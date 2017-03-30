@@ -523,7 +523,6 @@ function getsearchDocListS_after() {
 }
 
 function selFirstRow(Resultxml) {
-
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
@@ -533,6 +532,42 @@ function selFirstRow(Resultxml) {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
+        
+        if (approvalFlag) {
+        	DocType = GetAttribute(tr, "DATA9");
+            DocState = GetAttribute(tr, "DATA7");
+            
+            if (DocType == strDocType4) {
+                document.getElementById("tenforce").style.display = "none";
+                document.getElementById("tresend").style.display = "none";
+            }
+            else {
+                document.getElementById("tenforce").style.display = "";
+                document.getElementById("tresend").style.display = "";
+            }
+
+            if (DocState == strDocState31) {
+                document.getElementById("tenforce").style.display = "none";
+            }
+
+            var CheckContainerType = CheckResend(DocID);
+
+            var pExt = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+            if (CheckContainerType == "610") {
+                if (pExt == "hwp" || pExt == "doc") {
+                    document.getElementById("tresend").style.display = "none";
+                } else {
+                    if (DocType == strDocType4) {
+                        document.getElementById("tresend").style.display = "none";
+                    }
+                    else {
+                        document.getElementById("tresend").style.display = "";
+                    }
+                }
+            } else {
+                document.getElementById("tresend").style.display = "none";
+            }
+        }
 
         document.getElementById("tSearchCondi").style.display = "";
         document.getElementById("tViewDoc").style.display = "";
@@ -667,12 +702,15 @@ function lvtDoclist_SelChange() {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
+
         if (approvalFlag == "S") {
+        	DocType = GetAttribute(tr, "DATA9");
+            DocState = GetAttribute(tr, "DATA7");
+
 	        if (DocType == strDocType4) {
 	            document.getElementById("tenforce").style.display = "none";
 	            document.getElementById("tresend").style.display = "none";
-	        }
-	        else {
+	        } else {
 	            document.getElementById("tenforce").style.display = "";
 	            document.getElementById("tresend").style.display = "";
 	        }

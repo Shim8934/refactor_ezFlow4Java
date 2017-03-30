@@ -200,7 +200,8 @@
 			                return;
 			            }
 			        }
-			     if(approvalFlag == 'G') {
+			        
+			     if (approvalFlag == 'G') {
 			        draftfrom = draftfrom.split("-");
 			        draftto = draftto.split("-");
 			        apprfrom = apprfrom.split("-");
@@ -395,9 +396,17 @@
 		        //var Positon = getPositionOpenWin(530, 410);
 		        //opener.OpenWin2.moveTo(Positon[0], Positon[1]);
 		        //DivPopUpHidden();
-		        if (typeof (retVal) != "undefined" && retVal[0] != "cancel") {
-		            document.getElementsByName("FormName")[0].id = retVal[2];
-		            document.getElementsByName("FormName")[0].value = retVal[3];
+		        if (approvalFlag == "G") {
+			        if (typeof (retVal) != "undefined" && retVal[0] != "cancel") {
+			        	document.getElementsByName("FormName")[0].id = retVal[2];
+			            document.getElementsByName("FormName")[0].value = retVal[3];
+			        }
+		        } else {
+		        	if (typeof (retVal) != "undefined" && retVal[0] != "cancel" && retVal != "") {
+		                document.getElementById("formid").value = retVal[2];
+		                document.getElementById("FormName").value = retVal[3];
+		            }
+		            DivPopUpHidden();
 		        }
 		    }
 		    function btnToDaySearch_onclick() {
@@ -722,16 +731,15 @@
 			            window.returnValue = RtnVal;
 			        window.close();
 		        } else {
-		        	 RtnVal[0] = document.getElementById("DocNumber").value;
-		             RtnVal[1] = document.getElementById("DocTitle").value;
-		             RtnVal[2] = document.getElementById("drafter").value;
-
-		             RtnVal[3] = "";
-		             RtnVal[4] = "";
-		             RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
-		             RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
-		             RtnVal[7] = "";
-		             RtnVal[8] = "";
+		        	RtnVal[0] = document.getElementById("DocNumber").value;
+		            RtnVal[1] = document.getElementById("DocTitle").value;
+		            RtnVal[2] = document.getElementById("drafter").value;
+		            RtnVal[3] = draftfrom;
+		            RtnVal[4] = draftto;
+		            RtnVal[5] = apprfrom;
+		            RtnVal[6] = apprto;
+		            RtnVal[7] = myapprfrom;
+		            RtnVal[8] = myapprto;
 
 		             RtnVal[9] = document.getElementById("formid").value;
 		             RtnVal[10] = document.getElementById("EndAprYear").value;
@@ -765,6 +773,12 @@
 // 		                 RtnVal[13] += "<ITEMCODE>" + document.getElementById("tbItemCode").value + "</ITEMCODE>";
 // 		             }
 
+		 			for (i = 0; i < 14; i++) {
+			            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
+			                chkVal = true;
+			                break;
+			            }
+		       		 }
 // 		             RtnVal = SearchDateXML(RtnVal);
 
 		             if (ReturnFunction != null) {

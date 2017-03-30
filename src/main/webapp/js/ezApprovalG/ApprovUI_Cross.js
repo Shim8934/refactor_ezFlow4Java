@@ -30,6 +30,7 @@ function putBansongSign() {
     var RtnVal = getGyulJeDate();
     var CurrentDate = RtnVal.split(".");
     var s = CurrentDate[1] + "." + CurrentDate[2];
+    
     if (pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
@@ -51,8 +52,7 @@ function putBansongSign() {
         habyui = phabyuisign + pAprMemberSN;
         var field = message.GetListItem(fields, habyui);
         if (field) {
-
-            field.textContent = strLang4;
+        	setNodeText(field , strLang4);
             SignContent[signCnt] = strLang4;
             signInfo[signCnt] = habyui;
             SignType[signCnt] = "TEXT";
@@ -63,11 +63,9 @@ function putBansongSign() {
         }
 
         var habyuidateID = phabyuidate + pAprMemberSN;
-
         var field = message.GetListItem(fields, habyuidateID);
         if (field) {
-
-            field.textContent = s;
+        	setNodeText(field , s);
             signInfo[signCnt] = habyuidateID;
             SignType[signCnt] = "TEXT";
             SignName[signCnt] = habyuidateID;
@@ -2194,7 +2192,7 @@ function putSignXML(SignXML) {
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
                 
-                if (!SignName.indexOf("habyui") > -1) {
+                if (!(SignName.indexOf("habyui") > -1)) {
                 	continue;
                 }
                 
@@ -2413,7 +2411,7 @@ function UpdateLineHistory() {
 			userJobTitle : arr_userinfo[13],
 			userDeptID : arr_userinfo[4],
 			userDeptName : arr_userinfo[15],
-			chkFlag : "MUST",
+			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
 			userDeptName2 : arr_userinfo[16]

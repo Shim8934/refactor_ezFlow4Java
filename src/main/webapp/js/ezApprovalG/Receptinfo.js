@@ -651,45 +651,45 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
     var GetXml;
 
     GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang170 + "</NAME><WIDTH>150</WIDTH></HEADER><HEADER><NAME>" + strLang171 + "</NAME><WIDTH>600</WIDTH></HEADER></HEADERS>";
-    GetXml = GetXml + "<ROWS>";
+    GetXml += "<ROWS>";
 
     for (i = 0; i < CurListLen; i++) {
-        GetXml = GetXml + "<ROW>";
+        GetXml += "<ROW>";
         for (j = 0; j < CurCellLen; j++)
-            GetXml = GetXml + "<COLUMN>" + MakeXMLString(AprDeptRow[i].cells[j].innerText) + "</COLUMN>";
+            GetXml += "<COLUMN>" + MakeXMLString(getNodeText(AprDeptRow[i].cells[j])) + "</COLUMN>";
 
-        if (trim_Cross(AprDeptRow[i].getAttribute("DATA2")) == "") {
-            GetXml = GetXml + "<DATA name='DocID'>" + pDocID + "</DATA>";
+        if (trim_Cross(GetAttribute(AprDeptRow[i], "DATA2")) == "" || trim_Cross(GetAttribute(AprDeptRow[i], "DATA2")) == "null") {
+            GetXml += "<DATA name='DocID'>" + pDocID + "</DATA>";
         }
         else {
-            GetXml = GetXml + "<DATA name='DocID'>" + AprDeptRow[i].getAttribute("DATA2") + "</DATA>";
+            GetXml += "<DATA name='DocID'>" + GetAttribute(AprDeptRow[i], "DATA2") + "</DATA>";
         }
-        GetXml = GetXml + "<DATA name='ReceiptPointID'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA1")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ExtReceptYN'>" + AprDeptRow[i].getAttribute("DATA3") + "</DATA >";
-        GetXml = GetXml + "<DATA name='ProcessYN'>" + AprDeptRow[i].getAttribute("DATA4") + "</DATA>";
-        GetXml = GetXml + "<DATA name='CanEditYN'>" + AprDeptRow[i].getAttribute("DATA5") + "</DATA>";
-        GetXml = GetXml + "<DATA name='ExtReceptEmail'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA6")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberID'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA7")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberName'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA8")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberJobTitle'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA9")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='AprMemberDeptName'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA10")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='AprMemberDeptName2'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA11")) + "</DATA>";
         
-        if (AprDeptRow[i].getAttribute("DATA12") == null)
-            GetXml = GetXml + "<DATA name='ReceiptMemberName2'></DATA>";
+        GetXml += "<DATA name='ReceiptPointID'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA1")) + "</DATA>";
+        GetXml += "<DATA name='ExtReceptYN'>" + GetAttribute(AprDeptRow[i], "DATA3") + "</DATA >";
+        GetXml += "<DATA name='ProcessYN'>" + GetAttribute(AprDeptRow[i], "DATA4") + "</DATA>";
+        GetXml += "<DATA name='CanEditYN'>" + GetAttribute(AprDeptRow[i], "DATA5") + "</DATA>";
+        GetXml += "<DATA name='ExtReceptEmail'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA6")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberID'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA7")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA8")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberJobTitle'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA9")) + "</DATA>";
+        GetXml += "<DATA name='AprMemberDeptName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA10")) + "</DATA>";
+        GetXml += "<DATA name='AprMemberDeptName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA11")) + "</DATA>";
+        
+        if (GetAttribute(AprDeptRow[i], "DATA12") != null)
+            GetXml += "<DATA name='ReceiptMemberName2'></DATA>";
         else
-            GetXml = GetXml + "<DATA name='ReceiptMemberName2'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA12")) + "</DATA>";
+            GetXml += "<DATA name='ReceiptMemberName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA12")) + "</DATA>";
 
         if (AprDeptRow[i].getAttribute("DATA13") == null)
-            GetXml = GetXml + "<DATA name='ReceiptMemberJobTitle2'></DATA>";
+            GetXml += "<DATA name='ReceiptMemberJobTitle2'></DATA>";
         else
-            GetXml = GetXml + "<DATA name='ReceiptMemberJobTitle2'>" + MakeXMLString(AprDeptRow[i].getAttribute("DATA13")) + "</DATA>";
+            GetXml += "<DATA name='ReceiptMemberJobTitle2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA13")) + "</DATA>";
 
-
-        GetXml = GetXml + "</ROW>";
+        GetXml += "</ROW>";
     }
 
-    GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
+    GetXml += "</ROWS></LISTVIEWDATA>";
 
     return GetXml;
 }
@@ -697,6 +697,8 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
 function textUser_onkeypress2() {
     if (window.event.keyCode == "13") {
         document.getElementById("Span2").focus();
+        //document.getElementById("btn_searchUser").onclick();
+        btn_searchUser_onclick2();
     }
 }
 //############################################################################################################################################# 조직도 사용자 검색 

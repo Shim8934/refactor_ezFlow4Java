@@ -195,7 +195,7 @@ public interface EzApprovalGService {
 	
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getSignInfo(String docID, String companyID, int tenantID) throws Exception;
+	public String getSignInfo(String docID, String offset, Locale locale, String companyID, int tenantID) throws Exception;
 	
 	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID) throws Exception;
 	
@@ -235,7 +235,7 @@ public interface EzApprovalGService {
 	
 	public String getFindSimpleCabinetList(String processDeptCode, String productionYear, String searchKeyword, String flag, String companyID, String langType, int tenantID) throws Exception;
 	
-	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
+	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet, LoginVO userInfo) throws Exception;
 	
 	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception;
 	
@@ -365,7 +365,7 @@ public interface EzApprovalGService {
 
 	public String doSendOffer(Document xmlDom, String dirPath, String companyID, String lang, int tenantID)throws Exception;
 
-	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID)throws Exception;
+	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID, String offSet)throws Exception;
 
 	public String updateProcessYN2(String docID, String deptID,	String deptName, String deptName2, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception;
 

@@ -5,12 +5,13 @@
 	<head>
 	    <title><spring:message code='ezApproval.t157'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApproval.e2'/>" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezApproval.e1'/>" ></script>
+	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
+		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ezDraftCK_Common.js"></script>
@@ -145,21 +146,19 @@
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t45'/>";
-	                OpenInformationTFUI(pInformationContent, Edit_Complete);
+	                OpenInformationUI(pInformationContent, Edit_Complete);
 	            }
 	        }
 	        function Edit_Complete(RtnVal)
 	        {
 	        	DivPopUpHidden();
-	        	
+
 	            if (RtnVal) {
 	                modeflag = true;
-	            }
-	            else {
+	            } else {
 	                message.Set_EditorInputBodyHTML(modifiOrgBody);
 	                message.Set_HtmlDocument();
 	            }
-	
 	            message.SetEditable(false);
 	            setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='ezApproval.t46'/>");
 	            setMenuBar("btnOpinion", true);

@@ -55,7 +55,7 @@ function getDocList() {
 
     objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "NODE", selSContName.value);
-    createNodeAndInsertText(xmlpara, objNode, "BlockNum", nowblock + 1);
+    createNodeAndInsertText(xmlpara, objNode, "BlockNum", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
 
     xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do", false);
@@ -108,15 +108,15 @@ function DocMove() {
     length = listview.GetSelectedRows().length;
     Doclength = Doclistview.GetDataRows().length;
 
-    if (Doclength == 1 && Doclistview.GetDataRows()[0].id == "lvTDocList_TR_noItems") {
-        Doclistview.DeleteRow(Doclistview.GetDataRows()[0].id);
-        Doclength--;
-    }
-
     if (length <= 0) {
-        alert(strLang174);
+    	alert(strLang257);
     }
     else {
+    	if (Doclength == 1 && Doclistview.GetDataRows()[0].id == "lvTDocList_TR_noItems") {
+            Doclistview.DeleteRow(Doclistview.GetDataRows()[0].id);
+            Doclength--;
+        }
+    	
         DocInfo = listview.GetSelectedRows()[0];
 
         for (count1 = 0; count1 < length; count1++) {

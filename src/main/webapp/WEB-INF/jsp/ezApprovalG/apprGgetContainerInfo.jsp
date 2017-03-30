@@ -81,7 +81,7 @@
 	        var pEndAprType = "${endAprType}";
 	        var pEndAprState = "${endAprState}";
 	        var pUse_Editor = "${useEditor}";
-	        var DocType ="";
+	        var DocType = "";
  	        var DocState = "";
 
 	        document.onselectstart = function () { return false; };
@@ -1218,9 +1218,11 @@
 	        <ul>
 	        	<c:if test ="${approvalFlag == 'S'}">
 	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
-	            <li id="tresend"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
+	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
 <!-- 	            시행문 변환 추후 개발 -->
-	            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+				<div style="display: none">
+		            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+				</div>
 	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
 	            <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
 	            </c:if>

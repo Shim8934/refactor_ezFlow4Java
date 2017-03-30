@@ -1054,7 +1054,7 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String realPath = commonUtil.getRealPath(request);
 		String dirpath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator ;
-		String result = ezApprovalGService.addBebu(xmlDom, dirpath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.addBebu(xmlDom, dirpath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}
@@ -1491,6 +1491,7 @@ public class EzApprovalGarchiveController {
 		String title1 = "";
 		String title2 = "";
 		String docID = request.getParameter("pDocID");
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
             susinAdmin = "YES";
@@ -1541,6 +1542,8 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("title1", title1);
 		model.addAttribute("title2", title2);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
 		return "ezApprovalG/apprGaprdocattach";
 	}
 	
