@@ -552,6 +552,32 @@
 			        	} else {
 			            	window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + encodeURI(GetAttribute(tr, "DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			        	}
+			    	} else if (jobState == "ATTACH") {
+			    		var AttachfilenameA1 = tr.cells[1].innerHTML;
+                        if (AttachfilenameA1 != null) {
+                            var AttachfilenameN1 = AttachfilenameA1.lastIndexOf(".");
+                            var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
+                            var AttachUrlA1 = GetAttribute(tr,"DATA1");
+                            var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
+                            var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
+                            AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
+                            
+                            if (AttachfilenameN1 < 0) {
+                                Attachfilename = encodeURIComponent(tr.cells[1].innerHTML + AttachUrlA2);
+                            } else {
+                                Attachfilename = encodeURIComponent(tr.cells[1].innerHTML);
+                            }
+
+                            if (AttachUrl != "null") {
+                                var tempINGFlag = "";
+                                
+                                if (GetAttribute(tr,"data4") == "file") {
+                                    window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
+                                } else {
+                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl);
+                                }
+                            }
+                        }
 			    	}
 				}
 			}
