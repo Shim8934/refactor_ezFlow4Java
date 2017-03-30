@@ -140,7 +140,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String buJaeInfo = request.getParameter("buJae");
 		String buJaeInfo2 = "";
 		String proxyInfo = request.getParameter("proxy");
-		String proxyInfo2 = "";
+		//String proxyInfo2 = "";
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
 		
@@ -158,7 +158,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (result.equals("OK")) {
 			if (proxyInfo.split(":").length >= 5) {
-				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
+				//proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
 			}
 			
 			if (proxyInfo.split(":")[0].trim().equals("")) {
@@ -757,9 +757,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String noneActiveX = "YES";
 		// 모바일 설정
-		String useMobileMgmt = "";
-		String radBirthType1 = "";
-		String radBirthType2 = "";
+		//String radBirthType1 = "";
+		//String radBirthType2 = "";
 		String literalPhoto = "";
 		
 		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password";
@@ -783,10 +782,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String birthType = xmlDom.getElementsByTagName("BIRTHTYPE").item(0).getTextContent();
 		String password = xmlDom.getElementsByTagName("PASSWORD").item(0).getTextContent();
 		
-		if (userInfo.getLang().equals("1") || userInfo.getLang().equals("4")) {
+		/*if (userInfo.getLang().equals("1") || userInfo.getLang().equals("4")) {
 			radBirthType1 = messageSource.getMessage("ezPersonal.t2001", locale);
 			radBirthType2 = messageSource.getMessage("ezPersonal.t2002", locale);
-		}
+		}*/
 		
 		String pInfo = xmlDom.getElementsByTagName("INFO").item(0).getTextContent();
 		pInfo = pInfo.replace("&quot;", "\"");
