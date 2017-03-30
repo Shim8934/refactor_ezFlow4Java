@@ -75,6 +75,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
@@ -171,14 +172,16 @@
 		                    }
 		                } else {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
-		                    document.getElementById("ApvForm_sub6").style.display = "";
+		                    //위임전결
+// 		                    document.getElementById("ApvForm_sub6").style.display = "";
 		                    document.getElementById("rootTD").style.display = "";
 		                    message.SetEditorContent(htmlData);
 		                }
 		            } else {
 		                if (useEditor != "HWP") {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
-		                    document.getElementById("ApvForm_sub6").style.display = "";
+		                    //위임전결
+// 		                    document.getElementById("ApvForm_sub6").style.display = "";
 		                    document.getElementById("rootTD").style.display = "";
 		                } else {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
@@ -806,9 +809,9 @@
                 <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
-                <p id = "ApvForm_sub4" style="display:none"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
+                <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApproval.t730'/></span></p>
-                <p id = "ApvForm_sub6" style="display:none"><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
+                <p id = "ApvForm_sub6" style = 'display:none;'><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
 	        </div>
         </div>
         
