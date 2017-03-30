@@ -1996,6 +1996,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formID = request.getParameter("formID");
 		String title = request.getParameter("title");
 		String uFlag = request.getParameter("uFlag");
+		String admin = request.getParameter("admin");
 		
 		if(orgDocID == null){
 			orgDocID ="";
@@ -2050,6 +2051,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pass", pass);
 		model.addAttribute("uFlag", uFlag);
+		model.addAttribute("admin", admin);
 		
 		return "ezApprovalG/apprGcontDocView";
 	}

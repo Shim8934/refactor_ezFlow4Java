@@ -469,7 +469,7 @@
 			                }
 			            }
 			        }
-			        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(FormID) + "&orgDocID=" + encodeURI(OrgDocid.trim());
+			        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(FormID) + "&orgDocID=" + encodeURI(OrgDocid.trim()) + "&admin=Y";
 			        openwindow(openLocation, "", 880, 570);
 			    }
 			}
