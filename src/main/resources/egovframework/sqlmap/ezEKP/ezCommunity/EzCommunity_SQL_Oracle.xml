@@ -2079,6 +2079,7 @@
 					A.itemlevel,
 					A.abstract,
 					CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG,
+					A.extensionattribute4,
 					A.extensionattribute5
 				FROM
 					TBL_COMM_ITEM A
