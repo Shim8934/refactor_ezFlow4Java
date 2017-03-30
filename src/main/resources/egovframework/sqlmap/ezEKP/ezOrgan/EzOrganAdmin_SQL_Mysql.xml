@@ -2502,6 +2502,34 @@
         ]]>
     </update>
  				
+    <update id="EzOrganAdminDAO.updateUserCompanyDisplayName" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_USERMASTER
+            SET 
+                COMPANY = #v_DISPLAYNAME#,
+                COMPANY2 = #v_DISPLAYNAME2#
+            WHERE
+                PHYSICALDELIVERYOFFICENAME = #v_CN#
+            AND
+                TENANT_ID = #v_TENANT_ID#  
+        ]]>
+    </update>
+     
+    <update id="EzOrganAdminDAO.updateDeptCompanyDisplayName" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_DEPTMASTER
+            SET 
+                EXTENSIONATTRIBUTE3 = #v_DISPLAYNAME#,
+                COMPNM2 = #v_DISPLAYNAME2#
+            WHERE
+                EXTENSIONATTRIBUTE2 = #v_CN#
+            AND
+                TENANT_ID = #v_TENANT_ID#  
+        ]]>
+    </update>
+     
     <update id="EzOrganAdminDAO.moveGroupUser_U" parameterClass="Map">
         <![CDATA[
             UPDATE
@@ -2720,6 +2748,25 @@
       			tenant_id = #tenantID#	
 	     ]]>
 	</select>
+ 
+    <update id="EzOrganAdminDAO.updateDBData_company" parameterClass="Map">
+        <![CDATA[
+           UPDATE 
+               TBL_DEPTMASTER
+           SET
+               updatedt = #nowDate#,
+               displayName = #v_DISPLAYNAME#,
+               displayName2 = #v_DISPLAYNAME2#,
+               EXTENSIONATTRIBUTE3 = #v_DISPLAYNAME#,
+               COMPNM2 = #v_DISPLAYNAME2#,
+               mail = #v_MAIL#
+           WHERE  
+               cn = #v_CN#
+           AND
+               tenant_id = #v_TENANT_ID#                
+        ]]>  
+   </update>
+ 
 	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">
 		<![CDATA[
 			UPDATE 

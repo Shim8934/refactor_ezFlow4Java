@@ -452,38 +452,118 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		ezOrganAdminDao.insertDBData_company(map);
 		
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("tenantID", tenantID);
-		map1.put("companyID", cn);
-		map1.put("companyName", displayName);
-		map1.put("companyName2", displayName2);
-		map1.put("userID", userInfo.getId());
-		map1.put("userName", userInfo.getName());
-		map1.put("nowDate", nowDate);
-		
-		ezOrganAdminDao.insertCompanyInfo_I1(map1);
-		ezOrganAdminDao.insertCompanyInfo_I2(map1);
-		ezOrganAdminDao.insertCompanyInfo_I3(map1);
-		ezOrganAdminDao.insertCompanyInfo_I4(map1);
-		ezOrganAdminDao.insertCompanyInfo_I5(map1);
-		ezOrganAdminDao.insertCompanyInfo_I6(map1);
-		ezOrganAdminDao.insertCompanyInfo_I7(map1);
-		ezOrganAdminDao.insertCompanyInfo_I8(map1);
-		ezOrganAdminDao.insertCompanyInfo_I9(map1);
-		ezOrganAdminDao.insertCompanyInfo_I10(map1);
-		ezOrganAdminDao.insertCompanyInfo_I11(map1);
-		ezOrganAdminDao.insertCompanyInfo_I12(map1);
-		ezOrganAdminDao.insertCompanyInfo_I13(map1);
-		ezOrganAdminDao.insertCompanyInfo_I14(map1);
-		ezOrganAdminDao.insertCompanyInfo_I15(map1);
-		ezOrganAdminDao.insertCompanyInfo_I16(map1);
-		ezOrganAdminDao.insertCompanyInfo_I17(map1);
-		ezOrganAdminDao.insertCompanyInfo_I18(map1);
-		ezOrganAdminDao.insertCompanyInfo_I19(map1);
+		if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
+			try {
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("tenantID", tenantID);
+				map1.put("companyID", cn);
+				map1.put("companyName", displayName);
+				map1.put("companyName2", displayName2);
+				map1.put("userID", userInfo.getId());
+				map1.put("userName", userInfo.getName());
+				map1.put("nowDate", nowDate);
+				
+				ezOrganAdminDao.insertCompanyInfo_I1(map1);
+				ezOrganAdminDao.insertCompanyInfo_I2(map1);
+				ezOrganAdminDao.insertCompanyInfo_I3(map1);
+				ezOrganAdminDao.insertCompanyInfo_I4(map1);
+				ezOrganAdminDao.insertCompanyInfo_I5(map1);
+				ezOrganAdminDao.insertCompanyInfo_I6(map1);
+				ezOrganAdminDao.insertCompanyInfo_I7(map1);
+				ezOrganAdminDao.insertCompanyInfo_I8(map1);
+				ezOrganAdminDao.insertCompanyInfo_I9(map1);
+				ezOrganAdminDao.insertCompanyInfo_I10(map1);
+				ezOrganAdminDao.insertCompanyInfo_I11(map1);
+				ezOrganAdminDao.insertCompanyInfo_I12(map1);
+				ezOrganAdminDao.insertCompanyInfo_I13(map1);
+				ezOrganAdminDao.insertCompanyInfo_I14(map1);
+				ezOrganAdminDao.insertCompanyInfo_I15(map1);
+				ezOrganAdminDao.insertCompanyInfo_I16(map1);
+				ezOrganAdminDao.insertCompanyInfo_I17(map1);
+				ezOrganAdminDao.insertCompanyInfo_I18(map1);
+				ezOrganAdminDao.insertCompanyInfo_I19(map1);
+            // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
+            } catch (Exception e) {
+                e.printStackTrace();
+                
+                map.put("v_CLASS", "group");
+                ezOrganAdminDao.deleteDBDataForJMocha(map);
+                
+                throw e;
+            }			
+		}
 		
 		logger.debug("insertDBData_company ended");
 	}
 
+	@Override
+	public void updateDBData_company(String cn, String displayName, String displayName2, String mailAddr, int tenantID) throws Exception {
+	    logger.debug("updateDBData_company started");
+	    logger.debug("cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 + ",mailAddr=" + mailAddr 
+	            + ",tenantID=" + tenantID);
+	    
+        if (displayName2 == null || displayName2.equals("")) {
+            displayName2 = displayName;
+        }
+		
+        if (cn.equalsIgnoreCase("Top")) {
+        	OrganDeptVO dept = ezOrganService.getDeptInfo(cn, "1", tenantID);
+        	String curMailAddr = dept.getMail();
+        	
+        	logger.debug("Top curMailAddr=" + curMailAddr + ",new mailAddr=" + mailAddr);
+        	
+        	// 최상위 회사(Top)의 이메일 주소가 변경된 경우 새롭게 그룹 이메일 주소를 등록한다.
+        	if (!curMailAddr.equals(mailAddr)) {
+        		logger.debug("New Top Email Address");
+        		
+        		int atSignPos = curMailAddr.indexOf("@");
+        		String curMailId = curMailAddr.substring(0, atSignPos);
+        		String mailDomain = curMailAddr.substring(atSignPos + 1);
+        		String newMailId = mailAddr.substring(0, mailAddr.indexOf("@"));
+        		
+        		// 현재 이메일 아이디가 Top이 아니라면 해당 그룹 이메일 주소를 제거한다.
+        		if (!curMailId.equalsIgnoreCase("Top")) {
+        			ezEmailUserAdminService.removeGroup(curMailAddr);
+        		}
+        		
+        		// 새 이메일 아이디가 Top이 아니라면 해당 그룹 이메일 주소를 새롭게 등록하고
+        		// 멤버로 Top@domain 이메일 주소를 등록한다.
+        		if (!newMailId.equalsIgnoreCase("Top")) {
+        			ezEmailUserAdminService.addGroup(mailAddr);
+        			ezEmailUserAdminService.updateGroupAdd(mailAddr, "Top@" + mailDomain);
+        		}        		
+        	}
+        }
+        
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		map.put("v_DISPLAYNAME", displayName);
+		map.put("v_DISPLAYNAME2", displayName2);
+		map.put("v_MAIL", mailAddr);
+        
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+		map.put("nowDate", nowDate);
+		
+		ezOrganAdminDao.updateDBData_company(map);
+		ezOrganAdminDao.updateUserCompanyDisplayName(map);
+		ezOrganAdminDao.updateDeptCompanyDisplayName(map);
+		
+		OrganDeptVO vo = new OrganDeptVO();
+		
+		vo.setTenantId(tenantID);
+		vo.setCn(cn);
+		vo.setDisplayName(displayName);
+		vo.setDisplayName2(displayName2);
+		
+		ezOrganAdminDao.updateUserDeptDisplayName(vo);
+		
+        logger.debug("updateDBData_company ended");
+	}
+	
 	@Override
 	public void insertDBData_dept(OrganDeptVO vo) throws Exception {
 	    logger.debug("insertDBData_dept started");
