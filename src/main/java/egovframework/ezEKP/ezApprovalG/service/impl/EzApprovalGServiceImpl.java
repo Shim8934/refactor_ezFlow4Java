@@ -10833,7 +10833,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
-		//여기여기여기
+		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -20433,6 +20433,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
 					resultXML.append("<DATA8>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</DATA8>");
 					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA10>" + "</DATA10>");
 				}
 				
 				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("HASATTACHYN")) {
@@ -20452,6 +20453,130 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return resultXML.toString();
 	}
 
+	@Override
+	public String getUserContListAll(String contID, String pSubQuery, String pPageSize, String pPageNum, String SortHeader, String SortOption, String companyID, String lang, Document QueryData, int tenantID, String offSet)	throws Exception {
+		StringBuffer resultXML = new StringBuffer();
+		String OrderOption1 = "";
+		String OrderOption2 = "";
+		
+		// 수정(2007.06.18) : multidata 기능추가 
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
+		String listString = "";
+		
+		listString = getListHeader("S051", companyID, lang, tenantID);
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CONTID", contID);
+		map.put("v_PSUBQUERY", pSubQuery.trim());
+		map.put("v_PSUBQUERYLENGTH", pSubQuery.trim().length());
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+
+		int totalCount = ezApprovalGDAO.getUserContDocListCount(map);
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>"+ totalCount +"</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		
+		int i = 0;
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		for (i=0; i<hlength; i++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "</COLNAME>");
+			
+			if (!SortHeader.equals("") && SortHeader.equals(listXML.getElementsByTagName("NAME").item(i).getTextContent())) {
+				if(SortHeader.equals("")) {
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+				} else {
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+				}
+			}
+			resultXML.append("</HEADER>");
+		}
+		
+		resultXML.append("</HEADERS>");
+		map.put("v_ORDEROPTION", OrderOption1);
+		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
+		
+		if (OrderOption1.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,8).toLowerCase());
+		}
+		map.put("v_ORDEROPTION2", OrderOption2);
+		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
+		
+		if (OrderOption2.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,8).toLowerCase());
+		}
+		map.put("v_DOCNO", QueryData.getElementsByTagName("DOCNO").item(0) == null ? "" : QueryData.getElementsByTagName("DOCNO").item(0).getTextContent());
+		map.put("v_DOCTITLE", QueryData.getElementsByTagName("DOCTITLE").item(0) == null ? "" : QueryData.getElementsByTagName("DOCTITLE").item(0).getTextContent());
+		map.put("v_WRITERNAME", QueryData.getElementsByTagName("WRITERNAME").item(0) == null ? "" : QueryData.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+		map.put("v_WRITERDEPTNAME", QueryData.getElementsByTagName("WRITERDEPTNAME").item(0) == null ? "" : QueryData.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent());
+		map.put("v_KEYWORD", QueryData.getElementsByTagName("KEYWORD").item(0) == null ? "" : QueryData.getElementsByTagName("KEYWORD").item(0).getTextContent());
+		map.put("v_PSTRLANG", lang);
+		map.put("v_PSTRMULTIDATA", strMultiData);
+		map.put("v_PLISTCOUNT", pPageSize);
+		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1)));
+		map.put("v_PQUERYSIZESUB", Integer.parseInt(pPageSize)*Integer.parseInt(pPageNum));
+		map.put("v_ORDEROPTION", OrderOption1);
+		
+		List <ApprGDocListVO> userContList = ezApprovalGDAO.getUserContListAll(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int j = 0; j < userContList.size(); j++) {
+			sb.append(commonUtil.getQueryResult(userContList.get(j)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		String FieldName = "";
+		String FieldValue = "";
+		resultXML.append("<ROWS>");
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		for(int k = dlength-1; k >=0; k-- ) {
+			resultXML.append("<ROW>");
+			for(i=0; i<hlength; i++) {
+				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent();
+				FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "</VALUE>");
+			
+				if ( i == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "</DATA2>");
+					resultXML.append("<DATA3>" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "</DATA5>");
+					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
+					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
+					resultXML.append("<DATA8>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</DATA8>");
+					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
+				}
+				
+				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("HASATTACHYN")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				
+				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		return resultXML.toString();
+	}
+	
 	@Override
 	public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -20502,7 +20627,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -20515,12 +20639,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTDEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
 		map.put("v_DOCSTATE", docState);
-		map.put("v_DRAFTFROM", draftfrom);
-		map.put("v_DRAFTTO", draftto);
-		map.put("v_APPRFROM", apprfrom);
-		map.put("v_APPRTO", apprto);
-		map.put("v_MYPAPPRFROM", mypapprfrom);
-		map.put("v_MYPAPPRTO", mypapprto);
+		map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom, offSet, true));
+		map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto, offSet, true));
+		map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom, offSet, true));
+		map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto, offSet, true));
+		map.put("v_MYPAPPRFROM", commonUtil.getDateStringInUTC(mypapprfrom, offSet, true));
+		map.put("v_MYPAPPRTO", commonUtil.getDateStringInUTC(mypapprto, offSet, true));
 		map.put("v_SUBQUERY", subQuery);
 		map.put("v_PAPPROVUSER", pApprovUser);
 		map.put("companyID", companyID);
@@ -20609,27 +20733,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		if (draftfrom != null && !draftfrom.equals("")) {
-			whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + draftfrom + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		if (draftto != null && !draftto.equals("")) {
-			whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + draftto + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 
 		if (apprfrom != null && !apprfrom.equals("")) {
-			whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + apprfrom + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		
 		if (apprto != null && !apprto.equals("")) {
-			whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + apprto + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		
 		if (mypapprfrom != null && !mypapprfrom.equals("")) {
-			whereStr = whereStr + " AND PROCESSDATE >= STR_TO_DATE('" + mypapprfrom + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND PROCESSDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 			aprFlag = "INMYAPPRSEARCH";
 		}
 		
 		if (mypapprto != null && !mypapprto.equals("")) {
-			whereStr = whereStr + " AND PROCESSDATE <= STR_TO_DATE('" + mypapprto + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 			aprFlag = "INMYAPPRSEARCH";
 		}
 		

@@ -83,7 +83,7 @@
 	                        openLocation = "/ezApprovalG/contDocView.do";
 	                }
 	            }
-	            openLocation = openLocation + "?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(formID) + "&orgDocID=" + escape(orgDocid);
+	            openLocation = openLocation + "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
 	            var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
 	        }
 	        

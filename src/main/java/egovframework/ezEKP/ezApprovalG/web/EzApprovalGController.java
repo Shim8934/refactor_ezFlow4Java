@@ -1776,7 +1776,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String docStatus = request.getParameter("docStatus");
 		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName");
+		String fileName = request.getParameter("fileName").replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");;
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -2000,6 +2000,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formID = request.getParameter("formID");
 		String title = request.getParameter("title");
 		String uFlag = request.getParameter("uFlag");
+		String admin = request.getParameter("admin");
 		
 		if(orgDocID == null){
 			orgDocID ="";
@@ -2054,6 +2055,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pass", pass);
 		model.addAttribute("uFlag", uFlag);
+		model.addAttribute("admin", admin);
 		
 		return "ezApprovalG/apprGcontDocView";
 	}

@@ -515,10 +515,11 @@
                                 else
                                     tempINGFlag = "APR"
                                     
-                                if (GetAttribute(tr,"data4") == "file")
+                                if (GetAttribute(tr,"data4") == "file") {
                                     window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
-                                else
+                                } else {
                                     window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl);
+                                }
                             }
 
                         }

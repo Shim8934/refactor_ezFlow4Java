@@ -203,26 +203,27 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public void getCommunityThumInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         String pType = request.getParameter("type");
-		String pFileName = request.getParameter("fileName");
+        String imgUrl = request.getParameter("imgUrl");
+		String pfileName = request.getParameter("fileName");
 		String pFilePath = "", pBoardID = "";
-		
+
 		if (request.getParameter("boardID") != null) {
 			pBoardID = request.getParameter("boardID");
 		}
 
 		if (pType.toUpperCase().equals("COMMUNITYLOGO")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "LOGO", userInfo.getTenantId());
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "LOGO", userInfo.getTenantId());
 			
 	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
 	        }
 		}
 		
 		if (pType.toUpperCase().equals("COMMUNITYTHUM")) {
-			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, pFileName, "COMMUNITYTHUM", userInfo.getTenantId());
+			pFilePath = ezCommunityService.getCommunityThumInfo(pBoardID, imgUrl, "COMMUNITYTHUM", userInfo.getTenantId());
 			
 	        if (pFilePath != null && !pFilePath.equals("")) {
-	            ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+	            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
 	        }
 		}
 	}
@@ -1435,16 +1436,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("copyItem started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String pOrgItemIDList = request.getParameter("orgItemIDList");
+		String[] pOrgItemIDList = request.getParameter("orgItemIDList").split(";");
 		String pOrgBoardID = request.getParameter("orgBoardID");
-		String pDestItemIDList = request.getParameter("destItemIDList");
+		String[] pDestItemIDList = request.getParameter("destItemIDList").split(";");
 		String pDestBoardID = request.getParameter("destBoardID");
 		String realPath = commonUtil.getRealPath(request);
 		String ret = "";
 		
-		int i = 0;
-		for(String pOrgItemID : pOrgItemIDList.split(";")) {
-			ret = ezCommunityService.copyItem(pOrgItemID, pOrgBoardID, pDestItemIDList.split(";")[i], pDestBoardID, realPath, userInfo);
+		for(int i=0; i < pOrgItemIDList.length; i++) {
+			ret = ezCommunityService.copyItem(pOrgItemIDList[i], pOrgBoardID, pDestItemIDList[i], pDestBoardID, realPath, userInfo);
 		}
 		
 		model.addAttribute("ret", "<RESULT>" + ret + "</RESULT>");
@@ -4309,12 +4309,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 				nextTitle = egovMessageSource.getMessage("ezCommunity.t191", userInfo.getLocale());
 			}
 		}
-		
+
 		if (item.getExtensionAttribute5().length() > 0) {
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile//s_", "/uploadFile/"));
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
-			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&fileName=" + item.getExtensionAttribute5();
+			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYTHUM&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + item.getExtensionAttribute4();
 			
 			File file = new File(pFilePath);
 			

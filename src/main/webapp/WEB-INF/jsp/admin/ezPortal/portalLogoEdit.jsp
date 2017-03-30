@@ -127,8 +127,8 @@
 			//strXML += "<IMAGEHEIGHT>" + imageHeight + "</IMAGEHEIGHT>";
 			
 			// 20071029 logo size fix
-			strXML += "<IMAGEWIDTH>186</IMAGEWIDTH>";
-			strXML += "<IMAGEHEIGHT>40</IMAGEHEIGHT>";
+			strXML += "<IMAGEWIDTH>106</IMAGEWIDTH>";
+			strXML += "<IMAGEHEIGHT>42</IMAGEHEIGHT>";
 			
 			strXML += "<LINKURL>" + ReplaceValidString(document.getElementById("txtLinkURL").value) + "</LINKURL>";
 			strXML += "<LINKLOCATION>" + ReplaceValidString(document.getElementById("txtLinkLocation").value) + "</LINKLOCATION>";
@@ -340,12 +340,14 @@
 				<th><spring:message code='ezPortal.t65'/></th> 
 				<td><table width="100%"  border="0" cellspacing="0" cellpadding="0"> 
 				<tr> 
-					<%String imagePath = (String)request.getAttribute("imagePath"); %>
-					<% if (imagePath != null && !imagePath.trim().equals("")) { %>
-					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=186 height=40 ></td>
-					<% } else { %>
-					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display:none" width=186 height=40 ></td>
-					<% } %>
+					<c:choose>
+						<c:when test="${imagePath != '' && imagePath ne null}">
+							<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=106 height=42 ></td>
+						</c:when>
+						<c:otherwise>
+							<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display:none" width=106 height=42 ></td>
+						</c:otherwise>
+					</c:choose>
 
                     <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
                     <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=Logo" target="ifrm">

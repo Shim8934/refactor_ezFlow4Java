@@ -417,6 +417,8 @@ public interface EzApprovalGService {
 
 	public String getUserContList(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
 
+	public String getUserContListAll(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
+	
 	public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
 	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
