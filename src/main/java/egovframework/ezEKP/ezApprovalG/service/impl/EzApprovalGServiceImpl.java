@@ -10636,6 +10636,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 		if (approvalFlag.equals("G")) {
 			map.put("companyID", companyID);
 			map.put("v_DOCID", docID);

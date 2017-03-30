@@ -1123,21 +1123,53 @@ function SaveApproveInfo(pApproveFlag) {
     pDocTitle = field.textContent;
     createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
 
-    var field = message.GetListItem(fields, "deptshortedname");
-    if (field) {
-        createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-    }
-    else {
-        var field = message.GetListItem(fields, "docnumber");
-        if (field)
-            createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-        else {
-            var field = message.GetListItem(fields, "bedocnumber");
-            if (field)
-                createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-            else
-                createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
-        }
+    if (pApproveFlag == "2") {
+    	var field = message.GetListItem(fields, "deptshortedname");
+    	if (field) {
+    		if (getfieldValue(field).slice(-1) == "-") {
+    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    		} else {
+    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    		}
+    	} else {
+    		var field = message.GetListItem(fields, "docnumber");
+    		if (field) {
+    			if (getfieldValue(field).slice(-1) == "-") {
+        			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+        		} else {
+        			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+        		}
+    		} else {
+    			var field = message.GetListItem(fields, "bedocnumber");
+    			if (field) {
+    				if (getfieldValue(field).slice(-1) == "-") {
+    	    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field).substring(0, getfieldValue(field).length - 1));
+    	    		} else {
+    	    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    	    		}
+    			} else {
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+    			}
+    		}
+    	}
+    } else {
+    	var field = message.GetListItem(fields, "deptshortedname");
+    	if (field) {
+    		createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    	}
+    	else {
+    		var field = message.GetListItem(fields, "docnumber");
+    		if (field)
+    			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    		else {
+    			var field = message.GetListItem(fields, "bedocnumber");
+    			if (field)
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
+    			else
+    				createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+    		}
+    	}
+    	
     }
 
     if (pHasAttachYN == "")
@@ -2255,8 +2287,12 @@ function putSignXML(SignXML) {
                         signWidth = 50;
                         
                         if (seumyung) {
-                        	if (img[1].indexOf(strLang7) > -1) {
-                        		signHeight = 28;
+                        	if (img[1] != null) {
+                        		if (img[1].indexOf(strLang7) > -1) {
+                        			signHeight = 28;
+                        		} else {
+                        			signHeight = 50;
+                        		}
                         	} else {
                         		signHeight = 50;
                         	}
