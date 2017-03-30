@@ -115,7 +115,8 @@
 		<![CDATA[
 			UPDATE TBL_USERMASTER
 			SET
-				password = #password#				
+				password = #password#,
+				updatedt = SYS_EXTRACT_UTC(SYSTIMESTAMP)
 			WHERE
 				cn = #id# AND tenant_id = #tenantId#
 		]]>

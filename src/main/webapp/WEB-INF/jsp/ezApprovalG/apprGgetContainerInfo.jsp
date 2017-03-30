@@ -83,6 +83,7 @@
 	        var pUse_Editor = "${useEditor}";
 	        var DocType = "";
  	        var DocState = "";
+ 	        var period;
 
 	        document.onselectstart = function () { return false; };
 	
@@ -751,7 +752,14 @@
 		            tempPageSize = PageSize;
 		            tempPageNum = curpage;
 		        }
-		
+				
+		        if (LoadSquery == "usercontlist") {
+  		      		ContainerID = LoadContID;
+        	 		subCondition = "";
+           	  		GetUserContListSave(AllFG);
+               	 
+                }else{
+		        
 		        if (GamSaFlag)
 		            url = "../excelExportOutGS.aspx";
 		        else
@@ -776,6 +784,7 @@
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition);
 		        }
 		        window.frames["saveExcel"].location.href = url;
+                }
 		    }
 		    function SelEDMFolder_onclick() {
 		        var DocList = new ListView();
@@ -914,8 +923,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		
-		        var period;
+	
 		        if (document.getElementById("sel_year").value.toLowerCase() == "all") {
 		            var nowyear = new Date().getFullYear();
 		            var nowmonth = new Date().getMonth() + 1;

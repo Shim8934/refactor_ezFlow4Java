@@ -3,6 +3,7 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -23,14 +24,18 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 /**
  * 일반 로그인을 처리하는 컨트롤러 클래스
@@ -77,6 +82,12 @@ public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     
     @Autowired
+    private EzEmailUserAdminService ezEmailUserAdminService;
+    
+    @Autowired
+	private EzOrganAdminService ezOrganAdminService;
+    
+    @Autowired
     private LocaleResolver localeResolver;
         
 	/**
@@ -117,7 +128,7 @@ public class LoginController {
 	 */
     @RequestMapping(value="/user/login/actionLogin.do")
     public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
-    	logger.debug("=========================================== 로그인 ============================================");
+    	logger.debug("=========================================== login ============================================");
     	
     	String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
@@ -127,8 +138,7 @@ public class LoginController {
 		String _uid = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptID());
 		
 		if (_uid == null || _uid.equals("")) {
-		    logger.debug("invalid _uid=" + _uid);
-		    
+		    logger.debug("invalid _uid=" + _uid);		    
 		    return "";
 		}
 		
@@ -145,28 +155,42 @@ public class LoginController {
 		loginVO.setPassword(_pwd);
 		loginVO.setTenantId(tenantId);
 		
-    	// 1. 일반 로그인 처리
+    	//일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
         
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {    
-            /* dhlee: Expire 시, 패스워드 변경 UI를 작성할 때까지 임시로 주석 처리함.
-        	Calendar cal = Calendar.getInstance();
-        	cal.add(Calendar.MONTH, -6);
+        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {            
+        	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);
+        	//diff 값 양수로 초기화
+        	int diff = 1;
         	
-        	Date baseDT = cal.getTime();        	
-        	Date lastDT = resultVO.getUpdateDT();
-        	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-			int diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);
+        	if (!expirePassPeriod.trim().equals("0")) {
+        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
+        		
+        		Calendar cal = Calendar.getInstance();        	        	
+            	
+            	String baseStr = commonUtil.getTodayUTCTime("");        	
+            	Date baseDT = date.parse(baseStr);
+            	            	
+            	cal.setTime(baseDT);
+            	cal.add(Calendar.DATE, realPeriod);
+            	
+            	baseDT = cal.getTime();
+            	Date lastDT = resultVO.getUpdateDT();
+            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
+    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);
+        	}
+        	        	
 			//0보다 작아지면 패스워드 변경기한 Expired
-			if (diff <= 0) {
-				model.addAttribute("message", egovMessageSource.getMessage("fail.user.passwordExpired", locale));
+			if (diff <= 0) {				
+				model.addAttribute("isExpireDate", "Y");
+				model.addAttribute("userId", _uid);
+				
 	        	return "forward:/user/login/login.do";
-			} else {			    
-			*/
+			} else {			
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
-				
-				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+								
 				date.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String nowDate = date.format(new Date());
 				loginVO.setLastLogin(nowDate);
@@ -187,23 +211,20 @@ public class LoginController {
 				}
 				
 				loginService.insertLog(resultVO);
-				
-				//
+
 				//DB에서 lang 값 가져옴
-				String lang = ezCommonService.selectUserGetLang(_uid, tenantId);
-				//String timeZone = ezCommonService.selectUserGetTimeZone(_uid);
-				
+				String lang = ezCommonService.selectUserGetLang(_uid, tenantId);				
 				String acceptLanguage = request.getHeader("Accept-Language");
 				String returnValue = "";
 				
 				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
 				
-				// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)				
+				//userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)				
 				if (returnValue == null || returnValue.equals("")) {
 			        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			        logger.debug("primaryLang=" + primaryLang);					
 					
-			        // UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+			        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
 			        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
 				        if (primaryLang.equals("1")) {
 				        	acceptLanguage = "ko";
@@ -214,14 +235,14 @@ public class LoginController {
 			        
 				    if (acceptLanguage != null) {
 				        returnValue = acceptLanguage.substring(0, 2);
-				    // 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+				    //이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
 				    } else {				        
 				        returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 				    }
 					
 				    lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
 				    
-				    // 브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
+				    //브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
 				    if (lang.equals("")) {						
 						lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 					}
@@ -239,9 +260,8 @@ public class LoginController {
 				//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
 				locale = new Locale(returnValue);
 				localeResolver.setLocale(request, response, locale);
-				//
 				
-				// 80 포트가 아닌 경우엔 포트 번호도 포함시킨다.
+				//80 포트가 아닌 경우엔 포트 번호도 포함시킨다.
 				if (serverPort != 80) {
 				    serverName = serverName + ":" + serverPort;
 				}
@@ -258,7 +278,7 @@ public class LoginController {
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
 	        	
-	        	//세션 생성
+	        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
 	        	//session = request.getSession();	        	
 	        	
 	        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
@@ -266,9 +286,7 @@ public class LoginController {
 	        	} else {
 	        	    return "redirect:/ezPortal/portalMain.do";
 	        	}
-/*	        	
-			}
-			*/
+			}			
         } else {
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
@@ -312,6 +330,67 @@ public class LoginController {
     			loginService.updatePassword(userIDList.get(k), pwd);
     		}
     	}
+    }
+        
+    @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8")
+	@ResponseBody
+    public String changeExPassword(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    	logger.debug("=========================================== changePassword ============================================");
+    	
+    	String prm = egovFileScrty.getPrm();
+    	String pre = egovFileScrty.getPre();
+    	String encUserId = request.getParameter("USERID");
+    	String encPass = request.getParameter("OLDPASSWORD");
+    	String encNewPass = request.getParameter("NEWPASSWORD");
+    	
+		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+
+		String _uid = EgovFileScrty.decryptRsa(pk, encUserId);
+		
+		if (_uid == null || _uid.equals("")) {
+		    logger.debug("invalid _uid=" + _uid);
+		    
+		    return "DECRYPTERROR";
+		}
+		
+        String serverName = request.getServerName();        
+        int tenantId = loginService.getTenantId(serverName);
+		
+		String rpwd = EgovFileScrty.decryptRsa(pk, encPass);
+		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+		
+		loginVO.setId(_uid);
+		loginVO.setPassword(_pwd);
+		loginVO.setTenantId(tenantId);
+		
+    	//로그인 정보 확인
+        LoginVO resultVO = loginService.selectUser(loginVO);
+        
+        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
+        	String epwd = EgovFileScrty.decryptRsa(pk, encNewPass);
+
+        	//e-mail 연동
+			String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+			String mailAddr = _uid + "@" + domain;
+			//이메일 계정의 암호를 새 암호로 설정한다.
+			int rc = ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, rpwd, epwd);
+			//checkAndUpdateUserPassword 성공
+			if (rc == 0) {                                                  
+			    try {
+			        //로컬 시스템에서 해당 User의 암호를 변경한다.
+			        ezOrganAdminService.setPassword(_uid, epwd, tenantId);
+			        return "OK";
+			    } catch (Exception e) {
+			    	//Exception이 발생하면 취소 처리를 한다.
+			        ezEmailUserAdminService.checkAndUpdateUserPassword(mailAddr, epwd, rpwd);			        
+			        return "UPDATEERROR";
+			    }                                       
+			} else {
+				return "MAILERROR";
+			}        	
+        } else {
+        	return "LOGINERROR";
+        }    	
     }
     
 }

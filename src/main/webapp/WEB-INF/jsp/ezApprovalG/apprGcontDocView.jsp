@@ -53,9 +53,14 @@
 		    var SignCheckFlag = "${signCheck}";
 		    var pUse_Editor = "${editor}";
 		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+		    var admin = "${admin}";
+		    
 		    $(function () {
+		    	
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
-			        QuitWindow();
+			    	if (admin != 'Y') {
+			    		QuitWindow();
+			    	}
 			    }
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
@@ -83,9 +88,11 @@
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
-		
+		            
 		            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
-		                QuitWindow();
+		            	if (admin != 'Y') {
+		                	QuitWindow();
+		            	}
 		            }
 		            else {
 		                if (pDocHref != "") {
