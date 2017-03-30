@@ -20869,7 +20869,7 @@
    		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
    		ORDER BY LINKDATE DESC 
    		</isLessEqual>
-   			LIMIT $v_PQUERYSIZESUB$
+   			
    		) A 
          
       	<isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
@@ -20888,13 +20888,6 @@
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
    		ORDER BY LINKDATE DESC
    		</isLessEqual>
-   		LIMIT 
-   			<isGreaterEqual property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PLISTCOUNT$
-   			</isGreaterEqual>
-   			<isLessThan property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
-   			$v_PQUERYSIZEMAIN$
-   			</isLessThan>
    	</select>
    	
    	<delete id="EzApprovalG.deleteUserContDoc" parameterClass="Map">
