@@ -340,12 +340,14 @@
 				<th><spring:message code='ezPortal.t65'/></th> 
 				<td><table width="100%"  border="0" cellspacing="0" cellpadding="0"> 
 				<tr> 
-					<%String imagePath = (String)request.getAttribute("imagePath"); %>
-					<% if (imagePath != null && !imagePath.trim().equals("")) { %>
-					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=106 height=42 ></td>
-					<% } else { %>
-					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display:none" width=106 height=42 ></td>
-					<% } %>
+					<c:choose>
+						<c:when test="${imagePath != '' && imagePath ne null}">
+							<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=106 height=42 ></td>
+						</c:when>
+						<c:otherwise>
+							<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display:none" width=106 height=42 ></td>
+						</c:otherwise>
+					</c:choose>
 
                     <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
                     <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=Logo" target="ifrm">
