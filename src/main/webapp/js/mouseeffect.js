@@ -296,3 +296,23 @@ function specialChk(val){
 	}
 	return rVal;
 }
+
+function CheckPassword(str){
+	var pw = str;
+	var num = pw.search(/[0-9]/g);
+	var eng = pw.search(/[a-z]/ig);
+	var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);				 
+	
+	if (pw.length < 6 || pw.length > 50) {
+		return false;
+	}
+	
+	if (pw.search(/₩s/) != -1) {
+		return false;
+	}
+	
+	if (num < 0 || eng < 0 || spe < 0 ) {
+		return false;
+	}
+	return true;
+}

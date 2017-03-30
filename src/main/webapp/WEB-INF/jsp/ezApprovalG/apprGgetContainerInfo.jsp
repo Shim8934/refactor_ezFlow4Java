@@ -26,7 +26,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js?ver=2.3"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
