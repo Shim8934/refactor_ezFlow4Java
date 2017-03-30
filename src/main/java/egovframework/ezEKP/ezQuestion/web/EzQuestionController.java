@@ -2,8 +2,6 @@ package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -33,7 +30,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +48,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -3139,7 +3134,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			hidRType2 = request.getParameter("hidRType2");
 		}
 		
-		@SuppressWarnings("resource")
+		//@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -3635,10 +3630,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemID));
 		qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO, loginVO.getTenantId());
 		
-		String publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
-		String publicFlg = qstUserPermissionVO.getPublicFlg();
-		String multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
-		String endFlg = qstUserPermissionVO.getEndFlg();
 		responseRange = qstUserPermissionVO.getResponseRange();
 		
 		/*boolean bPublic;
@@ -3665,6 +3656,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		pollEndDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false); 
 		String uploadSDate = pollStartDate;
         String uploadEDate = pollEndDate;
+        
 		model.addAttribute("uploadSDate", uploadSDate);
 		model.addAttribute("uploadEDate", uploadEDate);
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
@@ -3847,7 +3839,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		Document objXML = commonUtil.convertStringToDocument(xmlDoc);
-		String itemID = "";
+		
 		int itemNo = 0;
 		String strQstNo = "";
 		String lastItemNo = "0";
