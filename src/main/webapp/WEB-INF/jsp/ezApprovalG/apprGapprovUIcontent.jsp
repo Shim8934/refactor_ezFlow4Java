@@ -240,7 +240,7 @@
 	                        if (TDRows.item(i).getAttribute("class") == "FIELD") {
 	                            if (TDRows.item(i).childNodes.length == 0) {
 	                                if (TDRows.item(i).innerHTML == "" || TDRows.item(i).innerHTML == " ") {
-	                                    TDRows.item(i).innerHTML = "&nbsp;";
+	                                    TDRows.item(i).innerHTML = "";
 	                                }
 	                            }
 	                        }

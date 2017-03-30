@@ -690,6 +690,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGDocListVO>) list("EzApprovalG.doBanSongAprTypeS", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> doHabyuiHesongType(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.doHabyuiHesongType", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> doHabyuiHesongTypeS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.doHabyuiHesongTypeS", map);
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}
@@ -1967,6 +1977,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertSetBebuExpLineInfoS", map);
 	}
 	
+	public void insertHesongReceiptInfo(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertHesongReceiptInfo", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -2267,6 +2281,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateBebuReceiptInfoS", map);
 	}
 	
+	public void updateHesongReceiptInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateHesongReceiptInfo", map);
+	}
+	
+	public void updateHesongLineInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateHesongLineInfo", map);
+	}
+	
+	public void updateHesongDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateHesongDocInfo", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -2554,4 +2580,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public ApprGDocListVO doSendOffer_expAprDocInfo(Map<String, Object> map) throws Exception {
 		return (ApprGDocListVO) select("EzApprovalG.doSendOffer_expAprDocInfo", map);
 	}
+
 }
