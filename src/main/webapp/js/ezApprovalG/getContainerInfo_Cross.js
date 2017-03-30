@@ -822,7 +822,7 @@ function paging(p_page, p_nowblock) {
     DocList.SetRowOnClick("lvtDoclist_SelChange");           
     DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
     DocList.SetUrgentFlag(true);                            
-    DocList.SetSecurityFlag(true);                           
+    DocList.SetSecurityFlag(true);
     DocList.DataSource(ListViewNode);                             
     DocList.DataBind("lvtDoclist");                          
     DocList = null;
