@@ -1772,7 +1772,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String docStatus = request.getParameter("docStatus");
 		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName");
+		String fileName = request.getParameter("fileName").replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");;
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
