@@ -12,7 +12,7 @@
 		<link href="/css/login.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">
 		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
@@ -166,27 +166,6 @@
 		    		}
 		        });	        
 		    }
-			
-			function CheckPassword(str){
-				var pw = str;
-				var num = pw.search(/[0-9]/g);
-				var eng = pw.search(/[a-z]/ig);
-				var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);				 
-				
-				if (pw.length < 6 || pw.length > 50) {
-					return false;
-				}
-				
-				if (pw.search(/₩s/) != -1) {
-					return false;
-				}
-				
-				if (num < 0 || eng < 0 || spe < 0 ) {
-					return false;
-				}
-				return true;
-			}
-
 		</script>
 	</head>
 	<body class="login_body" onload="fnInit()">
