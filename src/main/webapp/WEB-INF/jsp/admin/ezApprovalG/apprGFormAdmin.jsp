@@ -54,12 +54,13 @@
 			
 		    $(document).ready(function(){
 		    	
-		    	if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua))) {
-		    		$('#btnInsForm1').hide();
-		    		$('#btnInsForm2').hide();
-			    	$('#btnUpForm').hide();
-			    	$('#btnFormListView').hide();
-		    	}
+		    	//CK에디터일때 양식추가 수정 버튼
+// 		    	if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua))) {
+// 		    		$('#btnInsForm1').hide();
+// 		    		$('#btnInsForm2').hide();
+// 			    	$('#btnUpForm').hide();
+// 			    	$('#btnFormListView').hide();
+// 		    	}
 
 		    	companyID = document.getElementById("ListCompany").value;
 			    Tree_setconfig();
