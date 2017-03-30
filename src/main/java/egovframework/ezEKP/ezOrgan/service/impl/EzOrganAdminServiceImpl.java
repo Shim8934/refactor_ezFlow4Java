@@ -549,17 +549,20 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("nowDate", nowDate);
 		
 		ezOrganAdminDao.updateDBData_company(map);
-		ezOrganAdminDao.updateUserCompanyDisplayName(map);
-		ezOrganAdminDao.updateDeptCompanyDisplayName(map);
 		
-		OrganDeptVO vo = new OrganDeptVO();
+		if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	
+			ezOrganAdminDao.updateUserCompanyDisplayName(map);
+			ezOrganAdminDao.updateDeptCompanyDisplayName(map);
 		
-		vo.setTenantId(tenantID);
-		vo.setCn(cn);
-		vo.setDisplayName(displayName);
-		vo.setDisplayName2(displayName2);
-		
-		ezOrganAdminDao.updateUserDeptDisplayName(vo);
+			OrganDeptVO vo = new OrganDeptVO();
+			
+			vo.setTenantId(tenantID);
+			vo.setCn(cn);
+			vo.setDisplayName(displayName);
+			vo.setDisplayName2(displayName2);
+			
+			ezOrganAdminDao.updateUserDeptDisplayName(vo);
+		}
 		
         logger.debug("updateDBData_company ended");
 	}
@@ -697,7 +700,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         }
         
 		ezOrganAdminDao.updateDBData_dept(vo);
-		ezOrganAdminDao.updateUserDeptDisplayName(vo);
+		
+		if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
+			ezOrganAdminDao.updateUserDeptDisplayName(vo);
+		}
 		
 		logger.debug("updateDBData_dept ended");
 	}

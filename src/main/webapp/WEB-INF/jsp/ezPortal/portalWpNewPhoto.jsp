@@ -91,8 +91,8 @@
 	        	perCnt = getNodeText(perNode);
 	        	totalPage_NewPhoto = Math.ceil(new Number(pageCnt / perCnt));
 
-	        	//$('#photoul').html("");
-	        	document.getElementById("photoul").innerHTML = "";
+	        	$('#photoul').html("");
+	        	//document.getElementById("photoul").innerHTML = "";
 	        	var start_li = document.createElement("li");
 	        	start_li.className = "btn_area";
 	        	start_li.innerHTML = "<img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\">";

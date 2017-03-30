@@ -808,18 +808,22 @@
 		    }
 		
 		    function doCancelForce(pDocID, tempListType) {
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "ASSIGN");
-		        createNodeAndInsertText(xmlpara, objNode, "docID", pDocID);
-		        createNodeAndInsertText(xmlpara, objNode, "userID", pUserID);
-		
-		        xmlhttp.open("POST", "/ezApprovalG/doCancelForce.do", false);
-		        xmlhttp.send(xmlpara);
-		
-		        var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
-		
+				var result = "";
+	        	
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : false,
+	        		url : "/ezApprovalG/doCancelForce.do",
+	        		data : {
+	        			docID : pDocID,
+	        			userID : pUserID
+	        		},
+	        		success: function(xml){
+	        			result = xml;
+	        		}
+	        	});
+		        
 		        if (RtnVal == "TRUE") {
 		            if (tempListType == "3") {
 		                var pAlertContent = strLang891 + "<br> " + strLang892;
@@ -1261,7 +1265,7 @@
 		    function SearchCondi_onclick_Complete(returnvalue) {
 		        condition = returnvalue;
 		        if (condition) {
-		        	for (var i = 0; i < condition.length; i++) {
+		        	for (var i = 0; i < 11; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
 		                SearchCond[i] = condition[i];
@@ -1356,68 +1360,67 @@
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
 				} else {
-
-					    if (SearchCond[0] != "")
-					    {
+					
+					 if (condition[0] != "") {
 					        TYPE += "DOCNO;"
-					        DATA += "<DOCNO>" + SearchCond[0] + "</DOCNO>";
+					        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
 					    }
 
-					    if (SearchCond[1] != "")
-					    {
+					    if (condition[1] != "") {
 					        TYPE += "DOCTITLE;"
-					        DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
+					        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 					    }
 
-					    if (SearchCond[2] != "")
-					    {
+					    if (condition[2] != "") {
 					        TYPE += "WRITERNAME;"
-					        DATA += "<WRITERNAME>" + SearchCond[2] + "</WRITERNAME>";
-					    }
-					   
-					    if (SearchCond[3] != "")
-					    {
-					        TYPE += "STARTDATEAF;"
-					        DATA += "<STARTDATEAF>" + SearchCond[3] + "</STARTDATEAF>";
+					        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
 					    }
 
-					    if (SearchCond[4] != "")
-					    {
-					        TYPE += "STARTDATEBF;"
-					        DATA += "<STARTDATEBF>" + SearchCond[4] + "</STARTDATEBF>";
+					    if (condition[3] != "null" && condition[3].trim() != "") {
+					        TYPE += "APRSTARTDATE;"
+					        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
 					    }
 
-					    if (SearchCond[5] != "")
-					    {
-					        TYPE += "ENDDATEAF;"
-					        DATA += "<ENDDATEAF>" + SearchCond[5] + "</ENDDATEAF>";
+					    if (condition[4] != "null" && condition[4].trim() != "") {
+					        TYPE += "APRENDDATE;"
+					        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
 					    }
 
-					    if (SearchCond[6] != "")
-					    {
-					        TYPE += "ENDDATEBF;"
-					        DATA += "<ENDDATEBF>" + SearchCond[6] + "</ENDDATEBF>";
+					    if (condition[5] != "null" && condition[5].trim() != "") {
+					        TYPE += "APRSTARTDATE;"
+					        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
 					    }
 
-					    if (SearchCond[7] != "")
-					    {
+					    if (condition[6] != "null" && condition[6].trim() != "") {
+					        TYPE += "APRENDDATE;"
+					        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
+					    }
+
+					    if (condition[9] != "") {
 					        TYPE += "FORMID;"
-					        DATA += "<FORMID>" + SearchCond[7] + "</FORMID>";
+					        DATA += "<FORMID>" + condition[9] + "</FORMID>";
 					    }
 
-					    if (SearchCond[9] != "")
-					    {
+					    if (condition[11] != "") {
 					        TYPE += "WRITERDEPTNAME;"
-					        DATA += "<WRITERDEPTNAME>" + SearchCond[9] + "</WRITERDEPTNAME>";
+					        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
 					    }
 
-					    if (SearchCond[10] != "")
-					    {
-					        TYPE += "KAPR;"
-					        DATA += "<KEYWORD>" + SearchCond[10] + "</KEYWORD>";
+					    if (condition[12] != "") {
+					        TYPE += condition[12];
+					        DATA += condition[13];
 					    }
-				}
-		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+					    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
+					        TYPE += condition[14];
+					        DATA += condition[15];
+					    }
+					    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
+					        TYPE += condition[16];
+					        DATA += condition[17];
+					    }
+
+					    SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+					}
 		    }
 		
 		    window.onresize = function () {

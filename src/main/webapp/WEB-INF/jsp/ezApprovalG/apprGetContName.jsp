@@ -29,7 +29,7 @@
             }
             catch (e)
             { }
-            document.getElementById('TxtAprDeptTempletName').value = "${TitleText}";
+            document.getElementById('TxtAprDeptTempletName').value = "${titleText}";
             document.getElementById('TxtAprDeptTempletName').focus();
 
             try {

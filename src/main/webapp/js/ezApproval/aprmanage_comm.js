@@ -17,6 +17,8 @@ function MakeSubCondition() {
     var TYPE = "";
     var DATA = "";
 
+
+
     if (SearchCond[0] != "")
     {
         TYPE += "DOCNO;"
@@ -77,6 +79,7 @@ function MakeSubCondition() {
         DATA += "<KEYWORD>" + SearchCond[10] + "</KEYWORD>";
     }
     SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+    alert(SQLPARADATA);
 }
 function getDocList() {
     if (typeof (psearch) == "object")
