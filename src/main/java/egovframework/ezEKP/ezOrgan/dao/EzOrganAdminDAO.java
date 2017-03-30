@@ -978,10 +978,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private void insertDBData_companyForLocal(Map<String, Object> map) throws Exception {
-    	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    	date.setTimeZone(TimeZone.getTimeZone("GMT"));
-    	String nowDate = date.format(new Date());
-    	map.put("nowDate", nowDate);
         insert("EzOrganAdminDAO.insertDBData_company", map);
     }
 	
@@ -1197,6 +1193,60 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
                 
                 throw e;                
             }            
+	    }
+	}
+	
+    private void updateDBData_companyForJMocha(Map<String, Object> map) throws Exception {
+        int tenantId = (Integer)map.get("v_TENANT_ID");        
+        String companyId = (String)map.get("v_CN");
+        String displayName = (String)map.get("v_DISPLAYNAME");
+        String displayName2 = (String)map.get("v_DISPLAYNAME2");
+        String mail = (String)map.get("v_MAIL");
+    	
+        logger.debug("updateDBData_companyForJMocha started. tenantId=" + tenantId + ",companyId=" + companyId);
+
+        String param1 = "tenantId=" + tenantId;
+        String param2 = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+        String param3 = "displayName=" + URLEncoder.encode(displayName, "UTF-8");
+        String param4 = "displayName2=" + URLEncoder.encode(displayName2, "UTF-8");
+        String param5 = "mail=" + URLEncoder.encode(mail, "UTF-8");
+        String inputParams = param1 + "&" + param2 + "&" + param3 + "&" + param4 + "&" + param5;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateCompany";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+
+        String resultCode = "Error";
+        int reasonCode = -100; // 웹서비스로부터 아무런 응답을 받지 못하거나 OK 응답이 오지 않은 경우를 의미
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+            }
+        }                       
+        
+        logger.debug("updateDBData_companyForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
+        
+        if (reasonCode != 0) {
+            throw new Exception("Updating Company Failed!");
+        }                
+    }
+    
+    private void updateDBData_companyForLocal(Map<String, Object> map) throws Exception {
+        update("EzOrganAdminDAO.updateDBData_company", map);
+    }
+    	
+	public void updateDBData_company(Map<String, Object> map) throws Exception {        
+	    updateDBData_companyForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            updateDBData_companyForLocal(map);       
 	    }
 	}
 	
@@ -2016,6 +2066,22 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         update("EzOrganAdminDAO.updateUserDeptDisplayName", vo);
         
         logger.debug("updateUserDeptDisplayName ended.");
+    }
+
+    public void updateUserCompanyDisplayName(Map<String, Object> map) throws Exception {
+        logger.debug("updateUserCompanyDisplayName started.");
+        
+        update("EzOrganAdminDAO.updateUserCompanyDisplayName", map);
+        
+        logger.debug("updateUserCompanyDisplayName ended.");
+    }
+
+    public void updateDeptCompanyDisplayName(Map<String, Object> map) throws Exception {
+        logger.debug("updateDeptCompanyDisplayName started.");
+        
+        update("EzOrganAdminDAO.updateDeptCompanyDisplayName", map);
+        
+        logger.debug("updateDeptCompanyDisplayName ended.");
     }
     
     public void insertCompanyInfo_I1(Map<String, Object> map) throws Exception {

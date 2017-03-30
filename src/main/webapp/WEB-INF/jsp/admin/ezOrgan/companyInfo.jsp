@@ -12,25 +12,58 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var ReturnFunction;
+			var isAdd = true;
 			
 			$(document).ready(function(){
-				try {
-		            ReturnFunction = opener.companyinfo_dialogArguments[1];
-		            ParentID.value = opener.companyinfo_dialogArguments[0];
-		        } catch (e) {
-		            ParentID.value = window.dialogArguments;
-		        }
+				var RetValue;
+				
+			    if (CrossYN()) {
+			    	try {
+			        	ReturnFunction = opener.companyinfo_dialogArguments[1];
+			            RetValue = opener.companyinfo_dialogArguments[0];
+			        } catch(e) {}
+			    } else {
+			    	RetValue = window.dialogArguments;
+			    }
 		        
-		        /* dhlee: Safari에서 영문 입력이 되지 않아 제거함.
-		        try {
-			        var ua = navigator.userAgent;
-			        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-			            KeEventControl(document.getElementById("CompanyID"));
-			            KeEventControl(document.getElementById("CompanyName"));
-			            KeEventControl(document.getElementById("CompanyName2"));
-			        }
-			    }catch (e) { }
-			    */
+			    if (RetValue[1] == "") {
+			        ParentID.value = RetValue[0];
+			    } else {
+			        isAdd = false;
+			        subtitle.innerText = "<spring:message code='ezOrgan.x0006' />";		
+			        CompanyID.value = RetValue[0];
+			        CompanyID.readOnly = true;
+			        CompanyName.value = RetValue[1];		
+			        
+			    	if (RetValue[0] == "Top") {
+			    	    ParentID.readOnly = false;
+			    	}
+			    }
+
+				var xmlDom = createXmlDom();				
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/admin/ezOrgan/getEntryInfo.do",
+					async : false,
+					data : {cn : CompanyID.value, prop : "displayName;mail;extensionAttribute1", pMode : "dept" },
+					success : function(result){
+						xmlDom = loadXMLString(result);
+						CompanyName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
+						CompanyName2.value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
+						
+						if (!isAdd && RetValue[0] == "Top") {
+						    var mailId = SelectSingleNodeValueNew(xmlDom, "DATA/MAIL").trim();
+						    mailId = mailId.substring(0, mailId.indexOf("@"));
+						    
+						    parentHeader.innerText = "<spring:message code='ezOrgan.t288' />";	
+						    ParentID.value = mailId;
+						} else {
+							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
+						}
+					}
+				});			    
 			});
 			
 			function Check_ID(pValue){
@@ -69,12 +102,38 @@
 					return;
 				}
 				
+				var parentCn;
+				var mailId;
+				
+				if (isAdd) {
+					parentCn = ParentID.value;
+			    } else {
+			        if (CompanyID.value == "Top") {
+   						if (ParentID.value == ""){
+   							alert("<spring:message code='ezOrgan.x0007' />");
+   							return;
+   						}
+   					
+   						if (ParentID.value.length < 3){
+   							alert("<spring:message code='ezOrgan.x0008' />");
+   							return;
+   						}
+   					
+   						if (!Check_ID(ParentID.value)){
+   							alert("<spring:message code='ezOrgan.x0009' />");
+   							return;
+   						}				
+   						
+   						mailId = ParentID.value;
+			        }
+			    }				
+				
 				$.ajax({
 					type : "POST",
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/saveCompanyInfo.do",
 		        	async : false,
-		        	data : {parentCn : ParentID.value, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value},
+		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId},
 		        	success : function(result){
 		        		 var retVal = result;
 		        		 
@@ -127,14 +186,14 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1><spring:message code='ezOrgan.t120' /></h1>		
+		<h1 id="subtitle"><spring:message code='ezOrgan.t120' /></h1>		
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t121' /></th> 
 		    	<td><input id=CompanyID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		  	</tr> 
 		  	<tr> 
-		  		<th><spring:message code='ezOrgan.t122' /></th> 
+		  		<th id="parentHeader"><spring:message code='ezOrgan.t122' /></th> 
 		    	<td> <input id=ParentID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" readonly="readonly"></td> 
 		  	</tr> 
 		  	<tr>

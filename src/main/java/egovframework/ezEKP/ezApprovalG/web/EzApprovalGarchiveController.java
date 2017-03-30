@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -1475,6 +1477,168 @@ public class EzApprovalGarchiveController {
         String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
 
 		return result;
+	}
+	
+	
+	/** 전자결재 개인 문서함 리스트*/
+	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do")
+	@ResponseBody
+	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
+		StringBuilder resultExcel = new StringBuilder();
+		String excelValue = "";
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		response.setContentType("application/ms-excel");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale())) + ".xls\"");
+		
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		Document xmldomsub = null;
+		String pContID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String pPageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String pPageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String AllFG = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
+		
+		String pSubQuery = "";
+		String p_UserLang = userInfo.getLang();
+		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10)
+        {
+
+            try
+            {
+            	String TempQuery = "";
+            	String ReturnQuery = "(1 = 1) ";
+            	
+            	xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent());
+                TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+
+                if (TempQuery.indexOf("DOCNO;") != -1)
+                {
+                    ReturnQuery += " AND DOCNO LIKE '%'DOCNO'%' ";
+                }
+                if (TempQuery.indexOf("DOCTITLE;") != -1)
+                {
+                    ReturnQuery += " AND DocTitle LIKE '%'DOCTITLE'%' ";
+                }
+                if (p_UserLang.equals("2"))
+                {
+                    if (TempQuery.indexOf("WRITERNAME;") != -1)
+                    {
+                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%'WRITERNAME'%' ";
+                    }
+                }
+                else
+                {
+                    if (TempQuery.indexOf("WRITERNAME;") != -1)
+                    {
+                        ReturnQuery += " AND WRITERNAME LIKE '%'WRITERNAME'%' ";
+                    }
+                }
+                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
+                    ReturnQuery += " AND STARTDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+                }
+                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
+                    ReturnQuery += " AND STARTDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                }
+                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
+                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                }
+                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
+                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
+                }
+                if (TempQuery.indexOf("FORMID;") != -1) {
+                    ReturnQuery += " AND TBENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+                }
+                if (p_UserLang.equals("2")) {
+                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%'WRITERDEPTNAME'%' ";
+                    }
+                }
+                else
+                {
+                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1)
+                    {
+                        ReturnQuery += " AND WriterDeptName LIKE '%'WRITERDEPTNAME'%' ";
+                    }
+                }
+                if (TempQuery.indexOf("KAPR;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                }
+                if (TempQuery.indexOf("KEND;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                }
+                if (TempQuery.indexOf("CAPR;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                }
+                if (TempQuery.indexOf("CEND;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                }
+
+                pSubQuery = ReturnQuery;
+            }
+            catch (Exception Ex)
+            {
+                pSubQuery = "";
+            }
+        }
+
+        String oc = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+        String oo = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
+
+        if (xmlDom.getDocumentElement().getChildNodes().getLength() > 6)
+        {
+            if (!xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent().trim().equals(""))
+                pSubQuery = pSubQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+        }
+        if(AllFG.equals("0")){
+        excelValue = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
+        }else if(AllFG.equals("1")){
+       	excelValue = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());	
+        }
+        Document objXML = commonUtil.convertStringToDocument(excelValue);
+		
+		resultExcel.append("<table><tr>");
+		
+		for (int k = 0; k < objXML.getElementsByTagName("HEADER").getLength(); k++) {
+			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
+			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
+			
+			int width = Integer.parseInt(headerWidth) * 2;
+			
+			resultExcel.append("<![CDATA["+"<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'>"+"]]>"
+			+"<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'>"
+			+"<p align=center><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+		}
+		resultExcel.append("</tr></table>");
+		
+		resultExcel.append("<table>");
+
+		NodeList objRow = objXML.getElementsByTagName("ROW");
+		
+		for (int k = 0; k < objRow.getLength(); k++) {
+			resultExcel.append("<tr>");
+			Element row = (Element) objRow.item(k);
+			NodeList objCell = row.getElementsByTagName("CELL");
+			
+			for (int p = 0; p < objCell.getLength(); p++) {
+				Element cell = (Element) objCell.item(p);
+				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
+				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
+				int width = Integer.parseInt(headerWidth) * 2;
+				
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+			}
+			resultExcel.append("</tr>");
+		}
+		resultExcel.append("</table>");
+		
+		response.getWriter().write(resultExcel.toString());
 	}
 	
 	/** 전자결재 일반 결재문서 첨부*/
