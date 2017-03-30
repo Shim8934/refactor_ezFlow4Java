@@ -24,8 +24,11 @@
 		    }
 		    function btn_OpinionOK_onclick() {
 		        if (ReturnFunction != null) {
-		            ReturnFunction();
-		            window.close();
+		        	if (parent.ezapralert_cross_dialogArgument != undefined)
+		            	ReturnFunction();
+		        	else {
+			            window.close();
+		        	}
 		        }
 		        else
 	        	   if( document.getElementById("pMessageContent").innerHTML == "<spring:message code='ezApprovalG.t146'/>")
