@@ -51,6 +51,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var proxyInfo = "${proxyInfo}";
 		    var formURL = "";
 		    var formDocType = "";
 		    var formExt = "";
@@ -120,9 +121,30 @@
 		            else {
 		                checkBujaeInfo_Complete(false);
 		            }
-		        }
-		        else
+		        } else if (proxyInfo != null && proxyInfo != "") {
+		        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
+		            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
+		
+		            tmpStartDate=tmpStartDate.replace("/", ":");
+		            tmpEndDate=tmpEndDate.replace("/", ":");
+		            if (tmpEndDate < "${nowDate}") {
+		                setBujaeOff();
+		                return true;
+		            }
+		            else if (tmpStartDate > "${nowDate}") {
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "<spring:message code='ezApprovalG.t1722'/>" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+		            if (Rtnval) {
+		                checkBujaeInfo_Complete(true);
+		            }
+		            else {
+		                checkBujaeInfo_Complete(false);
+		            }
+		        } else {
 		            checkBujaeInfo_Complete(true);
+		        }
 		    }
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
@@ -1156,7 +1178,14 @@
 		            if (BDim[3] <= "${nowDate}" && BDim[4] >= "${nowDate}") {
 		                return true;
 		            }
+		        } else if (proxyInfo != null && proxyInfo != "") {
+		        	var strDate = "${proxyInfo.startDate}";
+		        	var endDate = "${proxyInfo.endDate}";
+		            if (strDate <= "${nowDate}" && endDate >= "${nowDate}") {
+		                return true;
+		            }
 		        }
+		        
 		        return false;
 		    }
 		    function setpause(numberMillis) {

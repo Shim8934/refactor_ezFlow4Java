@@ -7,13 +7,14 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     else
         url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || pNoneActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
         ezapralert_cross_dialogArguments[1] = CompleteFunction;
 
         if (CompleteFunction != undefined) {
             if (CompleteFunction == "OPEN")
             {
+            	ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
                 var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
             }
             else
@@ -37,7 +38,7 @@ function OpenAlertUI_Complete(RtnVal) {
 
 function OpenAlertUI_SUB(pAlertContent) {
     var parameter = pAlertContent;
-    var url = "/myoffice/ezApproval/ezAPRALERT_Cross.aspx";
+    var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || pNoneActiveX == "YES") {
         ezapralert_cross_dialogArgument[0] = parameter;
@@ -64,7 +65,7 @@ function openOpinionUI(pOpinionFlag) {
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
 
-        var url = "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion.aspx";
+        var url = "/ezApprovalG/aprOpinion.do";
         apropinion_cross_dialogArgument[0] = parameter;
         apropinion_cross_dialogArgument[1] = openOpinionUI_Complete;
         DivPopUpShow(530, 520, url);

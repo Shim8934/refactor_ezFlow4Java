@@ -353,7 +353,7 @@ function setRecevInfo(ret) {
     var mailcnt = 0;
     var xmldom = createXmlDom();
     xmldom.async = false;
-    xmldom = loadXMLString(ret)
+    xmldom = loadXMLString(ret);
 
     var rows = GetChildNodes(xmldom.documentElement);
 
@@ -442,7 +442,7 @@ function setRecevInfo(ret) {
             }
         }
         else {
-            precipent = strLang68;
+            precipent = strLangS68;
 
             if (getNodeText(dataNodes[3]) == "Y")
                 precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
@@ -458,14 +458,14 @@ function setRecevInfo(ret) {
 
     var field = message.GetListItem(fields, "recipient");
     if (field) {
-        if (precipent == strLang68) {
+        if (precipent == strLangS68) {
             setNodeText(field , precipent);
             var field = message.GetListItem(fields, "recipients");
             if (field) {
                 setNodeText(field , precipents);
                 var field = message.GetListItem(fields, "hrecipients");
                 if (field)
-                    setNodeText(field , strLang70);
+                    setNodeText(field , strLangS70);
             }
         }
         else {

@@ -52,6 +52,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -321,6 +322,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String selMenu = "all";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String subQuery = request.getParameter("SubQuery");
+		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId());
+		
 		nowDate = nowDate.substring(0, 16);
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -345,6 +348,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useMobile", useMobile);
 		model.addAttribute("listType", listType);
+		model.addAttribute("proxyInfo", proxyInfo);
 		
 		return "ezApprovalG/apprGManage";
 	}
@@ -5903,8 +5907,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docTitle = request.getParameter("docTitle");
-		String formText = request.getParameter("html");
-		String result = "";
+		String docHref = request.getParameter("docHref");
 		String realPath = commonUtil.getRealPath(request);
 		
 		String path = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
@@ -5912,7 +5915,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		path = path + commonUtil.separator + subFolder + commonUtil.separator;
 		
-		File file = new File(realPath + path);
+		File file = new File(path);
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -5920,44 +5923,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String saveFilePath = path + docTitle + ".mht";
 		
-		InputStream stream = null;
-		OutputStream bos = null;
-		
-		try {
-			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
-			
-			bos = new FileOutputStream(realPath + saveFilePath);
-			
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-			
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
-			}
-			
-			result = saveFilePath;
-		} catch (Exception e) {
-			result = "FAIL";
-		} finally {
-		   if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		   if (stream != null) {
-				try {
-					stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		}
+		FileUtils.copyFile(new File(realPath + docHref), new File(realPath + saveFilePath));
 
 		logger.debug("savePCTmpFile ended");
 		
-		return result;
+		return saveFilePath;
 	}
 	
 	/**
@@ -5978,6 +5948,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 전자결재S 재발송 페이지 커몬
+	 */	
 	@RequestMapping(value = "/ezApprovalG/docReSend.do")
 	public String docReSend(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("docReSend started");
@@ -6023,6 +5996,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGDocReSend";
 	}
 
+	/**
+	 * 전자결재S 재발송 
+	 */	
 	@RequestMapping(value = "/ezApprovalG/sendOffer.do", produces ="text/xml;charset=utf-8")
 	@ResponseBody
 	public String sendOffer(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {

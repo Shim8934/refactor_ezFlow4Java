@@ -932,30 +932,34 @@ function Block_Check(PageNum, BlockNum) {
         GetDocSearch();
 }
 
-var ezapralert_cross_dialogArguments = new Array();
-function OpenAlertUI(pAlertContent, CompleteFunction) {
-    var parameter = pAlertContent;
-    var url = "/ezApprovalG/ezAprAlert.do";
-
-    if (CrossYN()) {
-        ezapralert_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != "") {
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
-            var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
-            try { OpenWin.focus(); } catch (e) { }
-        }
-        else {
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-            var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
-            try { OpenWin.focus(); } catch (e) { }
-        }
-    }
-    else {
-        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-        feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
-    }
-}
+//var ezapralert_cross_dialogArguments = new Array();
+//function OpenAlertUI(pAlertContent, CompleteFunction) {
+//    var parameter = pAlertContent;
+//    var url = "/ezApprovalG/ezAprAlert.do";
+//
+//    if (CrossYN()) {
+//        ezapralert_cross_dialogArguments[0] = parameter;
+//        if (CompleteFunction != "") {
+//            ezapralert_cross_dialogArguments[1] = CompleteFunction;
+//            var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+//            try { OpenWin.focus(); } catch (e) { }
+//        }
+//        else {
+//            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+//            var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
+//            try { OpenWin.focus(); } catch (e) { }
+//        }
+//    }
+//    else {
+//        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+//        feature = feature + GetShowModalPosition(330, 205);
+//        var RtnVal = window.showModalDialog(url, parameter, feature);
+//    }
+//}
+//
+//function OpenAlertUI_Complete() {
+//    DivPopUpHidden();
+//}
 
 function isViewDoc(pDocID) {
     var xmlpara = createXmlDom();

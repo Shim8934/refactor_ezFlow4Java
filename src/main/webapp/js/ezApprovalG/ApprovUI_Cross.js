@@ -519,6 +519,42 @@ function AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType) {
     }
     return pAprLineSN;
 }
+
+function SAprLineSNCount(pAprLineType, objNodes, pTmpAprLineType) {
+    var objNodesLen = objNodes.length;
+    var pAprLineSN = 0;
+
+    if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
+        for (i = (objNodesLen - 1) ; i >= 0; i--) {
+            var pCurrentAprType = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]);
+            if (pCurrentAprType == strAprType8 || pCurrentAprType == strAprType9 || pCurrentAprType == strAprType11 || pCurrentAprType == strAprType12) {
+                var pCurrentAprState = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12]);
+                if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
+                    pAprLineSN = pAprLineSN + 1;
+                    break;
+                } else {
+                    pAprLineSN = pAprLineSN + 1;
+                }
+            }
+        }
+    }
+    else {
+        for (i = (objNodesLen - 1) ; i >= 0; i--) {
+            var pCurrentAprType = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]);
+            if (pCurrentAprType == strAprType18 || pCurrentAprType == strAprType19 || pCurrentAprType == pAprLineType || pCurrentAprType == pTmpAprLineType || pCurrentAprType == strAprType3 || pCurrentAprType == strAprType40) {
+                var pCurrentAprState = getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12]);
+                if ((getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
+                    pAprLineSN = pAprLineSN + 1;
+                    break;
+                } else {
+                    pAprLineSN = pAprLineSN + 1;
+                }
+            }
+        }
+    }
+    return pAprLineSN;
+}
+
 function GetAprDocFormID(pDocID) {
     var pFormID;
 
@@ -1038,15 +1074,23 @@ function getCurApproverAprLine() {
         if ((getNodeText(dataNodes[4]).toLowerCase() == pUserID.toLowerCase()) && ((pCurrentAprState == strAprState2) || (pCurrentAprState == strAprState5))) {
             pAprLineType = getNodeText(dataNodes[11]);
 
-            if (i < 1)
-                pAprLineB4type = "";
-            else
-                pAprLineB4type = getNodeText(GetLastChildNodes(objNodes[i - 1], params)[11]);
-
-            if (pAprLineType == strAprType4 || pAprLineType == strAprType16)
-                var pTmpAprLineType = strAprType1;
-
-            pAprMemberSN = AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType);
+            if (approvalFlag == "S") {
+            	if (pAprLineType == strAprType4)
+                    var pTmpAprLineType = strAprType1;
+            	
+            	pAprMemberSN = SAprLineSNCount(pAprLineType, objNodes, pTmpAprLineType);
+            } else {
+            	if (i < 1)
+            		pAprLineB4type = "";
+            	else
+            		pAprLineB4type = getNodeText(GetLastChildNodes(objNodes[i - 1], params)[11]);
+            	
+            	if (pAprLineType == strAprType4 || pAprLineType == strAprType16)
+            		var pTmpAprLineType = strAprType1;
+            	
+            	pAprMemberSN = AprLineSNCount(pAprLineType, objNodes, pTmpAprLineType);
+            }
+            
             break;
         }
     }

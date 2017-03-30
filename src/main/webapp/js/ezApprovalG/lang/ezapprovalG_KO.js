@@ -1485,3 +1485,6 @@ var strLangS109 = "결재상태";
 var strLangS110 = "결재일";
 var strLangS111 = "수신일";
 var strLangS38  = "결재유형";
+
+var strLangS68 = "수신처참조";
+var strLangS70 = "수신처:";

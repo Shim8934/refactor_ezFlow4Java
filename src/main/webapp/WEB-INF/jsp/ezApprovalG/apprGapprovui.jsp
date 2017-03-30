@@ -634,6 +634,7 @@
 		                return;
 		            }
 		        }
+		        
 		        signInfo = AprrovMappingSign(signtype);
 
 		        var rtnVal = true;
