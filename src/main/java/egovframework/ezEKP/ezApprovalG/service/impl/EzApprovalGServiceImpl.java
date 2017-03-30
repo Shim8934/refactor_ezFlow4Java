@@ -10828,7 +10828,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
-		//여기여기여기
+		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -20496,7 +20496,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -20509,12 +20508,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTDEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
 		map.put("v_DOCSTATE", docState);
-		map.put("v_DRAFTFROM", draftfrom);
-		map.put("v_DRAFTTO", draftto);
-		map.put("v_APPRFROM", apprfrom);
-		map.put("v_APPRTO", apprto);
-		map.put("v_MYPAPPRFROM", mypapprfrom);
-		map.put("v_MYPAPPRTO", mypapprto);
+		map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom, offSet, true));
+		map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto, offSet, true));
+		map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom, offSet, true));
+		map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto, offSet, true));
+		map.put("v_MYPAPPRFROM", commonUtil.getDateStringInUTC(mypapprfrom, offSet, true));
+		map.put("v_MYPAPPRTO", commonUtil.getDateStringInUTC(mypapprto, offSet, true));
 		map.put("v_SUBQUERY", subQuery);
 		map.put("v_PAPPROVUSER", pApprovUser);
 		map.put("companyID", companyID);
@@ -20603,27 +20602,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 
 		if (draftfrom != null && !draftfrom.equals("")) {
-			whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + draftfrom + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		if (draftto != null && !draftto.equals("")) {
-			whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + draftto + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND STARTDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(draftto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 
 		if (apprfrom != null && !apprfrom.equals("")) {
-			whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + apprfrom + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND ENDDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		
 		if (apprto != null && !apprto.equals("")) {
-			whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + apprto + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND ENDDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(apprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 		}
 		
 		if (mypapprfrom != null && !mypapprfrom.equals("")) {
-			whereStr = whereStr + " AND PROCESSDATE >= STR_TO_DATE('" + mypapprfrom + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND PROCESSDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprfrom, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 			aprFlag = "INMYAPPRSEARCH";
 		}
 		
 		if (mypapprto != null && !mypapprto.equals("")) {
-			whereStr = whereStr + " AND PROCESSDATE <= STR_TO_DATE('" + mypapprto + "','%Y-%m-%d %H:%i:%s')";
+			whereStr = whereStr + " AND PROCESSDATE <= STR_TO_DATE('" + commonUtil.getDateStringInUTC(mypapprto, offSet, true) + "','%Y-%m-%d %H:%i:%s')";
 			aprFlag = "INMYAPPRSEARCH";
 		}
 		
