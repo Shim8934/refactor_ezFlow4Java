@@ -34,6 +34,7 @@
 				if (topid != "Top"){
 					companybutton1.style.display = "none";
 					companybutton2.style.display = "none";
+					companybutton3.style.display = "none";
 				}
 		    });		    
 		    
@@ -194,8 +195,13 @@
 					alert("<spring:message code='ezOrgan.t3' />");
 					return;
 				}
+				
+				var args = new Array();
+				args[0] = treeNode.GetNodeData("CN");
+				args[1] = "";
+				
 			    if (CrossYN()){
-			        companyinfo_dialogArguments[0] = treeNode.GetNodeData("CN");
+			        companyinfo_dialogArguments[0] = args;
 			        companyinfo_dialogArguments[1] = add_company_Complete;
 			        var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 230));
 			        try { OpenWin.focus(); } catch (e) { }
@@ -213,6 +219,52 @@
 		            getDeptFullTree(rtnValue);
 		        }
 		    }		    
+		    
+		    function info_company(){
+		        var treeView = new TreeView();
+		        treeView.LoadFromID("FromTreeView");
+		        
+		        var nodeIdx = treeView.GetSelectNode();
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(nodeIdx.NodeID);
+
+				if (treeNode.selectedIndex == -1){
+					alert("<spring:message code='ezOrgan.x0004' />");
+					return;
+				}
+
+				if (treeNode.GetNodeData("CN") != treeNode.GetNodeData("EXTENSIONATTRIBUTE2")){
+					alert("<spring:message code='ezOrgan.x0004' />");
+					return;
+				}
+
+				var args = new Array();
+				args[0] = treeNode.GetNodeData("CN");
+				args[1] = treeNode.GetNodeData("VALUE");
+				
+				if (CrossYN()) {
+				    companyinfo_dialogArguments[0] = args;
+				    companyinfo_dialogArguments[1] = info_company_Complete;
+				    
+                    var OpenWin = window.open("/admin/ezOrgan/companyInfo.do", "CompanyInfo", GetOpenWindowfeature(328, 230));
+				    
+				    try { OpenWin.focus(); } catch (e) { }
+				} else {
+                    var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 270));
+
+				    if (typeof (rtnValue) != "undefined") {
+				        alert("<spring:message code='ezOrgan.x0005' />");
+				        getDeptFullTree(rtnValue);
+				    }
+				}
+			}
+		    
+		    function info_company_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		            alert("<spring:message code='ezOrgan.x0005' />");
+		            getDeptFullTree(rtnValue);
+		        }
+		    }
 		    
 		    var deptinfo_dialogArguments = new Array();
 		    
@@ -1262,6 +1314,9 @@
 				</th>
 				<th style="width:80px;text-align:center" rowspan="3">
 					<table>
+                        <tr id="companybutton3">
+                            <td><a class="imgbtn"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></a></td>
+                        </tr>     
 						<tr id="companybutton1">
 							<td><a class="imgbtn"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></a></td>
 						</tr>
