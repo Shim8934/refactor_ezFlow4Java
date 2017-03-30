@@ -8,9 +8,13 @@
 <html>
 	<head>
 		<title>::: ezEKP Java :::</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">		
-		<link href="/css/login.css" rel="stylesheet" type="text/css" />		
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
+		<link href="/css/login.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">
+		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
@@ -60,7 +64,7 @@
 			            return unescape(document.cookie.substring(offset, end))
 			        }
 			    } else {			    	
-					document.getElementById("uid").focus();			        
+					document.getElementById("uid").focus();
 			    }
 			    return "";
 			}
@@ -83,18 +87,99 @@
 			    // 로그인 페이지가 로드된 프레임이 Top 프레임이 아니면 Top 프레임으로 로드시킨다.
                 if (top != self) {
                     top.location.href = self.location.href;
-                }
+                }			    		                 
 			    
 			    var message = document.loginForm.message.value;	    
 			    if (message != "") {
 			        alert(message);
 			    }
-			    getid(document.loginForm);			    
+			    getid(document.loginForm);
+			    
+				if ("${isExpireDate}" == "Y") {					
+					$("#exDiv").modal();
+					$("#exDiv").show(function() {						
+						$("#txtOldPassword").focus();
+					});													
+			    }				
 			}
+			
 			function setting_click() {
 			    var ver = navigator.userAgent;
 			    window.open("/docs/usersetting_IE8.html", "", "height=768,width=1024, scrollbars=yes, status = yes, toolbar=yes, menubar=yes, location=yes, resizable=yes");
 			}
+			
+			function PassWordChange() {
+				if (document.getElementById('txtOldPassword').value == "") {
+					alert("<spring:message code='ezPersonal.t947'/>");
+				    document.all['txtOldPassword'].focus();
+				    return;
+				}
+				if (document.getElementById('txtNewPassword').value == "") {
+		            alert("<spring:message code='main.jjh01'/>");
+			        document.all['txtNewPassword'].focus();
+			        return;
+			    }
+				
+				if (!CheckPassword(document.getElementById('txtNewPassword').value)) {
+					alert("<spring:message code='main.jjh04'/>");
+					return;
+				};				
+				
+				if (document.getElementById('txtOldPassword').value == document.getElementById('txtNewPassword').value) {
+		            alert("<spring:message code='ezPersonal.t194'/>");
+			        document.all['txtNewPassword'].focus();
+			        return;
+			    }
+		        if (document.getElementById('txtNewPassword').value != document.getElementById('txtNewPasswordConfirm').value) {
+		            alert("<spring:message code='main.jjh02'/>");
+			        document.all['txtNewPassword'].focus();
+			        return;
+			    }
+		        
+		        var frm = document.loginForm;
+		        var rsa = new RSAKey();
+				rsa.setPublic(frm.publicModulus.value, frm.publicExponent.value);
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "html",				    		
+		    		async : false,
+		    		data : {
+		    			USERID : rsa.encrypt(document.getElementById("chooseId").innerHTML),
+		    			OLDPASSWORD : rsa.encrypt(document.getElementById('txtOldPassword').value),
+		    			NEWPASSWORD : rsa.encrypt(document.getElementById('txtNewPassword').value),
+		    			NEWPASSWORDCONFIRM : rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value)
+		    		},
+		    		url : "/user/login/changeExPassword.do",
+		    		success: function(text){
+		    			if (text == 'OK') {
+		    				alert("<spring:message code='ezPersonal.t197'/>");			            	
+		    			} else if (text == 'LOGINERROR') {
+		    				alert("<spring:message code='ezPersonal.t946'/>");		    				
+		    			} else {
+		    				alert("<spring:message code='fail.common.login'/>");
+		    			}
+		    			window.top.location.href = '/user/login/login.do';
+		    		},
+		    		error: function(err){
+		    			alert("<spring:message code='ezPersonal.t198'/>");
+		    		}
+		        });	        
+		    }
+			
+			function CheckPassword(upw) {
+			    if(!/^[a-zA-Z0-9]{6,50}$/.test(upw)) { 
+			        return false;
+			    }			    
+			    var chk_num = upw.search(/[0-9]/g); 
+			    var chk_eng = upw.search(/[a-z]/ig); 
+
+			    if(chk_num < 0 || chk_eng < 0) {			         
+			        return false;
+			    }
+			    return true;
+			} 
+
 		</script>
 	</head>
 	<body class="login_body" onload="fnInit()">
@@ -122,7 +207,7 @@
 		                        	<label for="save_login">ID Save</label>
 		                        </p>	                        	                        
 		                    </fieldset>
-		                    <input type="hidden" name="message" value="${message}" />
+		                    <input type="hidden" name="message" value="${message}" />		                    
 					    </form>
 					</article>
 				</div>			  		            
@@ -134,6 +219,37 @@
 				<img src="/images/login/notilayer_bg_arrow.gif" width="7" height="6" style="vertical-align:top; z-index:10;" />
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
-		</div>			
+		</div>
+		<div id="exDiv" style="display:none">
+			<div style="float:left">
+				<img src="/images/warning.png" width="52" height="52"/>
+			</div>
+			<div style="float:right;color:rgb(0, 72, 149)">
+				<div style="font-size:11px">▒ <spring:message code='fail.user.passwordExpired'/></div>
+				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh03'/></div>
+				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh04'/></div>
+			</div>
+			<div style="clear:both"></div>	
+			<p style="border-top:1px solid rgb(0, 72, 149);margin-top:13px">
+				<label style="color:rgb(0, 72, 149);">로그인 아이디 : </label>
+				<span id="chooseId">${userId}</span>
+			</p>
+			<p>
+				<label style="color:rgb(0, 72, 149);"><spring:message code='ezPersonal.t949'/> : </label>
+				<input type="password" id="txtOldPassword" />
+			</p>
+			<p>
+				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh05'/> : </label>
+				<input type="password" id="txtNewPassword" />
+			</p>
+			<p style="border-bottom:1px solid rgb(0, 72, 149)">
+				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh06'/> : </label>
+				<input type="password" id="txtNewPasswordConfirm" />
+			</p>
+			<div class="btnposition" style="margin:10px">
+			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
+			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t5' /></span></a>
+			</div>			
+		</div>
 	</body>
 </html>
