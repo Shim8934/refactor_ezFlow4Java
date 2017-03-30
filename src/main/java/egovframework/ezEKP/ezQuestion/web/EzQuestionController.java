@@ -3134,7 +3134,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			hidRType2 = request.getParameter("hidRType2");
 		}
 		
-		@SuppressWarnings("resource")
+		//@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
