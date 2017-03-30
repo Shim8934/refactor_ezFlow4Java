@@ -245,11 +245,11 @@
 			        }
 		        } else {
 		        	if (draftfrom != "")
-		                draftfrom = draftfrom + " 00:00:01";
+		                draftfrom = draftfrom ;
 		            else draftfrom = "";
 
 		            if (draftto != "")
-		                draftto = draftto + " 23:59:59";
+		                draftto = draftto ;
 		            else draftto = "";
 
 		            if (apprfrom != "")
@@ -734,12 +734,12 @@
 		        	RtnVal[0] = document.getElementById("DocNumber").value;
 		            RtnVal[1] = document.getElementById("DocTitle").value;
 		            RtnVal[2] = document.getElementById("drafter").value;
-		            RtnVal[3] = draftfrom;
-		            RtnVal[4] = draftto;
-		            RtnVal[5] = apprfrom;
-		            RtnVal[6] = apprto;
-		            RtnVal[7] = myapprfrom;
-		            RtnVal[8] = myapprto;
+		            RtnVal[3] = "";
+		            RtnVal[4] = "";
+		            RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
+		            RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
+		            RtnVal[7] = "";
+		            RtnVal[8] = "";
 
 		             RtnVal[9] = document.getElementById("formid").value;
 		             RtnVal[10] = document.getElementById("EndAprYear").value;
