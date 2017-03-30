@@ -5717,12 +5717,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/doCancelForce.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String doCancelForce(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request ,@RequestBody String xmlPara) throws Exception{
+	public String doCancelForce(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		Document doc = commonUtil.convertStringToDocument(xmlPara);
-		String docID = doc.getElementsByTagName("docID").item(0).getTextContent();
-		String userID = doc.getElementsByTagName("userID").item(0).getTextContent();
+		String docID = request.getParameter("docID");
+		String userID = request.getParameter("userID");
 		String result = ezApprovalGService.doCancelForce(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if(result.equals("OK")) {

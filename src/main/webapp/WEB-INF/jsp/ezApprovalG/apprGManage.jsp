@@ -807,18 +807,22 @@
 		    }
 		
 		    function doCancelForce(pDocID, tempListType) {
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "ASSIGN");
-		        createNodeAndInsertText(xmlpara, objNode, "docID", pDocID);
-		        createNodeAndInsertText(xmlpara, objNode, "userID", pUserID);
-		
-		        xmlhttp.open("POST", "/ezApprovalG/doCancelForce.do", false);
-		        xmlhttp.send(xmlpara);
-		
-		        var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
-		
+				var result = "";
+	        	
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : false,
+	        		url : "/ezApprovalG/doCancelForce.do",
+	        		data : {
+	        			docID : pDocID,
+	        			userID : pUserID
+	        		},
+	        		success: function(xml){
+	        			result = xml;
+	        		}
+	        	});
+		        
 		        if (RtnVal == "TRUE") {
 		            if (tempListType == "3") {
 		                var pAlertContent = strLang891 + "<br> " + strLang892;

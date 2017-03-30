@@ -2142,7 +2142,7 @@ function doCancel(pDocID, tempListType) {
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/doCancel.do",
+		url : "/ezApprovalG/doCancelForce.do",
 		data : {
 			docID : pDocID,
 			userID : pUserID
