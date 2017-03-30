@@ -220,7 +220,7 @@
         
         var getcontname_dialogArgument = new Array();
         function getContName(tempName, type) {
-            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + escapenew(tempName);
+            var windowName = "/ezApprovalG/getContName.do?Title=&TitleText=" + encodeURIComponent(tempName);
             if (CrossYN()) {
                 var para = new Array();
                 para[0] = type;
