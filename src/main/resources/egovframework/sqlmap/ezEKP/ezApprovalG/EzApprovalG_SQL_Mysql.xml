@@ -5461,7 +5461,8 @@
 			 SELECT 
 			 		APRMEMBERSN ,
 		            APRTYPE ,
-		            APRSTATE 
+		            APRSTATE,
+		            APRMEMBERID
 		     FROM 
 		     		TBL_APRLINEINFO 
 		     WHERE  ( 
