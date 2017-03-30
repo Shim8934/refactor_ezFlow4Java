@@ -189,9 +189,11 @@ function listAdd(pDocNum, pDocName, pDocID) {
     pparsingXML = pparsingXML + "<HEADER><NAME>" + text2 + "</NAME><WIDTH>300</WIDTH></HEADER>";
     pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";    
     pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pDocNum) + "</VALUE>";
+    pparsingXML = pparsingXML + "<STYLE>" + "overflow : hidden; white-space : nowrap; text-overflow : ellipsis;" + "</STYLE>";
     pparsingXML = pparsingXML + "<DATA1>" + pDocID + "</DATA1>";
     pparsingXML = pparsingXML + "</CELL><CELL>";
     pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pDocName) + "</VALUE>";
+    pparsingXML = pparsingXML + "<STYLE>" + "overflow : hidden; white-space : nowrap; text-overflow : ellipsis;" + "</STYLE>";
     pparsingXML = pparsingXML + "</CELL></ROW>";
     pparsingXML = pparsingXML + "</ROWS></LISTVIEWDATA>";
 
