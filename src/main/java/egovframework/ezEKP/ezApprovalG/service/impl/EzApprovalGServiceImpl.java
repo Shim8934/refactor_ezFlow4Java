@@ -10712,7 +10712,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
-		
+		//여기여기여기
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.doApproveLineInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -12116,7 +12116,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		String receiptUserID = makeListField(ezApprovalGDAO.updateSusinResultReceipt(map));
-		
+		logger.debug("receiptUserID = " + receiptUserID);
 		try {
 			if (receiptUserID.toUpperCase().equals(userID.toUpperCase())) {
 				map.put("v_PROCESSFLAG", processFlag);
@@ -20592,6 +20592,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb.append(commonUtil.getQueryResult(searchDocList.get(j)));
 		}
 		sb.append("</DATA>");
+		logger.debug("getSearchDocList = " + sb.toString());
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		String FieldName = "";

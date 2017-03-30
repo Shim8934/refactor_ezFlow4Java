@@ -427,8 +427,7 @@
 		        else {
 		            if ("${approvalPWD}" != "N") {
 		                chk_Passwd();
-		            }
-		            else {
+		            } else {
 		                check_skipdraft();
 		            }
 		        }
@@ -527,7 +526,7 @@
 		            var RtnVal;
 		            var pAlertContent;
 		            RtnVal = setSusinUpdataDocID();
-		
+
 		            if (RtnVal == "TRUE") {
 		                RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_BEFORE", "");
 		                if (!RtnVal) {
@@ -1294,7 +1293,8 @@
 			<span style ="display:none" ><li id="btnSetAprLine"><span onClick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li></span>
 			<span style ="display:none" ><li id="btnSetReceivLine" style="display:none"><span  onClick="return btnSetReceivLine_onclick()"><spring:message code='ezApprovalG.t154'/></span></li></span>
 			<li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
-			<li id="btnRJunkyul" class = 'approvalG'><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
+<%-- 			<li id="btnRJunkyul" class = 'approvalG'><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li> --%>
+			<li id="btnRJunkyul"><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
 			<span style ="display:none" ><li id="btnSendAround" style="display:none"><span  onClick="return btnSendAround_onclick()" ><spring:message code='ezApprovalG.t1428'/></span></li></span>
 			<span style ="display:none" ><li id="btnSetTaskCode"><span onClick="btnSetTaskCode_onclick()"  ><spring:message code='ezApprovalG.t51'/></span></li></span>
 			<span style ="display:none" ><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>

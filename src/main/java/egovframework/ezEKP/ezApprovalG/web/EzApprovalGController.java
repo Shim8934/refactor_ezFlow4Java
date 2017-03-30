@@ -3478,11 +3478,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getDocState.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDocState(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getDocState started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
 		String result = ezApprovalGService.getDocRecvState(docID, deptID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getDocState ended.");
 		
 		return result;
 	}
