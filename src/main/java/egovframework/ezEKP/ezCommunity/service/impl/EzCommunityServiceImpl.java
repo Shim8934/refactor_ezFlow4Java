@@ -3679,6 +3679,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 
 	@Override
 	public String copyItem(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String realPath, LoginVO userInfo) throws Exception {
+		logger.debug("copyItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pOrgItemID", pOrgItemID);
 		map.put("v_pOrgBoardID", pOrgBoardID);
@@ -3817,7 +3819,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	
         	logger.debug("copyUpdate ended.");
         }
-        
+
+        logger.debug("copyItem ended");
+
 		return ret;
 	}
 
