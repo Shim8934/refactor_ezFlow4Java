@@ -70,16 +70,36 @@
 		            return;
 		        }
 		    }
-
+			
+		    //2017-03-30
+		    //files일때와 fileroot일때 구분해주고 둘다 없을때 ""처리
+		    var normalImgPath = "";
+		    if (txtNormalImage.src.indexOf("${uploadPortalPath}") > 0) {
+		    	normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
+		    } else if (txtNormalImage.src.indexOf("/files/upload_portal") > 0) {
+		    	normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
+		    } else {
+		    	normalImgPath = "";
+		    }
+		    
+		    var overImgPath = "";
+		    if (txtOverImage.src.indexOf("${uploadPortalPath}") > 0) {
+		    	overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("${uploadPortalPath}"));
+		    } else if (txtOverImage.src.indexOf("/files/upload_portal") > 0) {
+		    	overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/files/upload_portal"));
+		    } else {
+		    	overImgPath = "";
+		    }
+		        
 			//var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
-			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
+			//var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
 			//var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("/files/upload_portal"));
-			var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("${uploadPortalPath}"));
+			//var overImgPath = txtOverImage.src.substr(txtOverImage.src.indexOf("${uploadPortalPath}"));
 
 			//if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
-			if (normalImgPath.indexOf("${uploadPortalPath}") == -1) normalImgPath = "";
+			//if (normalImgPath.indexOf("${uploadPortalPath}") == -1 && normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
 			//if (overImgPath.indexOf("/files/upload_portal") == -1) overImgPath = "";
-			if (overImgPath.indexOf("${uploadPortalPath}") == -1) overImgPath = "";
+			//if (overImgPath.indexOf("${uploadPortalPath}") == -1 && overImgPath.indexOf("/files/upload_portal") == -1) overImgPath = "";
 			
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(txtDisplayName.value) + "</DISPLAYNAME>";
 			strXML += "<DISPLAYNAME2>" + ReplaceValidString(txtDisplayName2.value) + "</DISPLAYNAME2>";

@@ -127,8 +127,8 @@
 			//strXML += "<IMAGEHEIGHT>" + imageHeight + "</IMAGEHEIGHT>";
 			
 			// 20071029 logo size fix
-			strXML += "<IMAGEWIDTH>186</IMAGEWIDTH>";
-			strXML += "<IMAGEHEIGHT>40</IMAGEHEIGHT>";
+			strXML += "<IMAGEWIDTH>106</IMAGEWIDTH>";
+			strXML += "<IMAGEHEIGHT>42</IMAGEHEIGHT>";
 			
 			strXML += "<LINKURL>" + ReplaceValidString(document.getElementById("txtLinkURL").value) + "</LINKURL>";
 			strXML += "<LINKLOCATION>" + ReplaceValidString(document.getElementById("txtLinkLocation").value) + "</LINKLOCATION>";
@@ -342,9 +342,9 @@
 				<tr> 
 					<%String imagePath = (String)request.getAttribute("imagePath"); %>
 					<% if (imagePath != null && !imagePath.trim().equals("")) { %>
-					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=186 height=40 ></td>
+					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${imagePath}" width=106 height=42 ></td>
 					<% } else { %>
-					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display:none" width=186 height=40 ></td>
+					<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="" style="display:none" width=106 height=42 ></td>
 					<% } %>
 
                     <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
