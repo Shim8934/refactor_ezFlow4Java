@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 
 public interface EzOrganService {
 	
@@ -51,6 +52,8 @@ public interface EzOrganService {
 	public String getCNByEmail(String email, int tenantID) throws Exception;
 
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
+
+	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
 
  
 }

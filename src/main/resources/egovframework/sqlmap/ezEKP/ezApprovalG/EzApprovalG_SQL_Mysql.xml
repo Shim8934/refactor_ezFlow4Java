@@ -18441,8 +18441,10 @@
 			DocID = #v_DOCID# 
 		AND 
 			ReceiveSN = #v_RECEIVESN# 
+		<isEqual property="approvalFlag" compareValue="G">
 		AND 
 			ProcessYN = 'N' 
+		</isEqual>
 		AND 
 			TENANT_ID= #v_TENANTID#
 		AND
@@ -18466,9 +18468,13 @@
 	   		 	TENANT_ID = #v_TENANTID# 
 	   		 AND
 	   		 	COMPANYID = #companyID#
-	   		 order by ProcessDate desc	
-	   		  LIMIT 1 )
-   		 	]]>
+	   	]]>
+		<isEqual property="approvalFlag" compareValue="G">
+				order by ProcessDate desc	
+	   		  LIMIT 1 
+		</isEqual>	   	
+		)
+	   		 
    </insert>
    
    <delete id="EzApprovalG.deleteHesongExpAprLine" parameterClass="Map">
@@ -21605,4 +21611,115 @@
    		AND
    			COMPANYID = #companyID#
    </update>
+   
+   <update id="EzApprovalG.updateHesongReceiptInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		SET 
+   			AprState = #v_APRSTATE#,
+            ProcessYN = 'Y', 
+            ProcessDate = #v_SYSDATE#
+		 WHERE 
+		 	TENANT_ID = #v_TENANTID#
+		 AND
+		 	COMPANYID = #companyID#
+		 AND
+		 	DocID = #v_DOCID# 
+		 AND 
+		 	ReceiveSN = #pReceiveSN#
+   </update>
+   
+   <insert id="EzApprovalG.insertHesongReceiptInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRRECEIPTPROCESSINFO 
+   			(ReceiveSN, DocID, SentDeptID,      SentDeptName, SentDeptName2,      ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,     ProcessDate, ProcessYN, ProcessDocID, ProcessorID,  ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, COMPANYID, TENANT_ID) 
+        (SELECT 
+         	#v_TEMPSN#, DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, #v_DEPTID#,   #v_DEPTNAME#,        #v_DEPTNAME2#,  DocState,  #v_APRSTATE#, #v_SYSDATE#, 'N',       '',               '',             '',           '',          '',                  '',               DocID, COMPANYID, TENANT_ID 
+         FROM 
+         	TBL_APRRECEIPTPROCESSINFO 
+         WHERE
+         	TENANT_ID = #v_TENANTID#
+		 AND
+		 	COMPANYID = #companyID#
+		 AND 
+         	DocID = #v_DOCID#
+         AND 
+         	ReceiveSN = #v_MAXSN#)
+   </insert>
+   
+   <select id="EzApprovalG.doHabyuiHesongType" parameterClass="Map" resultClass="ApprGDocListVO">
+   		SELECT 
+   			APRTYPE 
+   		FROM 
+   			TBL_APRLINEINFO  
+   		WHERE 
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   		AND
+   			DOCID = #v_PDOCID#
+   		AND 
+   			APRMEMBERID = #v_PDEPTID#
+   		AND 
+   			APRMEMBERISDEPTYN = 'Y'
+   </select>
+   
+   <update id="EzApprovalG.updateHesongLineInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_APRSTATE1#,
+            ProcessDate = #v_SYSDATE# 
+		WHERE 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DocID = #v_DOCID#
+		AND 
+			AprState = #v_APRSTATE2#
+   </update>
+   
+   <update id="EzApprovalG.updateHesongDocInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			StartDate = NULL 
+   		WHERE
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   		AND
+   			DocID = #v_DOCID#
+   </update>
+   
+   <select id="EzApprovalG.doHabyuiHesongTypeS" parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+   		SELECT 
+   			 ORGDOCID ,
+             TBL_APRDOCINFO.COMPANYID ,
+             WRITERID ,
+             WRITERNAME ,
+             WRITERNAME2 ,
+             WRITERJOBTITLE ,
+             WRITERJOBTITLE2 ,
+             WRITERDEPTID ,
+             WRITERDEPTNAME ,
+             WRITERDEPTNAME2 
+        FROM 
+        	 TBL_APRDOCINFO 
+        JOIN 
+        	 TBL_EXPAPRDOCINFO    
+        ON 
+        	 TBL_APRDOCINFO.DocID = TBL_EXPAPRDOCINFO.DocID
+       	AND
+       		 TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID
+       	AND
+       		 TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID
+        WHERE  
+        	 TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
+       	AND
+       		 TBL_APRDOCINFO.COMPANYID = #companyID#
+       	AND
+       		 TBL_APRDOCINFO.DocID = #v_DOCID#
+   </select>
 </sqlMap>

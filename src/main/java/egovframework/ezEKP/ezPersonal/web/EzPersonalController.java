@@ -61,7 +61,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -140,7 +139,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String buJaeInfo = request.getParameter("buJae");
 		String buJaeInfo2 = "";
 		String proxyInfo = request.getParameter("proxy");
-		//String proxyInfo2 = "";
+//		String proxyInfo2 = "";
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
 		
@@ -157,9 +156,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
 		
 		if (result.equals("OK")) {
-			if (proxyInfo.split(":").length >= 5) {
-				//proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
-			}
+//			if (proxyInfo.split(":").length >= 5) {
+//				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
+//			}
 			
 			if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
@@ -279,7 +278,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String proxyDeptID = "";
 		String proxyUserName = "";
 		String textProxyName = "";
-		String initDate = EgovDateUtil.getTodayTime();
+		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
 		
@@ -329,6 +329,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("textName", textName);
 		model.addAttribute("textProxyName", textProxyName);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		return "ezPersonal/persManageBujae";
 	}

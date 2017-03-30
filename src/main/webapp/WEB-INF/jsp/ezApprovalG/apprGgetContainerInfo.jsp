@@ -613,81 +613,81 @@
 		    }
 		    //END
 		
-		        function enforce_onclick() {
-		            var heigth = window.screen.availHeight;
-		            var width = window.screen.availWidth;
-		
-		            var heigth = heigth - 10;
-		            var width = width - 10;
-		
-		            var para = new Array();
-		            para[0] = DocID;
-		            para[1] = pURL;
-		
-		            var left = 0;
-		            var top = 0;
-		            var openLocation = "";
-		            if (UserID.toLowerCase() != WriterID.toLowerCase()) {
-		                var InformationString = "<spring:message code='ezApprovalG.t1519'/>";
-		                OpenAlertUI(InformationString);
-		                return;
-		            }
-		
-		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                if ("${userInfoEnforce}" == "1") {
-		                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezEnforce_HWP_Cross.aspx";
-		                }
-		                else if ("${userInfoEnforce}" == "2") {
-		                    openLocation = "../ezViewHWP/ezConv_HWP_Cross.aspx";
-		                }
-		                else {
-		                    openLocation = "../ezViewHWP/ezConvSend_HWP_Cross.aspx";
-		                }
-		            }
-		            else {
-		                if ("${userInfoEnforce}" == "1") {                    
-		                    if (CrossYN())
-		                        openLocation = "../enforce/convEnforce_CK.aspx";
-		                    else
-		                    {
-		                        openLocation = "../enforce/convEnforce.aspx";
-		                    }
-		                }
-		                else if ("${userInfoEnforce}" == "2") {
-		                    openLocation = "../enforce/ezConv.aspx";
-		                    if (CrossYN()) {
-		                        openLocation = "../enforce/ezConv_CK.aspx";
-		                    }
-		                }
-		                else {
-		                    openLocation = "../enforce/ezConvSend.aspx";
-		                    if (CrossYN()) {
-		                        openLocation = "../enforce/ezConvSend_Cross.aspx";
-		                    }
-		                }
-		            }
-		            openLocation = openLocation + "?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
-		            var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
-		            window.open(openLocation, "enforce", param);
-		        }
-		function Approval_onclick() {
-		    jobState = "APPROVAL";
-		    getDataInfo();
-		}
-		function Attach_onclick() {
-		    jobState = "ATTACH";
-		    getDataInfo();
-		}
-		function Recipent_onclick() {
-		    jobState = "RECIPENT";
-		    getDataInfo();
-		}
-		function Opinion_onclick() {
-		    jobState = "OPINION";
-		    getDataInfo();
-		}
-		function help_onclick() {
-		    CallHelp("<spring:message code='ezApprovalG.t904'/>");
+	        function enforce_onclick() {
+	            var heigth = window.screen.availHeight;
+	            var width = window.screen.availWidth;
+	
+	            var heigth = heigth - 10;
+	            var width = width - 10;
+	
+	            var para = new Array();
+	            para[0] = DocID;
+	            para[1] = pURL;
+	
+	            var left = 0;
+	            var top = 0;
+	            var openLocation = "";
+	            if (UserID.toLowerCase() != WriterID.toLowerCase()) {
+	                var InformationString = "<spring:message code='ezApprovalG.t1519'/>";
+	                OpenAlertUI(InformationString);
+	                return;
+	            }
+	
+	            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+	                if ("${userInfoEnforce}" == "1") {
+	                    openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezEnforce_HWP_Cross.aspx";
+	                }
+	                else if ("${userInfoEnforce}" == "2") {
+	                    openLocation = "../ezViewHWP/ezConv_HWP_Cross.aspx";
+	                }
+	                else {
+	                    openLocation = "../ezViewHWP/ezConvSend_HWP_Cross.aspx";
+	                }
+	            }
+	            else {
+	                if ("${userInfoEnforce}" == "1") {                    
+	                    if (CrossYN())
+	                        openLocation = "../enforce/convEnforce_CK.aspx";
+	                    else
+	                    {
+	                        openLocation = "../enforce/convEnforce.aspx";
+	                    }
+	                }
+	                else if ("${userInfoEnforce}" == "2") {
+	                    openLocation = "../enforce/ezConv.aspx";
+	                    if (CrossYN()) {
+	                        openLocation = "../enforce/ezConv_CK.aspx";
+	                    }
+	                }
+	                else {
+	                    openLocation = "../enforce/ezConvSend.aspx";
+	                    if (CrossYN()) {
+	                        openLocation = "../enforce/ezConvSend_Cross.aspx";
+	                    }
+	                }
+	            }
+	            openLocation = openLocation + "?DocID=" + escape(DocID) + "&DocHref=" + escape(pURL) + "&ListSusin=";
+	            var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
+	            window.open(openLocation, "enforce", param);
+	        }
+			function Approval_onclick() {
+			    jobState = "APPROVAL";
+			    getDataInfo();
+			}
+			function Attach_onclick() {
+			    jobState = "ATTACH";
+			    getDataInfo();
+			}
+			function Recipent_onclick() {
+			    jobState = "RECIPENT";
+			    getDataInfo();
+			}
+			function Opinion_onclick() {
+			    jobState = "OPINION";
+			    getDataInfo();
+			}
+			function help_onclick() {
+			  	  CallHelp("<spring:message code='ezApprovalG.t904'/>");
 		    }
 		    function MM_swapImagesub(nSel, e) {
 		        if (nSel != g_tagSelectsub) {

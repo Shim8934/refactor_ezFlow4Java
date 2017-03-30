@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -1242,11 +1243,12 @@ public class EzApprovalGarchiveController {
 	public String getContName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String title = request.getParameter("Title");
-		String titleText = request.getParameter("TitleText");
+		String titleText = URLDecoder.decode(request.getParameter("TitleText"), "utf-8");
 		
 		if (title.equals("")) {
 			title = messageSource.getMessage("ezApproval.t297", userInfo.getLocale());
 		}
+		logger.debug("titleText="+titleText);
 		 model.addAttribute("titleText", titleText);
 		 model.addAttribute("title", title);
 		return  "ezApprovalG/apprGetContName";
@@ -1382,7 +1384,6 @@ public class EzApprovalGarchiveController {
 		String p_UserLang = userInfo.getLang();
 		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10)
         {
-
             try
             {
             	String TempQuery = "";

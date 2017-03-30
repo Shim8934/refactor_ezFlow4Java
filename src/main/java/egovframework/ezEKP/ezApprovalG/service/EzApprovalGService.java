@@ -432,4 +432,6 @@ public interface EzApprovalGService {
 	
 	public String checkResend(String docID, String companyID, int tenantId) throws Exception;
 
+	public String doHabyuiHesong(Document doc, String dirPath, String companyID, String lang, int tenantId, LoginVO userInfo) throws Exception;
+
 }

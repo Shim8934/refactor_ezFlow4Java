@@ -51,6 +51,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var proxyInfo = "${proxyInfo}";
 		    var formURL = "";
 		    var formDocType = "";
 		    var formExt = "";
@@ -120,9 +121,30 @@
 		            else {
 		                checkBujaeInfo_Complete(false);
 		            }
-		        }
-		        else
+		        } else if (proxyInfo != null && proxyInfo != "") {
+		        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
+		            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
+		
+		            tmpStartDate=tmpStartDate.replace("/", ":");
+		            tmpEndDate=tmpEndDate.replace("/", ":");
+		            if (tmpEndDate < "${nowDate}") {
+		                setBujaeOff();
+		                return true;
+		            }
+		            else if (tmpStartDate > "${nowDate}") {
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "<spring:message code='ezApprovalG.t1722'/>" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+		            if (Rtnval) {
+		                checkBujaeInfo_Complete(true);
+		            }
+		            else {
+		                checkBujaeInfo_Complete(false);
+		            }
+		        } else {
 		            checkBujaeInfo_Complete(true);
+		        }
 		    }
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
@@ -1161,7 +1183,14 @@
 		            if (BDim[3] <= "${nowDate}" && BDim[4] >= "${nowDate}") {
 		                return true;
 		            }
+		        } else if (proxyInfo != null && proxyInfo != "") {
+		        	var strDate = "${proxyInfo.startDate}";
+		        	var endDate = "${proxyInfo.endDate}";
+		            if (strDate <= "${nowDate}" && endDate >= "${nowDate}") {
+		                return true;
+		            }
 		        }
+		        
 		        return false;
 		    }
 		    function setpause(numberMillis) {
@@ -1265,7 +1294,7 @@
 		    function SearchCondi_onclick_Complete(returnvalue) {
 		        condition = returnvalue;
 		        if (condition) {
-		        	for (var i = 0; i < condition.length; i++) {
+		        	for (var i = 0; i < 11; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
 		                SearchCond[i] = condition[i];
@@ -1360,68 +1389,67 @@
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
 				} else {
-
-					    if (SearchCond[0] != "")
-					    {
+					
+					 if (condition[0] != "") {
 					        TYPE += "DOCNO;"
-					        DATA += "<DOCNO>" + SearchCond[0] + "</DOCNO>";
+					        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
 					    }
 
-					    if (SearchCond[1] != "")
-					    {
+					    if (condition[1] != "") {
 					        TYPE += "DOCTITLE;"
-					        DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
+					        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
 					    }
 
-					    if (SearchCond[2] != "")
-					    {
+					    if (condition[2] != "") {
 					        TYPE += "WRITERNAME;"
-					        DATA += "<WRITERNAME>" + SearchCond[2] + "</WRITERNAME>";
-					    }
-					   
-					    if (SearchCond[3] != "")
-					    {
-					        TYPE += "STARTDATEAF;"
-					        DATA += "<STARTDATEAF>" + SearchCond[3] + "</STARTDATEAF>";
+					        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
 					    }
 
-					    if (SearchCond[4] != "")
-					    {
-					        TYPE += "STARTDATEBF;"
-					        DATA += "<STARTDATEBF>" + SearchCond[4] + "</STARTDATEBF>";
+					    if (condition[3] != "null" && condition[3].trim() != "") {
+					        TYPE += "APRSTARTDATE;"
+					        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
 					    }
 
-					    if (SearchCond[5] != "")
-					    {
-					        TYPE += "ENDDATEAF;"
-					        DATA += "<ENDDATEAF>" + SearchCond[5] + "</ENDDATEAF>";
+					    if (condition[4] != "null" && condition[4].trim() != "") {
+					        TYPE += "APRENDDATE;"
+					        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
 					    }
 
-					    if (SearchCond[6] != "")
-					    {
-					        TYPE += "ENDDATEBF;"
-					        DATA += "<ENDDATEBF>" + SearchCond[6] + "</ENDDATEBF>";
+					    if (condition[5] != "null" && condition[5].trim() != "") {
+					        TYPE += "APRSTARTDATE;"
+					        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
 					    }
 
-					    if (SearchCond[7] != "")
-					    {
+					    if (condition[6] != "null" && condition[6].trim() != "") {
+					        TYPE += "APRENDDATE;"
+					        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
+					    }
+
+					    if (condition[9] != "") {
 					        TYPE += "FORMID;"
-					        DATA += "<FORMID>" + SearchCond[7] + "</FORMID>";
+					        DATA += "<FORMID>" + condition[9] + "</FORMID>";
 					    }
 
-					    if (SearchCond[9] != "")
-					    {
+					    if (condition[11] != "") {
 					        TYPE += "WRITERDEPTNAME;"
-					        DATA += "<WRITERDEPTNAME>" + SearchCond[9] + "</WRITERDEPTNAME>";
+					        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
 					    }
 
-					    if (SearchCond[10] != "")
-					    {
-					        TYPE += "KAPR;"
-					        DATA += "<KEYWORD>" + SearchCond[10] + "</KEYWORD>";
+					    if (condition[12] != "") {
+					        TYPE += condition[12];
+					        DATA += condition[13];
 					    }
-				}
-		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+					    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
+					        TYPE += condition[14];
+					        DATA += condition[15];
+					    }
+					    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
+					        TYPE += condition[16];
+					        DATA += condition[17];
+					    }
+
+					    SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+					}
 		    }
 		
 		    window.onresize = function () {

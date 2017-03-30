@@ -5,6 +5,7 @@
 
 	<typeAlias alias="OrganDeptVO"							    type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
+	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>	
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
@@ -1448,5 +1449,21 @@
        		DEPARTMENT = #v_DEPTID#
        	AND 
        		EXTENSIONATTRIBUTE1 LIKE '%a=1;%'
+	</select>
+	
+	<select id="EzOrganDAO.getProxyInfo" parameterClass="Map" resultClass="OrganProxyVO">
+		SELECT
+			USERID,
+			PROXYUSERID,
+			PROXYUSERNAME,
+			PROXYUSERDEPTID,
+			STARTDATE,
+			ENDDATE
+		FROM
+			TBL_PROXYINFO
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USERID = #userID#
 	</select>
 </sqlMap>
