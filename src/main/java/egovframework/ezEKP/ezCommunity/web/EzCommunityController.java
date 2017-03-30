@@ -1435,16 +1435,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("copyItem started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String pOrgItemIDList = request.getParameter("orgItemIDList");
+		String[] pOrgItemIDList = request.getParameter("orgItemIDList").split(";");
 		String pOrgBoardID = request.getParameter("orgBoardID");
-		String pDestItemIDList = request.getParameter("destItemIDList");
+		String[] pDestItemIDList = request.getParameter("destItemIDList").split(";");
 		String pDestBoardID = request.getParameter("destBoardID");
 		String realPath = commonUtil.getRealPath(request);
 		String ret = "";
 		
-		int i = 0;
-		for(String pOrgItemID : pOrgItemIDList.split(";")) {
-			ret = ezCommunityService.copyItem(pOrgItemID, pOrgBoardID, pDestItemIDList.split(";")[i], pDestBoardID, realPath, userInfo);
+		for(int i=0; i < pOrgItemIDList.length; i++) {
+			ret = ezCommunityService.copyItem(pOrgItemIDList[i], pOrgBoardID, pDestItemIDList[i], pDestBoardID, realPath, userInfo);
 		}
 		
 		model.addAttribute("ret", "<RESULT>" + ret + "</RESULT>");
