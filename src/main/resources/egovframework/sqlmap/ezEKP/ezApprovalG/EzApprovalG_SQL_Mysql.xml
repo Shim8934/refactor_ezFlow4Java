@@ -20795,6 +20795,108 @@
    			</isLessThan>
    	</select>
    	
+   	   	<select id="EzApprovalG.getUserContListAll" parameterClass="Map" resultClass="ApprGDocListVO">
+   	SELECT A.* FROM(
+   		SELECT 
+   			TBL_ENDAPRDOCINFO.DOCID, 
+   			TBL_ENDAPRDOCINFO.DOCTYPE, 
+   			TBL_ENDAPRDOCINFO.DOCSTATE, 
+   			TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+   			TBL_ENDAPRDOCINFO.HREF, 
+   			TBL_ENDAPRDOCINFO.DOCTITLE,   
+   			TBL_ENDAPRDOCINFO.DOCNO, 
+   			TBL_ENDAPRDOCINFO.HASATTACHYN, 
+   			TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+   			TBL_ENDAPRDOCINFO.STARTDATE,   
+   			TBL_ENDAPRDOCINFO.ENDDATE, 
+   			TBL_ENDAPRDOCINFO.WRITERID, 
+   			TBL_ENDAPRDOCINFO.WRITERNAME$v_PSTRMULTIDATA$ AS WRITERNAME, 
+   			TBL_ENDAPRDOCINFO.WRITERJOBTITLE$v_PSTRMULTIDATA$ AS WRITERJOBTITLE, 
+   			TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+   			TBL_ENDAPRDOCINFO.WRITERDEPTNAME$v_PSTRMULTIDATA$ AS WRITERDEPTNAME, 
+   			TBL_ENDAPRDOCINFO.FORMID, 
+   			TBL_ENDAPRDOCINFO.CONTAINERID, 
+   			TBL_EXPENDAPRDOCINFO.FORMNAME$v_PSTRMULTIDATA$ AS FORMNAME, 
+   			TBL_EXPENDAPRDOCINFO.STATUS, 
+   			TBL_ENDAPRDOCINFO.ORGDOCID, 
+   			TBL_ENDAPRDOCINFO.ISPUBLIC, 
+   			TBL_EXPENDAPRDOCINFO.EDMSYN, 
+   			TBL_USERCONTLIST.LINKDATE, 
+   			TBL_USERCONTLIST.DESCRIPTION
+<!--    			GETSENDSTATUS' || v_PSTRLANG || '(TBENDAPRDOCINFO.DOCID) AS SENDFLAG -->
+   		FROM 
+   			TBL_ENDAPRDOCINFO  
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID 
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_USERCONTLIST  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_USERCONTLIST.DOCID 
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID 
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
+   		WHERE 
+   			USERCONTID = #v_CONTID#  
+   		AND 
+   			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
+   		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
+   		 AND 
+   		 	$v_PSUBQUERY$
+   		</isGreaterThan>
+   		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="8">
+   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+   			ORDER BY 
+   				$v_ORDEROPTION$ 
+   		</isEqual>
+   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+   		ORDER BY 
+   			$v_ORDEROPTION$, LINKDATE DESC 
+   		</isNotEqual>
+   		</isGreaterEqual>
+   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="8">
+   		ORDER BY  
+   			$v_ORDEROPTION$ , LINKDATE DESC
+   		</isLessThan>
+   		</isGreaterThan>
+   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		ORDER BY LINKDATE DESC 
+   		</isLessEqual>
+   			LIMIT $v_PQUERYSIZESUB$
+   		) A 
+         
+      	<isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
+   		<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="8">
+   		<isEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+   			ORDER BY $v_ORDEROPTION2$
+   		</isEqual>
+   		<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+   		ORDER BY $v_ORDEROPTION2$, LINKDATE
+   		</isNotEqual>
+   		</isGreaterEqual>
+   		<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="8">
+   		ORDER BY $v_ORDEROPTION2$, LINKDATE
+   		</isLessThan>
+   		</isGreaterThan>
+   		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
+   		ORDER BY LINKDATE DESC
+   		</isLessEqual>
+   		LIMIT 
+   			<isGreaterEqual property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
+   			$v_PLISTCOUNT$
+   			</isGreaterEqual>
+   			<isLessThan property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
+   			$v_PQUERYSIZEMAIN$
+   			</isLessThan>
+   	</select>
+   	
    	<delete id="EzApprovalG.deleteUserContDoc" parameterClass="Map">
    		DELETE FROM
    			TBL_USERCONTLIST
