@@ -311,7 +311,7 @@ function CheckPassword(str){
 		return false;
 	}
 	
-	if (num < 0 || eng < 0 || spe < 0 ) {
+	if (num < 0 || eng < 0 || spe < 0) {
 		return false;
 	}
 	return true;

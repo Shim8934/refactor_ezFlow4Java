@@ -1333,6 +1333,7 @@ var strLangS1117 = "차상위부서장";
 var strLangS1118 = "차차상위부서장";
 var strLangS1119 = "차차차상위부서장";
 var strLangS1120 = "선택된부서장";
+var strLangS1124 = "등록된 문서입니다.";
 
 var strLangS230 = "순번";
 var strLangS107 = "성명";
@@ -1474,7 +1475,7 @@ var strLangS250 = "결재참가자를 추가할수 ";
 var strLangS251 = "없습니다.";
 var strLangS252 = "기안시 , 결재선 변경시 적용";
 var strLangS253 = "재기안시 ";
-var strLangS254 = "최종결재자는 결재선을 변경할 수 없습니다.";
+var strLangS254 = "최종결재자는 결재선을 변경이 불가합니다.";
 
 var strLangS163 = "수신처목록 저장시 오류가 ";
 

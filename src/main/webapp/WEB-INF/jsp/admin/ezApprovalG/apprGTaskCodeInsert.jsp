@@ -20,6 +20,7 @@
 	        var gRtnVal = "FALSE";
 	        var gState, TaskCode, PCode, companyID, pLevel;
 	        var cateName, cateName2, cateDesc; 
+	        var tCheck = "<c:out value = '${tCheck}' />";
             
 	        var RetValue;
 	        var ReturnFunction;
@@ -429,7 +430,10 @@
 		    
 		    function UpdateCode() {
 		    	if (approvalFlag == 'S') {
-		    		document.getElementById("tbTaskCode").value = 'ZZ' + document.getElementById("tbTaskCode").value;
+		    		if (tCheck == 'ins') {
+			    		document.getElementById("tbTaskCode").value = 'ZZ' + document.getElementById("tbTaskCode").value;		    			
+		    		} else {
+		    		}
 		    	}
 		    	
 				var pDisplayFlag;
