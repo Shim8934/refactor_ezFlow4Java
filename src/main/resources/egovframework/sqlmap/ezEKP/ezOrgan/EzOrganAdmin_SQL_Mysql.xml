@@ -1077,7 +1077,7 @@
             TBL_CODELIST
              (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
          VALUES
-			('SA01','0',  '문서종류',		'문서종류',		null,		null,		'0',	'문서종류(DocType)',	#companyID#, #tenantID#)
+			('SA01','0',  '문서종류',		'문서종류',		null,		null,		'0',	'문서종류(DocType)',	#companyID#, #tenantID#),
 			('SA01','001','기안문',		'Approval',		'起案文',		'起案文',		'1',	'기안문',				#companyID#, #tenantID#),
 			('SA01','002','보고문',		'Report',		'報告文',		'?告文',		'1',	'보고문',				#companyID#, #tenantID#),
 			('SA01','003','수신문',		'Received',		'受信文',		'收件文',		'1',	'수신문',				#companyID#, #tenantID#),
