@@ -331,6 +331,7 @@ var strLangLHM09 = "外部へのメールは10MBまで送信できます。";
 var strLangLHM10 = "大容量";
 var strLangLHM11 = "回収対象を選択してください。";
 var strLangLHM12 = "セッションに問題が発生しました。\n改めてログインしてください。";
+var strLangKMS01 = "添付ファイルが";
 
 function GetLocalTime(Offset , pDateTime)
 {
