@@ -297,7 +297,7 @@
 		            _popObj.style.backgroundColor = "#ffffff";
 		        }
 		        _popObj = obj;
-		        obj.style.backgroundColor = "rgb(225, 238, 252)";
+		        obj.style.backgroundColor = "rgb(233, 241, 244)";
 		    }
 		    function random() {
 		        return Math.floor(Math.random() * 100);
