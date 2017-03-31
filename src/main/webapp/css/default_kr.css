@@ -1658,7 +1658,7 @@ form{display:inline;margin:0}
 
 
 .address_wordmenu {margin:0px 0px 10px 0px; height:20px; padding:0px; list-style:none;}
-.address_wordmenu li {float:left; height:20px; line-height:20px; background:url(../images/kr/cm/btn_function_left.gif) no-repeat left; padding:0px 0px 0px 4px; margin:0px 1px 0px 0px; display:inline-block; cursor:pointer;}
+.address_wordmenu li {float:left; height:20px; line-height:20px; width:16px; background:url(../images/kr/cm/btn_function_left.gif) no-repeat left; padding:0px 0px 0px 4px; margin:0px 1px 0px 2px; display:inline-block; cursor:pointer;text-align:center}
 .address_wordmenu li span { display:block; height:20px; background:url(../images/kr/cm/btn_function_right.gif) right no-repeat; padding:0px 4px 0px 0px;}
 .address_boxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
