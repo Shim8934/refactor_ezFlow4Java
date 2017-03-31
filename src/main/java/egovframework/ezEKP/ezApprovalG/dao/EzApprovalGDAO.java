@@ -701,6 +701,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGDocListVO>) list("EzApprovalG.doHabyuiHesongTypeS", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprDocInfoVO> doSusinHesongAprDocInfoS(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprDocInfoVO>) list("EzApprovalG.doSusinHesongAprDocInfoS", map);
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}

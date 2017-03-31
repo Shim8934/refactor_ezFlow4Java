@@ -15111,7 +15111,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			hesongType = getCode2Name("SA25", "001", companyID, lang, tenantID);
 		}
-			
+
 		String orgDocID = "";
 		String orgCompanyID = "";
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -15260,7 +15260,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("companyID", companyID);
 				map.put("v_TENANTID", tenantID);
 				
-				List <ApprGAprDocInfoVO> hesongList = ezApprovalGDAO.doSusinHesongAprDocInfo(map);
+				List <ApprGAprDocInfoVO> hesongList = ezApprovalGDAO.doSusinHesongAprDocInfoS(map);
 				
 				StringBuffer sb = new StringBuffer();
 		        sb.append("<DATA>");
@@ -15280,15 +15280,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 						if (companyID.toUpperCase().equals(orgCompanyID.toUpperCase())) {
 							
-							ezApprovalGDAO.aprDeleteDocInfo3(map);
-							ezApprovalGDAO.aprDeleteDocInfo(map);
-							ezApprovalGDAO.deleteApprLineInfo(map);
-							
 							map.put("v_APRSTATE", staDSPumYui);
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 							map.put("v_FUNCTIONTYPE", staASBanSong);
+							//다른 곳에 있는것 가져다 써서 두개 선언. 추후 변경
 							map.put("v_DOCID", docID);
+							map.put("v_DocID", docID);
 							map.put("v_TENANTID", tenantID);
+							
+							ezApprovalGDAO.aprDeleteDocInfo3(map);
+							ezApprovalGDAO.aprDeleteDocInfo(map);
+							ezApprovalGDAO.deleteApprLineInfo(map);
 							
 							ezApprovalGDAO.updateAprDocInfoS(map);
 							
@@ -15303,7 +15305,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							map.put("v_WRITERDEPTID", makeListField(signXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent()));
 							map.put("v_WRITERDEPTNAME", makeListField(signXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent()));
 							map.put("v_WRITERDEPTNAME2", makeListField(signXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent()));
-							map.put("v_APRSTATE", staASWheSong);
 							map.put("v_TENANTID", tenantID);
 							map.put("orgCompanyID", orgCompanyID);
 							map.put("v_SN", "1");
@@ -15311,7 +15312,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							ezApprovalGDAO.insertHesongAprLineInfo(map);
 							ezApprovalGDAO.insertSetHesongExpLineInfoS(map);
 							
-							map.put("v_APRTYPE", staASBanSong);
+							map.put("v_APRTYPE", staATSuSin);
 							map.put("v_APRSTATE", staASBanSong);
 							map.put("v_USERID", userID);
 							map.put("v_USERNAME", userName);
