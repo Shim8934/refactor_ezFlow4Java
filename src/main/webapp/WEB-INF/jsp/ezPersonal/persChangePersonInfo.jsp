@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="/js/ezPersonal/controls/composeappt.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
@@ -179,8 +180,27 @@
 			     }
 			    
 			    function PassWordChange() {
+			    	if (document.getElementById('txtOldPassword').value == "") {
+						alert("<spring:message code='ezPersonal.t947'/>");
+					    document.all['txtOldPassword'].focus();
+					    return;
+					}
+			    	
+			    	if (document.getElementById('txtNewPassword').value == "") {
+			            //alert("<spring:message code='ezPersonal.t195'/>");
+			            alert("<spring:message code='main.jjh01'/>");
+				        document.all['txtNewPassword'].focus();
+				        return;
+				    }
+			    	
+			    	if (!CheckPassword(document.getElementById('txtNewPassword').value)) {
+						alert("<spring:message code='main.jjh04'/>");
+						return;
+					};	
+			    	
 			        if (document.getElementById('txtNewPassword').value != document.getElementById('txtNewPasswordConfirm').value) {
-			            alert("<spring:message code='ezPersonal.t193'/>");
+			            //alert("<spring:message code='ezPersonal.t193'/>");
+			            alert("<spring:message code='main.jjh02'/>");
 				        document.all['txtNewPassword'].focus();
 				        return;
 				    }
@@ -190,17 +210,12 @@
 				        document.all['txtNewPassword'].focus();
 				        return;
 				    }
-			        if (document.getElementById('txtNewPassword').value == "") {
-			            alert("<spring:message code='ezPersonal.t195'/>");
-				        document.all['txtNewPassword'].focus();
-				        return;
-				    }
-	
-			        if (document.getElementById('txtNewPassword').value.Length > 100) {
+			        
+			        /* if (document.getElementById('txtNewPassword').value.Length > 100) {
 			            alert("<spring:message code='ezPersonal.t196'/>");
 				        document.all['txtNewPassword'].focus();
 				        return;
-				    }
+				    } */
 			        
 			        var xmlHTTP = createXMLHttpRequest();
 			        var xmlPara = createXmlDom();
