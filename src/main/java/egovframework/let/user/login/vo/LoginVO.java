@@ -125,10 +125,10 @@ public class LoginVO implements Serializable{
 	private String tableViewOption;
 	/** 마지막 접속시간*/
 	private String lastLogin;
-	
+	/** 로그인 횟수*/
+	private int loginCnt;
     /** 사용자가 속한 Tenant의 고유 ID */
-    private int tenantId = -1;
-    
+    private int tenantId = -1;    
     /** 사용자가 접속한 서버의 이름(80 포트가 아닌 경우엔 포트번호도 포함) */
     private String serverName;
 	
@@ -441,7 +441,13 @@ public class LoginVO implements Serializable{
 	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
-    
-    
+	
+	public int getLoginCnt() {
+		return loginCnt;
+	}
+	
+	public void setLoginCnt(int loginCnt) {
+		this.loginCnt = loginCnt;
+	}
 	
 }
