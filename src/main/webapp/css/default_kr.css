@@ -1658,7 +1658,7 @@ form{display:inline;margin:0}
 
 
 .address_wordmenu {margin:0px 0px 10px 0px; height:20px; padding:0px; list-style:none;}
-.address_wordmenu li {float:left; height:20px; line-height:20px; background:url(../images/kr/cm/btn_function_left.gif) no-repeat left; padding:0px 0px 0px 4px; margin:0px 1px 0px 0px; display:inline-block; cursor:pointer;}
+.address_wordmenu li {float:left; height:20px; line-height:20px; width:16px; background:url(../images/kr/cm/btn_function_left.gif) no-repeat left; padding:0px 0px 0px 4px; margin:0px 1px 0px 2px; display:inline-block; cursor:pointer;text-align:center}
 .address_wordmenu li span { display:block; height:20px; background:url(../images/kr/cm/btn_function_right.gif) right no-repeat; padding:0px 4px 0px 0px;}
 .address_boxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
@@ -1857,14 +1857,14 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .content_property table{border-collapse:collapse; border-spacing:0;}
 .content_property table tr{border-collapse:collapse; border-spacing:0;}
 .content_property table td{border-collapse:collapse; border-spacing:0;}
-.content_property .tabTitle{height:30px; background:#e4eaf5; border:1px solid #d2d7e1; text-align:center; font-family:Gulim, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#444; cursor:pointer;}
+.content_property .tabTitle{height:30px; background:rgb(242,242,242); border:1px solid #d2d7e1; text-align:center; font-family:Gulim, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#444; cursor:pointer;}
 .content_property .tabList{border-right:1px solid #d2d7e1; border-left:1px solid #d2d7e1;}
 .content_property .tabList table{}
 .content_property .tabList table td{height:25px; border-bottom:1px solid #ccc; cursor:pointer; padding:0px 5px 0px 5px;}
 
 
-.content_property .tabTitle:hover{background:#8b9099; color:#fff;}
-.content_property .tabList table td:hover{background:#c7d7ed;}
+.content_property .tabTitle:hover{background:rgb(48, 77, 127); color:#fff;}
+.content_property .tabList table td:hover{background:rgb(233, 241, 244);}
 
 .content_propertyInfo{margin:10px 0px 0px 0px;}
 .content_propertyInfo table{border-collapse:collapse; border-spacing:0;}

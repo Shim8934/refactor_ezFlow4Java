@@ -113,10 +113,20 @@
 			
 			var strXML = "<DATA>";
 			//var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
-			var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
+			//var normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
 			//if (normalImgPath.indexOf("/files/upload_portal") == -1) normalImgPath = "";
-			if (normalImgPath.indexOf("${uploadPortalPath}") == -1) normalImgPath = "";
+			//if (normalImgPath.indexOf("${uploadPortalPath}") == -1) normalImgPath = "";
 			
+			//2017-03-31
+		    //files일때와 fileroot일때 구분해주고 둘다 없을때 ""처리
+			var normalImgPath = "";
+		    if (txtNormalImage.src.indexOf("${uploadPortalPath}") > 0) {
+		    	normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("${uploadPortalPath}"));
+		    } else if (txtNormalImage.src.indexOf("/files/upload_portal") > 0) {
+		    	normalImgPath = txtNormalImage.src.substr(txtNormalImage.src.indexOf("/files/upload_portal"));
+		    } else {
+		    	normalImgPath = "";
+		    }
 			
 			strXML += "<OLDFILENAME></OLDFILENAME>";
 			strXML += "<DISPLAYNAME>" + ReplaceValidString(document.getElementById("txtDisplayName").value) + "</DISPLAYNAME>";

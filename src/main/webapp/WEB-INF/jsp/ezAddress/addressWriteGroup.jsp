@@ -1290,7 +1290,7 @@
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t352' />";
 	            document.getElementById("emailname").focus();
 	        }
-	        var m_strColorSelect = "#DBE1E7";
+	        var m_strColorSelect = "rgb(233, 241, 244)";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;

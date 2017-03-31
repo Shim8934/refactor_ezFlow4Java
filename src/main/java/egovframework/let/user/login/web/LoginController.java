@@ -184,8 +184,7 @@ public class LoginController {
 	            	Date lastDT = resultVO.getUpdateDT();
 	            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
 	    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
-	        	}
-	        	model.addAttribute("isFirstLogin", "N");
+	        	}	        	
         	}        	        	
 			//0보다 작아지면 패스워드 변경기한 Expired
 			if (diff <= 0) {				

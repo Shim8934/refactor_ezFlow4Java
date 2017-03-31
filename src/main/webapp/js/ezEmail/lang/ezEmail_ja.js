@@ -252,8 +252,8 @@ var strLang254 = "検索文字を入力してください。";
 var strLang255 = "未読メール";
 var strLang256 = "全体メール";
 var strLang257 = "通";
-var strLang258 = "以前";
-var strLang259 = "次";
+var strLang258 = "前へ";
+var strLang259 = "次へ";
 var strLang260 = "署名のサイズを超えています。";
 var strLang261 = "既に回収したメールです。結果を表示しますか？";
 var strLang300 = "人";
@@ -331,6 +331,7 @@ var strLangLHM09 = "外部へのメールは10MBまで送信できます。";
 var strLangLHM10 = "大容量";
 var strLangLHM11 = "回収対象を選択してください。";
 var strLangLHM12 = "セッションに問題が発生しました。\n改めてログインしてください。";
+var strLangKMS01 = "添付ファイルが";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -15366,12 +15366,54 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						sendRecvMsg(deptID, docID, "HESONG", companyID, lang, tenantID);
 					}
 				} else {
+					orgDocID = makeListField(signXML.getElementsByTagName("ORGDOCID").item(0).getTextContent());
+					orgCompanyID = makeListField(signXML.getElementsByTagName("COMPANYID").item(0).getTextContent());
 					
+					ApprGLineTempletVO vo = ezApprovalGDAO.getOrgDocLineInfo(map);
+					
+					if (companyID.toUpperCase().equals(orgCompanyID.toUpperCase())) {
+						map.put("v_APRSTATE", staASWheSong);
+						map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+						map.put("v_RECEIVESN", receiveSN);
+						map.put("v_TENANTID", tenantID);
+						map.put("approvalFlag", approvalFlag);
+						
+						ezApprovalGDAO.updateHesongAprReceiptProcessInfo(map);
+						
+						int pSN = Integer.parseInt(receiveSN) + 1;
+						
+						map.put("v_PSN", pSN);
+						map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+						map.put("v_WRITERDEPTID", vo.getAprMemberDeptID());
+						map.put("v_WRITERDEPTNAME", vo.getAprMemberName());
+						map.put("v_WRITERDEPTNAME2", vo.getAprMemberName2());
+						map.put("v_APRSTATE", staASWheSong);
+						map.put("v_RECEIVESN", receiveSN);
+						map.put("v_TENANTID", tenantID);
+	
+						ezApprovalGDAO.insertHesongAprReceiptProcessInfo(map);
+						
+						map.put("v_DocID", docID);
+						
+						ezApprovalGDAO.aprDeleteDocInfo(map);
+						ezApprovalGDAO.deleteApprLineInfo(map);
+					} else {
+						return "<RESULT>FALSE</RESULT>"; 
+					}
+					
+					subSQL = updateSusinResult(orgDocID, deptID, userID, "H", userName, userName2, companyID, tenantID);
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					}
+					
+					if (rtnVal) {
+						String pSentDeptID = ezApprovalGDAO.doSusinHesongDeptID(map);
+						sendRecvMsg(pSentDeptID, docID, "HESONG", companyID, lang, tenantID);
+					}
 				}
-		       }
 			}
-			
-			catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = false;
