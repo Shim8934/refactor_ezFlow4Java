@@ -4796,7 +4796,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String docState = getDocAprState(docID, userID, companyID, userInfo.getTenantId());
-		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", companyID, userInfo.getTenantId());
+		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", userInfo, companyID, userInfo.getTenantId());
 		
 		if (docType.equals("004") || docType.equals("015")) {
 			return messageSource.getMessage("ezApprovalG.t2104", userInfo.getLocale());
@@ -5064,16 +5064,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			proxySign = "代 ";
 		}
 		
-		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", companyID, userInfo.getTenantId());
+		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId());
 		
 		if (aprStateSign.equals("011") || aprStateSign.equals("012")) {
-			String receiveRet = getReceivedDocInfo(docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
+			String receiveRet = getReceivedDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 			Document aprXML = commonUtil.convertStringToDocument(receiveRet);
 			
 			receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 		} else {
-			String approveRet = getApproveDocInfo(docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
+			String approveRet = getApproveDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 			Document aprXML = commonUtil.convertStringToDocument(approveRet);
 			
 			drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
@@ -7373,7 +7373,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getDocInfo(String docID, String mode, String selected, String companyID, int tenantID) throws Exception {
+	public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocInfo Started");
 		StringBuilder rtnXML = new StringBuilder();
 		String selectSQL = "";
@@ -7419,7 +7419,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
-        for (int i = 0; i < apprGDocListVOList.size(); i++) {
+        for (int i = 0; i < apprGDocListVOList.size(); i++) {        	
 			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
 		}
 		sb.append("</DATA>");
@@ -7440,7 +7440,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			rtnXML.append("<DOCNO>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCNO").item(0).getTextContent())) + "</DOCNO>");
 			rtnXML.append("<HASATTACHYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("HASATTACHYN").item(0).getTextContent())) + "</HASATTACHYN>");
 			rtnXML.append("<HASOPINIONYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent())) + "</HASOPINIONYN>");
-            rtnXML.append("<STARTDATE>" + makeXMLString(makeListField(convertDate(docXML.getElementsByTagName("STARTDATE").item(0).getTextContent()))) + "</STARTDATE>");
+            rtnXML.append("<STARTDATE>" + commonUtil.getDateStringInUTC(makeXMLString(makeListField(convertDate(docXML.getElementsByTagName("STARTDATE").item(0).getTextContent()))), userInfo.getOffset(), false) + "</STARTDATE>");
             rtnXML.append("<ENDDATE>" + makeXMLString(makeListField(convertDate(docXML.getElementsByTagName("ENDDATE").item(0).getTextContent()))) + "</ENDDATE>");
 			rtnXML.append("<WRITERID>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERID").item(0).getTextContent())) + "</WRITERID>");
 			rtnXML.append("<WRITERNAME>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent())) + "</WRITERNAME>");
@@ -7474,7 +7474,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
 					rtnXML.append("<" + selecteds[k].toUpperCase() + ">");
-					rtnXML.append(makeXMLString(makeListField(docXML.getElementsByTagName(selecteds[k].toUpperCase()).item(0).getTextContent())));
+					if (selecteds[k].toUpperCase().equals("STARTDATE") || selecteds[k].toUpperCase().equals("ENDDATE")) {
+						rtnXML.append(makeXMLString(makeListField(commonUtil.getDateStringInUTC(docXML.getElementsByTagName(selecteds[k].toUpperCase()).item(0).getTextContent().substring(0, 19), userInfo.getOffset(), false))));
+					} else {
+						rtnXML.append(makeXMLString(makeListField(docXML.getElementsByTagName(selecteds[k].toUpperCase()).item(0).getTextContent())));
+					}
 					rtnXML.append("</" + selecteds[k].toUpperCase() + ">");
 				}
 			}
@@ -8358,7 +8362,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getApproveDocInfo(String docID, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		
 		rtnVal.append("<APROVEDATA>");
@@ -8448,7 +8452,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		rtnVal.append("</DOCFLAGINFO>");
 		rtnVal.append("<DOCINFO>");
-		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID, tenantID));
+		rtnVal.append(getDocInfo(docID, "APR", "ALL", userInfo, companyID, tenantID));
 		rtnVal.append("</DOCINFO>");
 		rtnVal.append("<ATTACHINFO>");
 		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID, offset));
@@ -8914,7 +8918,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getReceivedDocInfo(String docID, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getReceivedDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		
 		rtnVal.append("<RECEIVEDATA>");
@@ -9018,7 +9022,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append(receivedDeptID);				
         rtnVal.append("</RECEIPTDEPTID>");
 		rtnVal.append("<DOCINFO>");
-		rtnVal.append(getDocInfo(docID, "APR", "ALL", companyID, tenantID));
+		rtnVal.append(getDocInfo(docID, "APR", "ALL", userInfo, companyID, tenantID));
 		rtnVal.append("</DOCINFO>");
 		rtnVal.append("<ATTACHINFO>");
 		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID, offset));
