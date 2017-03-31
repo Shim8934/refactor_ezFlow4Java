@@ -21805,4 +21805,60 @@
        	 AND
        	 	TENANT_ID = #v_TENANTID#
    </select>
+   
+   <update id="EzApprovalG.updateAprDocInfoS" parameterClass="Map">
+   		 UPDATE 
+   		 	TBL_APRDOCINFO 
+   		 SET 
+   		 	OrgDocID = NULL, 
+   		 	DocState = #v_APRSTATE#, 
+   		 	FunctionType = #v_FUNCTIONTYPE#,
+   		 	StartDate = #v_SYSDATE#
+         WHERE 
+         	DocID = #v_DOCID#
+         AND
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	COMPANYID = #companyID#
+   </update>
+   
+   <insert id="EzApprovalG.insertHesongAprLineInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRLINEINFO 
+   		(DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, COMPANYID, TENANT_ID) 
+   		VALUES 
+   		(#v_DOCID#, '1', #v_APRTYPE#, #v_APRSTATE#, #v_WRITERID#, 'N', #v_WRITERNAME#, #v_WRITERNAME2, #v_WRITERJOBTITLE, #v_WRITERJOBTITLE2, #v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, #orgCompanyID#, #v_SYSDATE# ,NULL, '', 'N', 'N' , #companyID#, #v_TENANTID# ) 
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertSetHesongExpLineInfoS" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_EXPAPRLINE 
+   			(docid,  aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, COMPANYID, TENANT_ID) 
+   		VALUES 
+   			(#v_DOCID#, #v_SN#,        #v_WRITERID#, '',           '',               '',            '',               '',                '',                  '',                  '', #companyID#, #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertHesongAprLineInfoS" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRLINEINFO 
+   		(DocID, AprMemberSN, AprType,    AprState,  AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, COMPANYID, TENANT_ID)
+   		VALUES
+   		(#v_DOCID# , '2', #v_APRTYPE#, #v_APRSTATE#,  #v_USERID# , 'N',               #v_USERNAME#, #v_USERNAME2# ,   #v_TITLE#,            #v_TITLE2#,     #v_DEPTID#,     #v_DISPLAYNAME#,   #v_DISPLAYNAME2#,   #orgCompanyID#,     #v_SYSDATE#, #v_SYSDATE#,   '',                    'N',         'N',     #companyID#, #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertHesongAprDocInfoS" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRDOCINFO 
+   		(	  DocID,   FormID, OrgDocID, DocType, DocState, FunctionType,     Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                   EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+   		(SELECT 
+   			#v_NEWID#, FormID, OrgDocID, #v_DOCSTATE#, DocState, #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+   		 FROM 
+   		 	TBL_APRDOCINFO A  
+   		 WHERE 
+   		 	DocID = #v_DOCID#
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#
+   		 AND
+        	COMPANYID = #companyID#)
+   </insert>
 </sqlMap>

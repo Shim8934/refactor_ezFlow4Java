@@ -4103,7 +4103,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String result = ezApprovalGService.doSusinHesong(docID, receiveSN, deptID, docState, userID, userName, userName2, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.doSusinHesong(docID, receiveSN, deptID, docState, userID, userName, userName2, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return result;
 	}

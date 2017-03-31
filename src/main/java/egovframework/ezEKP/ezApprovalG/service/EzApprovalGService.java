@@ -239,7 +239,7 @@ public interface EzApprovalGService {
 	
 	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception;
 	
-	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID) throws Exception;
+	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 	
 	public String getAprType_AprState(String docID, String userID, String companyID, int tenantID) throws Exception;
 	

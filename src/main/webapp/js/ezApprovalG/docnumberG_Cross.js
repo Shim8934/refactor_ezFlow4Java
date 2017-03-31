@@ -68,7 +68,6 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
         var fields = message.GetFieldsList();
         var name, docnumber;
         var rtnval;
-
         name = pPrefix + "docnumber";
 
         var field = message.GetListItem(fields, name);
