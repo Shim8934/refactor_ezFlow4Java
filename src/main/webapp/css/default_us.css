@@ -1805,7 +1805,7 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 
 
 .content_property .tabTitle:hover{background:#8b9099; color:#fff;}
-.content_property .tabList table td:hover{background:rgb(233, 241, 244);}
+.content_property .tabList table td:hover{background:rgb(225, 238, 252);}
 
 .content_propertyInfo{margin:10px 0px 0px 0px;}
 .content_propertyInfo table{border-collapse:collapse; border-spacing:0;}
