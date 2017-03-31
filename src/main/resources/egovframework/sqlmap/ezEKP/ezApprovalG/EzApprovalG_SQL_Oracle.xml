@@ -5145,6 +5145,23 @@
      		A.TENANT_ID = #v_TENANTID#
 	</select>
 	
+	<select id="EzApprovalG.getOrgDocLineInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		<![CDATA[
+			SELECT
+				aprmemberdeptid,
+				aprmemberdeptname,
+				aprmemberdeptname2
+			FROM
+				TBL_ENDAPRLINEINFO
+			WHERE
+				docid = #v_DOCID#
+			AND
+				companyID = #companyID#
+			AND
+				tenant_id = #v_TENANTID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.getReceivedDocInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
 <!-- 		{CALL EZSP_GETRECEIVEDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -16644,6 +16661,19 @@
    		 	]]>
    </insert>
    
+   <select id="EzApprovalG.doSusinHesongDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				sentdeptid
+			FROM
+				TBL_APRRECEIPTPROCESSINFO 
+			WHERE
+				docid = #v_DOCID#
+			AND
+				receivesn = #v_RECEIVESN#
+		]]>
+	</select>
+	
    <delete id="EzApprovalG.deleteHesongExpAprLine" parameterClass="Map">
    			Delete 
    				TBL_EXPAPRLINE 
