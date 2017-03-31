@@ -21761,7 +21761,7 @@
    			DocID = #v_DOCID#
    </update>
    
-   <select id="EzApprovalG.doHabyuiHesongTypeS" parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+   <select id="EzApprovalG.doHabyuiHesongTypeS" parameterClass="Map" resultClass="ApprGDocListVO">
    		SELECT 
    			 ORGDOCID ,
              TBL_APRDOCINFO.COMPANYID ,
