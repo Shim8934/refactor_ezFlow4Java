@@ -153,7 +153,7 @@
 	        {
 	            document.getElementById('cbx_all').checked = false;
 	            if (obj.checked) {
-	                obj.parentElement.parentElement.style.backgroundColor = "#DBE1E7";
+	                obj.parentElement.parentElement.style.backgroundColor = "rgb(233, 241, 244)";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
 	                strFileName = strFileName + GetAttribute(obj, "data2") + "|||";
@@ -175,10 +175,10 @@
 	
 	                    document.getElementById('chk_' + i).checked = true;
 	                    if (CrossYN())
-	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#DBE1E7";
+	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "rgb(233, 241, 244)";
 	                    else {
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#DBE1E7";
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#DBE1E7";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "rgb(233, 241, 244)";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "rgb(233, 241, 244)";
 	                    }
 	
 	                    strPathInfo += document.getElementById('chk_' + i).value + "|||";
