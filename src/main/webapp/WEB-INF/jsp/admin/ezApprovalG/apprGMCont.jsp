@@ -292,8 +292,9 @@
 	                <a class="imgbtn"><span onclick="return btnIns_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br/>
 	                <a class="imgbtn"><span onclick="return btnUpdate_onclick()"><spring:message code='ezApprovalG.t269'/></span></a><br/>
 	                <a class="imgbtn"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a><br/>
+<!-- 	                특수문서함 주석처리 -->
 	                <c:if test="${approvalFlag == 'S' }">
-		                <a class="imgbtn"><span onclick="return btnSpecial_onclick()"><spring:message code='ezApproval.t689'/></span></a> </th>
+		                <a class="imgbtn" style="display: none"><span onclick="return btnSpecial_onclick()"><spring:message code='ezApproval.t689'/></span></a> </th>
 	                </c:if>
 	            </th>
 	        </tr>
