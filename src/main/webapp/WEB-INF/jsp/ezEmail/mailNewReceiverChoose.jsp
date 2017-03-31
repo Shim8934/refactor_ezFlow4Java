@@ -3310,18 +3310,18 @@
 	                <table id="ListViewINPUT" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div id="ManualView" style="HEIGHT: 504px; width: 668px;" class="box">
+	                            <div id="ManualView" style="HEIGHT: 504px; width: 667px;" class="box">
 	                                <table class="content">
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t31' /></th>
 	                                        <td>
-	                                            <input type="text" id="emailname" style="WIDTH: 100%; ime-mode: active; box-sizing: border-box; -moz-box-sizing: border-box;">
+	                                            <input type="text" id="emailname" style="WIDTH: 99%; ime-mode: active; box-sizing: border-box; -moz-box-sizing: border-box;">
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t35' /></th>
 	                                        <td>
-	                                            <input type="text" id="emailaddr" style="WIDTH: 100%; ime-mode: inactive; box-sizing: border-box; -moz-box-sizing: border-box;" onkeyup="return on_keydown()">
+	                                            <input type="text" id="emailaddr" style="WIDTH: 99%; ime-mode: inactive; box-sizing: border-box; -moz-box-sizing: border-box;" onkeyup="return on_keydown()">
 	                                        </td>
 	                                    </tr>
 	                                </table>
@@ -3397,7 +3397,7 @@
 	            </td>
 	        </tr>
 	    </table>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>

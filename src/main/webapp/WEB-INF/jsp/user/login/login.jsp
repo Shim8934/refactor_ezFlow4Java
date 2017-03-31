@@ -122,6 +122,7 @@
 				
 				if (!CheckPassword(document.getElementById('txtNewPassword').value)) {
 					alert("<spring:message code='main.jjh04'/>");
+					document.all['txtNewPassword'].focus();
 					return;
 				};				
 				
