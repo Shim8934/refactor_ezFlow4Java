@@ -8546,6 +8546,10 @@
             	DOCID = #v_DOCID#
             AND 
             	APRTYPE IN ( '001','004' )
+            ORDER BY 
+            	APRMEMBERSN DESC 
+            LIMIT 
+            	1
 	</select>
 <!-- 	<procedure id="EzApprovalG.updateHabyuiResultAprMemberJobTitle" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_UPDATEHABYUIRESULT_APRM_1(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -8565,6 +8569,8 @@
             	APRTYPE IN ( '001','004' )
             ORDER BY 
             	APRMEMBERSN DESC 
+            LIMIT 
+            	1
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.chkDocDelete" parameterClass="Map" resultClass="String"> -->
