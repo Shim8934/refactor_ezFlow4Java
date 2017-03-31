@@ -141,7 +141,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	final public String StaDSHesong = "032";			// 회송
 
 	// AprType
-	final public String staATYilBan = "001";         // 일반
+	//소스 중복으로 지움
+//	final public String staATYilBan = "001";         // 일반
 	final public String staATGyulJe = "001";         // 결재
 	final public String staatwhoakin = "002";        // 확인
 	final public String staATAnHam = "003";         // 결재안함
@@ -5233,7 +5234,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 			} else if (aprType.equals("001") || aprType.equals("019")) {
 				String lastCnt = "";
-				
+				//TODO: S버젼
 				if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
 					lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
 				}
@@ -8627,13 +8628,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (dlength >= 2) {
 			String aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
 			
-			if (!(aprType.equals(staATYilBan) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATgian))) {
+			if (!(aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATgian))) {
 				rtnVal = false;
 			}
 			
 			aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(1).getTextContent());
 			
-			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATYilBan) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul))) {
+			if (!(aprType.equals(staATGamSaBu) || aprType.equals(staATDekyul) || aprType.equals(staATgumto) || aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATJunGyul))) {
 				rtnVal = false;
 			}
 			
@@ -8668,47 +8669,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		 String result = "<RESULT>TRUE</RESULT>";
 		 
-		    if (docXML.getElementsByTagName("ROW").getLength() > 1)
-            {
+		    if (docXML.getElementsByTagName("ROW").getLength() > 1) {
                 boolean NextLineCheck = false;
-                for (int i = 0; i < docXML.getElementsByTagName("ROW").getLength(); i++)
-                {
+                for (int i = 0; i < docXML.getElementsByTagName("ROW").getLength(); i++) {
                     String aprtype = docXML.getElementsByTagName("APRTYPE").item(i).getTextContent();
                     String aprstate = docXML.getElementsByTagName("APRSTATE").item(i).getTextContent();
                     String aprmenberid = docXML.getElementsByTagName("APRMEMBERID").item(i).getTextContent();
 
-                    if (NextLineCheck == false && tempUserID.trim().equals(aprmenberid.trim()))
-                    {
+                    if (!NextLineCheck && tempUserID.trim().equals(aprmenberid.trim())) {
                         NextLineCheck = true;
-                        if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("008") || aprtype.equals("018")))
-                        {
+                        if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("008") || aprtype.equals("018"))) {
                             result = "<RESULT>FALSE</RESULT>";
                             break;
                         }
-                        if (i == 0 && docXML.getElementsByTagName("APRSTATE").item(0).getTextContent().equals("002"))
-                        {
+                        if (i == 0 && docXML.getElementsByTagName("APRSTATE").item(0).getTextContent().equals("002")) {
                             result = "<RESULT>FALSE</RESULT>";
                             break;
                         }
+                        
                         continue;
                     }
-                    if (NextLineCheck)
-                    {
-                        if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("004") || aprtype.equals("008") || aprtype.equals("013") || aprtype.equals("016") || aprtype.equals("019")))
-                        {
+                    if (NextLineCheck) {
+                        if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("004") || aprtype.equals("008") || aprtype.equals("013") || aprtype.equals("016") || aprtype.equals("019"))) {
                             result = "<RESULT>FALSE</RESULT>";
                             break;
                         }
 
-                        if (aprstate.equals("002"))
-                        {
+                        if (aprstate.equals("002")) {
                             break;
                         }
                     }
                 } 
             } else {
                 result = "<RESULT>FALSE</RESULT>";
-       }
+            }
+		    
 		return result;
 	}
 
@@ -8728,6 +8723,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			sb.append(commonUtil.getQueryResult(apprGLineTempletVOList.get(i)));
 		}
 		sb.append("</DATA>");
+		
 		return sb.toString();
 	}
 
@@ -10949,7 +10945,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 			switch (docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().trim()) {
 			case "001":
-				lastState = staATYilBan;
+				lastState = staATGyulJe;
 				 
 				map3.put("v_APRSTATE", staASJinHang);
 				try{
@@ -10965,7 +10961,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				whileFlag = false;
 				
 				break;
-
 			case "002":
 				lastState = staatwhoakin;
 				
