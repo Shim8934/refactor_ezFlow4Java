@@ -1489,3 +1489,53 @@ var strLangS38  = "결재유형";
 
 var strLangS68 = "수신처참조";
 var strLangS70 = "수신처:";
+
+var strLangS222 = "해당 부서에 사원이 존재하지 않아 ";
+var strLangS223 = "결재선에 등록할 수 없는 부서 입니다.";
+var strLangS224 = "결재참가자를 추가할수 없습니다.";
+var strLangS225 = "다른 회사의 부서입니다. ";
+var strLangS226 = "결재선에 등록할 수 없습니다.";
+var strLangS227 = "이미 등록되어있는 부서입니다. ";
+var strLangS228 = "이미 결재선에 등록되어 있습니다. ";
+var strLangS229 = "결재선에 추가하시겠습니까?";
+
+var strLangS283 = "부서합의에 같은 부서를 지정하실 수 없습니다. ";
+var strLangS285 = "참석칸 수는 ";
+var strLangS286 = "전결이후 최종결재자를 지정해 주세요. ";
+var strLangS287 = "전결이후 최종결재자 이외의 결재유형이 올 수 없습니다. ";
+var strLangS288 = "전결지정없이 결재안함 결재유형이 올 수 없습니다. ";
+var strLangS289 = "합의이후 최종결재자를 지정해 주세요. ";
+var strLangS290 = "부서합의 이후에 감사가 올 수 없습니다. ";
+var strLangS291 = "확인이후 최종결재자를 지정해 주세요. ";
+var strLangS292 = "사전감사 설정이 잘못 되었습니다. ";
+var strLangS293 = "사후공람 설정이 잘못 되었습니다. ";
+var strLangS294 = "부서합의 설정이 잘못 되었습니다. ";
+var strLangS295 = "기안자는 통제자가 될 수 없습니다. ";
+var strLangS296 = "결재방법이 ";
+var strLangS297 = "일수 없습니다. ";
+var strLangS298 = "를 사용할 수 없습니다.";
+var strLangS299 = "동일인이 ";
+var strLangS300 = "로 2번이상 지정될 수 없습니다.";
+var strLangS301 = "기안자나 최종결재자는 ";
+var strLangS302 = "일 수 없습니다.";
+var strLangS303 = "기안자의 겸직부서 선택이 잘못되었습니다.";
+var strLangS304 = "다시 확인하여 주십시요";
+
+var strLangS266 = "결재선이 지정되어있지 않습니다. ";
+var strLangS267 = "다시 확인해주십시오.";
+var strLangS281 = "합의칸 수는 ";
+var strLangS277 = "입니다. ";	
+var strLangS275 = "후결";
+var strLangS131 = "수신";
+var strLangS236 = "통제";
+var strLangS264 = "사전감사";
+var strLangS53 = "부서합의";
+var strLangS214 = "일반";
+var strLangS286 = "전결이후 최종결재자를 지정해 주세요. ";
+var strLangS287 = "전결이후 최종결재자 이외의 결재유형이 올 수 없습니다. ";
+var strLangS288 = "전결지정없이 결재안함 결재유형이 올 수 없습니다. ";
+var strLangS276 = "결재칸 수는 ";
+
+var strLangS305 = "합의를 지정할 수 없습니다. ";
+var strLangS306 = "다시확인하여 주십시요";
+var strLangS307 = "부서 합의를 지정할 수 없습니다. ";

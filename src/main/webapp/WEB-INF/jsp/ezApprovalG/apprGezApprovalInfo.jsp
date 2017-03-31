@@ -172,6 +172,7 @@
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var checkdocinfo = false;
 			var startDateTime = '${startDateTime}';
+			var pAdmin = "N";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -722,20 +723,21 @@
 		    }
 		
 		    function btn_OK() {
-		        try {
+// 		        try {
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
 		                    return;
 		                }
-		                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
-		                    var rtnVal = CheckSignCellValueLast();
-		
-		                    if (!rtnVal)
-		                        return;
-		                }
      
 		                if (approvalFlag == "G") {
+			                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
+			                    var rtnVal = CheckSignCellValueLast();
+			
+			                    if (!rtnVal)
+			                        return;
+			                }
+			                
 			                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 			                    if (hideCabinet == "0") {
 				                    var List = new ListView();
@@ -781,12 +783,24 @@
 			                    Tab1_MouseClick(tabshow);
 			                    return;
 			                }
+			                
+			                ret[0] = "OK";
+			                ret[1] = SaveAprLineList(); //결재선 저장 XML
 		                } else {
+		                    var lineArea = CheckLineArea();
+		                    if (!lineArea)
+		                        return;
+
+		                    var lineuser = SCheckLineUser();
+		                    if (lineuser == false) {
+		                        return;
+		                    }
+		                    
 		                	docinfo = MakeDocInfo();
+		                	
+			                ret[0] = "OK";
+			                ret[1] = SAPRLINETEMPLETXMLParsing(); //결재선 저장 XML
 		                }
-		
-		                ret[0] = "OK";
-		                ret[1] = SaveAprLineList(); //결재선 저장 XML
 		
 		                CheckAprPerson();
 		                var listview = new ListView();
@@ -907,11 +921,11 @@
 		            	
                         window.close();
 		            }
-		        }
-		        catch (e) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-		            ret[0] = "FALSE";
-		        }
+// 		        }
+// 		        catch (e) {
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+// 		            ret[0] = "FALSE";
+// 		        }
 		    }
 		    
 		    function setCabInfoXML() {

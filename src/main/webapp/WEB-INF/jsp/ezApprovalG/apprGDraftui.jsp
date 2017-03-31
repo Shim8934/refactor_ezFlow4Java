@@ -1201,7 +1201,7 @@
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
-		
+
 		                if (ret[1] != false) {
 		                    savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
 		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");

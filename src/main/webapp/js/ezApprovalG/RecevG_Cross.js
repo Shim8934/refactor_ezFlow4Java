@@ -1377,8 +1377,6 @@ function GetDraftAprLineInfo(ret) {
             susinSN = pSusinSN
         }
 
-
-
         for (i = 1; i < 20; i++) {
             name = susinSN + "habyuisign" + i
             field = message.GetListItem(fields, name);

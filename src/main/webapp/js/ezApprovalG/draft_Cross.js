@@ -156,6 +156,10 @@ function GetDraftAprLineInfo(ret)
    		var suggester = getNodeText(Cell[13]);
    		var reporter = getNodeText(Cell[14]);
 	      	
+   		if (KyljeaType == "003") {
+   			continue;
+   		}
+   		
 	    OrderType[KyljeaOrder] = KyljeaType;
 	    OrderTypeName[KyljeaOrder] = KyljeaTypeName;
 	    OrderName[KyljeaOrder] = KyljeaName;

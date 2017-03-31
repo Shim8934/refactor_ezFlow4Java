@@ -1,11 +1,22 @@
 ﻿//#############################################################################################################################################결재선 초기화
 function Lineinfo_ini() {
     if (!Lineinfoini) {
-        Tree_setconfig();
-        Lineinfoini = true;
-        TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
-        InitListView();
-        ChangeLineTab("Organ");
+    	if (approvalFlag == "S") {
+            Tree_setconfig();
+            Lineinfoini = true;
+            TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
+            InitListView();
+            displayUserList(DeptID);
+            ChangeLineTab("Organ");
+            initJunGyul();
+            CheckCurAprLine();
+    	} else {
+    		Tree_setconfig();
+    		Lineinfoini = true;
+    		TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "");
+    		InitListView();
+    		ChangeLineTab("Organ");
+    	}
     }
 }
 //#############################################################################################################################################결재선 내부 탭 이벤트
@@ -60,82 +71,147 @@ function Tree_setconfig() {
     }
 }
 //############################################################################################################################################# 결재선 리스트 결재유형 드랍다운박스 처리 
+//S버젼 안쓰는거같아서 주석
 function LineAprTyepSet() {
-    var pAPRLINE = new ListView(); 
+    var pAPRLINE = new ListView();
     pAPRLINE.LoadFromID("lvAPRLINE");
-    
     var pSelectedRow = pAPRLINE.GetSelectedRows();
-    var p_isDept = pSelectedRow[0].getAttribute("DATA5")
-    var p_StatusDis = pSelectedRow[0].getAttribute("DATA12") == "001" ? "" : pAPRLINE.GetDataRows().length == 1 ? "" : "disabled";
+    var p_isDept = GetAttribute(pSelectedRow[0], "DATA5")
     var AprTyepID = "";
+    var CurrentSn = getNodeText(pSelectedRow[0].childNodes.item(0));
+    var p_StatusDis = GetAttribute(pSelectedRow[0], "DATA12") == "003" ? "disabled" : "";
     if (p_isDept == "Y") {
-        var AprTypeObj = ChangeAprlineType("group", pSelectedRow[0].getAttribute("DATA11"));
-        AprTyepID = pSelectedRow[0].getAttribute("id") + "select";
-        AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+        var AprTypeObj = SChangeAprlineType("group", GetAttribute(pSelectedRow[0], "DATA11"));
+        AprTyepID = GetAttribute(pSelectedRow[0], "id") + "select";
+        AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
         pSelectedRow[0].childNodes[4].innerHTML = AprTypeObj;
     } else {
-        var AprTypeObj = ChangeAprlineType("user", pSelectedRow[0].getAttribute("DATA11"));
-        AprTyepID = pSelectedRow[0].getAttribute("id") + "select";
-        AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+        var AprTypeObj = SChangeAprlineType("user", GetAttribute(pSelectedRow[0], "DATA11"));
+        AprTyepID = GetAttribute(pSelectedRow[0], "id") + "select";
+        AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
         pSelectedRow[0].childNodes[4].innerHTML = AprTypeObj;
     }
+    
+    LineAprTyepSetAll();
 }
+
 var p_RejectFlag = false;
 var ProSn = 0;
 function LineAprTyepSetAll() {
-    aprlinecount = 0;
-    var pAPRLINE = new ListView();   
-    pAPRLINE.LoadFromID("lvAPRLINE");
-    var pTotalRows = pAPRLINE.GetDataRows();
-    for (var i = 0; i < pTotalRows.length; i++) {
-        var p_isDept = pTotalRows[i].getAttribute("DATA5");
-        var CurrentSn = CrossYN() ? pTotalRows[i].childNodes.item(0).textContent : pTotalRows[i].childNodes.item(0).innerText;
-        
-        if (pTotalRows[i].getAttribute("DATA12") == "002") {
-        	ProSn = CurrentSn;
-        }
+	if (approvalFlag == "S") {
+		var pAPRLINE = new ListView();
+	    pAPRLINE.LoadFromID("lvAPRLINE");
+	    var pTotalRows = pAPRLINE.GetDataRows();
+	    for (var i = 0; i < pTotalRows.length; i++) {
+	        var CurrentSn = getNodeText(pTotalRows[i].childNodes.item(0));
 
-        if (pTotalRows[i].getAttribute("DATA12") == "004")
-            p_RejectFlag = true;
-        
+	        if (GetAttribute(pTotalRows[i], "DATA12") == "002")
+	            ProSn = CurrentSn;
 
-        var p_StatusDis = (CurrentSn != 1 && (pTotalRows[i].getAttribute("DATA12") == "001" || p_RejectFlag)) ? "" : pTotalRows.length == 1 ? "" : "disabled";
-        if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
-            p_StatusDis = "disabled";
-        
+	        var p_isDept = GetAttribute(pTotalRows[i], "DATA5");
+	        
+	        if (GetAttribute(pTotalRows[i], "DATA12") == "004")
+	            p_RejectFlag = true;
+
+	        var p_StatusDis = (GetAttribute(pTotalRows[i], "DATA12") == "003" && !p_RejectFlag) ? "disabled" : "";
+	        if (p_isDept == "Y") {
+	            var AprTypeObj = SChangeAprlineType("group", GetAttribute(pTotalRows[i], "DATA11"));
+	            if (AprTypeObj == "") {
+	                pAPRLINE.DeleteRow(pTotalRows[i].id);
+	            }
+	            else {
+	                if (GetAttribute(pTotalRows[i], "DATA12") == "015")
+	                    p_StatusDis = "disabled";
+	                AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
+	                AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+	                pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+	            }
+	        } else {
+	            if (pTotalRows.length == 1)
+	                p_StatusDis = "disabled";
+	            else {
+	                if (CurrentSn == "1")
+	                    p_StatusDis = "disabled";
+
+	                if (GetAttribute(pTotalRows[i], "DATA12") == "002" && CurrentSn == ProSn)
+	                    p_StatusDis = "disabled";
+
+	                if ((GetAttribute(pTotalRows[i], "DATA11") == "009" || GetAttribute(pTotalRows[i], "DATA11") == "007" || GetAttribute(pTotalRows[i], "DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
+	                    p_StatusDis = "disabled";
+	                
+	                if (GetAttribute(pTotalRows[i],"DATA8") == "Y")    
+	                     p_StatusDis = "disabled";
+	            }
+	            if (GetAttribute(pTotalRows[i], "DATA11") != "003") {
+	                var AprTypeObj = SChangeAprlineType("user", GetAttribute(pTotalRows[i], "DATA11"));
+	                if (AprTypeObj == "") {
+	                    pAPRLINE.DeleteRow(pTotalRows[i].id);
+	                }
+	                else {
+	                    AprTyepID = GetAttribute(pTotalRows[i], "id") + "select";
+	                    AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style=\"width:100%;\"" + p_StatusDis + " >" + AprTypeObj + "</select>";
+	                    pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+	                    var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
+	                    SetAttribute(pTotalRows[i], "DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
+	                }
+	            }
+	        }
+	    }
+	} else {
+		aprlinecount = 0;
+		var pAPRLINE = new ListView();   
+		pAPRLINE.LoadFromID("lvAPRLINE");
+		var pTotalRows = pAPRLINE.GetDataRows();
+		for (var i = 0; i < pTotalRows.length; i++) {
+			var p_isDept = pTotalRows[i].getAttribute("DATA5");
+			var CurrentSn = CrossYN() ? pTotalRows[i].childNodes.item(0).textContent : pTotalRows[i].childNodes.item(0).innerText;
+			
+			if (pTotalRows[i].getAttribute("DATA12") == "002") {
+				ProSn = CurrentSn;
+			}
+			
+			if (pTotalRows[i].getAttribute("DATA12") == "004")
+				p_RejectFlag = true;
+			
+			
+			var p_StatusDis = (CurrentSn != 1 && (pTotalRows[i].getAttribute("DATA12") == "001" || p_RejectFlag)) ? "" : pTotalRows.length == 1 ? "" : "disabled";
+			if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
+				p_StatusDis = "disabled";
+			
 //        if (approvalFlag == "S") {
 //        	if (pTotalRows[i].getAttribute("DATA12") == "002" && parseInt(CurrentSn) == parseInt(ProSn)) {
 //        		p_StatusDis = "disabled";
 //        	}
 //        }
-        if (p_isDept == "Y") {
-            var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
-            AprTyepID = pTotalRows[i].getAttribute("id") + "select";
-            AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
-            pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
-        } else {
-            var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA11"));
-            AprTyepID = pTotalRows[i].getAttribute("id") + "select";
-            AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
-            pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
-
-            if (pTotalRows[i].childNodes[0].innerHTML != pTotalRows.length && pTotalRows[i].getAttribute("DATA11") == "001") {
-                pTotalRows[i].setAttribute("DATA11", "019");
-            }
-            else if (pTotalRows[i].childNodes[0].innerHTML.replace("★","").replace("⊙","") == "1" && pTotalRows[i].getAttribute("DATA11") == "001") {
-                pTotalRows[i].setAttribute("DATA11", "018");
-            }
-            
-            var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
-        	pTotalRows[i].setAttribute("DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
-        	
+			if (p_isDept == "Y") {
+				var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
+				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
+				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+			} else {
+				var AprTypeObj = ChangeAprlineType("user", pTotalRows[i].getAttribute("DATA11"));
+				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
+				AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchangeLine(this)\" style =\"width:100%\" " + p_StatusDis + " >" + AprTypeObj + "</select>";
+				pTotalRows[i].childNodes[4].innerHTML = AprTypeObj;
+				
+				if (pTotalRows[i].childNodes[0].innerHTML != pTotalRows.length && pTotalRows[i].getAttribute("DATA11") == "001") {
+					pTotalRows[i].setAttribute("DATA11", "019");
+				}
+				else if (pTotalRows[i].childNodes[0].innerHTML.replace("★","").replace("⊙","") == "1" && pTotalRows[i].getAttribute("DATA11") == "001") {
+					pTotalRows[i].setAttribute("DATA11", "018");
+				}
+				
+				var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
+				pTotalRows[i].setAttribute("DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
+				
 //        	if (approvalFlag == "S") {
 //        		if (pTotalRows.length == "1" && pTotalRows[i].getAttribute("DATA12") == "002") {
 //        			pTotalRows[i].setAttribute("DATA11", "001");
 //        		}
 //        	}
-        }
-    }
+			}
+		}
+	}
 }
 
 //############################################################################################################################################# 결재방법 지정 함수
@@ -158,6 +234,14 @@ function AprlineType_onchangeLine(obj) {
 
         if (Rtnval)
             APRLINETYPECHANGEFunction(pCheckTypevalue, TypeName);
+        
+        if (approvalFlag == "S") {
+        	if (TypeName != strLangAprType4) {
+                checkdisabled();
+            }
+        	
+            onclickLine = true;
+        }
     }
 }
 //############################################################################################################################################# 결재선 리스트 초기화
@@ -165,6 +249,7 @@ var xmlhttp;
 function InitListView() {
     try {
     	var result = "";
+    	
     	$.ajax({
     		type : "POST",
     		dataType : "text",
@@ -180,9 +265,10 @@ function InitListView() {
     			result = xml;
     		}        			
     	});
+    	
     	result = loadXMLString(result);
+    	
         var NodeList = createXmlDom();
-        
         NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
         
         var nodeCnt;
@@ -196,108 +282,203 @@ function InitListView() {
         pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
         pAPRLINE.SetSelectFlag(false);
         
-        var tempdeptname = "";
-
-        var curaprline = 1;
-        for (var i = 0; i < NodeList.length; i++) {
-            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
-                curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
-                break;
-            }
-        }
-
-        if (nodeCnt > 0) {
-            if (CrossYN())
-                tempdeptname = result.documentElement.getElementsByTagName("DATA6")[nodeCnt - 1].textContent;
-            else
-                tempdeptname = result.documentElement.getElementsByTagName("DATA6")[nodeCnt - 1].text;
-        }
-        if (curaprline == 1 && tempdeptname != arr_userinfo[4]) {
-            var DraftXml;
-            DraftXml = AddDraftUserFirst();
-            Resultxml = loadXMLString(DraftXml);
-            pAPRLINE.DataSource(Resultxml);
-            pAPRLINE.DataBind("APRLINE");
-        }
-        else {
-            var DraftNode = createXmlDom();
-            DraftNode = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW")[nodeCnt - 1];
-            var IniListData4 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA4").trim();
-            var IniListData6 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA6").trim();
-            var IniListData10 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA10").trim();
-            var IniListData13 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim();
-            var IniListData14 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim();
-            var IniListData15 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim();
-            var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
-            var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
-            var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
-            if ((IniListData4 == arr_userinfo[1] && IniListData6 == arr_userinfo[4] && IniListData10 == companyID && IniListData13 == arr_userinfo[11] &&
-                IniListData14 == arr_userinfo[12] && IniListData15 == arr_userinfo[15] && IniListData16 == arr_userinfo[16] && IniListData17 == arr_userinfo[13] && IniListData18 == arr_userinfo[14]) || curaprline != 1) {
-                var susinreset = false;
-                for (var i = 0; i < NodeList.length; i++) {
-                    if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA11") == strAprType14) {
-                        susinreset = true;
-                        break;
-                    }
-                }
-                if (susinreset) {
-                    var DraftXml;
-                    DraftXml = AddDraftUserFirst();
-                    Resultxml = loadXMLString(DraftXml);
-                    pAPRLINE.DataSource(Resultxml);
-                    pAPRLINE.DataBind("APRLINE");
-                }
-                else {
-                    pAPRLINE.DataSource(result);
-                    pAPRLINE.DataBind("APRLINE");
-                }
-            }
-            else {
-                var DraftXml;
-                DraftXml = AddDraftUserFirst();
-                Resultxml = loadXMLString(DraftXml);
-                pAPRLINE.DataSource(Resultxml);
-                pAPRLINE.DataBind("APRLINE");
-            }
-        }
-        
-    	LineAprTyepSetAll();
-
-        if (pReDraftFlag != "HAPYUI" && pReDraftFlag != "HABYUI") {
-            for (var i = 0; i < pAPRLINE.GetRowCount() ; i++) {
-                if (pAPRLINE.GetDataRows()[i].getAttribute("DATA8") == "Y") {
-                    pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "★" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML;
-                }
-                if (pAPRLINE.GetDataRows()[i].getAttribute("DATA9") == "Y") {
-                    pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "⊙" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML;
-                }
-            }
+        if (approvalFlag == "S") {
+        	if (pAdmin == "Y") {
+        		var DraftNode = createXmlDom();
+        	    DraftNode = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW")[nodeCnt - 1];
+        	    var IniListData4 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA4").trim();
+        	    var IniListData6 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA6").trim();
+        	    var IniListData10 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA10").trim();
+        	    var IniListData13 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim();
+        	    var IniListData14 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim();
+        	    var IniListData15 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim();
+        	    var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
+        	    var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
+        	    var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
+        	    var curaprline = "";
+        	    for (var i = 0; i < NodeList.length; i++) {
+        	        if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
+        	            curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
+        	            break;
+        			}
+        		}
+        		pAPRLINE.DataSource(result);
+            	pAPRLINE.DataBind("APRLINE");
+        	} else {
+        	    if (nodeCnt <= 1) {
+        	        var DraftXml;
+        	        DraftXml = AddDraftUserFirst();
+        	        Resultxml = loadXMLString(DraftXml);
+        	        pAPRLINE.DataSource(Resultxml);
+        	        pAPRLINE.DataBind("APRLINE");
+        	    } else {
+        	        var DraftNode = createXmlDom();
+        	        DraftNode = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW")[nodeCnt - 1];
+        	        var IniListData4 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA4").trim();
+        	        var IniListData6 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA6").trim();
+        	        var IniListData10 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA10").trim();
+        	        var IniListData13 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim();
+        	        var IniListData14 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim();
+        	        var IniListData15 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim();
+        	        var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
+        	        var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
+        	        var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
+        	        var curaprline = "";
+        	        for (var i = 0; i < NodeList.length; i++) {
+        	            if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
+        	                curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
+        	                break;
+        	            }
+        	        }
+        	        if ((IniListData4 == arr_userinfo[1] && IniListData6 == arr_userinfo[4] && IniListData10 == companyID && IniListData13 == arr_userinfo[11] &&
+        	            IniListData14 == arr_userinfo[12] && IniListData15 == arr_userinfo[15] && IniListData16 == arr_userinfo[16] && IniListData17 == arr_userinfo[13] && IniListData18 == arr_userinfo[14]) || curaprline != 1) {
+        	            var susinreset = false;
+        	            for (var i = 0; i < NodeList.length; i++) {
+        	                if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA11") == strAprType14) {
+        	                    susinreset = true;
+        	                    break;
+        	                }
+        	            }
+        	            if (susinreset) {
+        	                var DraftXml;
+        	                DraftXml = AddDraftUserFirst();
+        	                Resultxml = loadXMLString(DraftXml);
+        	                pAPRLINE.DataSource(Resultxml);
+        	                pAPRLINE.DataBind("APRLINE");
+        	            }
+        	            else {
+        	                pAPRLINE.DataSource(result);
+        	                pAPRLINE.DataBind("APRLINE");
+        	            }
+        	        } else {
+        	            var DraftXml;
+        	            DraftXml = AddDraftUserFirst();
+        	            Resultxml = loadXMLString(DraftXml);
+        	            pAPRLINE.DataSource(Resultxml);
+        	            pAPRLINE.DataBind("APRLINE");
+        	        }
+        	    }
+        	}
+        	
+            LineAprTyepSetAll();
+        } else {
+        	var tempdeptname = "";
+        	
+        	var curaprline = 1;
+        	for (var i = 0; i < NodeList.length; i++) {
+        		if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA12") == strAprState2) {
+        			curaprline = SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "VALUE");
+        			break;
+        		}
+        	}
+        	
+        	if (nodeCnt > 0) {
+        		if (CrossYN())
+        			tempdeptname = result.documentElement.getElementsByTagName("DATA6")[nodeCnt - 1].textContent;
+        		else
+        			tempdeptname = result.documentElement.getElementsByTagName("DATA6")[nodeCnt - 1].text;
+        	}
+        	if (curaprline == 1 && tempdeptname != arr_userinfo[4]) {
+        		var DraftXml;
+        		DraftXml = AddDraftUserFirst();
+        		Resultxml = loadXMLString(DraftXml);
+        		pAPRLINE.DataSource(Resultxml);
+        		pAPRLINE.DataBind("APRLINE");
+        	}
+        	else {
+        		var DraftNode = createXmlDom();
+        		DraftNode = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW")[nodeCnt - 1];
+        		var IniListData4 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA4").trim();
+        		var IniListData6 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA6").trim();
+        		var IniListData10 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA10").trim();
+        		var IniListData13 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA13").trim();
+        		var IniListData14 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA14").trim();
+        		var IniListData15 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA15").trim();
+        		var IniListData16 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA16").trim();
+        		var IniListData17 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA17").trim();
+        		var IniListData18 = SelectSingleNodeValue(GetChildNodes(DraftNode)[0], "DATA18").trim();
+        		if ((IniListData4 == arr_userinfo[1] && IniListData6 == arr_userinfo[4] && IniListData10 == companyID && IniListData13 == arr_userinfo[11] &&
+        				IniListData14 == arr_userinfo[12] && IniListData15 == arr_userinfo[15] && IniListData16 == arr_userinfo[16] && IniListData17 == arr_userinfo[13] && IniListData18 == arr_userinfo[14]) || curaprline != 1) {
+        			var susinreset = false;
+        			for (var i = 0; i < NodeList.length; i++) {
+        				if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA11") == strAprType14) {
+        					susinreset = true;
+        					break;
+        				}
+        			}
+        			if (susinreset) {
+        				var DraftXml;
+        				DraftXml = AddDraftUserFirst();
+        				Resultxml = loadXMLString(DraftXml);
+        				pAPRLINE.DataSource(Resultxml);
+        				pAPRLINE.DataBind("APRLINE");
+        			}
+        			else {
+        				pAPRLINE.DataSource(result);
+        				pAPRLINE.DataBind("APRLINE");
+        			}
+        		}
+        		else {
+        			var DraftXml;
+        			DraftXml = AddDraftUserFirst();
+        			Resultxml = loadXMLString(DraftXml);
+        			pAPRLINE.DataSource(Resultxml);
+        			pAPRLINE.DataBind("APRLINE");
+        		}
+        	}
+        	
+        	LineAprTyepSetAll();
+        	
+        	if (pReDraftFlag != "HAPYUI" && pReDraftFlag != "HABYUI") {
+        		for (var i = 0; i < pAPRLINE.GetRowCount() ; i++) {
+        			if (pAPRLINE.GetDataRows()[i].getAttribute("DATA8") == "Y") {
+        				pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "★" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML;
+        			}
+        			if (pAPRLINE.GetDataRows()[i].getAttribute("DATA9") == "Y") {
+        				pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML = "⊙" + pAPRLINE.GetDataRows()[i].childNodes[0].innerHTML;
+        			}
+        		}
+        	}
         }
     } catch (e) {
         alert("InitListView :: " + e.description);
     }
 }
 
-function initJunGyul()
-{
+function initJunGyul() {
     var pAPRLINE = new ListView();
     pAPRLINE.LoadFromID("lvAPRLINE");
-
     var pTotalRows = pAPRLINE.GetDataRows();
+
+    if (pTotalRows == undefined)
+        return;
+
     var pTotalRowsLen = pTotalRows.length;
-    
-    for(var i = pTotalRowsLen-1; i > 0; i--)
-    {
-        if(pTotalRows[i].getAttribute("DATA5") == "N")
-        {
-            if( findOptionNum("A03004") != undefined && pTotalRows[i].cells[4].childNodes[0].options[findOptionNum("A03004")].selected)
-            {
-                for(var y=0; y < i; y++)
-                {
-                    pTotalRows[y].cells[4].childNodes[0].disabled = true;   
+
+    for (var i = pTotalRowsLen - 1; i > 0; i--) {
+        if (GetAttribute(pTotalRows[i], "DATA5") == "N") {
+            for (var z = 0; z < pTotalRows[i].cells[4].childNodes[0].length; z++) {
+                var temprowvalue = getNodeText(pTotalRows[i].cells[4].childNodes[0].options[z]);
+
+                if (pTotalRows[i].cells[4].childNodes[0].options[z].selected && temprowvalue == strLangAprType4) {
+                    SetAttribute(pTotalRows[i], "DATA11", strAprType4);
+                    for (var y = 0; y < i; y++) {
+                        var SelectObjectId = GetAttribute(pTotalRows[y], "id") + "select";
+
+                        var p_Option = document.createElement("OPTION");
+                            setNodeText(p_Option,strLangAprType3);
+
+                        p_Option.setAttribute("value", "003");
+                        p_Option.setAttribute("value2", strLangAprType3);
+
+                        var AprTypeObj = "<select id='" + SelectObjectId + "' disabled style='width:100%;'>" + p_Option.outerHTML + "</select>";
+                        pTotalRows[y].cells[4].innerHTML = AprTypeObj;
+                        SetAttribute(pTotalRows[y], "DATA11", strAprType3);
+                    }
+
                 }
-                
             }
+
         }
     }
 }
@@ -405,8 +586,8 @@ function searchUserList(search)
 			async : true,
 			url : "/ezOrgan/getSearchList.do",
 			data : {
-				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
-				cell   : "displayname;description;title;telephonenumber",
+				search : "displayName::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
+				cell   : "displayName;description;title;telephoneNumber",
 				prop   : "department;displayName;description;title",
 				type   : "user"
 			},
@@ -535,45 +716,55 @@ function AprTypeToName(tempCode) {
 function AddDraftUserFirst() {
     var pparsingXML;
     pparsingXML = "<LISTVIEWDATA><HEADERS>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-    pparsingXML = pparsingXML + "</HEADERS><ROWS>";
-    pparsingXML = pparsingXML + "<ROW><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + "1" + "</VALUE>";
-    pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
-    pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
-    pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
-    pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(arr_userinfo[1]) + "</DATA4>";
-    pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
-    pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(arr_userinfo[4]) + "</DATA6>";
-    pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
-    pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
-    pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
-    pparsingXML = pparsingXML + "<DATA10>" + MakeXMLString(companyID) + "</DATA10>";
-    pparsingXML = pparsingXML + "<DATA11>" + strAprType18 + "</DATA11>";
-    pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
-    pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
-    pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
-    pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(arr_userinfo[15]) + "</DATA15>";
-    pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(arr_userinfo[16]) + "</DATA16>";
-    pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(arr_userinfo[13]) + "</DATA17>";
-    pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(arr_userinfo[14]) + "</DATA18>";
-    pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[2]) + "</VALUE>";
-    pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[3]) + "</VALUE>";
-    pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[5]) + "</VALUE>";
-    pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + strLangAprType18 + "</VALUE>";
-    pparsingXML = pparsingXML + "</CELL><CELL>";
-    pparsingXML = pparsingXML + "<VALUE>" + strLangAprState1 + "</VALUE>";
-    pparsingXML = pparsingXML + "</CELL><CELL></CELL></ROW></ROWS></LISTVIEWDATA>";
+	pparsingXML += "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+	pparsingXML += "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+	pparsingXML += "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	pparsingXML += "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+	pparsingXML += "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+	pparsingXML += "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+	pparsingXML += "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+    pparsingXML += "</HEADERS><ROWS>";
+    pparsingXML += "<ROW><CELL>";
+    pparsingXML += "<VALUE>" + "1" + "</VALUE>";
+    pparsingXML += "<DATA1>" + "" + "</DATA1>";
+    pparsingXML += "<DATA2>" + "" + "</DATA2>";
+    pparsingXML += "<DATA3>" + pDocID + "</DATA3>";
+    pparsingXML += "<DATA4>" + MakeXMLString(arr_userinfo[1]) + "</DATA4>";
+    pparsingXML += "<DATA5>" + "N" + "</DATA5>";
+    pparsingXML += "<DATA6>" + MakeXMLString(arr_userinfo[4]) + "</DATA6>";
+    pparsingXML += "<DATA7>" + "" + "</DATA7>";
+    pparsingXML += "<DATA8>" + "N" + "</DATA8>";
+    pparsingXML += "<DATA9>" + "N" + "</DATA9>";
+    pparsingXML += "<DATA10>" + MakeXMLString(companyID) + "</DATA10>";
+    
+    if (approvalFlag == "S") {
+    	pparsingXML += "<DATA11>" + strAprType1 + "</DATA11>";
+    } else {
+    	pparsingXML += "<DATA11>" + strAprType18 + "</DATA11>";
+    }
+    pparsingXML += "<DATA12>" + strAprState1 + "</DATA12>";
+    pparsingXML += "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
+    pparsingXML += "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
+    pparsingXML += "<DATA15>" + MakeXMLString(arr_userinfo[15]) + "</DATA15>";
+    pparsingXML += "<DATA16>" + MakeXMLString(arr_userinfo[16]) + "</DATA16>";
+    pparsingXML += "<DATA17>" + MakeXMLString(arr_userinfo[13]) + "</DATA17>";
+    pparsingXML += "<DATA18>" + MakeXMLString(arr_userinfo[14]) + "</DATA18>";
+    pparsingXML += "</CELL><CELL>";
+    pparsingXML += "<VALUE>" + MakeXMLString(arr_userinfo[2]) + "</VALUE>";
+    pparsingXML += "</CELL><CELL>";
+    pparsingXML += "<VALUE>" + MakeXMLString(arr_userinfo[3]) + "</VALUE>";
+    pparsingXML += "</CELL><CELL>";
+    pparsingXML += "<VALUE>" + MakeXMLString(arr_userinfo[5]) + "</VALUE>";
+    pparsingXML += "</CELL><CELL>";
+    
+    if (approvalFlag == "S") {
+    	pparsingXML += "<VALUE>" + strLangAprType1 + "</VALUE>";
+    } else {
+    	pparsingXML += "<VALUE>" + strLangAprType18 + "</VALUE>";
+    }
+    pparsingXML += "</CELL><CELL>";
+    pparsingXML += "<VALUE>" + strLangAprState1 + "</VALUE>";
+    pparsingXML += "</CELL><CELL></CELL></ROW></ROWS></LISTVIEWDATA>";
     return pparsingXML;
 }
 var aprlinecount = 0;
@@ -765,6 +956,150 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
     } catch (e) {
         alert("ChangeAprlineType :: " + e.description);
     }
+    return ReturnValue;
+}
+
+//S전용
+function SChangeAprlineType(CheckGPerson, CurrentAprType) {
+    var ReturnValue = "";
+    try {
+        var pAPRLINE = new ListView();
+        pAPRLINE.LoadFromID("lvAPRLINE");
+        if (CheckGPerson == "group") {
+            var selDeptID = GetAttribute(pAPRLINE.GetSelectedRows()[0], "DATA4");
+            var p_AprlineValue = new Array();
+            var p_AprlineCode = new Array();
+
+            var i = 0;
+            var j = 0;
+
+            for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
+                if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
+                    if (pGamSaCount > 0) {
+                        p_AprlineValue[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "NAME");
+                        p_AprlineCode[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE");
+                        j = j + 1;
+                    }
+                }
+                else {
+                    if (pHapYuiCount > 0) {
+                        p_AprlineValue[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "NAME");
+                        p_AprlineCode[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE");
+                        j = j + 1;
+                    }
+                }
+            }
+
+            var p_Aprlinelen = p_AprlineValue.length;
+            for (i = 0; i < p_Aprlinelen; i++) {
+                var p_Option = document.createElement("OPTION");
+                setNodeText(p_Option,p_AprlineValue[i]);
+
+                p_Option.setAttribute("value", p_AprlineCode[i]);
+                p_Option.setAttribute("value2", p_AprlineValue[i]);
+
+                if (CurrentAprType == p_AprlineCode[i])
+                    p_Option.setAttribute("selected", "true");
+
+                ReturnValue = ReturnValue + p_Option.outerHTML;
+            }
+        }
+        else if (CheckGPerson == "user") {
+            var selUserID = GetAttribute(pAPRLINE.GetSelectedRows()[0], "DATA4");
+            {
+                var p_AprlineValue = new Array();
+                var p_AprlineCode = new Array();
+                var i = 0;
+                var j = 0;
+                var tempName = "";
+                var tempCode = "";
+                var selLength = SelectNodes(AprTypeXML, "APRTYPES/USERTYPES/APRTYPE").length;
+
+                for (i = 0; i < selLength; i++) {
+                    tempName = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/USERTYPES/APRTYPE")[i], "NAME");
+                    tempCode = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/USERTYPES/APRTYPE")[i], "CODE");
+
+                    switch (tempCode) {
+                        case "001":
+                            p_AprlineValue[j] = tempName;
+                            p_AprlineCode[j] = tempCode;
+                            j = j + 1;
+                            break;
+
+                        case "002":
+                            p_AprlineValue[j] = tempName;
+                            p_AprlineCode[j] = tempCode;
+                            j = j + 1;
+                            break;
+
+                        case "003":
+                            p_AprlineValue[j] = tempName;
+                            p_AprlineCode[j] = tempCode;
+                            j = j + 1;
+                            break;
+
+                        case "004":
+                            p_AprlineValue[j] = tempName;
+                            p_AprlineCode[j] = tempCode;
+                            j = j + 1;
+                            break;
+
+                        case "007":
+                            if (pChamJoFlag == "Y" && pReDraftFlag != "GAMSABU") {
+                                p_AprlineValue[j] = tempName;
+                                p_AprlineCode[j] = tempCode;
+                                j = j + 1;
+                            }
+                            break;
+                        case "008":
+                            if (pHapYuiCount > 0) {
+                                p_AprlineValue[j] = tempName;
+                                p_AprlineCode[j] = tempCode;
+                                j = j + 1;
+                            }
+                            break;
+                        case "009":
+                            if (pHapYuiCount > 0) {
+                                p_AprlineValue[j] = tempName;
+                                p_AprlineCode[j] = tempCode;
+                                j = j + 1;
+                            }
+                            break;
+
+                        case "031":
+                            if (pReDraftFlag == "DRAFT" || pReDraftFlag == "REDRAFT") {
+                                p_AprlineValue[j] = tempName;
+                                p_AprlineCode[j] = tempCode;
+                                j = j + 1;
+                            }
+                            break;
+                        default:
+                            p_AprlineValue[j] = tempName;
+                            p_AprlineCode[j] = tempCode;
+                            j = j + 1;
+                            break;
+                    }
+                }
+
+                var p_Aprlinelen = p_AprlineValue.length;
+                for (i = 0; i < p_Aprlinelen; i++) {
+                    var p_Option = document.createElement("OPTION");
+                    setNodeText(p_Option,p_AprlineValue[i]);
+                    p_Option.setAttribute("value", p_AprlineCode[i]);
+                    p_Option.setAttribute("value2", p_AprlineValue[i]);
+                    if (CurrentAprType == p_AprlineCode[i]) {
+                        p_Option.setAttribute("selected", "true");
+                    }
+                    ReturnValue = ReturnValue + p_Option.outerHTML;
+
+                }
+            }
+        }
+
+    } catch (e) {
+        alert("ChangeAprlineType :: " + e.description);
+    }
+    
     return ReturnValue;
 }
 

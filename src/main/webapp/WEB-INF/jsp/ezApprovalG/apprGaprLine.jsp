@@ -101,7 +101,7 @@
 		                pUserID = arr_userinfo[1];
 		            InitDeptID = arr_userinfo[4];
 		            Tree_setconfig();
-		            TreeViewinitialize(InitDeptID, companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayname", "${serverName}");
+		            TreeViewinitialize(InitDeptID, companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
 		            InitListView();
 		            InitAprlineTemplet();
 		            hideProgress();
@@ -315,6 +315,7 @@
 		            if (pCurSelRow.length != 0) {
 		                RtnVal = CheckSignCellValue();
 		                if (RtnVal) {
+alert(303);
 		                    APRLINEATTENDADDFunction(pCurSelRow, "PERSON");
 		                }
 		            }
@@ -329,6 +330,7 @@
 		                    var treeView = new TreeView();
 		                    treeView.LoadFromID("FromTreeView");
 		                    var pTreeSelNode = treeView.GetSelectNode();
+alert(304);
 		                    APRLINEATTENDADDFunction(pTreeSelNode, "DEPT");
 		                }
 		            }
@@ -467,6 +469,7 @@
 		        pAPRLINE.LoadFromID("pAPRLINE");
 		        var pSelRow = pAPRLINE.GetSelectedRows();
 		        if (RtnVal) {
+alert(302);
 		            APRLINEATTENDADDFunction(selnode, "PERSON");
 		        }
 		    }
