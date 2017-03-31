@@ -21827,7 +21827,7 @@
    			TBL_APRLINEINFO 
    		(DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, COMPANYID, TENANT_ID) 
    		VALUES 
-   		(#v_DOCID#, '1', #v_APRTYPE#, #v_APRSTATE#, #v_WRITERID#, 'N', #v_WRITERNAME#, #v_WRITERNAME2, #v_WRITERJOBTITLE, #v_WRITERJOBTITLE2, #v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, #orgCompanyID#, #v_SYSDATE# ,NULL, '', 'N', 'N' , #companyID#, #v_TENANTID# ) 
+   		(#v_DOCID#, '1', #v_APRTYPE#, #v_APRSTATE#, #v_WRITERID#, 'N', #v_WRITERNAME#, #v_WRITERNAME2#, #v_WRITERJOBTITLE#, #v_WRITERJOBTITLE2#, #v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, #orgCompanyID#, #v_SYSDATE# ,NULL, '', 'N', 'N' , #companyID#, #v_TENANTID# ) 
    	</insert>
    	
    	<insert id="EzApprovalG.insertSetHesongExpLineInfoS" parameterClass="Map">
