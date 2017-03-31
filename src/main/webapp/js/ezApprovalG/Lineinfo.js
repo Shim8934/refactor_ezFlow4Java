@@ -329,114 +329,214 @@ function APRDEPTADD() {
 }
 //############################################################################################################################################# 결재순번(Down) 1)
 function AprlineDown_onclick() {
-    APRLINESNDownFunction();
-    aprlinecount = 0;
-    LineAprTyepSetAll();
+	if (approvalFlag == "S") {
+		APRLINESNDownFunction();
+	} else {
+		APRLINESNDownFunction();
+		aprlinecount = 0;
+		LineAprTyepSetAll();
+	}
 }
 //############################################################################################################################################# 결재순번(Down) 2)
 function APRLINESNDownFunction() {
     try {
-        var pAPRLINE = new ListView();
-        pAPRLINE.LoadFromID("lvAPRLINE");
-        var pSelectedRow = pAPRLINE.GetSelectedRows();
-        
-        if(pSelectedRow[0] == undefined){
-            OpenAlertUI(strLang549);
-            return;            
-        }
-        
-        if(pSelectedRow[0].getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1")
-	    {
-	        OpenAlertUI(strLang550);    
-	        return;
-	    }
-	    
-        
-        var pSelAprLineState = pSelectedRow[0].getAttribute("DATA12");
-        if (pSelectedRow.length != 0) {
-            var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
-            
-            if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1")
-            {
-                OpenAlertUI(strLang551);    
-	            return;
+    	if (approvalFlag == "S") {
+    		var pAPRLINE = new ListView();
+            pAPRLINE.LoadFromID("lvAPRLINE");
+            var pSelectedRow = pAPRLINE.GetSelectedRows();
+
+            if (pSelectedRow[0] == undefined) {
+                OpenAlertUI(strLangS574);
+                return;
             }
-            if(pSelectedRow[0].getAttribute("DATA5") == "N")
-            {
-	            if(pSelectedRow[0].cells[4].childNodes[0].options[2].selected == true || pSelectedRow[0].cells[4].childNodes[0].options[3].selected == true)
-	            {
-	                OpenAlertUI(strLang552);    
-	                return;
-	            }
-	            
-	            if(p_NextSelRow.getAttribute("DATA5") == "N")
-	            {
-	                if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true)
-	                {
-	                    OpenAlertUI(strLang551);    
-	                    return;
-	                }
-	            }
-                
-	        }
-	        else
-	        {
-	            if(p_NextSelRow.getAttribute("DATA5") == "N")
-	            {
-	                if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true)
-	                {
-	                    OpenAlertUI(strLang551);    
-	                    return;
-	                }
-	            }
-	        }
-            if (p_NextSelRow != null) {
-                var p_NextAprStat = GetAttribute(p_NextSelRow, "DATA12");
-                if ((pSelAprLineState == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
-                    var pAlertContent = strLang237;
-                    OpenAlertUI(pAlertContent);
+
+            if ((GetAttribute(pSelectedRow[0], "DATA4") != null ? GetAttribute(pSelectedRow[0], "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1") {
+                OpenAlertUI(strLangS575);
+                return;
+            }
+
+            var pSelAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
+            if (pSelectedRow.length != 0) {
+                var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
+
+                if ((GetAttribute(p_NextSelRow, "DATA4") != null ? GetAttribute(p_NextSelRow, "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
+                    OpenAlertUI(strLangS576);
                     return;
                 }
-                else if (pReDraftFlag == "REDRAFT") {
-                    if (pSelAprLineState == "002" || pSelAprLineState == "003" || pSelAprLineState == "004") {
-                        Ans = ture;
-                        if (Ans) {
-                            AprLineChangeType();
-                            DoAprLineDown(pSelectedRow);
-                            pReDraftAprLineChangeFlag = true;                          
+                if (GetAttribute(pSelectedRow[0], "DATA5") == "N") {
+                    if (pSelectedRow[0].cells[4].childNodes[0].value == strAprType3 || pSelectedRow[0].cells[4].childNodes[0].value == strAprType4) {
+                        OpenAlertUI(strLangS577);
+                        return;
+                    }
+
+                    if (GetAttribute(p_NextSelRow, "DATA5") == "N") {
+                        if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
+                            OpenAlertUI(strLangS576);
+                            return;
                         }
                     }
-                    else {
-                        DoAprLineDown(pSelectedRow);                      
-                    }
+
                 }
                 else {
-                    if (pReDraftAprLineFlag) {
-                        if (((p_NextAprStat == "002" || p_NextAprStat == "005") && GetAttribute(p_NextSelRow, "DATA4") == pUserID || p_NextAprStat == "003")) {
-                            var pAlertContent = strLang239;
-                            OpenAlertUI(pAlertContent);
+                    if (GetAttribute(p_NextSelRow, "DATA5") == "N") {
+                        if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
+                            OpenAlertUI(strLangS576);
                             return;
                         }
-                        else if ((pSelAprLineState == "002" && GetAttribute(pSelectedRow[0], "DATA12") == pUserID)) {
-                            var pAlertContent = strLang239;
-                            OpenAlertUI(pAlertContent);
-                            return;
-                        }
-                        else if (CurAprLine > pSelectedRow[0].cells[0].innerText) {
-                            var pAlertContent = strLang241;
-                            OpenAlertUI(pAlertContent);
-                            return;
+                    }
+                }
+                if (p_NextSelRow != null) {
+                    var p_NextAprStat = GetAttribute(p_NextSelRow, "DATA12");
+                    if ((pSelAprLineState == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
+                        var pAlertContent = strLangS237;
+                        OpenAlertUI(pAlertContent);
+                        return;
+                    }
+                    else if (pReDraftFlag == "REDRAFT") {
+                        if (pSelAprLineState == "002" || pSelAprLineState == "003" || pSelAprLineState == "004") {
+                            Ans = true;
+                            if (Ans) {
+                                AprLineChangeType();
+                                DoAprLineDown(pSelectedRow);
+                                pReDraftAprLineChangeFlag = true;                         
+                            }
                         }
                         else {
-                            DoAprLineDown(pSelectedRow);                         
+                            DoAprLineDown(pSelectedRow);                      
                         }
                     }
                     else {
-                        DoAprLineDown(pSelectedRow);                      
+                        var temproevalue = getNodeText(pSelectedRow[0].cells[0]);
+
+                        if (pReDraftAprLineFlag) {
+                            if (((p_NextAprStat == "002" || p_NextAprStat == "005") && GetAttribute(p_NextSelRow, "DATA4") == pUserID || p_NextAprStat == "003")) {
+                                var pAlertContent = strLangS239;
+                                OpenAlertUI(pAlertContent);
+                                return;
+                            }
+                            else if ((pSelAprLineState == "002" && GetAttribute(pSelectedRow[0], "DATA12") == pUserID)) {
+                                var pAlertContent = strLangS239;
+                                OpenAlertUI(pAlertContent);
+                                return;
+                            }
+                            else if (CurAprLine > temproevalue) {
+                                var pAlertContent = strLangS241;
+                                OpenAlertUI(pAlertContent);
+                                return;
+                            }
+                            else {
+                                DoAprLineDown(pSelectedRow);                         
+                            }
+                        }
+                        else {
+                            DoAprLineDown(pSelectedRow);                                                  
+                        }
                     }
                 }
             }
-        }
+    	} else {
+    		var pAPRLINE = new ListView();
+    		pAPRLINE.LoadFromID("lvAPRLINE");
+    		var pSelectedRow = pAPRLINE.GetSelectedRows();
+    		
+    		if(pSelectedRow[0] == undefined){
+    			OpenAlertUI(strLang549);
+    			return;            
+    		}
+    		
+    		if(pSelectedRow[0].getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1")
+    		{
+    			OpenAlertUI(strLang550);    
+    			return;
+    		}
+    		
+    		
+    		var pSelAprLineState = pSelectedRow[0].getAttribute("DATA12");
+    		if (pSelectedRow.length != 0) {
+    			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
+    			
+    			if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1")
+    			{
+    				OpenAlertUI(strLang551);    
+    				return;
+    			}
+    			if(pSelectedRow[0].getAttribute("DATA5") == "N")
+    			{
+    				if(pSelectedRow[0].cells[4].childNodes[0].options[2].selected == true || pSelectedRow[0].cells[4].childNodes[0].options[3].selected == true)
+    				{
+    					OpenAlertUI(strLang552);    
+    					return;
+    				}
+    				
+    				if(p_NextSelRow.getAttribute("DATA5") == "N")
+    				{
+    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true)
+    					{
+    						OpenAlertUI(strLang551);    
+    						return;
+    					}
+    				}
+    				
+    			}
+    			else
+    			{
+    				if(p_NextSelRow.getAttribute("DATA5") == "N")
+    				{
+    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true)
+    					{
+    						OpenAlertUI(strLang551);    
+    						return;
+    					}
+    				}
+    			}
+    			if (p_NextSelRow != null) {
+    				var p_NextAprStat = GetAttribute(p_NextSelRow, "DATA12");
+    				if ((pSelAprLineState == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
+    					var pAlertContent = strLang237;
+    					OpenAlertUI(pAlertContent);
+    					return;
+    				}
+    				else if (pReDraftFlag == "REDRAFT") {
+    					if (pSelAprLineState == "002" || pSelAprLineState == "003" || pSelAprLineState == "004") {
+    						Ans = ture;
+    						if (Ans) {
+    							AprLineChangeType();
+    							DoAprLineDown(pSelectedRow);
+    							pReDraftAprLineChangeFlag = true;                          
+    						}
+    					}
+    					else {
+    						DoAprLineDown(pSelectedRow);                      
+    					}
+    				}
+    				else {
+    					if (pReDraftAprLineFlag) {
+    						if (((p_NextAprStat == "002" || p_NextAprStat == "005") && GetAttribute(p_NextSelRow, "DATA4") == pUserID || p_NextAprStat == "003")) {
+    							var pAlertContent = strLang239;
+    							OpenAlertUI(pAlertContent);
+    							return;
+    						}
+    						else if ((pSelAprLineState == "002" && GetAttribute(pSelectedRow[0], "DATA12") == pUserID)) {
+    							var pAlertContent = strLang239;
+    							OpenAlertUI(pAlertContent);
+    							return;
+    						}
+    						else if (CurAprLine > pSelectedRow[0].cells[0].innerText) {
+    							var pAlertContent = strLang241;
+    							OpenAlertUI(pAlertContent);
+    							return;
+    						}
+    						else {
+    							DoAprLineDown(pSelectedRow);                         
+    						}
+    					}
+    					else {
+    						DoAprLineDown(pSelectedRow);                      
+    					}
+    				}
+    			}
+    		}
+    	}
     } catch (e) {
         alert("APRLINESNDownFunction :: " + e.description);
     }
@@ -478,231 +578,313 @@ function ChangeAprLineDown(CurSelRow, p_NextSelRow) {
 //############################################################################################################################################# 결재순번(Down) 4)
 function DoAprLineDown(pSelectedRow) {
     try {
-        var RowDownCheck;
-        var pAPRLINE = new ListView();
-        pAPRLINE.LoadFromID("lvAPRLINE");
+    	if (approvalFlag == "S") {
+    		var RowDownCheck;
+            var pAPRLINE = new ListView();
+            pAPRLINE.LoadFromID("lvAPRLINE");
 
-        var pTotalRows = pAPRLINE.GetDataRows();
-        var pTotalRowsLen = pTotalRows.length;
+            var pTotalRows = pAPRLINE.GetDataRows();
+            var pTotalRowsLen = pTotalRows.length;
 
-        var pSelectedIndex = Number(pAPRLINE.GetSelectedIndexes().split(',')[0]);
+            var pSelectedIndex = Number(pAPRLINE.GetSelectedIndexes().split(',')[0]);
 
-        var CIndex = pSelectedIndex;
-        var NIndex;
-        var Rtnval = "N";
+            var CIndex = pSelectedIndex;
+            var NIndex;
+            var Rtnval = "N";
 
-        NIndex = pSelectedIndex + 1;
-        if (NIndex + 1 != pTotalRowsLen) {
-            RowDownCheck = pTotalRows[NIndex].cells[0].innerText;
-            var localCheck = getNodeText(pTotalRows[CIndex].cells[0]);
-            var OrgRowDownCheck = RowDownCheck;
-            var OrglocalCheck = localCheck;
-            
-            RowDownCheck = RowDownCheck.replace("⊙", "").replace("★", "");
-            localCheck = localCheck.replace("⊙", "").replace("★", "");
+            NIndex = pSelectedIndex + 1;
+            if (NIndex < pTotalRowsLen) {
+                RowDownCheck = getNodeText(pTotalRows[NIndex].cells[0]);
 
-            if (OrglocalCheck.indexOf("⊙") > -1) {
-                RowDownCheck = "⊙" + RowDownCheck;
+                setNodeText(pTotalRows[NIndex].cells[0],getNodeText(pTotalRows[CIndex].cells[0]));
+                setNodeText(pTotalRows[CIndex].cells[0],RowDownCheck);
+                
+                Rtnval = "Y";
             }
-            if (OrglocalCheck.indexOf("★") > -1) {
-                RowDownCheck = "★" + RowDownCheck;
-            }
-            if (OrgRowDownCheck.indexOf("⊙") > -1) {
-                localCheck = "⊙" + localCheck;
-            }
-            if (OrgRowDownCheck.indexOf("★") > -1) {
-                localCheck = "★" + localCheck;
-            }
-
-            if (CrossYN()) {
-            	 setNodeText(pTotalRows[NIndex].childNodes[0] , localCheck);
-                 setNodeText(pTotalRows[CIndex].childNodes[0] , RowDownCheck);
-            }
-            else {
-            	 setNodeText(pTotalRows[NIndex].cells[0] , localCheck);
-                 setNodeText(pTotalRows[CIndex].cells[0] , RowDownCheck);
-            }
-            Rtnval = "Y";
-        }
-        else {
-            var pAlertContent = "" + strLang306 + "";
-            OpenAlertUI(pAlertContent);
-            return;
-        }
-        if (Rtnval == "Y")
-            pAPRLINE.RowMoveDown();
+            if (Rtnval == "Y")
+                pAPRLINE.RowMoveDown();
+    	} else {
+    		var RowDownCheck;
+    		var pAPRLINE = new ListView();
+    		pAPRLINE.LoadFromID("lvAPRLINE");
+    		
+    		var pTotalRows = pAPRLINE.GetDataRows();
+    		var pTotalRowsLen = pTotalRows.length;
+    		
+    		var pSelectedIndex = Number(pAPRLINE.GetSelectedIndexes().split(',')[0]);
+    		
+    		var CIndex = pSelectedIndex;
+    		var NIndex;
+    		var Rtnval = "N";
+    		
+    		NIndex = pSelectedIndex + 1;
+    		if (NIndex + 1 != pTotalRowsLen) {
+    			RowDownCheck = pTotalRows[NIndex].cells[0].innerText;
+    			var localCheck = getNodeText(pTotalRows[CIndex].cells[0]);
+    			var OrgRowDownCheck = RowDownCheck;
+    			var OrglocalCheck = localCheck;
+    			
+    			RowDownCheck = RowDownCheck.replace("⊙", "").replace("★", "");
+    			localCheck = localCheck.replace("⊙", "").replace("★", "");
+    			
+    			if (OrglocalCheck.indexOf("⊙") > -1) {
+    				RowDownCheck = "⊙" + RowDownCheck;
+    			}
+    			if (OrglocalCheck.indexOf("★") > -1) {
+    				RowDownCheck = "★" + RowDownCheck;
+    			}
+    			if (OrgRowDownCheck.indexOf("⊙") > -1) {
+    				localCheck = "⊙" + localCheck;
+    			}
+    			if (OrgRowDownCheck.indexOf("★") > -1) {
+    				localCheck = "★" + localCheck;
+    			}
+    			
+    			if (CrossYN()) {
+    				setNodeText(pTotalRows[NIndex].childNodes[0] , localCheck);
+    				setNodeText(pTotalRows[CIndex].childNodes[0] , RowDownCheck);
+    			}
+    			else {
+    				setNodeText(pTotalRows[NIndex].cells[0] , localCheck);
+    				setNodeText(pTotalRows[CIndex].cells[0] , RowDownCheck);
+    			}
+    			Rtnval = "Y";
+    		}
+    		else {
+    			var pAlertContent = "" + strLang306 + "";
+    			OpenAlertUI(pAlertContent);
+    			return;
+    		}
+    		if (Rtnval == "Y")
+    			pAPRLINE.RowMoveDown();
+    	}
     } catch (e) {
         alert("DoAprLineDown :: " + e.description);
     }
 }
 //############################################################################################################################################# 결재순번(UP) 1)
 function AprlineUpper_onclick() {
-    APRLINESNUPPERFunction();
-    aprlinecount = 0;
-    LineAprTyepSetAll();
+	if (approvalFlag == "S") {
+		APRLINESNUPPERFunction();
+	} else {
+		APRLINESNUPPERFunction();
+		aprlinecount = 0;
+		LineAprTyepSetAll();
+	}
 }
 //############################################################################################################################################# 결재순번(UP) 2)
 
 function APRLINESNUPPERFunction() {
     try {
-        var pAPRLINE = new ListView();
-        pAPRLINE.LoadFromID("lvAPRLINE");
-        var pSelectedRows = pAPRLINE.GetSelectedRows();
+    	if (approvalFlag == "S") {
+    		var pAPRLINE = new ListView();
+            pAPRLINE.LoadFromID("lvAPRLINE");
+            var pSelectedRows = pAPRLINE.GetSelectedRows();
 
-        if (pSelectedRows.length != 0) {
-            if (pSelectedRows[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == 1) {
-                var pAlertContent = "" + strLang306 + "";
-                OpenAlertUI(pAlertContent);
+            if (pSelectedRows[0] == undefined) {
+                OpenAlertUI(strLangS574);
                 return;
             }
 
-            if (pSelAprLineType == "003" && pReDraftFlag == "DRAFT") {
-                var pAlertContent = "" + strLang307 + "";
-                OpenAlertUI(pAlertContent);
+            if ((GetAttribute(pSelectedRows[0], "DATA4") != null ? GetAttribute(pSelectedRows[0], "DATA4").toLowerCase() : "") == pUserID.toLowerCase() && pSelectedRows[0].childNodes[0].innerHTML == "1") {
+                OpenAlertUI(strLangS575);
                 return;
             }
-            else if (pReDraftFlag == "REDRAFT") {
-                if (pSelAprLineType == "002" || pSelAprLineType == "003" || pSelAprLineType == "004" || GetAttribute(pSelectedRows[0], "DATA4") == pUserID) {
-                    Ans = true;
-                    if (Ans) {
-                        UpperAprLineSN(pSelectedRows);
-                        AprLineChangeType();
-                        pReDraftAprLineChangeFlag = true;
-                    }
-                } else {
-                    UpperAprLineSN(pSelectedRows);
-                }
-            } else {
-                if (pReDraftAprLineFlag) {
-                    var TmpAprLineState = pSelectedRows[0].cells[5].innerText;
-                    TmpAprLineState = ConvertAprLineState(TmpAprLineState, "Code");
 
-                    if (((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRows[0], "DATA4") == pUserID || pSelectedRows[0].cells[0].innerText.replace("★").replace("⊙") == "1"))  //다음결재자가 결재선변경자인경우
-                    {
-                        var pAlertContent = "" + strLang310 + "";
-                        OpenAlertUI(pAlertContent);
-                        return;
-                    } else {
-                        UpperAprLineSN(pSelectedRows);
-                    }
-                } else {
-                    UpperAprLineSN(pSelectedRows);
-                }
-            }
-        }
-    } catch (e) {
-        alert("APRLINESNUPPERFunction :: " + e.description);
-    }
-}
-function APRLINESNDownFunction() {
-    try {
-        var pAPRLINE = new ListView();
-        pAPRLINE.LoadFromID("lvAPRLINE");
-
-        var pSelectedRow = pAPRLINE.GetSelectedRows();
-
-        if (pSelectedRow.length != 0) {
-            var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
-            if (p_NextSelRow != null) {
-                var p_NextAprStat = p_NextSelRow.cells[5].innerText;
-                p_NextAprStat = ConvertAprLineState(p_NextAprStat, "Code");
-
-                if (p_NextSelRow.cells[4].innerText == "" + strLang20 + "") {
-                    var pAlertContent = "" + strLang306 + "";
-                    OpenAlertUI(pAlertContent);
+            if (pSelectedRows.length != 0) {
+                var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) - 1];
+                if (p_NextSelRow == undefined)
                     return;
-                }
 
-                if ((pSelAprLineType == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
-                    var pAlertContent = "" + strLang307 + "";
+                if (GetAttribute(pSelectedRows[0], "DATA5") == "N") {
+                    if (pSelectedRows[0].cells[4].childNodes[0].value == strAprType3 || pSelectedRows[0].cells[4].childNodes[0].value == strAprType4) {
+                        OpenAlertUI(strLangS577);
+                        return;
+                    }
+                    if (p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
+                        OpenAlertUI(strLangS287);
+                        return;
+                    }
+                    if (pAPRLINE.GetDataRows().length != parseInt(pSelectedRows[0].childNodes[0].innerHTML)) {
+                        if (GetAttribute(p_NextSelRow, "DATA5") == "N") {
+                            if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
+                                OpenAlertUI(strLangS576);
+                                return;
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (GetAttribute(p_NextSelRow, "DATA5") == "N") {
+                        if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
+                            OpenAlertUI(strLangS576);
+                            return;
+                        }
+                    }
+                }
+                if (pSelAprLineState == "003" && pReDraftFlag != "REDRAFT") {
+                    var pAlertContent = strLangS237;
                     OpenAlertUI(pAlertContent);
                     return;
                 }
                 else if (pReDraftFlag == "REDRAFT") {
-                    if (pSelAprLineType == "002" || pSelAprLineType == "003" || pSelAprLineType == "004") {
+                    if (pSelAprLineState == "002" || pSelAprLineState == "003" || pSelAprLineState == "004" || GetAttribute(pSelectedRows[0], "DATA4") == pUserID) {
                         Ans = true;
                         if (Ans) {
+                            UpperAprLineSN(pSelectedRows);
                             AprLineChangeType();
-                            DoAprLineDown(pSelectedRow);
                             pReDraftAprLineChangeFlag = true;
                         }
-                    }
-                    else {
-                        DoAprLineDown(pSelectedRow);
+                    } else {
+                        UpperAprLineSN(pSelectedRows);               
                     }
                 }
                 else {
                     if (pReDraftAprLineFlag) {
-                        if (((p_NextAprStat == "002" || p_NextAprStat == "005") && GetAttribute(p_NextSelRow, "DATA4") == pUserID || p_NextAprStat == "003")) {
-                            var pAlertContent = "" + strLang310 + "";
+                        var TmpAprLineState = GetAttribute(pSelectedRows[0], "DATA12");
+                        var tempcellvalue = getNodeText(pSelectedRows[0].cells[0]);
+                        if (((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRows[0], "DATA4") == pUserID || tempcellvalue == "1")) {
+                            var pAlertContent = strLangS245;
+                            OpenAlertUI(pAlertContent);
+                            return;
+                        }
+                        else if (CurAprLine > tempcellvalue) {
+                            var pAlertContent = strLangS241;
                             OpenAlertUI(pAlertContent);
                             return;
                         }
                         else {
-                            DoAprLineDown(pSelectedRow);
+                            UpperAprLineSN(pSelectedRows);                    
                         }
-                    }
-                    else {
-                        DoAprLineDown(pSelectedRow);
+                    } else {
+                        UpperAprLineSN(pSelectedRows);                
                     }
                 }
             }
-        }
-    }
-    catch (e) {
-        alert("APRLINESNDownFunction :: " + e.description);
+    	} else {
+    		var pAPRLINE = new ListView();
+    		pAPRLINE.LoadFromID("lvAPRLINE");
+    		var pSelectedRows = pAPRLINE.GetSelectedRows();
+    		
+    		if (pSelectedRows.length != 0) {
+    			if (pSelectedRows[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == 1) {
+    				var pAlertContent = "" + strLang306 + "";
+    				OpenAlertUI(pAlertContent);
+    				return;
+    			}
+    			
+    			if (pSelAprLineType == "003" && pReDraftFlag == "DRAFT") {
+    				var pAlertContent = "" + strLang307 + "";
+    				OpenAlertUI(pAlertContent);
+    				return;
+    			}
+    			else if (pReDraftFlag == "REDRAFT") {
+    				if (pSelAprLineType == "002" || pSelAprLineType == "003" || pSelAprLineType == "004" || GetAttribute(pSelectedRows[0], "DATA4") == pUserID) {
+    					Ans = true;
+    					if (Ans) {
+    						UpperAprLineSN(pSelectedRows);
+    						AprLineChangeType();
+    						pReDraftAprLineChangeFlag = true;
+    					}
+    				} else {
+    					UpperAprLineSN(pSelectedRows);
+    				}
+    			} else {
+    				if (pReDraftAprLineFlag) {
+    					var TmpAprLineState = pSelectedRows[0].cells[5].innerText;
+    					TmpAprLineState = ConvertAprLineState(TmpAprLineState, "Code");
+    					
+    					if (((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRows[0], "DATA4") == pUserID || pSelectedRows[0].cells[0].innerText.replace("★").replace("⊙") == "1"))  //다음결재자가 결재선변경자인경우
+    					{
+    						var pAlertContent = "" + strLang310 + "";
+    						OpenAlertUI(pAlertContent);
+    						return;
+    					} else {
+    						UpperAprLineSN(pSelectedRows);
+    					}
+    				} else {
+    					UpperAprLineSN(pSelectedRows);
+    				}
+    			}
+    		}
+    	}
+    } catch (e) {
+        alert("APRLINESNUPPERFunction :: " + e.description);
     }
 }
 
 //############################################################################################################################################# 결재순번(UP) 3)
 function UpperAprLineSN(pSelectedRow) {
     try {
-        var pAPRLINE = new ListView(); 
-        pAPRLINE.LoadFromID("lvAPRLINE");
+    	if (approvalFlag == "S") {
+    		var pAPRLINE = new ListView();
+            pAPRLINE.LoadFromID("lvAPRLINE");
 
-        var pTotalRows = pAPRLINE.GetDataRows();
-        var pSelectedIndex = Number(pAPRLINE.GetSelectedIndexes().split(',')[0]);
-        var RowUpCheck;
-        var NIndex = pSelectedIndex - 1;
-        var CIndex = pSelectedIndex;
-        var Rtnval = "N";
+            var pTotalRows = pAPRLINE.GetDataRows();
+            var pSelectedIndex = Number(pAPRLINE.GetSelectedIndexes().split(',')[0]);
+            var RowUpCheck;
+            var NIndex = pSelectedIndex - 1;
+            var CIndex = pSelectedIndex;
+            var Rtnval = "N";
 
-        if (NIndex >= 0) {
-            RowUpCheck = pTotalRows[NIndex].cells[0].innerText; 
-            var localCheck = getNodeText(pTotalRows[CIndex].cells[0]);
-            var OrgRowUpCheck = RowUpCheck
-            var OrglocalCheck = localCheck
+            if (NIndex >= 0) {
+                RowUpCheck = getNodeText(pTotalRows[NIndex].cells[0]);
 
-            RowUpCheck = RowUpCheck.replace("⊙", "").replace("★", "");
-            localCheck = localCheck.replace("⊙", "").replace("★", "");
+                setNodeText(pTotalRows[NIndex].cells[0],getNodeText(pTotalRows[CIndex].cells[0]));
+                setNodeText(pTotalRows[CIndex].cells[0],RowUpCheck);
+                
+                Rtnval = "Y";
+            }
 
-            if (OrglocalCheck.indexOf("⊙") > -1) {
-                RowUpCheck = "⊙" + RowUpCheck;
-            }
-            if (OrglocalCheck.indexOf("★") > -1) {
-                RowUpCheck = "★" + RowUpCheck;
-            }
-            if (OrgRowUpCheck.indexOf("⊙") > -1) {
-                localCheck = "⊙" + localCheck;
-            }
-            if (OrgRowUpCheck.indexOf("★") > -1) {
-                localCheck = "★" + localCheck;
-            }
-            
-            if (CrossYN()) {
-            	setNodeText(pTotalRows[NIndex].childNodes[0] , localCheck);
-                setNodeText(pTotalRows[CIndex].childNodes[0] , RowUpCheck);
-            }
-            else {
-            	setNodeText(pTotalRows[NIndex].cells[0] , localCheck);
-                setNodeText(pTotalRows[CIndex].cells[0] , RowUpCheck);
-            }
-            Rtnval = "Y";
-        }
-
-        if (Rtnval == "Y")
-            pAPRLINE.RowMoveUp();
-
+            if (Rtnval == "Y")
+                pAPRLINE.RowMoveUp();
+    	} else {
+    		var pAPRLINE = new ListView(); 
+    		pAPRLINE.LoadFromID("lvAPRLINE");
+    		
+    		var pTotalRows = pAPRLINE.GetDataRows();
+    		var pSelectedIndex = Number(pAPRLINE.GetSelectedIndexes().split(',')[0]);
+    		var RowUpCheck;
+    		var NIndex = pSelectedIndex - 1;
+    		var CIndex = pSelectedIndex;
+    		var Rtnval = "N";
+    		
+    		if (NIndex >= 0) {
+    			RowUpCheck = pTotalRows[NIndex].cells[0].innerText; 
+    			var localCheck = getNodeText(pTotalRows[CIndex].cells[0]);
+    			var OrgRowUpCheck = RowUpCheck
+    			var OrglocalCheck = localCheck
+    			
+    			RowUpCheck = RowUpCheck.replace("⊙", "").replace("★", "");
+    			localCheck = localCheck.replace("⊙", "").replace("★", "");
+    			
+    			if (OrglocalCheck.indexOf("⊙") > -1) {
+    				RowUpCheck = "⊙" + RowUpCheck;
+    			}
+    			if (OrglocalCheck.indexOf("★") > -1) {
+    				RowUpCheck = "★" + RowUpCheck;
+    			}
+    			if (OrgRowUpCheck.indexOf("⊙") > -1) {
+    				localCheck = "⊙" + localCheck;
+    			}
+    			if (OrgRowUpCheck.indexOf("★") > -1) {
+    				localCheck = "★" + localCheck;
+    			}
+    			
+    			if (CrossYN()) {
+    				setNodeText(pTotalRows[NIndex].childNodes[0] , localCheck);
+    				setNodeText(pTotalRows[CIndex].childNodes[0] , RowUpCheck);
+    			}
+    			else {
+    				setNodeText(pTotalRows[NIndex].cells[0] , localCheck);
+    				setNodeText(pTotalRows[CIndex].cells[0] , RowUpCheck);
+    			}
+    			Rtnval = "Y";
+    		}
+    		
+    		if (Rtnval == "Y")
+    			pAPRLINE.RowMoveUp();
+    	}
     } catch (e) {
         alert("UpperAprLineSN :: " + e.description);
     }
