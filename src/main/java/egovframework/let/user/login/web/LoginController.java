@@ -158,29 +158,35 @@ public class LoginController {
     	//일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
         
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {            
-        	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);
-        	//diff 값 양수로 초기화
+        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
+        	//비밀번호 변경 팝업 상태 값 초기화
         	int diff = 1;
         	
-        	if (!expirePassPeriod.trim().equals("0")) {
-        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
-        		
-        		Calendar cal = Calendar.getInstance();        	        	
-            	
-            	String baseStr = commonUtil.getTodayUTCTime("");        	
-            	Date baseDT = date.parse(baseStr);
-            	            	
-            	cal.setTime(baseDT);
-            	cal.add(Calendar.DATE, realPeriod);
-            	
-            	baseDT = cal.getTime();
-            	Date lastDT = resultVO.getUpdateDT();
-            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);
-        	}
-        	        	
+        	if (resultVO.getLoginCnt() == 0) {
+        		diff = 0;
+        		model.addAttribute("isFirstLogin", "Y");
+        	} else {
+	        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+	        	
+	        	if (!expirePassPeriod.trim().equals("0")) {
+	        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
+	        		
+	        		Calendar cal = Calendar.getInstance();
+	        		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            	
+	            	String baseStr = commonUtil.getTodayUTCTime("");        	
+	            	Date baseDT = date.parse(baseStr);
+	            	            	
+	            	cal.setTime(baseDT);
+	            	cal.add(Calendar.DATE, realPeriod);
+	            	
+	            	baseDT = cal.getTime();
+	            	Date lastDT = resultVO.getUpdateDT();
+	            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
+	    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+	        	}
+	        	model.addAttribute("isFirstLogin", "N");
+        	}        	        	
 			//0보다 작아지면 패스워드 변경기한 Expired
 			if (diff <= 0) {				
 				model.addAttribute("isExpireDate", "Y");
@@ -190,16 +196,11 @@ public class LoginController {
 			} else {			
 				String ip = ClientUtil.getClientIP(request);		
 				loginVO.setIp(ip);
-								
-				date.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String nowDate = date.format(new Date());
-				loginVO.setLastLogin(nowDate);
 				
 				//IP Address,  마지막 login시간 저장
 				loginService.updateUser(loginVO);
 				
 				//접속 로그정보 저장
-				resultVO.setLastLogin(nowDate);
 				resultVO.setIp(ip);
 				resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
@@ -379,6 +380,11 @@ public class LoginController {
 			    try {
 			        //로컬 시스템에서 해당 User의 암호를 변경한다.
 			        ezOrganAdminService.setPassword(_uid, epwd, tenantId);
+			        
+			        String ip = ClientUtil.getClientIP(request);		
+					loginVO.setIp(ip);
+			        //IP Address,  마지막 login시간 저장
+					loginService.updateUser(loginVO);
 			        return "OK";
 			    } catch (Exception e) {
 			    	//Exception이 발생하면 취소 처리를 한다.
