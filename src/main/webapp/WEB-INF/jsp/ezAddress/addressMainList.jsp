@@ -7,9 +7,12 @@
 	    <title>address_list</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
+	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/Address_List.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
 	    <script type="text/javascript">
 	        var pFolderID = "${pFolderId}";
@@ -274,8 +277,7 @@
 	                                Get_AddressList();
 	                        }
 	                    }
-	                }
-	
+	                }	
 	            }
 	        }
 	        function move_address_Complete(moveUrl) {
@@ -476,12 +478,7 @@
 	            createNodeAndInsertText(xmlDom, objNode, "USERNM2", "");
 	            objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
 	            
-	            /* if(pFolderType == "P")
-	                xmlHTTP.open("POST", "RemoteEWS/address_save.aspx", false);
-	            else
-	                xmlHTTP.open("POST", "Remote/address_save.aspx", false); */
-	            xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);
-	            
+	            xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);	            
 	            xmlHTTP.send(xmlDom);
 				
 	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
@@ -504,8 +501,7 @@
 	            }
 	            else {
 	            	window.location.href = window.location.href;
-	            }
-	            
+	            }	            
 	        }
 	        function check_length(chkstr, maxlength, fieldname) {
 	            var length = 0;
@@ -519,12 +515,10 @@
 	
 	            if (length > maxlength) {
 	                alert(fieldname + "<spring:message code='ezAddress.t227' />" + maxlength + "<spring:message code='ezAddress.t228' />");
-			    return false
-			}
-	
-	        return true;
-	        }
-	
+			    	return false
+				}	
+	        	return true;
+	        }	
 	        function address_inout(which) {
 	            var feature = "dialogWidth:390px; dialogHeight:290px; scroll:no; status:no; help:no;edge:sunken";
 	            feature = feature + GetShowModalPosition(390, 290);
@@ -534,30 +528,16 @@
 	                window.showModalDialog("address_import.aspx?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID), null, feature);
 	                window.location.reload();
 	            }
-	        }
-	
-	        function doLayerPopup(obj) {
-	            if (obj.getAttribute("mode") == "off") {
-	                document.getElementById("layer_popup").style.left = "55px";
-	                document.getElementById("layer_popup").style.top = "100px";
-	                document.getElementById("layer_popup").style.display = "";
-	                document.getElementById("srarchpopup").style.display = "";
-	                document.getElementById("addpopup").style.display = "none";
-	                obj.setAttribute("mode", "on");
-	                HiddenLayer_Click();
-	            }
-	            else {
-	                SearchOptionHidden();
-	            }
-	        }
+	        }	
+	        function doLayerPopup() {
+	        	$("#srarchpopup").modal();
+	        }	        
 	        function SearchOptionHidden() {
-	            document.getElementById("srarchpopup").style.display = "none";
-	            document.getElementById("addpopup").style.display = "";
-	            document.getElementById("layer_popup").style.display = "none";
-	            document.getElementById("SearchOption").setAttribute("mode", "off");
-	            HiddenLayer_Click();
-	        }
-	
+	        	$.modal.close();
+	        }	        
+	        function ShowQuickAddres() {
+	        	$("#addpopup").modal();
+	        }	
 	        function search_start() {
 	            if (document.getElementById("search_text").value == "") {
 	                alert("<spring:message code='ezAddress.t310' />");
@@ -591,8 +571,7 @@
 	            if (idlist == "") {
 	                alert("<spring:message code='ezAddress.t311' />");
 	                return;
-	            }
-	
+	            }	
 	
 	            var subtype = document.getElementById("search_case").value;
 	            var searchText = document.getElementById("search_text").value;
@@ -600,19 +579,18 @@
 	            pCurrentPage = "1";
 	            searchFlag = true;
 	            Get_SearchAddressList();
-	            SearchOptionHidden();
-	        }
-	
+	            SearchOptionHidden();	            
+	        }	
 	        function search_keypress() {
 	            if (window.event.keyCode == "13")
 	                search_start();
-	        }
+	        }	        
 	        function check_click(obj) {
 	            if (document.getElementById(obj).checked != true)
 	                document.getElementById(obj).checked = true;
 	            else
 	                document.getElementById(obj).checked = false;
-	        }
+	        }	        
 	        var xmlHTTP = createXMLHttpRequest();
 	        function crossexport() {
 	            var pURL = "/ezAddress/excelExport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID);
@@ -625,11 +603,11 @@
 	            document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
 
 	            setTimeout("event_CrossExport()", 500);
-	        }
+	        }	        
 	        function event_CrossExport() {
 	        	document.getElementById("Div1").style.display = "none";
             	document.getElementById("loadingLayer").style.display = "none";
-	        }
+	        }	        
 	        function crossImport() {
 	        	if (deptAdmin != "Y" && pFolderType == "D") {
 	        		alert("<spring:message code='ezAddress.t1' />");
@@ -641,7 +619,7 @@
 	            }
 	        	
 	            document.getElementById("file1").click();
-	        }
+	        }	        
 	        function btn_AttachAdd_onclick() {
 	            var tempname = document.form.file1.value;
 	        	if (tempname == "") {
@@ -665,7 +643,7 @@
 		        var frm = document.getElementById('form');
 		        frm.action = "/ezAddress/excelImport.do?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID);
 		        frm.submit();
-	        }
+	        }	        
 	        function UploadComplete(result) {
 	        	document.form.file1.value = "";
 	        	document.getElementById("Div1").style.display = "none";
@@ -675,8 +653,7 @@
 		        	alert("<spring:message code='ezAddress.t178' />");
 		        } else {
 		        	alert("<spring:message code='ezAddress.t181' />");
-		        }
-		        
+		        }		        
 		        window.location.reload();
 		    }
 	    </script>
@@ -695,7 +672,7 @@
 				
 				<li><span onClick="write_letter()"><spring:message code='ezAddress.t238' /></span></li>
 				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-				<li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezAddress.t142' /></span></li>
+				<li><span id="SearchOption" mode="off" onClick="doLayerPopup()"><spring:message code='ezAddress.t142' /></span></li>
 				<li><span onClick="move_address()"><spring:message code='ezAddress.t239' /></span></li>
 				<li><span onClick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
 				<li><span onClick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
@@ -709,7 +686,7 @@
 			</ul>
 		</div>
 		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:0px;">
-			<li><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+			<li style="width:40px"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 			<span id="address_wordmenu_korea">
 				<li><span onClick="pFilterDB='INDEX_KO,ㄱ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄱ</span></li>
 				<li><span onClick="pFilterDB='INDEX_KO,ㄴ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄴ</span></li>
@@ -766,17 +743,17 @@
 			<li><span onClick="pFilterDB='INDEX_EN,Z';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">Z</span></li>
 			<c:choose>
 				<c:when test="${userInfo.lang eq '1'}">
-					<li><span onClick="pFilterDB='INDEX_KO,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
+					<li style="width:40px"><span onClick="pFilterDB='INDEX_KO,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
 						<spring:message code='ezAddress.t259' /></span>
 					</li>
 				</c:when>
 				<c:when test="${userInfo.lang eq '3'}">
-					<li><span onClick="pFilterDB='INDEX_JA,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
+					<li style="width:40px"><span onClick="pFilterDB='INDEX_JA,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
 						<spring:message code='ezAddress.t259' /></span>
 					</li>
 				</c:when>
 				<c:otherwise>
-					<li><span onClick="pFilterDB='INDEX_EN,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
+					<li style="width:40px"><span onClick="pFilterDB='INDEX_EN,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
 						<spring:message code='ezAddress.t259' /></span>
 					</li>
 				</c:otherwise>
@@ -813,90 +790,91 @@
 		<div style="width:100%;height:100%;position:absolute;top:0px;left:0px;display:none;z-index:5000;" id="mailPanel" onclick="ShowQuickAddres();" >&nbsp;</div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
-		</div>
-		<div id="layer_popup" style="width:524px;z-index:6000;display:none;position:absolute;top:100px;left:100px;text-align:center;vertical-align:middle;background-color:#ffffff;">
-			<div id="addpopup" class="popupwrap1">
-				<div class="popupwrap3">
-					<h1><spring:message code='ezAddress.t2003' /></h1>
-					<div id="x_close" onclick="ShowQuickAddres();"><em><spring:message code='ezAddress.t5' /></em></div>
-					<!-- 내용 -->
-				    <table class="popuplist" style="width:480px;margin:10px 0px 0px 1px;">
-						<tr>
-				  			<th style="width:120px"><spring:message code='ezAddress.t124' /></th>
-							<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
-						</tr>
-						<tr>
-				  			<th style="width:150px"><spring:message code='ezAddress.t221' /></th>
-							<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
-						</tr>
-						<tr>
-				  			<th style="width:90px" ><spring:message code='ezAddress.t222' /></th>
-							<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
-						</tr>
-						<tr>
-							<th style="width:90px"><spring:message code='ezAddress.t223' /></th>
-							<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezAddress.t264' /></th>
-							<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="250">      </td>
-						</tr>
-					</table>
-					<!-- /내용 -->
-					<br />
-					<div style="text-align:center;">
-						<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-						<a class="imgbtn"><span onclick="quick_cancel()" ><spring:message code='ezAddress.t11' /></span></a>
-				    </div>
-				</div>
+		</div>		
+		<div id="addpopup" class="popupwrap1" style="display:none">
+			<div class="popupwrap3">
+				<div style="height:20px;font-size:13px;font-weight:bold;margin-top:3px;">
+					▒ <spring:message code='ezAddress.t2003' />
+				</div>				
+				<!-- 내용 -->
+			    <table class="popuplist" style="width:440px;margin:10px 0px 0px 1px;">
+					<tr>
+			  			<th style="width:90px"><spring:message code='ezAddress.t124' /></th>
+						<td><input type="text" id="qname" name="qname" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
+					</tr>
+					<tr>
+			  			<th style="width:90px"><spring:message code='ezAddress.t221' /></th>
+						<td><input type="text" id="qcompany" name="qcompany" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">      </td>
+					</tr>
+					<tr>
+			  			<th style="width:90px" ><spring:message code='ezAddress.t222' /></th>
+						<td><input type="text" id="qcomphone" name="qcomphone" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
+					</tr>
+					<tr>
+						<th style="width:90px"><spring:message code='ezAddress.t223' /></th>
+						<td><input type="text" id="qmobile" name="qmobile" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="20">      </td>
+					</tr>
+					<tr>
+						<th><spring:message code='ezAddress.t264' /></th>
+						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="250">      </td>
+					</tr>
+				</table>
+				<!-- /내용 -->
+				<br />
+				<div style="text-align:center;">
+					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
+					<a class="imgbtn" rel="modal:close"><span><spring:message code='ezAddress.t11' /></span></a>
+			    </div>
 			</div>
-			<div id="srarchpopup" class="popupwrap1" style="display:none">
-				<div class="popupwrap3">
-					<h1><spring:message code='ezAddress.t312' /></h1>
-					<table class="content">  
-						<tr>
-							<th style="text-align:center"><spring:message code='ezAddress.t314' /></th>
-							<td style="text-align:left">
-								<input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;"><spring:message code='ezAddress.t145' /></span>
-								<input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span>
-								<input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>
-							</td>
-						</tr>
-						<tr>
-							<th style="text-align:center">
-								<select name="search_case" id="search_case">
-									<option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
-									<option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
-									<option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>
-									<option value="S_TITLE"><spring:message code='ezAddress.t52' /></option>
-									<option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
-									<option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
-									<option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>
-									<option value="S_EMAIL"><spring:message code='ezAddress.t264' /></option>
-									<option value="S_COMPANY_PHONE"><spring:message code='ezAddress.t263' /></option>
-									<option value="S_MOBILE"><spring:message code='ezAddress.t189' /></option>
-									<option value="S_FAX"><spring:message code='ezAddress.t292' /></option>
-									<option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
-								</select>
-							</th>
-							<td style="text-align:left">
-								<input type="text" name="search_text" id="search_text" class="textarea" style="width:100%" onkeypress="return search_keypress()" >
-							</td>
-						</tr>
-					</table>
-					<br />
-					<table style="width:100%">
-						<tr>
-							<td style="text-align:center;">
-								<a class="imgbtn"><span onClick="search_start()"><spring:message code='ezAddress.t142' /></span></a>
-								<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</div>
-			<div class="shadow"></div>
 		</div>
+		<div id="srarchpopup" class="popupwrap1" style="display:none">
+			<div class="popupwrap3">
+				<div style="height:20px;font-size:13px;font-weight:bold;margin-top:3px">
+					▒ <spring:message code='ezAddress.t312' />
+				</div>
+				<table class="content" style="margin-top:10px;">  
+					<tr>
+						<th style="text-align:center"><spring:message code='ezAddress.t314' /></th>
+						<td style="text-align:left">
+							<input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;"><spring:message code='ezAddress.t145' /></span>
+							<input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span>
+							<input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>
+						</td>
+					</tr>
+					<tr>
+						<th style="text-align:center">
+							<select name="search_case" id="search_case">
+								<option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
+								<option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
+								<option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>
+								<option value="S_TITLE"><spring:message code='ezAddress.t52' /></option>
+								<option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
+								<option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
+								<option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>
+								<option value="S_EMAIL"><spring:message code='ezAddress.t264' /></option>
+								<option value="S_COMPANY_PHONE"><spring:message code='ezAddress.t263' /></option>
+								<option value="S_MOBILE"><spring:message code='ezAddress.t189' /></option>
+								<option value="S_FAX"><spring:message code='ezAddress.t292' /></option>
+								<option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
+							</select>
+						</th>
+						<td style="text-align:left">
+							<input type="text" name="search_text" id="search_text" class="textarea" style="width:100%" onkeypress="return search_keypress()" >
+						</td>
+					</tr>
+				</table>
+				<br />
+				<table style="width:100%">
+					<tr>
+						<td style="text-align:center;">
+							<a class="imgbtn"><span onClick="search_start()"><spring:message code='ezAddress.t142' /></span></a>
+							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="shadow"></div>		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
