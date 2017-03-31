@@ -47,10 +47,10 @@ public class EzEmailAsync {
 	
 	@Async
 	public void cancelMailDelete(String num, int tenantID) {
+		logger.debug("cancelMailDelete async methoed started.");
+		logger.debug("num=" + num);
+		
 		try {
-			logger.debug("cancelMailDelete async methoed started.");
-			logger.debug("num=" + num);
-			
 			final String messageId = ezEmailService.getMailReceiveMessageId(num);
 			if (messageId == null) {
 				logger.error("cannot get messageId from DB");
