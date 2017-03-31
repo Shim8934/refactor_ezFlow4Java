@@ -1204,10 +1204,6 @@ function setHeSongDocInfo(pCurSelRow) {
     else {
         var pAlertContent = strLang878;
         OpenAlertUI(pAlertContent, "", "OPEN");
-        //일반결재에서 회송 문서 지워지는 곳이 없다... 만듬...
-        if(approvalFlag == 'S') {
-        	RemoveDoc(pCurSelRow.getAttribute("DATA1"));
-        }
         openergetDocInfo();
     }
 }

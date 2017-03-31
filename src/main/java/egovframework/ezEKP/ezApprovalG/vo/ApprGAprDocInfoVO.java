@@ -36,6 +36,32 @@ public class ApprGAprDocInfoVO {
 	/** */
 	private String formName2;
 	
+	private String writerID;
+	
+	private String writerJobTitle;
+	
+	private String writerJobTitle2;
+	
+	
+	
+	public String getWriterJobTitle() {
+		return writerJobTitle;
+	}
+	public void setWriterJobTitle(String writerJobTitle) {
+		this.writerJobTitle = writerJobTitle;
+	}
+	public String getWriterJobTitle2() {
+		return writerJobTitle2;
+	}
+	public void setWriterJobTitle2(String writerJobTitle2) {
+		this.writerJobTitle2 = writerJobTitle2;
+	}
+	public String getWriterID() {
+		return writerID;
+	}
+	public void setWriterID(String writerID) {
+		this.writerID = writerID;
+	}
 	public String getDocID() {
 		return docID;
 	}
