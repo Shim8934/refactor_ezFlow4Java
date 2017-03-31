@@ -1205,7 +1205,7 @@ function check_presence2() {
             if (xmlhttp.responseText.indexOf("TRUE") > -1)
                 InformationString = strLang386;
             else
-                InformationString = strLang1124;
+                InformationString = strLangS1124;
             alert(InformationString);
         }
     }

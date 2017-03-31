@@ -1333,6 +1333,7 @@ var strLangS1117 = "차상위부서장";
 var strLangS1118 = "차차상위부서장";
 var strLangS1119 = "차차차상위부서장";
 var strLangS1120 = "선택된부서장";
+var strLangS1124 = "등록된 문서입니다.";
 
 var strLangS230 = "순번";
 var strLangS107 = "성명";
