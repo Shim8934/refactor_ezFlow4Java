@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApproval.vo.ApprDocViewVO;
+import egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -2583,6 +2584,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 
 	public ApprGDocListVO doSendOffer_expAprDocInfo(Map<String, Object> map) throws Exception {
 		return (ApprGDocListVO) select("EzApprovalG.doSendOffer_expAprDocInfo", map);
+	}
+
+	public ApprGLineTempletVO getOrgDocLineInfo(Map<String, Object> map) throws Exception {
+		return  (ApprGLineTempletVO) select("EzApprovalG.getOrgDocLineInfo", map);
+	}
+
+	public String doSusinHesongDeptID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.doSusinHesongDeptID", map);
 	}
 
 }

@@ -5811,6 +5811,23 @@
      		A.COMPANYID = #companyID#
 	</select>
 	
+	<select id="EzApprovalG.getOrgDocLineInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
+		<![CDATA[
+			SELECT
+				aprmemberdeptid,
+				aprmemberdeptname,
+				aprmemberdeptname2
+			FROM
+				TBL_ENDAPRLINEINFO
+			WHERE
+				docid = #v_DOCID#
+			AND
+				companyID = #companyID#
+			AND
+				tenant_id = #v_TENANTID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.getReceivedDocInfo" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
 <!-- 		{CALL EZSP_GETRECEIVEDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -18453,29 +18470,80 @@
    
    <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo" parameterClass="Map">
    		<![CDATA[
-   		INSERT INTO 
-   			TBL_APRRECEIPTPROCESSINFO 
-   		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
-	   	(SELECT 
-	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID ,COMPANYID
+   		INSERT INTO TBL_APRRECEIPTPROCESSINFO 
+   			(receivesn,
+   			docid,
+   			sentdeptid,
+   			sentdeptname,
+   			sentdeptname2,
+   			receiveddeptid,
+   			receiveddeptname,
+   			receiveddeptname2,
+   			docstate,
+   			aprstate,
+   			processdate,
+   			processyn,
+   			processdocid,
+   			processorid,
+   			processorname,
+   			processorname2,
+   			processorjobtitle,
+   			processorjobtitle2,
+   			parentsdocid,
+   			tenant_id,
+   			companyid)
+	   		(SELECT 
+	   			#v_PSN#,
+	   			docid,
+	   			receiveddeptid,
+	   			receiveddeptname,
+	   			receiveddeptname2,
+	   			#v_WRITERDEPTID#,
+	   			#v_WRITERDEPTNAME#,
+	   			#v_WRITERDEPTNAME2#,
+	   			docstate,
+	   			#v_APRSTATE#,
+	   			STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'),
+	   			'N',
+	   			'',
+	   			'',
+	   			'',
+	   			'',
+	   			'',
+	   			'',
+	   			docid,
+	   			tenant_id,
+	   			companyid
 	   		 FROM 
 	   		 	TBL_APRRECEIPTPROCESSINFO 
 	   		 WHERE 
-	   		 	DocID = #v_DOCID#
+	   		 	docid = #v_DOCID#
 	   		 AND 
-	   		 	ReceiveSN = #v_RECEIVESN#
+	   		 	receivesn = #v_RECEIVESN#
 	   		 AND 
-	   		 	TENANT_ID = #v_TENANTID# 
+	   		 	tenant_id = #v_TENANTID# 
 	   		 AND
-	   		 	COMPANYID = #companyID#
+	   		 	companyid = #companyID#
 	   	]]>
 		<isEqual property="approvalFlag" compareValue="G">
 				order by ProcessDate desc	
 	   		  LIMIT 1 
 		</isEqual>	   	
 		)
-	   		 
-   </insert>
+	</insert>
+   
+	<select id="EzApprovalG.doSusinHesongDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				sentdeptid
+			FROM
+				TBL_APRRECEIPTPROCESSINFO 
+			WHERE
+				docid = #v_DOCID#
+			AND
+				receivesn = #v_RECEIVESN#
+		]]>
+	</select>
    
    <delete id="EzApprovalG.deleteHesongExpAprLine" parameterClass="Map">
    			DELETE FROM 

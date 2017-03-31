@@ -30,10 +30,10 @@ function fnValueClick() {
         var parentTR = window.event.srcElement.parentElement;
 
         if (BeforeClickID == "")
-            document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#c7d7ed";
+            document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "rgb(233, 241, 244)";
         else {
             document.getElementById(BeforeClickID).style.backgroundColor = "#fff";
-            document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#c7d7ed";
+            document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "rgb(233, 241, 244)";
         }
 
         BeforeClickID = GetAttribute(parentTR.cells[0], "ID");
