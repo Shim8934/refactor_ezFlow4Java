@@ -1262,7 +1262,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_PROXYUSERNAME", proxyUserName);
 		map.put("v_PROXYUSERDEPTID", proxyUserDeptID);
 		map.put("v_STARTDATE", commonUtil.getDateStringInUTC(startDate, offset, true));
-		map.put("v_ENDDATE", endDate);
+		map.put("v_ENDDATE", commonUtil.getDateStringInUTC(endDate, offset, true));
 		map.put("v_TENANT_ID", tenantID);
 
 		 if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
@@ -1341,6 +1341,22 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return sb.toString();
 	}
 
+	@Override
+	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception {
+		logger.debug("getProxyInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		OrganProxyVO proxyInfo = ezOrganDAO.getProxyInfo(map);
+
+		logger.debug("getProxyInfo ended");
+		
+		return proxyInfo;
+	}
+
+	
 }
 
 

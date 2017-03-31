@@ -5461,7 +5461,8 @@
 			 SELECT 
 			 		APRMEMBERSN ,
 		            APRTYPE ,
-		            APRSTATE 
+		            APRSTATE,
+		            APRMEMBERID
 		     FROM 
 		     		TBL_APRLINEINFO 
 		     WHERE  ( 
@@ -21720,5 +21721,20 @@
        		 TBL_APRDOCINFO.COMPANYID = #companyID#
        	AND
        		 TBL_APRDOCINFO.DocID = #v_DOCID#
+   </select>
+   
+   <select id="EzApprovalG.getReceiptProcessInfoRecS" parameterClass="Map" resultClass="String">
+   		 SELECT 
+   		 	CASE WHEN RECEIVESN IS NULL THEN '0'
+   		 	ELSE RECEIVESN 
+   		 	END 
+         FROM 
+         	TBL_APRRECEIPTPROCESSINFO 
+       	 WHERE  
+       	 	DOCID = #v_DOCID#
+       	 AND
+       	 	COMPANYID = #companyID#
+       	 AND
+       	 	TENANT_ID = #v_TENANTID#
    </select>
 </sqlMap>

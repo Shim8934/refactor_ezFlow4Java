@@ -1513,8 +1513,15 @@
 	                                </td>
 	                            </tr>
 	                            <tr>
+	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
-	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn"><span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
+	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn">
+	                                 </c:if>
+	                                 <c:if test = "${approvalFlag=='S'}">
+	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top;">
+	                                 <a class="imgbtn">
+	                                 </c:if>
+	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
 	                                </td>
 	                            </tr>
 	                        </table>

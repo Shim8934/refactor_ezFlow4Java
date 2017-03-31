@@ -1400,6 +1400,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getPropertyValue_S5 (Map<String, Object> map) throws Exception {
 		return (String) select("EzOrganDAO.getPropertyValue_S5", map);
 	}
+
+	public OrganProxyVO getProxyInfo(Map<String, Object> map) throws Exception {
+		return (OrganProxyVO) select("EzOrganDAO.getProxyInfo", map);
+	}
 	
 
 }

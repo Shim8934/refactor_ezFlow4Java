@@ -149,7 +149,7 @@ public interface EzApprovalGService {
 	
 	public String deleteAttachDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getDocInfo(String docID, String mode, String selected, String companyID, int tenantID) throws Exception;
+	public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 	
 	public String saveRecReadHist(String readRecXML, int tenantID) throws Exception;
 	
@@ -191,7 +191,7 @@ public interface EzApprovalGService {
 	
 	public String getApprovalPWD1(String dUserID, int tenantID, String companyID) throws Exception;
 	
-	public String getApproveDocInfo(String docID, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getApproveDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -216,7 +216,7 @@ public interface EzApprovalGService {
 	
 	public String getOrgDocInfo(String docID, String companyID, int tenantID) throws Exception;
 	
-	public String getReceivedDocInfo(String docID, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getReceivedDocInfo(LoginVO userInfo, String docID, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
 	public String getDocRecvState(String docID, String deptID, String companyID, int tenantID) throws Exception;
 	

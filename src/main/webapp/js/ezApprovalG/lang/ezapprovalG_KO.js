@@ -1474,7 +1474,7 @@ var strLangS250 = "결재참가자를 추가할수 ";
 var strLangS251 = "없습니다.";
 var strLangS252 = "기안시 , 결재선 변경시 적용";
 var strLangS253 = "재기안시 ";
-var strLangS254 = "최종결재자는 결재선을 변경할 수 없습니다.";
+var strLangS254 = "최종결재자는 결재선을 변경이 불가합니다.";
 
 var strLangS163 = "수신처목록 저장시 오류가 ";
 
@@ -1485,3 +1485,6 @@ var strLangS109 = "결재상태";
 var strLangS110 = "결재일";
 var strLangS111 = "수신일";
 var strLangS38  = "결재유형";
+
+var strLangS68 = "수신처참조";
+var strLangS70 = "수신처:";

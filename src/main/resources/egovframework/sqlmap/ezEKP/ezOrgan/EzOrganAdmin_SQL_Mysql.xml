@@ -1015,7 +1015,7 @@
                  ('A04','006','회수','1','회수','Withdrew','回収','回收',#tenantID#, #companyID#),
                  ('A04','010','완료','1','완료','Completed','完了','完成',#tenantID#, #companyID#),
                  ('A04','011','도착','1','도착','Arrived','到着','到达',#tenantID#, #companyID#),
-                 ('A04','012','지정','1','지정','Designated','未受付','未接收',#tenantID#, #companyID#),
+                 ('A04','012','미접수','1','지정','Designated','未受付','未接收',#tenantID#, #companyID#),
                  ('A04','013','접수','1','접수','Received','受付','接收',#tenantID#, #companyID#),
                  ('A04','014','배부','1','배부','Distributed','配付','发行',#tenantID#, #companyID#),
                  ('A04','015','회송','1','회송','Returned','回送','退回',#tenantID#, #companyID#),

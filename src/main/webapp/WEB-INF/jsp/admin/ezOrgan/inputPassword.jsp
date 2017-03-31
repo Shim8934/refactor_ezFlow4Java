@@ -22,10 +22,17 @@
 			function OK_Click(){
 				if (NewPassword.value == ""){
 					alert("<spring:message code='ezOrgan.t229' />");
+					document.getElementById('NewPassword').focus();
 					return;
 				}
+				if (!CheckPassword(document.getElementById('NewPassword').value)) {
+					alert("<spring:message code='main.jjh04'/>");
+					document.getElementById('NewPassword').focus();
+					return;
+				};
 				if (NewPassword.value != ConfirmPassword.value){
 					alert("<spring:message code='ezOrgan.t230' />");
+					document.getElementById('ConfirmPassword').focus();
 					return;
 				}
 			    if(ReturnFunction != null){

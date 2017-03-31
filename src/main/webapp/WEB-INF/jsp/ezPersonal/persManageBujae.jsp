@@ -33,6 +33,7 @@
 			var proxystartdate = "";
 		    var proxyenddate = "";
 		    var Roll = "${userInfo.rollInfo}";
+		    var approvalFlag = "${approvalFlag}";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -312,7 +313,8 @@
 										style="CURSOR: pointer; POSITION: relative;vertical-align:middle" width="16">
 								</td>
 							</tr>
-						</table>	  </td>
+						</table>	  
+					</td>
 				</tr>        
 				<tr id="TR_Appoint">
 					<th><spring:message code='ezPersonal.t31'/></th>
@@ -332,28 +334,52 @@
 					    </td>
 				    </tr>
 				</c:if>
-				<tr>
-					<th><spring:message code='ezPersonal.t42'/></th>
-					<td>
-						<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
-							<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
-							<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
-							<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
-							<OPTION value="b3"><spring:message code='ezPersonal.b3'/></OPTION>
-							<OPTION value="b4"><spring:message code='ezPersonal.b4'/></OPTION>
-							<OPTION value="b5"><spring:message code='ezPersonal.b5'/></OPTION>
-							<OPTION value="b6"><spring:message code='ezPersonal.b6'/></OPTION>
-							<OPTION value="b7"><spring:message code='ezPersonal.b7'/></OPTION>
-							<OPTION value="b8"><spring:message code='ezPersonal.b8'/></OPTION>
-							<OPTION value="b9"><spring:message code='ezPersonal.b9'/></OPTION>
-							<OPTION value="b10"><spring:message code='ezPersonal.b10'/></OPTION>
-							<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
-							<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
-						</SELECT>
-					</td>
-				</tr>
-						</table>
-		            <br>
+				<c:if test="${approvalFlag eq 'G'}">
+					<tr>
+						<th><spring:message code='ezPersonal.t42'/></th>
+						<td>
+							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
+								<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
+								<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
+								<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
+								<OPTION value="b3"><spring:message code='ezPersonal.b3'/></OPTION>
+								<OPTION value="b4"><spring:message code='ezPersonal.b4'/></OPTION>
+								<OPTION value="b5"><spring:message code='ezPersonal.b5'/></OPTION>
+								<OPTION value="b6"><spring:message code='ezPersonal.b6'/></OPTION>
+								<OPTION value="b7"><spring:message code='ezPersonal.b7'/></OPTION>
+								<OPTION value="b8"><spring:message code='ezPersonal.b8'/></OPTION>
+								<OPTION value="b9"><spring:message code='ezPersonal.b9'/></OPTION>
+								<OPTION value="b10"><spring:message code='ezPersonal.b10'/></OPTION>
+								<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
+								<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
+							</SELECT>
+						</td>
+					</tr>
+				</c:if>
+				<c:if test="${approvalFlag eq 'S'}">
+					<tr style="display: none;">
+						<th><spring:message code='ezPersonal.t42'/></th>
+						<td>
+							<SELECT id="absentreason" onchange="return Sel_Change();"><!-- ezOrgan, ezPersonal 등 resource b1~b12 통일함 -->
+								<OPTION selected value="<spring:message code='ezPersonal.t35'/>"></OPTION>
+								<OPTION value="b1"><spring:message code='ezPersonal.b1'/></OPTION>
+								<OPTION value="b2"><spring:message code='ezPersonal.b2'/></OPTION>
+								<OPTION value="b3"><spring:message code='ezPersonal.b3'/></OPTION>
+								<OPTION value="b4"><spring:message code='ezPersonal.b4'/></OPTION>
+								<OPTION value="b5"><spring:message code='ezPersonal.b5'/></OPTION>
+								<OPTION value="b6"><spring:message code='ezPersonal.b6'/></OPTION>
+								<OPTION value="b7"><spring:message code='ezPersonal.b7'/></OPTION>
+								<OPTION value="b8"><spring:message code='ezPersonal.b8'/></OPTION>
+								<OPTION value="b9"><spring:message code='ezPersonal.b9'/></OPTION>
+								<OPTION value="b10"><spring:message code='ezPersonal.b10'/></OPTION>
+								<OPTION value="b11"><spring:message code='ezPersonal.b11'/></OPTION>
+								<OPTION value="b12"><spring:message code='ezPersonal.b12'/></OPTION>
+							</SELECT>
+						</td>
+					</tr>
+				</c:if>
+				</table>
+            <br>
 		 
 		  <br/>
 		  <div style="width:650px;text-align:center">

@@ -1736,7 +1736,11 @@ function setbuttonenable() {
             }
             else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
                 if (pFunctionType == "004")
-                    document.getElementById("tbtnRegList").style.display = "";
+                	if(approvalFlag == "G") {
+                		document.getElementById("tbtnRegList").style.display = "";
+                	} else {
+                		document.getElementById("tbtnRegList").style.display = "none";
+                	}
                 else
                     document.getElementById("tbtnRegList").style.display = "none";
 
@@ -1847,7 +1851,11 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
-                document.getElementById("tbtnRegList").style.display = "";
+                if(approvalFlag == "G") {
+                	document.getElementById("tbtnRegList").style.display = "";
+                } else {
+                	document.getElementById("tbtnRegList").style.display = "none";
+                }
             }
             document.getElementById("tbtnViewDoc").style.display = "";
         }
