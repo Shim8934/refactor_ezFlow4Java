@@ -714,18 +714,18 @@ function ListView() {
                             }
 
                         }
-                        
-                        if (CrossYN()) {
-                            if (_SecurityFlag && oDatas[9].textContent != "" && oDatas[9].textContent >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
+                        if(oDatas[9]!=null){
+                        	if (CrossYN()) {
+                        		if (_SecurityFlag && oDatas[9].textContent != "" && oDatas[9].textContent >= strToday) {   //DATA10값
+                        			objTd.style.color = m_SecurityColor;
+                        		}
+                        	}
+                        	else {
+                        		if (_SecurityFlag && oDatas[9].text != "" && oDatas[9].text >= strToday) {   //DATA10값
+                        			objTd.style.color = m_SecurityColor;
+                        		}
+                        	}
                         }
-                        else {
-                            if (_SecurityFlag && oDatas[9].text != "" && oDatas[9].text >= strToday) {   //DATA10값
-                                objTd.style.color = m_SecurityColor;
-                            }
-                        }
-                    
                         if (_Align[j] == 0)
                             objTd.align = "left";
                         else

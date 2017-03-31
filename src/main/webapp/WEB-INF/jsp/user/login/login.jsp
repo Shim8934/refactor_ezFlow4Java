@@ -122,6 +122,7 @@
 				
 				if (!CheckPassword(document.getElementById('txtNewPassword').value)) {
 					alert("<spring:message code='main.jjh04'/>");
+					document.all['txtNewPassword'].focus();
 					return;
 				};				
 				
@@ -132,7 +133,7 @@
 			    }
 		        if (document.getElementById('txtNewPassword').value != document.getElementById('txtNewPasswordConfirm').value) {
 		            alert("<spring:message code='main.jjh02'/>");
-			        document.all['txtNewPassword'].focus();
+			        document.all['txtNewPasswordConfirm'].focus();
 			        return;
 			    }
 		        
@@ -208,29 +209,35 @@
 		</div>
 		<div id="exDiv" style="display:none">
 			<div style="float:left">
-				<img src="/images/warning.png" width="52" height="52"/>
+				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
+				<c:if test="${isFirstLogin != 'Y'}"><img src="/images/warning.png" width="52" height="52"/></c:if>
 			</div>
 			<div style="float:right;color:rgb(0, 72, 149)">
-				<div style="font-size:11px">▒ <spring:message code='fail.user.passwordExpired'/></div>
+				<c:if test="${isFirstLogin == 'Y'}">
+					<div style="font-size:11px">▒ <spring:message code='main.jjh07'/></div>
+				</c:if>
+				<c:if test="${isFirstLogin != 'Y'}">
+					<div style="font-size:11px">▒ <spring:message code='fail.user.passwordExpired'/></div>
+				</c:if>				
 				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh03'/></div>
 				<div style="font-size:11px;margin-top:3px">▒ <spring:message code='main.jjh04'/></div>
 			</div>
-			<div style="clear:both"></div>	
+			<div style="clear:both"></div>
 			<p style="border-top:1px solid rgb(0, 72, 149);margin-top:13px">
 				<label style="color:rgb(0, 72, 149);">로그인 아이디 : </label>
 				<span id="chooseId">${userId}</span>
 			</p>
 			<p>
 				<label style="color:rgb(0, 72, 149);"><spring:message code='ezPersonal.t949'/> : </label>
-				<input type="password" id="txtOldPassword" />
+				<input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
 			</p>
 			<p>
 				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh05'/> : </label>
-				<input type="password" id="txtNewPassword" />
+				<input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
 			</p>
 			<p style="border-bottom:1px solid rgb(0, 72, 149)">
 				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh06'/> : </label>
-				<input type="password" id="txtNewPasswordConfirm" />
+				<input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
 			</p>
 			<div class="btnposition" style="margin:10px">
 			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
