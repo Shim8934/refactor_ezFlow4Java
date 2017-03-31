@@ -15289,7 +15289,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							
 							ezApprovalGDAO.updateAprDocInfoS(map);
 							
-							map.put("v_APRTYPE", staATYilBan);
+							map.put("v_APRTYPE", staATGyulJe);
 							map.put("v_APRSTATE", staASJinHang);
 							map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 							map.put("v_WRITERID", makeListField(signXML.getElementsByTagName("WRITERID").item(0).getTextContent()));
@@ -15499,7 +15499,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertHesongAprOpinionInfo(map);
 				ezApprovalGDAO.insertHesongAprReceiptProcessInfo2(map);
 				
-				map.put("v_APRTYPE", staATYilBan);
+				map.put("v_APRTYPE", staATGyulJe);
 				map.put("v_APRSTATE", staASJinHang);
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				map.put("v_WRITERID", DraftUserID);
