@@ -1678,6 +1678,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("title", title);
+		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("taskCodeInsert ended.");
