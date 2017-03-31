@@ -79,7 +79,7 @@
     <align>left</align>
   </column>
   <column>
-    <heading>受信日付</heading>
+    <heading>受信日時</heading>
     <type>date</type>
     <propname>receivedt</propname>
     <prop>urn:schemas:httpmail:datereceived</prop>
