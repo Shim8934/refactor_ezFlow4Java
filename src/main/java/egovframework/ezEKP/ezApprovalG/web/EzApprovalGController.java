@@ -2015,7 +2015,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
-		if (pass.equals("<RESULT>TRUE</RESULT>")) {
+		if (pass.equals("<RESULT>TRUE</RESULT>") || admin.equals("Y")) {
 			if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0 || docHref.split("/").length == 1) {
 				String strXML = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 				Document resultXML = commonUtil.convertStringToDocument(strXML);
