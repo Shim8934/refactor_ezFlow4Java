@@ -1224,9 +1224,9 @@
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
-		
+
 		                //결재선 저장
-		                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
+		                if (approvalFlag == "S") {
 		                    if (ret[1] != false) {
 		                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
 		                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
@@ -1241,6 +1241,23 @@
 		                    }
 		                    savexmlhttp = null;
 		                    savexmlhttp = createXMLHttpRequest();
+		                } else {
+			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
+			                    if (ret[1] != false) {
+			                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
+			                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+			                        savexmlhttp.send(ret[1]);
+			
+			                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+			                        IsSkipDrafter = "FALSE";
+			                        btnSendDraftEnable = "true";
+			                        ReAprLineSingMapping(ret);
+			                        SaveFile();
+			                        getCurApproverAprLine();
+			                    }
+			                    savexmlhttp = null;
+			                    savexmlhttp = createXMLHttpRequest();
+			                }
 		                }
 		
 		                if (pSuSinFlag == "Y") {

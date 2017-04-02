@@ -237,9 +237,9 @@
 	            	 try {
 	                     if (pIniGubun == "1") {
 	                         if (CrossYN())
-	                             document.getElementById("1tab1").onclick();
+	                             document.getElementById("1tab3").onclick();
 	                         else
-	                             document.getElementById("1tab1").click();
+	                             document.getElementById("1tab3").click();
 	                     }
 	                     else if (pIniGubun == "2") {
 	                         if (CrossYN())
@@ -249,9 +249,9 @@
 	                     }
 	                     else if (pIniGubun == "3") {
 	                         if (CrossYN())
-	                             document.getElementById("1tab3").onclick();
+	                             document.getElementById("1tab1").onclick();
 	                         else
-	                             document.getElementById("1tab3").click();
+	                             document.getElementById("1tab1").click();
 	                     }
 	                     else if (pIniGubun == "4") {
 	                         if (CrossYN())
@@ -261,9 +261,9 @@
 	                     }
 	                     else if (pIniGubun == "5") {
 	                         if (CrossYN())
-	                             document.getElementById("1tab3").onclick();
+	                             document.getElementById("1tab1").onclick();
 	                         else
-	                             document.getElementById("1tab3").click();
+	                             document.getElementById("1tab1").click();
 	                     }
 	                     else if (pIniGubun == "10") { //수신자
 	                    	onlydocinfiview = true;
@@ -723,7 +723,7 @@
 		    }
 		
 		    function btn_OK() {
-// 		        try {
+		        try {
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -921,11 +921,11 @@
 		            	
                         window.close();
 		            }
-// 		        }
-// 		        catch (e) {
-// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-// 		            ret[0] = "FALSE";
-// 		        }
+		        }
+		        catch (e) {
+		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+		            ret[0] = "FALSE";
+		        }
 		    }
 		    
 		    function setCabInfoXML() {
