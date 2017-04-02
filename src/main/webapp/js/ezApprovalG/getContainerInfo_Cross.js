@@ -585,7 +585,7 @@ function selFirstRow(Resultxml) {
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
         
-        if (approvalFlag) {
+        if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
             DocState = GetAttribute(tr, "DATA7");
             

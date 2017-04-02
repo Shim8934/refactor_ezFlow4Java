@@ -1312,7 +1312,6 @@ var strLang1148 = "첨부 정보";
 var strLang1149 = "결재선 정보";
 
 
-
 //일반용 S를 붙일 것 
 var strLangS599 = "분류 코드가 지정되어 있지 않습니다.";
 var strLang385 = "문서를 선택하여 주십시오"
