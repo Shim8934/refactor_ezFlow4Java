@@ -22,10 +22,10 @@
     {
         <c:if test="${IsJMochaStandAlone != 'YES'}">
 //        parent.frames[1].location.href = "Personal/ezStatistics_Connect.aspx";
-        parent.frames[1].location.href = "/admin/Ezsystem/systemMainMenu.do";        
+        parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";        
         </c:if>
         <c:if test="${IsJMochaStandAlone == 'YES'}">
-        parent.frames[1].location.href = "/admin/Ezsystem/systemMainMenu.do";
+        parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
         </c:if>
     };
 	
@@ -41,7 +41,7 @@
 	    switch(this_menu)
 	    {	
 	    	case "PARAMETER":
-           		parent.frames[1].location.href = "/admin/Ezsystem/systemMainMenu.do";
+           		parent.frames[1].location.href = "/admin/ezSystem/systemMainMenu.do";
            	 	break;
 	    }
     }

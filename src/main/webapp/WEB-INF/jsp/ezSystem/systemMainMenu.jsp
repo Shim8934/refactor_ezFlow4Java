@@ -2,180 +2,37 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
+<title><spring:message code='main.kms1'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="/css/default_kr.css;" type="text/css">
-<style>
-	select { width:100%; }
-</style>
-<script type="text/javascript" src="/js/jquery/jquery.js"></script>
+<link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript">
 	
 	var list = [];
 	var confirmChange = "";
 	
-	window.onload = function() {
-		get_Sys_Param();
-	};
-
-	function get_Sys_Param() {
-		$.ajax({
-			type : "POST",
-			url : "/admin/Ezsystem/getSysParam.do",
-			data : {
-
-			},
-			async: false,
-			success : function(result) {
-				after_get_Sys_Param(result);
-			},
-			error : function(error) {
-				alert("<spring:message code='main.kms2'/>" + error);
-			}
-		});
-
-	}
-	
-	function after_get_Sys_Param(result) {
-		$("table").children().remove();
-		$("table").append('<tr><th><spring:message code="main.kms1"/>'+
-				'</th><th><spring:message code="main.kms3"/></th></tr>');
-		list = result;
-		for (var i = 0; i < list.length; i++) {
-			if(list[i].name=="USE_AdditionalROle"){
-				list[i].name="USE_AdditionalRole";
-			}
-			
-				if(list[i].value != "YES" && list[i].value != "NO" ){
-					if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE" && list[i].name != "FormProcSpelling"){
-						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-						+'<td><input type="text" value='+list[i].value+'></td></tr>');
-					}else if(list[i].name == "PrimaryLang"){
-						if(list[i].value==3){
-							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-							+'<td><select><option value="1"><spring:message code="ezPersonal.s81"/></option>'
-							+'<option value="3" selected="selected"><spring:message code="ezPersonal.s84"/></option>'
-							+'</select></td></tr>');
-						}else if(list[i].value==1){
-							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-							+'<td><select><option value="1" selected="selected"><spring:message code="ezPersonal.s81"/></option>'
-							+'<option value="3"><spring:message code="ezPersonal.s84"/></option>'
-							+'</select></td></tr>');
-						}
-					}else if(list[i].name == "ONELINE_REPLY_ENABLE" || list[i].name == "FormProcSpelling"){
-						if(list[i].value == "1"){
-							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-							+'<td><select><option value="1" selected="selected">YES</option><option value="0">NO</option>'
-							+'</select></td></tr>');
-						}else if(list[i].value == "0"){
-							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-							+'<td><select><option value="1">YES</option><option value="0" selected="selected">NO</option>'
-							+'</select></td></tr>');
-						}		
-					}
-				}else if(list[i].value == "NO"){
-					$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-					+'<td><select><option value="YES">YES</option><option value="NO" selected="selected">NO</option>'
-					+'</select></td></tr>');
-				}else{
-					$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-					+'<td><select><option value="YES" selected="selected">YES</option><option value="NO">NO</option>'
-					+'</select></td></tr>');	
-				}
-		}
-		$("table").append('<tr><td colspan="2" style="text-align: center; padding-top:5px;">'
-		+'<div class="imgbtn" style="padding-right: 3px;"><span onclick="check_change_Param()">'
-		+'<spring:message code='main.sp09'/></span></div>'
-		+'<div class="imgbtn"><span onclick=$("form")[0].reset()><spring:message code='main.sp11'/>'
-		+'</span></div></td></tr>');
-	}
-	
-	function check_change_Param() {
-
-		var flag=false;
-		confirmChange = "";
-		
-		for (var i = 0; i < list.length; i++) {
-			if($("#tr_"+i+" input").val()==undefined){
-			var value = $("#tr_"+i+" select").val();
-			}else{
-			value = $("#tr_"+i+" input").val();
-			}
-			if(value!=list[i].value){
-				if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE" && list[i].name != "FormProcSpelling"){
-			 		flag=true;
-			 		confirmChange += $("#tr_"+i+" th").text()+ " : " + list[i].value+ " -> " +value +"\n";
-				}else if(list[i].name == "PrimaryLang"){
-					flag=true;
-					var oldLang = "";
-					var newLang = "";
- 					if(value==1){
- 						newLang = "<spring:message code="ezPersonal.s81"/>";
- 					}else if(value==3){
- 						newLang = "<spring:message code="ezPersonal.s84"/>";
- 					}
- 					if(list[i].value==1){
- 						oldLang = "<spring:message code="ezPersonal.s81"/>";
- 					}else if(list[i].value==3){
- 						oldLang = "<spring:message code="ezPersonal.s84"/>";
- 					}
-					confirmChange += $("#tr_"+i+" th").text()+ " : " + oldLang+ " -> " +newLang +"\n";
-				}else if(list[i].name == "ONELINE_REPLY_ENABLE" || list[i].name == "FormProcSpelling"){
-					flag=true;
-					var oldLang = "";
-					var newLang = "";
- 					if(value==1){
- 						newLang = "YES";
- 					}else if(value==0){
- 						newLang = "NO";
- 					}
- 					if(list[i].value==1){
- 						oldLang = "YES";
- 					}else if(list[i].value==0){
- 						oldLang = "NO";
- 					}
-					confirmChange += $("#tr_"+i+" th").text()+ " : " + oldLang+ " -> " +newLang +"\n";
-				}
-			}
-		}
-		if(flag){
-			if(confirm(confirmChange)){
-			update_Sys_Param();
-			}
-		}
-	}
-	
 	function update_Sys_Param() {
-		var paramArray = new Array();
-		
-		for (var i = 0; i < list.length; i++) {
-			if($("#tr_"+i+" input").val()==undefined){
-				var value = $("#tr_"+i+" select").val();
-			}else{
-				value = $("#tr_"+i+" input").val();
-			}
-			if(value!=list[i].value){
-				var paramInfo = new Object();
+		var paramArray
+			= [
+				{ name : "BigSizeMailAttachDelDay", value : document.getElementById("BigSizeMailAttachDelDay").value },
+				{ name : "ExpirePassPeriod", value : document.getElementById("ExpirePassPeriod").value },
+				{ name : "INDIVIDUALMAILUSER", value : document.getElementById("INDIVIDUALMAILUSER").value },
+				{ name : "IS_READ_DELETE", value : document.getElementById("IS_READ_DELETE").value },
+				{ name : "MailAttachLimit", value : document.getElementById("MailAttachLimit").value },
+				{ name : "PrimaryLang", value : document.getElementById("PrimaryLang").value },
+				{ name : "totBigSizeMailAttachLimit", value : document.getElementById("totBigSizeMailAttachLimit").value },
+				{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value }
+			  ];
 			
-				paramInfo.name = $("#tr_"+i+" th").text();
-				paramInfo.value = value;
-			
-				paramArray.push(paramInfo);
-				if(list[i].name == "PrimaryLang"){
-					change_PrimaryLang(paramArray,value);
-				}
-			}
-		}
-		
 		var jsonStr = JSON.stringify(paramArray);
 
 		$.ajax({
 			type : "POST",
-			url : "/admin/Ezsystem/updateSysParam.do",
-			processData : true /*querySTring make false*/, 
+			url : "/admin/ezSystem/updateSysParam.do",
+			processData : true, 
 			contentType : "application/json; charset=UTF-8", 
 			data :jsonStr,
 			success : function(data){
@@ -186,86 +43,32 @@
 					alert("<spring:message code='main.sp12'/>");
 				}
 			},
-			complete : function(){
-				get_Sys_Param();
-			},
 			error : function(e) {
 				alert(e);
 			}
 		});	
 	}
 	
-	function change_PrimaryLang(paramArray,value) {
-		if(value == 1){
-			
-			var paramInfo1 = new Object();
-			
-			paramInfo1.name = "LangPrimary1";
-			paramInfo1.value = "한글";
-		
-			paramArray.push(paramInfo1);
-			
-			var paramInfo2 = new Object();
-			
-			paramInfo2.name = "LangPrimary2";
-			paramInfo2.value = "Korean";
-		
-			paramArray.push(paramInfo2);
-			
-			var paramInfo3 = new Object();
-			
-			paramInfo3.name = "LangPrimary3";
-			paramInfo3.value = "韓国語";
-		
-			paramArray.push(paramInfo3);
-			
-			var paramInfo4 = new Object();
-			
-			paramInfo4.name = "LangPrimary4";
-			paramInfo4.value = "韩国语";
-		
-			paramArray.push(paramInfo4);
-			
-		}else if(value == 3){
-			
-			var paramInfo1 = new Object();
-			
-			paramInfo1.name = "LangPrimary1";
-			paramInfo1.value = "일본어";
-		
-			paramArray.push(paramInfo1);
-			
-			var paramInfo2 = new Object();
-			
-			paramInfo2.name = "LangPrimary2";
-			paramInfo2.value = "Japanese";
-		
-			paramArray.push(paramInfo2);
-			
-			var paramInfo3 = new Object();
-			
-			paramInfo3.name = "LangPrimary3";
-			paramInfo3.value = "日本語";
-		
-			paramArray.push(paramInfo3);
-			
-			var paramInfo4 = new Object();
-			
-			paramInfo4.name = "LangPrimary4";
-			paramInfo4.value = "日本語";
-		
-			paramArray.push(paramInfo4);
-		}
-		
-	}
 </script>
-<title><spring:message code='main.kms1'/></title>
 </head>
-<body class=mainbody>
+<body class="mainbody">
 <h1><spring:message code='main.kms1'/></h1>
-	<form>
-	<table>
-	</table>
-	</form>
+    <table class="content">
+        <tbody>
+            <tr><th><spring:message code="main.kms1"/></th><th><spring:message code="main.kms3"/></th></tr>
+            <tr><th><spring:message code="ezSystem.x0001"/></th><td><input id="BigSizeMailAttachDelDay" type="text" value="${configMap.BigSizeMailAttachDelDay}"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
+            <tr><th><spring:message code="ezSystem.x0002"/></th><td><input id="totBigSizeMailAttachLimit" type="text" value="${configMap.totBigSizeMailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>)</td></tr>
+            <tr><th><spring:message code="ezSystem.x0003"/></th><td><input id="MailAttachLimit" type="text" value="${configMap.MailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
+            <tr><th><spring:message code="ezSystem.x0005"/></th><td><input id="ExpirePassPeriod" type="text" value="${configMap.ExpirePassPeriod}"> (<spring:message code="ezSystem.x0010"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>
+            <tr><th><spring:message code="ezSystem.x0006"/></th><td><input id="INDIVIDUALMAILUSER" type="text" value="${configMap.INDIVIDUALMAILUSER}"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
+            <tr><th><spring:message code="ezSystem.x0007"/></th><td><select id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
+            <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select></td></tr>
+            <tr><th><spring:message code="ezSystem.x0009"/></th><td><input id="USE_FileExtension" type="text" value="${configMap.USE_FileExtension}"> (<spring:message code="ezSystem.x0012"/>, <spring:message code="ezSystem.x0013"/>: jpg,doc,xls)</td></tr>
+        </tbody>
+    </table> 
+    <div class="btnposition">
+        <a class="imgbtn" onclick="update_Sys_Param()"><span><spring:message code='main.sp09'/></span></a>
+        <a class="imgbtn" onClick="window.location.href='/admin/ezSystem/systemMainMenu.do'"><span><spring:message code='main.t135'/></span></a>
+    </div>       
 </body>
 </html>
