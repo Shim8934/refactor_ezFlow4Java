@@ -286,6 +286,7 @@ function SAPRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
             pReDraftAprLineChangeFlag = true;
         } else {
             AprLineAddUser(Mode, pCurSelRow, pCurSelectedRow);
+            pReDraftAprLineChangeFlag = true;
         }
     } else {
         if (pReDraftAprLineFlag) {

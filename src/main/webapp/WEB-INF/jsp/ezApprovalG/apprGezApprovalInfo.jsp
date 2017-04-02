@@ -833,7 +833,7 @@
 			                }
 		                }
 	
-		                if (pReDraftAprLineChangeFlag) {
+		                if (pReDraftAprLineChangeFlag || pReDraftFlag == "REDRAFT") {
 		                    ret[5] = "R";
 		                }
 		                else {
