@@ -139,8 +139,7 @@ public class EzResourceAdminDAO extends EgovAbstractDAO {
 	public void delClsData_D2(Map<String, Object> map) {
 		delete("EzResourceAdminDAO.delClsData_D2", map);
 	}
-	
-	
+		
 	public void delClsData_D4(Map<String, Object> map) {
 		delete("EzResourceAdminDAO.delClsData_D4", map);
 	}
@@ -149,5 +148,8 @@ public class EzResourceAdminDAO extends EgovAbstractDAO {
 		delete("EzResourceAdminDAO.delClsData_D5", map);
 	}
 	
+	public void updateBoardName(Map<String, Object> map) {
+		update("EzResourceAdminDAO.updateBoardName", map);
+	}	
 	
 }

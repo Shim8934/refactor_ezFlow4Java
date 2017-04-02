@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.let.user.login.dao.LoginDAO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -63,6 +65,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
     @Autowired
     private EzCommonService ezCommonService;
+    
+	@Resource(name="EzResourceAdminDAO")
+	private EzResourceAdminDAO ezResourceAdminDAO;
     
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
@@ -562,6 +567,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			vo.setDisplayName2(displayName2);
 			
 			ezOrganAdminDao.updateUserDeptDisplayName(vo);
+			
+			map.put("v_BOARD_ID", 1);
+			ezResourceAdminDAO.updateBoardName(map);
 		}
 		
         logger.debug("updateDBData_company ended");
