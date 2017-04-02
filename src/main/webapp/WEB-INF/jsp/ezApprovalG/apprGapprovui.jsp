@@ -88,6 +88,7 @@
 		    var SignContent = new Array();
 		    var RootURL = document.location.protocol + "//" + document.location.hostname;  
 		    var arr_userinfo = new Array();
+		    var onlydocinfiview;
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
 		    arr_userinfo[2]  = "${userInfo.displayName}";
@@ -461,24 +462,51 @@
 		    {
 		        getCurApproverAprLine();
 		        pGubun = "8";
-		        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
-		        {
-		            setMenuBar("btntotaldocinfo", false);
-		            setMenuBar("btnJunKyul", false);
-		            setMenuBar("btnModAprLine", false);
-		            setMenuBar("btnEdit", false);
-		            setMenuBar("btnDocInfo", false);
-		            setMenuBar("btnFileAttach", false);
-		            setMenuBar("btnAprDocAttach", false);
-		            setMenuBar("btnModAprDept", false);
-		            setMenuBar("btnSetTaskCode", false);
-		            setMenuBar("btnAddSepAttach", false); 
-		            pGubun = "10";
+		        
+		        if (approvalFlag == "S") {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
+			        {
+			            setMenuBar("btntotaldocinfo", false);
+			            setMenuBar("btnJunKyul", false);
+			            setMenuBar("btnModAprLine", false);
+			            setMenuBar("btnEdit", false);
+			            setMenuBar("btnDocInfo", false);
+			            setMenuBar("btnFileAttach", false);
+			            setMenuBar("btnAprDocAttach", false);
+			            setMenuBar("btnModAprDept", false);
+			            setMenuBar("btnSetTaskCode", false);
+			            setMenuBar("btnAddSepAttach", false); 
+			            pGubun = "10";
+			        } else if (pAprLineType == strAprType4) {
+			        	setMenuBar("btnJunKyul", false);
+		                setMenuBar("btnModAprLine", false);
+		                setMenuBar("btnModAprDept", false);
+		                setMenuBar("btnEdit", false);
+		                setMenuBar("btnFileAttach", false);
+		                setMenuBar("btnAprDocAttach", false);
+			            pGubun = "14";
+			        }
+		        } else {
+			        if(pAprLineType == strAprType2 || pAprLineType == strAprType7 || pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12)
+			        {
+			            setMenuBar("btntotaldocinfo", false);
+			            setMenuBar("btnJunKyul", false);
+			            setMenuBar("btnModAprLine", false);
+			            setMenuBar("btnEdit", false);
+			            setMenuBar("btnDocInfo", false);
+			            setMenuBar("btnFileAttach", false);
+			            setMenuBar("btnAprDocAttach", false);
+			            setMenuBar("btnModAprDept", false);
+			            setMenuBar("btnSetTaskCode", false);
+			            setMenuBar("btnAddSepAttach", false); 
+			            pGubun = "10";
+			        }
+			        else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			            setMenuBar("btnModAprLine", false);
+			            pGubun = "5";
+			        }
 		        }
-		        else if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-		            setMenuBar("btnModAprLine", false);
-		            pGubun = "5";
-		        }
+		        
 		        if (KuyjeType == "001") {
 		            if (pDraftFlag == "SUSIN" || pAprLineType == strAprType7 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
 		                setMenuBar("btnReject", false);
@@ -1166,7 +1194,8 @@
 		
 		        if (isExtDoc != "Y") isExtDoc = "N";
 		
-		        var onlydocinfiview = false;
+		        onlydocinfiview = false;
+		        
 		        var parameter = new Array();
 		        CheckDocCellInfo();
 		        parameter[0] = pDocID;
@@ -1227,20 +1256,22 @@
 
 		                //결재선 저장
 		                if (approvalFlag == "S") {
-		                    if (ret[1] != false) {
-		                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-		                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-		                        savexmlhttp.send(ret[1]);
-		
-		                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
-		                        IsSkipDrafter = "FALSE";
-		                        btnSendDraftEnable = "true";
-		                        ReAprLineSingMapping(ret);
-		                        SaveFile();
-		                        getCurApproverAprLine();
-		                    }
-		                    savexmlhttp = null;
-		                    savexmlhttp = createXMLHttpRequest();
+			                if (pGubun != "14" && pGubun != "10") {
+			                    if (ret[1] != false) {
+			                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
+			                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+			                        savexmlhttp.send(ret[1]);
+			
+			                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+			                        IsSkipDrafter = "FALSE";
+			                        btnSendDraftEnable = "true";
+			                        ReAprLineSingMapping(ret);
+			                        SaveFile();
+			                        getCurApproverAprLine();
+			                    }
+			                    savexmlhttp = null;
+			                    savexmlhttp = createXMLHttpRequest();
+			                }
 		                } else {
 			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
 			                    if (ret[1] != false) {
