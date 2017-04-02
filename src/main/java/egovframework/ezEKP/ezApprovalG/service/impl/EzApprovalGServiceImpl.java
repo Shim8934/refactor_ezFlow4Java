@@ -12689,6 +12689,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (orgDeptID.trim().equals("")) {
 			orgDeptID = deptID;
 		}
+		if (docState.equals("012")) {
+			sendFlag = false;
+		}
 		
 		if (docState.trim().equals("") && !sendFlag) {
 			rtnVal = false;
