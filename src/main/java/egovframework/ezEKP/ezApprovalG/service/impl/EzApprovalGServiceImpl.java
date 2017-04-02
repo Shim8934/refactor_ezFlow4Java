@@ -10830,12 +10830,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String subSQL = "";
 		boolean rtnVal = false;
 		
-	     // 표준모듈(2008.03.11) : [개인병렬협조-참조-개인병렬협조]인 경우 처리
-		//일반
-        boolean bLastByungRyulHyubJo = false;
-        // 수정(2008.04.29) : [개인병렬협조-참조-개인병렬협조]인 경우 처리 (보완)
-        //일반
-        boolean bChamJo = false;
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -10914,15 +10908,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			logger.debug("doApproveLineCnt ended");
 
-			if (approvalFlag.equals("G")) {
+			
 				if (subCount >= 1) {
 					return strSQL.toString();
 				}
-			} else {
-				if (subCount > 1) {
-					return strSQL.toString();
-				}
-			}
+			
 		}
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -11004,9 +10994,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FALSE";
 				}	
-				if (approvalFlag.equals("S")) {
-					bChamJo = true;
-				}
 				
                 k += 1;				
 				
@@ -11089,10 +11076,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     k += 1;
 				}
 				
-				if (approvalFlag.equals("S")) {
-					 // 수정(2008.04.29) : [개인병렬협조-참조-개인병렬협조]인 경우 처리 (보완)
-                    bChamJo = true;
-				}
 				break;
 			case "008":
 				lastState = staATSoonChaHyubJo;
@@ -11176,7 +11159,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						k += 1;
 					}
 				} else {
-					if (!curAprType.equals(staATByungRyulHyubJo) || (bLastByungRyulHyubJo && bChamJo)) {
+					if (!curAprType.equals(staATByungRyulHyubJo)) {
 						while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
 							map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 							map3.put("v_APRSTATE", staASJinHang);
