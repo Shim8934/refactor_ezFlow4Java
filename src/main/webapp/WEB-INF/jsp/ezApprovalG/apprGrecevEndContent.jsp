@@ -20,9 +20,15 @@
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
-	                $('#div_Content #body').css('overflow', 'auto');
 	            } catch (e)
 	            { }
+	            
+	            try {
+	            	$('#div_Content #body').css('overflow', 'auto');
+	                $('#div_Content #doctitle').css('word-wrap', 'break-word');
+	            } catch (e)
+	            { }
+	            
 	        };
 	        function Set_EditorContentURL(url) {
 	            try {
