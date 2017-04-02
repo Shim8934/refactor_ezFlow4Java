@@ -53,6 +53,7 @@
 	            
 	            try {
 		        	$('#div_Content #body').css('overflow', 'auto');
+		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        } catch (e)
 		        { }
 	        };

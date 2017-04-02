@@ -6384,7 +6384,7 @@
 									 	TBL_ENDAPRDOCINFO.TENANT_ID = D.TENANT_ID
 					              AND 
 					                 	TBL_ENDAPRDOCINFO.COMPANYID = D.COMPANYID 
-					              INNER JOIN 
+					              LEFT OUTER JOIN  
 					              		TBL_ENDRECEIPTPOINTINFO E ON TBL_ENDAPRDOCINFO.DOCID = E.DocID 
 								  AND 
 								  		TBL_ENDAPRDOCINFO.TENANT_ID = E.TENANT_ID
@@ -10325,7 +10325,7 @@
 									 	TBL_ENDAPRDOCINFO.TENANT_ID = D.TENANT_ID
 					              AND 
 					                 	TBL_ENDAPRDOCINFO.COMPANYID = D.COMPANYID 
-					              INNER JOIN 
+					              LEFT OUTER JOIN 
 					              		TBL_ENDRECEIPTPOINTINFO E ON TBL_ENDAPRDOCINFO.DOCID = E.DocID 
 								  AND 
 								  		TBL_ENDAPRDOCINFO.TENANT_ID = E.TENANT_ID
