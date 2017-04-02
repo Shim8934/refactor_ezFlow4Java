@@ -590,18 +590,33 @@
 		            }
 		        }
 		        if (pDraftFlag != "SUSIN") {
-		            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-		                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-		                    var rtnval;
-		                    rtnval = getDocNumber(drafterDeptid, "");
-		                    if (!rtnval) {
-		                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
-		                        OpenAlertUI(pAlertContent);
-		                        setMenuDisable("btnApprove", false);
-		                        return;
-		                    }
-		                }
-		            }
+		        	if (approvalFlag == "S") {
+			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
+			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+			                    var rtnval;
+			                    rtnval = getDocNumber(drafterDeptid, "");
+			                    if (!rtnval) {
+			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+			                        OpenAlertUI(pAlertContent);
+			                        setMenuDisable("btnApprove", false);
+			                        return;
+			                    }
+			                }
+			            }
+		        	} else {
+			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
+			                    var rtnval;
+			                    rtnval = getDocNumber(drafterDeptid, "");
+			                    if (!rtnval) {
+			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
+			                        OpenAlertUI(pAlertContent);
+			                        setMenuDisable("btnApprove", false);
+			                        return;
+			                    }
+			                }
+			            }
+		        	}
 		        }
 		        if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
@@ -634,7 +649,6 @@
 		                return;
 		            }
 		        }
-		        
 		        signInfo = AprrovMappingSign(signtype);
 
 		        var rtnVal = true;
@@ -659,7 +673,6 @@
 		                return;
 		            }
 		        }
-		        
 		        if (rtnVal) {
 		        	rtnVal = SaveApproveInfo("1");
 		        }

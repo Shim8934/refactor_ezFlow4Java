@@ -1498,6 +1498,10 @@ function ReAprLineSingMapping(ret) {
         var ReasonDoNotApprov = getNodeText(dataNodes[12]);
         var suggester = getNodeText(dataNodes[13]);
         var reporter = getNodeText(dataNodes[14]);
+        
+        if (KyljeaType == "003") {
+   			continue;
+   		}
 
         OrderType[KyljeaOrder] = KyljeaType;
         OrderTypeName[KyljeaOrder] = KyljeaTypeName;

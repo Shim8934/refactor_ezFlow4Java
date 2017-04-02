@@ -659,9 +659,9 @@
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
                             
                             if (AttachfilenameN1 < 0) {
-                                Attachfilename = encodeURIComponent(tr.cells[1].innerHTML + AttachUrlA2);
+                                Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                                Attachfilename = encodeURIComponent(tr.cells[1].innerHTML);
+                                Attachfilename = encodeURIComponent(tr.cells[1].innerText);
                             }
 
                             if (AttachUrl != "null") {

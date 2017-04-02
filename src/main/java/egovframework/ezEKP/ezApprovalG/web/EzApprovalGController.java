@@ -1776,7 +1776,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String docStatus = request.getParameter("docStatus");
 		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName").replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");;
+		String fileName = request.getParameter("fileName");
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -1809,6 +1809,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (fileName == null || fileName.equals("")) {
 			fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
 		}
+		
+		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
+		//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
 		
 		if (!result.equals("NOTPERMISSION")) {
 			downFile(request, response, realPath + filePath, fileName);
