@@ -11532,7 +11532,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if (subSQL.toUpperCase().equals("FALSE")) {
 							rtnVal = false;
 					    } 
-//						sendFlag = true;
+						sendFlag = true;
 				 }
 			}
 			
@@ -11664,9 +11664,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					sendFlag = true;
-				}
+				} 
 			}
 			
 			if (rtnVal) {
