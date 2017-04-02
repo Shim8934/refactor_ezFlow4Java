@@ -740,23 +740,31 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
-		        if (oArrRows.length > 0) {
-		            var pCurSelRow = oArrRows[0];
-		            if (pCurSelRow.cells.length >= 7) {
-		                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
-		                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
-		                    //OpenAlertUI(pAlertContent);
-		                    alert(pAlertContent);
-		                    return;
-		                }
-		            }
-		            if (pListTypeValue == "1") {
-		                g_selReturn = "Y";
-		                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
-		            }
-		            else
+		        
+		        if (approvalFlag == "G") {
+			        if (oArrRows.length > 0) {
+			            var pCurSelRow = oArrRows[0];
+			            if (pCurSelRow.cells.length >= 7) {
+			                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
+			                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
+			                    //OpenAlertUI(pAlertContent);
+			                    alert(pAlertContent);
+			                    return;
+			                }
+			            }
+			            if (pListTypeValue == "1") {
+			                g_selReturn = "Y";
+			                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
+			            }
+			            else
+			                OpenOpinionUI(pCurSelRow, "HeSong");
+			        }
+			    } else {
+			    	if (oArrRows != 0) {
+		                var pCurSelRow = oArrRows[0];
 		                OpenOpinionUI(pCurSelRow, "HeSong");
-		        }
+		            }
+			    }
 		    }
 		    var DocID_Complete;
 		    function btncallback_onclick() {

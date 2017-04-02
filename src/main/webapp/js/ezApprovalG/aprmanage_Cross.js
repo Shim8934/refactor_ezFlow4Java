@@ -1917,7 +1917,13 @@ function setbuttonenable() {
     if (pListTypeValue != "4" && pListTypeValue != "1") {
         document.getElementById("tbtnReturn").style.display = "none";
     }
-
+    
+    if (approvalFlag == "S") {
+	    if (pListTypeValue == "4") {
+	        document.getElementById("tbtnReturn").style.display = "none";
+	        document.getElementById("tbtnViewDoc").style.display = "none";
+	    }
+    }
     return true;
 }
 

@@ -17422,7 +17422,7 @@
    			TBL_APRLINEINFO 
    		(DocID, AprMemberSN, AprType,   AprState,    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,      ReceivedDate,                      ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID) 
    		VALUES
-   		(#v_NEWID#, 1,      #v_APRTYPE#, #v_APRSTATE#, #v_USERID#,        'N',        #v_USERNAME#,  #v_USERNAME2# , #v_USERJOBTITLE#, #v_USERJOBTITLE2#,    #v_DEPTID#,        #v_DEPTNAME#,     #v_DEPTNAME2#,     #v_PCOMPANYID# , #v_SYSDATE#, NULL,         NULL,               'N',         'N', #v_TENANTID#, #companyID#)
+   		(#v_NEWID#, #v_SN#,      #v_APRTYPE#, #v_APRSTATE#, #v_USERID#,        'N',        #v_USERNAME#,  #v_USERNAME2# , #v_USERJOBTITLE#, #v_USERJOBTITLE2#,    #v_DEPTID#,        #v_DEPTNAME#,     #v_DEPTNAME2#,     #v_PCOMPANYID# , #v_SYSDATE#, NULL,         NULL,               'N',         'N', #v_TENANTID#, #companyID#)
    </insert>
    
    <insert id="EzApprovalG.insertCamjoExAprLine" parameterClass="Map">
@@ -17430,7 +17430,7 @@
    			TBL_EXPAPRLINE 
    		(docid, aprmemberSN, orguserid,   proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID, COMPANYID) 
    		VALUES 
-   		(#v_NEWID#, 1,           #v_USERID#,   NULL,           NULL,              NULL,                NULL,             NULL,                NULL,                NULL,                  NULL,  #v_TENANTID#, #companyID#)
+   		(#v_NEWID#, #v_SN#,           #v_USERID#,   NULL,           NULL,              NULL,                NULL,             NULL,                NULL,                NULL,                  NULL,  #v_TENANTID#, #companyID#)
    </insert>
    
    <insert id="EzApprovalG.insertSignInfo" parameterClass="Map">
