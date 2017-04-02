@@ -9,11 +9,14 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzSystemAdminDAO")
 public class EzSystemAdminDAO extends EgovAbstractDAO {
+	
 	@SuppressWarnings("unchecked")
-	public List<SysParamVO> getSysParam(int tenantID){
-		return (List<SysParamVO>)list("EzSystemAdminDAO.getSysParam",tenantID);
+	public List<SysParamVO> getSysParam(int tenantID) throws Exception {
+		return (List<SysParamVO>)list("EzSystemAdminDAO.getSysParam", tenantID);
 	}
-	public int updateSysParam(SysParamVO sysParamVO){
-		return update("EzSystemAdminDAO.updateSysParam",sysParamVO);
+	
+	public int updateSysParam(SysParamVO sysParamVO) throws Exception {
+		return update("EzSystemAdminDAO.updateSysParam", sysParamVO);
 	}
+	
 }

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezSystem.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
@@ -23,35 +25,109 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	@Resource(name="EzSystemAdminDAO")
 	EzSystemAdminDAO ezSystemAdminDAO;
 	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Override
-	public List<SysParamVO> getSysParam(int tenantID) {
-		
+	public List<SysParamVO> getSysParam(int tenantID) throws Exception {		
 		List<SysParamVO> list = ezSystemAdminDAO.getSysParam(tenantID);
 		List<SysParamVO> afterList = new ArrayList<SysParamVO>();
 		
-		for(int i = 0; i < list.size(); i++){
-			try{
+		for (int i = 0; i < list.size(); i++) {
+			try {
 				CheckName.valueOf(list.get(i).getName());
 				afterList.add(list.get(i));
-			}catch(IllegalArgumentException e){}
+			} catch (IllegalArgumentException e){}
 		}
 
 		return afterList;
 	}
 
 	@Override
-	public int updateSysParam(int tenantID, List<Map<String, Object>> list) {
-		for(int i=0;i<list.size();i++){
-			SysParamVO sysParamVO = new SysParamVO();
-			sysParamVO.setName(list.get(i).get("name")+"");
-			sysParamVO.setValue(list.get(i).get("value")+"");
-			sysParamVO.setTenantID(tenantID);
-			int flag = ezSystemAdminDAO.updateSysParam(sysParamVO);
-			if(flag==0){
-				return 0;
+	public void updateSysParam(int tenantID, List<Map<String, String>> list, Locale locale) throws Exception {
+		SysParamVO sysParamVO = new SysParamVO();
+		sysParamVO.setTenantID(tenantID);		
+		
+		for (int i = 0; i < list.size(); i++) {					
+			String paramName = list.get(i).get("name");
+			String paramValue = list.get(i).get("value");
+			
+			sysParamVO.setName(paramName);
+			sysParamVO.setValue(paramValue);
+			
+			ezSystemAdminDAO.updateSysParam(sysParamVO);
+			
+			if (paramName.equals("MailAttachLimit")) {
+				sysParamVO.setName("BigSizeMailAttachLimit");
+				sysParamVO.setValue(paramValue);				
+				ezSystemAdminDAO.updateSysParam(sysParamVO);				
+			} else if (paramName.equals("PrimaryLang")) {
+				if (paramValue.equals("1")) {
+					sysParamVO.setName("LangPrimary1");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.korean1", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);					
+					
+					sysParamVO.setName("LangPrimary2");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.korean2", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);					
+										
+					sysParamVO.setName("LangPrimary3");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.korean3", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);					
+					
+					sysParamVO.setName("LangPrimary4");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.korean4", locale));			
+					ezSystemAdminDAO.updateSysParam(sysParamVO);
+					
+					sysParamVO.setName("LangSecondary1");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english1", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);	
+					
+					sysParamVO.setName("LangSecondary2");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english2", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);										
+
+					sysParamVO.setName("LangSecondary3");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english3", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);										
+
+					sysParamVO.setName("LangSecondary4");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english4", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);															
+				} else if (paramValue.equals("3")) {
+					sysParamVO.setName("LangPrimary1");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.japanese1", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);					
+					
+					sysParamVO.setName("LangPrimary2");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.japanese2", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);					
+										
+					sysParamVO.setName("LangPrimary3");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.japanese3", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);					
+					
+					sysParamVO.setName("LangPrimary4");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.japanese4", locale));			
+					ezSystemAdminDAO.updateSysParam(sysParamVO);
+					
+					sysParamVO.setName("LangSecondary1");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english1", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);	
+					
+					sysParamVO.setName("LangSecondary2");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english2", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);										
+
+					sysParamVO.setName("LangSecondary3");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english3", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);										
+
+					sysParamVO.setName("LangSecondary4");
+					sysParamVO.setValue(egovMessageSource.getMessage("ezSystem.english4", locale));
+					ezSystemAdminDAO.updateSysParam(sysParamVO);															
+				}				
 			}
 		}
-		return 1;
 	}
 }

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSystem.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class EzSystemAdminController {
 	@Resource(name="EzSystemAdminService")
 	private EzSystemAdminService ezSystemAdminService;
 	
-	@RequestMapping(value="/admin/Ezsystem/systemMain.do")
+	@RequestMapping(value="/admin/ezSystem/systemMain.do")
 	public String statisticsPersonalMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -43,37 +44,48 @@ public class EzSystemAdminController {
 		return "/ezSystem/systemMain";
 	}
 	
-	@RequestMapping(value="/admin/Ezsystem/systemLeftMenu.do")
+	@RequestMapping(value="/admin/ezSystem/systemLeftMenu.do")
 	public String statisticsLeftMenu(Model model) throws Exception {
 		
 		return "/ezSystem/systemLeftMenu";
 	}
 	
-	@RequestMapping(value="/admin/Ezsystem/systemMainMenu.do")
-	public String systemMainMenu(Model model) throws Exception {
-		
-		return "/ezSystem/systemMainMenu";
-	}
-	
-	@RequestMapping(value="/admin/Ezsystem/getSysParam.do")
-	@ResponseBody
-	public List<SysParamVO> getSysParam(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	@RequestMapping(value="/admin/ezSystem/systemMainMenu.do")
+	public String systemMainMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		//관리자 권한체크
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		return ezSystemAdminService.getSysParam(userInfo.getTenantId());
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		Map<String, String> configMap = new HashMap<String, String>();
+		List<SysParamVO> configList = ezSystemAdminService.getSysParam(userInfo.getTenantId());
+		
+		for (SysParamVO param : configList) {
+			configMap.put(param.getName(), param.getValue());
+		}
+		
+		model.addAttribute("configMap", configMap);
+		
+		return "/ezSystem/systemMainMenu";
 	}
-	
-	@RequestMapping(value="/admin/Ezsystem/updateSysParam.do", produces="application/json;charset=utf-8")
+		
+	@RequestMapping(value="/admin/ezSystem/updateSysParam.do", produces="application/json;charset=utf-8")
 	@ResponseBody
-	public String updateSysParam(@CookieValue("loginCookie") String loginCookie,Model model,@RequestBody List<Map<String, Object>> list) throws Exception {
+	public String updateSysParam(@CookieValue("loginCookie") String loginCookie, Model model, @RequestBody List<Map<String, String>> list) throws Exception {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		int success = ezSystemAdminService.updateSysParam(userInfo.getTenantId(),list);
-		if(success==1){
-			return "{\"msg\":\"success\"}";
-		}else{
+		if (userInfo == null) {
 			return "{\"msg\":\"fail\"}";
 		}
+		
+		try {
+			ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale());
+		} catch (Exception e) {
+			return "{\"msg\":\"fail\"}";			
+		}
+		
+		return "{\"msg\":\"success\"}";		
 	}
 }

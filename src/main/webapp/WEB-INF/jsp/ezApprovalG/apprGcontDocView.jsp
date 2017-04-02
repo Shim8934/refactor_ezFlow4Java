@@ -56,12 +56,10 @@
 		    var admin = "${admin}";
 		    
 		    $(function () {
-		    	
-			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
-			    	if (admin != 'Y') {
-			    		QuitWindow();
-			    	}
+			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
+		    		QuitWindow();
 			    }
+			    
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
@@ -89,10 +87,8 @@
 		        if (flag == false) {
 		            flag = true;
 		            
-		            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
-		            	if (admin != 'Y') {
-		                	QuitWindow();
-		            	}
+		            if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
+	                	QuitWindow();
 		            }
 		            else {
 		                if (pDocHref != "") {

@@ -253,6 +253,22 @@
 		]]>
 	</select>
 	
+    <update id="EzResourceAdminDAO.updateBoardName" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_RS_BRD
+            SET 
+                BRD_NM = #v_DISPLAYNAME#,
+                BRD_NM2 = #v_DISPLAYNAME2#
+            WHERE
+                BRD_ID = #v_BOARD_ID#
+            AND
+                BRD_COMPANY = #v_CN#
+            AND
+                TENANT_ID = #v_TENANT_ID# 
+        ]]>
+    </update>
+ 
 	<update id="EzResourceAdminDAO.chgClsOrder_U1" parameterClass="Map">
 		<![CDATA[
 			UPDATE
