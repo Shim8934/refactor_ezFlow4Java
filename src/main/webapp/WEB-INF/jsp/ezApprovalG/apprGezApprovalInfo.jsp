@@ -255,15 +255,15 @@
 	                     }
 	                     else if (pIniGubun == "4") {
 	                         if (CrossYN())
-	                             document.getElementById("1tab2").onclick();
+	                             document.getElementById("1tab4").onclick();
 	                         else
-	                             document.getElementById("1tab2").click();
+	                             document.getElementById("1tab4").click();
 	                     }
 	                     else if (pIniGubun == "5") {
 	                         if (CrossYN())
-	                             document.getElementById("1tab3").onclick();
+	                             document.getElementById("1tab2").onclick();
 	                         else
-	                             document.getElementById("1tab3").click();
+	                             document.getElementById("1tab2").click();
 	                     }
 	                     else if (pIniGubun == "10") { //수신자
 	                    	onlydocinfiview = true;
@@ -275,6 +275,13 @@
 	     	                document.getElementById("Docinfo").style.display = "none";
 	     	                document.getElementById("1tab2").onclick();
 	     	                ChangeTab(document.getElementById("1tab2"));
+	     	             }
+	                     else if (pIniGubun == "14") { //결재선 뺴고
+	     	                document.getElementById("showAprLine").style.display = "none";
+	     	                document.getElementById("Lineinfo").style.display = "none";
+	     	                document.getElementById("1tab2").onclick();
+	     	                ChangeTab(document.getElementById("1tab2"));
+	     	                liniReceptOuter();
 	     	            }
 	                 }
 	                 catch (e) {
@@ -723,7 +730,7 @@
 		    }
 		
 		    function btn_OK() {
-// 		        try {
+		        try {
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -921,11 +928,11 @@
 		            	
                         window.close();
 		            }
-// 		        }
-// 		        catch (e) {
-// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-// 		            ret[0] = "FALSE";
-// 		        }
+		        }
+		        catch (e) {
+		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+		            ret[0] = "FALSE";
+		        }
 		    }
 		    
 		    function setCabInfoXML() {

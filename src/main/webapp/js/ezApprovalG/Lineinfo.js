@@ -1548,13 +1548,13 @@ function APRLINEATTENDERDELFunction()
 
 	        if (pSelectedRow.length != 0 && pSelectedRow != null && pAPRLINE.GetSelectedIndexes().split(',')[0] != -1) {
 	            if (pSelAprLineState == "003" && pReDraftFlag != "REDRAFT") {
-	                var pAlertContent = strLang247;
+	                var pAlertContent = strLangS247;
 	                OpenAlertUI(pAlertContent);
 	                return;
 	            }
 	            else if (GetAttribute(pSelectedRow[0], "DATA8") == "Y")
 	            {
-	                var pAlertContent = strLang626;
+	                var pAlertContent = strLangS626;
 	                OpenAlertUI(pAlertContent);
 	                return;
 	            }
@@ -1575,7 +1575,7 @@ function APRLINEATTENDERDELFunction()
 	                    var TmpAprLineState = GetAttribute(pSelectedRow[0], "DATA12");
 	                    var tempcellvalue = getNodeText(pSelectedRow[0].cells[0]);
 	                    if ((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRow[0], "DATA4") == pUserID || tempcellvalue == "1") {
-	                        var pAlertContent = strLang249;
+	                        var pAlertContent = strLangS249;
 	                        OpenAlertUI(pAlertContent);
 	                        return;
 	                    }

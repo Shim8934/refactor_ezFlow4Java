@@ -105,6 +105,7 @@
 			var StartMode = "0";
 			var StartMode2 = "0";
 			var SummaryFlag = true;
+			var approvalFlag = "${approvalFlag}";
 			window.onload = function () {
 			};
 			
@@ -464,7 +465,9 @@
 		                    OpenAlertUI(pAlertContent);
 		                    return;
 		                }
-		                if (RtnVal) RtnVal = SaveDraftDocInfo();
+		                if (RtnVal) 
+		                	RtnVal = SaveDraftDocInfo();
+		                
 		                if (RtnVal == "TRUE") {
 		                    RtnVal = setSusinUpdataDocID();
 		                    RtnVal = ExcuteInfo("SUSIN_DRAFTSAVE_AFTER", "");
@@ -482,14 +485,14 @@
 		                        }
 		
 		                        if (pDraftFlag == "HAPYUI") {
-		                           
+		                        	LastHapyui();
 		                        }
 		
 		                    }
 		                    else {
 		                    	 sendAlertMail("APR", "1", "RECEV");
 		                    }
-		                    pAlertContent = "<spring:message code='ezApprovalG.t1494'/>";
+		                    pAlertContent = "<spring:message code='ezApprovalG.t1496'/>";
 		                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 		                    return;
 		                }
@@ -503,7 +506,7 @@
 		                            return;
 		                        }
 		                    }
-		                    pAlertContent = "[<spring:message code='ezApprovalG.t552'/>";
+		                    pAlertContent = "[<spring:message code='ezApprovalG.t1495'/>";
 		                    OpenAlertUI(pAlertContent);
 		                    return;
 		                }
@@ -763,6 +766,7 @@
 			var tempKeyword = "";
 			var tempItemCode = "";
 			var tempItemName = "";
+			var tempItemName2 = "";
 			
 			function btnDocInfo_onclick()
 			{
@@ -877,10 +881,12 @@
 		        parameter[11] = "";
 		        parameter[12] = "";
 		        parameter[13] = DraftFlag;
-		        //parameter[17] = AprLineArea;
-		        //parameter[18] = HapyuiArea;
+// 		        parameter[17] = AprLineArea;
+// 		        parameter[18] = HapyuiArea;
+		        parameter[20] = tempKeep;
 		        parameter[28] = onlydocinfiview;
-		        //parameter[30] = cabinetID; // 기록물철
+		        parameter[29] = TaskCode;
+		        parameter[30] = cabinetID; // 기록물철
 		        //문서 정보 추가
 		        parameter[31] = tempSecurity;
 		        parameter[32] = tempUrgent;
@@ -891,6 +897,8 @@
 		        parameter[37] = pPageNum;
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
+		        parameter[41] = tempItemName;
+		        parameter[42] = tempItemName2;
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -918,8 +926,36 @@
 		                btnSendDraftEnable = "true";
 		                GetDraftAprLineInfo(ret);
 		            }
+		            
+		            if (approvalFlag == "S") {
+			            if (ret[4] != undefined) {
+			                var g_SelCabXml = ret[4];
+			                var xmlCab = createXmlDom();
+			                xmlCab = loadXMLString(g_SelCabXml);
+			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+		                }
+		            	
+			            tempSecurity = ret[7];
+		                tempUrgent = ret[8];
+		                pSummery = ret[9];
+		                tempSecurityDate = ret[14];
+		                pPublicityCode = ret[11];
+		                
+		                tempKeep = ret[16];
+	                	tempItemName = ret[17];
+	                	tempItemName2 = ret[18];
+	                	pPageNum = "1";
+	                	pLimitRange = "1";
+	                	pSpecialRecordCode = "1";
+	                	tempPublic = ret[11];
+	                	SetDocOption(ret[20]);
+		            }
+		            
 		        }
 		        SummaryFlag = true;
+		        
+		        savexmlhttp = null;
 		    }
 		
 		    var totalsavefileinfo_dialogArguments = new Array();
