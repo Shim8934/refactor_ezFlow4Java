@@ -309,13 +309,15 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardConfigVO boardListConfig = ezBoardService.getBoardList_Config(pUserID, loginVO.getTenantId());
 		
-		boardListConfig = new BoardConfigVO();
-		boardListConfig.setListCount(20);
-		boardListConfig.setPreview("OFF");
-		boardListConfig.setPreviewHList(50);
-		boardListConfig.setPreviewHContent(50);
-		boardListConfig.setPreviewWList(50);
-		boardListConfig.setPreviewWContent(50);
+		if (boardListConfig == null) {
+			boardListConfig = new BoardConfigVO();
+			boardListConfig.setListCount(20);
+			boardListConfig.setPreview("OFF");
+			boardListConfig.setPreviewHList(50);
+			boardListConfig.setPreviewHContent(50);
+			boardListConfig.setPreviewWList(50);
+			boardListConfig.setPreviewWContent(50);
+		}
 		
 		model.addAttribute("boardListConfig", boardListConfig);
 		
