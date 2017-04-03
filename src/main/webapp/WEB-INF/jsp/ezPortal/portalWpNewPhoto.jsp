@@ -97,7 +97,7 @@
 	        	start_li.className = "btn_area";
 	        	start_li.innerHTML = "<img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\">";
 	        	//document.getElementById("photoul").appendChild(start_li);
-	        	$('#photoul').append("<img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\">");
+	        	$('#photoul').append(start_li);
 				//$('.btn_area').html(start_li);
 	        	
 		        var cnt = GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS")).length;
