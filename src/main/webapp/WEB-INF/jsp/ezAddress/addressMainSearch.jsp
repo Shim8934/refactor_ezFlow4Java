@@ -419,8 +419,9 @@
 	        <table class="mainlist" id="DetailList_header" style="width:100%">
 	            <tr>
 	                <th style="cursor: pointer; padding: 0; width: 20px">
-	                    <input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)"></th>
-	                <th style="padding: 0; width: 25px;"></th>
+	                	<input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)">
+	                </th>
+	                <th style="padding:0;text-align:center;width:16px"><img src="/images/i_individual.gif" border="0"></th>
 	                <th id="CompanyName"  style="CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t124' /><span id="S_NAME"><img border="0" src="/images/view-sortup.gif"></span></th>
 	                <th id="PhoneNumber" style="CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t51' /><span id="S_COMPANY"></span></th>
 	                <th id="width1" style="CURSOR: pointer; width: 15%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="0" _OrderName="S_COMPANY_PHONE" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t263' /><span id="S_COMPANY_PHONE"></span></th>
