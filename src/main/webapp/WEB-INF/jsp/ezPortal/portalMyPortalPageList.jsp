@@ -157,38 +157,29 @@
             	<li><span onclick="usepage()"><spring:message code='ezPortal.t248'/></span></li>
         	</ul>
     	</div>
-		<%
-			int intPage = (request.getParameter("intPage") != null && !request.getParameter("intPage").equals(""))?Integer.parseInt(request.getParameter("intPage")) : 0;
-			int totalPage = (request.getParameter("totalPage") != null && !request.getParameter("totalPage").equals(""))?Integer.parseInt(request.getParameter("totalPage")) : 0;
-		%>
+		
     	<div class="page">
-        	<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onclick="goToPage('front')" <% if (intPage != 1){ %>style="cursor:pointer"<% } %>>
-        		<spring:message code='ezPortal.t253'/>${totalPage} <spring:message code='ezPortal.t254'/>
+    		<c:choose>
+    			<c:when test="${intPage != '1'}">
+    				<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onclick="goToPage('front')" style="cursor:pointer">
+    			</c:when>
+    			<c:otherwise>
+    				<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onclick="goToPage('front')">
+    			</c:otherwise>
+    		</c:choose>
+        	<spring:message code='ezPortal.t253'/>${totalPage} <spring:message code='ezPortal.t254'/>
         	<input type="text" name="txt_PageInputNum" style="width: 30px" value='${intPage}' onkeypress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
-        	<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" <% if (intPage != totalPage){ %>style="cursor:pointer" onclick="goToPage('next')" <% } %>>
+        	<c:choose>
+        		<c:when test="${intPage != totalPage}">
+        			<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor:pointer" onclick="goToPage('next')">
+        		</c:when>
+        		<c:otherwise>
+        			<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2">
+        		</c:otherwise>
+        	</c:choose>
     	</div>
     	<div class="textbox"><spring:message code='ezPortal.t990023'/></div>
     	<div class="select_themebox">
-        	<%-- <% for (int i = 0; i < xmldom_3.GetElementsByTagName("UID_").Count; i++){ %>
-        		<%if (xmldom_3.GetElementsByTagName("USEFLAG").Item(i).InnerText.Trim() == "Y"){%>
-        			<%Response.Write("<script>var SelectedItems='" + xmldom_3.GetElementsByTagName("UID_").Item(i).InnerText + "'</script>"); %>
-        			<dl id='<%= xmldom_3.GetElementsByTagName("UID_").Item(i).InnerText %>' onclick="setValueNew('<%= xmldom_3.GetElementsByTagName("UID_").Item(i).InnerText %>', '<%= xmldom_3.GetElementsByTagName("USEFLAG").Item(i).InnerText %>', this)" ondblclick="selectItem('<%= xmldom_3.GetElementsByTagName("UID_").Item(i).InnerText %>', this)">
-            			<dt>
-                			<div class="onimg"></div>
-                			<img src="<%=xmldom_3.GetElementsByTagName("IMAGEURL").Item(i).InnerText %>" width="175" height="140">
-                		</dt>
-            			<dd><%=xmldom_3.GetElementsByTagName("DISPLAYNAME").Item(i).InnerText %></dd>
-        			</dl>
-        		<%}else{ %>
-        			<dl id='<%= xmldom_3.GetElementsByTagName("UID_").Item(i).InnerText %>' onclick="setValueNew('<%= xmldom_3.GetElementsByTagName("UID_").Item(i).InnerText %>', '<%= xmldom_3.GetElementsByTagName("USEFLAG").Item(i).InnerText %>', this)" ondblclick="selectItem('<%= xmldom_3.GetElementsByTagName("UID_").Item(i).InnerText %>', this)">
-            			<dt>
-                			<div>
-                    			<img src="<%=xmldom_3.GetElementsByTagName("IMAGEURL").Item(i).InnerText %>" width="175" height="140">
-            			</dt>
-            			<dd><%=xmldom_3.GetElementsByTagName("DISPLAYNAME").Item(i).InnerText %></dd>
-        			</dl>
-        		<%} %>
-        	<%} %> --%>
         	${resultHTML}
     	</div>
     	<script type="text/javascript">

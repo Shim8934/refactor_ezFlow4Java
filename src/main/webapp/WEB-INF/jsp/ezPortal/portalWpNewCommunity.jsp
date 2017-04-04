@@ -26,32 +26,6 @@
 	            window.open("/ezCommunity/communityMain.do?funCode=5", "main", "");
 	        }
 	        function go_best(idx, clubgubun) {
-	         /*    var xmlhttp = createXMLHttpRequest();
-	            var xmldom = createXmlDom();
-	            var objNode;
-
-	            createNodeInsert(xmldom, objNode, "DATA");
-	            createNodeAndInsertText(xmldom, objNode, "CID", idx);
-	            createNodeAndInsertText(xmldom, objNode, "UID", "${userInfo.id}");
-
-	            xmlhttp.open("POST", "/ezCommunity/getACL.do", false);
-	            xmlhttp.send(xmldom);
-
-	            if (xmlhttp.responseText == "ERR" || clubgubun == "1") {
-	                OpenAlertUI("<spring:message code='main.t1004' /><br><spring:message code='main.t1005' />", null, "wp_NewCommunity.aspx.OpenAlertUI");
-	            } else {
-	                var wWeight = "1300";
-	                var wHeight = "900";
-
-	                var heigth = window.screen.availHeight;
-	                var width = window.screen.availWidth;
-
-	                var left = (width - wWeight) / 2;
-	                var top = (heigth - wHeight) / 2 - 30;
-
-	                var ret = window.open("/myOffice/ezCommunity/Check_commhome.aspx?communityCD=" + idx + "&UserLevel=1", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
-	            }  */
-	            
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",

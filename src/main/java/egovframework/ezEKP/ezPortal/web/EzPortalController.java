@@ -1119,6 +1119,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("refreshSecond", refreshSecond);
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
+		model.addAttribute("checkBroswer", commonUtil.checkIE(req));
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";

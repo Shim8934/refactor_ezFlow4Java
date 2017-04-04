@@ -16191,6 +16191,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
+		System.out.println("rtnVal= " + rtnVal);
+		 Thread.sleep(4000);
+		 System.out.println("rtnVal2= " + rtnVal);
+		
 		if (rtnVal == null) {
 			ezApprovalGDAO.insertAprGetNewID(map);
 		}

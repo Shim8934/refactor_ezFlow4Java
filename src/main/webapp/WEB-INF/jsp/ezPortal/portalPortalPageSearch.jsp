@@ -69,14 +69,6 @@
 			<tr> 
 				<td class="pstitle"><spring:message code='ezPortal.t340'/></td> 
 			</tr>
-			<%-- <% for (int i=0; i<xmldom.GetElementsByTagName("UID").Count; i++) { %>
-				<tr>
-					<td class="white" style="padding-left:10px">
-						<input type="radio" name="uid" onClick="RadioClick('<%= xmldom.GetElementsByTagName("UID").Item(i).InnerText %>', '<%= xmldom.GetElementsByTagName("DISPLAYNAME").Item(i).InnerText %>', '<%= xmldom.GetElementsByTagName("DEPTH").Item(i).InnerText %>')">
-							<%= xmldom.GetElementsByTagName("DISPLAYNAME").Item(i).InnerText %>
-					</td>
-				</tr>
-			<% } %> --%>
 			${strHTML }
 		</table>
 		<table width="270" border="0" cellspacing="0" cellpadding="0"> 
