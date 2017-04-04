@@ -34,17 +34,17 @@ public interface EzPortalAdminService {
 	
 	public PortalPortletGeneralVO getPortletProperties (String pUID, int tenantID, String companyID) throws Exception;
 	
-	public String useThemeInfo(String pUID, int tenantID) throws Exception;
+	public String useThemeInfo(String pUID, int tenantID, String companyID) throws Exception;
 	
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception;
 	
-	public String deleteTopPage (String pUID, int tenantID) throws Exception;
+	public String deleteTopPage (String pUID, int tenantID, String companyID) throws Exception;
 	
 	public String saveTopMenu (String pPageID, String pParentPageID, String pUserID, String pUserName, String pXML, String pCompanyID, int tenantID) throws Exception;
 	
 	public String searchPortalPage (String pDisplayName, String pUseFlag, String pGubunFlag, int pStartRow, int pEndRow, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
 	
-	public String deletePortalPage (String pUID, int tenantID) throws Exception;
+	public String deletePortalPage (String pUID, int tenantID, String companyID) throws Exception;
 	
 	public String savePortalPage (String pCallingPageID, String pPageID, String pParentPageID, String pXML, String pComapnyID, String pType, int tenantID) throws Exception;
 	
@@ -60,13 +60,13 @@ public interface EzPortalAdminService {
 	
 	public String createNewPortlet (String pCompanyID, int tenantID) throws Exception;
 	
-	public String savePortletProperties (String pXML, int tenantID) throws Exception;
+	public String savePortletProperties (String pXML, int tenantID, String companyID) throws Exception;
 	
 	public String savePortletParameters (String pXML, int tenantID) throws Exception;
 	
 	public String saveMenuItemParameters (String pXML, int tenantID) throws Exception;
 	
-	public String deletePortlet (String pUID, int tenantID) throws Exception;
+	public String deletePortlet (String pUID, int tenantID, String companyID) throws Exception;
 	
 	public String loadLogoItems (String pPageID, int tenantID) throws Exception;
 	

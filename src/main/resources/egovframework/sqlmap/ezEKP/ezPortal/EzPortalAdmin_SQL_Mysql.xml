@@ -56,6 +56,7 @@
        			EXISTS ( SELECT UID_ 
                       		FROM TBL_THEME_GENERAL 
                        		WHERE  UID_ = #v_PUID#
+                            AND TENANT_ID = #tenantID#
                             AND COMPANAYID = #v_PCOMPANYID# )
 		]]>
 	</select>
@@ -570,7 +571,9 @@
        		WHERE
        			UID_ = #v_pUID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</update>
 	
@@ -1424,7 +1427,9 @@
        		WHERE
        			UID_ = #v_pPORTLET_PAGEUID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1437,7 +1442,9 @@
        		WHERE
        			UID_ = #v_pPORTLET_UID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1451,7 +1458,9 @@
                	  WHERE  
                	  	 THEMEUID = #v_PUID#
                	  AND
-               	  	TENANT_ID = #tenantID#  ) topUserCount  ,
+               	  	TENANT_ID = #tenantID#
+                  AND
+                    COMPANYID = #companyID#  ) topUserCount  ,
              	( SELECT
              		 COUNT(UID_)  
                	  FROM
@@ -1459,7 +1468,9 @@
                   WHERE
                   	THEMEUID = #v_PUID# 
                   AND
-                  	TENANT_ID = #tenantID#	) portalPage  
+                  	TENANT_ID = #tenantID#
+                  AND
+                    COMPANYID = #companyID# ) portalPage  
         	FROM
         		DUAL
 		]]>
@@ -1474,7 +1485,9 @@
       		WHERE
       			UID_ = #v_pUID#
       		AND
-      			TENANT_ID = #tenantID#	
+      			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1487,7 +1500,9 @@
       		WHERE
       			UID_ = #v_pUID#
       		AND
-      			TENANT_ID = #tenantID#	
+      			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1500,7 +1515,9 @@
        		WHERE
        			UID_ = #v_pPPARENTPAGEID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1552,7 +1569,9 @@
        		WHERE
        			UID_ = #v_pTEMP#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1563,7 +1582,9 @@
 	       WHERE
 	       		UID_ = #v_pUID#
 	       	AND
-	       		TENANT_ID = #tenantID#	
+	       		TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</delete>
 	
@@ -1618,7 +1639,9 @@
       		WHERE
       			UID_ = #v_pUID#
       		AND
-      			TENANT_ID = #tenantID#	
+      			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</delete>
 	
@@ -1649,7 +1672,9 @@
                        		WHERE
                        			UID_ = #v_pUID#
                             AND
-                                TENANT_ID = #tenantID# )
+                                TENANT_ID = #tenantID#
+                            AND
+                                COMPANYID = #companyID# )
 		]]>
 	</select>
 	
@@ -1675,7 +1700,9 @@
 		    WHERE
 		    	UID_ = #v_UID#
 		    AND
-		    	TENANT_ID = #tenantID#	
+		    	TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</delete>
 	
@@ -1847,7 +1874,9 @@
 			WHERE
 				UID_ = #uID#	 
 			AND
-				TENANT_ID = #tenantID#	
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1860,7 +1889,9 @@
 			WHERE
 				UID_ = #pageID#
 			AND
-				TENANT_ID = #tenantID#		 
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#		 
 		]]>
 	</select>
 	
@@ -1976,7 +2007,9 @@
 			WHERE
 				 UID_ = #pPageID#
 			AND
-				TENANT_ID = #tenantID#	  
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	  
 		]]>
 	</update>
 	
@@ -1989,7 +2022,9 @@
 			WHERE
 				 UID_ = #pPageID# 
 			AND
-				TENANT_ID = #tenantID#	 
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	 
 		]]>
 	</update>
 	
@@ -2130,7 +2165,9 @@
 			WHERE
 				 UID_ = #pUID#
 			AND
-				TENANT_ID = #tenantID#	  
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	  
 		]]>
 	</delete>
 	
@@ -2141,7 +2178,9 @@
 			WHERE
 				 UID_ = #pUID#
 			AND
-				TENANT_ID = #tenantID#	  
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	  
 		]]>
 	</delete>
 	
