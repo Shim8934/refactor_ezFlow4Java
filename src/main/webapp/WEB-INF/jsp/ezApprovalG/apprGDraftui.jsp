@@ -137,6 +137,8 @@
 		    var hideCabinet = "${hideCabinet}";
 		    var checkdocinfo = false;
 		    var DocType = "";
+		    var junGyulFlag = "${junGyulFlag}";
+		    
 		    window.onload = function ()
 		    {
 		        try{

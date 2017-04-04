@@ -1,4 +1,4 @@
-﻿var lastKyulName, lastKyuljiwee, LastSignSN;
+﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 function GetDraftAprLineInfo(ret)
 {
@@ -156,9 +156,13 @@ function GetDraftAprLineInfo(ret)
    		var suggester = getNodeText(Cell[13]);
    		var reporter = getNodeText(Cell[14]);
 	      	
-   		if (KyljeaType == "003") {
-   			continue;
-   		}
+		if (junGyulFlag == "1") {
+			//아무것도 안함
+		} else if (junGyulFlag == "4") {
+			if (KyljeaType == "003") {
+				continue;
+			}
+		}
    		
 	    OrderType[KyljeaOrder] = KyljeaType;
 	    OrderTypeName[KyljeaOrder] = KyljeaTypeName;
@@ -2110,30 +2114,30 @@ function setDocNumFormat(pPrefix) {
 
         switch (Header) {
             case "DP":
-                numHeader = numHeader + DeptSymbol + Tail;
+                numHeader += DeptSymbol + Tail;
                 break;
 
             case "dp":
-                numHeader = numHeader + DeptSymbol + Tail;
+                numHeader += DeptSymbol + Tail;
                 break;
 
             case "YY":
-                numHeader = numHeader + d.getYear() + Tail;
+                numHeader += d.getYear() + Tail;
                 break;
 
             case "yy":
                 var yyear = d.getYear();
-                numHeader = numHeader + yyear.toString().substr(2) + Tail;
+                numHeader += yyear.toString().substr(2) + Tail;
                 break;
 
             case "MM":
                 var mmonth = d.getMonth() + 1;
                 if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-                numHeader = numHeader + mmonth + Tail;
+                numHeader += mmonth + Tail;
                 break;
 
             case "mm":
-                numHeader = numHeader + (d.getMonth() + 1) + Tail;
+                numHeader += (d.getMonth() + 1) + Tail;
                 break;
 
             case "NN":
@@ -2143,11 +2147,11 @@ function setDocNumFormat(pPrefix) {
                 break;
 
             case "cs":
-                numHeader = numHeader + strLang107 + Tail;
+                numHeader += strLang107 + Tail;
                 break;
 
             default:
-                numHeader = numHeader + fieldValue;
+                numHeader += fieldValue;
                 break;
         }
     }

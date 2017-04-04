@@ -112,6 +112,7 @@
 		    var pMailEditor = "${crossEditor}";
 		    var pPageType = "SUSIN";
 		    var approvalFlag = "${approvalFlag}";
+		    var junGyulFlag = "${junGyulFlag}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {

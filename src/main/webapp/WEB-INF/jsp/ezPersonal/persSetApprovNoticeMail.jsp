@@ -81,83 +81,80 @@
 	</head>
 	<body>
 		<form id="Form1" method="post">
-		<br>
-		<h2>※ <spring:message code='ezPersonal.t403'/></h2>
-		<table class="content" style="width:500px">
-		<tr>
-			<c:choose>
-				<c:when test="${alert == '1'}">
-					<th style="white-space:nowrap"><input type="checkbox" id="alertMail" checked="checked"/></th>
-				</c:when>
-				<c:otherwise>
-					<th style="white-space:nowrap"><input type="checkbox" id="alertMail"/></th>
-				</c:otherwise>
-			</c:choose>
-			<td><spring:message code='ezPersonal.t404'/></td>
-		</tr>
-		<tr>
-			<c:choose>
-
-				<c:when test="${complete == '1'}">
-					<th style="white-space:nowrap"><input type="checkbox" id="completeMail" checked="checked"/></th>
-				</c:when>
-				<c:otherwise>
-					<th style="white-space:nowrap"><input type="checkbox" id="completeMail"/></th>
-				</c:otherwise>
-			</c:choose>
-		  <td><spring:message code='ezPersonal.t405'/></td>
-		</tr>
-		<tr>
-			<c:choose>
-				<c:when test="${bansong == '1'}">
-					<th style="white-space:nowrap"><input type="checkbox" id="bansongMail" checked="checked"/></th>
-				</c:when>
-				<c:otherwise>
-					<th style="white-space:nowrap"><input type="checkbox" id="bansongMail"/></th>
-				</c:otherwise>
-			</c:choose>
-		  <td><spring:message code='ezPersonal.t406'/></td>
-		</tr>
-		<tr>
-			<c:choose>
-				<c:when test="${callBack == '1'}">
-					<th style="white-space:nowrap"><input type="checkbox" id="callbackMail" checked="checked"/></th>
-				</c:when>
-				<c:otherwise>
-					<th style="white-space:nowrap"><input type="checkbox" id="callbackMail"/></th>
-				</c:otherwise>
-			</c:choose>
-		  <td><spring:message code='ezPersonal.t407'/></td>
-		</tr>
-		<tr>
-			<c:choose>
-				<c:when test="${hesong == '1'}">
-					<th style="white-space:nowrap"><input type="checkbox" id="hesongMail" checked="checked"/></th>
-				</c:when>
-				<c:otherwise>
-					<th style="white-space:nowrap"><input type="checkbox" id="hesongMail"/></th>
-				</c:otherwise>
-			</c:choose>
-		  <td><spring:message code='ezPersonal.t408'/></td>
-		</tr> 
-		<tr>
-			<c:choose>
-				<c:when test="${saveMailFlag == 'Y'}">
-					<th style="white-space:nowrap"><input type="checkbox" id="sentboxsave" checked="checked"/></th>
-				</c:when>
-				<c:otherwise>
-					<th style="white-space:nowrap"><input type="checkbox" id="sentboxsave"/></th>
-				</c:otherwise>
-			</c:choose>
-		  <td><spring:message code='ezPersonal.t409'/></td>
-		</tr> 
-		</table>
-		<br />
-		
-		<div class="btnposition" style="width:500px">
-		    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezPersonal.t12'/></span></a>
-		    <a class="imgbtn" onClick="window.document.location.reload()"><span><spring:message code='ezPersonal.t13'/></span></a>
-		</div>
+			<br/>
+			<h2>▒&nbsp;<spring:message code='ezPersonal.t403'/></h2>
+			<table class="content" style="width:520px;margin-top:5px">
+				<tr>
+					<c:choose>
+						<c:when test="${alert == '1'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="alertMail" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="alertMail"/></th>
+						</c:otherwise>
+					</c:choose>
+					<td>&nbsp;<spring:message code='ezPersonal.t404'/></td>
+				</tr>
+				<tr>
+					<c:choose>		
+						<c:when test="${complete == '1'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="completeMail" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="completeMail"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;<spring:message code='ezPersonal.t405'/></td>
+				</tr>
+				<tr>
+					<c:choose>
+						<c:when test="${bansong == '1'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="bansongMail" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="bansongMail"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;<spring:message code='ezPersonal.t406'/></td>
+				</tr>
+				<tr>
+					<c:choose>
+						<c:when test="${callBack == '1'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="callbackMail" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="callbackMail"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;<spring:message code='ezPersonal.t407'/></td>
+				</tr>
+				<tr>
+					<c:choose>
+						<c:when test="${hesong == '1'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="hesongMail" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="hesongMail"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;<spring:message code='ezPersonal.t408'/></td>
+				</tr> 
+				<tr>
+					<c:choose>
+						<c:when test="${saveMailFlag == 'Y'}">
+							<th style="white-space:nowrap"><input type="checkbox" id="sentboxsave" checked="checked"/></th>
+						</c:when>
+						<c:otherwise>
+							<th style="white-space:nowrap"><input type="checkbox" id="sentboxsave"/></th>
+						</c:otherwise>
+					</c:choose>
+				  <td>&nbsp;<spring:message code='ezPersonal.t409'/></td>
+				</tr> 
+			</table>					
+			<div class="btnposition" style="width:520px;margin-top:15px;">
+			    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezPersonal.t12'/></span></a>
+			    <a class="imgbtn" onClick="window.document.location.reload()"><span><spring:message code='ezPersonal.t13'/></span></a>
+			</div>
 		</form>
 	</body>
 </html>

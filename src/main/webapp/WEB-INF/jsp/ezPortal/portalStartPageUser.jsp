@@ -26,12 +26,12 @@
 			// 선택된 개체가 없는 경우
 			if( g_SelectedObj == null )
 			{
-				pObj.style.backgroundColor = "#ECF3BA";
+				pObj.style.backgroundColor = "rgb(233, 241, 244)";
 				g_SelectedObj = pObj;
 			}
 			else
 			{
-				pObj.style.backgroundColor = "#ECF3BA";
+				pObj.style.backgroundColor = "rgb(233, 241, 244)";
 				
 				if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 				g_SelectedObj = pObj;
@@ -96,8 +96,9 @@
 				<td height="1"  bgcolor="#ffffff"></td>
 			</tr>		
 			<tr>
-				<td  height="50" > <br /> <spring:message code='ezPortal.t266'/><br />
-        	         <spring:message code='ezPortal.t267'/><br /> <br />
+				<td height="50" > 
+					<div>▒&nbsp;<spring:message code='ezPortal.t266'/></div>
+        	        <div style="margin-top:3px">▒&nbsp;<spring:message code='ezPortal.t267'/></div>
 				</td>
 			</tr>
 			<tr>

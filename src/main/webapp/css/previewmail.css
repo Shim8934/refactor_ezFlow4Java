@@ -1,4 +1,4 @@
-﻿/* 메일미리보기 121022 */
+﻿﻿/* 메일미리보기 121022 */
 .previewmail_bar_h {position:relative;width:9px; float:left; height:100%; display:inline-block; background:url(/images/bar_length.gif) repeat-y left; margin:0px 0px 0px 0px; padding:0px; vertical-align:top; border-top:1px solid #b6b6b6; text-align:center;}
 /*.previewmail_bar_h {width:9px; height:100%; display:inline-block; background:url(/images/bar_length.gif) repeat-y left; margin:0px 10px 0px 0px; padding:0px; vertical-align:top; border-top:1px solid #b6b6b6;} */
 .hbar_dotted { width:4px; height:28px; position:absolute; left:50%; top:50%; margin:-14px 0 0 -2px;}
@@ -37,7 +37,7 @@ padding:0px 0px 0px 0px; background: #f6f6f6 ; border-bottom:1px solid #b6b6b6;h
 .previewmail_addfile .title_btn a {text-decoration:underline;}
 .previewmail_addfile  ul { margin:0px; padding:0px; list-style:none; z-index:1;border-top:1px solid #dadada;border-left:1px solid #dadada;border-right:1px solid #dadada;}
 .previewmail_addfile  ul li { position:relative;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 50px 5px 10px; margin:0px;}
-.previewmail_addfile  ul li span{font-size:12px;}
+.previewmail_addfile  ul li span{font-size:12px; font-family:dotum,arial,verdana;}
 .previewmail_addfile  ul li .icon_rbtn{position:absolute; right:10px;cursor:pointer;}
 .previewmail_addfile a{color:#666;text-decoration:none}
 .previewmail_addfile a:hover{ text-decoration:underline;}

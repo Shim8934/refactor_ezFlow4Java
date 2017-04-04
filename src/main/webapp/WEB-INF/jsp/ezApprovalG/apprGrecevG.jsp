@@ -100,6 +100,7 @@
 		    var SignName = new Array();
 		    var SignContent = new Array();
 		    var arrDelFiles = new Array();
+		    var junGyulFlag = "${junGyulFlag}";
 		
 		    function process_AfterOpen() {
 		        try {

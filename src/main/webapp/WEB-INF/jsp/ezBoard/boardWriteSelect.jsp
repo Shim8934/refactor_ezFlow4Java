@@ -26,7 +26,7 @@
 				font-family: "<spring:message code='ezBoard.t347'/>";
 				font-size: 9pt;
 				height : 15px;
-				background-color : #ECF3BA;
+				background-color : rgb(233, 241, 244);
 				cursor : hand;
 			}
 			.node_hover{

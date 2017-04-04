@@ -701,7 +701,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String listType = request.getParameter("listType");
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		
 		String docSN = "";
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -790,6 +793,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		
 		return "ezApprovalG/apprGDraftui";
@@ -1490,7 +1494,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/aprOpinion.do")
 	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String susinAdmin = "";
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -1500,6 +1506,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		
 		return "ezApprovalG/apprGaprOpinion";
 	}
@@ -2768,8 +2775,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         logger.debug("tenantID=" + tenantID);       
 		
-		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String crossEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", tenantID);
 		String susinAdmin = "";
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -2859,6 +2867,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		
 		return "ezApprovalG/apprGapprovui";
 	}
@@ -3368,6 +3377,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String realPath = commonUtil.getRealPath(request);
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String docID = request.getParameter("docID");
 		String orgDocID = request.getParameter("uOrgID");
 		String isReDraft = request.getParameter("isReDraft");
@@ -3430,6 +3440,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		
 		return "ezApprovalG/apprGrecevGSusin";
 	}
@@ -3565,6 +3576,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isReDraft = request.getParameter("isReDraft");
 		String draftFlag = request.getParameter("draftFlag");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
@@ -3627,6 +3639,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("sihangURL", sihangURL);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		
 		return "ezApprovalG/apprGrecevG";
 	}
@@ -5661,6 +5674,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String draftDate = "";
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -5687,6 +5701,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("junGyulFlag", junGyulFlag);
 		
 		return "ezApprovalG/apprGrecev";
 	}

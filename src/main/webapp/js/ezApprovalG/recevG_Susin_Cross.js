@@ -1,4 +1,4 @@
-﻿var selectcabinet_cross_dialogArguments = new Array();
+﻿﻿var selectcabinet_cross_dialogArguments = new Array();
 function btnSetTaskCode_onclick() {
     try {
         var para = new Array();
@@ -145,9 +145,13 @@ function GetDraftAprLineInfo(ret) {
             var suggester = getNodeText(Cell[13]);
             var reporter = getNodeText(Cell[14]);
             
-            if (KyljeaType == "003") {
-       			continue;
-       		}
+            if (junGyulFlag == "1") {
+    			//아무것도 안함
+    		} else if (junGyulFlag == "4") {
+    			if (KyljeaType == "003") {
+    				continue;
+    			}
+    		}
             
             OrderType[KyljeaOrder] = KyljeaType;
             OrderTypeName[KyljeaOrder] = KyljeaTypeName;

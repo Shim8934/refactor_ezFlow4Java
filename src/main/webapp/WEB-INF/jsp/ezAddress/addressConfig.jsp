@@ -48,9 +48,9 @@
 	</head>
 	<body style="margin-left:10px">
 	    <br />
-	    <h2 class="h2_dot"><spring:message code='ezAddress.t385' /></h2>
+	    <span>▒ <spring:message code='ezAddress.t385' /></span>
 		<form id="Form1" method="post">
-			<table class="content" style="width:450px;">
+			<table class="content" style="width:450px;margin-top:5px">
 			  <tr>
 			    <th><spring:message code='ezAddress.t2004' /></th>
 			    <td>

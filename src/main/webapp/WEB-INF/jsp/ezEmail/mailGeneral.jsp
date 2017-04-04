@@ -276,15 +276,15 @@
 	</head>
 	<body style="margin-left:10px;margin-right:10px;">
 		<br>
-		<h2 class="h2_dot"><spring:message code='ezEmail.t311' /></h2>
-		    <div align="center" style="width:618px;border:1px solid #d6d6d6;margin-left:18px;">
+		<h2><spring:message code='ezEmail.t311' /></h2>
+		    <div align="center" style="width:618px;border:1px solid #d6d6d6;margin-top:5px">
 		        <div id="mailquatersize" style="width:400px; height:200px;display: inline-block;"></div>
 		    </div>
 		<br />
-		<h2 class="h2_dot"><spring:message code='ezEmail.t177' /></h2>
-		<span class="txt" style="margin-left:13px;">* <spring:message code='ezEmail.t178' /></span> <br>
-		<span class="txt" style="margin-left:13px;">* <spring:message code='ezEmail.t99000033' /></span> <br><br>
-		<table class="content" style="width:623px;margin-left:13px;">
+		<h2><spring:message code='ezEmail.t177' /></h2>
+		<span class="txt">▒ <spring:message code='ezEmail.t178' /></span> <br>
+		<span class="txt">▒ <spring:message code='ezEmail.t99000033' /></span> <br><br>
+		<table class="content" style="width:623px;">
 		  <tr>
 		    <th><spring:message code='ezEmail.t179' /></th>
 		    <td>

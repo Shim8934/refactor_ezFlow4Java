@@ -129,6 +129,7 @@
 		    var pMailEditor = "${crossEditor}";
 		    var pPageType = "APPROVUI";
 		    var approvalFlag = "${approvalFlag}";
+		    var junGyulFlag = "${junGyulFlag}";
 		    
 		    window.onload = function () {
 		        if (allFlag == "2") {
