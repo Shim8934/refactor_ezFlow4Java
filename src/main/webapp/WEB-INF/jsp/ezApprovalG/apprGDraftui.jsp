@@ -1211,7 +1211,7 @@
 	                    		async : false,
 	                    		url : "/ezApprovalG/aprLineSave.do",
 	                    		data : {
-	                    				ret    : ret[1]
+	                    				ret : ret[1]
 	                    				},
 	                    		success : function(result){
 	                    			
@@ -1232,7 +1232,7 @@
 	                    		async : false,
 	                    		url : "/ezApprovalG/aprDeptSave.do",
 	                    		data : {
-	                    				aprDeptInfo : ret[2]
+	                    				aprDeptInfo : getXmlString(ret[2])
 	                    				},
 	                    		success : function(result){
 	                    			
