@@ -63,11 +63,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	@Autowired
 	private Properties globals;
 
-	public String useThemeInfo(String pUID, int tenantID) {
+	public String useThemeInfo(String pUID, int tenantID, String companyID) {
 		String pRValue = "";
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		PortalUseThemeCheckVO result = ezPortalAdminDAO.useThemeCheck(map);
 		
 		int topUserCnt = result.getTopUserCount();
@@ -469,20 +470,22 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return fileName;
 	}
 	
-	public String deleteTopPage (String pUID, int tenantID) throws Exception {
+	public String deleteTopPage (String pUID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		map.put("v_pPAGEUID", pUID);
 		map.put("pUID", pUID);
 		map.put("tenantID", tenantID);
+		map2.put("companyID", companyID);
 		
 		List<String> result = ezPortalAdminDAO.deleteTopPage(map);
 		if (result != null) {
 			for (int i=0; i<result.size(); i++) {
 				map2.put("pUID", result.get(i));
 				map2.put("tenantID", tenantID);
+				map2.put("companyID", companyID);
 				ezPortalAdminDAO.deleteTopMenuGeneralUID(map2);
-				deleteTopPage(result.get(i), tenantID);
+				deleteTopPage(result.get(i), tenantID, companyID);
 			}
 		}
 		
@@ -528,6 +531,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		Map<String, Object> saveMap = new HashMap<String, Object>();
 		saveMap.put("uID", pPageID);
 		saveMap.put("tenantID", tenantID);
+		saveMap.put("companyID", pCompanyID);
 		int result = ezPortalAdminDAO.saveTopMenu(saveMap);
 		logger.debug("saveTopMenu="+String.valueOf(result));
 		String pThemeUID = "";
@@ -555,6 +559,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("pThemeUID", pThemeUID);
 			map.put("pPageID", pPageID);
 			map.put("tenantID", tenantID);
+			map.put("companyID", pCompanyID);
 			ezPortalAdminDAO.updateTopMenuGeneral(map);
 			
 			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
@@ -577,11 +582,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							Map<String, Object> map1 = new HashMap<String, Object>();
 							map1.put("v_pUID", menuItemUID);
 							map1.put("tenantID", tenantID);
+							map1.put("companyID", pCompanyID);
 							depth = ezPortalAdminDAO.saveTopMenu2(map1);
 						} else {
 							Map<String, Object> map1 = new HashMap<String, Object>();
 							map1.put("v_pUID", menuItemPageUID);
 							map1.put("tenantID", tenantID);
+							map1.put("companyID", pCompanyID);
 							depth = ezPortalAdminDAO.saveTopMenu2(map1);
 						}
 						
@@ -660,8 +667,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			List<String> uID = ezPortalAdminDAO.selectTblTopMenuITemsUID(map3);
 			
 			for (i=0; i<uID.size(); i++) {
-				deleteSubPage(uID.get(i), tenantID);
+				deleteSubPage(uID.get(i), tenantID, pCompanyID);
 				map3.put("pUID", uID.get(i));
+				map3.put("companyID", pCompanyID);
 				ezPortalAdminDAO.deleteTopMenuGeneralUID(map3);
 			}
 			Map<String, Object> map4 = new HashMap<String, Object>();
@@ -684,6 +692,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("v_pUID", pParentPageID);
 				map.put("tenantID", tenantID);
+				map.put("companyID", pCompanyID);
 				depth = ezPortalAdminDAO.saveTopMenu5(map) + 1;
 				logger.debug("saveTopMenu5="+String.valueOf(depth));
 			}
@@ -798,7 +807,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return "OK";
 	}
 	
-	public void deleteSubPage (String pUID, int tenantID) {
+	public void deleteSubPage (String pUID, int tenantID, String companyID) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map.put("v_pUID", pUID);
@@ -812,6 +821,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			
 			map1.put("pUID", pUID);
 			map1.put("tenantID", tenantID);
+			map1.put("companyID", companyID);
 			ezPortalAdminDAO.deleteTopMenuGeneralUID(map1);
 		}
 	}
@@ -898,7 +908,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return sb.toString();
 	}
 	
-	public String deletePortalPage (String pUID, int tenantID) {
+	public String deletePortalPage (String pUID, int tenantID, String companyID) {
 		logger.debug("deletePortalPage Start");
 		logger.debug("pUID="+pUID);
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -908,11 +918,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		logger.debug("listSize="+list.size());
 		for (int i=0; i<list.size(); i++) {
 			map.put("v_pUID", list.get(i));
+			map.put("companyID", companyID);
 			logger.debug("list.get("+i+")="+list.get(i));
 			ezPortalAdminDAO.deletePortalPage2(map);
-			deletePortalPage(list.get(i), tenantID);
+			deletePortalPage(list.get(i), tenantID, companyID);
 		}
 		map.put("v_pUID", pUID);
+		map.put("companyID", companyID);
 		ezPortalAdminDAO.deletePortalPage3_D1(map);
 		ezPortalAdminDAO.deletePortalPage3_D2(map);
 		ezPortalAdminDAO.deletePortalPage3_D3(map);
@@ -965,6 +977,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		Map<String, Object> saveMap = new HashMap<String, Object>();
 		saveMap.put("pageID", pPageID);
 		saveMap.put("tenantID", tenantID);
+		saveMap.put("companyID", pComapnyID);
 		int result = ezPortalAdminDAO.savePortalPage(saveMap);
 		logger.debug("savePortalPage="+String.valueOf(result));
 		
@@ -989,6 +1002,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("pParentPageID", pParentPageID);
 				map.put("tenantID", tenantID);
+				map.put("companyID", pComapnyID);
 				result = ezPortalAdminDAO.savePortalPage7(map);
 				logger.debug("savePortalPage7="+String.valueOf(result));
 				depth = result + 1;
@@ -1061,7 +1075,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						rowPos = previousRowPos + interval * (j + 1);
 						interval = 100000;
 						
-						if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID, tenantID) == 0) {
+						if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID, tenantID, pComapnyID) == 0) {
 							Map<String, Object> map2 = new HashMap<String, Object>();
 							map2.put("uID", portletUID);
 							map2.put("pageUID", pPageID);
@@ -1126,6 +1140,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				map.put("tableViewOption", pTableViewOption);
 				map.put("pPageID", pPageID);
 				map.put("tenantID", tenantID);
+				map.put("companyID", pComapnyID);
 				ezPortalAdminDAO.updatePortalPageGeneral(map);
 				
 				XPath xpath = XPathFactory.newInstance().newXPath();
@@ -1177,11 +1192,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 								Map<String, Object> map1 = new HashMap<String, Object>();
 								map1.put("v_pPORTLET_UID", portletUID);
 								map1.put("tenantID", tenantID);
+								map1.put("companyID", pComapnyID);
 								depth = ezPortalAdminDAO.savePortalPage3(map1);
 							} else {
 								Map<String, Object> map1 = new HashMap<String, Object>();
 								map1.put("v_pPORTLET_PAGEUID", portletPageUID);
 								map1.put("tenantID", tenantID);
+								map1.put("companyID", pComapnyID);
 								depth = ezPortalAdminDAO.savePortalPage4(map1);
 							}
 							
@@ -1222,7 +1239,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 								map4.put("tenantID", tenantID);
 								ezPortalAdminDAO.updateTblPortalPageItems(map4);
 							} else {
-								if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID, tenantID) == 0) {
+								if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID, tenantID, pComapnyID) == 0) {
 									Map<String, Object> map5 = new HashMap<String, Object>();
 									map5.put("uID", portletUID);
 									map5.put("pageUID", pPageID);
@@ -1275,9 +1292,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				
 				logger.debug("resultXMLSize="+resultXML.size());
 				for (i=0; i<resultXML.size(); i++) {
-					deleteSubPage(resultXML.get(i), tenantID);
+					deleteSubPage(resultXML.get(i), tenantID, pComapnyID);
 					logger.debug("pUID["+i+"]="+resultXML.get(i));
 					map7.put("pUID", resultXML.get(i));
+					map7.put("companyID", pComapnyID);
 					ezPortalAdminDAO.deletePortalPageGeneralUID(map7);
 				}
 				
@@ -1312,6 +1330,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					logger.debug("savePortalPage7 start");
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("pParentPageID", pParentPageID);
+					map.put("tenantID", tenantID);
+					map.put("companyID", pComapnyID);
 					depth = ezPortalAdminDAO.savePortalPage7(map) + 1;
 				}
 				
@@ -1393,7 +1413,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							rowPos = previousRowPos + interval * (j + 1);
 							interval = 100000;
 
-							if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID, tenantID) == 0) {
+							if (getItemsCount(pParentPageID, portletUID, portletOwnerPageUID, tenantID, pComapnyID) == 0) {
 								Map<String, Object> map2 = new HashMap<String, Object>();
 								map2.put("uID", portletUID);
 								map2.put("pageUID", pPageID);
@@ -1433,8 +1453,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return "OK";
 	}
 	
-	public int getItemsCount (String pParentPageID, String portletUID, String portletOwnerPageUID, int tenantID) {
-		String pParentPageIDList = getParentPageIDList(pParentPageID, tenantID);
+	public int getItemsCount (String pParentPageID, String portletUID, String portletOwnerPageUID, int tenantID, String companyID) {
+		String pParentPageIDList = getParentPageIDList(pParentPageID, tenantID, companyID);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PORTLET_UID", portletUID);
 		map.put("v_PORTLET_OWNERPAGEUID", portletOwnerPageUID);
@@ -1445,7 +1465,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return result;
 	}
 	
-	public String getParentPageIDList (String pPortalPageID, int tenantID) {
+	public String getParentPageIDList (String pPortalPageID, int tenantID, String companyID) {
 		logger.debug("getParentPageIDList Start");
 		String temp = pPortalPageID;
 		String parentPageID = "";
@@ -1455,6 +1475,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pTEMP", temp);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		while (count < 10) {
 			parentPageID = ezPortalAdminDAO.getParentPageIDList(map);
 
@@ -1642,7 +1663,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return newUID;
 	}
 	
-	public String savePortletProperties (String pXML, int tenantID) {
+	public String savePortletProperties (String pXML, int tenantID, String companyID) {
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		
 		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
@@ -1678,6 +1699,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_pUID", uID);
 		map.put("v_pFRAMETYPE", frameType);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		ezPortalAdminDAO.saveNewPortletProperties(map);
 		
 		return "OK";
@@ -1727,10 +1749,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return "OK";
 	}
 	
-	public String deletePortlet (String pUID, int tenantID) {
+	public String deletePortlet (String pUID, int tenantID, String companyID) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		ezPortalAdminDAO.deletePortlet_D1(map);
 		ezPortalAdminDAO.deletePortlet_D2(map);
 		ezPortalAdminDAO.deletePortlet_D3(map);
