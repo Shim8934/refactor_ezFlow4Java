@@ -452,29 +452,22 @@
 	        }
 	
 	        function btnApprovalInfo_save(ret) {
-	            var xmlhttp = createXMLHttpRequest();
-	        	xmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
-                xmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-                xmlhttp.send(ret[2]);
-// 	            var xmlpara = createXmlDom();
-// 	            var objRoot, objNode;
-// 	            var AprDeptInfo = loadXMLString(ret[3]);
-// 	            var AprDeptPara = createXmlDom();
-// 	            var pAprNDeptNumber = 1;
-// 	            var pAprDeptFlag = "NDept";
-// 	            AprDeptPara = AprDeptParameter(pAprNDeptNumber, pAprDeptFlag);
-// 	            var xmlRtn = AprDeptPara.documentElement;
-// 	            AprDeptInfo.documentElement.appendChild(xmlRtn);
-// 	            xmlhttp = null;
-// 	            xmlhttp = createXMLHttpRequest();
-// 	            xmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
-// 	            xmlhttp.send(AprDeptInfo);
-	            var dataNodes = GetChildNodes(loadXMLString(xmlhttp.responseText));
-	            result = getNodeText(dataNodes[0]);
-	            
-	            if (result == "") {
-	                alert(strLangS163);
-	            }
+	        	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/aprDeptSave.do",
+            		data : {
+            				aprDeptInfo : getXmlString(ret[2])
+            				},
+            		success : function(result){
+            			if (result == 'TRUE') {
+            				
+            			} else {
+            				alert(strLangS163);
+            			}
+            		}
+            	});
 	        }
 	        function AprDeptParameter(pAprNDeptNumber, pAprDeptFlag) {
 	            var xmlpara = createXmlDom();

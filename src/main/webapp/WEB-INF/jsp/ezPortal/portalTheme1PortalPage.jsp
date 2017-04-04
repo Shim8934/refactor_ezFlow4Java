@@ -6,22 +6,15 @@
 	<head>
 		<title>PortalPage</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<%
-		String mode = (String)request.getAttribute("mode");
-		String strHTML = (String)request.getAttribute("strHTML");
-		String parentPageID = (String)request.getAttribute("parentPageID");
-		String baseType = (String)request.getAttribute("baseType");
-		String tableViewOption = (String)request.getAttribute("tableViewOption");
-		String langType = (String)request.getAttribute("langType");
-		
-		 if (!mode.equals("view")) {
-		 %>
-		 <!-- 관리자 -->
-		 <link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
-		 <%} else {%>	
-             <link href="/css/theme01.css" rel="stylesheet" type="text/css">
+		<c:choose>
+			<c:when test="${mode != 'view'}">
+				<link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
+			</c:when>
+			<c:otherwise>
+				<link href="/css/theme01.css" rel="stylesheet" type="text/css">
              <link href="/css/jquery.theme01scrollbar.css" rel="stylesheet" type="text/css">
-		<%} %>
+			</c:otherwise>
+		</c:choose>
 		
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
@@ -29,7 +22,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style>
             .section1_bg {
-                 height:305px;background:url(/images/<%=langType%>/theme01/main/bg_img.jpg) no-repeat center; padding:0px; margin:0px; 
+                 height:305px;background:url(/images/${langType}/theme01/main/bg_img.jpg) no-repeat center; padding:0px; margin:0px; 
             }
         </style>
 		<script type="text/javascript">
@@ -1609,19 +1602,26 @@ console.log("selectedSubCell="+selectedSubCell);
 		}
 		</script>
 	</head>
-			
-	<% if (!mode.equals("view")) { %>
-		<body <%if (!mode.equals("view")){%>class="mainbody"<%}else{ %>  class="mainbg"  <%} %> style="OVERFLOW:hidden">		
+		<c:choose>	
+		<c:when test="${mode != 'view'}">
+			<c:choose>
+				<c:when test="${mode != 'view'}">
+					<body class="mainbody" style="OVERFLOW:hidden">
+				</c:when>
+				<c:otherwise>
+					<body class="mainbg" style="OVERFLOW:hidden">
+				</c:otherwise>
+			</c:choose>			
 			<h1><spring:message code="ezPortal.t321" /></h1>
 			<div id="mainmenu">
 				<ul>
   					<li><span onClick="layoutmode()"><spring:message code="ezPortal.t322" /></span></li>
   					<li><span onClick="editingmode()"><spring:message code="ezPortal.t323" /></span></li>
   					<li><span onClick="preview()"><spring:message code="ezPortal.t63" /></span></li>
-					<% if (parentPageID.equals("top")) { %>
-  						<li><span onClick="ACLEdit()"><spring:message code="ezPortal.t87" /></span></li>
+					<c:if test="${parentPageID == 'top'}">
+						<li><span onClick="ACLEdit()"><spring:message code="ezPortal.t87" /></span></li>
   						<li style="display:none"><span onClick="inherit()"><spring:message code="ezPortal.t324" /></span></li>
-					<% } %>
+					</c:if>
   					<li><span onClick="insertpage()"><spring:message code="ezPortal.t325" /></span></li>
   					<li><span onClick="removecell()"><spring:message code="ezPortal.t326" /></span></li>
   					<li><span onClick="insertcell()"><spring:message code="ezPortal.t327" /></span></li>
@@ -1632,15 +1632,13 @@ console.log("selectedSubCell="+selectedSubCell);
   					<li><span onClick="swaprow('down')"><spring:message code="ezPortal.t332" /></span></li>
   					<li><span onClick="swaprow('left')"><spring:message code="ezPortal.t72" /></span></li>
   					<li><span onClick="swaprow('right')"><spring:message code="ezPortal.t74" /></span></li>
-
-  				<% if ((baseType != null && baseType.trim().toString().equals("1")) || (baseType != null && baseType.trim().toString().equals("2"))) { %>
-  					<!-- 상속페이지에서만 display -->
-  					<li><span onClick="ResetPortalPage()"><spring:message code="ezPortal.t333" /></span></li>
-  				<% } %>
-  				<% if (!parentPageID.equals("top")) { %>
-  					<!-- 상속페이지에서만 display -->
-  					<li><span onClick="DeletePortalPage()"><spring:message code="ezPortal.t333" /></span></li>
-  				<% } %>
+					<c:if test="${baseType == '1' || baseType == '2'}">
+  						<li><span onClick="ResetPortalPage()"><spring:message code="ezPortal.t333" /></span></li>
+  					</c:if>
+  				
+  					<c:if test="${parentPageID != 'top'}">
+  						<li><span onClick="DeletePortalPage()"><spring:message code="ezPortal.t333" /></span></li>
+  					</c:if>
 			</ul>
 		</div>			
 		<table id="table_displayname" class="popuplist" width="820">
@@ -1696,7 +1694,7 @@ console.log("selectedSubCell="+selectedSubCell);
 				<tr>
 					<td id="td_mainframe" style="width:820px;HEIGHT:320px" valign="top">
 						<div id="main_div" style="OVERFLOW:auto;width:820px;HEIGHT:320px">
-							<%= strHTML %>
+							${strHTML}
 						</div>
 					</td>
 				</tr>
@@ -1706,9 +1704,11 @@ console.log("selectedSubCell="+selectedSubCell);
       		</div>
 			<br><br>
 		</body>
-	<% } else { %>
-		<body class="mainbg">    
-			<%= strHTML %>
-    	</body>
-	<% } %>
+		</c:when>
+		<c:otherwise>
+			<body class="mainbg">        
+				${strHTML}
+			</body>
+		</c:otherwise>
+	</c:choose>	
 </html>

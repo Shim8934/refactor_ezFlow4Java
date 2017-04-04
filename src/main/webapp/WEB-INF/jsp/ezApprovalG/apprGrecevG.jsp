@@ -575,74 +575,81 @@
 		
 		        var UserID = '${userInfo.id}';
 		        var DisplayName = '${userInfo.displayName1}';
-		    var DepID = '${userInfo.deptID}';
-		    var DeptName = '${userInfo.deptName1}';
-		    var Position = '${userInfo.title1}';
-		    var CompanyID = '${userInfo.companyID}';
+			    var DepID = '${userInfo.deptID}';
+			    var DeptName = '${userInfo.deptName1}';
+			    var Position = '${userInfo.title1}';
+			    var CompanyID = '${userInfo.companyID}';
 		
-		    var d = new Date();
-		    var RecieveDay = d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate();
-		
-		    Resultxml = "<LISTVIEWDATA><HEADERS>";
-		    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t1421'/>%" + "</NAME><WIDTH>30</WIDTH></HEADER>";
+			    var d = new Date();
+			    var RecieveDay = d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate();
+			
+			    Resultxml = "<LISTVIEWDATA><HEADERS>";
+			    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t1421'/>%" + "</NAME><WIDTH>30</WIDTH></HEADER>";
 		        Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t379'/>%" + "</NAME><WIDTH>50</WIDTH></HEADER>";
-		    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t230'/>" + "</NAME><WIDTH>60</WIDTH></HEADER>";
-		    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t108'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t380'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t381'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t382'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t383'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		    Resultxml = Resultxml + "</HEADERS><ROWS><ROW>";
-		    Resultxml = Resultxml + "<COLUMN>1</COLUMN>";
-		    Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DisplayName) + "</COLUMN>";
-		    Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(Position) + "</COLUMN>";
-		
-		    Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DeptName) + "</COLUMN>";
-		
-		    Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t25'/>" + "</COLUMN>";
+			    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t230'/>" + "</NAME><WIDTH>60</WIDTH></HEADER>";
+			    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t108'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
+			    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t380'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
+			    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t381'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
+			    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t382'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
+			    Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t383'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
+			    Resultxml = Resultxml + "</HEADERS><ROWS><ROW>";
+			    Resultxml = Resultxml + "<COLUMN>1</COLUMN>";
+			    Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DisplayName) + "</COLUMN>";
+			    Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(Position) + "</COLUMN>";
+			
+			    Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DeptName) + "</COLUMN>";
+			
+			    Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t25'/>" + "</COLUMN>";
 		        Resultxml = Resultxml + "<COLUMN>" + "<spring:message code='ezApprovalG.t1422'/>" + "</COLUMN>";
-		    Resultxml = Resultxml + "<DATA name='ProcessDate'>" + "" + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='ReceivedDate'>" + RecieveDay + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='DocID'>" + pDocID + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='AprMemberID'>" + UserID + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='AprmemberIsDeptYN'>N</DATA>";
-		    Resultxml = Resultxml + "<DATA name='AprMemberDeptID'>" + DepID + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='ReasonDoNotApprov'></DATA>";
-		    Resultxml = Resultxml + "<DATA name='isProposerYN'>N</DATA>";
-		    Resultxml = Resultxml + "<DATA name='isBriefUserYN'>N</DATA>";
-		    Resultxml = Resultxml + "<DATA name='isCompanyID'>" + CompanyID + "</DATA>";
-		
-		    Resultxml = Resultxml + "<DATA name='AprType'>" + strAprType4 + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='PMemberName'>" + MakeXMLString(arr_userinfo[11]) + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='SMemberName'>" + MakeXMLString(arr_userinfo[12]) + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='PMemberDeptName'>" + MakeXMLString(arr_userinfo[15]) + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='SMemberDeptName'>" + MakeXMLString(arr_userinfo[16]) + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='PMemberJobTitle'>" + MakeXMLString(arr_userinfo[13]) + "</DATA>";
-		    Resultxml = Resultxml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(arr_userinfo[14]) + "</DATA>";
-		
-		    Resultxml = Resultxml + "</ROW></ROWS></LISTVIEWDATA>";
-		
-		    xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-		    xmlhttp.send(Resultxml);
-		
-		    if (getNodeText(GetChildNodes(xmlhttp.responseXML)[0])) {
-		        var retvalue = new Array();
-		        retvalue[0] = Resultxml;
-		        retvalue[1] = "NONE";
-		        retvalue[2] = "R";
-		        retvalue[3] = "";
-		
-		        GetDraftAprLineInfo(retvalue);
-		        btnSendDraftEnable = "true";
-		        CurAprType = "<spring:message code='ezApprovalG.t25'/>";
-		            LastSignSN = "1";
-		            btnSendDraft_onclick();
-		        }
-		        else {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
-		            OpenAlertUI(pAlertContent);
-		        }
+			    Resultxml = Resultxml + "<DATA name='ProcessDate'>" + "" + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='ReceivedDate'>" + RecieveDay + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='DocID'>" + pDocID + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='AprMemberID'>" + UserID + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='AprmemberIsDeptYN'>N</DATA>";
+			    Resultxml = Resultxml + "<DATA name='AprMemberDeptID'>" + DepID + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='ReasonDoNotApprov'></DATA>";
+			    Resultxml = Resultxml + "<DATA name='isProposerYN'>N</DATA>";
+			    Resultxml = Resultxml + "<DATA name='isBriefUserYN'>N</DATA>";
+			    Resultxml = Resultxml + "<DATA name='isCompanyID'>" + CompanyID + "</DATA>";
+			
+			    Resultxml = Resultxml + "<DATA name='AprType'>" + strAprType4 + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='PMemberName'>" + MakeXMLString(arr_userinfo[11]) + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='SMemberName'>" + MakeXMLString(arr_userinfo[12]) + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='PMemberDeptName'>" + MakeXMLString(arr_userinfo[15]) + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='SMemberDeptName'>" + MakeXMLString(arr_userinfo[16]) + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='PMemberJobTitle'>" + MakeXMLString(arr_userinfo[13]) + "</DATA>";
+			    Resultxml = Resultxml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(arr_userinfo[14]) + "</DATA>";
+			
+			    Resultxml = Resultxml + "</ROW></ROWS></LISTVIEWDATA>";
+			    
+				$.ajax({
+               		type : "POST",
+               		dataType : "text",
+               		async : false,
+               		url : "/ezApprovalG/aprLineSave.do",
+               		data : {
+               				ret    : Resultxml
+               				},
+               		success : function(result){
+               			if (result == 'TRUE') {
+	               			var retvalue = new Array();
+	    			        retvalue[0] = Resultxml;
+	    			        retvalue[1] = "NONE";
+	    			        retvalue[2] = "R";
+	    			        retvalue[3] = "";
+	    			
+	    			        GetDraftAprLineInfo(retvalue);
+	    			        btnSendDraftEnable = "true";
+	    			        CurAprType = "<spring:message code='ezApprovalG.t25'/>";
+	    		            LastSignSN = "1";
+	    		            btnSendDraft_onclick();
+               			} else {
+               				var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
+        		            OpenAlertUI(pAlertContent);
+               			}
+               		}
+               	});
 		    }
 		
 		    var tempSecurity = "";
@@ -700,25 +707,44 @@
 		                //결재선 저장
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
 		                    if (ret[1] != false) {
-		                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-		                        savexmlhttp.send(ret[1]);
-		
-		                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+		                    	$.ajax({
+		                    		type : "POST",
+		                    		dataType : "text",
+		                    		async : false,
+		                    		url : "/ezApprovalG/aprLineSave.do",
+		                    		data : {
+		                    				ret    : ret[1]
+		                    				},
+		                    		success : function(result){
+		                    			
+		                    		}
+		                    	});
 		                    }
-		
 		                }
+		                
 		                if (ret[1] != false) {
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
 		                    GetDraftAprLineInfo(ret);
 		                }
+		                
 		                savexmlhttp = null;
 		                savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "11" && pGubun != "12") {
 		                    //수신자 저장
-		                    savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
-		                    savexmlhttp.send(ret[2]);
+		                    $.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/aprDeptSave.do",
+	                    		data : {
+	                    				aprDeptInfo : getXmlString(ret[2])
+	                    				},
+	                    		success : function(result){
+	                    			
+	                    		}
+		                    });
 		
 		                    //수신자 저장 후
 		                    btnReceivLineEnable = false;

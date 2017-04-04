@@ -1,4 +1,4 @@
-﻿var sStartDate, sEndDate;
+﻿﻿var sStartDate, sEndDate;
 var DefaultView = 1;
 var sDate = new Date();
 

@@ -501,7 +501,7 @@
 		                    var top = (parseInt(heigth) - 220) / 2;
 		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=270px,width=525px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                } else {
-		                    window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            } else if (jobState == "RECIPENT") {
 		                var heigth = window.screen.availHeight;

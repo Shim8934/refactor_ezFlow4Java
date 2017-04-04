@@ -10,119 +10,119 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript">
-		var selectedID = "";
-	    var selectedDisplayName = "";
-	    var selectedHeight = "";
-	    var g_PortletCategoryXML = "${portletCategoryXML}";
-			var gubunFlag = "";   // 포탈페이지구분
-			var ReturnFunction;
-			var RetValue;
-			function window_onload() {
-			    try {
-			        RetValue = parent.portlet_search_dialogArguments[0];
-			        ReturnFunction = parent.portlet_search_dialogArguments[1];
-			    } catch (e) {
-			        try {
-			            RetValue = opener.portlet_search_dialogArguments[0];
-			            ReturnFunction = opener.portlet_search_dialogArguments[1];
-			        } catch (e) {
-			            RetValue = window.dialogArguments;
-			        }
-			    }
-			    // 상속받은 포탈페이지에서 포틀릿 추가시 처리
-			    gubunFlag = RetValue;
-			    gubunFlag = ReplaceText(gubunFlag, "c", "");
-
-			    var xmldom = createXmlDom();
-
-			    if (g_PortletCategoryXML != "") {
-			        xmldom = loadXMLString(g_PortletCategoryXML);;
-			        for (var i = 0; i < xmldom.getElementsByTagName("CATEGORY").length; i++) {
-			            var lastindex = document.getElementById("PortalGubun").length;
-			        	if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4075') {
-							var newoption = new Option("<spring:message code='ezPortal.t4075'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));	
-						} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4076') {
-							var newoption = new Option("<spring:message code='ezPortal.t4076'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
-						} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4077') {
-							var newoption = new Option("<spring:message code='ezPortal.t4077'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
-						} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4078') {
-							var newoption = new Option("<spring:message code='ezPortal.t4078'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
-						}
-			            document.getElementById("PortalGubun").options[lastindex] = newoption;
-			            
-			        }
-			    }
-			    xmldom = null;
-
-			    SearchPortlet("");
-			}
-
-			// 포틀릿 정보를 가져온다. - 편집권한이 있는 정보만 가져온다.
-			function SearchPortlet(pType) {
-			    var xmldom = createXmlDom();
-			    var xmlhttp = createXMLHttpRequest();
-			    xmlhttp.open("POST", "/ezPortal/portletSearchList.do?pType=" + pType + "&mode=edit" + "&pPageType=" + gubunFlag, false);
-			    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-			    xmlhttp.send();
-
-			    if (xmlhttp.statusText == "OK") {
-			        xmldom = loadXMLString(xmlhttp.responseText);
-			        
-					<%
-						String userLang = (String)request.getParameter("userLang");
-					%>
-			        var portletHTML = "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"TABLE-LAYOUT:fixed\">";
-
-			        for (var i = 0; i < xmldom.getElementsByTagName("UID_").length; i++) {
-			            portletHTML += "<tr><td class=\"white\" style=\"padding-left:10px\">";
-			            <%-- portletHTML += "<input type=radio name=uid onclick=\"RadioClick('" + getNodeText(GetElementsByTagName(xmldom, "UID_").item(i)).replace("'", "").replace("\"", "") + "', '" + getNodeText(GetElementsByTagName(xmldom, "DISPLAYNAME" + "<%=userLang%>").item(i)).replace("'", "").replace("\"", "") + "', '" + getNodeText(GetElementsByTagName(xmldom, "HEIGHT").item(i)).replace("'", "").replace("\"", "") + "')\"><span>" + getNodeText(GetElementsByTagName(xmldom, "DISPLAYNAME" + "<%=userLang%>").item(i)).replace("'", "").replace("\"", "") + "" + "</span>"; --%>
-			            portletHTML += "<input type=radio name=uid onclick=\"RadioClick('" + getNodeText(xmldom.getElementsByTagName("UID_").item(i)) + "', '" + getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) + "', '" + getNodeText(xmldom.getElementsByTagName("HEIGHT").item(i)) + "')\"><span>" + getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) + "" + "</span>";
-						portletHTML += "</td></tr>";
-	                }
-	                portletHTML += "</table>";
-
-	                document.getElementById("div_PortletList").innerHTML = portletHTML;
-	            }
-	            xmlhttp = null;
-	            xmldom = null;
-	        }
-
-	        function CheckBoxClick() {
-	            if (!event.srcElement.checked) return;
-	            for (var i = 0; i < document.all.tags("input").length; i++) {
-	                if (document.all.tags("input").item(i).type == "checkbox") document.all.tags("input").item(i).checked = false;
-	            }
-	            event.srcElement.checked = true;
-	            selectedID = event.srcElement.parentElement.nextSibling.uid;
-	            selectedDisplayName = event.srcElement.parentElement.nextSibling.innerText;
-	        }
-
-	        function RadioClick(pContentsID, pContentsName, pHeight) {
-	            selectedID = pContentsID;
-	            selectedDisplayName = pContentsName;
-	            selectedHeight = pHeight;
-	        }
-
-	        function Save() {
-	            if (selectedID == "") {
-	                alert("<spring:message code='ezPortal.t341'/>");
-				    return;
+			var selectedID = "";
+		    var selectedDisplayName = "";
+		    var selectedHeight = "";
+		    var g_PortletCategoryXML = "${portletCategoryXML}";
+				var gubunFlag = "";   // 포탈페이지구분
+				var ReturnFunction;
+				var RetValue;
+				function window_onload() {
+				    try {
+				        RetValue = parent.portlet_search_dialogArguments[0];
+				        ReturnFunction = parent.portlet_search_dialogArguments[1];
+				    } catch (e) {
+				        try {
+				            RetValue = opener.portlet_search_dialogArguments[0];
+				            ReturnFunction = opener.portlet_search_dialogArguments[1];
+				        } catch (e) {
+				            RetValue = window.dialogArguments;
+				        }
+				    }
+				    // 상속받은 포탈페이지에서 포틀릿 추가시 처리
+				    gubunFlag = RetValue;
+				    gubunFlag = ReplaceText(gubunFlag, "c", "");
+	
+				    var xmldom = createXmlDom();
+	
+				    if (g_PortletCategoryXML != "") {
+				        xmldom = loadXMLString(g_PortletCategoryXML);;
+				        for (var i = 0; i < xmldom.getElementsByTagName("CATEGORY").length; i++) {
+				            var lastindex = document.getElementById("PortalGubun").length;
+				        	if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4075') {
+								var newoption = new Option("<spring:message code='ezPortal.t4075'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));	
+							} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4076') {
+								var newoption = new Option("<spring:message code='ezPortal.t4076'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
+							} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4077') {
+								var newoption = new Option("<spring:message code='ezPortal.t4077'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
+							} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4078') {
+								var newoption = new Option("<spring:message code='ezPortal.t4078'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
+							}
+				            document.getElementById("PortalGubun").options[lastindex] = newoption;
+				            
+				        }
+				    }
+				    xmldom = null;
+	
+				    SearchPortlet("");
 				}
-	            var ret = new Array();
-	            ret[0] = selectedID;
-	            ret[1] = selectedDisplayName;
-	            ret[2] = selectedHeight;
-	            if (ReturnFunction != null)
-	                ReturnFunction(ret);
-	            else
-	                window.returnValue = ret;
-
-	            window.close();
-	        }
-
-	        function ChangeType() {
-	            SearchPortlet(document.getElementById("PortalGubun").value);
-	        }
+	
+				// 포틀릿 정보를 가져온다. - 편집권한이 있는 정보만 가져온다.
+				function SearchPortlet(pType) {
+				    var xmldom = createXmlDom();
+				    var xmlhttp = createXMLHttpRequest();
+				    xmlhttp.open("POST", "/ezPortal/portletSearchList.do?pType=" + pType + "&mode=edit" + "&pPageType=" + gubunFlag, false);
+				    xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+				    xmlhttp.send();
+	
+				    if (xmlhttp.statusText == "OK") {
+				        xmldom = loadXMLString(xmlhttp.responseText);
+				        
+						<%
+							String userLang = (String)request.getParameter("userLang");
+						%>
+				        var portletHTML = "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"TABLE-LAYOUT:fixed\">";
+	
+				        for (var i = 0; i < xmldom.getElementsByTagName("UID_").length; i++) {
+				            portletHTML += "<tr><td class=\"white\" style=\"padding-left:10px\">";
+				            <%-- portletHTML += "<input type=radio name=uid onclick=\"RadioClick('" + getNodeText(GetElementsByTagName(xmldom, "UID_").item(i)).replace("'", "").replace("\"", "") + "', '" + getNodeText(GetElementsByTagName(xmldom, "DISPLAYNAME" + "<%=userLang%>").item(i)).replace("'", "").replace("\"", "") + "', '" + getNodeText(GetElementsByTagName(xmldom, "HEIGHT").item(i)).replace("'", "").replace("\"", "") + "')\"><span>" + getNodeText(GetElementsByTagName(xmldom, "DISPLAYNAME" + "<%=userLang%>").item(i)).replace("'", "").replace("\"", "") + "" + "</span>"; --%>
+				            portletHTML += "<input type=radio name=uid onclick=\"RadioClick('" + getNodeText(xmldom.getElementsByTagName("UID_").item(i)) + "', '" + getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) + "', '" + getNodeText(xmldom.getElementsByTagName("HEIGHT").item(i)) + "')\"><span>" + getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) + "" + "</span>";
+							portletHTML += "</td></tr>";
+		                }
+		                portletHTML += "</table>";
+	
+		                document.getElementById("div_PortletList").innerHTML = portletHTML;
+		            }
+		            xmlhttp = null;
+		            xmldom = null;
+		        }
+	
+		        function CheckBoxClick() {
+		            if (!event.srcElement.checked) return;
+		            for (var i = 0; i < document.all.tags("input").length; i++) {
+		                if (document.all.tags("input").item(i).type == "checkbox") document.all.tags("input").item(i).checked = false;
+		            }
+		            event.srcElement.checked = true;
+		            selectedID = event.srcElement.parentElement.nextSibling.uid;
+		            selectedDisplayName = event.srcElement.parentElement.nextSibling.innerText;
+		        }
+	
+		        function RadioClick(pContentsID, pContentsName, pHeight) {
+		            selectedID = pContentsID;
+		            selectedDisplayName = pContentsName;
+		            selectedHeight = pHeight;
+		        }
+	
+		        function Save() {
+		            if (selectedID == "") {
+		                alert("<spring:message code='ezPortal.t341'/>");
+					    return;
+					}
+		            var ret = new Array();
+		            ret[0] = selectedID;
+		            ret[1] = selectedDisplayName;
+		            ret[2] = selectedHeight;
+		            if (ReturnFunction != null)
+		                ReturnFunction(ret);
+		            else
+		                window.returnValue = ret;
+	
+		            window.close();
+		        }
+	
+		        function ChangeType() {
+		            SearchPortlet(document.getElementById("PortalGubun").value);
+		        }
 		</script>
 	</head>
 	<body class="popup" scroll="no" onload="javascript:window_onload()">
