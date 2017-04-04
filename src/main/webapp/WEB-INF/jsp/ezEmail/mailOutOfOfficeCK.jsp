@@ -295,8 +295,8 @@
 	</head>
 	<body style="margin-left:10px;margin-right:10px;">	
 	<br>
-	<span class="txt"><spring:message code='ezEmail.t204' /><br>
-	<spring:message code='ezEmail.t205' /></span>
+	<span class="txt">▒ <spring:message code='ezEmail.t204' /><br>
+	▒ <spring:message code='ezEmail.t205' /></span>
 	<table style="width:720px;margin-top:5px;" class="box">
 	  <tr>
 	    <td style="padding:5px">

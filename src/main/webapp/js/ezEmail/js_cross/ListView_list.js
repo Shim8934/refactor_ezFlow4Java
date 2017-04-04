@@ -1,6 +1,6 @@
 ﻿var PressCtrlKey = false;
 var PressShiftKey = false;
-var m_strColorSelect =  "#ECF3BA";
+var m_strColorSelect =  "rgb(233, 241, 244)";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#F7FAE0";
 var m_UrgentColor = "#E9101A";

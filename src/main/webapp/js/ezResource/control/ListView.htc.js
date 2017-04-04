@@ -81,7 +81,7 @@ function ListView(thisobjid, elobjid) {
     var TABLENAME = "";
 
     /* Color Settings */
-    var m_strColorSelect = "#ECF3BA";
+    var m_strColorSelect = "rgb(233, 241, 244)";
     var m_strColorDefault = "#FFFFFF";
     var m_strColorOver = "#F7FAE0";
 
@@ -480,7 +480,7 @@ function ListView(thisobjid, elobjid) {
             //selectedRow = element.all(currow);
             selectedRow = document.getElementById(currow);
             selectedRowIndex = rowindex;
-            selectedRow.style.backgroundColor = "#ECF3BA";
+            selectedRow.style.backgroundColor = "rgb(233, 241, 244)";
             selectedRow.selected = true;
         }
     }
@@ -501,7 +501,7 @@ function ListView(thisobjid, elobjid) {
             //selectedRow = element.all(currow);
             selectedRow = document.getElementById(currow);
             selectedRowIndex = rowindex;
-            selectedRow.style.backgroundColor = "#ECF3BA";
+            selectedRow.style.backgroundColor = "rgb(233, 241, 244)";
             selectedRow.selected = true;
         }
     }
@@ -735,7 +735,7 @@ function ListView(thisobjid, elobjid) {
                     selectedRow.selected = true;
                     // 20091123 : 전자결재 리스트 변경
                     selectedRowIndex = elementid.substr(TABLENAME.length + 4, (elementid.length - (elementid.indexOf("_") + 1)))
-                    selectedRow.style.backgroundColor = "#ECF3BA";
+                    selectedRow.style.backgroundColor = "rgb(233, 241, 244)";
                 }
 
             }
@@ -786,7 +786,7 @@ function ListView(thisobjid, elobjid) {
                     selectedRow.selected = true;
                     // 20091123 : 전자결재 리스트 변경
                     selectedRowIndex = elementid.substr(TABLENAME.length + 4, (elementid.length - (elementid.indexOf("_") + 1)))
-                    selectedRow.style.backgroundColor = "#ECF3BA";
+                    selectedRow.style.backgroundColor = "rgb(233, 241, 244)";
                 }
 
             }

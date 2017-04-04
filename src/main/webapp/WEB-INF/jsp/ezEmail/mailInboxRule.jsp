@@ -754,12 +754,12 @@
 	<body style="margin-left:10px;margin-right:10px;"> 
 		<form method="post"> 
 			<br>
-			<span class="txt">&nbsp;<spring:message code='ezEmail.t800' /></span><br />
-			<span class="txt">&nbsp;<spring:message code='ezEmail.t801' /></span><br />
-			<span class="txt">&nbsp;<spring:message code='ezEmail.t802' /></span><br />
-			<span class="txt">&nbsp;<spring:message code='ezEmail.t803' /></span><br />
+			<span class="txt">▒&nbsp;<spring:message code='ezEmail.t800' /></span><br />
+			<span class="txt">▒&nbsp;<spring:message code='ezEmail.t801' /></span><br />
+			<span class="txt">▒&nbsp;<spring:message code='ezEmail.t802' /></span><br />
+			<span class="txt">▒&nbsp;<spring:message code='ezEmail.t803' /></span><br />
 			
-			<span class="txt">&nbsp;*&nbsp;<img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t807' /></span><br /><br /><br />
+			<span class="txt">▒ <img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t807' /></span><br /><br /><br />
 		    <div id="mainmenu">
 		        <ul id="tb_Parent">
 		          <li><span onclick="New_InboxRule();"><img src="/images/ImgIcon/rul-sml.gif"  style="margin-top:-2px;" /><spring:message code='ezEmail.t804' /></span></li>

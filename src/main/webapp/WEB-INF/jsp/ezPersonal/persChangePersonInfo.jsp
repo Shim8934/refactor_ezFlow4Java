@@ -287,8 +287,8 @@
 		<form method="post" action=""> 
     		<h1><spring:message code='ezPersonal.t172'/></h1>
     		<h2><spring:message code='ezPersonal.t173'/></h2>
-    		<span class="txt"><spring:message code='ezPersonal.t174'/></span>
-    		<table class="popuplist" width="100%">
+    		<span class="txt">▒&nbsp;<spring:message code='ezPersonal.t174'/></span>
+    		<table class="popuplist" width="100%" style="margin-top:5px;">
         		<tr> 
             		<td width="130" rowspan="6" align="center">
                 		<div> 
@@ -382,7 +382,7 @@
 		        </tr>
         		<tr> 
             		<th><spring:message code='ezPersonal.t182'/></th> 
-            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px" maxlength="450">${txtInfo}</textarea></td> 
+            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 
     		<div class="btnposition">
@@ -397,8 +397,10 @@
     		</div>
     	<br/>
     	<br/>
-    		<span class="subtxt"><spring:message code='ezPersonal.t185'/></span>-<spring:message code='ezPersonal.t186'/>
-    		<table class="content">
+    		<div class="subtxt"><spring:message code='ezPersonal.t185'/></div>
+    		<div style="margin-top:5px">▒ <spring:message code='ezPersonal.t186'/></div>    		
+			<div style="margin-top:3px">▒ <spring:message code='main.jjh04'/></div>
+    		<table class="content" style="margin-top:5px">
         		<!-- 표준모듈 (2007.02.21) 수정 -->
         		<tr>
             		<th><spring:message code='ezPersonal.t187'/></th> 
@@ -413,7 +415,7 @@
             		<td> <input type="password" id="txtNewPasswordConfirm" size="25" value="" onkeypress="change_press()"> </td> 
         		</tr>
     		</table> 
-    		<div class="btnposition">
+    		<div class="btnposition" style="margin-top:5px">
         		<a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
         		<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>
