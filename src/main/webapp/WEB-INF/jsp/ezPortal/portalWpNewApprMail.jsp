@@ -6,10 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<%
-		String userApprovalG = (String)request.getAttribute("userApprovalG");
-		String userLang = (String)request.getAttribute("userLang");
-		%>
+		
 		<section  class="body_bg1">
 			<article id="appr_article" class="appr_mail">
 				<div class="tab">
@@ -64,11 +61,15 @@
         					</dd>
     					</dl>
     					<dl>
-    						<%if(userLang != "3"){ %>
-    							<dt><spring:message code='main.t00010' /></dt>
-    						<%}else{%>
-    							<dt style="font-size:8pt"><spring:message code='main.t00010' /></dt>
-    						<%} %>
+    						<c:choose>
+    							<c:when test="${userLang != '3'}">
+    								<dt><spring:message code='main.t00010' /></dt>
+    							</c:when>
+    							<c:otherwise>
+    								<dt style="font-size:8pt"><spring:message code='main.t00010' /></dt>
+    							</c:otherwise>
+    						</c:choose>
+    						
     						<dd>
     							<div class="point_count">
         							<span id="OTHER" runat="server">000</span>
