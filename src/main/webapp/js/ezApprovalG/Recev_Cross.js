@@ -2309,7 +2309,7 @@ function SaveDraftDocInfo()
         		async : false,
         		url : "/ezApprovalG/aprDeptSave.do",
         		data : {
-        				aprDeptInfo : AprDeptInfo
+        				aprDeptInfo : getXmlString(AprDeptInfo)
         				},
         		success : function(result){
         			if (result == "TRUE") {
