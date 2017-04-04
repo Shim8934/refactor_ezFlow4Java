@@ -2883,7 +2883,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String deleteDocInfo(String docID, String mode, String companyID, int tenantID) throws Exception {
-		String rtnVal = "";
 		Map<String, Object> map	= new HashMap<>();
 		map.put("v_DocID", docID);
 		map.put("v_TENANTID", tenantID);
@@ -2893,7 +2892,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String delFlag = ezApprovalGDAO.aprDeleteDocInfoFlag(map);
 
 		if (delFlag.equals("Y") || mode.toUpperCase().equals("MUST")) {
-			try {
 				ezApprovalGDAO.aprDeleteDocInfo(map);
 				ezApprovalGDAO.aprDeleteDocInfo2(map);
 				ezApprovalGDAO.aprDeleteDocInfo3(map);
@@ -2903,15 +2901,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.aprDeleteDocInfo7(map);
 				ezApprovalGDAO.aprDeleteDocInfo8(map);
 				ezApprovalGDAO.aprDeleteDocInfo9(map);
-				rtnVal="TRUE";
-			} catch (Exception e) {
-				e.printStackTrace();
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				rtnVal = "FALSE";
-			}
 		} 
 
-		return rtnVal;
+		return "TRUE";
 	}
 
 	@Override
@@ -9065,9 +9057,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String setJijung(String docID, String receiveSN, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String docState,
 			String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, String lang, int tenantID) throws Exception {
-		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
 		
-		String result = "";
+		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -9090,76 +9081,62 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		
-		try {
-			if ( !flag.equals("G")) {
-				ezApprovalGDAO.jiJungInsertReceiptProInfo(map);
-				ezApprovalGDAO.jiJungUpdateReceiptProInfo(map);
-				ezApprovalGDAO.jiJungUpdateReceiptProInfo2(map);
-				ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
-				ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
-				ezApprovalGDAO.jiJungUpdateTbDocDelivery(map);
-			} else {
-				String code = ezApprovalGDAO.selectCodeValue(map);
-				if (code == null ) {
-					code = "";
-				}
-				 if(docState.equals("015") || code.equals("015")) {
-					 ezApprovalGDAO.jiJungUpdateReceiptProInfo3(map);
-				 } else {
-					 ezApprovalGDAO.jiJungUpdateReceiptProInfo4(map);
-				 }
-				 ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
-				 ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
+		if ( !flag.equals("G")) {
+			ezApprovalGDAO.jiJungInsertReceiptProInfo(map);
+			ezApprovalGDAO.jiJungUpdateReceiptProInfo(map);
+			ezApprovalGDAO.jiJungUpdateReceiptProInfo2(map);
+			ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
+			ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
+			ezApprovalGDAO.jiJungUpdateTbDocDelivery(map);
+		} else {
+			String code = ezApprovalGDAO.selectCodeValue(map);
+			if (code == null ) {
+				code = "";
 			}
-			sendMsg(docID, processorID, "JIJUNG", companyID, lang, tenantID);
-			
-			result = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			result = "<RESULT>FALSE</RESULT>";
+			 if(docState.equals("015") || code.equals("015")) {
+				 ezApprovalGDAO.jiJungUpdateReceiptProInfo3(map);
+			 } else {
+				 ezApprovalGDAO.jiJungUpdateReceiptProInfo4(map);
+			 }
+			 ezApprovalGDAO.jiJungDeleteReceiptProInfo(map);
+			 ezApprovalGDAO.jiJungDeleteReceiptProInfo2(map);
 		}
-		return result;
+		
+		sendMsg(docID, processorID, "JIJUNG", companyID, lang, tenantID);
+		
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override
 	public String updateSusinDocInfo(String orgDocID, String docID, String deptID, String userID, String displayName1, String displayName2, String companyID, int tenantID) throws Exception {
-		String rtnVal = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("companyID", companyID);
+		map.put("v_APRSTATE", staASJubSu);
+		map.put("v_DEPTID", deptID);
+		map.put("v_TENANTID", tenantID);
 		
-		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_DOCID", docID);
-			map.put("companyID", companyID);
-			map.put("v_APRSTATE", staASJubSu);
-			map.put("v_DEPTID", deptID);
-			map.put("v_TENANTID", tenantID);
-			
-			ezApprovalGDAO.updateJubsuAprReceiptProcessInfo(map);
-			
-			map.put("v_USERID", userID);
-			map.put("v_DISPLAYNAME1", displayName1);
-			map.put("v_DISPLAYNAME2", displayName2);
-			map.put("v_DEPTID", deptID);
-			
-			ezApprovalGDAO.updateJubsuDocDelivery(map);
-			
-			updateSusinResult(orgDocID, deptID, userID, "I", displayName1, displayName2, companyID, tenantID);
+		ezApprovalGDAO.updateJubsuAprReceiptProcessInfo(map);
 		
-			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
+		map.put("v_USERID", userID);
+		map.put("v_DISPLAYNAME1", displayName1);
+		map.put("v_DISPLAYNAME2", displayName2);
+		map.put("v_DEPTID", deptID);
+		
+		ezApprovalGDAO.updateJubsuDocDelivery(map);
+		
+		String result = updateSusinResult(orgDocID, deptID, userID, "I", displayName1, displayName2, companyID, tenantID);
+		
+		if (!result.equals("TRUE")) {
+			return "<RESULT>FALSE</RESULT>";
 		}
-		
-		return rtnVal;
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override
 	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		String strXML = "";
 		String basicOrder = getCode2Name("A18", "001", companyID, lang, tenantID);
-		
 
 		String userIDs = "'" + userID + "'";
 		String proxyOption = getIsUse("A23", "001", companyID, lang, tenantID);
@@ -9173,7 +9150,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERIDS", userIDs);
 		map.put("v_BASICORDER", basicOrder);
 		map.put("v_TENANTID", tenantID);
-
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getNextDocInfo(map); 
 		
@@ -9250,7 +9226,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String specialFlag = xmlDom.getElementsByTagName("SPECIALFLAG").item(0).getTextContent();
 	
 		Map<String, Object> map = new HashMap<String, Object>();
-		try {
 			map.put("v_CabinetClassNo", cabinetClassNO);
 			map.put("v_ProductionYear", produceY);
 			map.put("v_RegSerialNo", regSN);
@@ -9304,16 +9279,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				subSQL = saveSpecialInfoCab(specialFlag, cabinetClassNO, xmlDom, tenantID, companyID);
 				
 				if (subSQL.equals("FALSE")) {
+					rollbackSN("001", deptCode, taskCode, regSN, companyID, strLang, tenantID);
 					return "<RESULT>FALSE</RESULT>";
 				} 
 			}
 			return "<RESULT><![CDATA[" + cabinetClassNO + "001" + "]]></RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rollbackSN("001", deptCode, taskCode, regSN, companyID, strLang, tenantID);
-			return "<RESULT>FALSE</RESULT>";
-		}
 	}
 
 	@Override
@@ -9340,7 +9310,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("addNewVolume Started");
 		String createDate = commonUtil.getTodayUTCTime("");
 		String cabID = cabClassNO + formatVolNum(newVolNO);
-		String result = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CABINETID", cabID);
@@ -9352,18 +9321,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 
 		logger.debug("addNewVolume Param : v_CABINETID = " + cabID + " v_VOLUMENO = " + formatVolNum(newVolNO) + " v_CABCLASSNO = " + cabClassNO + " v_CREATEDATE =" + createDate + " companyID = " + companyID + " v_TENANTID = " + tenantID);
-		try {
 			ezApprovalGDAO.addNewVolume(map);
-			result = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			result = "<RESULT>FALSE</RESULT>";
-		}
-		
+			
 		logger.debug("addNewVolume Ended");
 
-		return result;
+		return "TRUE";
 	}
 
 	@Override
@@ -12309,7 +12271,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String receiptUserID = makeListField(ezApprovalGDAO.updateSusinResultReceipt(map));
 		logger.debug("receiptUserID = " + receiptUserID);
-		try {
 			if (receiptUserID.toUpperCase().equals(userID.toUpperCase())) {
 				map.put("v_PROCESSFLAG", processFlag);
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
@@ -12333,11 +12294,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.updateSusinEndReceiptPointInfo2(map);
 			}
 			return "TRUE";
-		} catch(Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "FALSE";
-		}
 	}
 
 	public String setCabinetRec(String docID, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception{
@@ -16234,15 +16190,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		rtnVal= ezApprovalGDAO.selectAprGetNewID(map);
-		if(rtnVal == null) {
+		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
+		System.out.println("rtnVal= " + rtnVal);
+		 Thread.sleep(4000);
+		 System.out.println("rtnVal2= " + rtnVal);
+		
+		if (rtnVal == null) {
 			ezApprovalGDAO.insertAprGetNewID(map);
 		}
 		
-		ezApprovalGDAO.aprGetNewID(map);
+		try {
+			ezApprovalGDAO.aprGetNewID(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		rtnVal = ezApprovalGDAO.selectAprGetNewID(map);
 		rtnVal = String.format("%020d", Integer.parseInt(rtnVal.trim()));
-		
+
 		return rtnVal;
 	}
 

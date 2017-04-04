@@ -8031,15 +8031,17 @@
 			COMPANYID = #companyID#
      ]]>
 	</update>
+	
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">
 		SELECT 
-	      	max(lastDocID) 
+	      	lastDocID 
 	    FROM 
 	     	TBL_LastDocID
 	    WHERE
 	    	TENANT_ID = #v_TENANTID#
 	    AND
 	    	COMPANYID = #companyID#
+	    FOR UPDATE
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCabinetCode2Name" parameterClass="Map" resultClass="String"> -->

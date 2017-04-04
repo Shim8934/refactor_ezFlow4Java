@@ -153,8 +153,9 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
     
     var dataNodes = GetChildNodes(loadXMLString(result));
     var rtn = getNodeText(dataNodes[0]);
-
+alert(rtn);
     if (rtn == "FALSE") {
+    	alert(100);
         alert(strLang486);
     }
     return rtn;
