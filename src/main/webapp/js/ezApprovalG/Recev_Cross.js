@@ -2033,7 +2033,7 @@ function SaveDraftDocInfo()
     		async : false,
     		url : "/ezApprovalG/aprLineSave.do",
     		data : {
-    				ret    : xmlpara
+    				ret    : pxml
     				},
     		success : function(result){
     			if (result == "TRUE") {
