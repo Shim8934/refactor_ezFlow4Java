@@ -499,9 +499,9 @@
 		    </div>
 		    <table id="favoritetable" style="margin-top: 5px; width: 697px;">
 		        <tr>
-		            <td style="padding-right: 1px; vertical-align: top;">
-		                <div class="border_gray">
-		                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 356px; overflow-x: auto; overflow-y: auto; padding: 0px"></div>
+		            <td style="vertical-align: top;">
+		                <div class="border_gray" style="border-bottom: 0px">
+		                    <div id="divlvtFavForm" style="border: 0; WIDTH: 100%; HEIGHT: 354px; overflow-x: auto; overflow-y: auto; padding: 0px"></div>
 		                </div>
 		            </td>
 		        </tr>
@@ -510,7 +510,7 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip2" style="width: 100%">&nbsp;</td>
+		                        <td id="descrip2" style="width: 90%">&nbsp;</td>
 		                    </tr>
 		                </table>
 		            </td>
@@ -522,9 +522,9 @@
 		                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
 		            </td>
 		            <td style="padding-left: 5px; vertical-align: top;">
-		                <div class="border_gray">
+		                <div class="border_gray" style="border-bottom: 0px">
 		                    <!-- 기존 class="listview" -->
-		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 395px; HEIGHT: 353px; margin: 0px 1px 1px 1px; overflow-y: auto; overflow-x: hidden;"></div>
+		                    <div id="divlvtForm" style="BORDER: 0; WIDTH: 406px; HEIGHT: 353px; margin: 0px 1px 1px 1px; overflow-y: auto; overflow-x: hidden;"></div>
 		                </div>
 		            </td>
 		        </tr>
@@ -533,7 +533,7 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip" style="width: 320px">&nbsp;</td>
+		                        <td id="descrip" style="width: 100%">&nbsp;</td>
 		                    </tr>
 		                </table>
 		            </td>
