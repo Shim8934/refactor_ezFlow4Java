@@ -249,7 +249,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String pResult = "";
 		String pThemeID = xmlDom.getElementsByTagName("THEMEID").item(0).getTextContent();
 		logger.debug("pThemeID="+pThemeID);
-		pResult = ezPortalAdminService.useThemeInfo(pThemeID, userInfo.getTenantId());
+		pResult = ezPortalAdminService.useThemeInfo(pThemeID, userInfo.getTenantId(), userInfo.getCompanyID());
 		logger.debug("pResult="+pResult);
 		if (pResult != null && pResult.equals("NO")) {
 			ezPortalAdminService.deleteTheme(pThemeID, userInfo.getTenantId(), userInfo.getCompanyID()); 
@@ -483,7 +483,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		ezPortalAdminService.deleteTopPage(uID, userInfo.getTenantId());
+		ezPortalAdminService.deleteTopPage(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		return "OK";
 	}
@@ -738,7 +738,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 		
-		String ret = ezPortalAdminService.deletePortalPage(uID, userInfo.getTenantId());
+		String ret = ezPortalAdminService.deletePortalPage(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		return ret;
 	}
@@ -1168,7 +1168,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String savePortletProperty(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String ret = ezPortalAdminService.savePortletProperties(xmlStr, userInfo.getTenantId());
+		String ret = ezPortalAdminService.savePortletProperties(xmlStr, userInfo.getTenantId(), userInfo.getCompanyID());
 		return ret;
 	}
 	
@@ -1388,7 +1388,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		String ret = ezPortalAdminService.deletePortlet(uID, userInfo.getTenantId());
+		String ret = ezPortalAdminService.deletePortlet(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		return ret;
 	}

@@ -419,36 +419,37 @@
 			</ul>
 		</div>
 		<table>
-		  <tr>
-		    <td style="padding-right:5px">
-		    	<c:if test="${type != 'Proxy'}">
-				    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:115px" maxLength="50">
-				    <a class="imgbtn" style="vertical-align:bottom"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
-		    	</c:if>
-		    </td>
-		    <td>
-		    	<c:if test="${type != 'Proxy'}">
-			    	<select id="search_type">
-			              <option selected value="displayname"><spring:message code='ezPersonal.t9'/></option>
-			              <option value="description"><spring:message code='ezPersonal.t7'/></option>
-			              <option value="title"><spring:message code='ezPersonal.t69'/></option>
-			              <option value="telephonenumber"><spring:message code='ezPersonal.t70'/></option>
-			              <option value="mobile"><spring:message code='ezPersonal.t72'/></option>
-			              <option value="HomePhone"><spring:message code='ezPersonal.t73'/></option>
-			              <option value="facsimileTelephoneNumber"><spring:message code='ezPersonal.t74'/></option>
-			              <option value="mail"><spring:message code='ezPersonal.t75'/></option>
-			              <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
-			        </select>
-			        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px" maxLength="50">
-			        <a class="imgbtn" style="vertical-align:bottom"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
-		    	</c:if> 
-		    </td>
-		  </tr>
-		  <tr>
-		    <td style="padding-right:5px"><div class="box" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:235px; HEIGHT:340px;" id="TreeView" ></div></td>
-		    <td class="listview">
-		        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 385px; HEIGHT: 340px; BACKGROUND-COLOR: white"></div></td>
-		  </tr>
+			<tr>
+			    <td style="padding-right:5px">
+			    	<c:if test="${type != 'Proxy'}">
+					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:115px" maxLength="50">
+					    <a class="imgbtn" style="vertical-align:bottom"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
+			    	</c:if>
+			    </td>
+			    <td>
+			    	<c:if test="${type != 'Proxy'}">
+						<select id="search_type">
+				            <option selected value="displayname"><spring:message code='ezPersonal.t9'/></option>
+				            <option value="description"><spring:message code='ezPersonal.t7'/></option>
+				            <option value="title"><spring:message code='ezPersonal.t69'/></option>
+				            <option value="telephonenumber"><spring:message code='ezPersonal.t70'/></option>
+				            <option value="mobile"><spring:message code='ezPersonal.t72'/></option>
+				            <option value="HomePhone"><spring:message code='ezPersonal.t73'/></option>
+				            <option value="facsimileTelephoneNumber"><spring:message code='ezPersonal.t74'/></option>
+				            <option value="mail"><spring:message code='ezPersonal.t75'/></option>
+				            <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
+				        </select>
+				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px" maxLength="50">
+				        <a class="imgbtn" style="vertical-align:bottom"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
+			    	</c:if> 
+			    </td>
+		  	</tr>		  
+		  	<tr>
+			    <td style="padding-right:5px">&nbsp;<div class="box" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:235px; HEIGHT:342px;" id="TreeView" ></div></td>
+			    <td class="listview" style="border-top:0px">
+			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 385px; HEIGHT: 342px; BACKGROUND-COLOR: white;margin-top:-2px"></div>
+				</td>
+		  	</tr>
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>

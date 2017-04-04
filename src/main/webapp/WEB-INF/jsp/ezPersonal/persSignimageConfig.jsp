@@ -218,26 +218,25 @@
 		</script> 
 	</head>
 	<body> 
-		<br>
-		<h2 class="h2_dot">&nbsp;<spring:message code='ezPersonal.t3011'/></h2>
-		    <table style="width: 300px; height: 150px;" border="0">
-		        <tr>
-		            <td>
-		                <div style="border: 1px solid #dbdbda; width: 200px; height: 200px; border-top: 0px; overflow: auto;">
-		                    <div id="lvDocList"></div>
-		                </div>
-		            </td>
-		            <td style="vertical-align: top">
-		                <div style="border: 1px solid #dbdbda; width: 200px; height: 200px; overflow-y: auto; margin: 0px 5px 0px 5px;">
-		                    <div id="ContentDescription" style="margin-top: 1px; margin: 5px 5px 5px 5px;vertical-align:middle;text-align:center;">
-		                        <div style="padding-top:80px;"><spring:message code='ezPersonal.t3012'/></div>
-		                    </div>
-		                </div>
-		            </td>
-		        </tr>
-		    </table>
-		
-		<div class="btnposition" style="width:400px">
+		<br/>
+		<h2>▒&nbsp;<spring:message code='ezPersonal.t3011'/></h2>
+		<table style="width: 300px; height: 150px; margin-top:5px" border="0">
+			<tr>
+	            <td>
+	                <div style="border: 1px solid #dbdbda; width: 200px; height: 200px; border-top: 0px; overflow: auto;">
+	                    <div id="lvDocList"></div>
+	                </div>
+	            </td>
+	            <td style="vertical-align: top">
+	                <div style="border: 1px solid #dbdbda; width: 200px; height: 200px; overflow-y: auto; margin: 0px 5px 0px 5px;">
+	                    <div id="ContentDescription" style="margin-top: 1px; margin: 5px 5px 5px 5px;vertical-align:middle;text-align:center;">
+	                        <div style="padding-top:80px;"><spring:message code='ezPersonal.t3012'/></div>
+	                    </div>
+	                </div>
+	            </td>
+	        </tr>
+	    </table>		
+		<div class="btnposition" style="width:400px;margin-top:15px;">
 		    <a class="imgbtn" onClick="add_sign()"><span><spring:message code='ezPersonal.t3013'/></span></a>
 		    <a class="imgbtn" onClick="del_sign()"><span><spring:message code='ezPersonal.t3014'/></span></a>
 		</div>

@@ -106,6 +106,8 @@
 			var StartMode2 = "0";
 			var SummaryFlag = true;
 			var approvalFlag = "${approvalFlag}";
+			var junGyulFlag = "${junGyulFlag}";
+			
 			window.onload = function () {
 			};
 			

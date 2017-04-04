@@ -1499,9 +1499,13 @@ function ReAprLineSingMapping(ret) {
         var suggester = getNodeText(dataNodes[13]);
         var reporter = getNodeText(dataNodes[14]);
         
-        if (KyljeaType == "003") {
-   			continue;
-   		}
+        if (junGyulFlag == "1") {
+			//아무것도 안함
+		} else if (junGyulFlag == "4") {
+			if (KyljeaType == "003") {
+				continue;
+			}
+		}
 
         OrderType[KyljeaOrder] = KyljeaType;
         OrderTypeName[KyljeaOrder] = KyljeaTypeName;

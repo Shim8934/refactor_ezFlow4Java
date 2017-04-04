@@ -288,34 +288,26 @@
 	</head>
 	<body>
 		<form id="ManageBujae" method="post">
-		    <br/>
-			 <span class="txt">
-						<spring:message code='ezPersonal.t55'/><br>
-						<spring:message code='ezPersonal.t56'/><br>
-						<spring:message code='ezPersonal.t57'/><br>
-			            <spring:message code='ezPersonal.t58'/></span><br/>
 			<br/>
-			<table class="content" style="width:650px;">
+			<div class="txt">
+				<div>▒&nbsp;<spring:message code='ezPersonal.t55'/></div>
+				<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t56'/></div>
+				<div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t57'/></div>
+			    <div style="margin-top:3px">▒&nbsp;<spring:message code='ezPersonal.t58'/></div>
+			</div>
+			<table class="content" style="width:520px;margin-top:20px">
 				<tr> 
-				<th><spring:message code='ezPersonal.t22'/></th>
+					<th><spring:message code='ezPersonal.t22'/></th>
 					<td>
 						<table>
 							<tr>
 								<td>
-									<input type="text" id="Sdatepicker" style="width:80px;text-align:center">
-		                            ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center">
-							<tr style="DISPLAY:none">
-								<td>
-									<input id='_T1' class='datepicker_time' readonly="true" style="PADDING-RIGHT: 3px; PADDING-LEFT: 3px; PADDING-BOTTOM: 0px; WIDTH: 73px; PADDING-TOP: 2px">
-									<IMG border="0" height="16" id="img_StartTime" src="/images/i_time.gif"
-										style="CURSOR: pointer; POSITION: relative;vertical-align:middle" width="16"> <input id='_T2' class='datepicker_time' readonly="true" style="PADDING-RIGHT: 3px; PADDING-LEFT: 3px; PADDING-BOTTOM: 0px; WIDTH: 100px; PADDING-TOP: 2px">
-									<IMG border="0" height="16" id="img_EndTime" src="/images/i_time.gif"
-										style="CURSOR: pointer; POSITION: relative;vertical-align:middle" width="16">
+									<input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" />
 								</td>
 							</tr>
-						</table>	  
+						</table>
 					</td>
-				</tr>        
+				</tr>
 				<tr id="TR_Appoint">
 					<th><spring:message code='ezPersonal.t31'/></th>
 					<td>
@@ -328,7 +320,7 @@
 				    <tr>
 			            <th><spring:message code='ezPersonal.t399'/></th>
 					    <td>
-					    <input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
+					    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
 						    &nbsp;<a class="imgbtn" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
 			                <a class="imgbtn" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
 					    </td>
@@ -378,14 +370,11 @@
 						</td>
 					</tr>
 				</c:if>
-				</table>
-            <br>
-		 
-		  <br/>
-		  <div style="width:650px;text-align:center">
-		    <a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
-		    <a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
-		  </div>
+			</table>            
+			<div style="width:520px;text-align:center;margin-top:15px;">
+		    	<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
+		    	<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
+		  	</div>
 		</form>
 	</body>
 </html>
