@@ -2022,19 +2022,24 @@ function SaveDraftDocInfo()
 	
         pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>";
         xmlpara.loadXML(pxml);
-	
-        xmlhttp.open("POST","/ezApprovalG/aprLineSave.do",false);
-        xmlhttp.send(xmlpara);
-	
-        if(xmlhttp.responseText == "true")
-        {
-            LastSignSN = 1;
-        }
-        else
-        {
-            var pAlertContent = strLang352;
-            OpenAlertUI(pAlertContent);
-        }
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/aprLineSave.do",
+    		data : {
+    				ret    : xmlpara
+    				},
+    		success : function(result){
+    			if (result == "TRUE") {
+    				LastSignSN = 1;
+                } else {
+                	var pAlertContent = strLang352;
+                    OpenAlertUI(pAlertContent);
+                }
+    		}
+    	});
     }
 
     //문서번호 포멧 설정
@@ -2257,17 +2262,24 @@ function SaveDraftDocInfo()
 
         var xmlhttp = createXMLHttpRequest();
 
-        var result = "";
-
-        xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-        xmlhttp.send(ret[2]);
-
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        result = getNodeText(dataNodes[0]);
-
-        if (result != "TRUE") {
-            alert(strLang259);
-        }
+        /*var result = "";*/
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/aprLineSave.do",
+    		data : {
+    				ret    : ret[2]
+    				},
+    		success : function(result){
+    			if (result == "TRUE") {
+    				
+    			} else {
+    				alert(strLang259);
+    			}
+    		}
+    	});
 
         if (pSuSinFlag == "Y") {
             var AprDeptInfo = loadXMLString(ret[3]);
@@ -2286,17 +2298,22 @@ function SaveDraftDocInfo()
                 var xmlRtn = AprDeptPara.documentElement;
                 AprDeptInfo.documentElement.appendChild(xmlRtn);
             }
-
-            xmlhttp = null;
-            xmlhttp = createXMLHttpRequest();
-            xmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
-            xmlhttp.send(AprDeptInfo);
-
-            var dataNodes = GetChildNodes(xmlhttp.responseXML);
-            result = getNodeText(dataNodes[0]);
-
-            if (result == "") {
-                alert(strLang163);
-            }
+            
+            $.ajax({
+        		type : "POST",
+        		dataType : "text",
+        		async : false,
+        		url : "/ezApprovalG/aprDeptSave.do",
+        		data : {
+        				aprDeptInfo : AprDeptInfo
+        				},
+        		success : function(result){
+        			if (result == "TRUE") {
+        				
+        			} else {
+        				alert(strLang163);
+        			}
+        		}
+        	});
         }
     }
