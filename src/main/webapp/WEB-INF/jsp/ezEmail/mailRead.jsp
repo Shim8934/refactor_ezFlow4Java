@@ -203,33 +203,39 @@
 		    function ShowHiddenTo(obj)
 		    {
 		    	var currHeight = $(".content tbody tr:nth-child(2)").outerHeight();
-		    	var heightForchange = "";
+		    	var heightForChange = "";
 		        if(MsgToGotHidden.style.display=="none")
 		        {
 		        	MsgToGotHidden.style.display = "";
 		            obj.src ="/images/cllps.gif";
-		            heightForchange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
-		            $("#message").outerHeight($("#message").outerHeight() - heightForchange );
+		            heightForChange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		        else
 		        {
 		        	MsgToGotHidden.style.display = "none";
 		            obj.src ="/images/expnd.gif";
-		            heightForchange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
-		            $("#message").outerHeight($("#message").outerHeight() - heightForchange );
+		            heightForChange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		    }
 		    function ShowHiddenCc(obj)
 		    {
+		    	var currHeight = $(".content tbody tr:nth-child(3)").outerHeight();
+		    	var heightForChange = "";
 		        if(MsgCCGotHidden.style.display=="none")
 		        {
 		            MsgCCGotHidden.style.display = "";
 		            obj.src ="/images/cllps.gif";
+		            heightForChange = $(".content tbody tr:nth-child(3)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		        else
 		        {
 		            MsgCCGotHidden.style.display = "none";    
 		            obj.src ="/images/expnd.gif";
+		            heightForChange = $(".content tbody tr:nth-child(3)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		    }
 		    function mtg_onClick(mtgid) {
