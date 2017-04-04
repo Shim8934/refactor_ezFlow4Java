@@ -150,14 +150,10 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
 			result = xml;
 		}        			
 	});
-    
-    var dataNodes = GetChildNodes(loadXMLString(result));
-    var rtn = getNodeText(dataNodes[0]);
-alert(rtn);
-    if (rtn == "FALSE") {
-    	alert(100);
-        alert(strLang486);
-    }
+  
+ 	    if (result != "TRUE") {
+	    	 alert(strLang486);
+	    }
     return rtn;
 }
 
