@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style> 
 			P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm } 
 		</style>
@@ -201,15 +202,21 @@
 		    }
 		    function ShowHiddenTo(obj)
 		    {
+		    	var currHeight = $(".content tbody tr:nth-child(2)").outerHeight();
+		    	var heightForchange = "";
 		        if(MsgToGotHidden.style.display=="none")
 		        {
-		            MsgToGotHidden.style.display = "";
+		        	MsgToGotHidden.style.display = "";
 		            obj.src ="/images/cllps.gif";
+		            heightForchange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForchange );
 		        }
 		        else
 		        {
-		            MsgToGotHidden.style.display = "none";
+		        	MsgToGotHidden.style.display = "none";
 		            obj.src ="/images/expnd.gif";
+		            heightForchange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForchange );
 		        }
 		    }
 		    function ShowHiddenCc(obj)
