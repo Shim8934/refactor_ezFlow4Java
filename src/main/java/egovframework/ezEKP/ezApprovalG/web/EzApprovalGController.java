@@ -984,6 +984,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String strXML = request.getParameter("ret");
+		logger.debug("ret = " + strXML);
 		
 		String result = ezApprovalGService.updateLineInfo(strXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
