@@ -1,4 +1,4 @@
-﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
+﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN, pAprLineB4type;
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";

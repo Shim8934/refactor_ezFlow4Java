@@ -961,27 +961,34 @@
 		        Resultxml = Resultxml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(arr_userinfo[14]) + "</DATA>";
 		
 		        Resultxml = Resultxml + "</ROW></ROWS></LISTVIEWDATA>";
-		
-		        xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-		        xmlhttp.send(Resultxml);
-		
-		        if (getNodeText(GetChildNodes(xmlhttp.responseXML)[0])) {
-		            var retvalue = new Array();
-		            retvalue[0] = Resultxml;
-		            retvalue[1] = "NONE";
-		            retvalue[2] = "R";
-		            retvalue[3] = "";
-		
-		            GetDraftAprLineInfo(retvalue);
-		            btnSendDraftEnable = "true";
-		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
-		            LastSignSN = "1";
-		            btnSendDraft_onclick();
-		        }
-		        else {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
-		            OpenAlertUI(pAlertContent);
-		        }
+		        
+		        $.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/aprLineSave.do",
+            		data : {
+            				ret    : Resultxml
+            				},
+            		success : function(result){
+            			if (result == 'TRUE') {
+	            			var retvalue = new Array();
+	    		            retvalue[0] = Resultxml;
+	    		            retvalue[1] = "NONE";
+	    		            retvalue[2] = "R";
+	    		            retvalue[3] = "";
+	    		
+	    		            GetDraftAprLineInfo(retvalue);
+	    		            btnSendDraftEnable = "true";
+	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
+	    		            LastSignSN = "1";
+	    		            btnSendDraft_onclick();
+            			} else {
+	            			var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
+	    		            OpenAlertUI(pAlertContent);
+            			}
+            		}
+            	});
 		    }
 		    
 		    function btnMail_onclick() {
@@ -1216,11 +1223,18 @@
 		
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
 		                    if (ret[1] != false) {
-		                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-		                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-		                        savexmlhttp.send(ret[1]);
-		
-		                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+		                    	$.ajax({
+		                    		type : "POST",
+		                    		dataType : "text",
+		                    		async : false,
+		                    		url : "/ezApprovalG/aprLineSave.do",
+		                    		data : {
+		                    				ret    : ret[1]
+		                    				},
+		                    		success : function(result){
+		                    			
+		                    		}
+		                    	});
 		                    }
 		
 		                }
@@ -1233,10 +1247,19 @@
 		                savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "11" && pGubun != "12") {
-		                    savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
-		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-		                    savexmlhttp.send(ret[2]);
-		
+		                	$.ajax({
+		                		type : "POST",
+		                		dataType : "text",
+		                		async : false,
+		                		url : "/ezApprovalG/aprDeptSave.do",
+		                		data : {
+		                				aprDeptInfo : ret[2]
+		                				},
+		                		success : function(result){
+		                			
+		                		}
+		                	});
+		                	
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
 		                }

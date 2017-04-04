@@ -1,4 +1,4 @@
-﻿var selectcabinet_cross_dialogArguments = new Array();
+﻿﻿var selectcabinet_cross_dialogArguments = new Array();
 function btnSetTaskCode_onclick() {
     try {
         var para = new Array();
