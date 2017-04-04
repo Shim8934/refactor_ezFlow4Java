@@ -59,7 +59,7 @@
 	                //document.getElementById("txtlist_Layer").style.height = "455px";
 	            }
 	            document.getElementById("AddressListView").hotTrackColor = "#F7FAE0";
-	            document.getElementById("AddressListView").selectColor = "#ECF3BA";
+	            document.getElementById("AddressListView").selectColor = "rgb(233, 241, 244)";
 	            document.getElementById("AddressListView").dataSource = listviewheader;
 	            AddressTreeView = new window['treeview.htc'].TreeView('AddressTreeView', 'AddressTreeView');
 	            AddressTreeView.attachEvent('requestdata', address_requestdata);

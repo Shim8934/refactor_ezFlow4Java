@@ -411,12 +411,13 @@
 	</head>
 	<body onload="javascript:window_onload()" style="margin-left:10px;margin-right:10px;">
 		<br>
-		<span class="txt" ><spring:message code='ezEmail.t239' /><br> 
-		      <spring:message code='ezEmail.t240' /><br> 
-		    <spring:message code='ezEmail.t241' /></span><br>
-		      <br> 
+		<div class="txt" style="margin-bottom:25px">
+			<div>▒ <spring:message code='ezEmail.t239' /></div> 
+		    <div style="margin-top:3px">▒ <spring:message code='ezEmail.t240' /></div> 
+		    <div style="margin-top:3px">▒ <spring:message code='ezEmail.t241' /></div>
+		</div>
 		<h2 class="h2_dot"><spring:message code='ezEmail.t242' /></h2>	
-		<table class="content" style="width:720px;margin-left:13px;"> 
+		<table class="content" style="width:720px;"> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer1" id="popServer1" class="textarea" style="width:200px"> 
@@ -462,7 +463,7 @@
 		</table> 
 		<br>
 		<h2 class="h2_dot"><spring:message code='ezEmail.t700' /></h2> 
-		<table class="content" style="width:720px;margin-left:13px;">
+		<table class="content" style="width:720px;">
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer2" id="popServer2" class="textarea" style="width:200px"> 
@@ -508,7 +509,7 @@
 		</table> 
 		<br> 
 		<h2 class="h2_dot"><spring:message code='ezEmail.t701' /></h2> 
-		<table class="content" style="width:720px;margin-left:13px;"> 
+		<table class="content" style="width:720px;"> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer3" id="popServer3" class="textarea" style="width:200px"> 

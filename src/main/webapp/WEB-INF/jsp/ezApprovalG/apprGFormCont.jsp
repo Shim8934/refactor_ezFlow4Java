@@ -272,10 +272,9 @@
 				                        OpenAlertUI(strLang1003);
 				                        Get_Favoritelist();
 				                    }
+				    			} else {
+				    				OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    			}
-				    		},
-				    		error : function(jqXHR, textStatus, errorThrown) {
-				    			OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    		}
 		                });
 		            }

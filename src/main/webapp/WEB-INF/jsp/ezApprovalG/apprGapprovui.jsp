@@ -1259,11 +1259,19 @@
 		                if (approvalFlag == "S") {
 			                if (pGubun != "14" && pGubun != "10") {
 			                    if (ret[1] != false) {
-			                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-			                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-			                        savexmlhttp.send(ret[1]);
-			
-			                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+			                    	$.ajax({
+			                    		type : "POST",
+			                    		dataType : "json",
+			                    		async : false,
+			                    		url : "/ezApprovalG/aprLineSave.do",
+			                    		data : {
+			                    				ret    : ret[1]
+			                    				},
+			                    		success : function(result){
+			                    			
+			                    		}
+			                    	});
+			                        
 			                        IsSkipDrafter = "FALSE";
 			                        btnSendDraftEnable = "true";
 			                        ReAprLineSingMapping(ret);
@@ -1276,11 +1284,19 @@
 		                } else {
 			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {
 			                    if (ret[1] != false) {
-			                        savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-			                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-			                        savexmlhttp.send(ret[1]);
-			
-			                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+			                    	$.ajax({
+			                    		type : "POST",
+			                    		dataType : "text",
+			                    		async : false,
+			                    		url : "/ezApprovalG/aprLineSave.do",
+			                    		data : {
+			                    				ret    : ret[1]
+			                    				},
+			                    		success : function(result){
+			                    			
+			                    		}
+			                    	});
+			                    	
 			                        IsSkipDrafter = "FALSE";
 			                        btnSendDraftEnable = "true";
 			                        ReAprLineSingMapping(ret);
@@ -1294,9 +1310,23 @@
 		
 		                if (pSuSinFlag == "Y") {
 		                    if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
-		                        savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
-		                        savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-		                        savexmlhttp.send(ret[2]);
+		                    	$.ajax({
+		                    		type : "POST",
+		                    		dataType : "text",
+		                    		async : false,
+		                    		url : "/ezApprovalG/aprDeptSave.do",
+		                    		data : {
+		                    				aprDeptInfo : ret[2]
+		                    				},
+		                    		success : function(result){
+		                    			if (result == 'TRUE') {
+		                    				
+		                    			} else {
+		                    				alert(strLang163);
+		                    			}
+		                    		}
+		                    	});
+		                    	
 		                        //수신자 저장 후
 		                        btnReceivLineEnable = false;
 		                        setRecevInfo(ret[3]);

@@ -32,8 +32,7 @@
 		            } catch (e) {
 		                
 		            }
-		        }
-		
+		        }		
 		
 		        try {
 		            var ua = navigator.userAgent;
@@ -364,6 +363,9 @@
 		        window.close();
 		    }
 		</script>
+		<style>
+			.mainlist tr th{border-top:0px;}
+		</style>
 	</head>
 	<body class="popup">
 		<xml id="listviewheader" style="display:none;">
@@ -419,11 +421,11 @@
 			</ul>
 		</div>
 		<table>
-			<tr>
+			<tr style="height:33px">
 			    <td style="padding-right:5px">
 			    	<c:if test="${type != 'Proxy'}">
 					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:115px" maxLength="50">
-					    <a class="imgbtn" style="vertical-align:bottom"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
+					    <a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
 			    	</c:if>
 			    </td>
 			    <td>
@@ -440,18 +442,18 @@
 				            <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
 				        </select>
 				        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px" maxLength="50">
-				        <a class="imgbtn" style="vertical-align:bottom"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
-			    	</c:if> 
+				        <a class="imgbtn"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
+			    	</c:if>			    	
 			    </td>
-		  	</tr>		  
+		  	</tr>
 		  	<tr>
-			    <td style="padding-right:5px">&nbsp;<div class="box" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:235px; HEIGHT:342px;" id="TreeView" ></div></td>
-			    <td class="listview" style="border-top:0px">
-			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 385px; HEIGHT: 342px; BACKGROUND-COLOR: white;margin-top:-2px"></div>
+			    <td style="padding-right:5px"><div class="box" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:235px; HEIGHT:340px;" id="TreeView" ></div></td>
+			    <td class="listview">
+			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 385px; HEIGHT: 340px; BACKGROUND-COLOR: white"></div>
 				</td>
 		  	</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnposition" style="margin-top:15px">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>
 		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezPersonal.t13'/></span></a>
 		</div>

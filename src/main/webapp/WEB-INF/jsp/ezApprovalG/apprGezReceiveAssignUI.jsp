@@ -150,6 +150,7 @@
 	        }
 	    }
 	    function setReceiveAssign(pCurSelRow) {
+	    	
 	        try {
 	        	var result = "";
 	        	

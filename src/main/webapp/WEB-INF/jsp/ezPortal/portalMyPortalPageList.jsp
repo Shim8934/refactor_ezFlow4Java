@@ -35,10 +35,10 @@
 	            g_UID = pUID;
             	g_UseFlag = pUseFG;
             	if (g_SelectedObj == null) {
-	                pObj.style.backgroundColor = "#ECF3BA";
+	                pObj.style.backgroundColor = "rgb(233, 241, 244)";
     	            g_SelectedObj = pObj;
         	    } else {
-                	pObj.style.backgroundColor = "#ECF3BA";
+                	pObj.style.backgroundColor = "rgb(233, 241, 244)";
 
                 	if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
                 	g_SelectedObj = pObj;

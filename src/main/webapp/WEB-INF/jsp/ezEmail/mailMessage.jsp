@@ -9,7 +9,7 @@
 			function window_onload() {
 				var ua = navigator.userAgent;
 				
-				if (ua.indexOf("Chrome") > 0) {
+				if (ua.indexOf("Chrome") != -1) {
 					window.resizeTo(380, 177);
 				} else {
 					window.resizeTo(380, 150);					

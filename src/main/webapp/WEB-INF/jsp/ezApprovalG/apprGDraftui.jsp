@@ -1205,11 +1205,18 @@
 		                var savexmlhttp = createXMLHttpRequest();
 
 		                if (ret[1] != false) {
-		                    savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-		                    savexmlhttp.send(ret[1]);
-		
-		                    var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+		                	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/aprLineSave.do",
+	                    		data : {
+	                    				ret    : ret[1]
+	                    				},
+	                    		success : function(result){
+	                    			
+	                    		}
+	                    	});
 		
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
@@ -1219,10 +1226,18 @@
 		                savexmlhttp = createXMLHttpRequest();
 		
 		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
-		                    savexmlhttp = createXMLHttpRequest();
-		                    savexmlhttp.open("Post", "/ezApprovalG/aprDeptSave.do", false);
-		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
-		                    savexmlhttp.send(ret[2]);
+		                	$.ajax({
+	                    		type : "POST",
+	                    		dataType : "text",
+	                    		async : false,
+	                    		url : "/ezApprovalG/aprDeptSave.do",
+	                    		data : {
+	                    				aprDeptInfo : ret[2]
+	                    				},
+	                    		success : function(result){
+	                    			
+	                    		}
+	                    	});
 		
 		                    if (approvalFlag == "G") {
 			                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */

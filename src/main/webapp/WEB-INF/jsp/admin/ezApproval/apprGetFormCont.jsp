@@ -44,7 +44,7 @@
 	            var pFormKind;
 	
 	            document.getElementById('divlvtForm').hotTrackColor = "#F7FAE0";
-	            document.getElementById('divlvtForm').selectColor = "#ECF3BA";
+	            document.getElementById('divlvtForm').selectColor = "rgb(233, 241, 244)";
 	            pDeptID = "${userInfo.deptID}";
 	                          
 	            try {

@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .popuplist td, .txt, .imgbtn{
 	font-size:12px;
 	font-family: 'Gulim', 'arial', 'verdana';
@@ -120,6 +120,7 @@ form{display:inline;margin:0}
 }
 .btnposition{
 	margin: 0px;
+	margin-top: 10px;
 	background: none;
 	border: none;
 	padding:5px 0px 0px 0px;
@@ -1260,6 +1261,9 @@ form{display:inline;margin:0}
 	line-height:17px;
 }
 
+.popup_noti_btnarea .btnposition {
+	margin:0px;
+}
 
 .popup_noti_btnarea {
 	position:relative; 

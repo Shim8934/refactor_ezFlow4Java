@@ -187,6 +187,7 @@ function RegisterCabinet() {
 
     var rtnXml = xmlhttp.responseXML;
     if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "FALSE") {
+    	alert(300);
         alert(strLang649);
         return false;
     }

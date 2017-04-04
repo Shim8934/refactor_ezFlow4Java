@@ -1,4 +1,4 @@
-﻿var sStartDate, sEndDate;
+﻿﻿var sStartDate, sEndDate;
 var DefaultView = 1;
 var sDate = new Date();
 
@@ -273,7 +273,7 @@ function DateView_onMouseClick(event) {
     if (typeCal == 0) { //월보기
     }
     else if (typeCal == 1) {
-        document.getElementById(GetAttribute(event.parentNode.parentNode,"id")).style.backgroundColor = "#ECF3BA";
+        document.getElementById(GetAttribute(event.parentNode.parentNode,"id")).style.backgroundColor = "rgb(233, 241, 244)";
         g_selTRID = GetAttribute(event.parentNode.parentNode,"id");
         g_selTDID = GetAttribute(event,"id");
 
@@ -282,7 +282,7 @@ function DateView_onMouseClick(event) {
     }
     else if (typeCal == 2) { //일보기
 
-        document.getElementById(GetAttribute(event,"id")).style.backgroundColor = "#ECF3BA";
+        document.getElementById(GetAttribute(event,"id")).style.backgroundColor = "rgb(233, 241, 244)";
         g_selTRID = GetAttribute(event.parentNode.parentNode,"id");
         g_selTDID = GetAttribute(event,"id");
         sDate = new Date(GetAttribute(event,"id").substring(7, 11), parseInt(GetAttribute(event,"id").substring(12, 14), 10) - 1, parseInt(GetAttribute(event,"id").substring(15, 17), 10));
