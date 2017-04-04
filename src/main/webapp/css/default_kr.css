@@ -1261,6 +1261,9 @@ form{display:inline;margin:0}
 	line-height:17px;
 }
 
+.popup_noti_btnarea .btnposition {
+	margin:0px;
+}
 
 .popup_noti_btnarea {
 	position:relative; 
