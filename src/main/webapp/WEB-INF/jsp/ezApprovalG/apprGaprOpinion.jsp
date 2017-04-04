@@ -52,6 +52,8 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
+		    var junGyulFlag = "${junGyulFlag}";
+		    
 		    window.onload = function () {
 		        try {
 		            var ua = navigator.userAgent;

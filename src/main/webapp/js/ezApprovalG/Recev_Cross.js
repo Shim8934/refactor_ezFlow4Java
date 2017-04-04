@@ -110,9 +110,13 @@ function GetDraftAprLineInfo(ret)
 	    var KyljeaJobtitle      = getNodeText(GetChildNodes(objNodes[i])[2]);
 	    var ReasonDoNotApprov   = getNodeText(GetChildNodes(objNodes[i])[12]);
 	    
-	    if (KyljeaType == "003") {
-   			continue;
-   		}
+	    if (junGyulFlag == "1") {
+			//아무것도 안함
+		} else if (junGyulFlag == "4") {
+			if (KyljeaType == "003") {
+				continue;
+			}
+		}
 
 	    OrderType[KyljeaOrder] = KyljeaType;
 	     
