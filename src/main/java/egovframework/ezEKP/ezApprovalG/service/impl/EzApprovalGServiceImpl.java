@@ -1628,46 +1628,33 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String setUserFormInfo(String formID, String userID, String companyID, int tenantID){
-		String rtnVal = "";
+	public String setUserFormInfo(String formID, String userID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_FORMID", formID);
 		map.put("v_USERID", userID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		try {
-			String setUserFormYN = ezApprovalGDAO.setUserFormInfoYN(map);
-			if(setUserFormYN == null) {
-				ezApprovalGDAO.setUserFormInfo(map);
-			}
-			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
+		String setUserFormYN = ezApprovalGDAO.setUserFormInfoYN(map);
+		
+		if(setUserFormYN == null) {
+			ezApprovalGDAO.setUserFormInfo(map);
 		}
-		return rtnVal;
+			
+		return "TRUE";
 	}
 
 	@Override
-	public String delUserFormInfo(String formID, String userID, String companyID, int tenantID){
-		String rtnVal = "";
+	public String delUserFormInfo(String formID, String userID, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_FORMID", formID);
 		map.put("v_USERID", userID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		try {
-			ezApprovalGDAO.delUserFormInfo(map);
-			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
-		return rtnVal;
+		ezApprovalGDAO.delUserFormInfo(map);
+		
+		return "TRUE";
 	}
 
 	@Override

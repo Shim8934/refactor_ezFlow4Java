@@ -655,10 +655,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/setFormUserInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String setFormUserInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String para, LoginVO userInfo) throws Exception{
+	public String setFormUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		Document doc = commonUtil.convertStringToDocument(para);
-		String formID = doc.getElementsByTagName("PARA").item(0).getTextContent();
+		String formID = request.getParameter("tempFormID");
 		String result = ezApprovalGService.setUserFormInfo(formID.trim(), userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
@@ -669,10 +668,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/delFormUserInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String delFormUserInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String para, LoginVO userInfo) throws Exception{
+	public String delFormUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		Document doc = commonUtil.convertStringToDocument(para);
-		String formID = doc.getElementsByTagName("PARA").item(0).getTextContent();
+		String formID = request.getParameter("tempFormID");
 		String result = ezApprovalGService.delUserFormInfo(formID.trim(), userInfo.getId(), userInfo.getCompanyID(),userInfo.getTenantId());
 		
 		return result;
@@ -692,11 +690,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/draftui.do")
 	public String draftui(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-        int tenantID = userInfo.getTenantId();        
-        
-        logger.debug("tenantID=" + tenantID);       
-		
+		int tenantID = userInfo.getTenantId();        
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String susinAdmin = "";
 		String formURL = request.getParameter("formURL");
@@ -708,7 +702,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		
 		String docSN = "";
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -728,6 +721,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = isTmpDoc;
 		
 		File file = new File (dirPath);
+		
 		if(!file.exists()) {
 			file.mkdirs();
 		}
@@ -763,6 +757,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 				}
 			}
+			
 			if (checkPermission) {
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId());
 				
