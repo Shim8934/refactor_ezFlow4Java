@@ -165,7 +165,7 @@
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<c:choose>
-			<c:when test="${checkBroswer == true}">
+			<c:when test="${checkBrowser == true}">
 				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
 			</c:when>
 			<c:otherwise>
