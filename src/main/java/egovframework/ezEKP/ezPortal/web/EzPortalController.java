@@ -2513,23 +2513,23 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String pSearchString = "";
 		String portalGubun = "";
-		//String parentPageID = "";
-		//String pageID = "";
+		String parentPageID = "";
+		String pageID = "";
 		String gubunFlag = "";
-		//String newMyPortalPage = "";
-		//String newMyPortalPageList = "";
+		String newMyPortalPage = "";
+		String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
 		int recordCnt = 0;
 		int intPage = 1;
 		int totalPage = 1;
 		
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
-			//parentPageID = req.getParameter("parentPageID");
+			parentPageID = req.getParameter("parentPageID");
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
-				//parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId());
+				parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId());
 			} else {
-				//parentPageID = "Top";
+				parentPageID = "Top";
 			}
 		}
 		
@@ -2539,10 +2539,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (myPortalList.size() > 0) {
 			gubunFlag = "1c";
-			//for (PortalMyPortalListVO myPortal : myPortalList) {
-				//parentPageID = myPortal.getuID_();
-				//newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "", userInfo.getTenantId());
-			//}
+			for (PortalMyPortalListVO myPortal : myPortalList) {
+				parentPageID = myPortal.getuID_();
+				newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "", userInfo.getTenantId());
+			}
 		}
 		
 		if (myPortalList.size() > 0) {
@@ -2566,7 +2566,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			sb.append("</DATA>");
-			//newMyPortalPageList = sb.toString();
+			newMyPortalPageList = sb.toString();
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {

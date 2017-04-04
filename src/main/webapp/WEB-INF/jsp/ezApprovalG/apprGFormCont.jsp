@@ -240,33 +240,46 @@
 		        treeView.LoadFromID("FormTreeView");
 		        var oArrRow = listView.GetSelectedRows();
 		        var selRow = oArrRow[0];
+		        
 		        if (selRow) {
 		            var tempFormID = selRow.getAttribute("DATA1");
 		            var selnode = treeView.GetSelectNode();
+		            
 		            if (selnode) {
 		                var pInformationText = "";
-		                var xmlhttp = createXMLHttpRequest();
-		                if (type == "2")
-		                    xmlhttp.open("POST", "/ezApprovalG/delFormUserInfo.do", false);
-		                else
-		                    xmlhttp.open("POST", "/ezApprovalG/setFormUserInfo.do", false);
-		                xmlhttp.send("<RESULT><PARA>" + tempFormID + "</PARA></RESULT>");
-		                if (getNodeText(GetChildNodes(xmlhttp.responseXML)[0]) == "TRUE") {
-		                    if (type == "2") {
-		                        OpenAlertUI("<spring:message code='ezApprovalG.t804'/>");
-		                        Get_Favoritelist();
-		                    }
-		                    else {
-		                        OpenAlertUI(strLang1003);
-		                        Get_Favoritelist();
-		                    }
+		                
+		                var url = "";
+		                if (type == "2") {
+		                	url = "/ezApprovalG/delFormUserInfo.do";
+		                } else {
+		                	url = "/ezApprovalG/setFormUserInfo.do";
 		                }
-		                else {
-		                    OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
-		                }
+		                
+		                $.ajax({
+		                	type : "POST",
+				    		dataType : "text",
+				    		async : false,
+				    		url : url,
+				    		data : {
+				    				tempFormID : tempFormID
+				    				},
+				    		success : function(result){
+				    			if (result == 'TRUE') {
+				    				if (type == "2") {
+				                        OpenAlertUI("<spring:message code='ezApprovalG.t804'/>");
+				                        Get_Favoritelist();
+				                    } else {
+				                        OpenAlertUI(strLang1003);
+				                        Get_Favoritelist();
+				                    }
+				    			}
+				    		},
+				    		error : function(jqXHR, textStatus, errorThrown) {
+				    			OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
+				    		}
+		                });
 		            }
-		        }
-		        else {
+		        } else {
 		            OpenAlertUI("<spring:message code='ezApprovalG.t1536'/>");
 		        }
 		    }
