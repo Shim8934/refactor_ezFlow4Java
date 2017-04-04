@@ -892,10 +892,10 @@
                         <td style="height:770px; vertical-align:top">
                         	<c:choose>
                         		<c:when test="${editorType == 'HWP'}">
-	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/hwpEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 100%; width: 1030px; overflow: auto; border:none"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/hwpEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/selectEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 100%; width: 800px; overflow: auto; border:none;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/selectEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>

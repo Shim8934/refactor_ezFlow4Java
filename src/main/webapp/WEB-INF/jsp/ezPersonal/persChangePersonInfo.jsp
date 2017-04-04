@@ -394,11 +394,9 @@
        			<%-- <a runat ="server" class="imgbtn" name="ButtonChange" ID="ButtonChange" onserverclick="ButtonChange_ServerClick"><span><spring:message code='ezPersonal.t34'/></span></a> --%>
        			<a class ="imgbtn"  onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
        			<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
-    		</div>
-    	<br/>
-    	<br/>
-    		<div class="subtxt"><spring:message code='ezPersonal.t185'/></div>
-    		<div style="margin-top:5px">▒ <spring:message code='ezPersonal.t186'/></div>    		
+    		</div>    		
+    		<h2><spring:message code='ezPersonal.t185'/></h2>
+    		<div>▒ <spring:message code='ezPersonal.t186'/></div>    		
 			<div style="margin-top:3px">▒ <spring:message code='main.jjh04'/></div>
     		<table class="content" style="margin-top:5px">
         		<!-- 표준모듈 (2007.02.21) 수정 -->
