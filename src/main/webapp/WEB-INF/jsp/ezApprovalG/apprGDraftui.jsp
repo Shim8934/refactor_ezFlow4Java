@@ -1202,6 +1202,7 @@
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
+		            	
 		                var savexmlhttp = createXMLHttpRequest();
 
 		                if (ret[1] != false) {
@@ -1217,14 +1218,14 @@
 	                    			
 	                    		}
 	                    	});
-		
+
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
 		                    GetDraftAprLineInfo(ret);
 		                }
 		                savexmlhttp = null;
 		                savexmlhttp = createXMLHttpRequest();
-		                
+
 		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
 		                	$.ajax({
 	                    		type : "POST",
@@ -1238,7 +1239,7 @@
 	                    			
 	                    		}
 	                    	});
-		                	
+
 		                    if (approvalFlag == "G") {
 			                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */
 			                    SummaryOuterReceiverList = ret[15];
