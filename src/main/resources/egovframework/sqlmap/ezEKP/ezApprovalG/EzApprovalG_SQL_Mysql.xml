@@ -8041,7 +8041,6 @@
 	    	TENANT_ID = #v_TENANTID#
 	    AND
 	    	COMPANYID = #companyID#
-	    FOR UPDATE
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCabinetCode2Name" parameterClass="Map" resultClass="String"> -->
