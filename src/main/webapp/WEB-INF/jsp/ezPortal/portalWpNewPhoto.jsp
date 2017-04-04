@@ -17,13 +17,6 @@
 		 			<c:choose>
 		 				<c:when test="${pExist == 'true'}">
 		 					<ul id="photoul">
-                				<!-- <li class="btn_area">
-                    				<img src="/images/kr/main/btn_prev2.gif" width="10" height="17" onclick="Pagenationimage('PREV')">
-                				</li>
-            			
-                				<li class="btn_next">
-	                    			<img src="/images/kr/main/btn_next2.gif" width="10" height="17" onclick="Pagenationimage('NEXT')">
-    	            			</li> -->
         	    			</ul>
 		 				</c:when>
 		 				<c:otherwise>

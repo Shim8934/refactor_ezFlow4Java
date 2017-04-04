@@ -13,72 +13,71 @@
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript">
-		var g_SelectedObj = null;
-		var g_UID = "";
-		var g_GubunFlag = "";
-		var g_UseFlag = "${useStartPage}";
+			var g_SelectedObj = null;
+			var g_UID = "";
+			var g_GubunFlag = "";
+			var g_UseFlag = "${useStartPage}";
+		
+	        function setValue(pUID,pObj)
+			{
+				g_UID = pUID;
+				
 	
-        function setValue(pUID,pObj)
-		{
-			g_UID = pUID;
-			
-
-			// 선택된 개체가 없는 경우
-			if( g_SelectedObj == null )
-			{
-				pObj.style.backgroundColor = "#ECF3BA";
-				g_SelectedObj = pObj;
-			}
-			else
-			{
-				pObj.style.backgroundColor = "#ECF3BA";
-				
-				if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
-				g_SelectedObj = pObj;
-			}
-		}
-		
-
-		
-		function entercheck()
-		{
-			if (window.event.keyCode == 13)
-				btnSearch_onClick();
-		}
-		
-		
-		
-		// 해당 페이지를 사용중으로 설정
-		// 마이포탈 페이지는 1개만 사용가능
-		function usepage()
-		{
-		    if (g_UID == "")
-			{
-				alert("<spring:message code='ezPortal.t240'/>");
-				return;
-			}
-			
-			if (g_UseFlag == g_UID)
-			{
-				alert("<spring:message code='ezPortal.t241'/>");
-				return;
-			}
-			
-			if (confirm("<spring:message code='ezPortal.t242'/>"))
-			{
-			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezPortal/useMyStartPage.do?uID=" + g_UID + "&oldUID=" + g_UseFlag , false);
-				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-				xmlhttp.send();
-				if (xmlhttp.responseText == "OK")
-					document.location.reload();
+				// 선택된 개체가 없는 경우
+				if( g_SelectedObj == null )
+				{
+					pObj.style.backgroundColor = "#ECF3BA";
+					g_SelectedObj = pObj;
+				}
 				else
-					alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
-				
-				xmlhttp = null;
+				{
+					pObj.style.backgroundColor = "#ECF3BA";
+					
+					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
+					g_SelectedObj = pObj;
+				}
 			}
-		}
-		
+			
+	
+			
+			function entercheck()
+			{
+				if (window.event.keyCode == 13)
+					btnSearch_onClick();
+			}
+			
+			
+			
+			// 해당 페이지를 사용중으로 설정
+			// 마이포탈 페이지는 1개만 사용가능
+			function usepage()
+			{
+			    if (g_UID == "")
+				{
+					alert("<spring:message code='ezPortal.t240'/>");
+					return;
+				}
+				
+				if (g_UseFlag == g_UID)
+				{
+					alert("<spring:message code='ezPortal.t241'/>");
+					return;
+				}
+				
+				if (confirm("<spring:message code='ezPortal.t242'/>"))
+				{
+				    var xmlhttp = createXMLHttpRequest();
+					xmlhttp.open("POST", "/ezPortal/useMyStartPage.do?uID=" + g_UID + "&oldUID=" + g_UseFlag , false);
+					xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+					xmlhttp.send();
+					if (xmlhttp.responseText == "OK")
+						document.location.reload();
+					else
+						alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
+					
+					xmlhttp = null;
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -116,24 +115,6 @@
 			</tr>
 		</table>		
 		<table class="mainlist" style="width:100%">
-			<%-- <% for (int i=0; i<xmldom_1.GetElementsByTagName("UID_").Count; i++) {%>
-            	<%if(uid != xmldom_1.GetElementsByTagName("UID_").Item(i).InnerText){ %>
-                	<%if(xmldom_1.GetElementsByTagName("VIEW_RIGHT").Item(i).InnerText != "1"){ %>   
-	                    <tr style="cursor:pointer" onClick="setValue('<%= xmldom_1.GetElementsByTagName("UID_").Item(i).InnerText %>', this)">
-    		                <td width="120"></td>
-					        <td width=""><% Response.Write(xmldom_1.GetElementsByTagName("DISPLAYNAME").Item(i).InnerText); %></td>
-					        <td width="150"><% 	if (xmldom_1.GetElementsByTagName("UID_").Item(i).InnerText.Trim() == Use_StartPage)
-							Response.Write(RM.GetString("t259"));
-						else
-                        	Response.Write("");			%>
-			        	</td>
-			        	<td width="150"></td>	
-		            </tr>    
-                	<%}%>
-                	<%  uid = xmldom_1.GetElementsByTagName("UID_").Item(i).InnerText; %>
-            	<%} %>
-			<% } xmldom = null; %> --%>
-			
 			<c:forEach var="item"  items="${list}">
 				<c:if test="${not empty item.uID_}">
 					<c:if test="${item.viewRight ne 1}">
@@ -154,7 +135,6 @@
 					</c:if>
 				</c:if>
 			</c:forEach>
-			
 		</table>
 		<br><br>
 		<script type="text/javascript">
