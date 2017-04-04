@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style> 
 			P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm } 
 		</style>
@@ -201,28 +202,40 @@
 		    }
 		    function ShowHiddenTo(obj)
 		    {
+		    	var currHeight = $(".content tbody tr:nth-child(2)").outerHeight();
+		    	var heightForChange = "";
 		        if(MsgToGotHidden.style.display=="none")
 		        {
-		            MsgToGotHidden.style.display = "";
+		        	MsgToGotHidden.style.display = "";
 		            obj.src ="/images/cllps.gif";
+		            heightForChange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		        else
 		        {
-		            MsgToGotHidden.style.display = "none";
+		        	MsgToGotHidden.style.display = "none";
 		            obj.src ="/images/expnd.gif";
+		            heightForChange = $(".content tbody tr:nth-child(2)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		    }
 		    function ShowHiddenCc(obj)
 		    {
+		    	var currHeight = $(".content tbody tr:nth-child(3)").outerHeight();
+		    	var heightForChange = "";
 		        if(MsgCCGotHidden.style.display=="none")
 		        {
 		            MsgCCGotHidden.style.display = "";
 		            obj.src ="/images/cllps.gif";
+		            heightForChange = $(".content tbody tr:nth-child(3)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		        else
 		        {
 		            MsgCCGotHidden.style.display = "none";    
 		            obj.src ="/images/expnd.gif";
+		            heightForChange = $(".content tbody tr:nth-child(3)").outerHeight()-currHeight;
+		            $("#message").outerHeight($("#message").outerHeight() - heightForChange );
 		        }
 		    }
 		    function mtg_onClick(mtgid) {

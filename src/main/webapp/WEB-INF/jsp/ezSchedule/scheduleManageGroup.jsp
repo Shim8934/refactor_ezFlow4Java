@@ -246,11 +246,11 @@
 	</head>
 	<body class="mainbody">		
 	    <h1><spring:message code='ezSchedule.t252' /></h1><br /><br />
-	    <span class="txt">&nbsp;* <spring:message code='ezSchedule.t00005' /></span><br />
-	    <span class="txt">&nbsp;* <spring:message code='ezSchedule.t00006' /></span><br />
-	    <span class="txt">&nbsp;* <spring:message code='ezSchedule.t00007' /></span><br />
-	    <span class="txt">&nbsp;* <spring:message code='ezSchedule.t00008' /></span><br /><br /><br />
-	    <div id="mainmenu">
+	    <div class="txt">▒ <spring:message code='ezSchedule.t00005' /></div>
+	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00006' /></div>
+	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00007' /></div>
+	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00008' /></div>
+	    <div id="mainmenu" style="margin-top:20px">
 	        <ul>
 	            <li><span onClick="add_group()"><spring:message code='ezSchedule.t191' /></span></li>
 	            <li><span onClick="show_groupinfo()"><spring:message code='ezSchedule.t00001' /></span></li>
@@ -260,7 +260,7 @@
 	    <table class="mainlist" style="width:70%;">
 	        <tr>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="GroupList" style ="BORDER:0;WIDTH:100%; height:400px; overflow-y: auto; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;"></div>
+	                <div id="GroupList" style ="BORDER:0;WIDTH:100%; height:400px; overflow-y: auto; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;"></div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
 	                <div id="Group_View" style="padding-top:5px; padding-left:5px; width: 100%; height: 395px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;">

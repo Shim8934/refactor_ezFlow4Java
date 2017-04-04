@@ -378,7 +378,7 @@
 	                    <select name="setAnonymity" id="set_anonymity" onChange="return set_anonymity_onchange()"> 
 	                      <option value="0" selected="selected"><spring:message code="ezQuestion.t238" /></option> 
 	                      <option value="1"><spring:message code="ezQuestion.t239" /></option> 
-	                    </select>
+	                    </select>&nbsp;&nbsp;&nbsp;
 	                    <div style="display:none">
 	                        <!-- hidden타입 사용시 크롬등에서 history.back()시 이전값을 캐쉬하지 않아 text타입으로 변경 -->
 	                        <input type="text" name="hidAnonymity" id="hidanonymity" value="0" style="display:none"> 
@@ -398,15 +398,13 @@
 	                    <select name="setMultiResponse" id="set_MultiResponse" onChange="return set_MultiResponse_onchange()"> 
 	                      <option value="1"><spring:message code="ezQuestion.t241" /></option> 
 	                      <option value="0" selected="selected"><spring:message code="ezQuestion.t242" /></option> 
-	                    </select> 
-	                    
+	                    </select>	                    
 	                    &nbsp;&nbsp;&nbsp;
 	                    <spring:message code="ezQuestion.t243" />
 	                    <select name="setOpenResult" id="set_openResult"  onChange="return set_openResult_onchange()"> 
 	                      <option value="1" selected="selected"><spring:message code="ezQuestion.t244" /></option> 
 	                      <option value="0"><spring:message code="ezQuestion.t245" /></option> 
-	                    </select> 
-	                    
+	                    </select>	                    
 	                    <select id="importance" name="importance" style="DISPLAY:none"> 
 	                      <option value="1"><spring:message code="ezQuestion.t246" /></option> 
 	                      <option value="2" selected="selected"><spring:message code="ezQuestion.t247" /></option> 
