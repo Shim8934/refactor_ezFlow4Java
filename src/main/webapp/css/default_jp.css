@@ -325,7 +325,8 @@ form{display:inline;margin:0}
 	padding-right:5px;
 	font:12px Meiryo UI ;
 	letter-spacing:-1;
-	padding-top:7px;
+	padding-top:5px;
+	color:black;
 }
 
 #mainmenu li span img, #mainmenu li span.off img{
