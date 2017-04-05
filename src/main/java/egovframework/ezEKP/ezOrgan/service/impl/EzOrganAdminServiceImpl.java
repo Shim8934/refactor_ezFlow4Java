@@ -593,13 +593,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_DISPLAYNAME2", vo.getDisplayName2());
 		map.put("v_MAIL", vo.getMail());
 		map.put("v_PARENTCN", vo.getParentCn());
-		map.put("v_EXTATTR4", vo.getExtensionAttribute4());
-		map.put("v_EXTATTR5", vo.getExtensionAttribute5());
-		map.put("v_EXTATTR6", vo.getExtensionAttribute6());
-		map.put("v_EXTATTR8", vo.getExtensionAttribute8());
-		map.put("v_EXTATTR9", vo.getExtensionAttribute9());
-		map.put("v_EXTATTR10", vo.getExtensionAttribute10());
-		map.put("v_EXTATTR15", vo.getExtensionAttribute15());		
+		map.put("v_EXTATTR4", vo.getExtensionAttribute4() != null ? vo.getExtensionAttribute4() : "");
+		map.put("v_EXTATTR5", vo.getExtensionAttribute5() != null ? vo.getExtensionAttribute5() : "");
+		map.put("v_EXTATTR6", vo.getExtensionAttribute6() != null ? vo.getExtensionAttribute6() : "");
+		map.put("v_EXTATTR8", vo.getExtensionAttribute8() != null ? vo.getExtensionAttribute8() : "");
+		map.put("v_EXTATTR9", vo.getExtensionAttribute9() != null ? vo.getExtensionAttribute9() : "");
+		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
+		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");		
 		map.put("v_LDAPPATH", "");
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -637,31 +637,31 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_DISPLAYNAME", vo.getDisplayName());
 		map.put("v_DISPLAYNAME2", vo.getDisplayName2());
 		map.put("v_MAIL", vo.getMail());
-		map.put("v_MAILNICKNAME", vo.getMailNickName());
+		map.put("v_MAILNICKNAME", vo.getMailNickName() != null ? vo.getMailNickName() : "");
 		map.put("v_UPNNAME", vo.getUpnName());
 		map.put("v_PARENTCN", vo.getParentCn());
-		map.put("v_TITLE", vo.getTitle());
-		map.put("v_TITLE2", vo.getTitle2());
-		map.put("v_TELEPHONE", vo.getTelephoneNumber());
-		map.put("v_HOMEPHONE", vo.getHomePhone());
-		map.put("v_FAX", vo.getFacsimileTelephoneNumber());
-		map.put("v_MOBILE", vo.getMobile());
-		map.put("v_POSTALCODE", vo.getPostalCode());
-		map.put("v_ADDRESS", vo.getStreetAddress());
+		map.put("v_TITLE", vo.getTitle() != null ? vo.getTitle() : "");
+		map.put("v_TITLE2", vo.getTitle2() != null ? vo.getTitle2() : "");
+		map.put("v_TELEPHONE", vo.getTelephoneNumber() != null ? vo.getTelephoneNumber() : "");
+		map.put("v_HOMEPHONE", vo.getHomePhone() != null ? vo.getHomePhone() : "");
+		map.put("v_FAX", vo.getFacsimileTelephoneNumber() != null ? vo.getFacsimileTelephoneNumber() : "");
+		map.put("v_MOBILE", vo.getMobile() != null ? vo.getMobile() : "");
+		map.put("v_POSTALCODE", vo.getPostalCode() != null ? vo.getPostalCode() : "");
+		map.put("v_ADDRESS", vo.getStreetAddress() != null ? vo.getStreetAddress() : "");
 		if (vo.getExtensionAttribute1() == null || vo.getExtensionAttribute1().equals("")) {
 			map.put("v_EXTATTR1", "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;");
 		} else {
 			map.put("v_EXTATTR1", vo.getExtensionAttribute1());
 			
 		}
-		map.put("v_EXTATTR6", vo.getExtensionAttribute6());
-		map.put("v_EXTATTR10", vo.getExtensionAttribute10());
-		map.put("v_EXTATTR102", vo.getExtensionAttribute102());
-		map.put("v_EXTATTR14", vo.getExtensionAttribute14());
-		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+		map.put("v_EXTATTR6", vo.getExtensionAttribute6() != null ? vo.getExtensionAttribute6() : "");
+		map.put("v_EXTATTR10", vo.getExtensionAttribute10() != null ? vo.getExtensionAttribute10() : "");
+		map.put("v_EXTATTR102", vo.getExtensionAttribute102() != null ? vo.getExtensionAttribute102() : "");
+		map.put("v_EXTATTR14", vo.getExtensionAttribute14() != null ? vo.getExtensionAttribute14() : "");
+		map.put("v_EXTATTR15", vo.getExtensionAttribute15() != null ? vo.getExtensionAttribute15() : "");
 		map.put("v_LDAPPATH", "");
-		map.put("v_BIRTH", vo.getBirth());		
-		map.put("v_BIRTHTYPE", vo.getBirthType());
+		map.put("v_BIRTH", vo.getBirth() != null ? vo.getBirth() : "");		
+		map.put("v_BIRTHTYPE", vo.getBirthType() != null ? vo.getBirthType() : "");
 		map.put("v_PASS", vo.getPassword());
 				
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
