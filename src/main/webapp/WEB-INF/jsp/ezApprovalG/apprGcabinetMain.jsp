@@ -779,7 +779,9 @@
 		    				},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    		}, error:funtion () {
+		    			return "FALSE";
+		    		}  			
 		    	});
 		        
 		        var dataNodes = GetChildNodes(result);

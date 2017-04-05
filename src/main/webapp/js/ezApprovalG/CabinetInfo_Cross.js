@@ -172,14 +172,15 @@ function EndCabProduce(pCabClassNo, pExpYear, pFlag) {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+		}, error: function() {
+			return false;
+		}			
 	});
     
     var dataNodes = GetChildNodes(loadXMLString(result));
     var rtn = getNodeText(dataNodes[0]);
 
-    if (rtn != "TRUE")
-        return false;
-    else
-        return true;
+    if (rtn == "TRUE") {
+    	return true;
+    }
 }

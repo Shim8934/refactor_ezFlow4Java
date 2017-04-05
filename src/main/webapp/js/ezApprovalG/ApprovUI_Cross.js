@@ -2822,15 +2822,16 @@ function UpdateDocHistory(pHtml) {
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
-        var DataNodes = GetChildNodes(xmlhttp.responseXML);
-        if (getNodeText(DataNodes[0]) == "TRUE") {
+        
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+          	 if (xmlhttp.statusText == "OK") {
+          		
+          	 } else {
+          		 var pAlertContent = strLang89;
+                 OpenAlertUI(pAlertContent);
+          	 }
         }
-        else {
-            var pAlertContent = strLang89;
-            OpenAlertUI(pAlertContent);
-        }
-    }
-    else {
+    } else {
         var pAlertContent = strLang90;
         OpenAlertUI(pAlertContent);
     }

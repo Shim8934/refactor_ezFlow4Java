@@ -452,6 +452,9 @@
 			    		},
 			    		success: function(xml){
 			    			result = loadXMLString(xml);
+			    		}, error: function () {
+			    			 var pAlertContent = "<spring:message code='ezApprovalG.t258'/>";
+				                OpenAlertUI(pAlertContent);
 			    		}        			
 			    	});
 		    		
@@ -460,10 +463,6 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
 		                OpenAlertUI(pAlertContent);
 		                setBtnDisable();
-		            }
-		            else {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t258'/>";
-		                OpenAlertUI(pAlertContent);
 		            }
 		        }
 		    }
@@ -498,7 +497,9 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    		} , error: function() {
+		    			return "FALSE";
+		    		}     			
 		    	});
 		    	 
 		        var ResultXML = result;

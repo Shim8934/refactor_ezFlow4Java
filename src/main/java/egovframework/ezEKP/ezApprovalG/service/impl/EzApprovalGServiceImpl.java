@@ -519,7 +519,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String result = "";
 		
-		try {
 			String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 			String orgDocID = xmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent();
 			String docTitle = xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent();
@@ -644,14 +643,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		   	ezApprovalGDAO.insertDosendAprReceiptProcessInfo(map);
 		   	
 		   	result = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			result = "<RESULT>FALSE</RESULT>";
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-		}
 		
 		logger.debug("doSendOfferS ended");
-		
 		return result;
 	}
 
@@ -1880,7 +1873,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 
-		try {
 		if (gongRamDocID == null || gongRamDocID.equals("") || gongRamDocID.equals("NONE")) {
 			gongRamDocID = getNewID(companyID, tenantID);
 			
@@ -1964,11 +1956,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertGongRamSaveExpAprLine(map);
 		}
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
 		
 		if (gongRamActivate(gongRamDocID, companyID, lang, tenantID)) {
 			rtnVal = "<RESULT>TRUE</RESULT>";
@@ -1987,7 +1974,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		String rtnVal = "";
 		
-		try {
 		if (gongRamDocID == null || gongRamDocID.equals("") || gongRamDocID.equals("NONE")) {
 			gongRamDocID = getNewID(companyID, tenantID);
 			
@@ -2070,12 +2056,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertGongRamAprLineInfo(map);
 			ezApprovalGDAO.insertGongRamExpAprLine(map);
 		}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
 		
 		if (gongRamActivate(gongRamDocID, companyID, lang, tenantID)) {
 			rtnVal = "<RESULT>TRUE</RESULT>";
@@ -2101,7 +2081,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		logger.debug("makeTmp2IngDocInfo Param : v_PUSERID =" + userID.trim() + "v_PDOCID = " + docID + "v_PSN = " + sn + "companyID =" + companyID + "v_TENANTID =" + tenantID);
 
-		try {
 			//수신정보
 			ezApprovalGDAO.aprMakeTmp2Ing(map);
 			//의견 정보
@@ -2121,11 +2100,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			rtnVal = "<RESULT>" + docID + "</RESULT>";
 			logger.debug("makeTmp2IngDocInfo Ended");
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
 		
 		return rtnVal;
 	}
@@ -4623,16 +4597,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime("yyyy"));
 		
-		try {
-			
-			ezApprovalGDAO.confirmClassify(map);
-			
-			return "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "<RESULT>FALSE</RESULT>";
-		}
+		ezApprovalGDAO.confirmClassify(map);
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override
@@ -4756,7 +4722,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_CabinetClassNo", cabClassNo);
 		
-		try {
 			if (flag.equals("0")) {
 				map.put("v_TerminateFlag", "1");
 				ezApprovalGDAO.updateEndCabCabinetClass(map);
@@ -4765,11 +4730,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.updateEndCabCabinetClass(map);
 	        }
 			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
 		
 		return rtnVal;
 	}
@@ -4820,14 +4780,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		try {
 			ezApprovalGDAO.updateReqDelayCabinetClass(map);
 			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
 		
 		return rtnVal;
 	}
@@ -4849,7 +4803,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 
-		try {
 			if (approvalFlag.equals("S")) {
 				ezApprovalGDAO.doSendOfferApprove1(map);
 				
@@ -4881,11 +4834,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.deleteTbExpAprLine(map);
 				ezApprovalGDAO.insertTbExpAprLine(map);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "<RESULT>FALSE</RESULT>";
-		}
 		
 		doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
 		
@@ -4897,18 +4845,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		} else {
 			if (!strSQL.toString().toUpperCase().equals("FALSE")) {
-				try {
 					map.put("v_DOCID", docID);
 					ezApprovalGDAO.updateProEndAprDocInfo(map);  
 					
 					map.put("v_DOCID", orgDocID);
 					ezApprovalGDAO.updateProEndAprDocInfo(map);	
 					rtn = true;
-				} catch (Exception e) {
-					e.printStackTrace();
-					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-					rtn = false;
-				}
 			} else {
 				rtn = false;
 			}
@@ -4921,13 +4863,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			
-			try {
 				ezApprovalGDAO.doSendOfferApprove2(map);
-			} catch (Exception e) {
-				e.printStackTrace();
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				return "<RESULT>FALSE</RESULT>";
-			}
 			chkDocDelete(docID, orgDocID, rtn, userID, deptID, dirPath, companyID, userInfo.getTenantId());
 			
 			return "<RESULT>FALSE</RESULT>";
@@ -4939,7 +4875,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("doSendOfferReject started");
 		String retValue = "";
 		int receivedSN = 1;
-		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("v_APRSTATE", staASBanSong);
@@ -4985,11 +4920,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRejectAprReceiptProcessInfo(map);
 			
 			retValue = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			retValue = "<RESULT>FALSE</RESULT>";
-		}
 		
 		logger.debug("doSendOfferReject ended");
 
@@ -20124,7 +20054,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantId);
 		
 		String rtnVal = "OK";
-		try {
 			int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
 			if(aprMemberSn > 0) {
 				if(aprMemberSn == 1) {
@@ -20136,13 +20065,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_APRMEMBERSN", aprMemberSn + 1);
 				ezApprovalGDAO.updateDoCallBack3(map);
 			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return rtnVal = "FALSE";
-		}
-		
 		return rtnVal;
 	}
 
@@ -20166,17 +20088,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERDEPTNAME", userDeptName);
 		map.put("v_USERDEPTNAME2", userDeptName2);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-		String rtn ="";
 		
-		try {
-			ezApprovalGDAO.insertHistoryDocInfo(map);
-			rtn = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtn = "<RESULT>FALSE</RESULT>";
-		}
-		return rtn;
+		ezApprovalGDAO.insertHistoryDocInfo(map);
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override

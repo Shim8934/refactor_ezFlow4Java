@@ -2162,6 +2162,9 @@ function doCancel(pDocID, tempListType) {
 		},
 		success: function(xml){
 			result = xml;
+		}, error: function () {
+			var pAlertContent = strLang898;
+	        OpenAlertUI(pAlertContent, "", "OPEN");
 		}
 	});
 	
@@ -2194,10 +2197,6 @@ function doCancel(pDocID, tempListType) {
     }
     else if (RtnVal == "ERR03") {
         var pAlertContent = strLang897;
-        OpenAlertUI(pAlertContent, "", "OPEN");
-    }
-    else {
-        var pAlertContent = strLang898;
         OpenAlertUI(pAlertContent, "", "OPEN");
     }
 }

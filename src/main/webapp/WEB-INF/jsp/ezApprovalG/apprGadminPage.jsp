@@ -492,15 +492,11 @@
 			},
 			success: function(xml){
 				result = loadXMLString(xml);
-			}        			
+			}, error: function() {
+				  OpenAlertUI("<spring:message code='ezApprovalG.t491'/>");
+			}
 		});
 		
-        var dataNodes = GetChildNodes(result);
-        var rtnTxt = getNodeText(dataNodes[0]);
-       
-        if (rtnTxt == "FALSE") {
-            OpenAlertUI("<spring:message code='ezApprovalG.t491'/>");
-    	}
 	}
 	function btnProdReportRecList_onclick() {
 	    DocList_Flag = "RECORD";

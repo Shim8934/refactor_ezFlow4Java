@@ -326,29 +326,35 @@
 	            createNodeAndInsertText(xmlpara, objNode, "SIMSAUSERDEPTNAME2", arr_userinfo[16]);
 	            xmlhttp.open("POST", "/ezApprovalG/sendOffer.do", false);
 	            xmlhttp.send(xmlpara);
-	            var dataNodes = GetChildNodes(loadXMLString(xmlhttp.responseText));
-	            if (getNodeText(dataNodes[0]) == "TRUE") {
-	                var rtnVal = SetContainer();
-	                if (rtnVal == "TRUE") {
-	                    var title = "";
-	                    var fields = message.GetFieldsList();
-	                    var field = message.GetListItem(fields, "doctitle");
-	                    if (field)
-	                        title = getNodeText(field);
-	                    var drafdate = GetDocInfoData("END", "STARTDATE");
-	                    SendMailToReceiveDept(title, arr_userinfo[2], drafdate, newDocID);
-	                    var pAlertContent = "<spring:message code='ezApproval.t147'/>";
-	                    OpenAlertUI(pAlertContent);
-	                    setBtnDisable();
-	                }
-	                else {
-	                    var pAlertContent = "<spring:message code='ezApproval.t160'/>";
-	                    OpenAlertUI(pAlertContent);
-	                }
-	            } else {
-	                var pAlertContent = "<spring:message code='ezApproval.t131'/>";
+	            
+	            if (xmlhttp != null && xmlhttp.readyState == 4) {
+	           	 if (xmlhttp.statusText == "OK") {
+	           		 var dataNodes = GetChildNodes(loadXMLString(xmlhttp.responseText));
+	 	            if (getNodeText(dataNodes[0]) == "TRUE") {
+	 	                var rtnVal = SetContainer();
+	 	                if (rtnVal == "TRUE") {
+	 	                    var title = "";
+	 	                    var fields = message.GetFieldsList();
+	 	                    var field = message.GetListItem(fields, "doctitle");
+	 	                    if (field)
+	 	                        title = getNodeText(field);
+	 	                    var drafdate = GetDocInfoData("END", "STARTDATE");
+	 	                    SendMailToReceiveDept(title, arr_userinfo[2], drafdate, newDocID);
+	 	                    var pAlertContent = "<spring:message code='ezApproval.t147'/>";
+	 	                    OpenAlertUI(pAlertContent);
+	 	                    setBtnDisable();
+	 	                }
+	 	                else {
+	 	                    var pAlertContent = "<spring:message code='ezApproval.t160'/>";
+	 	                    OpenAlertUI(pAlertContent);
+	 	                }
+	 	            }
+	           	 } else {
+	           		var pAlertContent = "<spring:message code='ezApproval.t131'/>";
 	                OpenAlertUI(pAlertContent);
-	            }
+	           	 }
+	           } 
+	          
 	        }
 	
 	        function setBtnDisable() {
@@ -416,6 +422,8 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
+		    		}, error: funtion () {
+		    			return "FALSE";
 		    		}
 	    		});
 	    		
