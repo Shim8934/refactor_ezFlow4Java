@@ -130,6 +130,7 @@
 		    var pPageType = "APPROVUI";
 		    var approvalFlag = "${approvalFlag}";
 		    var junGyulFlag = "${junGyulFlag}";
+		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
 		    
 		    window.onload = function () {
@@ -679,6 +680,7 @@
 		                return;
 		            }
 		        }
+		        
 		        signInfo = AprrovMappingSign(signtype);
 
 		        var rtnVal = true;
@@ -1257,7 +1259,7 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-		            try {
+// 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 
 		                //결재선 저장
@@ -1376,10 +1378,10 @@
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-		            }
+// 		            }
+// 		            catch (e) {
+// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+// 		            }
 		        }
 		    }
 		

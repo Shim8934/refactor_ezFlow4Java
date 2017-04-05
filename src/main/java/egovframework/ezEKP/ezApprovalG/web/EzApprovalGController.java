@@ -2789,6 +2789,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", tenantID);
+		String signImageSize = ezCommonService.getTenantConfig("signImageSize", userInfo.getTenantId());
 		String susinAdmin = "";
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -2885,6 +2886,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("signImageSize", signImageSize);
 		
 		return "ezApprovalG/apprGapprovui";
 	}

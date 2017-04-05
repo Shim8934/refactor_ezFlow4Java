@@ -262,11 +262,37 @@ function AprrovMappingSign(ret) {
 
     }
     else {
-        var pAprMemberSignSN = pAprMemberSN;
-        var signID;
-        var seumyungID;
-        var seumyungdateID;
-
+    	var pAprMemberSignSN = pAprMemberSN;
+    	var signID;
+    	var seumyungID;
+    	var seumyungdateID;
+    	
+    	//S버젼 추가
+    	
+    	if (approvalFlag == "S") {
+    		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
+    			for (i = 1; i < 20; i++) {
+    				if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N"))
+    					signID = pSusinSN + "sign" + i
+    					else
+    						signID = "sign" + i
+    						
+    						field = message.GetListItem(fields, signID);
+    				if (field) {
+    					LastSignNo = i;
+    				}
+    			}
+    			
+    			if (LastKyulSN == pAprMemberSN) {
+    				pAprMemberSignSN = LastSignNo;
+    			}
+    			
+    			if (pAprLineType == strAprType4) {
+    				LastKyulSN = LastSignNo;
+    			}
+    		}
+    	}
+        
         if (pDraftFlag == "SUSIN") {
             signID = pSusinSN + "sign" + pAprMemberSignSN;
             seumyungID = pSusinSN + "jikwe" + pAprMemberSignSN;
@@ -458,6 +484,8 @@ function AprrovMappingSign(ret) {
     }
     return signInfo;
 }
+
+
 function putJunkyulSign(signID) {
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, signID);
@@ -1452,13 +1480,13 @@ function SReAprLineSingMapping(ret) {
 
     if (ret[5] == undefined) {
         xmlKuljea = ret[0];
-        xmlReDraft = ret[2];
+        xmlReDraft = ret[1];
         DrawAutoAprLine(ret[0], pDraftFlag);
     }
     else {
-        xmlKuljea = ret[2];
-        xmlReDraft = ret[3];
-        DrawAutoAprLine(ret[2], pDraftFlag);
+        xmlKuljea = ret[1];
+        xmlReDraft = ret[2];
+        DrawAutoAprLine(ret[1], pDraftFlag);
     }
 
     var xmldom = createXmlDom();
@@ -1495,6 +1523,7 @@ function SReAprLineSingMapping(ret) {
         var KyljeaStatName = getNodeText(dataNodes[5]);
         var KyljeaJobtitle = getNodeText(dataNodes[2]);
         var ReasonDoNotApprov = getNodeText(dataNodes[12]);
+        
         OrderType[KyljeaOrder] = KyljeaType;
         OrderTypeName[KyljeaOrder] = KyljeaTypeName;
         OrderName[KyljeaOrder] = KyljeaName;

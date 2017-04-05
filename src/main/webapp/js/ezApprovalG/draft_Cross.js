@@ -1603,9 +1603,36 @@ function SendDraftMappingSign(ret) {
             PositionText = "(" + strLang5 + "";
         }
 
-        if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) 
-        {
-            OpinionText = getSignDate() + "<br>";
+        if (approvalFlag == "S") {
+            if (LastSignSN == 1) {
+                for (i = 1; i < 20; i++) {
+                    if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                    else signID = "sign" + i
+
+                    field = message.GetListItem(fields, signID)
+                    if (field) {
+                        LastSignNo = i;
+                    }
+                }
+                sn = LastSignNo;
+            } else if (DraftLastFlag) {
+                putJunkyulSign("sign" + sn);
+                for (i = 1; i < 20; i++) {
+                    if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                    else signID = "sign" + i
+
+                    field = message.GetListItem(fields, signID)
+                    if (field) {
+                        LastSignNo = i;
+                    }
+                }
+                sn = LastSignNo;
+            }
+        } else {
+        	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) 
+        	{
+        		OpinionText = getSignDate() + "<br>";
+        	}
         }
 
         psigncell = "sign" + sn;
