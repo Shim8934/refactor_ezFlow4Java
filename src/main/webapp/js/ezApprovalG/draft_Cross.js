@@ -662,8 +662,11 @@ function SGetDraftAprLineInfo(ret) {
 
         refer = "";
 
-        if (ret[5] == "R") xmlReDraft = "R";
-        else xmlReDraft = "C";
+        if (ret[5] == "R") {
+        	xmlReDraft = "R";
+        } else  if (ret[5] == "C") {
+        	xmlReDraft = "C";
+        } 
 
         for (i = 0; i < OrderType.length; i++) {
             switch (OrderType[i]) {
@@ -672,7 +675,9 @@ function SGetDraftAprLineInfo(ret) {
                     break;
 
                 case strAprType2:
-                    if (OrderName[i] == arr_userinfo[2] && i == 1) IsSkipDrafter = "TRUE";
+                    if (OrderName[i] == arr_userinfo[2] && i == 1) {
+                    	IsSkipDrafter = "TRUE";
+                    }
                     break;
 
                 case strAprType8:
@@ -739,6 +744,7 @@ function SGetDraftAprLineInfo(ret) {
                         if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
+                        
                         IsSkipDrafter = "TRUE";
                     }
                     else {

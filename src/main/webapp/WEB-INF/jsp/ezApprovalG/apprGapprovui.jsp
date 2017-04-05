@@ -1279,9 +1279,9 @@
 			                    		}
 			                    	});
 			                        
-			                        IsSkipDrafter = "FALSE";
 			                        btnSendDraftEnable = "true";
 			                        SReAprLineSingMapping(ret);
+			                        IsSkipDrafter = "FALSE";
 			                        SaveFile();
 			                        getCurApproverAprLine();
 			                    }

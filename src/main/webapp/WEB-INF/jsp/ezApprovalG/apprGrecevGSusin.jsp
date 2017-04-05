@@ -1230,9 +1230,7 @@
 		    }
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-// 		            try {
-		                var savexmlhttp = createXMLHttpRequest();
-		
+		            try {
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
 		                    if (ret[1] != false) {
 		                    	$.ajax({
@@ -1251,7 +1249,6 @@
 		
 		                }
 		                if (ret[1] != false) {
-		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
 
 		                    if (approvalFlag == "S") {
@@ -1259,9 +1256,9 @@
 		                    } else {
 			                    GetDraftAprLineInfo(ret);
 		                    }
+		                    
+		                    IsSkipDrafter = "FALSE";
 		                }
-		                savexmlhttp = null;
-		                savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "11" && pGubun != "12") {
 		                	$.ajax({
@@ -1314,12 +1311,10 @@
 		                
 		                SummaryFlag = true;
 		
-		                savexmlhttp = null;
-		
-// 		            }
-// 		            catch (e) {
-// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-// 		            }
+		            }
+		            catch (e) {
+		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		            }
 		        }
 		    }
 		</script>

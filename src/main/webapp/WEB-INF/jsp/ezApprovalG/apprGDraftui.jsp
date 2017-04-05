@@ -710,7 +710,7 @@
 		                    SendMailToReceiveDept(pDocTitle, arr_userinfo[2], Gyuljedate, pDocID);
 		                } else {
 		                	Gyuljedate = GetDocInfoData("APR", "STARTDATE");
-	                        CurrentAprType = "A03001";
+	                        CurrentAprType = "001";
 	                        CurrentAprUserID = pUserID;
 	                        sendAlertMail("APR", 1, "DRAFT");
 		                }
@@ -1207,9 +1207,7 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-// 		            try {
-// 		                var savexmlhttp = createXMLHttpRequest();
-
+		            try {
 		                if (ret[1] != false) {
 		                	var result = "";
 		                	
@@ -1225,8 +1223,6 @@
 	                    		}
 	                    	});
 		                	
-		
-		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
 		                    
 		                    if (approvalFlag == "S") {
@@ -1234,9 +1230,9 @@
 		                    } else {
 			                    GetDraftAprLineInfo(ret);
 		                    }
+		                    
+		                    IsSkipDrafter = "FALSE";
 		                }
-// 		                savexmlhttp = null;
-// 		                savexmlhttp = createXMLHttpRequest();
 
 		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 		                	$.ajax({
@@ -1299,12 +1295,10 @@
 		                
 		                SummaryFlag = true;
 		
-// 		                savexmlhttp = null;
-		
-// 		            }
-// 		            catch (e) {
-// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-// 		            }
+		            }
+		            catch (e) {
+		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		            }
 		        }
 		    }
 		

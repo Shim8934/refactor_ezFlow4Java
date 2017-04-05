@@ -939,7 +939,6 @@
 		            	
 		                //var ret = getNodeText(dataNodes[0]);
 		                //결재선 저장 후
-		                IsSkipDrafter = "FALSE";
 		                btnSendDraftEnable = "true";
 
 		                if (approvalFlag == "S") {
@@ -947,6 +946,8 @@
 	                    } else {
 		                    GetDraftAprLineInfo(ret);
 	                    }
+		                
+		                IsSkipDrafter = "FALSE";
 		            }
 		            
 		            if (approvalFlag == "S") {

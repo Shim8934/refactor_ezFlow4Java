@@ -836,8 +836,7 @@
 	
 		                if (pReDraftAprLineChangeFlag || pReDraftFlag == "REDRAFT") {
 		                    ret[5] = "R";
-		                }
-		                else {
+		                } else {
 		                    ret[5] = "C";
 		                }
 		
