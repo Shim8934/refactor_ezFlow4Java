@@ -8031,9 +8031,10 @@
 			COMPANYID = #companyID#
      ]]>
 	</update>
+	
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">
 		SELECT 
-	      	max(lastDocID) 
+	      	lastDocID 
 	    FROM 
 	     	TBL_LastDocID
 	    WHERE

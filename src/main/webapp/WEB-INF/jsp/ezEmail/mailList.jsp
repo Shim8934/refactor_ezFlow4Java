@@ -479,8 +479,8 @@
 
 		                    </dl>
                         </div>
-	                </span>
-                    <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;">
+	                </span>	                
+                    <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code="main.kms4" />" frameborder="0" style="width:100%;height:100%;border:solid 0px green;display:inline-block;">
                     </iframe>
                 </span>
             </span>

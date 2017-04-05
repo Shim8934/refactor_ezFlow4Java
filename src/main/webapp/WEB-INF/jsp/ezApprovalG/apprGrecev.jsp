@@ -923,10 +923,19 @@
 		            var savexmlhttp = createXMLHttpRequest();
 		            //결재선 저장
 		            if (ret[1] != false) {
-		                savexmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-		                savexmlhttp.send(ret[1]);
-		
-		                var dataNodes = GetChildNodes(savexmlhttp.responseXML);
+		            	$.ajax({
+                    		type : "POST",
+                    		dataType : "text",
+                    		async : false,
+                    		url : "/ezApprovalG/aprLineSave.do",
+                    		data : {
+                    				ret    : ret[1]
+                    				},
+                    		success : function(result){
+                    			
+                    		}
+                    	});
+		            	
 		                //var ret = getNodeText(dataNodes[0]);
 		                //결재선 저장 후
 		                IsSkipDrafter = "FALSE";

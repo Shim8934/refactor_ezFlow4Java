@@ -1797,21 +1797,20 @@
 	
 	<c:if test="${mode == 'view'}">
 		<aside style="position:fixed;">
-    <c:choose>
-    	<c:when test="${userInfo.lang == 3}">
-    		<p class="quickmenu_title"><img src="/images/jp/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
-    	</c:when>
-    	<c:when test="${userInfo.lang == 2}">
-    		<p class="quickmenu_title"><img src="/images/us/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
-    	</c:when>
-    	<c:otherwise>
-    		<p class="quickmenu_title"><img src="/images/kr/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
-    	</c:otherwise>
-    </c:choose>
-    <p class="btn_quick" id="btn_quick_Up" onclick="QuickMove('UP')"><img src="/images/kr/main/quickmenu_btn_up.gif" ></p>
-    <ul class="quickmenu" id="QuickUl">
-     </ul>
-	<p class="btn_quick" id="btn_quick_Down" onclick="QuickMove('DOWN')"><img src="/images/kr/main/quickmenu_btn_down.gif" ></p>
-    </aside>
+    		<c:choose>
+    			<c:when test="${userInfo.lang == 3}">
+    				<p class="quickmenu_title"><img src="/images/jp/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+    			</c:when>
+    			<c:when test="${userInfo.lang == 2}">
+    				<p class="quickmenu_title"><img src="/images/us/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+    			</c:when>
+    			<c:otherwise>
+    				<p class="quickmenu_title"><img src="/images/kr/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+    			</c:otherwise>
+    		</c:choose>
+    		<p class="btn_quick" id="btn_quick_Up" onclick="QuickMove('UP')"><img src="/images/kr/main/quickmenu_btn_up.gif" ></p>
+    		<ul class="quickmenu" id="QuickUl"></ul>
+			<p class="btn_quick" id="btn_quick_Down" onclick="QuickMove('DOWN')"><img src="/images/kr/main/quickmenu_btn_down.gif" ></p>
+    	</aside>
 	</c:if>
 </html>

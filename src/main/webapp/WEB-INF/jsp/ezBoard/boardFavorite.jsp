@@ -241,15 +241,15 @@
     	</script>
 	</head>
 	<body style="margin-left: 10px; margin-right: 10px;">
-    	<h2 class="h2_dot"><spring:message code="ezBoard.t00010" /></h2>
-    	<span class="txt" style="margin-left: 13px;">* <spring:message code="ezBoard.t00014" /></span><br />
-    	<span class="txt" style="margin-left: 13px;">* 
+		<br/>
+    	<h2><spring:message code="ezBoard.t00010" /></h2>
+    	<span class="txt">▒ <spring:message code="ezBoard.t00014" /></span><br />
+    	<span class="txt">▒ 
         	<img src="/images/ImgIcon/prev.gif" style="height: 16px; margin-top: -3px; vertical-align: middle; text-align: center;" />
         	<img src="/images/ImgIcon/next.gif" align="absmiddle" style="height: 16px; margin-top: -3px;" />
         	: <spring:message code="ezBoard.t00015" />
     	</span>
-    	<br />
-    	<br />
+    	<br />    	
     	<br />
     	<div id="mainmenu">
         	<ul id="tb_Parent">

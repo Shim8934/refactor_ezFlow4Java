@@ -1102,6 +1102,13 @@ public class EzPortalController extends EgovFileMngUtil {
 		//새로고침 시간 컨피그화
 		String refreshSecond = config.getProperty("refreshSecond");
 		
+		boolean checkBrowser;
+		if (req.getHeader("User-Agent").indexOf("Trident") < 0 && req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+			checkBrowser = true;
+		} else {
+			checkBrowser = false;
+		}
+		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);
 		model.addAttribute("title", title);
@@ -1119,6 +1126,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("refreshSecond", refreshSecond);
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
+		model.addAttribute("checkBrowser", checkBrowser);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";

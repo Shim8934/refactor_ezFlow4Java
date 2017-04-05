@@ -742,9 +742,11 @@
                 	}
 	            }
         	}
-    	}
-    	
+    	}    	
 		</script>
+		<style>
+			.mainlist tr th {border-top:0px}
+		</style>
 	</head>
 	<body class="popup"> 
 		<xml id="listviewheader" style="display:none">
@@ -792,7 +794,7 @@
         		</td>
         		<td valign="top">
             		<h2><spring:message code='ezQuestion.t35' /></h2>
-             		<div class="listview" style="margin-top:5px;margin-bottom:5px">
+             		<div class="listview" style="margin-bottom:5px">
 		                    <div id="DeptListView" style="OVERFLOW:auto;WIDTH:220px;HEIGHT:270px;border:0"></div>
                 	</div>
             		<%--<div>
@@ -803,9 +805,10 @@
         		</td>
 			</tr>
 			<tr>
-        		<td>
+        		<td valign="top">
+        			<h2><spring:message code='ezQuestion.t253' /></h2>
             		<div class="listview" style="margin-top:5px;margin-bottom:5px">
-                		<div id="OrganListView" style="OVERFLOW:auto;WIDTH:274px;HEIGHT:260px;border:0"></div>
+                		<div id="OrganListView" style="OVERFLOW:auto;WIDTH:280px;HEIGHT:240px;border:0"></div>
             		</div>
         		</td> 
         		<td width="30" align="center" valign="middle"> 
@@ -832,7 +835,7 @@
         		</td>
         		<td></td>
         		<td>         
-            		<div class="btnposition">
+            		<div class="btnposition" style="margin-top:0px;padding-top:0px">
                 		<a class="imgbtn" name="Submit" onClick="SetRange()" ><span><spring:message code='ezQuestion.t37' /></span></a>
                 		<a class="imgbtn" name="Submit2" onClick="close_onclick()" ><span><spring:message code='ezQuestion.t38' /></span></a>
             		</div>

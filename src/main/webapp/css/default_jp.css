@@ -104,6 +104,7 @@ form{display:inline;margin:0}
 	border-top:1px solid #c4d0dc;
 	border-right:1px solid #7792ad;
 	border-bottom:1px solid #7792ad; */
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 	cursor:pointer;
 	font-weight:bold;
 	color:#fff;
@@ -119,6 +120,7 @@ form{display:inline;margin:0}
 }
 .btnposition{
 	margin: 0px;
+	margin-top: 10px;
 	background: none;
 	border: none;
 	padding:5px 0px 0px 0px;
@@ -1244,7 +1246,9 @@ form{display:inline;margin:0}
 	height:90px;
 	line-height:17px;
 }
-
+.popup_noti_btnarea .btnposition {
+	margin:0px;
+}
 .popup_noti_btnarea {
 	position:relative; 
 /* 	background:url(/images/kr/cm/popup_noti_bgbc.gif) repeat-x bottom; */
@@ -1755,7 +1759,7 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
     -moz-border-radius-bottomright: 5px;
     background: #ffffff;
     border-radius: 4px;
-    box-shadow: 0 0 2px 2px #333333;
+    box-shadow: 0 0 1px 1px #333333;
     /* padding: 2px 2px;
     border: 1px solid #ffffff; */
 }

@@ -175,7 +175,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 + ",mailId=" + mailId);
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
+        }
+		
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);       
@@ -269,7 +274,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String delDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("delDept started.");
 	    
-	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+	    LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+	    
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
+        }
+	    
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);	    
@@ -400,7 +410,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("saveDeptInfo started");
 	    
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
+        }
         
         int tenantID = userInfo.getTenantId();                              
 	    
@@ -721,7 +735,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void retireUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("retireUser started.");
 	    
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	throw new Exception("retireUser failed.");
+        }
+        
         int tenantID = userInfo.getTenantId();        
         
         String cnList = request.getParameter("cn");
@@ -815,10 +834,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 사원삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/delUser.do")
-	public void delUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void delUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("delUser started.");
 	    
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	throw new Exception("delUser failed.");
+        }
+        
         int tenantID = userInfo.getTenantId();        
         String cnList = request.getParameter("cn");
         
@@ -909,13 +933,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String saveUserInfo(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("saveUserInfo started.");
 	    
-	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 	    
         //관리자 권한 체크
-        if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-            return "cmm/error/adminDenied";
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
         }
-	    
+	    	    
 	    int tenantID = userInfo.getTenantId();
 	    
 	    vo.setTenantId(tenantID);
@@ -1758,7 +1782,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public void restoreRetireUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("restoreRetireUser started.");
 	    
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	throw new Exception("restoreRetireUser failed.");
+        }
+        
         int tenantID = userInfo.getTenantId();        
         
         String cnList = request.getParameter("cn");

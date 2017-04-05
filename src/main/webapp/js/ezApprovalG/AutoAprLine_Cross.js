@@ -1,49 +1,53 @@
 ﻿function getAutoAprLine() {
-    try {
-        getFormRecv();
+    getFormRecv();
 
-        var retvalue = new Array();
-        retvalue[0] = "NONE";
-        retvalue[1] = "NONE";
-        retvalue[2] = "R";
-        retvalue[3] = "";
+    var retvalue = new Array();
+    retvalue[0] = "NONE";
+    retvalue[1] = "NONE";
+    retvalue[2] = "R";
+    retvalue[3] = "";
 
-        var result = "";
-        
-        $.ajax({
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/aprLineRequest.do",
+		data : {
+				docID    : pDocID, 
+				userID 	 : pUserID,
+				formID   : pFormID
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+    
+    result = loadXMLString(result);
+    
+    var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
+    if (NodeList.length > 0) {
+    	var Resultxml = APRLINEXMLParsing(result);
+    	
+    	$.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
-    		url : "/ezApprovalG/aprLineRequest.do",
+    		url : "/ezApprovalG/aprLineSave.do",
     		data : {
-    				docID    : pDocID, 
-    				userID 	 : pUserID,
-    				formID   : pFormID
+    				ret : getXmlString(Resultxml)
     				},
-    		success: function(xml){
-    			result = xml;
-    		}        			
+    		success : function(result){
+    			if (result == "TRUE") {
+                    retvalue[0] = getXmlString(Resultxml);
+                    return retvalue;
+                }
+    		}
     	});
-        
-        result = loadXMLString(result);
-        
-        var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
-        if (NodeList.length > 0) {
-            var Resultxml = APRLINEXMLParsing(result);
-            xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
-            xmlhttp.send(Resultxml);
-
-            var ret = SelectSingleNodeValue(result, "RESULT");
-            if (ret == "TRUE") {
-                retvalue[0] = getXmlString(Resultxml);
-                return retvalue;
-            }
-        }
-        return retvalue;
-
-    } catch (e) {
-        alert("getAutoAprLine :: " + e.description);
     }
+    
+    return retvalue;
 }
 
 function APRLINEXMLParsing(APRLINE) {

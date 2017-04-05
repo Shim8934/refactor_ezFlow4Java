@@ -191,27 +191,26 @@
 	</head>
 	<body>
 		<form id="Form1" method="post" >
-		   <br />
-		   <h2 class="h2_dot">&nbsp;<spring:message code='ezPersonal.t938'/></h2>
-		   <br />
-		  <table class="content" style="width:450px;margin-left:15px;">  
-		    <tr>
-		    <th><spring:message code='ezPersonal.t513'/></th>
-		    <td>
-		    	<c:if test="${flag != 'N'}">
-			      <input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" checked='checked' onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label>
-		      	  <input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label>
-		    	</c:if>
-		    	<c:if test="${flag == 'N'}">
-			      <input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label>
-		      	  <input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" checked='checked' onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label>
-		    	</c:if>
-		    </td>
-		  </tr>
-		  </table><br />
-		  <c:if test="${flag == 'N'}">
-			<div id="DivPassType" style="display:none">
-				<h2 class="h2_dot">&nbsp;<spring:message code='ezPersonal.t948'/>&nbsp;
+			<br />
+			<h2>▒&nbsp;<spring:message code='ezPersonal.t938'/></h2>			
+			<table class="content" style="width:450px;margin-top:10px">
+		    	<tr>
+		    		<th><spring:message code='ezPersonal.t513'/></th>
+		    		<td>
+				    	<c:if test="${flag != 'N'}">
+					      <input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" checked='checked' onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label>
+				      	  <input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label>
+				    	</c:if>
+				    	<c:if test="${flag == 'N'}">
+					      <input style="margin-top:0px;" type="radio" id="ApprovPwdY" name="ApprovPwd" onclick ="PassTypeView()" /><label for ="ApprovPwdY" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t937'/></label>
+				      	  <input style="margin-top:0px;" type="radio" id="ApprovPwdN" name="ApprovPwd" checked='checked' onclick="PassTypeView()"  /><label for ="ApprovPwdN" style="cursor:pointer;vertical-align:middle"><spring:message code='ezPersonal.t1000'/></label>
+				    	</c:if>
+				    </td>
+		  		</tr>
+		  	</table><br />
+			<c:if test="${flag == 'N'}">
+				<div id="DivPassType" style="display:none">
+					<h2>▒&nbsp;<spring:message code='ezPersonal.t948'/>&nbsp;
 					<select id="pwdType" onchange="ChangeType()">
 						<c:choose>
 							<c:when test="${pwdType == 'L' || pwdType == '' }">
@@ -230,65 +229,66 @@
 							</c:otherwise>
 						</c:choose>
 					</select>
-				</h2>
-		  </c:if>
-		  <c:if test="${flag != 'N'}">
-			<div id="DivPassType">
-				<h2 class="h2_dot">&nbsp;
-					<spring:message code='ezPersonal.t948'/>&nbsp;
-					<select id="pwdType" onchange="ChangeType()">
-						<c:choose>
-							<c:when test="${pwdType == 'L' || pwdType == '' }">
-								<option value ='L' selected>
-									<spring:message code='ezPersonal.t952'/>
-								</option>
-							</c:when>
-							<c:otherwise>
-								<option value ='L'>
-									<spring:message code='ezPersonal.t952'/>
-								</option>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${pwdType == 'A'}">
-								<option value ='A' selected>
-									<spring:message code='ezPersonal.t953'/>
-								</option>
-							</c:when>
-							<c:otherwise>
-								<option value ='A'>
-									<spring:message code='ezPersonal.t953'/>
-								</option>
-							</c:otherwise>
-						</c:choose>
-					</select>
-				</h2>
-		  </c:if>
-		    <br />    
-		    <div id="DivApprvalPass" style="display:none">
-			    <h2 class="h2_dot">&nbsp;<spring:message code='ezPersonal.t954'/></h2>
-			      <table class="content">
-			        <tr id="oldpassTR">
-			            <th><spring:message code='ezPersonal.t949'/> :</th>
-			            <td ><input type="password" id="txtOldPassword" size="25" onKeyPress="change_press(event)"  disabled=true > </td>               
-			        </tr>
-			        <tr>
-			            <th><spring:message code='ezPersonal.t950'/> :</th>
-			            <td><input type="password" id="txtNewPassword" size="25" onKeyPress="change_press(event)" disabled=true ></td>               
-			        </tr>
-			        <tr>
-			            <th><spring:message code='ezPersonal.t951'/> :</th>
-			            <td><input type="password" id="txtNewPasswordConfirm" size="25" onKeyPress="change_press(event)" disabled=true></td>               
-			        </tr>
-			    </table>  
-		    </div>
-		</div>
-		<div class="btnposition" style="width:450px">
-		    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t12'/></span></a>
-		    <a class="imgbtn" onClick="Cancel_Click()" ><span><spring:message code='ezPersonal.t13'/></span></a>
-		</div>
-		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
-		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
+					</h2>
+			</c:if>
+		  	<c:if test="${flag != 'N'}">
+				<div id="DivPassType">
+					<h2>▒&nbsp;<spring:message code='ezPersonal.t948'/>
+						<div style="margin-top:10px;">						
+							<select id="pwdType" onchange="ChangeType()">
+								<c:choose>
+									<c:when test="${pwdType == 'L' || pwdType == '' }">
+										<option value ='L' selected>
+											<spring:message code='ezPersonal.t952'/>
+										</option>
+									</c:when>
+									<c:otherwise>
+										<option value ='L'>
+											<spring:message code='ezPersonal.t952'/>
+										</option>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="${pwdType == 'A'}">
+										<option value ='A' selected>
+											<spring:message code='ezPersonal.t953'/>
+										</option>
+									</c:when>
+									<c:otherwise>
+										<option value ='A'>
+											<spring:message code='ezPersonal.t953'/>
+										</option>
+									</c:otherwise>
+								</c:choose>
+							</select>
+						</div>
+					</h2>
+			</c:if>
+			<br />
+				<div id="DivApprvalPass" style="display:none">
+					<h2>▒&nbsp;<spring:message code='ezPersonal.t954'/></h2>						
+				    	<table class="content" style="margin-top:10px;width:450px">
+					        <tr id="oldpassTR">
+					            <th><spring:message code='ezPersonal.t949'/></th>
+					            <td ><input type="password" id="txtOldPassword" size="25" onKeyPress="change_press(event)"  disabled=true > </td>               
+					        </tr>
+					        <tr>
+					            <th><spring:message code='ezPersonal.t950'/></th>
+					            <td><input type="password" id="txtNewPassword" size="25" onKeyPress="change_press(event)" disabled=true ></td>               
+					        </tr>
+					        <tr>
+					            <th><spring:message code='ezPersonal.t951'/></th>
+					            <td><input type="password" id="txtNewPasswordConfirm" size="25" onKeyPress="change_press(event)" disabled=true></td>               
+					        </tr>
+					    </table>  
+			   	 </div>
+			</div>
+			<div class="btnposition" style="width:450px;margin-top:10px">
+			    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t12'/></span></a>
+			    <a class="imgbtn" onClick="Cancel_Click()" ><span><spring:message code='ezPersonal.t13'/></span></a>
+			</div>
+			<input id="publicModulus" value="${publicModulus}" type="hidden"/>
+			<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 		</form>
 	</body>
 </html>

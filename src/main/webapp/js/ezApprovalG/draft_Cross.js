@@ -1,4 +1,4 @@
-﻿var lastKyulName, lastKyuljiwee, LastSignSN;
+﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 function GetDraftAprLineInfo(ret)
 {
@@ -3721,7 +3721,6 @@ function RemoveTmpDoc(pDocID) {
 }
 
 function setFirstDrafterAuto() {
-
     var d = new Date();
     var RecieveDay = d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate();
 
@@ -3763,26 +3762,19 @@ function setFirstDrafterAuto() {
     pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>"
 
     xmlpara = loadXMLString(pxml);
-
-    xmlhttp.open("POST", "/ezApprovalG/aprLineSave.do", false);
-    xmlhttp.send(xmlpara);
-    //	if(xmlhttp.responseXML.text == "TRUE")
-    //	{
-    //		var ret = new Array();
-    //		ret[0] = pxml;
-    //		ret[1] = "NONE";
-    //		ret[2] = "R";
-    //		ret[3] = "";
-    //	
-    //		GetDraftAprLineInfo(ret);
-    //		btnSendDraft.Enable	= "true";
-    //		LastSignSN = 1;
-    //	}
-    //	else
-    //	{
-    //		var pAlertContent = strLang742 + "<BR>" + strLang831 + xmlhttp.responseText;
-    //		OpenAlertUI(pAlertContent);
-    //	}
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/aprLineSave.do",
+		data : {
+				ret    : pxml
+				},
+		success : function(result){
+			
+		}
+	});
 }
 function DeleteDeptInfo() {
     var xmlhttp = createXMLHttpRequest();

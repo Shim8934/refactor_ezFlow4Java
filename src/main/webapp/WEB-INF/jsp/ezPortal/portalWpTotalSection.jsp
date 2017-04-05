@@ -164,11 +164,14 @@
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-		<%if (request.getHeader("User-Agent").indexOf("Trident") < 0 && request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0){ %>
-			<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
-    	<%} else { %>
-    		<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
-    	<%} %>
+		<c:choose>
+			<c:when test="${checkBrowser == true}">
+				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
+			</c:when>
+			<c:otherwise>
+				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
+			</c:otherwise>
+		</c:choose>
 		
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>   

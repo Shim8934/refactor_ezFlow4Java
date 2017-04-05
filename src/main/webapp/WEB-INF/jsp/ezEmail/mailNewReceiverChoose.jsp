@@ -3208,7 +3208,7 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 410px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 410px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
 	                                        <div id="tblPageRayer2"  style="text-align:center;border-top:1px solid #B6B6B6"></div>
 	                                	</td>
 	                                </tr>

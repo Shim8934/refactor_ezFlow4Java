@@ -411,29 +411,25 @@ function NewVolume_Complete(rtn) {
 
 function AddNewVolume(pCabClassNo, pNewVolNo) {
     var result = "";
+	    $.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/addNewVolume.do",
+			data : {
+				cabClassNO : pCabClassNo,
+				companyID  : CompanyID,
+				newVolNO   : pNewVolNo
+			},
+			success: function(xml){
+				result = xml;
+			}
+		});
+	    
+	    if (result != "TRUE") {
+	    	 alert(strLang486);
+	    }
     
-    $.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/addNewVolume.do",
-		data : {
-			cabClassNO : pCabClassNo,
-			companyID  : CompanyID,
-			newVolNO   : pNewVolNo
-		},
-		success: function(xml){
-			result = xml;
-		}        			
-	});
-    
-    var dataNodes = GetChildNodes(loadXMLString(result));
-    var rtn = getNodeText(dataNodes[0]);
-
-    if (rtn == "FALSE") {
-        alert(strLang486);
-    }
-    else
         selTaskMCategory_onchange();
 }
 

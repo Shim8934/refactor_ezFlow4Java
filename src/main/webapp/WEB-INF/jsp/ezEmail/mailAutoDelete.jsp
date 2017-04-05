@@ -66,7 +66,7 @@
 	<body style="margin-left:10px;margin-right:10px;"> 
 		<form method="post"> 
 		<br>
-			<h2 class="h2_dot"><spring:message code='ezEmail.t118' /></h2>
+			<span>▒ <spring:message code='ezEmail.t118' /></span>
 			<table class="content" style="width:750px;margin-top:5px;">
 				<tr>
 					<th><spring:message code='ezEmail.t119' /></th>
