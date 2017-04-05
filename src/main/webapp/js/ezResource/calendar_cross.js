@@ -1,4 +1,4 @@
-﻿﻿var	g_szCurrentApptNum = null;
+﻿var	g_szCurrentApptNum = null;
 var g_szCurrentApptPNum;
 var	g_szCurrentApptOwnerID;
 var g_szCurrentApptWriterID;

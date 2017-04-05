@@ -1,4 +1,4 @@
-﻿﻿/*
+﻿/*
 <public:component urn="www.asitaka.com:documentList">
 
 <public:property name="config" put="put_config" />
