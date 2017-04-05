@@ -12,99 +12,99 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
 		<script type="text/javascript">
-		var g_align = "${align}";
-		var g_valign = "${vAlign}";
-		var g_leftmargin = "${leftMargin}";
-		var g_rightmargin = "${rightMargin}";
-		var g_topmargin = "${topMargin}";
-		var g_bottommargin = "${bottomMargin}";
-		var pageid = "${pageID}";
-		var parentuid = "${parentUID}";
-		
-		function window_onload() {
-			tdpreview.align = g_align;
-			//tdpreview.parentElement.vAlign = g_valign;
-			tdpreview.style.verticalAlign = g_valign;
-			tdpreview.style.paddingLeft = g_leftmargin + "px";
-			tdpreview.style.paddingRight = g_rightmargin + "px";
-			tdpreview.style.paddingTop = g_topmargin + "px";
-			tdpreview.style.paddingBottom = g_bottommargin + "px";			
+			var g_align = "${align}";
+			var g_valign = "${vAlign}";
+			var g_leftmargin = "${leftMargin}";
+			var g_rightmargin = "${rightMargin}";
+			var g_topmargin = "${topMargin}";
+			var g_bottommargin = "${bottomMargin}";
+			var pageid = "${pageID}";
+			var parentuid = "${parentUID}";
 			
-			topmargin.value = g_topmargin;
-			bottommargin.value = g_bottommargin;
-			leftmargin.value = g_leftmargin;
-			rightmargin.value = g_rightmargin;
-			
-			if (g_align == "left") alignselect.selectedIndex = 0;
-			if (g_align == "center") alignselect.selectedIndex = 1;
-			if (g_align == "right") alignselect.selectedIndex = 2;
-			if (g_valign == "top") valignselect.selectedIndex = 0;
-			if (g_valign == "middle") valignselect.selectedIndex = 1;
-			if (g_valign == "bottom") valignselect.selectedIndex = 2;			
-		}
-		
-		function alignchange() {
-			var obj = event.srcElement;
-			switch(parseInt(obj.item(obj.selectedIndex).value))
-			{
-				case 1 : 
-					tdpreview.align = "left";
-					break;
-				case 2 : 
-					tdpreview.align = "center";
-					break;
-				case 3 : 
-					tdpreview.align = "right";
-					break;
-				case 4 : 
-					// 20071031 속성 변경
-					//tdpreview.parentElement.vAlign = "top";
-					tdpreview.style.verticalAlign = "top";
-					break;
-				case 5 : 
-					//tdpreview.parentElement.vAlign = "middle";
-					tdpreview.style.verticalAlign = "middle";
-					break;
-				case 6 : 
-					//tdpreview.parentElement.vAlign = "bottom";
-					tdpreview.style.verticalAlign = "bottom";
-					break;					
-			}
-		}
-		
-		function SaveSetting()
-		{
-			var errorFlag = 0;
-			if (!is_num(topmargin.value))    errorFlag = 1;
-			if (!is_num(bottommargin.value)) errorFlag = 1;
-			if (!is_num(leftmargin.value))   errorFlag = 1;
-			if (!is_num(rightmargin.value))  errorFlag = 1;
-			
-			if (errorFlag == "1")
-			{
-				alert("<spring:message code='ezPortal.t58'/>");
-				return;
+			function window_onload() {
+				tdpreview.align = g_align;
+				//tdpreview.parentElement.vAlign = g_valign;
+				tdpreview.style.verticalAlign = g_valign;
+				tdpreview.style.paddingLeft = g_leftmargin + "px";
+				tdpreview.style.paddingRight = g_rightmargin + "px";
+				tdpreview.style.paddingTop = g_topmargin + "px";
+				tdpreview.style.paddingBottom = g_bottommargin + "px";			
+				
+				topmargin.value = g_topmargin;
+				bottommargin.value = g_bottommargin;
+				leftmargin.value = g_leftmargin;
+				rightmargin.value = g_rightmargin;
+				
+				if (g_align == "left") alignselect.selectedIndex = 0;
+				if (g_align == "center") alignselect.selectedIndex = 1;
+				if (g_align == "right") alignselect.selectedIndex = 2;
+				if (g_valign == "top") valignselect.selectedIndex = 0;
+				if (g_valign == "middle") valignselect.selectedIndex = 1;
+				if (g_valign == "bottom") valignselect.selectedIndex = 2;			
 			}
 			
-			var strXML = "<DATA>";
-			strXML += "<UID_>" + parentuid + "</UID_>";
-			strXML += "<ALIGN>" + alignselect.selectedIndex + "</ALIGN>";
-			strXML += "<VALIGN>" + valignselect.selectedIndex + "</VALIGN>";
-			strXML += "<PADDINGLEFT>" + leftmargin.value + "</PADDINGLEFT>";
-			strXML += "<PADDINGRIGHT>" + rightmargin.value + "</PADDINGRIGHT>";
-			strXML += "<PADDINGTOP>" + topmargin.value + "</PADDINGTOP>";
-			strXML += "<PADDINGBOTTOM>" +  bottommargin.value + "</PADDINGBOTTOM>";
-			strXML += "</DATA>";
+			function alignchange() {
+				var obj = event.srcElement;
+				switch(parseInt(obj.item(obj.selectedIndex).value))
+				{
+					case 1 : 
+						tdpreview.align = "left";
+						break;
+					case 2 : 
+						tdpreview.align = "center";
+						break;
+					case 3 : 
+						tdpreview.align = "right";
+						break;
+					case 4 : 
+						// 20071031 속성 변경
+						//tdpreview.parentElement.vAlign = "top";
+						tdpreview.style.verticalAlign = "top";
+						break;
+					case 5 : 
+						//tdpreview.parentElement.vAlign = "middle";
+						tdpreview.style.verticalAlign = "middle";
+						break;
+					case 6 : 
+						//tdpreview.parentElement.vAlign = "bottom";
+						tdpreview.style.verticalAlign = "bottom";
+						break;					
+				}
+			}
 			
-			var xmlhttp = createXMLHttpRequest();
-
-			xmlhttp.open("POST", "/admin/ezPortal/savePositionSettings.do?pageID=" + pageid, false);
-			xmlhttp.send(strXML);
-			
-			xmlhttp = null;
-			alert("<spring:message code='ezPortal.t119'/>");
-			document.location.reload();
-		}
+			function SaveSetting()
+			{
+				var errorFlag = 0;
+				if (!is_num(topmargin.value))    errorFlag = 1;
+				if (!is_num(bottommargin.value)) errorFlag = 1;
+				if (!is_num(leftmargin.value))   errorFlag = 1;
+				if (!is_num(rightmargin.value))  errorFlag = 1;
+				
+				if (errorFlag == "1")
+				{
+					alert("<spring:message code='ezPortal.t58'/>");
+					return;
+				}
+				
+				var strXML = "<DATA>";
+				strXML += "<UID_>" + parentuid + "</UID_>";
+				strXML += "<ALIGN>" + alignselect.selectedIndex + "</ALIGN>";
+				strXML += "<VALIGN>" + valignselect.selectedIndex + "</VALIGN>";
+				strXML += "<PADDINGLEFT>" + leftmargin.value + "</PADDINGLEFT>";
+				strXML += "<PADDINGRIGHT>" + rightmargin.value + "</PADDINGRIGHT>";
+				strXML += "<PADDINGTOP>" + topmargin.value + "</PADDINGTOP>";
+				strXML += "<PADDINGBOTTOM>" +  bottommargin.value + "</PADDINGBOTTOM>";
+				strXML += "</DATA>";
+				
+				var xmlhttp = createXMLHttpRequest();
+	
+				xmlhttp.open("POST", "/admin/ezPortal/savePositionSettings.do?pageID=" + pageid, false);
+				xmlhttp.send(strXML);
+				
+				xmlhttp = null;
+				alert("<spring:message code='ezPortal.t119'/>");
+				document.location.reload();
+			}
 		</script>
 	</head>
 	<body class="popup" onload="javascript:window_onload()">

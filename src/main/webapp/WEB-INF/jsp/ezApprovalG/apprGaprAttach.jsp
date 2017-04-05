@@ -448,7 +448,7 @@
 			            var pCurSelRow = CurSelList.GetSelectedRows();
 			            SetAttribute(pCurSelRow[0], "DATA9", retValue[1]);
 			            pCurSelRow[0].childNodes[1].innerHTML = retValue[2];
-			            pCurSelRow[0].childNodes[3].innerHTML = retValue[1];
+// 			            pCurSelRow[0].childNodes[3].innerHTML = retValue[1];
 			            SetAttribute(pCurSelRow[0], "DATA12", retValue[2]);
 			        }
 			    }

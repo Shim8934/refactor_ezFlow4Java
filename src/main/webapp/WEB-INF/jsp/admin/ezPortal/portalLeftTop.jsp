@@ -10,11 +10,11 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
-		document.onselectstart = function () {
-	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-	            return false;
-	        else
-	            return true;
+			document.onselectstart = function () {
+	        	if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+	            	return false;
+	        	else
+	            	return true;
 			};
 			
 			function DeleteCache() {

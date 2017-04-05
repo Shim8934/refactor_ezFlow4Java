@@ -11,194 +11,193 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
-		var g_SelectedObj = null;
-		var g_UID = "";
-		var g_UseFlag = "";
-		var g_UserACL = "${result}"; 
-		
-		document.onselectstart = function () {
-        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-            return false;
-        else
-            return true;
-		};
-		
-		function setValue(pUID, pUseFG, pObj)
-		{
-			g_UID = pUID;
-			g_UseFlag = pUseFG;
+			var g_SelectedObj = null;
+			var g_UID = "";
+			var g_UseFlag = "";
+			var g_UserACL = "${result}"; 
 			
+			document.onselectstart = function () {
+	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+	            return false;
+	        else
+	            return true;
+			};
 			
-			if( g_SelectedObj == null )
+			function setValue(pUID, pUseFG, pObj)
 			{
-			    pObj.style.backgroundColor = "rgb(233, 241, 244)";
-				g_SelectedObj = pObj;
-			}
-			else
-			{
-			    pObj.style.backgroundColor = "rgb(233, 241, 244)";
+				g_UID = pUID;
+				g_UseFlag = pUseFG;
 				
-				if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
-				g_SelectedObj = pObj;
-			}
-		}
-		
-		function selectItem(pUID, pObj)
-		{
-		     location.href = "/ezPortal/topMenu.do?pageID=" + pUID;
-		}
-		
-		function newpage()
-		{
-		    location.href = "/ezPortal/topMenu.do?mode=new";
-		}
-		
-		function preview()
-		{
-			if (g_UID == "")
-			{
-				alert("<spring:message code='ezPortal.t60'/>");
-				return;
-			}
-		    window.open("/ezPortal/topMenu.do?mode=view&viewMode=preview&pageID=" + g_UID);
-		}
-		
-		function deleteTopMenu()
-		{
-			if (g_UID == "")
-			{
-				alert("<spring:message code='ezPortal.t98'/>");
-				return;
-			}
-			
-			if (confirm("<spring:message code='ezPortal.t54'/>"))
-			{
-			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/admin/ezPortal/deleteTopPage.do?uID=" + g_UID, false);
-				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-				xmlhttp.send();
 				
-				if (xmlhttp.responseText == "OK")
-					document.location.reload();
-				else
-					alert("<spring:message code='ezPortal.t239'/>" + xmlhttp.responseText);
-				
-				xmlhttp = null;
-			}
-		}
-		
-		function usepage()
-		{
-			if (g_UID == "")
-			{
-				alert("<spring:message code='ezPortal.t240'/>");
-				return;
-			}
-			
-			if (g_UseFlag == "Y")
-			{
-				alert("<spring:message code='ezPortal.t241'/>");
-				return;
-			}
-			
-			if (confirm("<spring:message code='ezPortal.t242'/>"))
-			{
-			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/admin/ezPortal/useTopPage.do?uID=" + g_UID , false);
-				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-				xmlhttp.send();
-				
-				if (xmlhttp.responseText == "OK")
+				if( g_SelectedObj == null )
 				{
-					alert("<spring:message code='ezPortal.t412'/>");
-					document.location.reload();
+				    pObj.style.backgroundColor = "rgb(233, 241, 244)";
+					g_SelectedObj = pObj;
 				}
 				else
 				{
-					alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
+				    pObj.style.backgroundColor = "rgb(233, 241, 244)";
+					
+					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
+					g_SelectedObj = pObj;
 				}
-				
-				xmlhttp = null;
-			}
-		}
-		
-		function Outofusepage()
-	     {
-	           if (g_UID == "")
-	           { 
-	            alert("<spring:message code='ezPortal.t244'/>");
-	            return;
-	           }
-        	   
-	           if (g_UseFlag == "")
-	           {
-	            alert("<spring:message code='ezPortal.t245'/>");
-	            return;
-	           }
-        	   
-	           if (confirm("<spring:message code='ezPortal.t246'/>"))
-	           {
-	               var xmlhttp = createXMLHttpRequest();
-	                  xmlhttp.open("POST", "/admin/ezPortal/outOfUseTopMenu.do?uID=" + g_UID , false);
-	                  xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-	                  xmlhttp.send();
-            	      
-	                  if (xmlhttp.responseText =="OK")
-	                  {
-						 alert("<spring:message code='ezPortal.t413'/>");
-	                     document.location.reload();
-	                  }
-	                  else
-	                  {
-	                    alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
-	                  }
-            	      
-            	      xmlhttp = null;
-	           }
-	     }
-	     
-	     
-		function uselang(lang)
-		{
-			if (g_UID == "")
-			{
-				alert("<spring:message code='ezPortal.t240'/>");
-				return;
 			}
 			
-			var mgrStr = "";
-			if( lang=="1")
+			function selectItem(pUID, pObj)
 			{
-				mgrStr = "<spring:message code='ezPortal.t401'/>";
-			} else if( lang=="2")
-			{
-				mgrStr = "<spring:message code='ezPortal.t402'/>";
-			} else if( lang=="3")
-			{
-				mgrStr = "<spring:message code='ezPortal.t4023'/>";
-			} 
-			
-			if (confirm(mgrStr))
-			{
-			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/admin/ezPortal/setLang.do?uID=" + g_UID + "&lang=" +  lang, false);
-				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-				xmlhttp.send();
-				
-				if (xmlhttp.responseText == "OK")
-				{
-					alert("<spring:message code='ezPortal.t412'/>");
-					document.location.reload();
-				}
-				else
-				{
-					alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
-				}
-				
-				xmlhttp = null;
+			     location.href = "/ezPortal/topMenu.do?pageID=" + pUID;
 			}
-		}
-	     
+			
+			function newpage()
+			{
+			    location.href = "/ezPortal/topMenu.do?mode=new";
+			}
+			
+			function preview()
+			{
+				if (g_UID == "")
+				{
+					alert("<spring:message code='ezPortal.t60'/>");
+					return;
+				}
+			    window.open("/ezPortal/topMenu.do?mode=view&viewMode=preview&pageID=" + g_UID);
+			}
+			
+			function deleteTopMenu()
+			{
+				if (g_UID == "")
+				{
+					alert("<spring:message code='ezPortal.t98'/>");
+					return;
+				}
+				
+				if (confirm("<spring:message code='ezPortal.t54'/>"))
+				{
+				    var xmlhttp = createXMLHttpRequest();
+					xmlhttp.open("POST", "/admin/ezPortal/deleteTopPage.do?uID=" + g_UID, false);
+					xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+					xmlhttp.send();
+					
+					if (xmlhttp.responseText == "OK")
+						document.location.reload();
+					else
+						alert("<spring:message code='ezPortal.t239'/>" + xmlhttp.responseText);
+					
+					xmlhttp = null;
+				}
+			}
+			
+			function usepage()
+			{
+				if (g_UID == "")
+				{
+					alert("<spring:message code='ezPortal.t240'/>");
+					return;
+				}
+				
+				if (g_UseFlag == "Y")
+				{
+					alert("<spring:message code='ezPortal.t241'/>");
+					return;
+				}
+				
+				if (confirm("<spring:message code='ezPortal.t242'/>"))
+				{
+				    var xmlhttp = createXMLHttpRequest();
+					xmlhttp.open("POST", "/admin/ezPortal/useTopPage.do?uID=" + g_UID , false);
+					xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+					xmlhttp.send();
+					
+					if (xmlhttp.responseText == "OK")
+					{
+						alert("<spring:message code='ezPortal.t412'/>");
+						document.location.reload();
+					}
+					else
+					{
+						alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
+					}
+					
+					xmlhttp = null;
+				}
+			}
+			
+			function Outofusepage()
+		     {
+		           if (g_UID == "")
+		           { 
+		            alert("<spring:message code='ezPortal.t244'/>");
+		            return;
+		           }
+	        	   
+		           if (g_UseFlag == "")
+		           {
+		            alert("<spring:message code='ezPortal.t245'/>");
+		            return;
+		           }
+	        	   
+		           if (confirm("<spring:message code='ezPortal.t246'/>"))
+		           {
+		               var xmlhttp = createXMLHttpRequest();
+		                  xmlhttp.open("POST", "/admin/ezPortal/outOfUseTopMenu.do?uID=" + g_UID , false);
+		                  xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+		                  xmlhttp.send();
+	            	      
+		                  if (xmlhttp.responseText =="OK")
+		                  {
+							 alert("<spring:message code='ezPortal.t413'/>");
+		                     document.location.reload();
+		                  }
+		                  else
+		                  {
+		                    alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
+		                  }
+	            	      
+	            	      xmlhttp = null;
+		           }
+		     }
+		     
+		     
+			function uselang(lang)
+			{
+				if (g_UID == "")
+				{
+					alert("<spring:message code='ezPortal.t240'/>");
+					return;
+				}
+				
+				var mgrStr = "";
+				if( lang=="1")
+				{
+					mgrStr = "<spring:message code='ezPortal.t401'/>";
+				} else if( lang=="2")
+				{
+					mgrStr = "<spring:message code='ezPortal.t402'/>";
+				} else if( lang=="3")
+				{
+					mgrStr = "<spring:message code='ezPortal.t4023'/>";
+				} 
+				
+				if (confirm(mgrStr))
+				{
+				    var xmlhttp = createXMLHttpRequest();
+					xmlhttp.open("POST", "/admin/ezPortal/setLang.do?uID=" + g_UID + "&lang=" +  lang, false);
+					xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+					xmlhttp.send();
+					
+					if (xmlhttp.responseText == "OK")
+					{
+						alert("<spring:message code='ezPortal.t412'/>");
+						document.location.reload();
+					}
+					else
+					{
+						alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
+					}
+					
+					xmlhttp = null;
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody">

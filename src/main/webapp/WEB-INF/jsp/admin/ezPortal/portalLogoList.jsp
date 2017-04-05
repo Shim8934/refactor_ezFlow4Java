@@ -11,109 +11,109 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
-		var pageid = "${pageID}";
-		var LogoAreaExist = "${logoAreaExist}";
-		var g_SelectedObj = null;
-		var g_UID = "";
-		var logo_URL = "";
-		
-		document.onselectstart = function () {
-        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
-            return false;
-        else
-            return true;
-		};
-		
-		// 선택
-		function setValue(pUID, pObj)
-		{
-			g_UID = pUID;
-						            
-			pObj.style.backgroundColor = "rgb(233, 241, 244)";
-			logo_URL = GetAttribute(pObj, "imageurl");
-
-			if (g_SelectedObj != null) {
-			    if (pObj != g_SelectedObj)
-			        g_SelectedObj.style.backgroundColor = "#FFFFFF";
-			}
-			g_SelectedObj = pObj;
-		}
-		
-		// 수정
-		function selectItem(pUID, pObj){
-		    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=201", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
-		}
-		
-		// 추가
-		function Add()
-		{
-			if (pageid == "")
+			var pageid = "${pageID}";
+			var LogoAreaExist = "${logoAreaExist}";
+			var g_SelectedObj = null;
+			var g_UID = "";
+			var logo_URL = "";
+			
+			document.onselectstart = function () {
+	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+	            return false;
+	        else
+	            return true;
+			};
+			
+			// 선택
+			function setValue(pUID, pObj)
 			{
-				alert("<spring:message code='ezPortal.t52'/>");
-				return;
+				g_UID = pUID;
+							            
+				pObj.style.backgroundColor = "rgb(233, 241, 244)";
+				logo_URL = GetAttribute(pObj, "imageurl");
+	
+				if (g_SelectedObj != null) {
+				    if (pObj != g_SelectedObj)
+				        g_SelectedObj.style.backgroundColor = "#FFFFFF";
+				}
+				g_SelectedObj = pObj;
 			}
 			
-			if (LogoAreaExist == "NO")
-			{
-				alert("<spring:message code='ezPortal.t56'/>");
-				return;
-			}
-		    //if (CrossYN())
-		    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=new&parentUID=201", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
-		}
-		
-		// 미리보기
-		function preview()
-		{
-			if (pageid == "")
-			{
-				alert("<spring:message code='ezPortal.t60'/>");
-				return;
-			}
-		    window.open("/ezPortal/topMenu.do?mode=view&viewMode=preview&pageID=" + pageid + "&imageUrl=" + escape(logo_URL));
-		}
-		
-		// 삭제
-		function Delete()
-		{
-			if (g_UID == "")
-			{
-				alert("<spring:message code='ezPortal.t98'/>");
-				return;
+			// 수정
+			function selectItem(pUID, pObj){
+			    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=201", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
 			}
 			
-			if (confirm("<spring:message code='ezPortal.t54'/>"))
+			// 추가
+			function Add()
 			{
-			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/admin/ezPortal/saveLogoImage.do?pageID=" + pageid + "&uID=" + g_UID + "&mode=DEL", false);
-				xmlhttp.send();
-				xmlhttp = null;
+				if (pageid == "")
+				{
+					alert("<spring:message code='ezPortal.t52'/>");
+					return;
+				}
 				
-				location.reload();
-			}
-		}
-		
-		// 위치설정
-		function SetPosition() {
-			if (pageid == "") {
-				alert("<spring:message code='ezPortal.t52'/>");
-				return;
+				if (LogoAreaExist == "NO")
+				{
+					alert("<spring:message code='ezPortal.t56'/>");
+					return;
+				}
+			    //if (CrossYN())
+			    window.open("/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=new&parentUID=201", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));		    
 			}
 			
-			if (LogoAreaExist == "NO") {
-				alert("<spring:message code='ezPortal.t56'/>");
-				return;
+			// 미리보기
+			function preview()
+			{
+				if (pageid == "")
+				{
+					alert("<spring:message code='ezPortal.t60'/>");
+					return;
+				}
+			    window.open("/ezPortal/topMenu.do?mode=view&viewMode=preview&pageID=" + pageid + "&imageUrl=" + escape(logo_URL));
 			}
 			
-		    window.open("/admin/ezPortal/menuPosition.do?pageID=" + pageid + "&parentUID=201", "", "height = 230px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 230));
-		}
-		
-      // 메뉴레이아웃 변경함수가 없어 추가 2007-08-06
-       function layout_change()
-       {       
-			if (layoutList.options.selectedIndex != -1)			
-				location.href = "/admin/ezPortal/logoList.do?pageID=" + layoutList.options[layoutList.options.selectedIndex].value;
-       }
+			// 삭제
+			function Delete()
+			{
+				if (g_UID == "")
+				{
+					alert("<spring:message code='ezPortal.t98'/>");
+					return;
+				}
+				
+				if (confirm("<spring:message code='ezPortal.t54'/>"))
+				{
+				    var xmlhttp = createXMLHttpRequest();
+					xmlhttp.open("POST", "/admin/ezPortal/saveLogoImage.do?pageID=" + pageid + "&uID=" + g_UID + "&mode=DEL", false);
+					xmlhttp.send();
+					xmlhttp = null;
+					
+					location.reload();
+				}
+			}
+			
+			// 위치설정
+			function SetPosition() {
+				if (pageid == "") {
+					alert("<spring:message code='ezPortal.t52'/>");
+					return;
+				}
+				
+				if (LogoAreaExist == "NO") {
+					alert("<spring:message code='ezPortal.t56'/>");
+					return;
+				}
+				
+			    window.open("/admin/ezPortal/menuPosition.do?pageID=" + pageid + "&parentUID=201", "", "height = 230px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 230));
+			}
+			
+	      // 메뉴레이아웃 변경함수가 없어 추가 2007-08-06
+	       function layout_change()
+	       {       
+				if (layoutList.options.selectedIndex != -1)			
+					location.href = "/admin/ezPortal/logoList.do?pageID=" + layoutList.options[layoutList.options.selectedIndex].value;
+	       }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -144,12 +144,6 @@
 			</tr>
 		</table>
 		<table class="mainlist" style="width:100%">
-			<%-- <% for (int i=0; i<g_XmlDom.GetElementsByTagName("UID_").Count; i++) { %>
-			<tr style="cursor:pointer" imageurl="<%= g_XmlDom.GetElementsByTagName("NORMALIMAGEPATH").Item(i).InnerText %>" onclick="setValue('<%= g_XmlDom.GetElementsByTagName("UID_").Item(i).InnerText %>', this)" ondblclick="selectItem('<%= g_XmlDom.GetElementsByTagName("UID_").Item(i).InnerText %>', this)">
-				<td width="60"><%= (i+1).ToString() %></td>
-				<td><%= g_XmlDom.GetElementsByTagName("DISPLAYNAME" + GetLangData(userinfo.primary)).Item(i).InnerText %></td>
-			</tr>
-			<% } %> --%>
 			${mainHTML}
 		</table>
 		<script type="text/javascript">

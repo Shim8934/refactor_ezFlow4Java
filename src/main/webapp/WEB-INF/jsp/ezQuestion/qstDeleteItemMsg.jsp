@@ -58,7 +58,7 @@
 		</script>
 	</head>
 	<body class="popup">
-		<form id="Form1" method="post" runat="server"> 
+		<form id="Form1" method="post"> 
 			<h1><spring:message code='ezQuestion.t262' /></h1>
   			<table class="content"> 
     			<tr > 
