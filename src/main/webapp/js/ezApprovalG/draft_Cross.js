@@ -2036,14 +2036,13 @@ function createNewDoc() {
     		},
     		success: function(text){
     			result = text;
-    		}        			
+    		}, error: function() {
+    			 var pAlertContent = strLang131 + "<br> " + strLang132;
+    	         OpenAlertUI(pAlertContent);
+    	         return "";
+    		}      
     	});
-        if (result == "False") {
-            var pAlertContent = strLang131 + "<br> " + strLang132;
-            OpenAlertUI(pAlertContent);
-        } else {
-            return result;
-        }
+        return result;
     } catch (e) {
         alert("createNewDoc()" + e.description);
     }
@@ -3438,6 +3437,7 @@ function UndoDoc() {
 		}        			
 	});
 }
+
 function getSignDate() {
     var GyulJeDate;
 	var result = "";

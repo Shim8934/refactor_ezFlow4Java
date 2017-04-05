@@ -1170,13 +1170,16 @@ function createNewDoc()
 	xmlhttp.open("POST","/ezApprovalG/createNewDoc.do",false);
 	xmlhttp.send(xmlpara);
 	
-	if(xmlhttp.responseText == "False")
-	{
-		var pAlertContent = strLang344 + "<br> " + strLang345;
-		OpenAlertUI(pAlertContent);
-	}else{
-		return xmlhttp.responseText;
-	}
+    var rtnXml = xmlhttp.responseXML;
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+    	 if (xmlhttp.statusText == "OK") {
+    		 return xmlhttp.responseText;
+    	 } else {
+    		 var pAlertContent = strLang344 + "<br> " + strLang345;
+    			OpenAlertUI(pAlertContent);
+    	 }
+    } 
+    
   }catch(e){
     alert("createNewDoc " + e.description);
   }

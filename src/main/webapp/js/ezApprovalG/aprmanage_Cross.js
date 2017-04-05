@@ -2315,7 +2315,7 @@ function RemoveDocCabinet(tempDocID, FLAG) {
 			flag : FLAG,
 			deptName2 : arr_userinfo[16]
 		},
-		success: function(xml){
+	success: function(xml){
 			result = xml;
 		}
 	});

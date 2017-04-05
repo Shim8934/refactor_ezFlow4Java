@@ -57,22 +57,26 @@ function lvRecSaveList_onSel_Click() {
 //############################################################################################################################################# 수신처 즐겨찾기 리스트 세부 리스트 로드
 var xmlHTTP;
 function GetReceptTempletInfo(p_AprLineTempletID) {
-
-	$.ajax({
-		type : "POST",
-		dataType : "text",
-		async : true,
-		url : "/ezApprovalG/getAprDeptTempletListInfo.do",
-		data : {
-				userID : pUserID,
-				formID : pFormID,
-				aprSN  : p_AprLineTempletID
-				},
-		success: function(text){
-			event_GetReceptTempletInfo(text);
-		}        			
-	});
+	try {
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezApprovalG/getAprDeptTempletListInfo.do",
+			data : {
+					userID : pUserID,
+					formID : pFormID,
+					aprSN  : p_AprLineTempletID
+					},
+			success: function(text){
+				event_GetReceptTempletInfo(text);
+			}     			
+		});
+	} catch(e) {
+        alert("GetReceptTempletInfo::" + e.description);
+    }
 }
+
 function event_GetReceptTempletInfo(text)
 {
     try

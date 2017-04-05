@@ -187,8 +187,9 @@ function getFormRecv() {
 				},
 		success: function(xml){
 			result = xml;
-		}        			
+			setRecevInfo(result);
+		} ,error: function() {
+			 OpenAlertUI(strLang131);
+		}       			
 	});
-
-    setRecevInfo(result);
 }

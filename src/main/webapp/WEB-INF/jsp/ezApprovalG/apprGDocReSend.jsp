@@ -117,15 +117,13 @@
 	            		},
 	            		success: function(text){
 	            			result = text;
+	            		}, error: function() {
+	            			var pAlertContent = "<spring:message code='ezApproval.t126'/><br> <spring:message code='ezApproval.t127'/>";
+		                    OpenAlertUI(pAlertContent);
+		                    return "";
 	            		}        			
 	            	});
-	                
-	                if (result == "False") {
-	                    var pAlertContent = "<spring:message code='ezApproval.t126'/><br> <spring:message code='ezApproval.t127'/>";
-	                    OpenAlertUI(pAlertContent);
-	                } else {
-	                    return result;
-	                }
+	                return result;
 	            } catch (e) {
 	                alert("createNewDoc()" + e.description);
 	            }
@@ -422,7 +420,7 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}, error: funtion () {
+		    		}, error: function() {
 		    			return "FALSE";
 		    		}
 	    		});
