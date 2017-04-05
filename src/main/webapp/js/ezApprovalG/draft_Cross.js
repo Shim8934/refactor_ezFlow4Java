@@ -2360,7 +2360,7 @@ function openOpinionUI(pOpinionFlag) {
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-        DivPopUpShow(530, 500, "/ezApprovalG/aprOpinion.do");
+        DivPopUpShow(530, 495, "/ezApprovalG/aprOpinion.do");
 
     } catch (e) {
         alert("openOpinionUI(pOpinionFlag)" + e.description);
@@ -2422,7 +2422,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(535, 285, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag);
+        DivPopUpShow(535, 250, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }
@@ -2447,7 +2447,7 @@ function openAaprDocAttachUI() {
             if(approvalFlag == "G") {
             	DivPopUpShow(800, 370, url);
             } else {
-            	DivPopUpShow(850, 650, url);
+            	DivPopUpShow(1050, 660, url);
             }
         }
         else {
@@ -2456,7 +2456,7 @@ function openAaprDocAttachUI() {
         		feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
         		feature = feature + GetShowModalPosition(675, 395);
         	} else {
-        		feature = "status:no;dialogWidth:850px;dialogHeight:650px;edge:sunken;scroll:no";
+        		feature = "status:no;dialogWidth:1050px;dialogHeight:660px;edge:sunken;scroll:no";
         	}
            
             var ret = window.showModalDialog(url, parameter, feature);
@@ -3453,7 +3453,7 @@ function getSignDate() {
 }
 function getHistory() {
     var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
-    centerOpenWindow(URL, 730, 430);
+    centerOpenWindow(URL, 730, 465);
 }
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {

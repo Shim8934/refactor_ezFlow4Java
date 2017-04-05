@@ -123,11 +123,10 @@
 		    }
 		</script>
 	</head>
-		<body class="popup">
-		<h1><spring:message code='ezApprovalG.t25004'/></h1>
-		<span>▒ <spring:message code='ezApprovalG.t292'/></span>
-		
-		<table class="content" style="margin-top: 5">
+		<body class="popup">		
+		<h1><spring:message code='ezApprovalG.t286'/></h1>		
+		<span>▒ <spring:message code='ezApprovalG.t292'/></span>		
+		<table class="content" style="margin-top: 15px">
 		  <tr style="display:none"> 
 		    <th> <spring:message code='ezApprovalG.t293'/></th>
 		    <td style="width:100%"> 
@@ -140,7 +139,7 @@
 		  </tr>
 		</table>
 		
-		<div class="btnposition"> 
+		<div class="btnposition" style="margin-top:25px"> 
 		<a class="imgbtn" id="btn_SaveAprDeptTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
 		<a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>

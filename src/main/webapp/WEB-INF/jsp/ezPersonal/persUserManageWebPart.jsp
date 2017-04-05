@@ -155,7 +155,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<form method="post" runat="server">
+		<form method="post">
   			<h1><spring:message code='ezPersonal.t357'/></h1>
   			<br>
   			<table>

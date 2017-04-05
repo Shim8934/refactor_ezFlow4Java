@@ -66,7 +66,7 @@
 		</script> 
 	</head>
 	<body class="mainbody" onload="javascript:window_onload()">
-		<form id="Form1" method="post" runat="server">
+		<form id="Form1" method="post">
   			<h1><spring:message code='ezPersonal.s3'/></h1>
   			<table class="popuplist">
 				<tr>
