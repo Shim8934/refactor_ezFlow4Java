@@ -261,7 +261,217 @@ function AprrovMappingSign(ret) {
         }
 
     }
-    else {
+    else if (approvalFlag == "S" && pAprLineType == strAprType4) {
+    	var pAprMemberSignSN = pAprMemberSN;
+        var signID;
+        var seumyungID;
+        var seumyungdateID;
+        
+        var pSusinSN2 = "";
+    	if (pDraftFlag == "SUSIN" || (pDraftFlag == "B_GAMSA" && ConvertYN == "N")) {
+    		pSusinSN2 = pSusinSN;
+    	}
+        
+        if (junGyulFlag == "1") {
+        	
+            //전결자, 결재안함 결재칸에 전결String
+            for (var i = pAprMemberSignSN; i < LastKyulSN; i++) {
+            	signID = pSusinSN2 + "sign" + i;
+            	
+            	var field = message.GetListItem(fields, signID);
+                if (field) {
+                	field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang6 + "</P>";
+                }
+            }
+            
+            //최종결재자 인덱스 구하기
+            for (var i=0; i<20; i++) {
+            	signID = pSusinSN2 + "sign" + i;
+            	var field = message.GetListItem(fields, signID);
+            	
+                if (field) {
+                	LastKyulSN = i;
+                }
+            }
+            
+            //최종결재자 결재칸에 싸인
+        	signID = pSusinSN2 + "sign" + LastKyulSN;
+            seumyungID = pSusinSN2 + "jikwe" + LastKyulSN;
+            seumyungdateID = pSusinSN2 + "seumyungdate" + LastKyulSN;
+        	
+            var field = message.GetListItem(fields, seumyungdateID);
+            if (field) {
+                setNodeText(field , s);
+            }
+
+            field = message.GetListItem(fields, seumyungID);
+            if (field) {
+                setNodeText(field , getNodeText(field) + PositionText);
+            }
+        	
+            var field = message.GetListItem(fields, signID);
+            if (field) {
+            	//전자결재 일반에는 대결없음
+//                if (DekyulFlag && pAprLineB4type == strAprType4) {
+//                    field.innerHTML = strLang6;
+//                    signInfo[signCnt] = signID;
+//                    SignName[signCnt] = signID;
+//                    SignType[signCnt] = "TEXT";
+//                    SignContent[signCnt] = strLang6;
+//
+//                    signCnt = signCnt + 1;
+//                }
+//                else if (DekyulFlag) {
+//                }
+//                else {
+                    if (ret != "NAME") { //이미지 서명
+                    	
+                        signWidth = 50;
+                        signHeight = 50;
+
+                        var strimg;
+                        var FilePath = encodeURI(ret);
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                            strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
+                        else {
+                        	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        	signHeight = 28;
+                        }
+
+                        strimg = strimg + " width=" + signWidth;
+                        strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+
+                        var contents = "";
+                        if (!message.GetListItem(fields, seumyungdateID)) {
+                            strimg = OpinionText + strimg;
+                            contents = OpinionText;
+                        }
+
+                        var contents = OpinionText;
+                        
+                        //TODO: signInfo[signCnt]... 에 담아야하나?
+                        field.innerHTML = strimg;
+                        signInfo[signCnt] = signID;
+                        SignName[signCnt] = signID;
+                        SignType[signCnt] = "IMAGE";
+                        SignContent[signCnt] = ret + "::" + contents;
+                        
+                        signCnt = signCnt + 1;
+                        SingFlag = true;
+                    }
+                    else { //문자 서명
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                            strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
+                        else
+                            strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
+
+                        if (!message.GetListItem(fields, seumyungdateID)) {
+                            strimg = OpinionText + strimg;
+                        }
+
+                        field.innerHTML = strimg;
+                        signInfo[signCnt] = signID;
+                        SignName[signCnt] = signID;
+                        SignType[signCnt] = "HTML";
+                        SignContent[signCnt] = strimg;
+                        signCnt = signCnt + 1;
+                        SingFlag = false;
+                    }
+//                }
+            }
+    	} else { //junGyulFlag == "4" (2,3은 추후개발)
+    		signID = pSusinSN2 + "sign" + pAprMemberSignSN;
+            seumyungID = pSusinSN2 + "jikwe" + pAprMemberSignSN;
+            seumyungdateID = pSusinSN2 + "seumyungdate" + pAprMemberSignSN;
+
+            var field = message.GetListItem(fields, seumyungdateID);
+            if (field) {
+                setNodeText(field , s);
+            }
+
+            field = message.GetListItem(fields, seumyungID);
+            if (field) {
+                setNodeText(field , getNodeText(field) + PositionText);
+            }
+        	
+            var field = message.GetListItem(fields, signID);
+            if (field) {
+            	//전자결재 일반에는 대결없음
+//                if (DekyulFlag && pAprLineB4type == strAprType4) {
+//                    field.innerHTML = strLang6;
+//                    signInfo[signCnt] = signID;
+//                    SignName[signCnt] = signID;
+//                    SignType[signCnt] = "TEXT";
+//                    SignContent[signCnt] = strLang6;
+//
+//                    signCnt = signCnt + 1;
+//                }
+//                else if (DekyulFlag) {
+//                }
+//                else {
+                    if (ret != "NAME") { //이미지 서명
+                    	
+                        signWidth = 50;
+                        signHeight = 28;
+
+                        var strimg;
+                        var FilePath = encodeURI(ret);
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                            strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
+                        else {
+                        	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        }
+
+                        strimg = strimg + " width=" + signWidth;
+                        strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+
+                        var contents = "";
+                        if (!message.GetListItem(fields, seumyungdateID)) {
+                            strimg = OpinionText + strimg;
+                            contents = OpinionText;
+                        }
+
+                        var contents = OpinionText;
+                        
+                        strimg = strLang6 + strimg;
+                        contents = strLang6 + contents;
+
+                        field.innerHTML = strimg;
+                        signInfo[signCnt] = signID;
+                        SignName[signCnt] = signID;
+                        SignType[signCnt] = "IMAGE";
+                        SignContent[signCnt] = ret + "::" + contents;
+
+                        
+                        signCnt = signCnt + 1;
+                        SingFlag = true;
+                    }
+                    else { // 문자 서명
+                    	var strimg;
+                    	
+                        if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                            strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
+                        else
+                            strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
+
+                        if (!message.GetListItem(fields, seumyungdateID)) {
+                            strimg = OpinionText + strimg;
+                        }
+
+                        strimg = strLang6 + strimg;
+
+                        field.innerHTML = strimg;
+                        signInfo[signCnt] = signID;
+                        SignName[signCnt] = signID;
+                        SignType[signCnt] = "HTML";
+                        SignContent[signCnt] = strimg;
+                        signCnt = signCnt + 1;
+                        SingFlag = false;
+                    }
+//                }
+            }
+    	} 
+    } else {
     	var pAprMemberSignSN = pAprMemberSN;
     	var signID;
     	var seumyungID;
