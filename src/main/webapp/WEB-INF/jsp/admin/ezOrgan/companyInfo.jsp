@@ -38,32 +38,32 @@
 			    	if (RetValue[0] == "Top") {
 			    	    ParentID.readOnly = false;
 			    	}
-			    }
 
-				var xmlDom = createXmlDom();				
-				
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					url : "/admin/ezOrgan/getEntryInfo.do",
-					async : false,
-					data : {cn : CompanyID.value, prop : "displayName;mail;extensionAttribute1", pMode : "dept" },
-					success : function(result){
-						xmlDom = loadXMLString(result);
-						CompanyName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
-						CompanyName2.value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
-						
-						if (!isAdd && RetValue[0] == "Top") {
-						    var mailId = SelectSingleNodeValueNew(xmlDom, "DATA/MAIL").trim();
-						    mailId = mailId.substring(0, mailId.indexOf("@"));
-						    
-						    parentHeader.innerText = "<spring:message code='ezOrgan.t288' />";	
-						    ParentID.value = mailId;
-						} else {
-							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
-						}
-					}
-				});			    
+     				var xmlDom = createXmlDom();				
+     				
+     				$.ajax({
+     					type : "POST",
+     					dataType : "text",
+     					url : "/admin/ezOrgan/getEntryInfo.do",
+     					async : false,
+     					data : {cn : CompanyID.value, prop : "displayName;mail;extensionAttribute1", pMode : "dept" },
+     					success : function(result){
+     						xmlDom = loadXMLString(result);
+     						CompanyName.value = SelectSingleNodeValueNew(xmlDom,"DATA/DISPLAYNAME1").trim();
+     						CompanyName2.value = SelectSingleNodeValueNew(xmlDom, "DATA/DISPLAYNAME2").trim();
+     						
+     						if (!isAdd && RetValue[0] == "Top") {
+     						    var mailId = SelectSingleNodeValueNew(xmlDom, "DATA/MAIL").trim();
+     						    mailId = mailId.substring(0, mailId.indexOf("@"));
+     						    
+     						    parentHeader.innerText = "<spring:message code='ezOrgan.t288' />";	
+     						    ParentID.value = mailId;
+     						} else {
+     							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
+     						}
+     					}
+     				});
+			    }
 			});
 			
 			function Check_ID(pValue){
