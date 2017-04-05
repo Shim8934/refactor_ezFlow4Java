@@ -209,6 +209,9 @@
 		        } catch (e) { }
 		    }
 		</script>
+		<style>
+			.mainlist tr th {border-top:0px}
+		</style>
 	</head>
 	<body class="popup">
 	    <h1>

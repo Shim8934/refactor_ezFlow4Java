@@ -1431,7 +1431,7 @@ function openOpinionUI(pOpinionFlag) {
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+        DivPopUpShow(530, 500, "/ezApprovalG/aprOpinion.do");
 
     } catch (e) {
         alert("openOpinionUI(pOpinionFlag)" + e.description);
