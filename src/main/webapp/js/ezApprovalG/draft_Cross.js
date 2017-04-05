@@ -1440,7 +1440,7 @@ function openOpinionUI(pOpinionFlag) {
 
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();
-    if (ret != "cancel") {
+    if (ret != "cancel" && ret != "Clear") {
         var NodeList;
         var objXML = createXmlDom();
         objXML = loadXMLString(ret);
