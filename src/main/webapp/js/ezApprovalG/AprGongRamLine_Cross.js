@@ -533,20 +533,22 @@ function SaveAprLineInfo() {
         xmlhttp.open("Post", "/ezApprovalG/gongRamSave.do?type=" + type, false);
         xmlhttp.send(pstrXML);
 
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        var ret = getNodeText(dataNodes[0]);
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+          	 if (xmlhttp.statusText == "OK") {
+          		  var dataNodes = GetChildNodes(xmlhttp.responseXML);
+                  var ret = getNodeText(dataNodes[0]);
+                  if (ret != "FALSE") {
+                      UpdateLineHistory(ret);
+                      window.returnValue = "OK";
+                      window.close();
+                  }
+          	 } else {
+          		var pAlertContent = strLang826;
+                OpenAlertUI(pAlertContent);
+                return;
+          	 }
+          } 
 
-        //2015-05-18 수정 - KSK
-        //공람지정 후 History에 공람 지정 한 사람 정보를 남긴다.
-        if (ret != "FALSE") {
-            UpdateLineHistory(ret);
-            window.returnValue = "OK";
-            window.close();
-        } else {
-            var pAlertContent = strLang826;
-            OpenAlertUI(pAlertContent);
-            return;
-        }
     } catch (e) {
         alert("SaveAprLineInfo :: " + e.description);
     }

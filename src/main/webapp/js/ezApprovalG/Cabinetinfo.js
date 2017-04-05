@@ -423,12 +423,10 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
 			},
 			success: function(xml){
 				result = xml;
-			}
+			}, error : function() {
+				 alert(strLang486);
+			}    
 		});
-	    
-	    if (result != "TRUE") {
-	    	 alert(strLang486);
-	    }
     
         selTaskMCategory_onchange();
 }

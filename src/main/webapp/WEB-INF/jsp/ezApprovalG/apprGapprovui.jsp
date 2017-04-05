@@ -132,7 +132,7 @@
 		    var junGyulFlag = "${junGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
-		    
+		    var hideCabinet = "${hideCabinet}";
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;

@@ -148,12 +148,11 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+		} , error : function() {
+			 alert(strLang486);
+		}      			
 	});
   
- 	    if (result != "TRUE") {
-	    	 alert(strLang486);
-	    }
     return rtn;
 }
 
@@ -173,14 +172,15 @@ function EndCabProduce(pCabClassNo, pExpYear, pFlag) {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+		}, error: function() {
+			return false;
+		}			
 	});
     
     var dataNodes = GetChildNodes(loadXMLString(result));
     var rtn = getNodeText(dataNodes[0]);
 
-    if (rtn != "TRUE")
-        return false;
-    else
-        return true;
+    if (rtn == "TRUE") {
+    	return true;
+    }
 }

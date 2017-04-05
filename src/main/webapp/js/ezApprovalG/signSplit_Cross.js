@@ -27,9 +27,9 @@ function setSignSlash(pSignKinds, pSusin) {
                 var signWidth = parseInt(pSignImage_Size.split('/')[0]);
                 var signHeight = parseInt(pSignImage_Size.split('/')[1]);
                 var strimg;
-                var ret = "/files/upload_approvalG/signimgs/200.gif";
+                var ret = "/images/signimgs/200.gif";
                 strimg = "<img src='" + ret + "' border=0 embedding='1' ";
-                strimg = strimg + " spath = '" + "/files/upload_approvalG/signimgs/200.gif";
+                strimg = strimg + " spath = '" + "/images/signimgs/200.gif";
                 strimg = strimg + "' width=" + signWidth;
                 strimg = strimg + " height=" + signHeight + " imglock >";
                 field.innerHTML = strimg;

@@ -110,18 +110,21 @@
 	        }
 	        XmlHttp.open("POST", "/ezApprovalG/transferCab.do", false);
 	        XmlHttp.send(xmlpara);
-	        var rtnVal = getNodeText(XmlHttp.responseXML.documentElement);
-	        if (rtnVal == "NODEPTADMIN") {
-	            alert("<spring:message code='ezApprovalG.t567'/>");
-	            return false;
-	        }
-	        else if (rtnVal == "FALSE") {
-	            alert("<spring:message code='ezApprovalG.t568'/>");
-	                return false;
-	            }
-	            else {
-	                return true;
-	            }
+
+	        if (XmlHttp != null && XmlHttp.readyState == 4) {
+	        	 if (XmlHttp.statusText == "OK") {
+	        		 var rtnVal = getNodeText(XmlHttp.responseXML.documentElement);
+	        		  if (rtnVal == "NODEPTADMIN") {
+	      	            alert("<spring:message code='ezApprovalG.t567'/>");
+	      	            return false;
+	      	        } else {
+	      	        	return true;
+	      	        }
+	        	 } else {
+	        		 alert("<spring:message code='ezApprovalG.t568'/>");
+		             return false;
+	        	 }
+	        } 
 	    }
 	
 	    function GetSelCabInfo() {

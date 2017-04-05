@@ -2213,20 +2213,19 @@ function setHeSongDocInfo() {
     		},
     		success: function(xml){
     			result = loadXMLString(xml);
-    		}        			
+    		}, error: function() {
+    			var pAlertContent = strLang740;
+                OpenAlertUI(pAlertContent);
+                return false;
+    		}			
     	});
 
         var RtnVal = getNodeText(result.documentElement);
 
-        if (RtnVal != "TRUE") {
-            var pAlertContent = strLang740;
-            OpenAlertUI(pAlertContent);
-            return false;
-        }
-        else {
-            var pAlertContent = strLang741;
-            OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-            return true;
+        if (RtnVal == "TRUE") {
+        	   var pAlertContent = strLang741;
+               OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+               return true;
         }
     }
     catch (e) {

@@ -184,17 +184,17 @@ function RegisterCabinet() {
 
     xmlhttp.open("POST", "/ezApprovalG/registerCabinet.do", false);
     xmlhttp.send(xmlpara);
-
+    
     var rtnXml = xmlhttp.responseXML;
-    if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "FALSE") {
-    	alert(300);
-        alert(strLang649);
-        return false;
-    }
-    else {
-        g_CabID = SelectSingleNodeValue(xmlhttp.responseXML, "RESULT");
-        return true;
-    }
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+    	 if (xmlhttp.statusText == "OK") {
+    		 g_CabID = SelectSingleNodeValue(xmlhttp.responseXML, "RESULT");
+    	        return true;
+    	 } else {
+    		 alert(strLang649);
+    	     return false;
+    	 }
+    } 
 }
 
 var InsDisplayInfo_Cross_dialogArguments = new Array();

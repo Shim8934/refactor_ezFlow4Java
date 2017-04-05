@@ -1144,16 +1144,18 @@ function setHeSongHapyuiDocInfo(pSelectedRow) {
 
         xmlhttp.open("POST", "/ezApprovalG/setHeSongHapyuiDocInfo.do", false);
         xmlhttp.send(xmlpara);
-
-        if (getNodeText(xmlhttp.responseXML.documentElement) != "TRUE") {
-            var pAlertContent = strLang740;
-            OpenAlertUI(pAlertContent, "", "OPEN");
-            return;
-        } else {
-            var pAlertContent = strLang878;
-            OpenAlertUI(pAlertContent, "", "OPEN");
-            openergetDocInfo();
-        }
+        
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+       	 if (xmlhttp.statusText == "OK") {
+       		 var pAlertContent = strLang878;
+             OpenAlertUI(pAlertContent, "", "OPEN");
+             openergetDocInfo();
+       	 } else {
+       		 var pAlertContent = strLang740;
+             OpenAlertUI(pAlertContent, "", "OPEN");
+             return;
+       	 }
+       } 
     } catch (e) {
         alert("setHeSongHapyuiDocInfo :: " + e.description);
     }
@@ -1192,19 +1194,18 @@ function setHeSongDocInfo(pCurSelRow) {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+		}, error: function() {
+			 var pAlertContent = strLang740;
+		        OpenAlertUI(pAlertContent, "", "OPEN");
+		}       			
 	});
 
     var RtnVal = getNodeText(loadXMLString(result));
 
-    if (RtnVal == "FALSE") {
-        var pAlertContent = strLang740;
-        OpenAlertUI(pAlertContent, "", "OPEN");
-    }
-    else {
-        var pAlertContent = strLang878;
-        OpenAlertUI(pAlertContent, "", "OPEN");
-        openergetDocInfo();
+    if (RtnVal != "FALSE") {
+    	 var pAlertContent = strLang878;
+         OpenAlertUI(pAlertContent, "", "OPEN");
+         openergetDocInfo();
     }
 }
 
@@ -2161,6 +2162,9 @@ function doCancel(pDocID, tempListType) {
 		},
 		success: function(xml){
 			result = xml;
+		}, error: function () {
+			var pAlertContent = strLang898;
+	        OpenAlertUI(pAlertContent, "", "OPEN");
 		}
 	});
 	
@@ -2193,10 +2197,6 @@ function doCancel(pDocID, tempListType) {
     }
     else if (RtnVal == "ERR03") {
         var pAlertContent = strLang897;
-        OpenAlertUI(pAlertContent, "", "OPEN");
-    }
-    else {
-        var pAlertContent = strLang898;
         OpenAlertUI(pAlertContent, "", "OPEN");
     }
 }

@@ -326,7 +326,9 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    		},error: function() {
+		    			
+		    		}	
 		    	});
 		        
 		        var dataNodes = GetChildNodes(result);
@@ -402,8 +404,13 @@
 	        		},
 	        		success: function(xml){
 	        			result = xml;
+	        		}, error: function () {
+	    	                var pAlertContent = strLang898;
+	    	                OpenAlertUI(pAlertContent);
+	    	            }
 	        		}
 	        	});
+	        	
 	            var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
 	            if (RtnVal == "TRUE") {
 	            	SendMailToCancel_Function(GetCurrentlinelist);
@@ -422,10 +429,7 @@
 	                var pAlertContent = strLang897;
 	                OpenAlertUI(pAlertContent);
 	            }
-	            else {
-	                var pAlertContent = strLang898;
-	                OpenAlertUI(pAlertContent);
-	            }
+	            
 	        }
 	        
 	        function SendMailToCancel_Function(GetCurrentlinelist) {
