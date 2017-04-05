@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/recevG_Susin_Cross.js"></script>
@@ -113,6 +114,8 @@
 		    var pPageType = "SUSIN";
 		    var approvalFlag = "${approvalFlag}";
 		    var junGyulFlag = "${junGyulFlag}";
+		    var pSignImage_Size = "${signImageSize}";
+		    var pADMIN = "N";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -1227,7 +1230,7 @@
 		    }
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-		            try {
+// 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
@@ -1313,10 +1316,10 @@
 		
 		                savexmlhttp = null;
 		
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-		            }
+// 		            }
+// 		            catch (e) {
+// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+// 		            }
 		        }
 		    }
 		</script>

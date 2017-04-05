@@ -603,7 +603,14 @@ function SGetDraftAprLineInfo(ret) {
             var ReasonDoNotApprov = getNodeText(Cell[12]);
             var KyljeaID = getNodeText(Cell[9]);
             
-
+            if (junGyulFlag == "1") {
+    			//아무것도 안함
+    		} else if (junGyulFlag == "4") {
+    			if (KyljeaType == "003") {
+    				continue;
+    			}
+    		}
+            
             OrderType[KyljeaOrder] = KyljeaType;
             OrderTypeName[KyljeaOrder] = KyljeaTypeName;
             OrderName[KyljeaOrder] = KyljeaName;
@@ -703,14 +710,14 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderName[i]);
                         }
 
@@ -729,7 +736,7 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuipositon" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
                         IsSkipDrafter = "TRUE";
@@ -806,14 +813,14 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderName[i]);
                         }
 
@@ -832,7 +839,7 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuipositon" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
                         IsSkipDrafter = "TRUE";
@@ -909,14 +916,14 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang57) {
+                        if (field && OrderStat[i] != strLangS57) {
                             setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang57) {
+                        if (field && OrderStat[i] != strLangS57) {
                             setNodeText(field , OrderName[i]);
                         }
 
@@ -935,7 +942,7 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuipositon" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang57) {
+                        if (field && OrderStat[i] != strLangS57) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
                         IsSkipDrafter = "TRUE";
@@ -1016,14 +1023,14 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderDept[i]);
                         }
 
                         fieldname = "habyuisign" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderName[i]);
                         }
 
@@ -1042,7 +1049,7 @@ function SGetDraftAprLineInfo(ret) {
                         fieldname = "habyuipositon" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
-                        if (field && OrderStat[i] != strLang26) {
+                        if (field && OrderStat[i] != strLangS26) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
                         IsSkipDrafter = "TRUE";
@@ -1094,7 +1101,7 @@ function SGetDraftAprLineInfo(ret) {
                     }
                     break;
 
-                case strLang61:
+                case strLangS61:
                     fieldname = "gongram" + gongramCnt
                     field = message.GetListItem(fields, fieldname);
 
@@ -1104,19 +1111,19 @@ function SGetDraftAprLineInfo(ret) {
                     }
                     break;
 
-                case strLang63:
+                case strLangS63:
                     fieldname = "hgamsa"
                     field = message.GetListItem(fields, fieldname)
                     if (field) {
-                        setNodeText(field , strLang63);
+                        setNodeText(field , strLangS63);
                     }
                     break;
 
-                case strLang64:
+                case strLangS64:
                     fieldname = "hgamsa"
                     field = message.GetListItem(fields, fieldname)
                     if (field) {
-                        setNodeText(field , strLang64);
+                        setNodeText(field , strLangS64);
                     }
                     break;
             }

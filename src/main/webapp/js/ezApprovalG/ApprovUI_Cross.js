@@ -1480,12 +1480,12 @@ function SReAprLineSingMapping(ret) {
 
     if (ret[5] == undefined) {
         xmlKuljea = ret[0];
-        xmlReDraft = ret[1];
+        xmlReDraft = ret[2];
         DrawAutoAprLine(ret[0], pDraftFlag);
     }
     else {
         xmlKuljea = ret[1];
-        xmlReDraft = ret[2];
+        xmlReDraft = ret[5];
         DrawAutoAprLine(ret[1], pDraftFlag);
     }
 
@@ -1523,6 +1523,14 @@ function SReAprLineSingMapping(ret) {
         var KyljeaStatName = getNodeText(dataNodes[5]);
         var KyljeaJobtitle = getNodeText(dataNodes[2]);
         var ReasonDoNotApprov = getNodeText(dataNodes[12]);
+        
+        if (junGyulFlag == "1") {
+			//아무것도 안함
+		} else if (junGyulFlag == "4") {
+			if (KyljeaType == "003") {
+				continue;
+			}
+		}
         
         OrderType[KyljeaOrder] = KyljeaType;
         OrderTypeName[KyljeaOrder] = KyljeaTypeName;
@@ -2039,9 +2047,9 @@ function ReAprLineSingMapping(ret) {
                     if (field) {
                     	setNodeText(field , OrderJobtitle[i]);
                         if (OrderSuggester[i] == "Y")
-                        	setNodeText(field , strLang75 + getNodeText(field));
+                        	setNodeText(field , strLangS75 + getNodeText(field));
                         if (OrderReporter[i] == "Y")
-                        	setNodeText(field , strLang76 + getNodeText(field));
+                        	setNodeText(field , strLangS76 + getNodeText(field));
                     }
 
                     fieldname = susinSN + "sign" + idx;
@@ -2073,9 +2081,9 @@ function ReAprLineSingMapping(ret) {
             if (field) {
             	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                	setNodeText(field , strLang75 + getNodeText(field));
+                	setNodeText(field , strLangS75 + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                	setNodeText(field , strLang76 + getNodeText(field));
+                	setNodeText(field , strLangS76 + getNodeText(field));
             }
 
             fieldname = susinSN + "sign" + idx;
@@ -2103,9 +2111,9 @@ function ReAprLineSingMapping(ret) {
             if (field) {
             	setNodeText(field , OrderJobtitle[i]);
                 if (OrderSuggester[i] == "Y")
-                	setNodeText(field , strLang75 + getNodeText(field));
+                	setNodeText(field , strLangS75 + getNodeText(field));
                 if (OrderReporter[i] == "Y")
-                	setNodeText(field , strLang76 + getNodeText(field));
+                	setNodeText(field , strLangS76 + getNodeText(field));
             }
             hidx = hidx + 1;
         }
