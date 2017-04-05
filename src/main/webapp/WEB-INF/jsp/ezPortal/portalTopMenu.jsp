@@ -1551,62 +1551,59 @@
 		<c:choose>
 			<c:when test="${mode != 'view'}">
 				<!-- 메뉴 -->
-		<h1><spring:message code='ezPortal.t363' /></h1>
-		<div id="mainmenu">
-			<ul>
-				<li><span onClick="save()"><spring:message code='ezPortal.t62' /></span></li>
-				<li><span onClick="layoutmode()"><spring:message code='ezPortal.t322' /></span></li>
-				<li><span onClick="editingmode()"><spring:message code='ezPortal.t323' /></span></li>					
-				<li><span onClick="preview()"><spring:message code='ezPortal.t63' /></span></li>				
-				<li><span onClick="insertpage()"><spring:message code='ezPortal.t325' /></span></li>
-				<li><span onClick="removecell()"><spring:message code='ezPortal.t326' /></span></li>
-				<li><span onClick="insertcell()"><spring:message code='ezPortal.t327' /></span></li>
-				<li><span onClick="removecell()"><spring:message code='ezPortal.t328' /></span></li>
-				<li><span onClick="insertrow()"><spring:message code='ezPortal.t329' /></span></li>
-				<li><span onClick="removerow()"><spring:message code='ezPortal.t330' /></span></li>
-				<li><span onClick="swaprow('up')"><spring:message code='ezPortal.t331' /></span></li>
-				<li><span onClick="swaprow('down')"><spring:message code='ezPortal.t332' /></span></li>
-				<li><span onClick="swaprow('left')"><spring:message code='ezPortal.t72' /></span></li>
-				<li><span onClick="swaprow('right')"><spring:message code='ezPortal.t74' /></span></li>					
-			</ul>
-		</div>	
-		<table width="1020" class="popuplist" >
-			<tr>
-				<th height="30" style="width:100px"><spring:message code='ezPortal.t359' /></th>
-				<td>
-				    <table style="width:100%;">
-			            <tr class="primary">
-				            <th style="width:80px;">${langPrimary}</th>
-				            <td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;" maxLength="255"></td>	
-			            </tr>
-			            <tr class="secondary">
-				            <th style="width:80px;">${langSecondary}</th>
-				            <td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;" maxLength="255"></td>	
-			            </tr>
-		            </table>
-				</td>
-				<%-- <td ><input type="text" id="1" value="<%= displayname %>"></td> --%>
-			</tr>
-		</table>
-		<br>
-		<table width="1020" class="box">
-			<tr>
-			  <td height="30" bgcolor="#F5f5f5"><spring:message code='ezPortal.t334' /><input type="text" id="txtWidth" name="txtWidth" style="WIDTH:50px" maxLength="10">
-					px * <spring:message code='ezPortal.t335' /><input type="text" id="txtHeight" name="txtHeight" style="WIDTH:50px" maxLength="10"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code='ezPortal.t336' /></span></a>
-			  </td>
-                <td bgcolor="#F5f5f5" ><spring:message code='ezPortal.t990022' />:</td>
-                <td bgcolor="#F5f5f5">
-                    <select id="Themeinfo">
-                        <%-- <%=pThemeSelectObject.ToString() %> --%>
-                        ${pThemeSelectObject}
-                    </select>
-                </td>
-			</tr>
-		</table>
-		
-		<div style="WIDTH:1020px">
-			${strHTML}
-		</div>
+				<h1><spring:message code='ezPortal.t363' /></h1>
+					<div id="mainmenu">
+						<ul>
+							<li><span onClick="save()"><spring:message code='ezPortal.t62' /></span></li>
+							<li><span onClick="layoutmode()"><spring:message code='ezPortal.t322' /></span></li>
+							<li><span onClick="editingmode()"><spring:message code='ezPortal.t323' /></span></li>					
+							<li><span onClick="preview()"><spring:message code='ezPortal.t63' /></span></li>				
+							<li><span onClick="insertpage()"><spring:message code='ezPortal.t325' /></span></li>
+							<li><span onClick="removecell()"><spring:message code='ezPortal.t326' /></span></li>
+							<li><span onClick="insertcell()"><spring:message code='ezPortal.t327' /></span></li>
+							<li><span onClick="removecell()"><spring:message code='ezPortal.t328' /></span></li>
+							<li><span onClick="insertrow()"><spring:message code='ezPortal.t329' /></span></li>
+							<li><span onClick="removerow()"><spring:message code='ezPortal.t330' /></span></li>
+							<li><span onClick="swaprow('up')"><spring:message code='ezPortal.t331' /></span></li>
+							<li><span onClick="swaprow('down')"><spring:message code='ezPortal.t332' /></span></li>
+							<li><span onClick="swaprow('left')"><spring:message code='ezPortal.t72' /></span></li>
+							<li><span onClick="swaprow('right')"><spring:message code='ezPortal.t74' /></span></li>					
+						</ul>
+					</div>	
+					<table width="1020" class="popuplist" >
+						<tr>
+							<th height="30" style="width:100px"><spring:message code='ezPortal.t359' /></th>
+							<td>
+				    			<table style="width:100%;">
+			            			<tr class="primary">
+				            			<th style="width:80px;">${langPrimary}</th>
+				            			<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;" maxLength="255"></td>	
+			            			</tr>
+			            			<tr class="secondary">
+				            			<th style="width:80px;">${langSecondary}</th>
+				            			<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;" maxLength="255"></td>	
+			            			</tr>
+		            			</table>
+							</td>
+						</tr>
+					</table>
+					<br>
+					<table width="1020" class="box">
+						<tr>
+			  				<td height="30" bgcolor="#F5f5f5"><spring:message code='ezPortal.t334' /><input type="text" id="txtWidth" name="txtWidth" style="WIDTH:50px" maxLength="10">
+								px * <spring:message code='ezPortal.t335' /><input type="text" id="txtHeight" name="txtHeight" style="WIDTH:50px" maxLength="10"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code='ezPortal.t336' /></span></a>
+			  				</td>
+                			<td bgcolor="#F5f5f5" ><spring:message code='ezPortal.t990022' />:</td>
+                			<td bgcolor="#F5f5f5">
+                    			<select id="Themeinfo">
+			                        ${pThemeSelectObject}
+                    			</select>
+                			</td>
+						</tr>
+					</table>
+				<div style="WIDTH:1020px">
+					${strHTML}
+				</div>
 			</c:when>
 			<c:otherwise>
 				${strHTML}
@@ -1614,11 +1611,10 @@
 		</c:choose>
 		<!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->
 		${script1}
-	
-	<div id="objectProgressDiv"></div>
-	<c:if test="${isCrossBrowser != true}">
-		<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
-	</c:if>
-	<iframe id=ifmpopup style="display:none" src=""></iframe>
+		<div id="objectProgressDiv"></div>
+		<c:if test="${isCrossBrowser != true}">
+			<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
+		</c:if>
+		<iframe id=ifmpopup style="display:none" src=""></iframe>
 	</body>
 </html>

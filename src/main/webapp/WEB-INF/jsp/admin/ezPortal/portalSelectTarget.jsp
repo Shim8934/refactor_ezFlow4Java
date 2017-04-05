@@ -206,19 +206,6 @@
 	        function displayUserList(DeptID) {
 	            listContentArry = new Array();
 
-	           /*  var xmlpara = createXmlDom();
-	            var objRoot, objNode;
-	            objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
-	            createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-	            createNodeAndInsertText(xmlpara, objNode, "CELL", "company;description;displayname;title;telephonenumber");
-	            createNodeAndInsertText(xmlpara, objNode, "PROP", "mail;displayname;description;title;company;telephonenumber;extensionattribute2");
-	            createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-	            g_xmlHTTP = createXMLHttpRequest();
-	            g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", true);
-	            g_xmlHTTP.onreadystatechange = event_displayUserList;
-	            g_xmlHTTP.send(xmlpara); */
-	            
-	            //
 	            $.ajax({
   					url : '/ezOrgan/getDeptMemberList.do',
   					method : 'POST',
@@ -634,32 +621,7 @@
 	            deptkeyword.focus();
 	            return;
 	        }
-	    /*     var objNode;
-	        var xmlHTTP = createXMLHttpRequest();
-	        var xmlDom = createXmlDom();
-	        createNodeInsert(xmlDom, objNode, "DATA");
-	        createNodeAndInsertText(xmlDom, objNode, "SEARCH", "displayname::" + deptkeyword.value);
-	        createNodeAndInsertText(xmlDom, objNode, "CELL", "extensionAttribute3;displayname;extensionAttribute9;");
-	        createNodeAndInsertText(xmlDom, objNode, "PROP", "");
-	        createNodeAndInsertText(xmlDom, objNode, "TYPE", "group");
-	        try {
-	            xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx", false);
-	            xmlHTTP.send(xmlDom);
-	            if (xmlHTTP.statusText != "OK") {
-	                alert("<spring:message code='ezPortal.t21'/>" + xmlHTTP.statusText);
-	                xmlDom = null;
-	                xmlHTTP = null;
-	            }
-	            else {
-	                xmlDom = xmlHTTP.responseXML;
-	                adCount = xmlDom.getElementsByTagName("ROW").length;
-	            }
-	        }
-	        catch (e) {
-	            alert("<spring:message code='ezPortal.t21'/>" + e.description);
-	            xmlDom = null;
-	            xmlHTTP = null;
-	        } */
+	  
 	        var xmlDOM = createXmlDom();
 	        
 	        $.ajax({
@@ -714,6 +676,7 @@
 	            }
 	        }
 	    }
+	    
 	    function event_getDeptFullTree() {
 	        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 	            if (g_xmlHTTP.statusText == "OK") {
