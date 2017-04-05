@@ -91,7 +91,7 @@
                 	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
             	</span>
         	</div>
-        	<div id="tblBest" class="communitycont" runat="server">${strHTML}</div>
+        	<div id="tblBest" class="communitycont">${strHTML}</div>
         	<div class="guide"><span class="lb"></span><span class="rb"></span></div>
     	</article>
 	</body>	

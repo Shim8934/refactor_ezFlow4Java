@@ -32,7 +32,7 @@
     						<dt><spring:message code='main.t00006' /></dt>
     							<dd>
     								<div class="nomal_count">
-        								<span id="SIXHGAP" runat="server">0</span>
+        								<span id="SIXHGAP">0</span>
         							</div>
      							</dd>
     					</dl>
@@ -40,7 +40,7 @@
     						<dt><spring:message code='main.t00007' /></dt>
     						<dd>
     							<div class="nomal_count">
-        							<span id="ONEDGAP" runat="server">0</span>
+        							<span id="ONEDGAP">0</span>
         						</div>
         					</dd>
     					</dl>
@@ -48,7 +48,7 @@
     						<dt><spring:message code='main.t00008' /></dt>
     						<dd>
     							<div class="nomal_count">
-        							<span id="SEVENDGAP" runat="server">0</span>
+        							<span id="SEVENDGAP">0</span>
         						</div>
         					</dd>
     					</dl>
@@ -56,7 +56,7 @@
     						<dt><spring:message code='main.t00009' /></dt>
     						<dd>
     							<div class="nomal_count">
-        							<span id="ONEMGAP" runat="server">0</span>
+        							<span id="ONEMGAP">0</span>
         						</div>
         					</dd>
     					</dl>
@@ -72,7 +72,7 @@
     						
     						<dd>
     							<div class="point_count">
-        							<span id="OTHER" runat="server">000</span>
+        							<span id="OTHER" >000</span>
         						</div>
         					</dd>
     					</dl>
@@ -85,9 +85,9 @@
           				<span class="tr"></span>
             			<!-- tab -->
             			<dl class="portlet_tab">
-              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num" runat="server">(0)</span></span></dt>
-              				<dt id="rejectTab" onclick="apprChangeTab(this)" ><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num" runat="server">(0)</span></span></dt>
-              				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num" runat="server">(0)</span></span></dt>
+              				<dt id="doingTab" onclick="apprChangeTab(this)"  class="on"><span><spring:message code='main.t00003' /><span id="doingCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="rejectTab" onclick="apprChangeTab(this)" ><span><spring:message code='main.t00004' /><span id="rejectCNT" class="tab_num">(0)</span></span></dt>
+              				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num">(0)</span></span></dt>
             			</dl>
             			<!-- /tab -->
             			<c:choose>

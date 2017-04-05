@@ -57,7 +57,7 @@
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal02.gif" alt="<spring:message code="main.t00018" />" /></li>
 								<li class="count">
 									<div>
-										<span id="aprnum" runat="server">0</span>
+										<span id="aprnum">0</span>
 									</div>
 								</li>
                     			<c:choose>

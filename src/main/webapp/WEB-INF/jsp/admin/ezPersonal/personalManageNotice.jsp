@@ -368,7 +368,7 @@
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
-		<form method="post" runat="server">
+		<form method="post">
 	        <h1><spring:message code = 'ezPersonal.t157' /><span id="mailBoxInfo"></span></h1>
 	        <div id="mainmenu">
 	            <ul>
