@@ -305,9 +305,10 @@ function InitListView() {
         		pAPRLINE.DataSource(result);
             	pAPRLINE.DataBind("APRLINE");
         	} else {
-        	    if (nodeCnt <= 1) {
+//fomace        		
+        	    if (nodeCnt <= 1) {        	    	
         	        var DraftXml;
-        	        DraftXml = AddDraftUserFirst();
+        	        DraftXml = AddDraftUserFirst(); 
         	        Resultxml = loadXMLString(DraftXml);
         	        pAPRLINE.DataSource(Resultxml);
         	        pAPRLINE.DataBind("APRLINE");
@@ -332,6 +333,7 @@ function InitListView() {
         	        }
         	        if ((IniListData4 == arr_userinfo[1] && IniListData6 == arr_userinfo[4] && IniListData10 == companyID && IniListData13 == arr_userinfo[11] &&
         	            IniListData14 == arr_userinfo[12] && IniListData15 == arr_userinfo[15] && IniListData16 == arr_userinfo[16] && IniListData17 == arr_userinfo[13] && IniListData18 == arr_userinfo[14]) || curaprline != 1) {
+
         	            var susinreset = false;
         	            for (var i = 0; i < NodeList.length; i++) {
         	                if (SelectSingleNodeValue(GetChildNodes(NodeList[i])[0], "DATA11") == strAprType14) {
@@ -350,7 +352,7 @@ function InitListView() {
         	                pAPRLINE.DataSource(result);
         	                pAPRLINE.DataBind("APRLINE");
         	            }
-        	        } else {
+        	        } else {        	        	
         	            var DraftXml;
         	            DraftXml = AddDraftUserFirst();
         	            Resultxml = loadXMLString(DraftXml);
