@@ -156,14 +156,6 @@ function GetDraftAprLineInfo(ret)
    		var suggester = getNodeText(Cell[13]);
    		var reporter = getNodeText(Cell[14]);
 	      	
-		if (junGyulFlag == "1") {
-			//아무것도 안함
-		} else if (junGyulFlag == "4") {
-			if (KyljeaType == "003") {
-				continue;
-			}
-		}
-   		
 	    OrderType[KyljeaOrder] = KyljeaType;
 	    OrderTypeName[KyljeaOrder] = KyljeaTypeName;
 	    OrderName[KyljeaOrder] = KyljeaName;
@@ -602,14 +594,6 @@ function SGetDraftAprLineInfo(ret) {
             var KyljeaJobtitle = getNodeText(Cell[2]);
             var ReasonDoNotApprov = getNodeText(Cell[12]);
             var KyljeaID = getNodeText(Cell[9]);
-            
-            if (junGyulFlag == "1") {
-    			//아무것도 안함
-    		} else if (junGyulFlag == "4") {
-    			if (KyljeaType == "003") {
-    				continue;
-    			}
-    		}
             
             OrderType[KyljeaOrder] = KyljeaType;
             OrderTypeName[KyljeaOrder] = KyljeaTypeName;
@@ -1208,6 +1192,15 @@ function SGetDraftAprLineInfo(ret) {
                     }
                     idx = LastSignNo;
                 }
+                
+                if (junGyulFlag == "1") {
+        			//아무것도 안함
+        		} else if (junGyulFlag == "4") {
+        			if (OrderType[i] == "003") {
+        				continue;
+        			}
+        		}
+                
                 fieldname = susinSN + "jikwe" + idx;
                 field = message.GetListItem(fields, fieldname);
 

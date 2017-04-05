@@ -110,14 +110,6 @@ function GetDraftAprLineInfo(ret)
 	    var KyljeaJobtitle      = getNodeText(GetChildNodes(objNodes[i])[2]);
 	    var ReasonDoNotApprov   = getNodeText(GetChildNodes(objNodes[i])[12]);
 	    
-	    if (junGyulFlag == "1") {
-			//아무것도 안함
-		} else if (junGyulFlag == "4") {
-			if (KyljeaType == "003") {
-				continue;
-			}
-		}
-
 	    OrderType[KyljeaOrder] = KyljeaType;
 	     
 	    OrderTypeName[KyljeaOrder] = KyljeaTypeName;
@@ -538,14 +530,6 @@ function SGetDraftAprLineInfo(ret) {
             var KyljeaJobtitle = getNodeText(GetChildNodes(objNodes[i])[2]);
             var ReasonDoNotApprov = getNodeText(GetChildNodes(objNodes[i])[12]);
 
-            if (junGyulFlag == "1") {
-    			//아무것도 안함
-    		} else if (junGyulFlag == "4") {
-    			if (KyljeaType == "003") {
-    				continue;
-    			}
-    		}
-            
             OrderType[KyljeaOrder] = KyljeaType;
             OrderTypeName[KyljeaOrder] = KyljeaTypeName;
             OrderName[KyljeaOrder] = KyljeaName;
@@ -745,7 +729,6 @@ function SGetDraftAprLineInfo(ret) {
         }
 
         for (i = 1; i < OrderJobtitle.length; i++) {
-
             if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
                 if (LastSignSN == 1 || LastSignSN == i) {
                     field = message.GetListItem(fields, Flag + "AprLine");
@@ -767,6 +750,14 @@ function SGetDraftAprLineInfo(ret) {
                 }
                 var j, chkflag;
 
+                if (junGyulFlag == "1") {
+        			//아무것도 안함
+        		} else if (junGyulFlag == "4") {
+        			if (OrderType[i] == "003") {
+        				continue;
+        			}
+        		}
+                
                 if (OrderType[i] == strAprType3) {
                     chkflag = false;
                     for (j = 1; j < i; j++) {
