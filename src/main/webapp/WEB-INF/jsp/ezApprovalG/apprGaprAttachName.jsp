@@ -125,10 +125,10 @@
 	</head>
 		<body class="popup">
 		<h1><spring:message code='ezApprovalG.t286'/></h1>
-		<h2><spring:message code='ezApprovalG.t292'/></h2>
+		<span>▒ <spring:message code='ezApprovalG.t292'/></span>
 		
-		<table class="content">
-		  <tr> 
+		<table class="content" style="margin-top: 5">
+		  <tr style="display:none"> 
 		    <th> <spring:message code='ezApprovalG.t293'/></th>
 		    <td style="width:100%"> 
 		      <input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtPageNum">    </td>
@@ -142,6 +142,7 @@
 		
 		<div class="btnposition"> 
 		<a class="imgbtn" id="btn_SaveAprDeptTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
+		<a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
