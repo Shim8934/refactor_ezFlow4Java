@@ -133,9 +133,8 @@ function getAttachFilePageNum(PageNum, DisplayName, CompleteFunction) {
     aprattachname_cross_dialogArguments[1] = CompleteFunction;
 
     if (CrossYN()) {
-        DivPopUpShow(330, 230, windowName);
-    }
-    else {
+        DivPopUpShow(330, 150, windowName);
+    } else {
         var parameter = "status:no;dialogWidth:340px;dialogHeight:230px;scroll:no;edge:sunken;help:no";
         parameter = parameter + GetShowModalPosition(340, 230);
         var AddressName = window.showModalDialog(windowName, dialogValue, parameter);
