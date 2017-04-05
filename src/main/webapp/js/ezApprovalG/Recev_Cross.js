@@ -1,4 +1,4 @@
-﻿﻿//sign 정보를 가지고 온다!
+﻿//sign 정보를 가지고 온다!
 var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 

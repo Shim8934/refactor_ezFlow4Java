@@ -1,4 +1,4 @@
-﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN;
+﻿var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 function GetDraftAprLineInfo(ret)
 {
