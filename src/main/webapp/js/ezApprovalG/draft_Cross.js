@@ -1,4 +1,4 @@
-﻿﻿var lastKyulName, lastKyuljiwee, LastSignSN;
+﻿var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 function GetDraftAprLineInfo(ret)
 {
@@ -591,7 +591,6 @@ function SGetDraftAprLineInfo(ret) {
         }
 
         for (i = 0; i < count; i++) {
-
             var Cell = GetChildNodes(objNodes[i]);
             var KyljeaOrder = getNodeText(Cell[0]) - 1;
             var KyljeaName = getNodeText(Cell[1]);
@@ -656,7 +655,7 @@ function SGetDraftAprLineInfo(ret) {
 
         refer = "";
 
-        if (ret[2] == "R") xmlReDraft = "R";
+        if (ret[5] == "R") xmlReDraft = "R";
         else xmlReDraft = "C";
 
         for (i = 0; i < OrderType.length; i++) {
@@ -1144,7 +1143,7 @@ function SGetDraftAprLineInfo(ret) {
         if (field)
             cnt = OrderType.length;
 
-        for (i = 1; i < cnt; i++) {
+        for (i = 0; i < cnt; i++) {
             fieldname = susinSN + "jikwe" + i
             field = message.GetListItem(fields, fieldname);
 
@@ -1166,7 +1165,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
 
-        for (i = 1; i < cnt; i++) {
+        for (i = 0; i < cnt; i++) {
             fieldname = "hjkwe" + i
             field = message.GetListItem(fields, fieldname);
 
@@ -1182,7 +1181,7 @@ function SGetDraftAprLineInfo(ret) {
         var idx = 1;
         var hidx = 1;
 
-        for (i = 1; i < OrderJobtitle.length; i++) {
+        for (i = 0; i < OrderJobtitle.length; i++) {
             if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
                 if (LastSignSN == 1 || LastSignSN == i) {
                     for (k = 1; k < cnt; k++) {

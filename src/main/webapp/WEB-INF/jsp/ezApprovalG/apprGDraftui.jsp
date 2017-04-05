@@ -1211,6 +1211,8 @@
 		                var savexmlhttp = createXMLHttpRequest();
 
 		                if (ret[1] != false) {
+		                	var result = "";
+		                	
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1219,10 +1221,12 @@
 	                    		data : {
 	                    				ret : ret[1]
 	                    				},
-	                    		success : function(result){
-	                    			
+	                    		success : function(text){
+	                    			result = loadXMLString(text);
 	                    		}
 	                    	});
+		                	
+                   			var dataNodes = GetChildNodes(result);
 		
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
@@ -1243,10 +1247,7 @@
 	                    		async : false,
 	                    		url : "/ezApprovalG/aprDeptSave.do",
 	                    		data : {
-	                    				aprDeptInfo : getXmlString(ret[2])
-	                    				},
-	                    		success : function(result){
-	                    			
+	                    				aprDeptInfo : ret[2]
 	                    		}
 	                    	});
 		
