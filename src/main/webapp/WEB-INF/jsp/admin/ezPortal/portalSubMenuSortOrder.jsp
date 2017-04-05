@@ -11,66 +11,66 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
-		var pageid = "${pageID}";
-		var parentuid = "${parentUID}";
-		
-		function SaveItems() {
-			var selectobj = MENULIST;
+			var pageid = "${pageID}";
+			var parentuid = "${parentUID}";
 			
-			var strXML = "<DATA>";
-			for(var i=0; i < selectobj.length; i++)
+			function SaveItems() {
+				var selectobj = MENULIST;
+				
+				var strXML = "<DATA>";
+				for(var i=0; i < selectobj.length; i++)
+				{
+					strXML += "<UID>" + selectobj.options[i].value + "</UID>";
+				}
+				strXML += "</DATA>";
+				
+				var xmlhttp = createXMLHttpRequest();
+				xmlhttp.open("POST", "/admin/ezPortal/saveSubMenuItemsOrder.do?pageID=" + pageid, false);
+				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+				xmlhttp.send(strXML);
+				xmlhttp = null;
+				
+				alert("<spring:message code='ezPortal.t121'/>");
+				try{
+					window.opener.location.reload();
+				} catch(e) {}
+				window.close();
+			}
+			
+			function SetOrder(inc)
 			{
-				strXML += "<UID>" + selectobj.options[i].value + "</UID>";
+				var selectobj = MENULIST;
+				var index = selectobj.selectedIndex;
+				
+				if (index >= 0) {
+					var newidx = index + inc;
+			        
+					if (newidx < 0 || newidx > selectobj.length || newidx == selectobj.length)	
+					return;
+	
+					var curr_id, next_id;
+					var tmp;
+					curr_id = selectobj.options[index].value;
+					next_id = selectobj.options[newidx].value;
+					
+					// value
+					tmp = selectobj.options[index].value;
+					selectobj.options[index].value = selectobj.options[newidx].value;		
+					selectobj.options[newidx].value = tmp;
+					
+					// text
+					tmp = selectobj.options[index].text;
+					selectobj.options[index].text = selectobj.options[newidx].text;
+					selectobj.options[newidx].text = tmp;
+					
+					// ITEM_SORT
+					tmp = selectobj.options[index].ITEM_SORT;
+					selectobj.options[index].ITEM_SORT = selectobj.options[newidx].ITEM_SORT;
+					selectobj.options[newidx].ITEM_SORT = tmp;
+					
+					selectobj.options[newidx].selected = true;
+				}
 			}
-			strXML += "</DATA>";
-			
-			var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "/admin/ezPortal/saveSubMenuItemsOrder.do?pageID=" + pageid, false);
-			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-			xmlhttp.send(strXML);
-			xmlhttp = null;
-			
-			alert("<spring:message code='ezPortal.t121'/>");
-			try{
-				window.opener.location.reload();
-			} catch(e) {}
-			window.close();
-		}
-		
-		function SetOrder(inc)
-		{
-			var selectobj = MENULIST;
-			var index = selectobj.selectedIndex;
-			
-			if (index >= 0) {
-				var newidx = index + inc;
-		        
-				if (newidx < 0 || newidx > selectobj.length || newidx == selectobj.length)	
-				return;
-
-				var curr_id, next_id;
-				var tmp;
-				curr_id = selectobj.options[index].value;
-				next_id = selectobj.options[newidx].value;
-				
-				// value
-				tmp = selectobj.options[index].value;
-				selectobj.options[index].value = selectobj.options[newidx].value;		
-				selectobj.options[newidx].value = tmp;
-				
-				// text
-				tmp = selectobj.options[index].text;
-				selectobj.options[index].text = selectobj.options[newidx].text;
-				selectobj.options[newidx].text = tmp;
-				
-				// ITEM_SORT
-				tmp = selectobj.options[index].ITEM_SORT;
-				selectobj.options[index].ITEM_SORT = selectobj.options[newidx].ITEM_SORT;
-				selectobj.options[newidx].ITEM_SORT = tmp;
-				
-				selectobj.options[newidx].selected = true;
-			}
-		}
 		</script>
 	</head>
 	 <body class="popup">

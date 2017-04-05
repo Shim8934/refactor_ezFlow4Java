@@ -762,102 +762,106 @@
     				<td>${item.accessID}</td>
     				<td>${item.accessName}</td>
     				<td>
-    	<c:choose>
-    		<c:when test="${item.edit_Right == 2}">
-    			<spring:message code='ezPortal.t95'/>
-    		</c:when>
-    		<c:otherwise>
-    			<spring:message code='ezPortal.t96'/>
-    		</c:otherwise>
-    	</c:choose>
-    	</td>
-    	<td>
-    	<c:choose>
-    		<c:when test="${item.view_Right == 2}">
-    			<spring:message code='ezPortal.t95'/>
-    		</c:when>
-    		<c:otherwise>
-    			<spring:message code='ezPortal.t96'/>
-    		</c:otherwise>
-    	</c:choose>
-    	</td>
-    	<td align="center">
-				<a class="imgbtn"><span onclick="DeleteRight('${item.accessID}')" style="width: 20px">
-					<spring:message code='ezPortal.t67'/>
-				</span></a>
-			</td>
-  	</tr>
-  </c:forEach>
-	</table>
-	<br>
-	<table id="toggle_tbl3_2" width="500" class="popuplist" style="display: none">
-		<tr>
-			<th width="70">
-				<spring:message code='ezPortal.t91'/>
-			</th>
-			<td>
-				<table width="100%" border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td>
-							<input type="text" id="newAccessID" style="width: 100%" readonly>
-						</td>
-						<td width="39" align="center">
-							<a class="imgbtn"><span onclick="SelectID()" style="width: 20px">
-								<spring:message code='ezPortal.t45'/>
-							</span></a>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<spring:message code='ezPortal.t92'/>
-			</th>
-			<td>
-				<input type="text" id="newAccessName" style="width: 100%" readonly></td>
-		</tr>
-		<tr>
-			<th>
-				<spring:message code='ezPortal.t93'/>
-			</th>
-			<td>
-				<input type="radio" name="SelectEditRight" value="1" checked>
-					<spring:message code='ezPortal.t97'/>
-				<input type="radio" name="SelectEditRight" value="2">
-					<spring:message code='ezPortal.t95'/>
-			</td>
-		</tr>
-		<tr>
-			<th>
-				<spring:message code='ezPortal.t94'/>
-			</th>
-			<td>
-				<input type="radio" name="SelectViewRight" value="1" checked>
-					<spring:message code='ezPortal.t97'/>
-				<input type="radio" name="SelectViewRight" value="2">
-					<spring:message code='ezPortal.t95'/>
-			</td>
-		</tr>
-	</table>
-	<div class="btnposition" id="toggle_tbl3_3" style="display: none">
-		<input type="button" value="<spring:message code='ezPortal.t62'/>" onclick="AddRight()">
-		<input onclick="window.close();" type="button" value="<spring:message code='ezPortal.t12'/>">
-	</div>
-    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-                    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=SubMenu" target="ifrm">
-                        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
-                        <input type="hidden" name="boardid" id="boardid" />
-                        <input type="hidden" name="maxsize" id="maxsize" />
-                        <input type="hidden" name="mode" id="mode" />
-                        <input type="hidden" name="cnt" id="cnt" />
-                        <input type="hidden" name="mailgubun" id="mailgubun" />
-                    </form>
-	<script type="text/javascript">
-    selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-	selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	selToggleList(document.getElementById("close"), "ul", "li", "0");
-	</script>
-
-</body>
+    					<c:choose>
+    						<c:when test="${item.edit_Right == 2}">
+    							<spring:message code='ezPortal.t95'/>
+    						</c:when>
+    						<c:otherwise>
+    							<spring:message code='ezPortal.t96'/>
+    						</c:otherwise>
+    					</c:choose>
+    				</td>
+    				<td>
+    					<c:choose>
+    						<c:when test="${item.view_Right == 2}">
+    							<spring:message code='ezPortal.t95'/>
+    						</c:when>
+    						<c:otherwise>
+    							<spring:message code='ezPortal.t96'/>
+    						</c:otherwise>
+    					</c:choose>
+    				</td>
+    				<td align="center">
+						<a class="imgbtn">
+							<span onclick="DeleteRight('${item.accessID}')" style="width: 20px">
+								<spring:message code='ezPortal.t67'/>
+							</span>
+						</a>
+					</td>
+  				</tr>
+  			</c:forEach>
+		</table>
+		<br>
+		<table id="toggle_tbl3_2" width="500" class="popuplist" style="display: none">
+			<tr>
+				<th width="70">
+					<spring:message code='ezPortal.t91'/>
+				</th>
+				<td>
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td>
+								<input type="text" id="newAccessID" style="width: 100%" readonly>
+							</td>
+							<td width="39" align="center">
+								<a class="imgbtn">
+									<span onclick="SelectID()" style="width: 20px">
+										<spring:message code='ezPortal.t45'/>
+									</span>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<spring:message code='ezPortal.t92'/>
+				</th>
+				<td>
+					<input type="text" id="newAccessName" style="width: 100%" readonly>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<spring:message code='ezPortal.t93'/>
+				</th>
+				<td>
+					<input type="radio" name="SelectEditRight" value="1" checked>
+						<spring:message code='ezPortal.t97'/>
+					<input type="radio" name="SelectEditRight" value="2">
+						<spring:message code='ezPortal.t95'/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<spring:message code='ezPortal.t94'/>
+				</th>
+				<td>
+					<input type="radio" name="SelectViewRight" value="1" checked>
+						<spring:message code='ezPortal.t97'/>
+					<input type="radio" name="SelectViewRight" value="2">
+						<spring:message code='ezPortal.t95'/>
+				</td>
+			</tr>
+		</table>
+		<div class="btnposition" id="toggle_tbl3_3" style="display: none">
+			<input type="button" value="<spring:message code='ezPortal.t62'/>" onclick="AddRight()">
+			<input onclick="window.close();" type="button" value="<spring:message code='ezPortal.t12'/>">
+		</div>
+    	<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+        <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=SubMenu" target="ifrm">
+        	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
+            <input type="hidden" name="boardid" id="boardid" />
+            <input type="hidden" name="maxsize" id="maxsize" />
+            <input type="hidden" name="mode" id="mode" />
+            <input type="hidden" name="cnt" id="cnt" />
+            <input type="hidden" name="mailgubun" id="mailgubun" />
+		</form>
+		<script type="text/javascript">
+    		selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		</script>
+	</body>
 </html>
