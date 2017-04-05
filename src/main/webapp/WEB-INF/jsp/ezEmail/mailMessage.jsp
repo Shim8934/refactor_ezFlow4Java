@@ -7,13 +7,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script>
 			function window_onload() {
-				var ua = navigator.userAgent;
-				
-				if (ua.indexOf("Chrome") != -1) {
-					window.resizeTo(380, 177);
-				} else {
-					window.resizeTo(380, 150);					
-				}
+				window.resizeTo(380, 111 + (window.outerHeight - window.innerHeight));	
 			}
 		</script>
 	</head>
