@@ -1431,7 +1431,7 @@ function openOpinionUI(pOpinionFlag) {
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
-        DivPopUpShow(530, 500, "/ezApprovalG/aprOpinion.do");
+        DivPopUpShow(530, 495, "/ezApprovalG/aprOpinion.do");
 
     } catch (e) {
         alert("openOpinionUI(pOpinionFlag)" + e.description);
@@ -1440,7 +1440,7 @@ function openOpinionUI(pOpinionFlag) {
 
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();
-    if (ret != "cancel") {
+    if (ret != "cancel" && ret != "Clear") {
         var NodeList;
         var objXML = createXmlDom();
         objXML = loadXMLString(ret);
@@ -1493,7 +1493,7 @@ function openFileAttachUI() {
         aprattach_cross_dialogArguments[0] = "";
         aprattach_cross_dialogArguments[1] = "";
 
-        DivPopUpShow(535, 285, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag);
+        DivPopUpShow(535, 250, "/ezApprovalG/aprAttach.do?formID=" + encodeURI(pFormID) + "&docID=" + encodeURI(pDocID) + "&draftFlag=" + DraftFlag);
     } catch (e) {
         alert("openFileAttachUI()" + e.description);
     }
