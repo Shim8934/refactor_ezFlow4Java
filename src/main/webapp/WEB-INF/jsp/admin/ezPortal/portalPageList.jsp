@@ -22,10 +22,6 @@
 			var g_intPage  = "${intPage}";
 			var g_totalPage= "${totalPage}";
 			var pDefaultPageUID = "${defaultPageUID}";
-			<%
-				int intPage = (request.getParameter("intPage") != null && !request.getParameter("intPage").equals(""))?Integer.parseInt(request.getParameter("intPage")) : 0;
-				int totalPage = (request.getParameter("totalPage") != null && !request.getParameter("totalPage").equals(""))?Integer.parseInt(request.getParameter("totalPage")) : 0;
-			%>	
 			
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
