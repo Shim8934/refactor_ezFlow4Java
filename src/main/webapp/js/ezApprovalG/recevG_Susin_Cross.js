@@ -1833,7 +1833,11 @@ function setFirstDrafter() {
     var ret = getAutoAprLine();
 
     if (ret[0] != "NONE") {
-        GetDraftAprLineInfo(ret);
+    	if (approvalFlag == "S") {
+    		SGetDraftAprLineInfo(ret);
+    	} else {
+    		GetDraftAprLineInfo(ret);
+    	}
         btnSendDraft.Enable = "true";
         LastSignSN = 1;
     }

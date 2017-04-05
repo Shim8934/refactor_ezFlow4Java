@@ -313,7 +313,12 @@
 		            btnSendDraftEnable = "true";
 		            IsSkipDrafter = "FALSE";
 		            btnSendDraft.Enable = "true";
-		            GetDraftAprLineInfo(ret);
+		            
+		            if (approvalFlag == "S") {
+	                    SGetDraftAprLineInfo(ret);
+                    } else {
+	                    GetDraftAprLineInfo(ret);
+                    }
 		        }
 		        else {
 		            if (ret[2] == "cancel") {
@@ -972,7 +977,12 @@
 		            retvalue[2] = "R";
 		            retvalue[3] = "";
 		
-		            GetDraftAprLineInfo(retvalue);
+		            if (approvalFlag == "S") {
+	                    SGetDraftAprLineInfo(retvalue);
+                    } else {
+	                    GetDraftAprLineInfo(retvalue);
+                    }
+		            
 		            btnSendDraftEnable = "true";
 		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
 		            LastSignSN = "1";
@@ -1227,7 +1237,12 @@
 		                if (ret[1] != false) {
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
-		                    GetDraftAprLineInfo(ret);
+
+		                    if (approvalFlag == "S") {
+			                    SGetDraftAprLineInfo(ret);
+		                    } else {
+			                    GetDraftAprLineInfo(ret);
+		                    }
 		                }
 		                savexmlhttp = null;
 		                savexmlhttp = createXMLHttpRequest();

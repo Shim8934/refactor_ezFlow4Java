@@ -1,5 +1,6 @@
 ﻿var color1, color2
 var bgFlag = true;
+var colSignCnt = 10;
 
 function ConnExist(pprocessIdx, currTD) {
     var xmlData = createXmlDom();
@@ -904,4 +905,225 @@ function CheckSignImg() {
     }
     catch (e)
     { }
+}
+
+function DrawAutoAprLine(ret, pDraftFlag) {
+    var SignCnt = 0; 
+    var HapyCnt = 0; 
+    var SSignCnt = 0;
+    var SHapyCnt = 0;
+    var SignHTML = "";
+    var HapyHTML = "";
+    var SSignHTML = "";
+    var SHapyHTML = "";
+    var pFormTagName = new Array(); 
+    var i, j, p, k, z;
+
+    var xmldom = createXmlDom();
+    xmldom =loadXMLString(ret);
+
+    var susinSN = "";
+    var Recv = "";
+
+    if (pDraftFlag == "SUSIN") {
+        susinSN = pSusinSN;
+        Recv = pSusinSN + "Recv";
+    }
+
+    objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+    var fields = message.GetFieldsList();
+    count = objNodes.length;
+
+    for (i = 0; i < count; i++) {
+        var KyljeaType = getNodeText(GetChildNodes(objNodes[i])[16]);
+
+        if (KyljeaType == "001" || KyljeaType == "003" || KyljeaType == "004" || KyljeaType == "015" || KyljeaType == "040") {
+            SignCnt = SignCnt + 1;
+        }
+
+        if (KyljeaType == "008" || KyljeaType == "009"  || KyljeaType == "011" || KyljeaType == "012") {
+            HapyCnt = HapyCnt + 1;
+        }
+    }
+
+
+    var tempLen = 0;
+    var SignLen = 0;
+    var tempLen1 = parseInt(SignCnt / colSignCnt);
+    SignLen = (SignCnt % colSignCnt > 0) ? tempLen1 + 1 : tempLen1;
+
+    var HapyLen = 0;
+    var tempLen2 = parseInt(HapyCnt / colSignCnt);
+    HapyLen = (HapyCnt % colSignCnt > 0) ? tempLen2 + 1 : tempLen2;
+    
+    var BODYElement = message.GetListItem(fields, "body");
+    if(colSignCnt == "" || colSignCnt == null)
+        colSignCnt = 10;
+    else
+        colSignCnt = parseInt(colSignCnt);
+
+    field = message.GetListItem(fields, Recv + "AprLine");
+    if (field && SignCnt > 0) {
+        if (Recv != "")
+            pFormTagName[0] = "<P align=center>수</P><P align=center>신</P><P align=center>결</P><P align=center>재</P>";
+        else
+            pFormTagName[0] = "<P align=center>기</P><P align=center>안</P><P align=center>결</P><P align=center>재</P>";
+
+        pFormTagName[1] = "18";
+
+        var strHTML = "";
+        k = 1;
+        z = (SignCnt >= colSignCnt) ? colSignCnt : SignCnt;
+
+        strHTML = "<TABLE style='FONT-SIZE: 0pt' cellSpacing=0 cellPadding=0 align=right valign=top>";
+        for (p = 1; SignLen >= p; p++) {
+            strHTML += "<TR><TD>";
+            if (p >= SignLen) {
+                z = SignCnt;
+            }
+
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+            for (i = 1; i <= 3; i++) {
+                strHTML += "<TR>";
+                for (j = k; j <= z; j++) {
+                    if (i == "1" && (j % colSignCnt) == "1") {
+                        strHTML += "<TD vAlign='middle' width='" + pFormTagName[1] + "' rowSpan='4' align='center' bgColor='#d2e2fd'><STRONG>" + pFormTagName[0] + "</STRONG></TD>";
+                    }
+
+                    switch (i.toString()) {
+                        case "1":
+                            strHTML += "<TD class='FIELD' id='" + susinSN + "jikwe" + j + "' vAlign='middle' align='center' width='64' height='17' >";
+                            
+                            field = message.GetListItem(fields,susinSN + "jikwe" + j);                            
+                            if (field)
+                                strHTML += field.innerHTML  + "</TD>";
+                            else
+                                strHTML += "&nbsp;</TD>";
+                            break;
+                        
+                        case "2":
+                            strHTML += "<TD class='FIELD' id='" + susinSN + "sign" + j + "' vAlign='middle' align='center' width='64' height='50'>";
+                           
+                            field = message.GetListItem(fields, susinSN + "sign" + j);                            
+                            if (field)
+                                strHTML += field.innerHTML + "</TD>";
+                            else
+                                strHTML += "&nbsp;</TD>";
+                            break;
+                        case "3":
+                            strHTML += "<TD class='FIELD' id='" + susinSN + "seumyungdate" + j + "' vAlign='middle' align='center' width='64' height='17'>";
+
+                           
+                            field = message.GetListItem(fields, susinSN + "seumyungdate" + j);                            
+                            if (field)
+                                strHTML += field.innerHTML + "</TD>";
+                            else
+                                strHTML += "&nbsp;</TD>";
+                            break;
+                    }
+                }
+
+                strHTML += "</TR>";
+            }
+            strHTML += "</TABLE>";
+            strHTML += "</TD></TR>";
+
+            if (SignCnt > (p * colSignCnt)) {
+                k = k + colSignCnt;
+                z = z + colSignCnt;
+            }
+        }
+        strHTML += "</TABLE>";
+        field = message.GetListItem(fields, Recv + "AprLine");
+        field.innerHTML = strHTML;
+
+    }
+
+    if (field && SignCnt <= 0) {
+        field.innerHTML = "&nbsp;";
+    }
+
+    field = message.GetListItem(fields, Recv + "AprHapuiLine");
+
+    if (field && HapyCnt <= 0) {
+        field.innerHTML = "&nbsp;";
+    }
+
+    if (field && HapyCnt > 0) {
+        pFormTagName[0] = "<P align=center>합</P><P align=center>의</P><P align=center>결</P><P align=center>재</P>";
+        pFormTagName[1] = "18";
+
+
+        k = 1;
+        z = (HapyCnt >= colSignCnt) ? colSignCnt : HapyCnt;
+        strHTML = "<TABLE style='FONT-SIZE: 0pt' cellSpacing=0 cellPadding=0 align=right valign=top>";
+
+        for (p = 1; HapyLen >= p; p++) {
+            strHTML += "<TR><TD>";
+            if (p >= HapyLen) {
+                z = HapyCnt;
+            }
+            strHTML += "<TABLE style='TABLE-LAYOUT:fixed; FONT-SIZE:9pt; FONT-FAMILY:굴림체; Design_Time_Lock:true' cellSpacing='0' borderColorDark='white' cellPadding='0' borderColorLight='black' border='1' align='right'>";
+            for (i = 1; i <= 4; i++) {
+                strHTML += "<TR>";
+                for (j = k; j <= z; j++) {
+                    if (i == "1" && (j % colSignCnt) == "1") {
+                        strHTML += "<TD vAlign='middle' width='" + pFormTagName[1] + "' rowSpan='4' align='center' bgColor='#d2e2fd'><STRONG>" + pFormTagName[0] + "</STRONG></TD>";
+                    }
+
+                    switch (i.toString()) {
+                        
+                        case "1": 
+                            strHTML += "<TD class='FIELD' id='" + susinSN + "habyui" + j + "' vAlign='middle' align='center' width='64' height='17' >"; 
+                            field = message.GetListItem(fields, susinSN + "habyui" + j);         
+                            if (field) 
+                                strHTML += field.innerHTML + "</TD>"; 
+                            else 
+                                strHTML += "&nbsp;</TD>"; 
+                            break; 
+                        case "2":
+                            strHTML += "<TD class='FIELD' id='" + susinSN + "habyuipositon" + j + "' vAlign='middle' align='center' width='64' height='17'>";
+                            
+                            field = message.GetListItem(fields, susinSN + "habyuipositon" + j);                            
+                            if (field)                         
+                                strHTML += field.innerHTML + "</TD>";
+                            else
+                                strHTML += "&nbsp;</TD>";
+                            break;
+                        case "3":
+                            strHTML += "<TD class='FIELD' id='" + susinSN + "habyuisign" + j + "' vAlign='middle' align='center' width='64' height='50'>";
+                            field = message.GetListItem(fields, susinSN + "habyuisign" + j);                            
+                            if (field)                              
+                                strHTML += field.innerHTML + "</TD>";
+                            else
+                                strHTML += "&nbsp;</TD>";
+                            break;
+                        case "4":
+                            strHTML += "<TD class='FIELD' id='" + susinSN + "habyuidate" + j + "' vAlign='middle' align='center' width='64' height='17'>";
+                           
+                            field = message.GetListItem(fields, susinSN + "habyuidate" + j);                            
+                            if (field)  
+                                strHTML += field.innerHTML + "</TD>";
+                            else
+                                strHTML += "&nbsp;</TD>";
+                            break;
+                    }
+                }
+                strHTML += "</TR>";
+            }
+
+            strHTML += "</TABLE>";
+            strHTML += "</TD></TR>";
+
+            if (HapyCnt > (p * colSignCnt)) {
+                k = k + colSignCnt;
+                z = z + colSignCnt;
+            }
+
+        }
+        strHTML += "</TABLE>";
+        field = message.GetListItem(fields, Recv + "AprHapuiLine");
+        field.innerHTML = strHTML;
+    }
+  
 }

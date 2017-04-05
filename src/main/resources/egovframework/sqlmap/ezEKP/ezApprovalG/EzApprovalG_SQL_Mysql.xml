@@ -21884,4 +21884,17 @@
        	AND
        		 TBL_APRDOCINFO.COMPANYID = #companyID#
 	</select>
+	
+	<select id="EzApprovalG.getAddress" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				STREETADDRESS
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				CN IN ($userIDs$)
+		]]>
+	</select>
 </sqlMap>

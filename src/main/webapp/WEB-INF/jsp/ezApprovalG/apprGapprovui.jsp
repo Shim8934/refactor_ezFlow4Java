@@ -130,6 +130,7 @@
 		    var pPageType = "APPROVUI";
 		    var approvalFlag = "${approvalFlag}";
 		    var junGyulFlag = "${junGyulFlag}";
+		    var pADMIN = "N";
 		    
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -984,7 +985,11 @@
 		        TempsaveAprlineinfo = ret[0];
 		
 		        if (ret[0] != "cancel" && ret[0] != "EXIST") {
-		            ReAprLineSingMapping(ret);
+		        	if (approvalFlag == "S") {
+			            SReAprLineSingMapping(ret);
+		        	} else {
+			            ReAprLineSingMapping(ret);
+		        	}
 		            SaveFile();
 		            getCurApproverAprLine();
 		        }
@@ -1266,7 +1271,7 @@
 			                        var dataNodes = GetChildNodes(savexmlhttp.responseXML);
 			                        IsSkipDrafter = "FALSE";
 			                        btnSendDraftEnable = "true";
-			                        ReAprLineSingMapping(ret);
+			                        SReAprLineSingMapping(ret);
 			                        SaveFile();
 			                        getCurApproverAprLine();
 			                    }
