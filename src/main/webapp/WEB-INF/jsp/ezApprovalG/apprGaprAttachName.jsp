@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezApprovalG.t286'/></title>
+		<title><spring:message code='ezApprovalG.t25004'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -124,7 +124,7 @@
 		</script>
 	</head>
 		<body class="popup">
-		<h1><spring:message code='ezApprovalG.t286'/></h1>
+		<h1><spring:message code='ezApprovalG.t25004'/></h1>
 		<span>▒ <spring:message code='ezApprovalG.t292'/></span>
 		
 		<table class="content" style="margin-top: 5">
