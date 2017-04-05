@@ -107,6 +107,7 @@
 			var SummaryFlag = true;
 			var approvalFlag = "${approvalFlag}";
 			var junGyulFlag = "${junGyulFlag}";
+			var pSignImage_Size = "${signImageSize}";
 			
 			window.onload = function () {
 			};

@@ -172,6 +172,7 @@
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var checkdocinfo = false;
 			var startDateTime = '${startDateTime}';
+			var pSignImage_Size = "${signImageSize}";
 			var pAdmin = "N";
 	        
 	        $(function () {
