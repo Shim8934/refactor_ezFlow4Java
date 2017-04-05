@@ -434,6 +434,6 @@ public interface EzApprovalGService {
 
 	public String doHabyuiHesong(Document doc, String dirPath, String companyID, String lang, int tenantId, LoginVO userInfo) throws Exception;
 
-	public String[] getAddress(String userIDs, int tenantID) throws Exception;
+	public List<String> getAddress(String userIDs, int tenantID) throws Exception;
 
 }

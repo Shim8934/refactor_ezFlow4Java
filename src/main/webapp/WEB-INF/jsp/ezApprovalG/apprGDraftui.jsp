@@ -1208,7 +1208,7 @@
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
 // 		            try {
-		                var savexmlhttp = createXMLHttpRequest();
+// 		                var savexmlhttp = createXMLHttpRequest();
 
 		                if (ret[1] != false) {
 		                	var result = "";
@@ -1222,11 +1222,9 @@
 	                    				ret : ret[1]
 	                    				},
 	                    		success : function(text){
-	                    			result = loadXMLString(text);
 	                    		}
 	                    	});
 		                	
-                   			var dataNodes = GetChildNodes(result);
 		
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
@@ -1237,10 +1235,10 @@
 			                    GetDraftAprLineInfo(ret);
 		                    }
 		                }
-		                savexmlhttp = null;
-		                savexmlhttp = createXMLHttpRequest();
-		
-		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
+// 		                savexmlhttp = null;
+// 		                savexmlhttp = createXMLHttpRequest();
+
+		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1301,7 +1299,7 @@
 		                
 		                SummaryFlag = true;
 		
-		                savexmlhttp = null;
+// 		                savexmlhttp = null;
 		
 // 		            }
 // 		            catch (e) {

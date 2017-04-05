@@ -592,7 +592,7 @@ function SGetDraftAprLineInfo(ret) {
 
         for (i = 0; i < count; i++) {
             var Cell = GetChildNodes(objNodes[i]);
-            var KyljeaOrder = getNodeText(Cell[0]) - 1;
+            var KyljeaOrder = getNodeText(Cell[0]);
             var KyljeaName = getNodeText(Cell[1]);
             var KyljeaDeptName = getNodeText(Cell[3]);
             var KyljeaType = getNodeText(Cell[16]);
@@ -1143,7 +1143,7 @@ function SGetDraftAprLineInfo(ret) {
         if (field)
             cnt = OrderType.length;
 
-        for (i = 0; i < cnt; i++) {
+        for (i = 1; i < cnt; i++) {
             fieldname = susinSN + "jikwe" + i
             field = message.GetListItem(fields, fieldname);
 
@@ -1165,7 +1165,7 @@ function SGetDraftAprLineInfo(ret) {
             }
         }
 
-        for (i = 0; i < cnt; i++) {
+        for (i = 1; i < cnt; i++) {
             fieldname = "hjkwe" + i
             field = message.GetListItem(fields, fieldname);
 
@@ -1181,7 +1181,7 @@ function SGetDraftAprLineInfo(ret) {
         var idx = 1;
         var hidx = 1;
 
-        for (i = 0; i < OrderJobtitle.length; i++) {
+        for (i = 1; i < OrderJobtitle.length; i++) {
             if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
                 if (LastSignSN == 1 || LastSignSN == i) {
                     for (k = 1; k < cnt; k++) {
@@ -3768,8 +3768,8 @@ function setFirstDrafterAuto() {
 		async : false,
 		url : "/ezApprovalG/aprLineSave.do",
 		data : {
-				ret    : pxml
-				},
+				ret    : escape(pxml)
+		},
 		success : function(result){
 			
 		}

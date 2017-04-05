@@ -656,14 +656,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String[] getAddress(String userIDs, int tenantID) throws Exception {
+	public List<String> getAddress(String userIDs, int tenantID) throws Exception {
 		logger.debug("getAddress started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userIDs", userIDs);
 		map.put("tenantID", tenantID);
 
-		String[] addressArray = ezApprovalGDAO.getAddress(map);
+		List<String> addressArray = ezApprovalGDAO.getAddress(map);
 
 		logger.debug("getAddress ended");
 		

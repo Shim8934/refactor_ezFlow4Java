@@ -6132,13 +6132,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userIDs = request.getParameter("userID");
 		String[] userIDArray = userIDs.split(",");
 		
+		userIDs = "";
+		
 		for (String k : userIDArray) {
 			 userIDs += "'" + k + "', ";
 		}
 		
-		userIDs = userIDs.substring(0, userIDs.length() - 1);
+		userIDs = userIDs.substring(0, userIDs.length() - 2);
 		
-		String[] addressArray = ezApprovalGService.getAddress(userIDs, userInfo.getTenantId());
+		List<String> addressArray = ezApprovalGService.getAddress(userIDs, userInfo.getTenantId());
 		
 		String result = StringUtils.join(addressArray, "||"); 
 
