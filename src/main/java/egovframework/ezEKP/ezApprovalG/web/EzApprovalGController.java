@@ -885,6 +885,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String ezApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String securityNode3 = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String periodnode = ezApprovalGService.getKeepType(userInfo.getLang(),userInfo.getTenantId(), userInfo.getCompanyID());
 		String startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -932,6 +933,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("aprTypeXML", aprTypeXML);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
+		model.addAttribute("signImageSize", signImageSize);
 		
 		return "ezApprovalG/apprGezApprovalInfo";
 	}
