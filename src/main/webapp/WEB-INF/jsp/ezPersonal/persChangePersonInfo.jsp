@@ -389,9 +389,7 @@
     			<%--2016-10-25 모바일 설정 주석처리  --%>
        			<%-- <a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a> --%>
        			<a class="imgbtn" name="Submit" onClick="return btnPhoto_onclick()"><span><spring:message code='ezPersonal.t183'/></span></a>
-       			<%-- <a runat ="server" class="imgbtn" name="ButtonDelPic" ID="ButtonDelPic" onserverclick="ButtonDelPic_ServerClick"><span><spring:message code='ezPersonal.t184'/></span></a> --%>
        			<a class ="imgbtn"  onClick="ButtonDeleteClick()" name="ButtonDelete"  id="ButtonDelete" ><span><spring:message code='ezPersonal.t184'/></span></a>
-       			<%-- <a runat ="server" class="imgbtn" name="ButtonChange" ID="ButtonChange" onserverclick="ButtonChange_ServerClick"><span><spring:message code='ezPersonal.t34'/></span></a> --%>
        			<a class ="imgbtn"  onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
        			<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>    		

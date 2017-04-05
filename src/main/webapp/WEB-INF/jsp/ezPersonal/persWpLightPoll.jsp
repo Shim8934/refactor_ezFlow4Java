@@ -139,7 +139,7 @@
   				</div>
 			</div>
     	</div>
-	<form name="wp_LightPoll" runat="server">
+	<form name="wp_LightPoll">
 	</form>
 	</body>
 </html>
