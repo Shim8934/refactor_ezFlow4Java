@@ -638,6 +638,9 @@
 			    }
 			}
 		</script>
+		<style>
+			.mainlist tr th {border-top:0px}
+		</style>
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t264'/></h1>
