@@ -8,10 +8,6 @@
 		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-		<%
-		 String userApprovalG = (String)request.getAttribute("userApprovalG");
-		 %>
-			
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
 		    var pNoneActiveX = "YES";
@@ -27,7 +23,7 @@
 			var xmlHttp_getnewapprovalcount_total = null;
 			function getnewapprovalcount() {
 			    xmlHttp_getnewapprovalcount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
-				if (("<%=userApprovalG%>") == ("YES"))
+				if (("${userApprovalG}") == ("YES"))
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
 				else
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/myoffice/ezApproval/WebPartFolder/getWebPartCount.aspx", true);
@@ -125,7 +121,7 @@
 					case "AprSign" : 		
 						var listType;
 						listType = 1;
-						if ("<%=userApprovalG%>" == ("YES"))
+						if ("${userApprovalG}" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
 							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
@@ -134,7 +130,7 @@
 						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
 						var listType;
 						listType = 1;
-						if ("<%=userApprovalG%>" == ("YES"))
+						if ("${userApprovalG}" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
 							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
@@ -463,7 +459,7 @@
 		        parameter[0] = "${userInfo.deptID}";
 		        parameter[1] = "A01000";
 
-		        if ("<%=userApprovalG%>" == ("YES")) {
+		        if ("${userApprovalG}" == ("YES")) {
 		            url = "/ezApprovalG/getFormCont.do";
 		        } else {
 		            url = "/ezApproval/getFormCont.do";
@@ -499,7 +495,7 @@
 		    function openDraftUI() {
 		        var pArgument = new Array();
 		        var gb = "";
-		        if ("<%=userApprovalG%>" == ("YES"))
+		        if ("${userApprovalG}" == ("YES"))
 		            gb = "G";
 		        
 		        	pArgument[0] = "${userInfo.id}";
