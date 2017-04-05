@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
@@ -704,6 +705,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String signImageSize = ezCommonService.getTenantConfig("signImageSize", userInfo.getTenantId());
 		
 		String docSN = "";
 		
@@ -771,7 +773,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		String optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optisSplit = "";
+		
+		if (approvalFlag.equals("S")) {
+			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+		} else {
+			optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		}
+		
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		
@@ -794,6 +803,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("dirPath", dirPath);
 		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		
 		return "ezApprovalG/apprGDraftui";
@@ -2779,6 +2789,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", tenantID);
+		String signImageSize = ezCommonService.getTenantConfig("signImageSize", userInfo.getTenantId());
 		String susinAdmin = "";
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -2813,7 +2824,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optIsSplit = "";
+		
+		if (approvalFlag.equals("S")) {
+			optIsSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+		} else {
+			optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		}
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String optJunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
 		
@@ -2869,6 +2886,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("signImageSize", signImageSize);
 		
 		return "ezApprovalG/apprGapprovui";
 	}
@@ -3387,7 +3405,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optisSplit = "";
+		
+		if (approvalFlag.equals("S")) {
+			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+		} else {
+			optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		}
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		
@@ -3435,7 +3459,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("draftFlag", draftFlag);
 		model.addAttribute("retFlag", retFlag);
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
-		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optIsSplit", optisSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
 		model.addAttribute("sihangURL", sihangURL);
 		model.addAttribute("userInfo", userInfo);
@@ -3578,9 +3602,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String draftFlag = request.getParameter("draftFlag");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		String optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		String optisSplit = "";
+		
+		if (approvalFlag.equals("S")) {
+			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+		} else {
+			optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		}
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		String dirYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -3635,7 +3666,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isReDraft", isReDraft);
 		model.addAttribute("draftFlag", draftFlag);
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
-		model.addAttribute("optIsSplit", optIsSplit);
+		model.addAttribute("optIsSplit", optisSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
 		model.addAttribute("sihangURL", sihangURL);
 		model.addAttribute("userInfo", userInfo);
@@ -5684,7 +5715,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
-		optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		
+		if (approvalFlag.equals("S")) {
+			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+		} else {
+			optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		}
 		optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		
 		userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
@@ -6081,6 +6117,36 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.doSendOfferS(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("sendOffer ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재S 유저 주소 가져오기 
+	 */
+	@RequestMapping(value = "/ezApprovalG/getAddress.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getAddress(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getAddress started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String userIDs = request.getParameter("userID");
+		String[] userIDArray = userIDs.split(",");
+		
+		userIDs = "";
+		
+		for (String k : userIDArray) {
+			 userIDs += "'" + k + "', ";
+		}
+		
+		userIDs = userIDs.substring(0, userIDs.length() - 2);
+		
+		List<String> addressArray = ezApprovalGService.getAddress(userIDs, userInfo.getTenantId());
+		
+		String result = StringUtils.join(addressArray, "||"); 
+
+		logger.debug("getAddress ended");
 		
 		return result;
 	}

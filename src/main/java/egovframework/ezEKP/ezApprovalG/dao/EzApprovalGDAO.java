@@ -2619,4 +2619,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.doSusinHesongDeptID", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<String> getAddress(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.getAddress", map);
+	}
+
 }

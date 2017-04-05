@@ -656,6 +656,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public List<String> getAddress(String userIDs, int tenantID) throws Exception {
+		logger.debug("getAddress started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userIDs", userIDs);
+		map.put("tenantID", tenantID);
+
+		List<String> addressArray = ezApprovalGDAO.getAddress(map);
+
+		logger.debug("getAddress ended");
+		
+		return addressArray;
+	}
+
+	@Override
 	// 해당 부서에서 볼 수 있는 문서함의 리스트를 가져온다.
 	// OwnFlag : "0"-자기 부서의 문서함, "1"-타부서의 문서함, "2"-전부
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception{

@@ -333,7 +333,12 @@ function setFirstDrafter() {
     if (ret[0] != "NONE") {
         IsSkipDrafter = "FALSE";
         btnSendDraftEnable = "true";
-        GetDraftAprLineInfo(ret);
+
+        if (approvalFlag == "S") {
+            SGetDraftAprLineInfo(ret);
+        } else {
+            GetDraftAprLineInfo(ret);
+        }
     }
     return;
 }

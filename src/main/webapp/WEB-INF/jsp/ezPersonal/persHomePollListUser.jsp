@@ -149,7 +149,7 @@
 		</script>
 	</head>
 	<body class="popup"> 
-		<form method="post" runat="server"> 
+		<form method="post"> 
 			<h1>Quick Poll<span id="mailBoxInfo"></span></h1>
 			<div id="close"><ul><li><span onClick="window.close()"><spring:message code='ezPersonal.t10' /></span></li></ul></div>
   			<table> 

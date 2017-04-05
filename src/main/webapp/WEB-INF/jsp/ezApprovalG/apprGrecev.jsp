@@ -377,7 +377,12 @@
 				{	   
 					IsSkipDrafter = "FALSE";			  
 					document.getElementById('btnSendDraft').Enable = "true";
-					GetDraftAprLineInfo(ret); 
+
+					if (approvalFlag == "S") {
+	                    SGetDraftAprLineInfo(ret);
+                    } else {
+	                    GetDraftAprLineInfo(ret);
+                    }
 				}
 				else
 				{
@@ -935,7 +940,12 @@
 		                //결재선 저장 후
 		                IsSkipDrafter = "FALSE";
 		                btnSendDraftEnable = "true";
-		                GetDraftAprLineInfo(ret);
+
+		                if (approvalFlag == "S") {
+		                    SGetDraftAprLineInfo(ret);
+	                    } else {
+		                    GetDraftAprLineInfo(ret);
+	                    }
 		            }
 		            
 		            if (approvalFlag == "S") {

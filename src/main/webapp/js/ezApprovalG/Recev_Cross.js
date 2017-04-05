@@ -2286,22 +2286,23 @@ function SaveDraftDocInfo()
     	});
 
         if (pSuSinFlag == "Y") {
-            var AprDeptInfo = loadXMLString(ret[3]);
+            var AprDeptInfo = ret[2];
 
-            var AprDeptPara = createXmlDom();
-            var pAprNDeptNumber = 1;
-            var pAprDeptFlag = "NDept";
-            AprDeptPara = AprDeptParameter(pAprNDeptNumber, pAprDeptFlag);
-
-            if (CrossYN()) {
-                var xmlRtn = AprDeptPara.documentElement;
-                var Node = AprDeptInfo.importNode(xmlRtn, true);
-                AprDeptInfo.documentElement.appendChild(Node);
-            }
-            else {
-                var xmlRtn = AprDeptPara.documentElement;
-                AprDeptInfo.documentElement.appendChild(xmlRtn);
-            }
+            //같은현상이다 도르야
+//            var AprDeptPara = createXmlDom();
+//            var pAprNDeptNumber = 1;
+//            var pAprDeptFlag = "NDept";
+//            AprDeptPara = AprDeptParameter(pAprNDeptNumber, pAprDeptFlag);
+//
+//            if (CrossYN()) {
+//                var xmlRtn = AprDeptPara.documentElement;
+//                var Node = AprDeptInfo.importNode(xmlRtn, true);
+//                AprDeptInfo.documentElement.appendChild(Node);
+//            }
+//            else {
+//                var xmlRtn = AprDeptPara.documentElement;
+//                AprDeptInfo.documentElement.appendChild(xmlRtn);
+//            }
             
             $.ajax({
         		type : "POST",
@@ -2309,7 +2310,7 @@ function SaveDraftDocInfo()
         		async : false,
         		url : "/ezApprovalG/aprDeptSave.do",
         		data : {
-        				aprDeptInfo : getXmlString(AprDeptInfo)
+        				aprDeptInfo : AprDeptInfo
         				},
         		success : function(result){
         			if (result == "TRUE") {
