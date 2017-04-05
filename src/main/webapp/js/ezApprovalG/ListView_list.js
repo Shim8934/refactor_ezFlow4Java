@@ -671,7 +671,8 @@ function ListView() {
                     //if(!_SetHeightFree)
                     //    objTd.height = "24px";                    
                         
-                    if (_titleIdx == null) { //하단정보탭일경우                       
+                    if (_titleIdx == null) { //하단정보탭일경우
+                    	//fomace
                         if (_Align[j] == 0)
                             objTd.align = "left";
                         else

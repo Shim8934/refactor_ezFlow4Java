@@ -124,7 +124,7 @@
 		</script>
 	</head>
 		<body class="popup">		
-		<h1><spring:message code='ezApprovalG.t286'/></h1>		
+		<h1><spring:message code='ezApprovalG.t25004'/></h1>		
 		<span>▒ <spring:message code='ezApprovalG.t292'/></span>		
 		<table class="content" style="margin-top: 15px">
 		  <tr style="display:none"> 

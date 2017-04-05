@@ -252,7 +252,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition" style="margin-top:25px">
+	    <div class="btnposition" style="margin-top:20px">
 	        <a class="imgbtn" onclick="return bt_OK_onclick()"><span><spring:message code='ezApprovalG.t1760'/></span></a>
 	        <a class="imgbtn" onclick="return bt_Cancel_onclick()"><span><spring:message code='ezApprovalG.t1761'/></span></a>
 	    </div>
