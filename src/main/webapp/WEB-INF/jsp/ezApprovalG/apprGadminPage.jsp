@@ -350,7 +350,9 @@
 			},
 			success: function(xml){
 				result = loadXMLString(xml);
-			}        			
+			}, error : function() {
+				return "FALSE";
+			}
 		});
 		
 	    var dataNodes = GetChildNodes(result);

@@ -2299,20 +2299,18 @@ function SaveDraftDocInfo()
         		},
         		success: function(text){
         			result = text;
-        		}        			
+        		}, error: function() {
+        			var pAlertContent = strLang350;
+                    OpenAlertUI(pAlertContent);
+                    return false;
+        		}       			
         	});
             
-            if(result != "TRUE")
+            if(result == "TRUE")
             {
-                var pAlertContent = strLang350;
-                OpenAlertUI(pAlertContent);
-                return false;
-            }
-            else
-            {
-                var pAlertContent = strLang35;
-                OpenAlertUI(pAlertContent);
-                return true;
+            	  var pAlertContent = strLang35;
+                  OpenAlertUI(pAlertContent);
+                  return true;
             }
         }catch(e){
             alert("setHeSongDocInfo :: " + e.description);

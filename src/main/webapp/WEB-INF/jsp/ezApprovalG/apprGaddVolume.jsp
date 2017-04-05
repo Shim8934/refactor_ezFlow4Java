@@ -76,15 +76,14 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    		}, error : function() {
+		    			  alert("<spring:message code='ezApprovalG.t895'/>");
+		    		} 			
 		    	});
 
 		        var xmlRtn = result;
 		        
-		        if (SelectSingleNodeValue(xmlRtn, "RESULT") == "FALSE") {
-		            alert("<spring:message code='ezApprovalG.t895'/>");
-		        }
-		        else {
+		        if (SelectSingleNodeValue(xmlRtn, "RESULT") != "FALSE") {
 		            return SelectSingleNodeValue(xmlRtn, "RESULT");
 		        }
 		    }
