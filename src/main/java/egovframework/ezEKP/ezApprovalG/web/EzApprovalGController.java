@@ -885,6 +885,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String ezApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String securityNode3 = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String periodnode = ezApprovalGService.getKeepType(userInfo.getLang(),userInfo.getTenantId(), userInfo.getCompanyID());
 		String startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -896,7 +897,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String aprTypeXML = "";
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
-		
+
 		if (request.getParameter("docSN") != null) {
 			docSN = request.getParameter("docSN");
 		}
@@ -932,6 +933,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("aprTypeXML", aprTypeXML);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
+		model.addAttribute("signImageSize", signImageSize);
 		
 		return "ezApprovalG/apprGezApprovalInfo";
 	}
@@ -2791,7 +2793,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", tenantID);
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String susinAdmin = "";
-		
+		String hideCabinet = config.getProperty("config.hideCabinet");
+
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -2887,6 +2890,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
+		model.addAttribute("hideCabinet", hideCabinet);
 		
 		return "ezApprovalG/apprGapprovui";
 	}
@@ -3588,7 +3592,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String receivedDeptName2 = request.getParameter("receivedDeptName2");
 		
 		String result = ezApprovalGService.setJijung(docID, receiveSN, processorID, processorName, processorJobTitle, receivedDeptID, receivedDeptName, docState, processorName2, processorJobTitle2, receivedDeptName2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-		
 		return result;
 	}
 	
@@ -4004,7 +4007,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("xmlPara = " + xmlPara);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		
 		String result = ezApprovalGService.registerCabinet(xmlDom, userInfo.getLang(), userInfo.getTenantId());
 		
 		return result;
@@ -4464,25 +4466,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docNumber = "";
 		String docTitle = "";
 		String drafter = "";
-		String draftFromYEAR = "";
-		String draftFromMONTH ="";
-		String draftFromDAY = "";
-		String draftToYEAR = "";
-		String draftToMONTH = "";
-		String draftToDAY = "";
-		String apprFromYEAR = "";
-		String apprFromMONTH = "";
-		String apprFromDAY = "";
-		String apprToYEAR = "";
-		String apprToMONTH = "";
-		String apprToDAY = "";
-		                       
-		String myApprFromYEAR = "";
-		String myApprFromMONTH = "";
-		String myApprFromDAY = "";
-		String myApprToYEAR = "";
-		String myApprToMONTH = "";
-		String myApprToDAY = "";
 		String formID = "";
 		String draftDeptName = "";
 		                       

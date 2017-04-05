@@ -326,7 +326,9 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    		},error: function() {
+		    			
+		    		}	
 		    	});
 		        
 		        var dataNodes = GetChildNodes(result);

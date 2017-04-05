@@ -1074,7 +1074,7 @@ form{display:inline;margin:0}
 
 
 .mainlist_free{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-
+/* fomace */
 .mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 
