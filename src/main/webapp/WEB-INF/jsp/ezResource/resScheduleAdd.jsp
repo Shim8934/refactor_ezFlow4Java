@@ -424,10 +424,10 @@
        								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
        									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
        								</c:if>
-          								
-       								<c:if test="${strApproveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
+
+       								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
        									<c:choose>
-       										<c:when test="${savedApproveFlag eq '1'}">
+       										<c:when test="${saveApproveFlag eq '1'}">
 				    							<li><span  onClick="SetApproval_onClick('${cmdStr}', '0')"><spring:message code="ezResource.t190"/></span></li>
        										</c:when>
        										<c:otherwise>

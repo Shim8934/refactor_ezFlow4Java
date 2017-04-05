@@ -14,7 +14,7 @@
     	</style>
 	</head>
 	<body class="popup">
-		<form id="Form1" method="post" runat="server">
+		<form id="Form1" method="post">
   			<table class="layout" style="height:530px;">
     			<tr>
       				<td height="20">

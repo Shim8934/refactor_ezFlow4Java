@@ -3966,19 +3966,22 @@ function AprDeptListXML() {
 
     pAprNDeptNumber = 1;
     pAprDeptFlag = "NDept";
-    AprDeptPara = AprDeptParameter(pAprNDeptNumber, pAprDeptFlag);
+//    AprDeptPara = AprDeptParameter(pAprNDeptNumber, pAprDeptFlag);
     AprDeptListxml = APRDeptXMLParsing(RECEPTLIST, pDocID);
-    var AprDeptInfo = loadXMLString(AprDeptListxml);
 
-    if (CrossYN()) {
-        var xmlRtn = AprDeptPara.documentElement;
-        var Node = AprDeptInfo.importNode(xmlRtn, true);
-        AprDeptInfo.documentElement.appendChild(Node);
-    }
-    else {
-        var xmlRtn = AprDeptPara.documentElement;
-        AprDeptInfo.documentElement.appendChild(xmlRtn);
-    }
+    var AprDeptInfo = AprDeptListxml;
+
+    //일단 크로스 위주로 했으니깐 나중에 고치자 도르야
+//    if (CrossYN()) {
+//        var xmlRtn = AprDeptPara.documentElement;
+//        var Node = AprDeptInfo.importNode(xmlRtn, true);
+//        AprDeptInfo.documentElement.appendChild(Node);
+//    }
+//    else {
+//        var xmlRtn = AprDeptPara.documentElement;
+//        AprDeptInfo.documentElement.appendChild(xmlRtn);
+//    }
+    
     return AprDeptInfo;
 }
 function AprDeptParameter(pAprNDeptNumber, pAprDeptFlag) {
@@ -4035,7 +4038,14 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
 
         GetXml += "</ROW>";
     }
-    GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
+    
+    GetXml += "</ROWS>";
+    GetXml += "<APRDEPT>";
+    GetXml += "<pAprNDeptNumber>1</pAprNDeptNumber>";
+    GetXml += "<pAprDeptFlag>NDept</pAprDeptFlag>";
+    GetXml += "</APRDEPT>";
+    
+    GetXml += "</LISTVIEWDATA>";
     
     return GetXml;
 }

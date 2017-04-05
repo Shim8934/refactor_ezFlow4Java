@@ -66,6 +66,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'Use_MultiData','YES','멀티언어 사용유무');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_OCS','NO',NULL);
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'Use_Portal','YES','portal모듈사용 유무');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'signImageSize','50/50','전자결재 사인이미지 크기');
 INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES ('0', 'UserInfo_ApprovalG_VIEW', 'YYY', '문서 열람 권한 정의 : 문서 열람 권한을 정의한다.1 : 공개/부분공개/비공개 권한 체크.2 : 보안등급 권한 체크.3 : 열람권한 체크.비공개 문서인 경우, 이곳에 속하면 열람 가능.속하지 않으면, 2번, 3번을 추가로 체크함.부분공개 문서인 경우, 이곳에 속하면 열람 가능.속하지 않으면, 2번, 3번을 추가로 체크함.공개 문서인 경우, 2번 3번을 추가로 체크함.');
 INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES ('0', 'UseRunTime', 'NO', '게시판에서 RunTime 사용 시 Value 값 Yes');
 INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES ('0', 'JunGyulFlag', '4', '전결 옵션');

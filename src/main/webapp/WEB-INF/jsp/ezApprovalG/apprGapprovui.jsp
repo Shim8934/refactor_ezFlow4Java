@@ -130,6 +130,8 @@
 		    var pPageType = "APPROVUI";
 		    var approvalFlag = "${approvalFlag}";
 		    var junGyulFlag = "${junGyulFlag}";
+		    var pSignImage_Size = "${signImageSize}";
+		    var pADMIN = "N";
 		    
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -678,6 +680,7 @@
 		                return;
 		            }
 		        }
+		        
 		        signInfo = AprrovMappingSign(signtype);
 
 		        var rtnVal = true;
@@ -984,7 +987,11 @@
 		        TempsaveAprlineinfo = ret[0];
 		
 		        if (ret[0] != "cancel" && ret[0] != "EXIST") {
-		            ReAprLineSingMapping(ret);
+		        	if (approvalFlag == "S") {
+			            SReAprLineSingMapping(ret);
+		        	} else {
+			            ReAprLineSingMapping(ret);
+		        	}
 		            SaveFile();
 		            getCurApproverAprLine();
 		        }
@@ -1252,7 +1259,7 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-		            try {
+// 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 
 		                //결재선 저장
@@ -1274,7 +1281,7 @@
 			                        
 			                        IsSkipDrafter = "FALSE";
 			                        btnSendDraftEnable = "true";
-			                        ReAprLineSingMapping(ret);
+			                        SReAprLineSingMapping(ret);
 			                        SaveFile();
 			                        getCurApproverAprLine();
 			                    }
@@ -1371,10 +1378,10 @@
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-		            }
+// 		            }
+// 		            catch (e) {
+// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+// 		            }
 		        }
 		    }
 		

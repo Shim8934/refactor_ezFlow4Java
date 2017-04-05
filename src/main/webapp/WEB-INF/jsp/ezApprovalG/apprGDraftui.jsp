@@ -24,7 +24,6 @@
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -138,6 +137,7 @@
 		    var checkdocinfo = false;
 		    var DocType = "";
 		    var junGyulFlag = "${junGyulFlag}";
+		    var pSignImage_Size = "${signImageSize}";
 		    
 		    window.onload = function ()
 		    {
@@ -405,7 +405,13 @@
 		            if (ret[0] != "cancel" && ret[3] != "cancel") {
 		                IsSkipDrafter = "FALSE";
 		                btnSendDraftEnable = "true";
-		                GetDraftAprLineInfo(ret);
+		                
+		                if (approvalFlag == "S") {
+		                    SGetDraftAprLineInfo(ret);
+	                    } else {
+		                    GetDraftAprLineInfo(ret);
+	                    }
+		                
 		                return true;
 		            } else {
 		                if (ret[2] == "cancel") {
@@ -1201,10 +1207,12 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-		            try {
-		                var savexmlhttp = createXMLHttpRequest();
+// 		            try {
+// 		                var savexmlhttp = createXMLHttpRequest();
 
 		                if (ret[1] != false) {
+		                	var result = "";
+		                	
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1213,29 +1221,31 @@
 	                    		data : {
 	                    				ret : ret[1]
 	                    				},
-	                    		success : function(result){
-	                    			
+	                    		success : function(text){
 	                    		}
 	                    	});
+		                	
 		
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
-		                    GetDraftAprLineInfo(ret);
+		                    
+		                    if (approvalFlag == "S") {
+			                    SGetDraftAprLineInfo(ret);
+		                    } else {
+			                    GetDraftAprLineInfo(ret);
+		                    }
 		                }
-		                savexmlhttp = null;
-		                savexmlhttp = createXMLHttpRequest();
-		
-		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "object") {
+// 		                savexmlhttp = null;
+// 		                savexmlhttp = createXMLHttpRequest();
+
+		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
 	                    		async : false,
 	                    		url : "/ezApprovalG/aprDeptSave.do",
 	                    		data : {
-	                    				aprDeptInfo : getXmlString(ret[2])
-	                    				},
-	                    		success : function(result){
-	                    			
+	                    				aprDeptInfo : ret[2]
 	                    		}
 	                    	});
 		
@@ -1289,12 +1299,12 @@
 		                
 		                SummaryFlag = true;
 		
-		                savexmlhttp = null;
+// 		                savexmlhttp = null;
 		
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-		            }
+// 		            }
+// 		            catch (e) {
+// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+// 		            }
 		        }
 		    }
 		

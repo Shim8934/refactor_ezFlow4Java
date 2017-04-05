@@ -11,6 +11,33 @@ function findBaseCell() {
     return rtnVal
 }
 
+//S버젼 추가
+function setSignSlash(pSignKinds, pSusin) {
+    var i, j;
+    var fieldName;
+    var field, fieldvalue;
+    var tempFieldName;
+    var fields = message.GetFieldsList();
+    for (i = 1; i < 20; i++) {
+        fieldName = pSusin + pSignKinds + i;
+        field = message.GetListItem(fields, fieldName);
+        if (field) {
+            fieldvalue = trim(getNodeText(field));
+            if (trim(fieldvalue) == "" && (trim(field.innerHTML) == "&nbsp;" || trim(field.innerHTML) == "" || trim(field.innerHTML) == "<br>")) {
+                var signWidth = parseInt(pSignImage_Size.split('/')[0]);
+                var signHeight = parseInt(pSignImage_Size.split('/')[1]);
+                var strimg;
+                var ret = "/files/upload_approvalG/signimgs/200.gif";
+                strimg = "<img src='" + ret + "' border=0 embedding='1' ";
+                strimg = strimg + " spath = '" + "/files/upload_approvalG/signimgs/200.gif";
+                strimg = strimg + "' width=" + signWidth;
+                strimg = strimg + " height=" + signHeight + " imglock >";
+                field.innerHTML = strimg;
+            }
+        }
+    }
+}
+
 function fsignInfo(pSignKind, pSignNumber) {
     var signDorect;
     if (SusinSN == 0) SusinSN = ""

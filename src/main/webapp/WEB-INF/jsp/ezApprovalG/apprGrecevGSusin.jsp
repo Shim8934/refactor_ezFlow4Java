@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/recevG_Susin_Cross.js"></script>
@@ -113,6 +114,8 @@
 		    var pPageType = "SUSIN";
 		    var approvalFlag = "${approvalFlag}";
 		    var junGyulFlag = "${junGyulFlag}";
+		    var pSignImage_Size = "${signImageSize}";
+		    var pADMIN = "N";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -313,7 +316,12 @@
 		            btnSendDraftEnable = "true";
 		            IsSkipDrafter = "FALSE";
 		            btnSendDraft.Enable = "true";
-		            GetDraftAprLineInfo(ret);
+		            
+		            if (approvalFlag == "S") {
+	                    SGetDraftAprLineInfo(ret);
+                    } else {
+	                    GetDraftAprLineInfo(ret);
+                    }
 		        }
 		        else {
 		            if (ret[2] == "cancel") {
@@ -978,7 +986,11 @@
 	    		            retvalue[2] = "R";
 	    		            retvalue[3] = "";
 	    		
-	    		            GetDraftAprLineInfo(retvalue);
+	    		            if (approvalFlag == "S") {
+	    	                    SGetDraftAprLineInfo(retvalue);
+	                        } else {
+	    	                    GetDraftAprLineInfo(retvalue);
+	                        }
 	    		            btnSendDraftEnable = "true";
 	    		            CurAprType = "<spring:message code='ezApprovalG.t25'/>";
 	    		            LastSignSN = "1";
@@ -1218,7 +1230,7 @@
 		    }
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-		            try {
+// 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
@@ -1241,7 +1253,12 @@
 		                if (ret[1] != false) {
 		                    IsSkipDrafter = "FALSE";
 		                    btnSendDraftEnable = "true";
-		                    GetDraftAprLineInfo(ret);
+
+		                    if (approvalFlag == "S") {
+			                    SGetDraftAprLineInfo(ret);
+		                    } else {
+			                    GetDraftAprLineInfo(ret);
+		                    }
 		                }
 		                savexmlhttp = null;
 		                savexmlhttp = createXMLHttpRequest();
@@ -1299,10 +1316,10 @@
 		
 		                savexmlhttp = null;
 		
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-		            }
+// 		            }
+// 		            catch (e) {
+// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+// 		            }
 		        }
 		    }
 		</script>

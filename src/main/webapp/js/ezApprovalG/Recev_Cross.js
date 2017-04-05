@@ -441,6 +441,387 @@ function GetDraftAprLineInfo(ret)
   }	
 }
 
+
+function SGetDraftAprLineInfo(ret) {
+//    try {
+        DraftLastFlag = false;
+        var xmlKuljea;
+        var chamjo;
+        var hapyuiCnt;
+        var SignCnt;
+        var referCnt;
+        var xmlReDraft;
+        var objNodes;
+        var fields;
+        var findstring;
+        var count;
+        var i;
+        var name;
+        var OrderType = new Array();
+        var OrderTypeName = new Array();
+        var OrderDept = new Array();
+        var OrderName = new Array();
+        var OrderStat = new Array();
+        var OrderStatName = new Array();
+        var OrderJobtitle = new Array();
+        var OrderReason = new Array();
+        var xmldom = createXmlDom();
+        if (pDraftFlag == "REDRAFT") {
+            xmlReDraft = "R";
+        }
+        else {
+            xmlReDraft = "C";
+        }
+
+        if (ret[5] == undefined) {
+            TempsaveAprlineinfo = ret[0];
+            xmlKuljea = ret[0];
+            setAprLinesXML(xmlKuljea);
+        }
+        else {
+            TempsaveAprlineinfo = ret[1];
+            xmlKuljea = ret[1];
+            setAprLinesXML(xmlKuljea);
+        }
+
+        xmlReDraft = "R";
+        if (xmlReDraft == "C") {
+            ApplyDocCellInfo();
+        } else if (xmlReDraft == "R") {
+            ClearDocCellInfo();
+        }
+
+        xmldom = loadXMLString(xmlKuljea);
+        objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+        fields = message.GetFieldsList();
+        count = objNodes.length;
+
+        for (i = 1; i < 200; i++) {
+            name = "habyuidate" + i
+            field = message.GetListItem(fields, name);
+            if (field) {
+                if (!trim(getNodeText(field))) {
+                    name = "habyui" + i
+                    field = message.GetListItem(fields, name);
+                    if (field)
+                        setNodeText(field , "");
+
+                    fieldname = "habyuisign" + i;
+                    field = message.GetListItem(fields, fieldname);
+                    if (field)
+                        setNodeText(field , "");
+
+                    fieldname = "habyuipositon" + i;
+                    field = message.GetListItem(fields, fieldname);
+
+                    if (field)
+                        setNodeText(field , "");
+                }
+            } else {
+                break;
+            }
+        }
+
+        for (i = 1; i < fields.Count; i++) {
+            field = message.GetListItem(fields, "gongram" + i);
+            if (field) setNodeText(field,"");
+        }
+
+        for (i = 0; i < count; i++) {
+            var KyljeaOrder = getNodeText(GetChildNodes(objNodes[i])[0]);
+            var KyljeaName = getNodeText(GetChildNodes(objNodes[i])[1]);
+            var KyljeaDeptName = getNodeText(GetChildNodes(objNodes[i])[3]);
+            var KyljeaType = getNodeText(GetChildNodes(objNodes[i])[16]);
+            var KyljeaTypeName = getNodeText(GetChildNodes(objNodes[i])[4]);
+            var KyljeaStat = getNodeText(GetChildNodes(objNodes[i])[17]);
+            var KyljeaStatName = getNodeText(GetChildNodes(objNodes[i])[5]);
+            var KyljeaJobtitle = getNodeText(GetChildNodes(objNodes[i])[2]);
+            var ReasonDoNotApprov = getNodeText(GetChildNodes(objNodes[i])[12]);
+
+            if (junGyulFlag == "1") {
+    			//아무것도 안함
+    		} else if (junGyulFlag == "4") {
+    			if (KyljeaType == "003") {
+    				continue;
+    			}
+    		}
+            
+            OrderType[KyljeaOrder] = KyljeaType;
+            OrderTypeName[KyljeaOrder] = KyljeaTypeName;
+            OrderName[KyljeaOrder] = KyljeaName;
+            OrderDept[KyljeaOrder] = KyljeaDeptName;
+            OrderStat[KyljeaOrder] = KyljeaStat;
+            OrderStatName[KyljeaOrder] = KyljeaStatName;
+            OrderJobtitle[KyljeaOrder] = KyljeaJobtitle;
+            OrderReason[KyljeaOrder] = ReasonDoNotApprov;
+        }
+
+        LastSignSN = OrderType.length
+        for (i = 1; i < OrderType.length; i++) {
+
+            if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
+                LastSignSN = i;
+            }
+        }
+
+        if (OrderType[1] == strAprType4) {
+            DraftLastFlag = true;
+        }
+
+        var field = message.GetListItem(fields, "lastKyulName");
+        if (field)
+            setNodeText(field , OrderName[LastSignSN]);
+
+        hapyuiCnt = 1;
+        SignCnt = 1;
+        referCnt = 1;
+        gongramCnt = 1;
+
+        var fieldname;
+        var field;
+        var refer;
+        refer = "";
+
+        for (i = 0; i < OrderType.length; i++) {
+            switch (OrderType[i]) {
+
+
+                case strAprType1:
+                    break;
+
+                case strAprType2:
+                    if ((OrderName[i] == arr_userinfo[2]) && (i == 1)) IsSkipDrafter = "TRUE";
+                    break;
+
+                case strAprType11:
+                    if (xmlReDraft == "R") {
+                        fieldname = "habyui" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderDept[i]);
+
+                        fieldname = "habyuisign" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderName[i]);
+
+                        fieldname = "habyuipositon" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderJobtitle[i]);
+                    }
+                    else if (xmlReDraft == "C") {
+                        fieldname = "habyui" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field && OrderStat[i] != strLangS26)
+                            setNodeText(field , OrderDept[i]);
+
+                        fieldname = "habyuisign" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field && OrderStat[i] != strLangS26)
+                            setNodeText(field , OrderName[i]);
+
+                        fieldname = "habyuipositon" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field && OrderStat[i] != strLangS26)
+                            field.Value = OrderJobtitle[i];
+                        IsSkipDrafter = "TRUE";
+                    }
+                    else {
+                        fieldname = "habyui" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderDept[i]);
+
+                        fieldname = "habyuisign" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderName[i]);
+
+                        fieldname = "habyuipositon" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderJobtitle[i]);
+                    }
+                    hapyuiCnt = hapyuiCnt + 1;
+                    break;
+
+                case strAprType8:
+                    if (xmlReDraft == "R") {
+                        fieldname = "habyui" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderDept[i]);
+                        IsSkipDrafter = "FALSE";
+                    }
+                    else if (xmlReDraft == "C") {
+                        fieldname = "habyui" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field && OrderStat[i] != "" + strLangS57 + "") {
+                        }
+                        IsSkipDrafter = "TRUE";
+                    }
+                    else {
+                        fieldname = "habyui" + hapyuiCnt;
+                        field = message.GetListItem(fields, fieldname);
+
+                        if (field)
+                            setNodeText(field , OrderDept[i]);
+                    }
+                    hapyuiCnt = hapyuiCnt + 1;
+                    break;
+
+
+                case strAprType7:
+                    if (referCnt == 1) {
+                        refer = "";
+                        refer = refer + OrderName[i];
+                        referCnt = referCnt + 1
+                    } else {
+                        refer = refer + ", " + OrderName[i];
+                    }
+                    break;
+
+                case strAprType17:
+                    fieldname = "gongram" + gongramCnt
+                    field = message.GetListItem(fields, fieldname);
+
+                    if (field) {
+                        setNodeText(field , OrderName[i] + " " + OrderJobtitle[i] + " " + OrderDept[i]);
+                        gongramCnt = gongramCnt + 1;
+                    }
+                    break;
+            }
+        }
+
+        if (refer != "") {
+            fieldname = "refer";
+            field = message.GetListItem(fields, fieldname);
+
+            if (field)
+                field.Value = refer;
+        }
+
+        var susinSN = "";
+        if (pDraftFlag == "SUSIN" || pDocState == strDocState11 || pDraftFlag == "GAMSABU")
+            susinSN = pSusinSN
+
+        for (i = 1; i < 20; i++) {
+            fieldname = susinSN + "jikwe" + i
+            field = message.GetListItem(fields, fieldname);
+
+            if (field)
+                setNodeText(field , " ");
+            else
+                break;
+        }
+
+        for (i = 1; i < 20; i++) {
+            fieldname = "hjkwe" + i
+            field = message.GetListItem(fields, fieldname);
+            if (field)
+                setNodeText(field , " ");
+            else
+                break;
+        }
+
+        var idx = 1;
+        var hidx = 1;
+        var Flag = "";
+        if (pDraftFlag == "SUSIN" || pDocState == strDocState11) {
+            susinSN = pSusinSN;
+            Flag = susinSN + "Recv";
+        }
+
+        for (i = 1; i < OrderJobtitle.length; i++) {
+
+            if (OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
+                if (LastSignSN == 1 || LastSignSN == i) {
+                    field = message.GetListItem(fields, Flag + "AprLine");
+                    var cnt = 20;
+                    if (field)
+                        cnt = OrderType.length;
+
+                    for (k = 1; k < 20; k++) {
+                        if (pDraftFlag == "SUSIN" || pDraftFlag == "GAMSABU")
+                            signID = pSusinSN + "sign" + k
+                        else
+                            signID = "sign" + k
+
+                        field = message.GetListItem(fields, signID);
+                        if (field)
+                            LastSignNo = k;
+                    }
+                    idx = LastSignNo;
+                }
+                var j, chkflag;
+
+                if (OrderType[i] == strAprType3) {
+                    chkflag = false;
+                    for (j = 1; j < i; j++) {
+
+                        if (OrderType[j] == strAprType4) {
+                            chkflag = true;
+                            break;
+                        }
+                    }
+                    if (!chkflag) {
+                        fieldname = susinSN + "jikwe" + idx;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field)
+                            setNodeText(field , OrderJobtitle[i]);
+
+                        fieldname = susinSN + "sign" + idx;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field)
+                            field.innerHTML = OrderName[i] + "<br>" + OrderReason[i];
+
+                        idx = idx + 1;
+                        continue;
+                    }
+                }
+                fieldname = susinSN + "jikwe" + idx;
+                field = message.GetListItem(fields, fieldname);
+                if (field)
+                    setNodeText(field , OrderJobtitle[i]);
+
+                fieldname = susinSN + "sign" + idx;
+                field = message.GetListItem(fields, fieldname);
+                if (field) {
+                    setNodeText(field , OrderName[i]);
+                    idx = idx + 1;
+                }
+            }
+
+
+            if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+                fieldname = "hjikwe" + hidx;
+                field = message.GetListItem(fields, fieldname);
+                if (field) {
+                    setNodeText(field , OrderJobtitle[i]);
+                    hidx = hidx + 1;
+                }
+            }
+        }
+        if (isSplit == "Y")
+            setSignSlash("sign", susinSN);
+
+//    } catch (e) {
+//        alert("GetDraftAprLineInfo : " + e.description);
+//    }
+}
+
 //재기안 셀정보를 Clear
 function ClearDocCellInfo()
 {
@@ -2286,22 +2667,23 @@ function SaveDraftDocInfo()
     	});
 
         if (pSuSinFlag == "Y") {
-            var AprDeptInfo = loadXMLString(ret[3]);
+            var AprDeptInfo = ret[2];
 
-            var AprDeptPara = createXmlDom();
-            var pAprNDeptNumber = 1;
-            var pAprDeptFlag = "NDept";
-            AprDeptPara = AprDeptParameter(pAprNDeptNumber, pAprDeptFlag);
-
-            if (CrossYN()) {
-                var xmlRtn = AprDeptPara.documentElement;
-                var Node = AprDeptInfo.importNode(xmlRtn, true);
-                AprDeptInfo.documentElement.appendChild(Node);
-            }
-            else {
-                var xmlRtn = AprDeptPara.documentElement;
-                AprDeptInfo.documentElement.appendChild(xmlRtn);
-            }
+            //같은현상이다 도르야
+//            var AprDeptPara = createXmlDom();
+//            var pAprNDeptNumber = 1;
+//            var pAprDeptFlag = "NDept";
+//            AprDeptPara = AprDeptParameter(pAprNDeptNumber, pAprDeptFlag);
+//
+//            if (CrossYN()) {
+//                var xmlRtn = AprDeptPara.documentElement;
+//                var Node = AprDeptInfo.importNode(xmlRtn, true);
+//                AprDeptInfo.documentElement.appendChild(Node);
+//            }
+//            else {
+//                var xmlRtn = AprDeptPara.documentElement;
+//                AprDeptInfo.documentElement.appendChild(xmlRtn);
+//            }
             
             $.ajax({
         		type : "POST",
@@ -2309,7 +2691,7 @@ function SaveDraftDocInfo()
         		async : false,
         		url : "/ezApprovalG/aprDeptSave.do",
         		data : {
-        				aprDeptInfo : getXmlString(AprDeptInfo)
+        				aprDeptInfo : AprDeptInfo
         				},
         		success : function(result){
         			if (result == "TRUE") {
