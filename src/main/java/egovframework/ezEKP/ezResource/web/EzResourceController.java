@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezResource.web;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -1999,7 +1998,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
 		String cmd = xmlDom.getElementsByTagName("CMD").item(0).getTextContent();
-		String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();
+		/*String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();*/
 		String allDay = xmlDom.getElementsByTagName("allday").getLength() == 0 ? "" : xmlDom.getElementsByTagName("allday").item(0).getTextContent();
 		
 		//반복예약시

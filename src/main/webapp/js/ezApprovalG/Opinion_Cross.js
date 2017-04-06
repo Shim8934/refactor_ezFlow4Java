@@ -739,21 +739,24 @@ function autosaveOpinionXMLInfo() {
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;
-        if (RtnVal != "TRUE") {
-            var pAlertContent = strLang416;
-            OpenAlertUI(pAlertContent);
-            return;
-        } else {
-            if (ReturnFunction != null) {
-                ReturnFunction(getXmlString(objXML));
-                window.close();
-            }
-            else {
-                window.returnValue = getXmlString(objXML);
-                window.close();
-            }
-            return;
-        }
+        
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+			if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+				if (ReturnFunction != null) {
+	                ReturnFunction(getXmlString(objXML));
+	                window.close();
+	            }
+	            else {
+	                window.returnValue = getXmlString(objXML);
+	                window.close();
+	            }
+	            return;
+			} else {
+				var pAlertContent = strLang416;
+	            OpenAlertUI(pAlertContent);
+	            return;
+			}
+		}
     } catch (e) {
         alert("autosaveOpinionXMLInfo :: " + e.description);
     }
@@ -812,22 +815,24 @@ function saveHesoungOpinionXMLInfo() {
             xmlhttp.send(objXML);
 
             var RtnVal = xmlhttp.responseText;
-            if (RtnVal != "TRUE") {
-                var pAlertContent = strLang417;
-                OpenAlertUI(pAlertContent);
-                return;
-            }
-            else {
-                if (ReturnFunction != null) {
-                    ReturnFunction("add");
-                    window.close();
-                }
-                else {
-                    window.returnValue = "add";
-                    window.close();
-                }
-                return;
-            }
+            
+            if (xmlhttp != null && xmlhttp.readyState == 4) {
+				if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+					if (ReturnFunction != null) {
+	                    ReturnFunction("add");
+	                    window.close();
+	                }
+	                else {
+	                    window.returnValue = "add";
+	                    window.close();
+	                }
+	                return;
+				} else {
+					var pAlertContent = strLang417;
+	                OpenAlertUI(pAlertContent);
+	                return;
+				}
+			}
         }
     } catch (e) {
         alert("saveHesoungOpinionXMLInfo :: " + e.description);
@@ -875,34 +880,36 @@ function saveOpinionXMLInfo() {
         xmlhttp.send(objXML);
 
         var RtnVal = xmlhttp.responseText;
-        if (RtnVal != "TRUE") {
-            var pAlertContent = strLang417;
-            OpenAlertUI(pAlertContent);
-            return;
-
-        } else {
-            if (btn_OpinionCancel.textContent == strLang407) {
-                if (ReturnFunction != null) {
-                    ReturnFunction("cancel");
-                    window.close();
-                }
-                else {
-                    window.returnValue = "cancel";
-                    window.close();
-                }
-            }
-            else {
-                if (ReturnFunction != null) {
-                    ReturnFunction(getXmlString(objXML));
-                    window.close();
-                }
-                else {
-                    window.returnValue = getXmlString(objXML);
-                    window.close();
-                }
-            }
-            return;
-        }
+        
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+			if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+				if (btn_OpinionCancel.textContent == strLang407) {
+	                if (ReturnFunction != null) {
+	                    ReturnFunction("cancel");
+	                    window.close();
+	                }
+	                else {
+	                    window.returnValue = "cancel";
+	                    window.close();
+	                }
+	            }
+	            else {
+	                if (ReturnFunction != null) {
+	                    ReturnFunction(getXmlString(objXML));
+	                    window.close();
+	                }
+	                else {
+	                    window.returnValue = getXmlString(objXML);
+	                    window.close();
+	                }
+	            }
+	            return;
+			} else {
+				var pAlertContent = strLang417;
+	            OpenAlertUI(pAlertContent);
+	            return;
+			}
+		}
     } catch (e) {
         alert("saveOpinionXMLInfo :: " + e.description);
     }

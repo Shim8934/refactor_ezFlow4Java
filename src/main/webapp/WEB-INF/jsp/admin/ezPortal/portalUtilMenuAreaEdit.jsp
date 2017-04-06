@@ -166,7 +166,7 @@
 		<br>
 		<table  class="mainlist" style="width:100%">
   			<tr>
-    			<th width="60" height="23"><spring:message code='ezPortal.t101'/></th>
+    			<th width="60"><spring:message code='ezPortal.t101'/></th>
     			<th><spring:message code='ezPortal.t225'/></th>
   			</tr>
   			${mainHTML}
