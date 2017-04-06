@@ -24,10 +24,13 @@
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_04" target="right">주소록관리</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_05" target="right">주소함관리</a></span> </h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_05" target="right">간단검색</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_06" target="right">주소록검색</a></span> </h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_06" target="right">주소함관리</a></span> </h2>
+				<ul>
+				</ul>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_07" target="right">주소록검색</a></span> </h2>
 				<ul>
 				</ul>
 			</c:when>
@@ -45,10 +48,10 @@
 					<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_jp_04" target="right">アドレス帳管理</a></span></h2>
 					<ul>
 					</ul>
-					<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_jp_05" target="right">アドレス帳管理</a></span> </h2>
+					<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_jp_06" target="right">アドレス帳管理</a></span> </h2>
 					<ul>
 					</ul>
-					<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_jp_06" target="right">アドレス帳検索</a></span> </h2>
+					<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/addr_jp_07" target="right">アドレス帳検索</a></span> </h2>
 					<ul>
 					</ul>
 			</c:otherwise>
