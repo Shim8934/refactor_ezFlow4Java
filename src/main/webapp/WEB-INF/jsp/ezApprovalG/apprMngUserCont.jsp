@@ -195,6 +195,8 @@
                     var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t310'/>" + rvalue + "]<spring:message code='ezApproval.t311'/>"
                     OpenInformationUI(OpinionContent, Del_Complete_MUST);
                 }
+            } else {
+            	self.close();
             }
         }
 
@@ -254,24 +256,26 @@
                     createNodeAndInsertText(xmlpara, objNode, "Description", "");
                     xmlhttp.open("POST", "/ezApprovalG/insertUserCont.do", false);
                     xmlhttp.send(xmlpara);
+                    if (xmlhttp != null && xmlhttp.readyState == 4) {
+    		            if (xmlhttp.statusText == "OK") {
+    		            	var ResultXML = "";
+    	                    ResultXML = loadXMLString(xmlhttp.responseText);
+    	                    var dataNodes = GetChildNodes(ResultXML);
 
-                    var ResultXML = "";
-                    ResultXML = loadXMLString(xmlhttp.responseText);
-                    var dataNodes = GetChildNodes(ResultXML);
-
-                    if (getNodeText(dataNodes[0]) == "TRUE") {
-                        var pAlertContent = "<spring:message code='ezApproval.t300'/>";
-                        OpenAlertUI(pAlertContent);
-                        TreeViewRefresh();
-                        return;
-                    }
-                    else {
-                        var pAlertContent = "<spring:message code='ezApproval.t301'/>";
-                        OpenAlertUI(pAlertContent);
-                        return;
-                    }
-                }
-                else if (type == "MOD") {
+    	                    if (getNodeText(dataNodes[0]) == "TRUE") {
+    	                        var pAlertContent = "<spring:message code='ezApproval.t300'/>";
+    	                        OpenAlertUI(pAlertContent);
+    	                        TreeViewRefresh();
+    	                        return;
+    	                    }
+    		            } else {
+    		            	 var pAlertContent = "<spring:message code='ezApproval.t301'/>";
+    	                        OpenAlertUI(pAlertContent);
+    	                        return;
+    		            }
+		        	}
+                    
+                } else if (type == "MOD") {
                     createNodeInsert(xmlpara, objNode, "PARAMETER");
                     createNodeAndInsertText(xmlpara, objNode, "ContID", ContID);
                     createNodeAndInsertText(xmlpara, objNode, "OwnUserID", pUserID);
@@ -280,24 +284,28 @@
                     createNodeAndInsertText(xmlpara, objNode, "Description", "");
                     xmlhttp.open("POST", "/ezApprovalG/updateUserCont.do", false);
                     xmlhttp.send(xmlpara);
+                    
+                    if (xmlhttp != null && xmlhttp.readyState == 4) {
+    		            if (xmlhttp.statusText == "OK") {
+    		            	var ResultXML = "";
+    	                    ResultXML = loadXMLString(xmlhttp.responseText);
+    	                    var dataNodes = GetChildNodes(ResultXML);
 
-                    var ResultXML = "";
-                    ResultXML = loadXMLString(xmlhttp.responseText);
-                    var dataNodes = GetChildNodes(ResultXML);
-
-                    if (getNodeText(dataNodes[0]) == "TRUE") {
-                        var pAlertContent = "<spring:message code='ezApproval.t303'/>";
-                        OpenAlertUI(pAlertContent);
-                        TreeViewRefresh();
-                        return;
-                    }
-                    else {
-                        var pAlertContent = "<spring:message code='ezApproval.t304'/>";
-                        OpenAlertUI(pAlertContent);
-                        return;
-                    }
+    	                    if (getNodeText(dataNodes[0]) == "TRUE") {
+    	                        var pAlertContent = "<spring:message code='ezApproval.t303'/>";
+    	                        OpenAlertUI(pAlertContent);
+    	                        TreeViewRefresh();
+    	                        return;
+    	                    }
+    		            } else {
+    		            	var pAlertContent = "<spring:message code='ezApproval.t304'/>";
+                            OpenAlertUI(pAlertContent);
+                            return;
+    		            }
+		        	}
                 }
-            }
+                   
+                   	}
         }
         function DelUserCont(ContID, Mode) {
             var xmlhttp = createXMLHttpRequest();
@@ -309,12 +317,18 @@
 
             xmlhttp.open("POST", "/ezApprovalG/deleteUserCont.do", false);
             xmlhttp.send(xmlpara);
+            
+            if (xmlhttp.statusText == "OK") {
+            	 var ResultXML = "";
+                 ResultXML = loadXMLString(xmlhttp.responseText);
+                 var dataNodes = GetChildNodes(ResultXML);
 
-            var ResultXML = "";
-            ResultXML = loadXMLString(xmlhttp.responseText);
-            var dataNodes = GetChildNodes(ResultXML);
-
-            return getNodeText(dataNodes[0]);
+                 return getNodeText(dataNodes[0]);
+            } else {
+            	return "FALSE";
+            }
+              
+           
         }
     </script>
 </head>

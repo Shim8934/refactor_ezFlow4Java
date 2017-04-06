@@ -315,7 +315,6 @@
 		            if (pCurSelRow.length != 0) {
 		                RtnVal = CheckSignCellValue();
 		                if (RtnVal) {
-alert(303);
 		                    APRLINEATTENDADDFunction(pCurSelRow, "PERSON");
 		                }
 		            }
@@ -330,7 +329,6 @@ alert(303);
 		                    var treeView = new TreeView();
 		                    treeView.LoadFromID("FromTreeView");
 		                    var pTreeSelNode = treeView.GetSelectNode();
-alert(304);
 		                    APRLINEATTENDADDFunction(pTreeSelNode, "DEPT");
 		                }
 		            }
@@ -469,7 +467,6 @@ alert(304);
 		        pAPRLINE.LoadFromID("pAPRLINE");
 		        var pSelRow = pAPRLINE.GetSelectedRows();
 		        if (RtnVal) {
-alert(302);
 		            APRLINEATTENDADDFunction(selnode, "PERSON");
 		        }
 		    }

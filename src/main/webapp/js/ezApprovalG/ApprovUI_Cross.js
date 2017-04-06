@@ -1688,16 +1688,16 @@ function SReAprLineSingMapping(ret) {
     var OrderJobtitle = new Array();
     var OrderReason = new Array();
 
-    if (ret[5] == undefined) {
-        xmlKuljea = ret[0];
-        xmlReDraft = ret[2];
-        DrawAutoAprLine(ret[0], pDraftFlag);
-    }
-    else {
-        xmlKuljea = ret[1];
-        xmlReDraft = ret[5];
-        DrawAutoAprLine(ret[1], pDraftFlag);
-    }
+//    if (ret[5] == undefined) {
+//        xmlKuljea = ret[0];
+//        xmlReDraft = ret[2];
+//        DrawAutoAprLine(ret[0], pDraftFlag);
+//    }
+//    else {
+    xmlKuljea = ret[1];
+    xmlReDraft = ret[5];
+    DrawAutoAprLine(ret[1], pDraftFlag);
+//    }
 
     var xmldom = createXmlDom();
     xmldom = loadXMLString(xmlKuljea);

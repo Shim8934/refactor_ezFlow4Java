@@ -349,18 +349,18 @@ function SGetDraftAprLineInfo(ret) {
             xmlReDraft = "C";
         }
 
-        if (ret[3] == undefined) {
-            TempsaveAprlineinfo = ret[0];
-            xmlKuljea = ret[0];
-            setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[0], pDraftFlag);
-        }
-        else {
-            TempsaveAprlineinfo = ret[1];
-            xmlKuljea = ret[1];
-            setAprLinesXML(xmlKuljea);
-            DrawAutoAprLine(ret[1], pDraftFlag);
-        }
+//        if (ret[5] == undefined) {
+//            TempsaveAprlineinfo = ret[0];
+//            xmlKuljea = ret[0];
+//            setAprLinesXML(xmlKuljea);
+//            DrawAutoAprLine(ret[0], pDraftFlag);
+//        }
+//        else {
+        TempsaveAprlineinfo = ret[1];
+        xmlKuljea = ret[1];
+        setAprLinesXML(xmlKuljea);
+        DrawAutoAprLine(ret[1], pDraftFlag);
+//        }
 
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
@@ -1228,7 +1228,7 @@ function SGetDraftAprLineInfo(ret) {
         if (isSplit == "Y")
             setSignSlash("sign", susinSN);
     } catch (e) {
-        alert("GetDraftAprLineInfo(ret)" + e.description);
+        alert("SGetDraftAprLineInfo(ret)" + e.description);
     }
 }
 

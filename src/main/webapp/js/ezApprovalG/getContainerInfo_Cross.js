@@ -434,14 +434,17 @@ function RemoveDoc_Complete(RtnVal)
             xmlhttp.open("POST", "/ezApprovalG/delDeptContDoc.do", false);
         xmlhttp.send(xmlpara);
     }
+    
+     		 var InformationString = strLang388;
+     	    OpenAlertUI(InformationString);
 
-    var InformationString = strLang388;
-    OpenAlertUI(InformationString);
-
-    if (DocListType == "UserContDocList")
-        GetUserContList();
-    else if (DocListType == "DeptContDocList")
-        GetDeptContList();
+     	    if (DocListType == "UserContDocList") {
+     	    	GetUserContList();
+     	    } else if (DocListType == "DeptContDocList"){
+     	        GetDeptContList();
+     	    } else {
+     		  alert(strLang803);
+     	 }
 }
 
 function getsearchDocList_after() {

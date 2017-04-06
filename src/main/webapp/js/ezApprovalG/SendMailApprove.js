@@ -15,7 +15,7 @@ function getAprLinefor(mode, docid) {
 		url : "/ezApprovalG/getLineList.do",
 		data : {
 			docID : docid,
-			mode  : mode,
+			mode  : mode
 		},
 		success: function(text){
 			result = text;
@@ -40,7 +40,7 @@ function sendAlertMail(mode, sn, ui) {
         var objNodes = SelectNodes(MemberList, "LISTVIEWDATA/ROWS/ROW");
         for (i = 0; i < objNodes.length; i++) {
             if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[4])) == CurrentAprUserID && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11])) == CurrentAprType &&
-                trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) == "A04003") {
+                trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) == "003") {
                 _pAprMemberSN = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[0])); break;
             }
         }
@@ -65,10 +65,10 @@ function SendMailApproveMember(aprLineList,  aprsn, pdrafttitle, pdraftname, pdr
     if (sn >= 0) {
         nextMethod = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[sn])[0])[11]));
 
-        if (nextMethod == "A03040" || nextMethod == "A03003") {
+        if (nextMethod == "040" || nextMethod == "003") {
             for (var i = sn; i < objNodes.length; i++) {
                 nextMethod = trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11]));
-                if (nextMethod == "A03040" || nextMethod == "A03003")
+                if (nextMethod == "040" || nextMethod == "003")
                     sn -= 1
                 else
                     break;
@@ -283,8 +283,8 @@ function continusendMail(nextMethod, aprlinelist, sn) {
     var Method = "";
     var i = sn;
 
-    if (nextMethod == "A03009" || nextMethod == "A03012") {
-        if (CurrentAprType != "A03009" && CurrentAprType != "A03012") {
+    if (nextMethod == "009" || nextMethod == "012") {
+        if (CurrentAprType != "009" && CurrentAprType != "012") {
             var isstop = false;
             for (i = sn; i > -1; i--) {
                 if (objNodes.length != "0") {
@@ -313,7 +313,7 @@ function continusendMail(nextMethod, aprlinelist, sn) {
         }
         else {
             for (i = 0; i < objNodes.length; i++) {
-                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11])) == "A03009" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "A04003")
+                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[11])) == "009" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003")
                     return;
             }
             var Tempsn = sn > 0 ? sn - 1 : sn;
@@ -322,7 +322,7 @@ function continusendMail(nextMethod, aprlinelist, sn) {
         }
     }
         
-    else if (nextMethod == "A03007") {
+    else if (nextMethod == "007") {
 
         
         var isstop = false;
@@ -369,9 +369,9 @@ function continusendMail(nextMethod, aprlinelist, sn) {
         if (sn == objNodes.length || sn < 0)  
             return;
 
-        if (CurrentAprType == "A03009") {
+        if (CurrentAprType == "009") {
             for (var i = sn + 1; i < objNodes.length; i++) {
-                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "A04003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "A04010")
+                if (trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "003" && trim(getNodeText(GetChildNodes(GetChildNodes(objNodes[i])[0])[12])) != "010")
                     return;
             }
         }
@@ -601,17 +601,22 @@ function LastHapyui() {
 }
 
 function getSameOrgHAPYUIDoc(orgID) {
-    var xmlpara = createXmlDom();
+	var result = "";
+	
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getSameOrgHAPYUIDoc.do",
+		data : {
+			docID : orgID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
     
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");  
-    createNodeAndInsertText(xmlpara, objNode, "porgID", orgID);
-
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("Post", "/myoffice/ezApprovalG/aspx/getSameOrgHAPYUIDoc.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    return xmlhttp.responseText;
+    return result;
 }
 
 function SendMailToDrafter() {
