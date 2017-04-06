@@ -184,6 +184,7 @@ function TreeNode() {
 
         if (pNodeClick != "") {
             spnNode.style.cursor = "pointer";
+            this.NodeName = this.NodeName.replace(/"/g, '\\"');
             spnNode.setAttribute("onClick", "node_select(\"" + this.NodeID + "\", \"" + this.NodeName + "\", \"" + strTreeID + "\", " + pNodeClick + ");");
         }
 

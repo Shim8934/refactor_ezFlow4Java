@@ -204,6 +204,7 @@ function TreeNode() {
         //노드 클릭 이벤트 Attach
         if (pNodeClick != "") {
             spnNode.style.cursor = "pointer";
+            this.NodeName = this.NodeName.replace(/"/g, '\\"');
             spnNode.setAttribute("onClick", "node_select(\"" + this.NodeID + "\", \"" + this.NodeName.replace(/\n/gi, "") + "\", \"" + strTreeID + "\", " + pNodeClick + ");");
         }
 

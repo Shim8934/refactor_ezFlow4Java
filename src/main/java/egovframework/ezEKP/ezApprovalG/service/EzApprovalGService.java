@@ -151,7 +151,7 @@ public interface EzApprovalGService {
 	
 	public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 	
-	public String saveRecReadHist(String readRecXML, int tenantID) throws Exception;
+	public void saveRecReadHist(String readRecXML, int tenantID) throws Exception;
 	
 	public String receiverChk(String deptID, String companyID, int tenantID) throws Exception;
 	

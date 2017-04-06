@@ -165,12 +165,13 @@ function DocMoveParser() {
 
     xmlhttp.open("Post", "/ezApprovalG/updateDocAttach.do", false);
     xmlhttp.send(xmlpara);
-
-    var rtnval = xmlhttp.responseXML;
-    if (SelectSingleNodeValue(rtnval, "RESULT") == "TRUE") {
+    
+    var rtnval = xmlhttp.responseText;
+    var rtnXML;
+    if (rtnval == "TRUE")
         rtnXML = getXmlString(xmlpara);
-    }
-    else rtnXML = "<ROWS></ROWS>";
+    else
+        rtnXML = "<ROWS></ROWS>";
 
     return rtnXML;
 }

@@ -118,13 +118,13 @@ function btn_SaveAprLineTemplet_onclick()
 	    if (CrossYN()) {
 	        aprlinetempletname_cross_dialogArguments[0] = dialogValue;
 	        aprlinetempletname_cross_dialogArguments[1] = btn_SaveAprLineTemplet_onclick_Complete;
-	        DivPopUpShow(360, 220, windowName);
+	        DivPopUpShow(360, 185, windowName);
 	    }
 	    else {
-	        var parameter = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken";
+	        var parameter = "status:no;dialogWidth:340px;dialogHeight:185px;scroll:no;edge:sunken";
 	       
 
-	        parameter = parameter + GetShowModalPosition(340, 205);
+	        parameter = parameter + GetShowModalPosition(340, 185);
 	        var ret = window.showModalDialog(windowName, dialogValue, parameter);
 	        if (ret != "cancel") {
 	            CreateNewAprLineTemplet(ret);
@@ -290,11 +290,11 @@ function btn_ModifyToAprLine_onclick() {
             aprlinetempletname_cross_dialogArguments[0] = dialogValue;
             aprlinetempletname_cross_dialogArguments[1] = btn_ModifyToAprLine_onclick_Complete;
 
-            DivPopUpShow(360, 220, windowName);
+            DivPopUpShow(360, 185, windowName);
         }
         else {
-            var parameter = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken";
-            parameter = parameter + GetShowModalPosition(340, 205);
+            var parameter = "status:no;dialogWidth:340px;dialogHeight:185px;scroll:no;edge:sunken";
+            parameter = parameter + GetShowModalPosition(340, 185);
             var ret = window.showModalDialog(windowName, dialogValue, parameter);
             if (ret != "cancel") {
                 pAprLineTempletFlag = true;
