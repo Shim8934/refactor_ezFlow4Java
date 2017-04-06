@@ -3079,6 +3079,60 @@ function CheckDraftDeptID( AprLineRow )
 	
 	return true;
 }
+function ReDraftSaveAprLine() {
+    if (pReDraftFlag == "DRAFT" || pReDraftFlag == "SUSIN" || pReDraftFlag == "HAPYUI" || pReDraftFlag == "HABYUI" || pReDraftFlag == "GAMSABU" || pReDraftFlag == "WHOKYUL") {
+        if (!pReDraftAprLineFlag) {
+            AlterAprLineType();
+        }
+    }
+    else if (pReDraftFlag == "REDRAFT") {
+        if (!pReDraftAprLineChangeFlag) {
+            Ans = true;
+            if (Ans) {
+                AprLineChangeType();
+
+                pReDraftAprLineChangeFlag = true;
+            }
+            else {
+                AprLineBanSongChangeType();
+            }
+        }
+        else {
+            AprLineChangeType();
+        }
+
+    }
+}
+function AlterAprLineType() {
+    var pAPRLINE = new ListView();
+    pAPRLINE.LoadFromID("lvAPRLINE");
+
+    var pAprRow = pAPRLINE.GetDataRows();
+    var pAprRowLen = pAprRow.length;
+    var i;
+
+    var TmpAprLineStateReadyCode, TmpAprLineStateReadyName;
+    var TmpAprLineStateJinhangCode, TmpAprLineStateJinhangName;
+
+    TmpAprLineStateReadyCode = strAprState1;
+    TmpAprLineStateReadyName = strLangAprState1;
+
+    TmpAprLineStateJinhangCode = strAprState2;
+    TmpAprLineStateJinhangName = strLangAprState2;
+
+    for (i = 0 ; i < pAprRowLen ; i++) {
+        var TmpAprLineState = GetAttribute(pAprRow[i], "DATA12");
+        if (TmpAprLineState != strAprState3) {
+            SetAttribute(pAprRow[i], "DATA12", TmpAprLineStateReadyCode);
+            pAprRow[i].cells[5].innerHTML = TmpAprLineStateReadyName;
+        }
+        else {
+            SetAttribute(pAprRow[i - 1], "DATA12", TmpAprLineStateJinhangCode);
+            pAprRow[i - 1].cells[5].innerHTML = TmpAprLineStateJinhangName;
+            break;
+        }
+    }
+}
 //결재선, 수신처에 데이터가 있는지 검사하는 함수
 function Checkline() {
     if (!bool) {
