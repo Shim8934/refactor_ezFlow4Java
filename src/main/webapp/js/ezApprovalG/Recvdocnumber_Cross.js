@@ -78,6 +78,14 @@ function setDocNumFormat() {
             case "cs":
                 numHeader = numHeader + strLang107 + Tail;
                 break;
+                
+            case "FT":
+            	numHeader += "FT" + Tail;
+            	break;
+            	
+            case "MV":
+            	numHeader += "MV" + Tail;
+            	break;
 
             default:
                 numHeader = numHeader + fieldValue;

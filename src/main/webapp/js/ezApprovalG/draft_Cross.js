@@ -349,18 +349,18 @@ function SGetDraftAprLineInfo(ret) {
             xmlReDraft = "C";
         }
 
-//        if (ret[5] == undefined) {
-//            TempsaveAprlineinfo = ret[0];
-//            xmlKuljea = ret[0];
-//            setAprLinesXML(xmlKuljea);
-//            DrawAutoAprLine(ret[0], pDraftFlag);
-//        }
-//        else {
-        TempsaveAprlineinfo = ret[1];
-        xmlKuljea = ret[1];
-        setAprLinesXML(xmlKuljea);
-        DrawAutoAprLine(ret[1], pDraftFlag);
-//        }
+        if (ret[5] == undefined) {
+            TempsaveAprlineinfo = ret[0];
+            xmlKuljea = ret[0];
+            setAprLinesXML(xmlKuljea);
+            DrawAutoAprLine(ret[0], pDraftFlag);
+        }
+        else {
+	        TempsaveAprlineinfo = ret[1];
+	        xmlKuljea = ret[1];
+	        setAprLinesXML(xmlKuljea);
+	        DrawAutoAprLine(ret[1], pDraftFlag);
+        }
 
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
@@ -3061,7 +3061,7 @@ function setDocNumFormat(pPrefix) {
                 
             case "yy":
                 var yyear = d.getYear();
-                numHeader += yyear.toString().substr(2) + Tail;
+                numHeader += yyear.toString().substr(1) + Tail;
                 break;
 
             case "MM":

@@ -465,16 +465,16 @@ function SGetDraftAprLineInfo(ret) {
             xmlReDraft = "C";
         }
 
-//        if (ret[5] == undefined) {
-//            TempsaveAprlineinfo = ret[0];
-//            xmlKuljea = ret[0];
-//            setAprLinesXML(xmlKuljea);
-//        }
-//        else {
-        TempsaveAprlineinfo = ret[1];
-        xmlKuljea = ret[1];
-        setAprLinesXML(xmlKuljea);
-//        }
+        if (ret[5] == undefined) {
+            TempsaveAprlineinfo = ret[0];
+            xmlKuljea = ret[0];
+            setAprLinesXML(xmlKuljea);
+        }
+        else {
+		    TempsaveAprlineinfo = ret[1];
+		    xmlKuljea = ret[1];
+		    setAprLinesXML(xmlKuljea);
+        }
 
         xmlReDraft = "R";
         if (xmlReDraft == "C") {
@@ -2520,6 +2520,14 @@ function SaveDraftDocInfo()
                         numHeader = numHeader + tempdocnumcode + Tail;
                     break;
 
+                case "FT":
+                	numHeader += "FT" + Tail;
+                	break;
+                	
+                case "MV":
+                	numHeader += "MV" + Tail;
+                	break;
+                	
                 default:
                     numHeader = numHeader + fieldValue;
                     break;
