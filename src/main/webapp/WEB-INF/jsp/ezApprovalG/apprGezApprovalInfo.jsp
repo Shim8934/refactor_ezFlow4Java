@@ -805,7 +805,7 @@
 		                    }
 		                    
 		                	docinfo = MakeDocInfo();
-		                	
+		                	ReDraftSaveAprLine();
 			                ret[0] = "OK";
 			                ret[1] = SAPRLINETEMPLETXMLParsing(); //결재선 저장 XML
 		                }
