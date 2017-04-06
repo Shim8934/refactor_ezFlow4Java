@@ -1888,7 +1888,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		for (int i=0; i<list.size(); i++) {
 			mainHTML += "<tr style='cursor:pointer' onclick=\"setValue('"+list.get(i).getuID()+"', this)\" ondblclick=\"selectItem('"+list.get(i).getuID()+"', this)\">";
-			mainHTML += "<td width='60' height='23'>"+String.valueOf(i+1)+"</td>";
+			mainHTML += "<td width='60'>"+String.valueOf(i+1)+"</td>";
 			mainHTML += "<td>"+gXmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>";
 			mainHTML += "</tr>";
 		}

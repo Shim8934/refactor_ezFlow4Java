@@ -61,13 +61,21 @@
 
     		function TreeLoad() {
         		initTreeInfo("", g_UserID, g_DeptID);
+        		
+        		if(document.getElementById("TreeView").innerText == "") {
+        			var msg = "<div style='margin-top:10px;margin-bottom:10px'><img width='183' height='27' src='/images/notify/warning01.gif'></div>";
+        			msg += "<div><spring:message code='ezResource.t368' /></div>";
+        			var strUrl = "/ezResource/nonResList.do?msg="+msg;
+            		locationInfo("");
+            		Navigate(strUrl);
+        		}
     		}
 
     		function TreeView_onNodeExpanded(event) {
         		displayBrdTree.call(this, g_UserID, g_DeptID, event);
     		}
 
-		    function TreeView_onNodeClick() {
+		    function TreeView_onNodeClick() {		    	
 		        var i = "";
 		        var arrName = "";
 		        var RealPath = "";
