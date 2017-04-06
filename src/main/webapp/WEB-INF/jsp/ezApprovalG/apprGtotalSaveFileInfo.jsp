@@ -212,8 +212,8 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApprovalG.t00008'/></h1>
-	    <h2>&nbsp;&nbsp;※ <spring:message code='ezApprovalG.t00009'/></h2>
-	    <table class="mainlist" style="width: 550px; margin-left: 5px;">
+	    <span>&nbsp;▒ <spring:message code='ezApprovalG.t00009'/></span>
+	    <table class="mainlist" style="width: 550px; margin-left: 5px;margin-top:7px">
 	        <tr>
 	            <th style="width:30px;"><input id="cbx_all" type="checkbox" onclick="return HeaderCheckBoxClick(this);" value="all" /></th>
 	            <th><spring:message code='ezApprovalG.t00010'/></th>

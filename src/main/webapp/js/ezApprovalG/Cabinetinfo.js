@@ -610,7 +610,6 @@ function Set_MyTask(type) {
             }
         }
     }
-    var result = "";
    
     $.ajax({
 		type : "POST",
@@ -622,24 +621,23 @@ function Set_MyTask(type) {
 			taskCode  : GetAttribute(selRows[0], "data2"),
 			type      : type
 		},
-		success: function(text){
-			result = text;
-		}        			
-	});
-        
-    if (result == "OK") {
-        if (type == "INS")
-            OpenAlertUI(strLang1003);
-        else
-            OpenAlertUI(strLang1004);
+		success : function(result){
+			if (result == "OK") {
+		        if (type == "INS")
+		            OpenAlertUI(strLang1003);
+		        else
+		            OpenAlertUI(strLang1004);
 
-        MyCabinet_List();
-        return;
-    }
-    else {
-        OpenAlertUI(strLang649);
-        return;
-    }
+		        MyCabinet_List();
+		    }
+		    else {
+		        OpenAlertUI(strLang649);
+		    }
+		},
+		error : function () {
+			OpenAlertUI(strLang649);
+		}
+	});
 }
 
 function GetTaskXml(TaskXml) {

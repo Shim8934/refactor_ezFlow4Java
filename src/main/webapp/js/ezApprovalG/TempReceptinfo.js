@@ -474,8 +474,8 @@ function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 			result = text;
 		}        			
 	});
-	
-    var RtnVal = text;
+
+    var RtnVal = result;
 
     if (RtnVal == "TRUE") {
         InitReceptTemplet();

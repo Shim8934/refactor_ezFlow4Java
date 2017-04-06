@@ -2624,4 +2624,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<String>) list("EzApprovalG.getAddress", map);
 	}
 
+	public ApprGAprLineVO getSameOrgHAPYUIDoc(Map<String, Object> map) throws Exception {
+		return (ApprGAprLineVO) select("EzApprovalG.getSameOrgHAPYUIDoc", map);
+	}
+
+	public String getHapyuiCount(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getHapyuiCount", map);
+	}
+
 }

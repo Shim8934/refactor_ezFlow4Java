@@ -407,15 +407,15 @@
 		        oXmlhttp.open("POST", "/ezApprovalG/regSepAttach.do", false);
 		        oXmlhttp.send(xmlpara);
 		
-		        var rtnXml = oXmlhttp.responseXML;
-		
-		        if (SelectSingleNodeValue(rtnXml, "RESULT") == "FALSE") {
-		            alert("<spring:message code='ezApprovalG.t1085'/>");
-		            return false;
-		        }
-		        else {
-		            return true;
-		        }
+		        var rtnXml = oXmlhttp.responseText
+		        if (xmlhttp != null && xmlhttp.readyState == 4) {
+					if (xmlhttp.statusText == "OK") {
+						return true;
+					} else {
+						alert("<spring:message code='ezApprovalG.t1085'/>");
+			            return false;
+					}
+				}
 		    }
 		
 		    var selectcabinetintask_cross_dialogArguments = new Array();

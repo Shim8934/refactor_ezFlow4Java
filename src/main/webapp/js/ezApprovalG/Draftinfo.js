@@ -537,8 +537,6 @@ function btnAddCode_onclick() {
 }
 
 function InsMyGroupItem(curSelCode, curSelGroupCode) {
-	var result = "";
-	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -549,20 +547,19 @@ function InsMyGroupItem(curSelCode, curSelGroupCode) {
 			taskCode  : curSelCode,
 			type      : "INS"
 		},
-		success: function(text){
-			result = text;
-		}        			
+		success: function(result){
+			if (result == "OK") {
+		        var pAlertContent = strLangS602;
+		        OpenAlertUI(pAlertContent);
+
+		        getMyGroupItem();
+		    }
+		},
+		error : function() {
+			var pAlertContent = strLangS604;
+	        OpenAlertUI(pAlertContent);
+		}
 	});
-
-    if (result == "OK") {
-        var pAlertContent = strLangS602;
-        OpenAlertUI(pAlertContent);
-
-        getMyGroupItem();
-    } else {
-        var pAlertContent = strLangS604;
-        OpenAlertUI(pAlertContent);
-    }
 }
 
 function btnDelCode_onclick() {
@@ -580,9 +577,6 @@ function btnDelCode_onclick() {
 
     var curSelCode = GetAttribute(pAprRow[0],"DATA1");
     var curSelGroupCode = GetAttribute(pAprRow[0],"DATA7");
-
-
-	var result = "";
 	
 	$.ajax({
 		type : "POST",
@@ -594,21 +588,19 @@ function btnDelCode_onclick() {
 			taskCode  : curSelCode,
 			type      : "DEL"
 		},
-		success: function(text){
-			result = text;
-		}        			
-	});
-	
-    if (result == "OK") {
-        var pAlertContent = strLangS603;
-        OpenAlertUI(pAlertContent);
+		success: function(result){
+			if (result == "OK") {
+		        var pAlertContent = strLangS603;
+		        OpenAlertUI(pAlertContent);
 
-        getMyGroupItem();
-    }
-    else {
-        var pAlertContent = strLangS605;
-        OpenAlertUI(pAlertContent);
-    }
+		        getMyGroupItem();
+		    }
+		},
+		error : function() {
+			var pAlertContent = strLangS605;
+	        OpenAlertUI(pAlertContent);
+		}
+	});
 }
 function getMyGroupItem()
 {

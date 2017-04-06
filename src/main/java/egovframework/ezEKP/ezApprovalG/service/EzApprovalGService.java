@@ -151,7 +151,7 @@ public interface EzApprovalGService {
 	
 	public String getDocInfo(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 	
-	public String saveRecReadHist(String readRecXML, int tenantID) throws Exception;
+	public void saveRecReadHist(String readRecXML, int tenantID) throws Exception;
 	
 	public String receiverChk(String deptID, String companyID, int tenantID) throws Exception;
 	
@@ -435,5 +435,7 @@ public interface EzApprovalGService {
 	public String doHabyuiHesong(Document doc, String dirPath, String companyID, String lang, int tenantId, LoginVO userInfo) throws Exception;
 
 	public List<String> getAddress(String userIDs, int tenantID) throws Exception;
+
+	public String getSameOrgHAPYUIDoc(String docID, String companyID, String lang, int tenantID) throws Exception;
 
 }

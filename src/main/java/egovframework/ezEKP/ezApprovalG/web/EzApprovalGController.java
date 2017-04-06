@@ -592,7 +592,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	
 	/**
 	 * 전자결재G 기안양식 호출 Method
 	 */
@@ -1698,6 +1697,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 
+		
 		return result;
 	}
 	
@@ -1787,6 +1787,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
 		}
+		
 		String result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		return result;
@@ -6136,6 +6137,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = StringUtils.join(addressArray, "||"); 
 
 		logger.debug("getAddress ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재S 라스트합의 APRMEMBERSN 가져오기
+	 */
+	@RequestMapping(value = "/ezApprovalG/getSameOrgHAPYUIDoc.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSameOrgHAPYUIDoc(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getSameOrgHAPYUIDoc started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getSameOrgHAPYUIDoc(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		logger.debug("getSameOrgHAPYUIDoc ended");
 		
 		return result;
 	}
