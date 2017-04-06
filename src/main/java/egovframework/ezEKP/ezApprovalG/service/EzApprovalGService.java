@@ -435,5 +435,7 @@ public interface EzApprovalGService {
 	public String doHabyuiHesong(Document doc, String dirPath, String companyID, String lang, int tenantId, LoginVO userInfo) throws Exception;
 
 	public List<String> getAddress(String userIDs, int tenantID) throws Exception;
+	
+	public String deleteSignInfo(String docID ,String companyID, int tenantID) throws Exception;
 
 }

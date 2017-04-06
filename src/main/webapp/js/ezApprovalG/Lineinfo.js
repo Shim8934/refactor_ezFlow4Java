@@ -3086,6 +3086,19 @@ function ReDraftSaveAprLine() {
         }
     }
     else if (pReDraftFlag == "REDRAFT") {
+    	//TODO
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/deleteSignInfo.do",
+    		data : {
+    				docID : pDocID, 
+    				},
+    		success: function(result){
+    		}
+    	});
+    	
         if (!pReDraftAprLineChangeFlag) {
             Ans = true;
             if (Ans) {

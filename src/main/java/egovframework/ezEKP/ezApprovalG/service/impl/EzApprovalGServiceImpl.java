@@ -21322,5 +21322,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		return "<RESULT>TRUE</RESULT>";
 	}
-
+	
+	@Override
+	public String deleteSignInfo(String docID ,String companyID, int tenantID) throws Exception {
+		String rtnVal = "TRUE";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", tenantID);
+		
+		ezApprovalGDAO.deleteSignCheck(map);
+		
+		return rtnVal;
+	}
 }
