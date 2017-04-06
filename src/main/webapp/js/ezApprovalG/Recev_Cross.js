@@ -465,16 +465,16 @@ function SGetDraftAprLineInfo(ret) {
             xmlReDraft = "C";
         }
 
-        if (ret[5] == undefined) {
-            TempsaveAprlineinfo = ret[0];
-            xmlKuljea = ret[0];
-            setAprLinesXML(xmlKuljea);
-        }
-        else {
-            TempsaveAprlineinfo = ret[1];
-            xmlKuljea = ret[1];
-            setAprLinesXML(xmlKuljea);
-        }
+//        if (ret[5] == undefined) {
+//            TempsaveAprlineinfo = ret[0];
+//            xmlKuljea = ret[0];
+//            setAprLinesXML(xmlKuljea);
+//        }
+//        else {
+        TempsaveAprlineinfo = ret[1];
+        xmlKuljea = ret[1];
+        setAprLinesXML(xmlKuljea);
+//        }
 
         xmlReDraft = "R";
         if (xmlReDraft == "C") {

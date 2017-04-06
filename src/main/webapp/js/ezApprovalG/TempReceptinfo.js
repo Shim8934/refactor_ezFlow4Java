@@ -575,6 +575,12 @@ function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
     var p_AprDeptTempletID;
     AprDeptTemplet = AprDeptTempletXmlParsing(p_AprDeptTempletName);
     var AprDeptXml = APRDeptXMLParsing(RECEPTLIST, pDocID);
+    
+    if (AprDeptXml == "NODATA") {
+    	OpenAlertUI(strLangS957);
+    	
+    	return;
+    }
     var AprDeptInfo = createXmlDom();
     AprDeptInfo = loadXMLString(AprDeptXml);
 

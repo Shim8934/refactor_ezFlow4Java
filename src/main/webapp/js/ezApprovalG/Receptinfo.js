@@ -650,6 +650,10 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
     var j;
     var GetXml;
 
+    if (getNodeText(AprDeptRow[0].cells[0]).indexOf(strLang944) > -1) {
+    	return "NODATA";
+    }
+    
     GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang170 + "</NAME><WIDTH>150</WIDTH></HEADER><HEADER><NAME>" + strLang171 + "</NAME><WIDTH>600</WIDTH></HEADER></HEADERS>";
     GetXml += "<ROWS>";
 
@@ -699,7 +703,7 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
     }
     
     GetXml += "</LISTVIEWDATA>";
-    alert(GetXml);
+    
     return GetXml;
 }
 //############################################################################################################################################# 조직도 사용자 검색

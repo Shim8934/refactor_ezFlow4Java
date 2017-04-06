@@ -1547,3 +1547,5 @@ var strLangS64 = "후열";
 var strLangS51 = "합의";
 var strLangS6 = "반송:서명자";
 var strLangS57 = "승인";
+var strLangS957 = "수신처를 지정해 주세요.";
+var strLangS506 = "결재선에 합의가 있으면";
