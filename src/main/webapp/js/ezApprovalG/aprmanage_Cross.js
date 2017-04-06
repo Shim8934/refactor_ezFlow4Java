@@ -152,10 +152,8 @@ function getDocList_after(xml) {
 
         if (pDocInfoValue == "1") {
             InitlvAprLine();
-
         }
         else {
-
             var DocList = new ListView();
             DocList.LoadFromID("DocList");
             var oArrRows = DocList.GetSelectedRows();
@@ -176,9 +174,7 @@ function getDocList_after(xml) {
                 else if (pDocInfoValue == "5") {
                     getAprDocAproveInfo(tr);
                 }
-
             }
-
         }
     }
 

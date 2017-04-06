@@ -586,7 +586,6 @@
 		        }
 		    }
 		    function btnRedraft_onclick() {
-		
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();

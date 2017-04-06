@@ -436,4 +436,6 @@ public interface EzApprovalGService {
 
 	public List<String> getAddress(String userIDs, int tenantID) throws Exception;
 
+	public String getSameOrgHAPYUIDoc(String docID, String companyID, String lang, int tenantID) throws Exception;
+
 }

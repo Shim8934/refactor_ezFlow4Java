@@ -731,7 +731,7 @@
 		    }
 		
 		    function btn_OK() {
-// 		        try {
+		        try {
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -928,11 +928,11 @@
 		            	
                         window.close();
 		            }
-// 		        }
-// 		        catch (e) {
-// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-// 		            ret[0] = "FALSE";
-// 		        }
+		        }
+		        catch (e) {
+		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+		            ret[0] = "FALSE";
+		        }
 		    }
 		    
 		    function setCabInfoXML() {

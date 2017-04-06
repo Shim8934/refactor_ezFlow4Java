@@ -21898,4 +21898,53 @@
 				CN IN ($userIDs$)
 		]]>
 	</select>
+	
+	<select id="EzApprovalG.getSameOrgHAPYUIDoc" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<![CDATA[
+			SELECT 
+				AprType, AprMemberSN 
+			FROM 
+				TBL_APRLINEINFO 
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID# 
+			AND 
+				APRMEMBERSN = (SELECT
+									MAX(APRMEMBERSN)
+								FROM
+									TBL_APRLINEINFO
+								WHERE
+									TENANT_ID = #tenantID#
+								AND
+									COMPANYID = #companyID#
+								AND
+									DOCID = #docID#
+								AND 
+									APRTYPE IN (#staATBuSeuSoonChaHyubJo#, #staATBuSeuByungRyulHyubJo#, #staATByungRyulHyubJo#)
+			                    AND 
+									APRSTATE IN (#staASSungIn#, #staASBanSong#, #staASWheSong#))
+		]]>
+	</select>
+	
+	<select id="EzApprovalG.getHapyuiCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(DOCID)
+			FROM
+				TBL_APRLINEINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+			AND
+				APRTYPE = #aprType#
+			AND
+				APRSTATE IN (#staASJinHang#, #staASBoRyu#)
+		]]>
+	</select>
 </sqlMap>

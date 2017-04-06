@@ -664,6 +664,60 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String getSameOrgHAPYUIDoc(String docID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getSameOrgHAPYUIDoc started");
+		
+		String result = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("staATBuSeuSoonChaHyubJo", staATBuSeuSoonChaHyubJo);
+		map.put("staATBuSeuByungRyulHyubJo", staATBuSeuByungRyulHyubJo);
+		map.put("staATByungRyulHyubJo", staATByungRyulHyubJo);
+		map.put("staASSungIn", staASSungIn);
+		map.put("staASBanSong", staASBanSong);
+		map.put("staASWheSong", staASWheSong);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		ApprGAprLineVO apprGAprLineVO = ezApprovalGDAO.getSameOrgHAPYUIDoc(map);
+		
+		if (apprGAprLineVO.getAprType().equals(staATBuSeuSoonChaHyubJo)) {
+			result = apprGAprLineVO.getAprMemberSN();
+		} else if (apprGAprLineVO.getAprType().equals(staATBuSeuByungRyulHyubJo)) {
+			map.put("aprType", staATBuSeuByungRyulHyubJo);
+			map.put("staASJinHang", staASJinHang);
+			map.put("staASBoRyu", staASBoRyu);
+			
+			String tempCount = ezApprovalGDAO.getHapyuiCount(map);
+			
+			if (tempCount.equals("0")) {
+				result = apprGAprLineVO.getAprMemberSN();
+			} else {
+				result = "0";
+			}
+		} else if (apprGAprLineVO.getAprType().equals(staATByungRyulHyubJo)) {
+			map.put("aprType", staATByungRyulHyubJo);
+			map.put("staASJinHang", staASJinHang);
+			map.put("staASBoRyu", staASBoRyu);
+			
+			String tempCount = ezApprovalGDAO.getHapyuiCount(map);
+			
+			if (tempCount.equals("0")) {
+				result = apprGAprLineVO.getAprMemberSN();
+			} else {
+				result = "0";
+			}
+		} else {
+			result = "0";
+		}
+
+		logger.debug("getSameOrgHAPYUIDoc ended");
+		
+		return result;
+	}
+
+	@Override
 	// 해당 부서에서 볼 수 있는 문서함의 리스트를 가져온다.
 	// OwnFlag : "0"-자기 부서의 문서함, "1"-타부서의 문서함, "2"-전부
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception{
