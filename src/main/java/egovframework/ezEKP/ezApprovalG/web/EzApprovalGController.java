@@ -592,7 +592,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	
 	/**
 	 * 전자결재G 기안양식 호출 Method
 	 */
