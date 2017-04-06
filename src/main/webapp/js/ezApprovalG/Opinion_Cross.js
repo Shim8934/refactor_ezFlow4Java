@@ -634,7 +634,7 @@ function saveOpinionInfo_Complete(Rtnval) {
             return;
         }
         else {
-            autosaveOpinionXMLInfo();0
+            autosaveOpinionXMLInfo();
         }
     }
 }
@@ -655,13 +655,12 @@ function removeOpinionInfo() {
     		data : {
     			docID : pDocID
     		},
-    		success: function(xml){
-    			result = xml;
+    		success: function(text){
+    			result = text;
     		}        			
     	});
         
-        var dataNodes = GetChildNodes(loadXMLString(result));
-        var RtnVal = getNodeText(dataNodes[0]);
+        var RtnVal = result;
         
         return RtnVal;
 
@@ -739,8 +738,7 @@ function autosaveOpinionXMLInfo() {
         xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
         xmlhttp.send(objXML);
 
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        var RtnVal = getNodeText(dataNodes[0]);
+        var RtnVal = xmlhttp.responseText;
         if (RtnVal != "TRUE") {
             var pAlertContent = strLang416;
             OpenAlertUI(pAlertContent);
@@ -813,8 +811,7 @@ function saveHesoungOpinionXMLInfo() {
             xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
             xmlhttp.send(objXML);
 
-            var dataNodes = GetChildNodes(xmlhttp.responseXML);
-            var RtnVal = getNodeText(dataNodes[0]);
+            var RtnVal = xmlhttp.responseText;
             if (RtnVal != "TRUE") {
                 var pAlertContent = strLang417;
                 OpenAlertUI(pAlertContent);
@@ -877,8 +874,7 @@ function saveOpinionXMLInfo() {
         xmlhttp.open("Post", "/ezApprovalG/opinionSave.do", false);
         xmlhttp.send(objXML);
 
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        var RtnVal = getNodeText(dataNodes[0]);
+        var RtnVal = xmlhttp.responseText;
         if (RtnVal != "TRUE") {
             var pAlertContent = strLang417;
             OpenAlertUI(pAlertContent);

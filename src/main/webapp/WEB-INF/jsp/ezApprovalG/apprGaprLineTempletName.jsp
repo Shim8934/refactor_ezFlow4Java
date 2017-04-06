@@ -100,8 +100,8 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t384'/></h1>
-		<h2><spring:message code='ezApprovalG.t2107'/></h2>
-		<div class="nobox">
+		<span>▒ <spring:message code='ezApprovalG.t2107'/></span>
+		<div class="nobox" style="margin-top:10px">
 		<input type="text" class="text" style="width:100%" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
 		</div>		
 			

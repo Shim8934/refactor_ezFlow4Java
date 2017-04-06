@@ -1549,6 +1549,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.deleteOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
+		logger.debug("result = " + result);
+		
 		return result;
 	}
 	
