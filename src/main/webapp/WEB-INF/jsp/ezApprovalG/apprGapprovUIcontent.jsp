@@ -260,8 +260,8 @@
 	                        }
 	                    }
 	                    parent.OrgHtml = _htmlcontent;
-	                    BodyTagsDisabled(document.getElementById('div_Content'));
-	                    parent.FieldsAvailable();
+ 	                    BodyTagsDisabled(document.getElementById('div_Content'));
+ 	                    parent.FieldsAvailable();
 	                }
 	            } catch (e)
 	            { }

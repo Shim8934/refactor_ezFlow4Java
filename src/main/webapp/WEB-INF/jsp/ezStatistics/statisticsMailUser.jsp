@@ -554,7 +554,6 @@
 
     function searchdept() {
         if (keyword.value == "") {
-        	alert("1");
             alert("<spring:message code='ezStatistics.t1010' />");
             keyword.focus();
             return;
