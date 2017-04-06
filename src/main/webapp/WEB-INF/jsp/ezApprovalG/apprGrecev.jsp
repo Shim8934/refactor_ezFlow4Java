@@ -915,7 +915,7 @@
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		
 		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1000, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

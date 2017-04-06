@@ -521,7 +521,7 @@ function btn_AprDeptTempletSave_onclick(mode) {
 
     if (ListViewLen.length != "0" && ListViewLen[0].id != "lvRECEPTLIST_TR_noItems") {
         var windowName = "/ezApprovalG/aprDeptTempletName.do";
-        var parameter = "status:no;dialogWidth:340px;dialogHeight:200px;scroll:no;edge:sunken";
+        var parameter = "status:no;dialogWidth:340px;dialogHeight:185px;scroll:no;edge:sunken";
         var dialogValue = new Array();
         dialogValue[0] = pUserID;
         dialogValue[1] = pFormID;
@@ -535,10 +535,10 @@ function btn_AprDeptTempletSave_onclick(mode) {
             aprdepttempletname_cross_dialogArguments[0] = dialogValue;
             aprdepttempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
 
-            DivPopUpShow(360, 220, windowName);
+            DivPopUpShow(360, 185, windowName);
         }
         else {
-            parameter = parameter + GetShowModalPosition(340, 200);
+            parameter = parameter + GetShowModalPosition(340, 185);
 
             var ret = window.showModalDialog(windowName, dialogValue, parameter);
             if (ret != "cancel") {

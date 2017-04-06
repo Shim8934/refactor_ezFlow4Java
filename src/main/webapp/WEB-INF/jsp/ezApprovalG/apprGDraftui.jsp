@@ -1201,7 +1201,7 @@
 		        if (ListType == "21")
 		            OpenUrl += "&docSN=" + DocSN;
 		
-		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1000, 750));
+		        var OpenWin = window.open(OpenUrl , "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
