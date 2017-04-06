@@ -470,13 +470,12 @@ function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 				formID : pFormID,
 				aprSN  : p_SelAprDeptTempletSN
 				},
-		success: function(xml){
-			result = loadXMLString(xml);
+		success: function(text){
+			result = text;
 		}        			
 	});
 	
-    var dataNodes = GetChildNodes(result);
-    var RtnVal = getNodeText(dataNodes[0]);
+    var RtnVal = text;
 
     if (RtnVal == "TRUE") {
         InitReceptTemplet();
@@ -593,8 +592,7 @@ function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
     xmlhttp.open("Post", "/ezApprovalG/createAprDeptTemplet.do", false);
     xmlhttp.send(AprDeptInfo);
 
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
-    var RtnVal = getNodeText(dataNodes[0]);
+    var RtnVal = xmlhttp.responseText;
 
     if (RtnVal == "TRUE") {
         OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);

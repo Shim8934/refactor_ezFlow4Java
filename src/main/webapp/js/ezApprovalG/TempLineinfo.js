@@ -168,8 +168,7 @@ function CreateNewAprLineTemplet(p_AprLineTempletName) {
     xmlhttp.open("Post", "/ezApprovalG/createAprLineTemplet.do", false);
     xmlhttp.send(AprLineInfo);
 
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
-    var RtnVal = getNodeText(dataNodes[0]);
+    var RtnVal = xmlhttp.responseText;
     if (RtnVal == "TRUE") {
         OpenAlertUI(strLang814, CreateNewAprLineTemplet_Complete);
         if (!CrossYN())
@@ -248,13 +247,12 @@ function DelAprLineTempletList(p_SelAprLineTempletSN) {
 				formID   : pFormID,
 				aprLineSN: p_SelAprLineTempletSN
 				},
-		success: function(xml){
-			result = loadXMLString(xml);
+		success: function(text){
+			result = text
 		}        			
 	});
 	
-    var dataNodes = GetChildNodes(result);
-    var RtnVal = getNodeText(dataNodes[0]);
+    var RtnVal = result;
 
     if (RtnVal != "TRUE") {
         var parameter = strLang192 + "<br> " + strLang164;
