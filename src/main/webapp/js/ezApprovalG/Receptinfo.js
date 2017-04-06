@@ -690,13 +690,16 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
     }
     
     GetXml += "</ROWS>";
-    GetXml += "<APRDEPT>";
-    GetXml += "<pAprNDeptNumber>1</pAprNDeptNumber>";
-    GetXml += "<pAprDeptFlag>NDept</pAprDeptFlag>";
-    GetXml += "</APRDEPT>";
-
+    
+    if (approvalFlag == "G") {
+	    GetXml += "<APRDEPT>";
+	    GetXml += "<pAprNDeptNumber>1</pAprNDeptNumber>";
+	    GetXml += "<pAprDeptFlag>NDept</pAprDeptFlag>";
+	    GetXml += "</APRDEPT>";
+    }
+    
     GetXml += "</LISTVIEWDATA>";
-
+    alert(GetXml);
     return GetXml;
 }
 //############################################################################################################################################# 조직도 사용자 검색

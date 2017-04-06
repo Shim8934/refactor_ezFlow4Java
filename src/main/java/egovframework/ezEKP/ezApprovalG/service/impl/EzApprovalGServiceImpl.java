@@ -3486,7 +3486,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateReceiptTempletDetailInfo(Document doc, String companyID, int tenantID, String approvalFlag) throws Exception {
 
-		String rtnVal = "";
+		String rtnVal = "TRUE";
 		String strUserID = doc.getElementsByTagName("APRDEPT").item(0).getChildNodes().item(0).getTextContent();
 		String strFormID = doc.getElementsByTagName("APRDEPT").item(0).getChildNodes().item(1).getTextContent();
 		String strAprDeptSN = doc.getElementsByTagName("APRDEPT").item(0).getChildNodes().item(2).getTextContent();
@@ -5253,14 +5253,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		OutputStream outputStream = null;
 		OutputStreamWriter output = null;
 		try {
-		convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, userInfo.getLocale());
-		tempMht = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.mht";
-		FileUtils.copyFile(new File(formURL), new File(tempMht));
-		
-		 outputStream = new FileOutputStream(new File(formURL));
-		 output = new OutputStreamWriter(outputStream);
-		
-		output.write(convertedMHT);
+			convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, userInfo.getLocale());
+			tempMht = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.mht";
+			FileUtils.copyFile(new File(formURL), new File(tempMht));
+			
+			 outputStream = new FileOutputStream(new File(formURL));
+			 output = new OutputStreamWriter(outputStream);
+			
+			output.write(convertedMHT);
 		}  catch (FileNotFoundException fnfe) {
 			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
@@ -5514,7 +5514,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 
-		try {
 		ezApprovalGDAO.deleteRollBackSignInfo(map);
 		
 		map.put("SIGNNAME", signAdd + "seumyung" + signNum);
@@ -5535,12 +5534,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("SIGNNAME", "habyuidate" + signNum);
 		ezApprovalGDAO.deleteRollBackSignInfo(map);
 
-			result = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			result = false;
-		}
+		result = true;
 		
 		return result;
 	}
@@ -5954,17 +5948,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_FLAG", "1");
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			
-			try {
-				ezApprovalGDAO.gongRamActivateAprState(map);
-				rtnVal = true;
-			} catch (Exception e) {
-				e.printStackTrace();
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				rtnVal = false;
-			}
+			ezApprovalGDAO.gongRamActivateAprState(map);
+			rtnVal = true;
 		} else {
-			
-			
 			int gongRamCount = ezApprovalGDAO.gongRamActivateCount(map);
 			
 			if (gongRamCount == 0) {
@@ -5976,14 +5962,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_APRMEMBERSN", apprGLineTempletVOList.getAprMemberSN());
 					map.put("v_FLAG", "2");
 					
-					try {
-						ezApprovalGDAO.gongRamActivateAprState(map);
-						rtnVal = true;
-					} catch (Exception e) {
-						e.printStackTrace();
-						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-						rtnVal = false;
-					}
+					ezApprovalGDAO.gongRamActivateAprState(map);
 				}
 			}
 		}
@@ -20824,14 +20803,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		try {
-			ezApprovalGDAO.deleteUserContDoc(map);
-			return "<RESULT>TRUE</RESULT>";
-		} catch (Exception e ) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "<RESULT>FALSE</RESULT>";
-		}
+		ezApprovalGDAO.deleteUserContDoc(map);
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override
