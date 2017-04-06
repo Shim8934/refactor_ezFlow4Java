@@ -3058,7 +3058,7 @@ function setDocNumFormat(pPrefix) {
             case "YY":
                 numHeader += d.getYear() + Tail;
                 break;
-
+                
             case "yy":
                 var yyear = d.getYear();
                 numHeader += yyear.toString().substr(2) + Tail;
@@ -3083,6 +3083,14 @@ function setDocNumFormat(pPrefix) {
             case "cs":
                 numHeader += strLang107 + Tail;
                 break;
+                
+            case "FT":
+            	numHeader += "FT" + Tail;
+            	break;
+            	
+            case "MV":
+            	numHeader += "MV" + Tail;
+            	break;
 
             default:
                 numHeader += fieldValue;
