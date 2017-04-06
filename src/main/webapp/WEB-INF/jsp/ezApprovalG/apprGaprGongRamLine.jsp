@@ -523,13 +523,12 @@
 	        				formID   : pFormID,
 	        				aprLineSN: p_SelAprDeptTempletSN
 	        				},
-	        		success: function(xml){
-	        			result = loadXMLString(xml);
+	        		success: function(text){
+	        			result = text;
 	        		}        			
 	        	});
 	        	
-	            var dataNodes = GetChildNodes(result);
-	            var RtnVal = getNodeText(dataNodes[0]);
+	            var RtnVal = result;
 	
 	            if (RtnVal == "TRUE") {
 	                GetReceptTempletList();
@@ -858,8 +857,7 @@
 	            xmlhttp.open("POST", "/ezApprovalG/createAprLineTemplet.do", false);
 	            xmlhttp.send(AprDeptInfo);
 	
-	            var dataNodes = GetChildNodes(xmlhttp.responseXML);
-	            var RtnVal = getNodeText(dataNodes[0]);
+	            var RtnVal = xmlhttp.responseText;
 	
 	            if (RtnVal == "TRUE") {
 	                OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);

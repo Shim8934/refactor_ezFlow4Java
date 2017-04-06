@@ -317,7 +317,7 @@ function GetDraftAprLineInfo(ret)
 }
 
 function SGetDraftAprLineInfo(ret) {
-//    try {
+    try {
         DraftLastFlag = false;
         var xmlKuljea;
         var chamjo;
@@ -1227,9 +1227,9 @@ function SGetDraftAprLineInfo(ret) {
         }
         if (isSplit == "Y")
             setSignSlash("sign", susinSN);
-//    } catch (e) {
-//        alert("GetDraftAprLineInfo(ret)" + e.description);
-//    }
+    } catch (e) {
+        alert("GetDraftAprLineInfo(ret)" + e.description);
+    }
 }
 
 function setRecevInfo(ret) {

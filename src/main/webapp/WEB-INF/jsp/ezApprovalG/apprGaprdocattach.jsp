@@ -9,6 +9,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <script type="text/javascript" src="/js/ezApprovalG/aprDocAttach_Cross.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/Pagenation_Cross.js"></script>

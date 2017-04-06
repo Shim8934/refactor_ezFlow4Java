@@ -148,17 +148,19 @@ function DocMove() {
 }
 
 function AttachList() {
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
-
-    createNodeAndInsertText(xmlpara, objNode, "NODE", pDocID);
-
-    xmlhttp.open("POST", "/ezApprovalG/getAttachInfo.do", false);
-    xmlhttp.send(xmlpara);
-
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getAttachInfo.do",
+		data : {
+			docID : pDocID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
     document.getElementById("lvTDoc").innerHTML = "";
 
     var listview = new ListView();
@@ -168,7 +170,7 @@ function AttachList() {
     listview.SetRowOnClick("lvTDoc_onSel_Click");
     listview.SetRowOnDblClick("btndel_onclick");
     listview.SetTableWidth(350 - 14);
-    listview.DataSource(loadXMLString(xmlhttp.responseText));
+    listview.DataSource(loadXMLString(result));
     listview.DataBind("lvTDoc");
 }
 
