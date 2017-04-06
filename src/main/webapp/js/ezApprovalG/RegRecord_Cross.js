@@ -262,13 +262,14 @@ function RegisterRecord() {
     xmlhttp.send(xmlpara);
 
     var rtnXml = xmlhttp.responseXML;
-    if (getNodeText(GetChildNodes(rtnXml)[0]) == "TRUE") {
-        return true;
-    }
-    else {
-        alert(strLang677);
-        return false;
-    }
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK" && getNodeText(GetChildNodes(rtnXml)[0]) == "TRUE") {
+			return true;
+		} else {
+			alert(strLang677);
+            return false;
+		}
+	}
 }
 var selectcabinet_cross_dialogArguments = new Array();
 function btnChangeCabinet_onclick() {

@@ -102,7 +102,7 @@ function SaveAttachListInfo(Attachxml) {
     xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do", false);
     xmlhttp.send(Attachxml);
 
-    if (SelectSingleNodeValue(xmlhttp.responseXML, "RESULT") == "FALSE") {
+    if (xmlhttp.responseText == "FALSE") {
         var pAlertContent = strLang217;
         OpenAlertUI(pAlertContent);
     }
@@ -506,8 +506,6 @@ function chkFileFilter(cur_ExtName) {
     return chkflag;
 }
 function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
-	var result = "";
-	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -526,15 +524,16 @@ function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 			userJobTitle2 : arr_userinfo[14],
 			userDeptName2 : arr_userinfo[16]
 		},
-		success: function(xml){
-			result = xml;
-		}        			
+		success: function(result){
+			if (result == "TRUE") {
+				
+			} else {
+				var pAlertContent = strLang226;
+		        OpenAlertUI(pAlertContent);
+			}
+		}, error : function() {
+			var pAlertContent = strLang226;
+	        OpenAlertUI(pAlertContent);
+		}	
 	});
-	
-    if (SelectSingleNodeValue(loadXMLString(result), "RESULT") == "TRUE") {
-    }
-    else {
-        var pAlertContent = strLang226;
-        OpenAlertUI(pAlertContent);
-    }
 }
