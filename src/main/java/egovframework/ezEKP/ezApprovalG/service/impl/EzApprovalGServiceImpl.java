@@ -7483,9 +7483,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strSQL = registerSepAttachEx(recID, cabID, title, numOfPage, regType, summary, recType, companyID, "", tenantID, locale);
 		
 		if (strSQL.equals("FALSE")) {
-			return "<RESULT>FALSE</RESULT>";
+			return "FALSE";
 		} else {
-				return "<RESULT>TRUE</RESULT>";
+			return "TRUE";
 		}
 	}
 
@@ -14310,14 +14310,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_UserRight", "1");
 		map.put("v_UserName2", messageSource.getMessage("ezApprovalG.t999936", locale));
 
-		try {
-			ezApprovalGDAO.insertRegSeperateAttach(map);
-			ezApprovalGDAO.insertRecRoleInfo(map);
-		} catch(Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "FALSE";
-		}
+		
+		ezApprovalGDAO.insertRegSeperateAttach(map);
+		ezApprovalGDAO.insertRecRoleInfo(map);
+		
         if (regType.equals("5") || regType.equals("6")) {
         	String subSQL = saveAudioVisualExtraInfo(recID, sepAttSN, summary, recType, tenantID, companyID);
         	
@@ -14327,6 +14323,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		rtnVal = "TRUE";
         	}
         }
+        
 		return rtnVal;
 	}
 
@@ -18106,24 +18103,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         // '## 기록물 분리첨부 테이블에 저장
 		subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID, locale);
 		
-        if (subSQL.equals("FALSE")) {
-        	return "<RESULT>FALSE</RESULT>";
-        }
-		
         // 2011.04.04 수기등록시 첨부등록 추가
         
         // 수기기록물이면서 첨부파일이 있다면 APR->END 로 복사한다.
         if (manualFlag.equals("1")) {
             if (!docID.equals("")) {
             	map.put("v_DOCID", docID);
-            	try {
-	            	ezApprovalGDAO.insertRegEndAttachInfo(map);
-	            	ezApprovalGDAO.deleteRegAprAttachInfo(map);
-            	} catch(Exception e) {
-            		e.printStackTrace();
-        			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            		return "<RESULT>FALSE</RESULT>";
-            	}
+            	
+            	ezApprovalGDAO.insertRegEndAttachInfo(map);
+            	ezApprovalGDAO.deleteRegAprAttachInfo(map);
             }
         }
         
@@ -18135,7 +18123,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(k).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID, locale);
 	        		
 	        		if (subSQL.equals("FALSE")) {
-	        			return "FALSE";
+	        			return "<RESULT>FALSE</RESULT>";
 	        		} 
 	        	}
 	        }
@@ -18147,6 +18135,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				return "<RESULT>FALSE</RESULT>";
 			}
 		}
+		
 		return "<RESULT>TRUE</RESULT>";
 	}
 
