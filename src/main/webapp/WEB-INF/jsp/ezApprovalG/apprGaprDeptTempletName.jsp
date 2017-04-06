@@ -75,8 +75,8 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t308'/></h1>
-		<h2><spring:message code='ezApprovalG.t311'/></h2>
-		<div class="nobox">
+		<span>▒ <spring:message code='ezApprovalG.t311'/></span>
+		<div class="nobox" style="margin-top:7px">
 		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%" maxlength="7">
 		</div>
 		<div class="btnposition" >

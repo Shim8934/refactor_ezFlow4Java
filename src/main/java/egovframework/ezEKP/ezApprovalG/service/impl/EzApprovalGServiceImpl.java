@@ -2166,7 +2166,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
 				}
 			} else {
-				rtnXML.append("<input type='radio' id='RSecurity' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ><span>" + colOption[1] + "</span>&nbsp;&nbsp;");
+				rtnXML.append("<input type='radio' id='RSecurity' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' >&nbsp;<span>" + colOption[1] + "</span>&nbsp;&nbsp;");
 			}
 		}
 		
@@ -20055,7 +20055,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
-			rtnXML.append("<input type='radio' id='RKeeptype' name='RKeeptype' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ><span style='margin-top: 5px;'>" + colOption[1] + "</span>&nbsp;&nbsp;");
+			rtnXML.append("<input type='radio' id='RKeeptype' name='RKeeptype' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' >&nbsp;<span style='margin-top: 5px;'>" + colOption[1] + "</span>&nbsp;&nbsp;");
 		}
 		
 		rtnXML.append("</div>");
