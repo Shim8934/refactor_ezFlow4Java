@@ -382,10 +382,8 @@ function AttachRemoveAll() {
 			result = text;
 		}        			
 	});
-
-    Resultxml = result;
     
-    return Resultxml;
+    return result;
 }
 var pDeleteFile = new Array();
 var pDeleteFileSn = 0;

@@ -226,10 +226,17 @@ function DocMoveParser() {
 
     var rtnval = xmlhttp.responseText;
     var rtnXML;
-    if (rtnval == "TRUE")
-        rtnXML = getXmlString(xmlpara);
-    else
-        rtnXML = "<ROWS></ROWS>";
+    
+
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK" && rtnval == "TRUE") {
+			rtnXML = getXmlString(xmlpara);
+		} else {
+			rtnXML = "<ROWS></ROWS>";
+		}
+	} else {
+		rtnXML = "<ROWS></ROWS>";
+	}
 
     return rtnXML;
 }
