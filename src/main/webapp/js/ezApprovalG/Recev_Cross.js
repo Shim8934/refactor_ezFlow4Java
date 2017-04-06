@@ -435,7 +435,7 @@ function GetDraftAprLineInfo(ret)
 
 
 function SGetDraftAprLineInfo(ret) {
-//    try {
+    try {
         DraftLastFlag = false;
         var xmlKuljea;
         var chamjo;
@@ -808,9 +808,9 @@ function SGetDraftAprLineInfo(ret) {
         if (isSplit == "Y")
             setSignSlash("sign", susinSN);
 
-//    } catch (e) {
-//        alert("GetDraftAprLineInfo : " + e.description);
-//    }
+    } catch (e) {
+        alert("GetDraftAprLineInfo : " + e.description);
+    }
 }
 
 //재기안 셀정보를 Clear
@@ -978,26 +978,52 @@ function SendDraftMappingSign(ret)
 	var signCnt;
 	var signposition = "1";
 	signCnt = 0;
-
-	if ( LastSignSN == "1") 
-		signposition = 1;
-	else if (DraftLastFlag)		
-	{
-		putJunkyulSign("sign" + signposition);
-		for(i=1;i<20;i++)
-	  	{
-	  		if(pDraftFlag == "SUSIN") signID = "sign" + i;
-	  		else signID = "sign" + i;
-
-	  		field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
-	  		if(field){
-	  			LastSignNo = i;
-	  		}
-	  	}
-		signposition = LastSignNo;
-	}
 	
-	 
+    if (approvalFlag == "S") {
+        if (LastSignSN == 1) {
+            for (i = 1; i < 20; i++) {
+                if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                else signID = "sign" + i
+
+                field = message.GetListItem(fields, signID)
+                if (field) {
+                    LastSignNo = i;
+                }
+            }
+            signposition = LastSignNo;
+        } else if (DraftLastFlag) {
+            putJunkyulSign("sign" + signposition);
+            for (i = 1; i < 20; i++) {
+                if (pDraftFlag == "SUSIN") signID = pSusinSN + "sign" + i
+                else signID = "sign" + i
+
+                field = message.GetListItem(fields, signID)
+                if (field) {
+                    LastSignNo = i;
+                }
+            }
+            signposition = LastSignNo;
+        }
+    } else {
+    	if ( LastSignSN == "1") 
+    		signposition = 1;
+    	else if (DraftLastFlag)		
+    	{
+    		putJunkyulSign("sign" + signposition);
+    		for(i=1;i<20;i++)
+    		{
+    			if(pDraftFlag == "SUSIN") signID = "sign" + i;
+    			else signID = "sign" + i;
+    			
+    			field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
+    			if(field){
+    				LastSignNo = i;
+    			}
+    		}
+    		signposition = LastSignNo;
+    	}
+    }
+	
 	if(pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU")  
 	{ 
 		psigncell = pSusinSN + "sign" + signposition;
@@ -1733,7 +1759,7 @@ function SaveDraftDocInfo()
     var aprsign1_cross_dialogArguments = new Array();
     function openSignUI(parameter)
     {
-        try{
+//        try{
             var signOption = parameter[1];  //20090112 직접서명
             var objRoot;
             var objNode;
@@ -1765,9 +1791,9 @@ function SaveDraftDocInfo()
             }else{
                 openSignUI_Complete("NAME");
             }
-        }catch(e){
-            alert("openSignUI : " + e.description);
-        }
+//        }catch(e){
+//            alert("openSignUI : " + e.description);
+//        }
     }
 
     //결재선 지정 UI호출 함수

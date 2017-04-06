@@ -407,7 +407,6 @@
 	        		}, error: function () {
 	    	                var pAlertContent = strLang898;
 	    	                OpenAlertUI(pAlertContent);
-	    	            }
 	        		}
 	        	});
 	        	
