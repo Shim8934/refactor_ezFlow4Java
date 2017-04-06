@@ -829,7 +829,7 @@ function openOpinionUI(ret, CompleteFunction) {
 }
 function openOpinionUI_Complete(ret) {
     DivPopUpHidden();
-    if (ret != "cancel") {
+    if (ret != "cancel" && ret!= "Clear") {
         var Rtnxml = createXmlDom();
         Rtnxml = loadXMLString(ret);
 
