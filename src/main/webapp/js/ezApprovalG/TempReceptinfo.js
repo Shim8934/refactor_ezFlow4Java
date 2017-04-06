@@ -470,13 +470,12 @@ function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 				formID : pFormID,
 				aprSN  : p_SelAprDeptTempletSN
 				},
-		success: function(xml){
-			result = loadXMLString(xml);
+		success: function(text){
+			result = text;
 		}        			
 	});
 	
-    var dataNodes = GetChildNodes(result);
-    var RtnVal = getNodeText(dataNodes[0]);
+    var RtnVal = text;
 
     if (RtnVal == "TRUE") {
         InitReceptTemplet();
@@ -522,7 +521,7 @@ function btn_AprDeptTempletSave_onclick(mode) {
 
     if (ListViewLen.length != "0" && ListViewLen[0].id != "lvRECEPTLIST_TR_noItems") {
         var windowName = "/ezApprovalG/aprDeptTempletName.do";
-        var parameter = "status:no;dialogWidth:340px;dialogHeight:200px;scroll:no;edge:sunken";
+        var parameter = "status:no;dialogWidth:340px;dialogHeight:185px;scroll:no;edge:sunken";
         var dialogValue = new Array();
         dialogValue[0] = pUserID;
         dialogValue[1] = pFormID;
@@ -536,10 +535,10 @@ function btn_AprDeptTempletSave_onclick(mode) {
             aprdepttempletname_cross_dialogArguments[0] = dialogValue;
             aprdepttempletname_cross_dialogArguments[1] = btn_AprDeptTempletSave_onclick_Complete;
 
-            DivPopUpShow(360, 220, windowName);
+            DivPopUpShow(360, 185, windowName);
         }
         else {
-            parameter = parameter + GetShowModalPosition(340, 200);
+            parameter = parameter + GetShowModalPosition(340, 185);
 
             var ret = window.showModalDialog(windowName, dialogValue, parameter);
             if (ret != "cancel") {
@@ -593,8 +592,7 @@ function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
     xmlhttp.open("Post", "/ezApprovalG/createAprDeptTemplet.do", false);
     xmlhttp.send(AprDeptInfo);
 
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
-    var RtnVal = getNodeText(dataNodes[0]);
+    var RtnVal = xmlhttp.responseText;
 
     if (RtnVal == "TRUE") {
         OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);
