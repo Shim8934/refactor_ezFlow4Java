@@ -6138,6 +6138,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 전자결재S 라스트합의 APRMEMBERSN 가져오기
+	 */
+	@RequestMapping(value = "/ezApprovalG/getSameOrgHAPYUIDoc.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSameOrgHAPYUIDoc(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getSameOrgHAPYUIDoc started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getSameOrgHAPYUIDoc(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		logger.debug("getSameOrgHAPYUIDoc ended");
+		
+		return result;
+	}
+	
 	@RequestMapping(value = "/ezApprovalG/checkResend.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String checkResend(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
