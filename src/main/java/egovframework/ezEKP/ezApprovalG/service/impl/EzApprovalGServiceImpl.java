@@ -20176,6 +20176,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
+		
 		if(docXML.getElementsByTagName("ROW").getLength() > 0) {
 			isLeaf = "FALSE";
         }
@@ -20189,18 +20190,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String insUserCont(String ownUserID, String parentContID, String UserContName, String description, String companyID, String lang, int tenantID) throws Exception {
-		try {
 		String ContID = createUserCont(UserContName, parentContID, description, ownUserID, companyID, lang, tenantID);
 		
 		if (ContID.trim().equals(""))
 			return "<RESULT>FALSE</RESULT>";
 		else
 			return "<RESULT>TRUE</RESULT>";
-		} catch(Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "<RESULT>TRUE</RESULT>";
-		}
 	}
 
 	@Override
@@ -20215,13 +20210,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		
-		try {
-			ezApprovalGDAO.updateUserCont(map);
-		} catch(Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "<RESULT>FALSE</RESULT>";
-		}
+		ezApprovalGDAO.updateUserCont(map);
 		return "<RESULT>TRUE</RESULT>";
 	}
 
@@ -20233,22 +20222,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		
-		try {
-			int docCount = 0;
-			if (mode.toLowerCase().equals("check")) {
-				docCount = ezApprovalGDAO.delUserConutCnt(map);
-			}
-			
-			if (docCount <= 0) {
-				ezApprovalGDAO.delUserConttList(map);
-				ezApprovalGDAO.delUserCont(map);
-			} else {
-				return "<RESULT>" + docCount + "</RESULT>";
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "<RESULT>FALSE</RESULT>";
+		int docCount = 0;
+		if (mode.toLowerCase().equals("check")) {
+			docCount = ezApprovalGDAO.delUserConutCnt(map);
+		}
+		
+		if (docCount <= 0) {
+			ezApprovalGDAO.delUserConttList(map);
+			ezApprovalGDAO.delUserCont(map);
+		} else {
+			return "<RESULT>" + docCount + "</RESULT>";
 		}
 		return "<RESULT>TRUE</RESULT>";
 	}
@@ -21249,7 +21232,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				} else {
 					// 표준모듈 (2007.05.07) : 다국어
-//                    result = doApprove(pOrgDocID, pDeptID, staASWheSong, GetADInfo(pDeptID, "DisplayName"), GetADInfo(pDeptID, "DisplayName2"), pDirPath, pDeptID, "", pOrgCompanyID, strLang);
 					result = doApprove(pOrgDocID, "", staASWheSong, ezOrganService.getPropertyValue(pDeptID, "DisplayName", tenantID), ezOrganService.getPropertyValue(pDeptID, "DisplayName2", tenantID), dirPath, pDeptID, "", pOrgCompanyID, lang, userInfo);
 
 					if (result.toUpperCase().equals("FALSE")) {

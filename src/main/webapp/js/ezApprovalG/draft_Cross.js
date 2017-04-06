@@ -1228,7 +1228,7 @@ function SGetDraftAprLineInfo(ret) {
         if (isSplit == "Y")
             setSignSlash("sign", susinSN);
     } catch (e) {
-        alert("GetDraftAprLineInfo(ret)" + e.description);
+        alert("SGetDraftAprLineInfo(ret)" + e.description);
     }
 }
 
