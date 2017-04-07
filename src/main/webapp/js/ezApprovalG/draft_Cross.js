@@ -3467,7 +3467,7 @@ function getSignDate() {
 }
 function getHistory() {
     var URL = "/ezApprovalG/ezAprHistory.do?docID=" + pDocID;
-    centerOpenWindow(URL, 730, 465);
+    centerOpenWindow(URL, 730, 430);
 }
 function centerOpenWindow(wfileLocation, wWeight, wHeight) {
     try {
