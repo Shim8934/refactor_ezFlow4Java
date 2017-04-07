@@ -342,12 +342,11 @@ function SGetDraftAprLineInfo(ret) {
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
             DrawAutoAprLine(ret[0], pDraftFlag);
-        }
-        else {
-	        TempsaveAprlineinfo = ret[1];
-	        xmlKuljea = ret[1];
-	        setAprLinesXML(xmlKuljea);
-	        DrawAutoAprLine(ret[1], pDraftFlag);
+        } else {
+        TempsaveAprlineinfo = ret[1];
+        xmlKuljea = ret[1];
+        setAprLinesXML(xmlKuljea);
+        DrawAutoAprLine(ret[1], pDraftFlag);
         }
         xmlReDraft = "R";
         if (xmlReDraft == "C") {
