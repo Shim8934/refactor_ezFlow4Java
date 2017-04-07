@@ -705,7 +705,7 @@
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
-		        var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;help:no;scroll:no;;edge:sunken;";
+		        var feature = "status:no;dialogWidth:1130px;dialogHeight:750px;help:no;scroll:no;;edge:sunken;";
 		        var ret = window.showModalDialog(url, parameter, feature);
 		
 		        if (ret != undefined && ret[0] == "OK") {
