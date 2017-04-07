@@ -763,8 +763,12 @@
 	                alert("<spring:message code='ezOrgan.t204' />");
 	            }
 	            
+	            try {
+ 			    	window.opener.location.reload(true);
+ 			    } catch (e) {
+ 			    }
+	            
 	            window.close();
-	            opener.location.reload();
 	        }
 		    
 		    var rgParams = new Array();
