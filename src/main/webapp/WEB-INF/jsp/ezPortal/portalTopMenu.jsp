@@ -1277,13 +1277,11 @@
 			}
 			
 	
-			function submenuover(subObj) {
-			    if (tempobj.name === subObj.id.replace("menu_", "")) {
-                    img_onMouseOver(temppNewPath, tempobj);
-                }
+			function submenuover() {
+				img_onMouseOver(temppNewPath, tempobj);
 			}
 	
-			function submenuout(subObj) {
+			function submenuout() {
 			    img_onMouseOut(tempobj);
 			}
 			window.onresize = function () {
