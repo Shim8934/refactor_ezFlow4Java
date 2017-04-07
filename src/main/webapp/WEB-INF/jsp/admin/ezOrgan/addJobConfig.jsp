@@ -762,6 +762,9 @@
 	                //sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang27, AddjobText);
 	                alert("<spring:message code='ezOrgan.t204' />");
 	            }
+	            
+	            window.close();
+	            opener.location.reload();
 	        }
 		    
 		    var rgParams = new Array();
