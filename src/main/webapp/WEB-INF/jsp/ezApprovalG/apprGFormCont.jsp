@@ -533,7 +533,7 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip" style="width: 100%">&nbsp;</td>
+		                        <td id="descrip" style="width: 340px">&nbsp;</td>
 		                    </tr>
 		                </table>
 		            </td>
