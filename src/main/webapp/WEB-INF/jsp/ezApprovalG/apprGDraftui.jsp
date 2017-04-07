@@ -1210,8 +1210,8 @@
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
 		                if (ret[1] != false) {
-		                	var result = "";
-		                	
+							var result = "";
+							
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",

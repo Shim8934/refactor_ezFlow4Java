@@ -1277,11 +1277,13 @@
 			}
 			
 	
-			function submenuover() {
-				img_onMouseOver(temppNewPath, tempobj);
+			function submenuover(subObj) {
+			    if (tempobj.name === subObj.id.replace("menu_", "")) {
+					img_onMouseOver(temppNewPath, tempobj);
+			    }
 			}
 	
-			function submenuout() {
+			function submenuout(subObj) {
 			    img_onMouseOut(tempobj);
 			}
 			window.onresize = function () {
@@ -1531,6 +1533,15 @@
 	            			clickmenuName = menuName;
 	        			}
 	    			}
+	    			
+	    			var targetName = evt.target ? evt.target.parentElement.id : event.srcElement.parentElement.id;
+	 		        if (targetName.indexOf("menu_") > -1) {
+	 		            clickmenusub = targetName;
+	 		            if (menuName != clickmenuName) {
+	 		                clickmenuPath = oldPath;
+	 		                clickmenuName = targetName.split("menu_")[1];
+	 		            }
+	 		        }
 				}
 				window.open(url, location, option);
 			}

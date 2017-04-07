@@ -644,14 +644,18 @@
 	    	                } else {
 	    	                    GetDraftAprLineInfo(retvalue);
 	    	                }
-	    			        btnSendDraftEnable = "true";
-	    			        CurAprType = "<spring:message code='ezApprovalG.t25'/>";
-	    		            LastSignSN = "1";
+	    			        
+	    			        var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
+        		            OpenAlertUI(pAlertContent);"1";
 	    		            btnSendDraft_onclick();
                			} else {
                				var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
         		            OpenAlertUI(pAlertContent);
                			}
+               		},
+               		error : function() {
+	               			var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
+	    		            OpenAlertUI(pAlertContent);
                		}
                	});
 		    }
@@ -741,14 +745,13 @@
 		                savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "11" && pGubun != "12") {
-		                    //수신자 저장
-		                    $.ajax({
+							$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
 	                    		async : false,
 	                    		url : "/ezApprovalG/aprDeptSave.do",
 	                    		data : {
-	                    				aprDeptInfo : getXmlString(ret[2])
+	                    				aprDeptInfo : ret[2]
 	                    				},
 	                    		success : function(result){
 	                    			
