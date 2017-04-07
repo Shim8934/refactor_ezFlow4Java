@@ -1261,7 +1261,6 @@
 		        if (ret != undefined && ret[0] == "OK") {
 // 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
-
 		                //결재선 저장
 		                if (approvalFlag == "S") {
 			                if (pGubun != "14" && pGubun != "10") {
