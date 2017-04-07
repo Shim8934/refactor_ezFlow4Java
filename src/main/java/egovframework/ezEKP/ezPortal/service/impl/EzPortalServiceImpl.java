@@ -1690,7 +1690,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				continue;
 			}
 			String parentMenuID = result2.get(0).getParentMenuID();
-			sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover()\" onmouseout=\"submenuout()\"><li class=\"left\">");
+			sb.append("<ul id=\"menu_" + parentMenuID + "\" id=\"menu01_sub\" style=\"DISPLAY:none;top:0px;left:" + leftMargin + "px\" onmouseover=\"submenuover(this)\" onmouseout=\"submenuout(this)\"><li class=\"left\">");
 			for (int j=0; j<result2.size(); j++) {
 				if (!checkViewRightBln(result2.get(j).getuID(), getAccessList(userInfo), userInfo.getTenantId())) {
 					continue;
