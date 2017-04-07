@@ -2424,8 +2424,6 @@ function SaveDraftDocInfo()
         pxml = pxml + "<DATA name='SMemberJobTitle'><![CDATA[" + arr_userinfo[14] + "]]></DATA>";	//secondary title
 	
         pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>";
-        xmlpara.loadXML(pxml);
-        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -2673,8 +2671,6 @@ function SaveDraftDocInfo()
 
         var xmlhttp = createXMLHttpRequest();
 
-        /*var result = "";*/
-        
         $.ajax({
     		type : "POST",
     		dataType : "text",
