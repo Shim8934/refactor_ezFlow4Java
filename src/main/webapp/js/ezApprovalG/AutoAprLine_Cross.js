@@ -26,27 +26,20 @@
     
     result = loadXMLString(result);
     
+    //이효진 04-07 수정해야함   APRLINEXMLParsing  에서 String으로 리턴하게 만들어야
     var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
     	var Resultxml = APRLINEXMLParsing(result);
 
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/aprLineSave.do",
-    		data : {
-    				ret : getXmlString(Resultxml)
-    				},
-    		success : function(result){
-    			if (result == "TRUE") {
-                    retvalue[0] = getXmlString(Resultxml);
-                    return retvalue;
-                }
-    		}
-    	});
+    	xmlhttp.open("Post", "/ezApprovalG/aprLineSave.do", false);
+        xmlhttp.send(Resultxml);
+
+        var ret = SelectSingleNodeValue(result, "RESULT");
+        if (ret == "TRUE") {
+            retvalue[0] = getXmlString(Resultxml);
+            return retvalue;
+        }
     }
-    
     return retvalue;
 }
 

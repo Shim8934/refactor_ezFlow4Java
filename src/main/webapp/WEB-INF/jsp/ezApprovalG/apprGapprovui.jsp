@@ -1323,7 +1323,7 @@
 		                    		async : false,
 		                    		url : "/ezApprovalG/aprDeptSave.do",
 		                    		data : {
-		                    				aprDeptInfo : getXmlString(ret[2])
+		                    				aprDeptInfo : ret[2]
 		                    				},
 		                    		success : function(result){
 		                    			if (result == 'TRUE') {

@@ -3815,6 +3815,23 @@ function setFirstDrafterAuto() {
 			
 		}
 	});
+    //	if(xmlhttp.responseXML.text == "TRUE")
+    //	{
+    //		var ret = new Array();
+    //		ret[0] = pxml;
+    //		ret[1] = "NONE";
+    //		ret[2] = "R";
+    //		ret[3] = "";
+    //	
+    //		GetDraftAprLineInfo(ret);
+    //		btnSendDraft.Enable	= "true";
+    //		LastSignSN = 1;
+    //	}
+    //	else
+    //	{
+    //		var pAlertContent = strLang742 + "<BR>" + strLang831 + xmlhttp.responseText;
+    //		OpenAlertUI(pAlertContent);
+    //	}
 }
 function DeleteDeptInfo() {
     var xmlhttp = createXMLHttpRequest();
