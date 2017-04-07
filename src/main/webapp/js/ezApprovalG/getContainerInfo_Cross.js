@@ -438,15 +438,13 @@ function RemoveDoc_Complete(RtnVal)
      		 var InformationString = strLang388;
      	    OpenAlertUI(InformationString);
 
-     	    if (DocListType == "UserContDocList")
-     	        GetUserContList();
-     	    else if (DocListType == "DeptContDocList")
+     	    if (DocListType == "UserContDocList") {
+     	    	GetUserContList();
+     	    } else if (DocListType == "DeptContDocList"){
      	        GetDeptContList();
-     	 } else {
-     		alert(strLang803);
+     	    } else {
+     		  alert(strLang803);
      	 }
-     } 
-   
 }
 
 function getsearchDocList_after() {

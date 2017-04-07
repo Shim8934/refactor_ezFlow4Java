@@ -523,20 +523,14 @@
 	        				formID   : pFormID,
 	        				aprLineSN: p_SelAprDeptTempletSN
 	        				},
-	        		success: function(text){
-	        			result = text;
-	        		}        			
+	        		success: function(result){
+	        			GetReceptTempletList();
+	        		},
+	        		error : function() {
+	        			var parameter = strLang163 + "<br> " + strLang164;
+		                OpenAlertUI(parameter);
+	        		}
 	        	});
-	        	
-	            var RtnVal = result;
-	
-	            if (RtnVal == "TRUE") {
-	                GetReceptTempletList();
-	            }
-	            else {
-	                var parameter = strLang163 + "<br> " + strLang164;
-	                OpenAlertUI(parameter);
-	            }
 	        } catch (e) {
 	            alert("AprGongRamLine_Cross_DelAprDeptTempletList::" + e.description);
 	        }
@@ -856,17 +850,18 @@
 	            var xmlhttp = createXMLHttpRequest();
 	            xmlhttp.open("POST", "/ezApprovalG/createAprLineTemplet.do", false);
 	            xmlhttp.send(AprDeptInfo);
-	
+	            
 	            var RtnVal = xmlhttp.responseText;
-	
-	            if (RtnVal == "TRUE") {
-	                OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);
-	                if (!CrossYN())
-	                    GetReceptTempletList();
-	            }
-	            else {
-	                OpenAlertUI(strLang131);
-	            }
+	            
+	            if (xmlhttp != null && xmlhttp.readyState == 4) {
+	        		if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+	        			OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);
+		                if (!CrossYN())
+		                    GetReceptTempletList();
+	        		} else {
+	        			OpenAlertUI(strLang131);
+	        		}
+	        	}
 	
 	            GetReceptTempletList();
 	        } catch (e) {

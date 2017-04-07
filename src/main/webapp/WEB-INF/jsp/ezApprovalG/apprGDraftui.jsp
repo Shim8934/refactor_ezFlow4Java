@@ -138,14 +138,15 @@
 		    var DocType = "";
 		    var junGyulFlag = "${junGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
-		    
+
+		    	
 		    window.onload = function ()
 		    {
-		        try{
+		        try {
 		            pSusinSN = SusinSN;
 		            setMenuBar("btnSendDraft", true);
 		            dragNdrapNo();	
-		        }catch(e){
+		        } catch(e){
 		            alert(e.description + ": window_onload");
 		        }
 		        

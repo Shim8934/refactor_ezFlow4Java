@@ -169,13 +169,16 @@ function CreateNewAprLineTemplet(p_AprLineTempletName) {
     xmlhttp.send(AprLineInfo);
 
     var RtnVal = xmlhttp.responseText;
-    if (RtnVal == "TRUE") {
-        OpenAlertUI(strLang814, CreateNewAprLineTemplet_Complete);
-        if (!CrossYN())
-            InitAprlineTemplet();
-    } else {
-        OpenAlertUI(strLang131);
-    }
+    
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+			OpenAlertUI(strLang814, CreateNewAprLineTemplet_Complete);
+	        if (!CrossYN())
+	            InitAprlineTemplet();
+		} else {
+			OpenAlertUI(strLang131);
+		}
+	}
 }
 
 function CreateNewAprLineTemplet_Complete() {
@@ -247,19 +250,13 @@ function DelAprLineTempletList(p_SelAprLineTempletSN) {
 				formID   : pFormID,
 				aprLineSN: p_SelAprLineTempletSN
 				},
-		success: function(text){
-			result = text
-		}        			
+		success: function(result){
+			InitAprlineTemplet();
+		}, error : function() {
+			var parameter = strLang192 + "<br> " + strLang164;
+	        OpenAlertUI(parameter);
+		}
 	});
-	
-    var RtnVal = result;
-
-    if (RtnVal != "TRUE") {
-        var parameter = strLang192 + "<br> " + strLang164;
-        OpenAlertUI(parameter);
-    } else {
-        InitAprlineTemplet();
-    }
 }
 //#############################################################################################################################################즐겨찾기 수정
 function btn_ModifyToAprLine_onclick() {

@@ -6194,4 +6194,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/deleteSignInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String deleteSignInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("deleteSignInfo started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		String result = ezApprovalGService.deleteSignInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("result=" + result);
+		logger.debug("deleteSignInfo ended");
+		
+		return result;
+	}
+	
 }

@@ -81,8 +81,7 @@
 		
 		            getUseContainer(DeptID, isOwnflag);
 		        }
-		    }
-		
+		    }		
 		   
 		    function deleteCont_onclick() {
 		        var listview = new ListView();
@@ -232,74 +231,73 @@
 		        var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
 		            if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
 		    }
-	</script>
+		</script>
 	</head>
-
-<body class="popup"> 
-<XML id="DEPTLIST" style="display:none">
-    <LISTVIEWDATA>
-        <HEADERS>
-            <HEADER>
-                <NAME><spring:message code='ezApprovalG.t1221'/></NAME>
-                <WIDTH>90</WIDTH>
-            </HEADER>
-        </HEADERS>
-    </LISTVIEWDATA>
-</XML>
-<XML id="CONTLIST" style="display:none">
-    <LISTVIEWDATA>
-        <HEADERS>
-            <HEADER>
-                <NAME><spring:message code='ezApprovalG.t1548'/></NAME>
-                <WIDTH>90</WIDTH>
-            </HEADER>
-        </HEADERS>
-    </LISTVIEWDATA>
-</XML>
-<XML id="SELCONTLIST" style="display:none">
-    <LISTVIEWDATA>
-        <HEADERS>
-            <HEADER>
-                <NAME><spring:message code='ezApprovalG.t687'/></NAME>
-                <WIDTH>50</WIDTH>
-            </HEADER>
-            <HEADER>
-                <NAME><spring:message code='ezApprovalG.t1549'/></NAME>
-                <WIDTH>50</WIDTH>
-            </HEADER>
-        </HEADERS>
-    </LISTVIEWDATA>
-</XML> 
-<h1><spring:message code='ezApprovalG.t1187'/></h1>
-<table> 
-  <tr> 
-    <td>
-        <h2><spring:message code='ezApprovalG.t1124'/></h2>
-	    <div class="listview">
-	        <div id="divlvtDept" style="border:0; Width:260px; Height:300px; font-size:9pt" > </div>
-	    </div>
-	</td> 
-    <td style="padding-left:12px;padding-right:2px" >
-        <h2><spring:message code='ezApprovalG.t1550'/></h2> 
-	    <div class="listview">
-	        <div id="divlvtCont" style="border:0; Width:260px; Height:300px; font-size:9pt" > </div>
-	    </div>
-	</td> 
-    <td style="width:30px">
-        <img src="/images/arr_right.gif" style="cursor:pointer" width="16" height="16" onClick="return insertCont_onclick()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image191','','images/arrow_add1.gif',1)" />
-	    <img src="/images/arr_left.gif"style="cursor:pointer"  width="16" height="16" onClick="return deleteCont_onclick()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image201','','images/arrow_delete1.gif',1)" />
-	</td> 
-    <td style="padding-left:2px">
-        <h2><spring:message code='ezApprovalG.t1551'/></h2>
-	    <div class="listview">
-	        <div id="divlvtdepCont" style="Width:370px; Height:300px;" ></div>
-	    </div>
-	</td> 
-  </tr> 
-</table> 
-<div class="btnposition">
-    <a class="imgbtn" onClick="return cmdOK_onclick()" ><span><spring:message code='ezApprovalG.t1760'/></span></a>
-    <a class="imgbtn" onClick="return cmdcancel_onclick()" ><span><spring:message code='ezApprovalG.t1761'/></span></a>
-</div>
-</body>
+	<body class="popup"> 
+		<XML id="DEPTLIST" style="display:none">
+    		<LISTVIEWDATA>
+        		<HEADERS>
+            		<HEADER>
+                		<NAME><spring:message code='ezApprovalG.t1221'/></NAME>
+                		<WIDTH>90</WIDTH>
+            		</HEADER>
+        		</HEADERS>
+    		</LISTVIEWDATA>
+		</XML>
+		<XML id="CONTLIST" style="display:none">
+    		<LISTVIEWDATA>
+        		<HEADERS>
+            		<HEADER>
+                		<NAME><spring:message code='ezApprovalG.t1548'/></NAME>
+                		<WIDTH>90</WIDTH>
+            		</HEADER>
+        		</HEADERS>
+    		</LISTVIEWDATA>
+		</XML>
+		<XML id="SELCONTLIST" style="display:none">
+    		<LISTVIEWDATA>
+        	<HEADERS>
+            	<HEADER>
+                	<NAME><spring:message code='ezApprovalG.t687'/></NAME>
+                	<WIDTH>50</WIDTH>
+            	</HEADER>
+            	<HEADER>
+                	<NAME><spring:message code='ezApprovalG.t1549'/></NAME>
+                	<WIDTH>50</WIDTH>
+            	</HEADER>
+        	</HEADERS>
+    		</LISTVIEWDATA>
+		</XML> 
+		<h1><spring:message code='ezApprovalG.t1187'/></h1>
+		<table> 
+			<tr> 
+		    	<td>
+		        	<h2><spring:message code='ezApprovalG.t1124'/></h2>
+			    	<div class="listview">
+			        	<div id="divlvtDept" style="border:0; Width:260px; Height:300px; font-size:9pt" > </div>
+			    	</div>
+				</td> 
+		    	<td style="padding-left:12px;padding-right:2px" >
+		        	<h2><spring:message code='ezApprovalG.t1550'/></h2> 
+			    	<div class="listview">
+			    	    <div id="divlvtCont" style="border:0; Width:260px; Height:300px; font-size:9pt" > </div>
+			    	</div>
+				</td> 
+		    	<td style="width:30px">
+		        	<img src="/images/arr_right.gif" style="cursor:pointer" width="16" height="16" onClick="return insertCont_onclick()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image191','','images/arrow_add1.gif',1)" />
+			    	<img src="/images/arr_left.gif"style="cursor:pointer"  width="16" height="16" onClick="return deleteCont_onclick()" onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image201','','images/arrow_delete1.gif',1)" />
+				</td> 
+		    	<td style="padding-left:2px">
+		        	<h2><spring:message code='ezApprovalG.t1551'/></h2>
+			    	<div class="listview">
+			        	<div id="divlvtdepCont" style="Width:370px; Height:300px;" ></div>
+			    	</div>
+				</td> 
+		  	</tr> 
+		</table> 
+		<div class="btnposition">
+    		<a class="imgbtn" onClick="return cmdOK_onclick()" ><span><spring:message code='ezApprovalG.t1760'/></span></a>
+    		<a class="imgbtn" onClick="return cmdcancel_onclick()" ><span><spring:message code='ezApprovalG.t1761'/></span></a>
+		</div>
+	</body>
 </html>

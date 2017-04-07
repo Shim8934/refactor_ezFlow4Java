@@ -2559,13 +2559,21 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		boolean isUpdate = false;
+		String saveFileFolder = "";
 		String saveFileName = "";
 
 		if (!formID.equals("") && !formMhtInfo.equals("")) {
 			isUpdate = true;
-			saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
+			saveFileFolder = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form";
+			saveFileName = saveFileFolder + commonUtil.separator + formID + ".mht";
 			
 			try {
+				File fileFolder = new File(saveFileFolder);
+				
+				if (!fileFolder.exists()) {
+					fileFolder.mkdirs();
+				}
+				
 				File file = new File(saveFileName);
 				if (file.exists()) {
 					strBeforeMHT = FileUtils.readFileToString(file);

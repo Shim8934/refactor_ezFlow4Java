@@ -470,20 +470,14 @@ function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
 				formID : pFormID,
 				aprSN  : p_SelAprDeptTempletSN
 				},
-		success: function(text){
-			result = text;
-		}        			
+		success: function(result){
+			InitReceptTemplet();
+		},
+		error : function() {
+			var parameter = strLang163 + "<br> " + strLang164;
+	        OpenAlertUI(parameter);
+		}
 	});
-
-    var RtnVal = result;
-
-    if (RtnVal == "TRUE") {
-        InitReceptTemplet();
-    }
-    else {
-        var parameter = strLang163 + "<br> " + strLang164;
-        OpenAlertUI(parameter);
-    }
 }
 //############################################################################################################################################# 수신처 즐겨찾기 삭제 
 //############################################################################################################################################# 수신처 즐겨찾기 저장 및 수정
@@ -575,6 +569,12 @@ function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
     var p_AprDeptTempletID;
     AprDeptTemplet = AprDeptTempletXmlParsing(p_AprDeptTempletName);
     var AprDeptXml = APRDeptXMLParsing(RECEPTLIST, pDocID);
+    
+    if (AprDeptXml == "NODATA") {
+    	OpenAlertUI(strLangS957);
+    	
+    	return;
+    }
     var AprDeptInfo = createXmlDom();
     AprDeptInfo = loadXMLString(AprDeptXml);
 
@@ -593,15 +593,16 @@ function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
     xmlhttp.send(AprDeptInfo);
 
     var RtnVal = xmlhttp.responseText;
-
-    if (RtnVal == "TRUE") {
-        OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);
-        if (!CrossYN())
-            InitReceptTemplet();
-    }
-    else {
-        OpenAlertUI(strLang131);
-    }
+    
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK" && RtnVal == "TRUE") {
+			OpenAlertUI(strLang814, CreateNewAprDeptTemplet_Complete);
+	        if (!CrossYN())
+	            InitReceptTemplet();
+		} else {
+			OpenAlertUI(strLang131);
+		}
+	}
 }
 
 function CreateNewAprDeptTemplet_Complete() {

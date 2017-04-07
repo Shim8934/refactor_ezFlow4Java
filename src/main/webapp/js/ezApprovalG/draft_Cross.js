@@ -349,18 +349,18 @@ function SGetDraftAprLineInfo(ret) {
             xmlReDraft = "C";
         }
 
-//        if (ret[5] == undefined) {
-//            TempsaveAprlineinfo = ret[0];
-//            xmlKuljea = ret[0];
-//            setAprLinesXML(xmlKuljea);
-//            DrawAutoAprLine(ret[0], pDraftFlag);
-//        }
-//        else {
-        TempsaveAprlineinfo = ret[1];
-        xmlKuljea = ret[1];
-        setAprLinesXML(xmlKuljea);
-        DrawAutoAprLine(ret[1], pDraftFlag);
-//        }
+        if (ret[5] == undefined) {
+            TempsaveAprlineinfo = ret[0];
+            xmlKuljea = ret[0];
+            setAprLinesXML(xmlKuljea);
+            DrawAutoAprLine(ret[0], pDraftFlag);
+        }
+        else {
+	        TempsaveAprlineinfo = ret[1];
+	        xmlKuljea = ret[1];
+	        setAprLinesXML(xmlKuljea);
+	        DrawAutoAprLine(ret[1], pDraftFlag);
+        }
 
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
@@ -1228,7 +1228,7 @@ function SGetDraftAprLineInfo(ret) {
         if (isSplit == "Y")
             setSignSlash("sign", susinSN);
     } catch (e) {
-        alert("GetDraftAprLineInfo(ret)" + e.description);
+        alert("SGetDraftAprLineInfo(ret)" + e.description);
     }
 }
 
@@ -3058,10 +3058,10 @@ function setDocNumFormat(pPrefix) {
             case "YY":
                 numHeader += d.getYear() + Tail;
                 break;
-
+                
             case "yy":
                 var yyear = d.getYear();
-                numHeader += yyear.toString().substr(2) + Tail;
+                numHeader += yyear.toString().substr(1) + Tail;
                 break;
 
             case "MM":
@@ -3083,6 +3083,14 @@ function setDocNumFormat(pPrefix) {
             case "cs":
                 numHeader += strLang107 + Tail;
                 break;
+                
+            case "FT":
+            	numHeader += "FT" + Tail;
+            	break;
+            	
+            case "MV":
+            	numHeader += "MV" + Tail;
+            	break;
 
             default:
                 numHeader += fieldValue;

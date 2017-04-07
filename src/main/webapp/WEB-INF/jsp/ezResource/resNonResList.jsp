@@ -20,10 +20,7 @@
 	</style>
 	<body class="mainbody">
 		<h1></h1>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
+		<br/>				
 		<br/>
 		<div style="text-align:center">
 			<div id="EmptyMsg">

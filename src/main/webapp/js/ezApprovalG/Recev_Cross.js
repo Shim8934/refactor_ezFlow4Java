@@ -471,9 +471,9 @@ function SGetDraftAprLineInfo(ret) {
             setAprLinesXML(xmlKuljea);
         }
         else {
-            TempsaveAprlineinfo = ret[1];
-            xmlKuljea = ret[1];
-            setAprLinesXML(xmlKuljea);
+		    TempsaveAprlineinfo = ret[1];
+		    xmlKuljea = ret[1];
+		    setAprLinesXML(xmlKuljea);
         }
 
         xmlReDraft = "R";
@@ -2520,6 +2520,14 @@ function SaveDraftDocInfo()
                         numHeader = numHeader + tempdocnumcode + Tail;
                     break;
 
+                case "FT":
+                	numHeader += "FT" + Tail;
+                	break;
+                	
+                case "MV":
+                	numHeader += "MV" + Tail;
+                	break;
+                	
                 default:
                     numHeader = numHeader + fieldValue;
                     break;

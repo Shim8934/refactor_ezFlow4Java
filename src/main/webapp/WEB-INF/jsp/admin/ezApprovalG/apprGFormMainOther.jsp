@@ -210,7 +210,7 @@
 		        	success : function(result) {
 		        		if (result != "") {
 		        			tbFormName.value = result.vo.formName;
-		        			tbFormName2.value = result.vo.formName;
+		        			tbFormName2.value = result.vo.formName2;
 		        			tbDescript.value = result.vo.formDescription;
 		        			selFormKind.value = result.vo.formDocType;
 // 		        			formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);

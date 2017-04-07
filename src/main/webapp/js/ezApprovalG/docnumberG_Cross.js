@@ -35,25 +35,47 @@ function getDocNumber(pDeptID, pPrefix) {
             return false;
         }
         else {
-            field.textContent = fractionsymbol + SN;
-
-            var tempNumString = SN;
-            var i = 0;
-            var templen = tempNumString.length;
-            for (i = 0; i < 6 - templen; i++)
-                tempNumString = "0" + tempNumString;
-            DocNumCode = pDeptID + tempNumString;
-
-            message.DocumentBodySetAttribute("regnumbercode", tempNumString);
-            message.DocumentBodySetAttribute("deptid", pDeptID);
-
-            var field = message.GetListItem(fields, "enforcedate");
-            if (field) {
-                if (trim(field.textContent) == "") {
-                    field.textContent = getGyulJeDate();
-                }
-            }
-            return true;
+        	if (approvalFlag == "S") {
+        		var tempNumString = SN;
+        		var i = 0;
+        		var templen = tempNumString.length;
+        		for (i = 0; i < 6 - templen; i++)
+        			tempNumString = "0" + tempNumString;
+        		DocNumCode = pDeptID + tempNumString;
+        		
+        		field.textContent = fractionsymbol + tempNumString.substring(2);
+        		
+        		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
+        		message.DocumentBodySetAttribute("deptid", pDeptID);
+        		
+        		var field = message.GetListItem(fields, "enforcedate");
+        		if (field) {
+        			if (trim(field.textContent) == "") {
+        				field.textContent = getGyulJeDate();
+        			}
+        		}
+        		return true;
+        	} else {
+        		field.textContent = fractionsymbol + SN;
+        		
+        		var tempNumString = SN;
+        		var i = 0;
+        		var templen = tempNumString.length;
+        		for (i = 0; i < 6 - templen; i++)
+        			tempNumString = "0" + tempNumString;
+        		DocNumCode = pDeptID + tempNumString;
+        		
+        		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
+        		message.DocumentBodySetAttribute("deptid", pDeptID);
+        		
+        		var field = message.GetListItem(fields, "enforcedate");
+        		if (field) {
+        			if (trim(field.textContent) == "") {
+        				field.textContent = getGyulJeDate();
+        			}
+        		}
+        		return true;
+        	}
         }
     } catch (e) {
         if (SN != "") {
