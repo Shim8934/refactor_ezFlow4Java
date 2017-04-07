@@ -70,7 +70,7 @@ function GetReceptTempletInfo(p_AprLineTempletID) {
 					},
 			success: function(text){
 				event_GetReceptTempletInfo(text);
-			}     			
+			}
 		});
 	} catch(e) {
         alert("GetReceptTempletInfo::" + e.description);
