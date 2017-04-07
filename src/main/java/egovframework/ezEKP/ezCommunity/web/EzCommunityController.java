@@ -3041,6 +3041,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String strXML = ezCommunityService.getBoardTree(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 0, 1, 0, " ", code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
+		if (strXML.trim().equals("<NODES></NODES>")) {
+			model.addAttribute("hasSubBoard", 0);
+		} else {
+			model.addAttribute("hasSubBoard", 1);
+		}
+
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
