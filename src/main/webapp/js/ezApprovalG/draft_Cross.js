@@ -3809,7 +3809,7 @@ function setFirstDrafterAuto() {
 		async : false,
 		url : "/ezApprovalG/aprLineSave.do",
 		data : {
-				ret    : escape(pxml)
+				ret    : pxml
 		},
 		success : function(result){
 			
