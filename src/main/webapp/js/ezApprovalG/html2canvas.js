@@ -2382,7 +2382,7 @@ NodeParser.prototype.parseBorders = function(container) {
         }
         var colorTransform = borderColorTransforms[style] ? borderColorTransforms[style][index] : null;
         return {
-            width: container.cssInt('border' + side + 'Width'),
+            width: container.cssFloat('border' + side + 'Width'),
             color: colorTransform ? color[colorTransform[0]](colorTransform[1]) : color,
             args: null
         };
