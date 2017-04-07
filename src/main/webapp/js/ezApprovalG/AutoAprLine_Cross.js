@@ -29,7 +29,7 @@
     var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
     	var Resultxml = APRLINEXMLParsing(result);
-    	
+
     	$.ajax({
     		type : "POST",
     		dataType : "text",
