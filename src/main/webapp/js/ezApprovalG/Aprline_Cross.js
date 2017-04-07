@@ -1,18 +1,23 @@
 ﻿function InitListView() {
     try {
-        var xmlpara = createXmlDom();
-        var xmlhttp = createXMLHttpRequest();
+    	var result = "";
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/aprLineRequest.do",
+    		data : {
+    				docID    : pDocID, 
+    				userID 	 : pUserID,
+    				formID   : pFormID
+    				},
+    		success: function(xml){
+    			result = loadXMLString(xml);
+    		}        			
+    	});
 
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-        createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-
-        xmlhttp.open("Post", "aspx/AprLineRequest.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var NodeList = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+        var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 
         if (NodeList.length == 0) {
             pAprLineXml[0] = "cancel";
@@ -43,7 +48,7 @@
             pAPRLINE.DataBind("APRLINE");
         }
         else {
-            pAPRLINE.DataSource(xmlhttp.responseXML);
+            pAPRLINE.DataSource(result);
             pAPRLINE.DataBind("APRLINE");
         }
 

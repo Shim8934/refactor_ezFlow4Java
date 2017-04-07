@@ -11,10 +11,10 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Tree_View.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/OrganAprline_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/OrganAprLine_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/AprlineV_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/AprLineTemplet_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SelectSubTitles_Cross.js"></script>
@@ -376,7 +376,7 @@
 		        pAPRLINE.LoadFromID("pAPRLINE");
 		        var ListViewLen = pAPRLINE.GetDataRows();
 		        if (ListViewLen.length != "0") {
-		            var windowName = "/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/AprLineTempletName_Cross.aspx";
+		            var windowName = "/ezApprovalG/aprLineTempletName.do";
 		            var parameter = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken";
 		            var dialogValue = new Array();
 		            dialogValue[0] = pUserID;
@@ -412,7 +412,7 @@
 			}
 			if(ListViewLen.length != "0")
 			{
-				var windowName  = "/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/AprLineTempletName_Cross.aspx";
+				var windowName  = "/ezApprovalG/aprLineTempletName.do";
 				var parameter   = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken;help:no"; 
 				var dialogValue = new Array();
 				dialogValue[0]  = pUserID;
@@ -504,8 +504,8 @@
 	                		async : true,
 	                		url : "/ezOrgan/getSearchList.do",
 	                		data : {
-	                			search : "displayname::" + strSearch + ";;physicalDeliveryOfficeName::" + "${userInfo.companyID}",
-	                			cell   : "displayname;Description;Title;extensionAttribute5;telephonenumber",
+	                			search : "displayName::" + strSearch + ";;physicalDeliveryOfficeName::" + "${userInfo.companyID}",
+	                			cell   : "displayName;description;title;extensionAttribute5;telephonenumber",
 	                			prop   : "department;displayName;description;title;extensionAttribute4;extensionAttribute5",
 	                			type   : "user"
 	                		},
@@ -546,59 +546,55 @@
 		    }
 		
 		    function displayUserList(DeptID) {
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "DATA");
-		        createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-		        createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;Description;Title;extensionAttribute5;telephonenumber");
-		        createNodeAndInsertText(xmlpara, objNode, "PROP", "Department;DisplayName;Description;Title;extensionAttribute4;extensionAttribute5");
-		        createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-		        g_xmlHTTP = createXMLHttpRequest();
-		        g_xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", true);
-		        g_xmlHTTP.onreadystatechange = event_displayUserList;
-		        g_xmlHTTP.send(xmlpara);
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezOrgan/getDeptMemberList.do",
+					data : {
+							deptID   : DeptID, 
+							cell 	 : "displayName;description;title;extensionAttribute5;telephonenumber",
+							prop     : "department;displayName;description;title;extensionAttribute4;extensionAttribute5",
+							type 	 : "user"
+					},
+					success: function(text){
+						event_displayUserList(text);
+					}        			
+				});
 		    }
-		    function event_displayUserList() {
-		        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
-		            if (g_xmlHTTP.statusText == "OK") {
-		                var retXml = createXmlDom();
-		
-		                if (document.getElementById("UserList").innerHTML != "")
-		                    document.getElementById("UserList").innerHTML = "";
-		                var headerData = createXmlDom();
-		                headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
-		                if (g_xmlHTTP.responseText != "") {
-		                    if (CrossYN()) {
-		                        var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-		                        var Node = headerData.importNode(xmlRtn, true);
-		                        headerData.documentElement.appendChild(Node);
-		                    }
-		                    else {
-		                        var xmlRtn = g_xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-		                        headerData.documentElement.appendChild(xmlRtn);
-		                    }
-		                }
-		                var pUserList = new ListView();
-		                pUserList.SetID("pUserList");
-		                pUserList.SetRowOnClick("list2_onSel_Click");
-		                pUserList.SetRowOnDblClick("list2_onSel_DBclick");
-		                pUserList.SetSelectFlag(false);
-		                pUserList.SetHeightFree(true);
-		                pUserList.DataSource(headerData);
-		                pUserList.DataBind("UserList");
-		                var userRows = pUserList.GetDataRows();
-		                if (userRows.length <= 0) {
-		                    return;
-		                }
-		                else if (USE_OCS.toUpperCase() == "YES") {
-		                }
-		            }
-		            else
-		                OpenAlertUI("<spring:message code='ezApprovalG.t228'/>" + g_xmlHTTP.statusText);
-		
-		            g_xmlHTTP = null;
-		        }
-		    }
+		    function event_displayUserList(text) {
+                var retXml = createXmlDom();
+                var xml = loadXMLString(text);
+                
+                if (document.getElementById("UserList").innerHTML != "")
+                    document.getElementById("UserList").innerHTML = "";
+                var headerData = createXmlDom();
+                headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+                if (text != "") {
+                    if (CrossYN()) {
+                        var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+                        var Node = headerData.importNode(xmlRtn, true);
+                        headerData.documentElement.appendChild(Node);
+                    } else {
+                        var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+                        headerData.documentElement.appendChild(xmlRtn);
+                    }
+                }
+                var pUserList = new ListView();
+                pUserList.SetID("pUserList");
+                pUserList.SetRowOnClick("list2_onSel_Click");
+                pUserList.SetRowOnDblClick("list2_onSel_DBclick");
+                pUserList.SetSelectFlag(false);
+                pUserList.SetHeightFree(true);
+                pUserList.DataSource(headerData);
+                pUserList.DataBind("UserList");
+                var userRows = pUserList.GetDataRows();
+                if (userRows.length <= 0) {
+                    return;
+                }
+                else if (USE_OCS.toUpperCase() == "YES") {
+                }
+            }
 		    function check_presence() {
 		        var pUserList = new ListView();
 		        pUserList.LoadFromID("pUserList");
