@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +13,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -93,6 +91,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @Autowired
     private EzEmailUtil ezEmailUtil;	
 	 
+    /** CRYPTO */
+    @Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
+    
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
@@ -977,6 +979,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (cnt > 0) {
 				result = "PRE";
 			} else {
+				/*
+				String encLicenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantID);
+				
+				logger.debug("encLicenseKey=" + encLicenseKey);
+				
+				if (encLicenseKey == null || encLicenseKey.equals("")) {
+					return "NO_LICENSE_KEY";
+				}
+				
+				String licenseKey = egovFileScrty.decryptAES(encLicenseKey);
+				logger.debug("licenseKey=" + licenseKey);
+				
+				
+				result = "OK";
+				*/
+				
 				String mailAddr = cn + "@" + domain;
 
 				// dhlee
@@ -1577,6 +1595,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", user.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		
         String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
@@ -1597,7 +1616,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
-        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);		
+        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);	
+        model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("permissionsList ended.");
 		
