@@ -453,7 +453,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getUserCnListForLocal(int tenantID) throws Exception {
-        return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList");
+        return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {

@@ -1230,7 +1230,7 @@
 		]]>
 	</select>
 
-	<select id="EzOrganAdminDAO.userCnList" resultMap="userCnList">
+	<select id="EzOrganAdminDAO.userCnList" parameterClass="int" resultMap="userCnList">
 		<![CDATA[
 			SELECT 
 				a.cn
@@ -1238,7 +1238,8 @@
 	    		TBL_USERMASTER a 
 	    	INNER JOIN 
 	    		TBL_DEPTMASTER b
-	    	ON a.department=b.cn AND a.tenant_id = b.tenant_id
+	    	ON a.department = b.cn AND a.tenant_id = b.tenant_id
+            WHERE a.tenant_id = #tenantID#
 	    	ORDER BY cn
 	    ]]>    		 				
 	</select>
