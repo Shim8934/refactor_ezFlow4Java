@@ -91,7 +91,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @Autowired
     private EzEmailUtil ezEmailUtil;	
 	 
-    /** CRYPTO */
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
     
@@ -927,6 +926,73 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("delUser ended.");
 	}
 	
+	private String checkLicenseKey(int tenantID, String domain) throws Exception {
+		String licenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantID);
+		
+		logger.debug("licenseKey=" + licenseKey);
+		
+		// 입력된 라이센스키가 발견되지 않는 경우
+		if (licenseKey == null || licenseKey.equals("")) {
+			logger.debug("No License Key is found.");
+			
+			return "NO_LICENSE_KEY";
+		}
+		
+		try {
+			// 라이센스키를 복호화한다.
+			licenseKey = egovFileScrty.decryptAES(licenseKey);
+		} catch (Exception e) {
+			logger.debug("License Key Decryption failed.");
+			
+			return "INVALID_LICENSE_KEY";
+		}
+		
+		logger.debug("Decrypted licenseKey=" + licenseKey);
+		
+		String items[] = licenseKey.split(":");
+		
+		if (items.length != 2) {
+			logger.debug("Number of License Key Items is not 2");
+			
+			return "INVALID_LICENSE_KEY";					
+		}
+		
+		String licensedDomainName = items[0];
+		
+		if (!licensedDomainName.equals(domain)) {
+			logger.debug("licensedDomainName=" + licensedDomainName + ",domain=" + domain);
+			
+			return "INVALID_LICENSE_KEY";										
+		}
+		
+		String licensedUserCountStr = items[1];
+		
+		int licensedUserCount = 0; 
+				
+		try {
+			licensedUserCount = Integer.parseInt(licensedUserCountStr);
+		} catch (NumberFormatException e) {
+			logger.debug("Parsing Licensed User Count failed.");
+			
+			return "INVALID_LICENSE_KEY";										
+		}
+		
+		int userCount = ezOrganAdminService.getUserCount(tenantID);
+		
+		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
+		userCount--;
+		
+		logger.debug("licensedUserCount=" + licensedUserCount + ",userCount=" + userCount);
+				
+		if (licensedUserCount <= userCount) {
+			logger.debug("Maximum User Count already reached");
+			
+			return "MAX_USER_REACHED";															
+		}
+		
+		return "OK";
+	}
+	
 	/**
 	 * 조직도관리 사원정보 추가/수정 실행 함수
 	 */
@@ -979,25 +1045,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (cnt > 0) {
 				result = "PRE";
 			} else {
-				/*
-				String encLicenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantID);
+				// 라이센스키를 체크한다.
+				String checkResult = checkLicenseKey(tenantID, domain);
 				
-				logger.debug("encLicenseKey=" + encLicenseKey);
-				
-				if (encLicenseKey == null || encLicenseKey.equals("")) {
-					return "NO_LICENSE_KEY";
+				if (!checkResult.equals("OK")) {
+					return checkResult;
 				}
-				
-				String licenseKey = egovFileScrty.decryptAES(encLicenseKey);
-				logger.debug("licenseKey=" + licenseKey);
-				
-				
-				result = "OK";
-				*/
 				
 				String mailAddr = cn + "@" + domain;
 
-				// dhlee
 				// 이메일 시스템에 계정을 생성한다.
 				int rc = ezEmailUserAdminService.addUser(mailAddr, vo.getPassword());
 				
@@ -1037,8 +1093,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					}
 				} else {
 					result = "EMAIL_ERROR";
-				}
-				// dhlee - end								
+				}			
 			}
 		}
 		

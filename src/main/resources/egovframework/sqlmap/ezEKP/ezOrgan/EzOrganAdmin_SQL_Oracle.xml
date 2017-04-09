@@ -1244,6 +1244,16 @@
 	    ]]>    		 				
 	</select>
 	
+    <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
+        <![CDATA[
+            SELECT 
+                COUNT(cn)
+            FROM 
+                TBL_USERMASTER
+            WHERE tenant_id = #tenantID#
+        ]]>           
+    </select>
+ 
 	<select id="EzOrganAdminDAO.companyCheck" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 

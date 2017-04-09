@@ -24,7 +24,8 @@
 				{ name : "MailAttachLimit", value : document.getElementById("MailAttachLimit").value },
 				{ name : "PrimaryLang", value : document.getElementById("PrimaryLang").value },
 				{ name : "totBigSizeMailAttachLimit", value : document.getElementById("totBigSizeMailAttachLimit").value },
-				{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value }
+				{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value },
+				{ name : "LicenseKey", value : document.getElementById("LicenseKey").value }
 			  ];
 			
 		var jsonStr = JSON.stringify(paramArray);
@@ -38,6 +39,8 @@
 			success : function(data){
 				if(data.msg=='success'){
 					alert("<spring:message code='main.sp10'/>");
+					
+					window.location.href='/admin/ezSystem/systemMainMenu.do';
 				}
 				if(data.msg=='fail'){
 					alert("<spring:message code='main.sp12'/>");
@@ -64,6 +67,7 @@
             <tr><th><spring:message code="ezSystem.x0007"/></th><td><select id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
             <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select></td></tr>
             <tr><th><spring:message code="ezSystem.x0009"/></th><td><input id="USE_FileExtension" type="text" value="${configMap.USE_FileExtension}"> (<spring:message code="ezSystem.x0012"/>, <spring:message code="ezSystem.x0013"/>: jpg,doc,xls)</td></tr>
+            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="60" maxlength="60" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
         </tbody>
     </table> 
     <div class="btnposition">

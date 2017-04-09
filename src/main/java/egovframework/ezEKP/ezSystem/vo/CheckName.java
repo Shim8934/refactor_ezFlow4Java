@@ -10,5 +10,6 @@ public enum CheckName {
 	MailAttachLimit,
 	PrimaryLang,
 	USE_FileExtension,
-	ExpirePassPeriod
+	ExpirePassPeriod,
+	LicenseKey
 }

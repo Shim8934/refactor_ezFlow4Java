@@ -379,12 +379,19 @@
 							alert("<spring:message code='ezOrgan.t119' />");
 						} else if (result == "EMAIL_ERROR") {
 							alert("<spring:message code='ezOrgan.t269' />");
+						} else if (result == "NO_LICENSE_KEY") {
+							alert("<spring:message code='ezOrgan.x0010' />");
+						} else if (result == "INVALID_LICENSE_KEY") {
+							alert("<spring:message code='ezOrgan.x0011' />");
+						} else if (result == "MAX_USER_REACHED") {
+							alert("<spring:message code='ezOrgan.x0012' />");
 						} else {
-							if (ReturnFunction != null){
+							if (ReturnFunction != null) {
 				                ReturnFunction(DeptID);
-							}else{
+							} else {
 				                window.returnValue = DeptID;
 							}
+							
 				            window.close();
 						}
 					},
