@@ -502,7 +502,7 @@
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px">
-	                <input id="UserID" style="ime-mode: disabled; width: 98%;" maxlength="50"/>
+	                <input id="UserID" style="ime-mode: disabled; width: 98%;" maxlength="20"/>
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t277' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px;">
