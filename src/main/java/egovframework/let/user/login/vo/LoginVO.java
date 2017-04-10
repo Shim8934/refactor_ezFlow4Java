@@ -131,6 +131,8 @@ public class LoginVO implements Serializable{
     private int tenantId = -1;    
     /** 사용자가 접속한 서버의 이름(80 포트가 아닌 경우엔 포트번호도 포함) */
     private String serverName;
+    /** 겸직 정보*/
+    private String gyumJik;
 	
 	public String getId() {
 		return id;
@@ -448,6 +450,12 @@ public class LoginVO implements Serializable{
 	
 	public void setLoginCnt(int loginCnt) {
 		this.loginCnt = loginCnt;
+	}
+	public String getGyumJik() {
+		return gyumJik;
+	}
+	public void setGyumJik(String gyumJik) {
+		this.gyumJik = gyumJik;
 	}
 	
 }

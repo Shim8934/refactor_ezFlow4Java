@@ -886,7 +886,10 @@
 	        				deptName  : arr_userinfo[5],
 	        				deptName2 : arr_userinfo[14],
 	        				position  : arr_userinfo[3],
-	        				position2 : arr_userinfo[16]
+	        				position2 : arr_userinfo[16],
+			        		companyID : CompanyID,
+		    				companyName : "${userInfo.companyName}",
+		    				companyName2 : "${userInfo.companyName2}"
 	        				},
 	        		success: function(xml){
 	        		}        			

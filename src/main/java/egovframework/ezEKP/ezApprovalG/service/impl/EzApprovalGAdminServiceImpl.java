@@ -3067,65 +3067,59 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		StringBuilder sb;
 		
-		try {
-			sb = new StringBuilder();
-			Map<String, Object> map = new HashMap<String, Object>();
+		sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("deptID", deptID);
+		map.put("contType", contType);
+		map.put("sn", sn);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("deptID = " + deptID);
+		logger.debug("contType = " + contType);
+		logger.debug("sn = " + sn);
+		logger.debug("companyID = " + companyID);
+		logger.debug("tenantID = " + tenantID);
+		
+		ApprGContInfoVO vo = ezApprovalGAdminDAO.getSpecialContInfo(map);
+		
+		sb.append("<CONTINFO>");
+		sb.append("<DEPTID>" + vo.getDeptID() + "</DEPTID>");
+		sb.append("<CONTTYPE>" + vo.getContType() + "</CONTTYPE>");
+		sb.append("<SN>" + vo.getSn() + "</SN>");
+		sb.append("<CONTNAME>" + vo.getContName() + "</CONTNAME>");
+		
+		String subQuery = vo.getSubQuery();
+		
+		if (subQuery != null && subQuery.indexOf("NOT") > 0) {
+			sb.append("<CONTYN>N</CONTYN>");
+		} else {
+			sb.append("<CONTYN>Y</CONTYN>");
+		}
+		
+		sb.append("<FORMIDS>");
+		
+		if (subQuery != null && subQuery.length() > 0) {
+			map = new HashMap<String, Object>();
 			
-			map.put("deptID", deptID);
-			map.put("contType", contType);
-			map.put("sn", sn);
+			map.put("lang", commonUtil.getMultiData(lang, tenantID));
+			map.put("subQuery", subQuery);
 			map.put("companyID", companyID);
 			map.put("tenantID", tenantID);
 			
-			logger.debug("deptID = " + deptID);
-			logger.debug("contType = " + contType);
-			logger.debug("sn = " + sn);
-			logger.debug("companyID = " + companyID);
-			logger.debug("tenantID = " + tenantID);
+			logger.debug("subQuerty = " + subQuery);
+			List<String> list = ezApprovalGAdminDAO.getSpecialContInfoFormName(map);
 			
-			ApprGContInfoVO vo = ezApprovalGAdminDAO.getSpecialContInfo(map);
-			
-			sb.append("<CONTINFO>");
-			sb.append("<DEPTID>" + vo.getDeptID() + "</DEPTID>");
-			sb.append("<CONTTYPE>" + vo.getContType() + "</CONTTYPE>");
-			sb.append("<SN>" + vo.getSn() + "</SN>");
-			sb.append("<CONTNAME>" + vo.getContName() + "</CONTNAME>");
-			
-			String subQuery = vo.getSubQuery();
-			
-			if (subQuery != null && subQuery.indexOf("NOT") > 0) {
-				sb.append("<CONTYN>N</CONTYN>");
-			} else {
-				sb.append("<CONTYN>Y</CONTYN>");
+			for (String formIDName : list) {
+				sb.append("<FORMID>" + formIDName + "</FORMID>");
 			}
-			
-			sb.append("<FORMIDS>");
-			
-			if (subQuery != null && subQuery.length() > 0) {
-				map = new HashMap<String, Object>();
-				
-				map.put("lang", commonUtil.getMultiData(lang, tenantID));
-				map.put("subQuery", subQuery);
-				map.put("companyID", companyID);
-				map.put("tenantID", tenantID);
-				
-logger.debug("subQuerty = " + subQuery);
-				List<String> list = ezApprovalGAdminDAO.getSpecialContInfoFormName(map);
-				
-				for (String formIDName : list) {
-					sb.append("<FORMID>" + formIDName + "</FORMID>");
-				}
-			}
-			
-			sb.append("</FORMIDS>");
-			sb.append("</CONTINFO>");
-			
-			logger.debug("getSpecialContInfo ended.");
-		} catch (Exception e){
-			e.printStackTrace();
-			sb = new StringBuilder();
-			sb.append("");
 		}
+		
+		sb.append("</FORMIDS>");
+		sb.append("</CONTINFO>");
+		
+		logger.debug("getSpecialContInfo ended.");
 
 		return sb.toString();
 	}

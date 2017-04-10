@@ -156,7 +156,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String sendOutDept = ezApprovalGService.getOptionInfo("A55", "001", userInfo, "CODE");
 		String optGamsabu = ezApprovalGService.getOptionInfo("A40", "001", userInfo, "CODE");
 		
-        logger.debug("apprGLeft Value : sendOutDept=" + sendOutDept + "optGamsabu=" +optGamsabu);  
+        logger.debug("apprGLeft Value : sendOutDept=" + sendOutDept + "optGamsabu=" +optGamsabu);
 
 		if (sendOutDept.toUpperCase().indexOf(userInfo.getDeptID().toUpperCase()) > -1) {
 			userSendOut = "YES";
@@ -219,7 +219,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public void getUserSubTitle(LoginVO userInfo, List<Object> referenceTemp) throws Exception{
         logger.debug("getUserSubTitle started");       
 
-		String propList = "extensionAttribute4;department;description;title;title2;description2";
+		String propList = "extensionAttribute4;department;description;title;title2;description2;physicalDeliveryOfficeName;company;company2";
 		String results = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		String myDept = "";
 		String subTitleString = "";
@@ -232,20 +232,23 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String title = doc.getElementsByTagName("TITLE1").item(0).getTextContent();
         String deptName2 = doc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
         String title2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
+        String companyID = doc.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent();
+        String companyName = doc.getElementsByTagName("COMPANY").item(0).getTextContent();
+        String companyName2 = doc.getElementsByTagName("COMPANY2").item(0).getTextContent();
         
         myDept = userInfo.getPrimary().equals("1") ? deptName : deptName2;
         
         if (userInfo.getDeptID().equals(deptID)) {
         	if (title.equals("")){
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "'  selected >" + myDept + "</option>";
+        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "</option>";
         	} else {
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "'  selected >" + myDept + "[" + title + "]" + "</option>";
+        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "'  selected >" + myDept + "[" + title + "]" + "</option>";
         	}
         } else {
         	if (title.equals("")){
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "' >" + myDept + "</option>";
+        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "</option>";
         	} else {
-        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "' >" + myDept + "[" + title + "]" + "</option>";
+        		subTitleString = "<option value='" + deptID + "|" + myDept + "|" + title + "|" + deptName + "|" + deptName2 + "|" + title + "|" + title2 + "|" + companyID + "|" + companyName + "|" + companyName2 + "' >" + myDept + "[" + title + "]" + "</option>";
         	}
         }
         
@@ -277,29 +280,32 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 
                 String pDeptNM1_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME", userInfo.getTenantId()));
                 String pDeptNM2_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME2", userInfo.getTenantId()));
+                String pCompanyID_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "EXTENSIONATTRIBUTE2", userInfo.getTenantId()));
+                String pCompanyName_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "EXTENSIONATTRIBUTE3", userInfo.getTenantId()));
+                String pCompanyName2_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "COMPNM2", userInfo.getTenantId()));
                 String pDeptNM_ = userInfo.getPrimary().equals("1") ? pDeptNM1_ : pDeptNM2_;
                 
                 if (userInfo.getDeptID().equals(subList[0])) {
                     if (pTitle_.equals("")) {
-                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "'  selected>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "</option>";
+                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "'  selected>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "</option>";
                     } else {
-                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "'  selected>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
+                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "'  selected>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
                     }
                 } else {
                     if (pTitle_.equals("")) {
-                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "</option>";
+                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "</option>";
                     } else {
-                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
+                    	subTitleString += "<option  value='" + subList[0] + "|" + pDeptNM_ + "|" + pTitle_ + "|" + pDeptNM1_ + "|" + pDeptNM2_ + "|" + pTitle1_ + "|" + pTitle2_ + "|" + pCompanyID_ + "|" + pCompanyName_ + "|" + pCompanyName2_ + "' >" + commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DisplayName" + lang, userInfo.getTenantId())) + "[" + pTitle_ + "]" + "</option>";
                     }
                 }
         	}
         }
-        logger.debug("getUserSubTitle Value : subTitleString =" + subTitleString);       
-        logger.debug("getUserSubTitle Value : isSubTitle =" + isSubTitle);       
+        logger.debug("getUserSubTitle Value : subTitleString =" + subTitleString);
+        logger.debug("getUserSubTitle Value : isSubTitle =" + isSubTitle);
 
         referenceTemp.set(0, subTitleString);
         referenceTemp.set(1, isSubTitle);
-        logger.debug("getUserSubTitle ended");       
+        logger.debug("getUserSubTitle ended");
 	}
 	
 	/**
@@ -2478,6 +2484,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String checkAprLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String tempDept = userInfo.getGyumJik();
+		
+		if (tempDept != null) {
+			for (String k : tempDept.split(";")) {
+				if (k.split(":")[0].equals(userInfo.getDeptID())) {
+					return "<RESULT></RESULT>";
+				}
+			}
+		}
+		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), userInfo);
 		
@@ -2491,6 +2508,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String checkDeptLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String tempDept = userInfo.getGyumJik();
+		
+		if (tempDept != null) {
+			for (String k : tempDept.split(";")) {
+				if (k.split(":")[0].equals(userInfo.getDeptID())) {
+					return "<RESULT></RESULT>";
+				}
+			}
+		}
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkDeptLines(doc, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
@@ -5495,6 +5522,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptName2 = request.getParameter("deptName2");
 		String title = request.getParameter("position");
 		String title2 = request.getParameter("position2");
+		String companyID = request.getParameter("companyID");
+		String companyName = request.getParameter("companyName");
+		String companyName2 = request.getParameter("companyName2");
 		
 		Cookie cookieID0 = new Cookie("APRUI0", deptID);
     	cookieID0.setPath("/");
@@ -5504,17 +5534,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
     	cookieID1.setPath("/");
     	response.addCookie(cookieID1);
     	
-    	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(title, "utf-8"));
+    	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(deptName2, "utf-8"));
     	cookieID2.setPath("/");
     	response.addCookie(cookieID2);
     	
-    	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(deptName2, "utf-8"));
+    	Cookie cookieID3 = new Cookie("APRUI3", URLEncoder.encode(companyName, "utf-8"));
+    	cookieID3.setPath("/");
+    	response.addCookie(cookieID3);
+    	
+    	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(companyName2, "utf-8"));
     	cookieID4.setPath("/");
     	response.addCookie(cookieID4);
+    	
+    	Cookie cookieID5 = new Cookie("APRUI5", URLEncoder.encode(title, "utf-8"));
+    	cookieID5.setPath("/");
+    	response.addCookie(cookieID5);
     	
     	Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(title2, "utf-8"));
     	cookieID6.setPath("/");
     	response.addCookie(cookieID6);
+    	
+    	Cookie cookieID7 = new Cookie("APRUI7", companyID);
+    	cookieID7.setPath("/");
+    	response.addCookie(cookieID7);
+    	
 	}
 	
 	/**
