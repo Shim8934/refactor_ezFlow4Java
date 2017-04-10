@@ -449,7 +449,7 @@
 		        }
 		    }
 		    function btnSendDraft_onclick() {
-// 		        try {
+		        try {
 		        	var result = "";
 		        	
 			    	$.ajax({
@@ -546,9 +546,9 @@
 		            }
 		            else
 		                CheckPassWord();
-// 		        } catch (e) {
-// 		            alert("btnSendDraft_onclick()" + e.description);
-// 		        }
+		        } catch (e) {
+		            alert("btnSendDraft_onclick()" + e.description);
+		        }
 		    }
 		
 		    function CheckPassWord() {

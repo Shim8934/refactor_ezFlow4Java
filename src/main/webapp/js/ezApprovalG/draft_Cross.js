@@ -654,7 +654,6 @@ function SGetDraftAprLineInfo(ret) {
 
         for (i = 0; i < OrderType.length; i++) {
             switch (OrderType[i]) {
-
                 case strAprType1:
                     break;
 
