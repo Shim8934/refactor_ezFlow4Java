@@ -356,11 +356,14 @@ var strLangLHM04 = "데이터가 지정되지 않았습니다.";
 var strLangLHM05 = "파일을 삭제 하시겠습니까?";
 var strLangLHM06 = "이동하였습니다.";
 var strLangLHM07 = "업로드 할 파일을 선택하시오";
-var strLangLHM08 = "메일 용량이 초과되어 메일 발송이 금지되었습니다.";
+var strLangLHM08 = "메일 용량이 초과되어 메일 발송이 금지되었습니다. \n편지함을 정리해주세요.";
 var strLangLHM09 = "외부로 발송되는 메일은 10MB를 넘을 수 없습니다.";
 var strLangLHM10 = "대용량";
 var strLangLHM11 = "회수할 대상을 선택해주세요.";
 var strLangLHM12 = "세션에 문제가 생겼습니다.\n다시 로그인해주세요.";
+var strLangLHM13 = "메일 전체 크기가 최대 크기를 초과하여 메일 발송 및 저장에 실패하였습니다. 메일 수정 후 다시 시도해주세요.";
+var strLangLHM14 = "\n최대 메일 크기 : ";
+var strLangLHM15 = "\n현재 메일 크기 : ";
 var strLangKMS01 = "";
 
 function GetLocalTime(Offset , pDateTime)

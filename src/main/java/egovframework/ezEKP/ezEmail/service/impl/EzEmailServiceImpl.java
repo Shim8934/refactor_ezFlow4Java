@@ -1248,4 +1248,43 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("checkMailQuota ended. returnValue=" + returnValue);
 		return returnValue;
 	}
+	
+	@Override
+	public int getMaxMessageSize(int tenantId) throws Exception {
+		logger.debug("getMaxMessageSize started. tenantId=" + tenantId);
+		
+		int size = 0;
+		
+		String inputParams = "tenantId=" + tenantId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getMaxMessageSize";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+				
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0 && responseObj.get("result") != null) {
+					String sizeStr = (String)responseObj.get("result");
+					size = Integer.parseInt(sizeStr);
+				}
+			}
+		}
+		
+		logger.debug("getMaxMessageSize ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode + ",size=" + size);
+		
+		return size;
+	}
+	
 }

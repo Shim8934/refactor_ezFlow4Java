@@ -1200,7 +1200,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * <pre>
 	 * 메일 DragAndDrop 첨부파일 업로드 실행 함수
-	 * - 게시판/커뮤니티/전자결재에서 메일론 전송 시.
+	 * - 게시판/커뮤니티/전자결재에서 메일로 전송 시.
 	 * - 서버에 이미 업로드 되어있는 첨부파일을 복사해옴.
 	 * - 일반 첨부파일에만 해당됨.
 	 * </pre>
@@ -2658,6 +2658,39 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 		        }        
 		        
+		        //mailboxUsage + messageSize >= mailboxQuota인 경우 OVERQUOTA Exception
+		        CountOutputStream cos = null;
+		        double messageSize = 0;
+		        
+		        try {
+		        	cos = new CountOutputStream();
+		        	message.writeTo(cos);
+		        	messageSize = cos.getSize() / 1024.0;
+		        } catch(Exception e) {
+		        	e.printStackTrace();
+		        } finally {
+		        	try { cos.close(); } catch (Exception e) {}
+		        }
+		        
+		        logger.debug("mailboxUsage=" + mailboxUsage + ", messageSize=" + messageSize + ", mailboxQuota=" + mailboxQuota);
+		        
+		        if (mailboxUsage + messageSize >= mailboxQuota) {
+					throw new Exception("OVERQUOTA");
+				}
+		        
+		        //messageSize가 maxMessageSize 넘을 경우 OVERMESSAGESIZE Exception
+		        int maxMessageSize = ezEmailService.getMaxMessageSize(userInfo.getTenantId());
+		        
+		        if (maxMessageSize > 0 && messageSize > maxMessageSize) {
+		        	double maxMessageSizeD = maxMessageSize / 1024.0;
+		        	maxMessageSizeD = Math.round(maxMessageSizeD * 10) / 10;
+		        	
+		        	double messageSizeD = messageSize / 1024.0;
+		        	messageSizeD = Math.round(messageSizeD * 10) / 10;
+		        	
+		        	throw new Exception("OVERMESSAGESIZE:" + maxMessageSizeD + "MB:" + messageSizeD + "MB");
+		        }
+		        
 		        if (cmd.equalsIgnoreCase("SAVE")) {
 		        	logger.debug("Saving the message");
 		        	
@@ -2862,8 +2895,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 				
-				//over quota exception이 아니면 retry한다.
-				if (e.getMessage().indexOf("NO APPEND failed.") == -1) {
+				//OVERQUOTA/OVERMESSAGESIZE exception이 아니면 retry한다.
+				if (e.getMessage().indexOf("OVERQUOTA") == -1 && e.getMessage().indexOf("OVERMESSAGESIZE") == -1 ) {
 					retryFlag = true;
 					--retryCount;
 					
@@ -3816,6 +3849,29 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     			fos.close();
     		}
     	}
+	}
+	
+	public class CountOutputStream extends OutputStream {
+	    int size;
+		
+	    public int getSize() {
+	    	return size;
+	    }
+	    
+	    @Override
+	    public void write(byte[] b, int off, int len) {
+	    	size += len;
+	    }
+
+	    @Override
+	    public void write(int b) {
+	    	size += 1;
+	    }
+
+	    @Override
+	    public void write(byte[] b) throws IOException {
+	    	size += b.length;
+	    }
 	}
 	
 }

@@ -49,4 +49,5 @@ public interface EzEmailService {
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
+	public int getMaxMessageSize(int tenantId) throws Exception;
 }
