@@ -20,6 +20,9 @@ function getDocType() {
     		},
     		success: function(text){
     			result = text;
+    		},
+    		error : function() {
+    			result = "<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>";
     		}
     	});
     	
@@ -308,14 +311,19 @@ function DocDel() {
 
     Flag = xmlhttp.responseText;
 
-    if (Flag == "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>") {
-        alert(strLang802);
-        for (count1 = length - 1 ; count1 > -1 ; count1--) {
-            listview2.DeleteRow(GetAttribute(listview2.GetDataRows()[count1], "id"));
-        }
-    } else {
-        alert(strLang803);
-    }
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK" && Flag == "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>") {
+			alert(strLang802);
+	        for (count1 = length - 1 ; count1 > -1 ; count1--) {
+	            listview2.DeleteRow(GetAttribute(listview2.GetDataRows()[count1], "id"));
+	        }
+		} else {
+			alert(strLang803);
+		}
+	} else {
+		alert(strLang803);
+	}
+    
     Check = false;
 }
 

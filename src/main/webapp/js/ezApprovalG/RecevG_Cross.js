@@ -2234,7 +2234,13 @@ function SetBtnStateTrue() {
 
 function SaveDraftDocInfo() {
     var rtnVal;
-    SaveFile();
+    
+    // 수정(2008.06.12) : 결재문서 파일 저장 시 임시파일 생성 후 파일크기를 체크하여 원본 파일로 복사하도록 루틴 수정
+    rtnVal = SaveFile();
+    if (rtnVal != "TRUE")
+    {
+        return rtnVal;
+    }
     SignSave();
 
     rtnVal = SaveDraftDocInfo_susin();

@@ -525,6 +525,9 @@ function GetTaskFullListXml() {
 		data : {deptCode : DeptID, companyID : CompanyID, pageSize : PageSize, pageNo : curpage, langType : UserLang},
 		success : function (result) {
 			tempRet = loadXMLString(result);
+		},
+		error : function() {
+			tempRet = loadXMLString("<RESULT>FALSE</RESULT>");
 		}
 	});
 	return tempRet;

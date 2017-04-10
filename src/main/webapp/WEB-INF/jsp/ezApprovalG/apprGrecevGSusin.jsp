@@ -671,7 +671,7 @@
 		
 		    function chk_Passwd_Complete(chkpass) {
 		        DivPopUpHidden();
-		        if (chkpass == "False") {
+		        if (chkpass == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;
@@ -998,12 +998,11 @@
             			} else {
 	            			var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
 	    		            OpenAlertUI(pAlertContent);
-            			},
-            		error : function() {
+            			}
+            		}, 	error : function() {
             			var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
 	    		        OpenAlertUI(pAlertContent);
             			}
-            		}
             	});
 		    }
 		    

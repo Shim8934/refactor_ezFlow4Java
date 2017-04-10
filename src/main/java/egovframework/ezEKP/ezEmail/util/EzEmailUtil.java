@@ -1465,7 +1465,7 @@ public class EzEmailUtil {
 	public Part getAttachPart(Part part, int index) throws MessagingException, IOException {
 		logger.debug("getAttachPart started.");
 		
-		if (part.isMimeType("multipart/mixed")){
+		if (part.isMimeType("multipart/mixed") || part.isMimeType("multipart/report")){
 			Part p = ((Multipart)part.getContent()).getBodyPart(index);
 			
 			logger.debug("getAttachPart ended.");

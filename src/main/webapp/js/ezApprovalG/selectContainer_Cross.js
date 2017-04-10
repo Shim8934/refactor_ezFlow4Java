@@ -10,7 +10,11 @@ function getUseContainer()
     	data : {deptID : pDeptID, comID : companyID},
     	success : function(result){
     		xmlRtn = loadXMLString(result);	        		
-    		 document.getElementById('divlvtCont').innerHTML = "";
+    		document.getElementById('divlvtCont').innerHTML = "";
+    	},
+    	error : function() {
+    		xmlRtn = loadXMLString("<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>");
+    		document.getElementById('divlvtCont').innerHTML = "";
     	}
     });
 	

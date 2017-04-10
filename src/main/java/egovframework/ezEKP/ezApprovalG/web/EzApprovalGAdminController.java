@@ -780,7 +780,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		path = realPath + commonUtil.separator + path;
 		
-		logger.debug("||||||||||||||||||||||||||||||");
 		logger.debug("path : " + path);
 		
 		try {
@@ -1632,8 +1631,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		
 		String result = ezApprovalGAdminService.removeTaskCategory(categoryType, categoryCode, companyID, userInfo.getTenantId(), approvalFlag);
-		
-		logger.debug("removeTaskCategory ended.");
 		
 		logger.debug("removeTaskCategory ended.");
 		
@@ -2868,7 +2865,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDocList started");
-logger.debug("period = " + request.getParameter("period"));
+		logger.debug("period = " + request.getParameter("period"));
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String contID = request.getParameter("contID");

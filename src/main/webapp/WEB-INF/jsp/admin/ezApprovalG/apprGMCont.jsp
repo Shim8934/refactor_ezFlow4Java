@@ -82,11 +82,15 @@
 		        	data : {deptID : DeptID, comID : CompanyID},
 		        	success : function(result){
 		        		xmlRtn = loadXMLString(result);		        		
-		        		document.getElementById('lvtForm').innerHTML = "";
-				        listview.DataSource(xmlRtn);
-				        listview.DataBind("lvtForm");
+		        	},
+		        	error : function() {
+		        		xmlRtn = loadXMLString("<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>");
 		        	}
 		        });
+		        
+		        document.getElementById('lvtForm').innerHTML = "";
+		        listview.DataSource(xmlRtn);
+		        listview.DataBind("lvtForm");
 		    }
 		    
 		    function selectCompanyID() {
@@ -208,8 +212,11 @@
 		        		if (result == "TRUE") {
 			                listview.GetDataRows()[selRow].parentElement.removeChild(listview.GetDataRows()[selRow]);
 			            } else {
-			                window.alert("<spring:message code='ezApprovalG.t1587'/>");
-			        	}
+			            	alert("<spring:message code='ezApprovalG.t1587'/>");
+			            }
+		        	},
+		        	error : function() {
+		        		alert("<spring:message code='ezApprovalG.t1587'/>");
 		        	}
 		        });	            
 	   	 	}

@@ -581,7 +581,7 @@
 		
 		    function chk_Passwd_Complete(Rtn)
 		    {
-		        if (Rtn == "False") {
+		        if (Rtn == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            return "";
@@ -1290,6 +1290,6 @@
 	    </script>
 	
 	
-	    <iframe id="saveExcel" name="saveExcel" style="display: none"></iframe>
+	    <iframe id="saveExcel" name="saveExcel" style="display: none" ></iframe>
 	</body>
 </html>

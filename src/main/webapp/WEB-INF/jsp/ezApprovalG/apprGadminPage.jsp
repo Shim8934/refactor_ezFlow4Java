@@ -517,14 +517,14 @@
 	function btnStaTargetDeli_onclick() {
 	}
 	function btnSndProdList_onclick() {
-	    var ConStr = "다음 목록을 자료관으로 전송하시겠습니까?<br>" +
-	                 " * 기록물철등록부\n" +
-	                 " * 기록물등록대장\n" +
-	                 " * 배부대장\n" +
-	                 " * 기록물철등록부 변경이력\n" +
-	                 " * 기록물등록대장 변경이력\n" +
-	                 " * 첨부파일정보\n" +
-	                 " * 특수목록정보";
+	    var ConStr = <spring:message code='ezApprovalG.t492'/>+ "<br>" +
+	                 " * " + <spring:message code='ezApprovalG.t912'/> + "\n" +
+	                 " * " + <spring:message code='ezApprovalG.t552'/> + "\n" +
+	                 " * " + <spring:message code='ezApprovalG.t96'/> + "\n" +
+	                 " * " + <spring:message code='ezApprovalG.t92'/> + "\n" +
+	                 " * " + <spring:message code='ezApprovalG.t93'/> + "\n" +
+	                 " * " + <spring:message code='ezApprovalG.t498'/> +
+	                 " * " + <spring:message code='ezApprovalG.t499'/> ;
 	    bCon = OpenConfirmUI(ConStr);
 	    if (bCon) {
 	        if (TransferProdList(DeptID, "0")) {

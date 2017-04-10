@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>처리중입니다.</title>
+		<title><spring:message code='ezApprovalG.t1565'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 			<script language="JScript">
 				function fileinfo_change(fileinfo)
@@ -14,8 +14,8 @@
 	</head>
 
 	<body scroll="no" class="msgbody">
-		<div class="message"><span class="point">처리중입니다.<br>
-			잠시만 기다려 주십시오.</span><br><br>
+		<div class="message"><span class="point"><spring:message code='ezApprovalG.t1565'/><br>
+			<spring:message code='ezApproval.t900'/></span><br><br>
 		<div id="message">${fileInfo}</div></div>
 	</body>
-</html>
+</html> 

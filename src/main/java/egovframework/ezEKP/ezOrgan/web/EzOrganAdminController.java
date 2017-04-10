@@ -1778,6 +1778,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -1785,6 +1786,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", user);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("permissionsCheck ended.");
 		

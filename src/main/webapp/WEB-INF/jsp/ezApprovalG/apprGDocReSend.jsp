@@ -285,7 +285,7 @@
 	        function chk_Passwd_Complete(RtnVal) {
 	            DivPopUpHidden();
 	
-	            if (RtnVal == "False") {
+	            if (RtnVal == "FALSE") {
 	                var pAlertContent = "<spring:message code='ezApproval.t26'/>";
 	                OpenAlertUI(pAlertContent);
 	                return;

@@ -2609,10 +2609,14 @@ function SaveDraftDocInfo_ilban(pState) {
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
-        if (pState != "000")
-            SetBtnStateFalse();
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        return getNodeText(dataNodes[0]);
+    	if (xmlhttp.statusText == "OK") {
+    		 if (pState != "000")
+    	            SetBtnStateFalse();
+    	        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    	        return getNodeText(dataNodes[0]);
+    	} else {
+    		return "FALSE";
+    	}
     } catch (e) {
         alert("SaveDraftDocInfo_ilban(pState)" + e.description);
     }
@@ -3553,18 +3557,23 @@ function UpdateLineHistory() {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+			
+			var DataNodes = GetChildNodes(loadXMLString(result));
+		    var rtnVal = getNodeText(DataNodes[0]);
+		    if (rtnVal == "TRUE") {
+		    }
+		    else {
+		        var pAlertContent = strLang91;
+		        OpenAlertUI(pAlertContent);
+		    }
+		},
+		error : function() {
+			var pAlertContent = strLang91;
+	        OpenAlertUI(pAlertContent);
+		}
 	});
-    
-    var DataNodes = GetChildNodes(loadXMLString(result));
-    var rtnVal = getNodeText(DataNodes[0]);
-    if (rtnVal == "TRUE") {
-    }
-    else {
-        var pAlertContent = strLang91;
-        OpenAlertUI(pAlertContent);
-    }
 }
+
 function getOpinionCount() {
     try {
     	var result = "";
@@ -3730,8 +3739,13 @@ function SaveTMPDocInfo(AutoSave) {
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
-
-        return xmlhttp.responseText;
+        
+     	if (xmlhttp.statusText == "OK") {
+     		return xmlhttp.responseText;
+     	} else {
+     		return "FALSE";
+     	}
+      
     } catch (e) {
         OpenAlertUI("SaveTMPDocInfo()" + e.description);
     }
@@ -3750,14 +3764,12 @@ function RemoveTmpDoc(pDocID) {
 		},
 		success: function(text){
 			result = text;
+		},
+		error : function() {
+			var pAlertContent = strLang1134;
+	        OpenAlertUI(pAlertContent);
 		}
 	});
-	
-    var RtnVal = result;
-    if (RtnVal.indexOf("TRUE") == -1) {
-        var pAlertContent = strLang1134;
-        OpenAlertUI(pAlertContent);
-    }
 }
 
 function setFirstDrafterAuto() {

@@ -61,8 +61,8 @@
 		            document.getElementById('Localload').style.display = "none";
 		        }
 		        else if (pFormKind == "999") {
-		            document.getElementById("LocalloadHwp").style.display = "none";
-		            document.getElementById("LocalloadMht").style.display = "none";
+// 		            document.getElementById("LocalloadHwp").style.display = "none";
+// 		            document.getElementById("LocalloadMht").style.display = "none";
 		        }
 		        InitFormCont();
 		

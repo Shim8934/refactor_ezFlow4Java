@@ -1560,6 +1560,7 @@ function SaveDraftDocInfo()
 
     function SaveDraftDocInfo_ilban()
     {
+    	alert(500);
         try{
             var fields = message.GetFieldsList();//CKEDITOR-원본 : var fields = FormProc.Fields;
             var field;
@@ -1645,10 +1646,17 @@ function SaveDraftDocInfo()
 	
             xmlhttp.open("POST","/ezApprovalG/doDraft.do",false);
             xmlhttp.send(xmlpara);
+            
+            if (xmlhttp != null && xmlhttp.readyState == 4) {
+             	 if (xmlhttp.statusText == "OK") {
+             		SetBtnStateFalse();
+             		 return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+             	 } else {
+             		return "FALSE";
+             	 }
+           }
+        } catch(e){
 
-            SetBtnStateFalse();
-            return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
-        }catch(e){
             alert("SaveDraftDocInfo_ilban " + e.description);
         }
     }
@@ -1724,10 +1732,16 @@ function SaveDraftDocInfo()
 	
             xmlhttp.open("POST","/ezApprovalG/doDraft.do",false);
             xmlhttp.send(xmlpara);
-	  		
-            SetBtnStateFalse();
-            return xmlhttp.responseText;
-        }catch(e){
+            
+            if (xmlhttp != null && xmlhttp.readyState == 4) {
+             	 if (xmlhttp.statusText == "OK") {
+             		SetBtnStateFalse();
+                    return xmlhttp.responseText;
+             	 } else {
+             		return "FALSE";
+             	 }
+           }
+        } catch(e){
             alert("SaveDraftDocInfo_susin : " + e.description);
         }
     }

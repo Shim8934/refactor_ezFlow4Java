@@ -97,16 +97,19 @@
     			companyID : CompanyID
     		},
     		success: function(xml){
-    			result = xml;
-    		}        			
+    			result = loadXMLString(xml);
+    			
+    			if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
+    	    		OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
+				}
+    	        else {
+    	        }
+    		},
+    		error : function () {
+    			OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
+    		}
     	});
     	g_CodeInfoXml = result;
-    	  if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
-    		  OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
-    	    }
-        else {
-        	
-        }
     }
     function InitRecordInfo() {
         var objXml = createXmlDom();
@@ -505,15 +508,17 @@
         oXmlhttp.open("POST", "/ezApprovalG/changeRecInfo.do", false);
         oXmlhttp.send(xmlpara);
 
-        var rtnXml = oXmlhttp.responseXML;
-        if (getNodeText(GetChildNodes(rtnXml)[0]) == "FALSE") {
-            OpenAlertUI("<spring:message code='ezApprovalG.t962'/>");
-            return false;
-        }
-        else {
-            return true;
-        }
+        if (oXmlhttp != null && oXmlhttp.readyState == 4) {
+         	 if (oXmlhttp.statusText == "OK") {
+         			OpenAlertUI("<spring:message code='ezApprovalG.t962'/>");
+         		   return true;
+         	 } else {
+         		 OpenAlertUI("<spring:message code='ezApprovalG.t962'/>");
+                 return false;
+         	 }
+       }
     }
+    
     function btnClose_onclick() {
         rtnVal[0] = "FALSE";
         window.close();

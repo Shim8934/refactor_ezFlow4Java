@@ -147,13 +147,15 @@ function ContSave() {
     xmlhttp.send(xmlpara);
 
     Flag = xmlhttp.responseText;
-
-    if (Flag == "TRUE") {
-        alert(strLang814);
-        InitlvContTypeList();
-    } else {
-        alert(strLang803);
-    }
+    
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK" && Flag == "TRUE") {
+			alert(strLang814);
+	        InitlvContTypeList();
+		} else {
+			alert(strLang803);
+		}
+	}
 }
 
 function XMLParse() {

@@ -131,6 +131,9 @@
 				                Add_Group(SelectSingleNodeValueNew(xmlRtn, "PARAMETER/NAME" + Cnt), SelectSingleNodeValueNew(xmlRtn, "PARAMETER/ID" + Cnt));
 				            }
 				        }    		 
+		        	},
+		        	error : function() {
+		        		xmlRtn = loadXMLString("<PARAMETER><ID0>FALSE</ID0><NAME0></NAME0></PARAMETER>");
 		        	}
 		        });		        
 		    }
@@ -268,11 +271,13 @@
 		        xmlhttp.open("POST", "/admin/ezApprovalG/apprGMinsCont.do", false);
 		        xmlhttp.send(xmlpara);
 
-		        if (xmlhttp.responseText == "FALSE") {
-		            return false;
-		        } else {
-		            return true;
-		        }
+		        if (xmlhttp != null && xmlhttp.readyState == 4) {
+					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
+						return true;
+					} else {
+			            return false;
+					}
+				}
 		    }
 		    
 		    function UpdateCont(state) {
@@ -299,11 +304,13 @@
 		        xmlhttp.open("POST", "/admin/ezApprovalG/apprGMupdateCont.do", false);
 		        xmlhttp.send(xmlpara);
 		        
-		        if (xmlhttp.responseText == "FALSE") {
-		            return false;
-		        } else {
-		            return true;
-		        }
+		        if (xmlhttp != null && xmlhttp.readyState == 4) {
+					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
+						return true;
+					} else {
+			            return false;
+					}
+				}
 		    }
 		    
 		    function btncancel_onclick() {

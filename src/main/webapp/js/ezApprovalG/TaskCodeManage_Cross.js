@@ -138,6 +138,9 @@ function GetTaskCategoryNodeExist(pType, pGroupID) {
     	data : {cateType : pType, sCateCode : pGroupID, companyID : companyID},
     	success : function(result) {
     		retVal = result;
+    	},
+    	error : function() {
+    		retVal = "FALSE";
     	}
 	});
 	
