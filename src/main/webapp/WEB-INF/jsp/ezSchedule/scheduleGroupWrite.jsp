@@ -660,10 +660,10 @@
 		    }
 			
 		    function close_onclick() {
-		    	if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
+		    	/* if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
-		    	}
+		    	} */
 		    	
 		        if (document.all("groupname").value == "") {
 		            alert("<spring:message code='ezSchedule.t195' />");

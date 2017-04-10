@@ -15,9 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>		
 	    <script type="text/javascript">
-		    var holidayid = "<c:out value='${id}'/>";
-		    var name = "<c:out value='${name}'/>";
-		    var name2 = "<c:out value='${name2}'/>";
+		    var holidayid = "<c:out value='${id}'/>";		    
 		    var issolar = "<c:out value='${isSolar}'/>";
 		    var holidaydate = "<c:out value='${date}'/>";
 		    var isrepeat = "<c:out value='${isRepeat}'/>";
@@ -26,9 +24,7 @@
 		    window.onload = function () {
 		        if (holidayid != "") {
 		            document.getElementById("add").style.display = "none";
-		            document.getElementById("mod").style.display = "";
-		            document.getElementById("holidayname").value = name;
-		            document.getElementById("holidayname2").value = name2;
+		            document.getElementById("mod").style.display = "";		            
 	
 		            if (issolar != "1")
 		                document.getElementById("date2").checked = true;
@@ -143,13 +139,13 @@
 		                	<tr class="primary">
 		                        <th><spring:message code='ezSchedule.t4013' /></th>
 		                        <td>
-		                            <input id="holidayname" type="text" style="width: 98%" maxlength="20"/>
+		                            <input id="holidayname" type="text" style="width: 98%" maxlength="20" value="<c:out value='${name}' />" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><spring:message code='ezSchedule.t4014' /></th>
 		                        <td>
-		                            <input id="holidayname2" type="text" style="width: 98%" maxlength="40"/>
+		                            <input id="holidayname2" type="text" style="width: 98%" maxlength="40" value="<c:out value='${name2}' />" />
 		                        </td>
 		                    </tr>
 		                </table>
