@@ -30,7 +30,11 @@
 			var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
 			var tid = "${tenantId}";
 			var g_senderinfo = "${senderInfo}";
-			var g_eImportance = "${importance}";                                      
+			var g_eImportance = "${importance}";
+			var g_bodyType = "${bodyType}";
+			var g_replySendTime = "${replySendTime}";
+			var g_replyReadTime = "${replyReadTime}";
+			var g_delaySendDate = "${pReservedSaveTime}";
 			var g_ePostType = "${postType}";                                          
 			var g_url = "${url}";
 			var g_unread = "${unread}";
@@ -72,7 +76,7 @@
 		    var gg_url = "${urlOwn}";
 		    var g_newid = "${newwindowid}";
 		    var FileUploadtype = "${fileUploadType}";
-		    var iseachMail = "false";
+		    var iseachMail = "${isEach}";
 		    var individualmailuser = "${individualMailUser}";
 		    var pSecurity = "${pSecurity}";
 		    var InnerDomain = "${mailInnerDomain}";
@@ -120,9 +124,10 @@
 				document.getElementsByName("importantSelect")[0].selectedIndex = g_eImportance;
 				m_rgParams4PostOption["important"] = g_eImportance;
 				m_rgParams4PostOption["postType"] = g_ePostType;
-				m_rgParams4PostOption["replySendTime"] = "0";
-				m_rgParams4PostOption["replyReadTime"] = "1";
-				m_rgParams4PostOption["delaySendDate"] = "${pReservedSaveTime}";
+				m_rgParams4PostOption["bodyType"] = g_bodyType;
+				m_rgParams4PostOption["replySendTime"] = g_replySendTime;
+		        m_rgParams4PostOption["replyReadTime"] = g_replyReadTime;
+				m_rgParams4PostOption["delaySendDate"] = g_delaySendDate;
 				m_rgParams4PostOption["showMsgCC"] = true;
 				m_rgParams4PostOption["showMsgBCC"] = true;
 				m_rgParams4PostOption["tagMsgCC"] = MsgCC_TR;

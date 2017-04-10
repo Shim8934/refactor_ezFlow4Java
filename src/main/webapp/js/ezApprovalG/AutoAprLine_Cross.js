@@ -77,8 +77,8 @@ function APRLINEXMLParsing(APRLINE) {
             GetXml = GetXml + "<COLUMN>" + TmpAprLineState + "</COLUMN>";//
             GetXml = GetXml + "<COLUMN>" + SelectSingleNodeValue(Cell[5], "VALUE") + "</COLUMN>";
 
-            GetXml = GetXml + "<DATA name='ProcessDate'>" + pDraftDay + "</DATA>";//
-            GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+            GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";//
+            GetXml = GetXml + "<DATA name='ReceivedDate'>" + pDraftDay + "</DATA>";
             GetXml = GetXml + "<DATA name='DocID'>" + pDocID + "</DATA>";
             GetXml = GetXml + "<DATA name='AprMemberID'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA4")) + "</DATA>";
             GetXml = GetXml + "<DATA name='AprmemberIsDeptYN'>" + SelectSingleNodeValue(Cell[0], "DATA5") + "</DATA>";

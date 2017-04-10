@@ -301,24 +301,24 @@ function GetUserContListSave(AllFG) {
     createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
     createNodeAndInsertText(xmlpara, objNode, "AllFG", AllFG);
     
-    xmlDocListHttp.open("post", "/ezApprovalG/getUserContListSave.do", true);
-    xmlDocListHttp.reponseType='blob';
+    xmlDocListHttp.open("post", "getUserContListSave.do", true);
+    xmlDocListHttp.responseType='blob';
     xmlDocListHttp.send(xmlpara);
     xmlDocListHttp.onload = function(e) {
         if (this.status == 200) {
             // Create a new Blob object using the 
             //response data of the onload object
-            var blob = new Blob([this.response]);
+            var blob = new Blob([this.response] ,{ type: "application/vnd.ms-excel" });
             //Create a link element, hide it, direct 
             //it towards the blob, and then 'click' it programatically
-            let a = document.createElement("a");
-            a.style = "display: none";
-            document.body.appendChild(a);
+            var a = document.createElement("a");
+            a.setAttribute("type", "hidden");
             //Create a DOMString representing the blob 
             //and point the link element towards it
-            let url = window.URL.createObjectURL(blob);
+            var url = window.URL.createObjectURL(blob);
             a.href = url;
             a.download = period+'.xls';
+            document.body.appendChild(a);
             //programatically click the link to trigger the download
             a.click();
             //release the reference to the file by revoking the Object URL
