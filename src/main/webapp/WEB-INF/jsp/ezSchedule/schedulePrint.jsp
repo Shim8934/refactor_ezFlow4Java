@@ -21,7 +21,7 @@
 		    }
 		</script>
 		<style type="text/css">
-	       html, body {height: 101%;}        
+	       html, body {height: 98%;}        
 	    </style>
 	</head>	
 	<body id="body" class="popup" scroll="auto">    
@@ -111,7 +111,7 @@
 				        <c:if test="${primary == '1'}">${item.ownerName}</c:if>
 						<c:if test="${primary != '1'}">${item.ownerName2}</c:if>
 			         </td>
-			         <td style="word-break: keep-all;">
+			         <td style="word-break:break-all;">
 					 	${item.title} 
 					 </td>
 			         <td style="word-break:break-all;">

@@ -123,9 +123,7 @@
 
 	            if (RetValue != null) {
 	                var listView = new ListView();
-	                listView.LoadFromID("MsgToList");
-
-	                listView.DeleteRow(listView.GetDataRows()[0].id);
+	                listView.LoadFromID("MsgToList");	                
 
 	                var totalRows = listView.GetDataRows();
 	                var totalLen = totalRows.length;
