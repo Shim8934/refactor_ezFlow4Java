@@ -172,6 +172,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String url = "";
 		String attach = "";
 		String importance = "1";
+		String isEach = "FALSE";
+		String bodyType = "0";
+		String replySendTime = "0";
+		String replyReadTime = "1";
+		String delaySendDate = "";
 		String unread = "";
 		String reSendFlag = "N";
 		String folderPath = "";
@@ -794,7 +799,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	
 		        	//set importance
 		        	if (orgMessage.getHeader("X-Priority") != null) {
-	        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+		        		String tempImportance = orgMessage.getHeader("X-Priority")[0];
 	        			if (tempImportance.equals("1")) {
 	        				importance = "2";
 	        			} else if (tempImportance.equals("5")) {
@@ -804,8 +809,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        			}
 	        		}
 		        	logger.debug("importance=" + importance);
+
+		        	//set isEachMail
+		        	if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
+		        		isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
+	        		}
+		        	//set bodyType
+		        	if (orgMessage.getHeader("Content-Type") != null) {
+		        		String tempBodyType = orgMessage.getHeader("Content-Type")[0];
+		        		if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
+		        			bodyType = "1";
+		        		}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
+		        			bodyType = "0";
+		        		}
+	        		}
+		        	if (orgMessage.getHeader("Return-Receipt-To") != null) {
+		        		replySendTime = "1";
+	        		} else {
+	        			replySendTime = "0";
+	        		}
+		        	if (orgMessage.getHeader("Disposition-Notification-To") != null) {
+		        		replyReadTime = "1";
+	        		} else {
+	        			replyReadTime = "0";
+	        		}
+		        	
+		        	if (orgMessage.getHeader("Delivery-Date") != null) {
+		        		delaySendDate = orgMessage.getHeader("Delivery-Date")[0].trim();
+	        		} else {
+	        			delaySendDate = "";
+	        		}
 				}
-	        	        	
 				orgFolder.close(true);
 				
 			} catch (MessagingException e) {
@@ -834,6 +868,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("subject", subject);
 		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
 		model.addAttribute("importance", importance);
+		model.addAttribute("isEach", isEach);
+		model.addAttribute("bodyType", bodyType);
+		model.addAttribute("replySendTime", replySendTime);
+		model.addAttribute("replyReadTime", replyReadTime);
+		model.addAttribute("delaySendDate", delaySendDate);
 		model.addAttribute("postType", postType);
 		model.addAttribute("url", url);
 		model.addAttribute("attach", attach);
@@ -2344,16 +2383,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				logger.debug("replySendTime=" + replySendTime);
 		        if (replySendTime.equals("1")) {
 		        	message.setHeader("Return-Receipt-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-		        } else {
-		        	message.removeHeader("Return-Receipt-To");
 		        }
 		
 		        // 추적(수신확인)
 		        logger.debug("replyReadTime=" + replyReadTime);
 		        if (replyReadTime.equals("1")) {
 		        	message.setHeader("Disposition-Notification-To", ((InternetAddress)message.getFrom()[0]).getAddress());
-		        } else {
-		        	message.removeHeader("Disposition-Notification-To");
 		        }
 		        
 		        //SentDate 설정
@@ -2661,12 +2696,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        if (cmd.equalsIgnoreCase("SAVE")) {
 		        	logger.debug("Saving the message");
 		        	
+		    		Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
+		    		
+		    		if (isEachMailB) {
+	                	message.setHeader("X-JMocha-Each-Mail", "true");
+                    }
+		    		if (delaySendTime != ""){
+		    			message.setHeader("Delivery-Date", delaySendTime);
+		    		}
 		    		message.setFlag(Flags.Flag.SEEN, true);
 		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
 		    		if (uids != null && uids[0] != null) {
 		    			draftUID = uids[0].uid;
 		    		} 
-		    		
+		    	
 		            // this deletion code block has been moved here because
 		            // it needs to be kept in Drafts if an error occurs during the above process.
 		            if (oldMessage != null) {
@@ -2686,7 +2729,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            }
 			                            
                     message.setFlag(Flags.Flag.SEEN, true);
-                    			        
+		            
                     // 예약 발송의 경우
 			        if (!delaySendTime.equals("")) {
 			            // 편지함 용량 초과 메세지 확인을 위해 임시저장
@@ -2726,7 +2769,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     	                        sentFolderMessageUID = uids[0].uid;
     	                    } 
 			            }
-			            			            
+			            
+			            String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
+						String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
+						
+						if (eachMailHeader != null) {
+							message.removeHeader("X-JMocha-Each-Mail");
+						}
+			            
 			            // 개별발신
 			            if (isEachMailB) {
 			            	logger.debug("sending each recipient mail");
