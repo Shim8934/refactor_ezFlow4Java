@@ -1560,7 +1560,6 @@ function SaveDraftDocInfo()
 
     function SaveDraftDocInfo_ilban()
     {
-    	alert(500);
         try{
             var fields = message.GetFieldsList();//CKEDITOR-원본 : var fields = FormProc.Fields;
             var field;

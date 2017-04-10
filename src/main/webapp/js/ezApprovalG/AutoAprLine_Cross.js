@@ -25,7 +25,6 @@
 	});
     
     result = loadXMLString(result);
-    
     var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
     	var Resultxml = APRLINEXMLParsing(result);

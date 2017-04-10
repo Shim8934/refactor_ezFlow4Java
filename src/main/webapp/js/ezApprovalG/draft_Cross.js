@@ -654,7 +654,6 @@ function SGetDraftAprLineInfo(ret) {
 
         for (i = 0; i < OrderType.length; i++) {
             switch (OrderType[i]) {
-
                 case strAprType1:
                     break;
 
@@ -3814,7 +3813,7 @@ function setFirstDrafterAuto() {
     pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>"
 
     xmlpara = loadXMLString(pxml);
-    
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
