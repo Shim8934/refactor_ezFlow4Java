@@ -1173,7 +1173,7 @@
 		        	});
 		        	
 		            return result;
-		        }
+		        } 
 		        catch (e) {
 		            alert("getDocRecevState :: " + e.description);
 		        }
