@@ -847,13 +847,13 @@ function MoveRecord(pRecID, pSepAttNo, pNewCabID, pFlag) {
     XmlHttp.open("POST", "/ezApprovalG/moveRecord.do", false);
     XmlHttp.send(xmlpara);
 
-    var rtn = getNodeText(GetChildNodes(XmlHttp.responseXML)[0]);
-    if (rtn == "FALSE") {
-        return false;
-    }
-    else {
-        return true;
-    }
+    if (XmlHttp != null && XmlHttp.readyState == 4) {
+     	 if (XmlHttp.statusText == "OK") {
+     		return true;
+     	 } else {
+     		 return false;
+     	 }
+   }
 }
 
 function DisplayLineCnt_ezCab(NodeListLen) {

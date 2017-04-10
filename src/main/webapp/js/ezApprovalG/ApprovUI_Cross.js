@@ -1335,6 +1335,7 @@ function getCurApproverAprLine() {
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
         setMenuBar("btnJunKyul", false);
 }
+
 function SaveApproveInfo(pApproveFlag) {
     SaveFile();
     SignSave();
@@ -1482,13 +1483,17 @@ function SaveApproveInfo(pApproveFlag) {
         xmlhttp.open("POST", "/ezApprovalG/doBoryuApprov.do", false);
     }
     xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
-    if (getNodeText(dataNodes[0]) != "TRUE") {
-        SaveOrgFile();
-    }
-    return getNodeText(dataNodes[0]);
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+     	 if (xmlhttp.statusText == "OK") {
+     	    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+     	    return getNodeText(dataNodes[0]);
+     	 } else {
+     		 SaveOrgFile();
+     		 return "FALSE";
+     	 }
+   }
 }
+
 function getfieldValue(pfield) {
     var rtnVal = "";
     if (pfield) {
@@ -2777,6 +2782,7 @@ function SignSave() {
         }
         xmlhttp.open("Post", "/ezApprovalG/setSignInfo.do", false);
         xmlhttp.send(xmlpara);
+        
     }
 }
 function SignCheck() {
@@ -3074,7 +3080,14 @@ function UpdateLineHistory() {
 	        OpenAlertUI(pAlertContent);
 		}
 	});
+	
+    if (result == "TRUE") {
+    } else {
+        var pAlertContent = strLang91;
+        OpenAlertUI(pAlertContent);
+    }
 }
+
 function getOpinionCount() {
     try {
     	var result = "";

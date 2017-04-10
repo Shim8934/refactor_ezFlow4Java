@@ -266,13 +266,18 @@
 
         oXmlhttp.open("POST", "/ezApprovalG/saveCabRoleInfo.do", false);
         oXmlhttp.send(xmlpara);
-
-        var rtnXml = oXmlhttp.responseXML;
-        var DataNodes = GetChildNodes(rtnXml);
-        if (getNodeText(DataNodes[0]) == "TRUE")
-            return true;
-        else
-            return false;
+        
+        if (oXmlhttp != null && oXmlhttp.readyState == 4) {
+         	 if (oXmlhttp.statusText == "OK") {
+         	     var rtnXml = oXmlhttp.responseXML;
+                 var DataNodes = GetChildNodes(rtnXml);
+                 if (getNodeText(DataNodes[0]) == "TRUE")
+                     return true;
+         	 } else {
+         		return false;
+         	 }
+       }
+            
     }
     function GetSelUserID_Cross() {
         var SelUserList = new ListView();

@@ -2609,11 +2609,14 @@ function SaveDraftDocInfo_ilban(pState) {
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
-        if (pState != "000")
-            SetBtnStateFalse();
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        
-        return getNodeText(dataNodes[0]);
+    	if (xmlhttp.statusText == "OK") {
+    		 if (pState != "000")
+    	            SetBtnStateFalse();
+    	        var dataNodes = GetChildNodes(xmlhttp.responseXML);
+    	        return getNodeText(dataNodes[0]);
+    	} else {
+    		return "FALSE";
+    	}
     } catch (e) {
         alert("SaveDraftDocInfo_ilban(pState)" + e.description);
     }
@@ -3570,6 +3573,7 @@ function UpdateLineHistory() {
 		}
 	});
 }
+
 function getOpinionCount() {
     try {
     	var result = "";
@@ -3735,8 +3739,13 @@ function SaveTMPDocInfo(AutoSave) {
 
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
-
-        return xmlhttp.responseText;
+        
+     	if (xmlhttp.statusText == "OK") {
+     		return xmlhttp.responseText;
+     	} else {
+     		return "FALSE";
+     	}
+      
     } catch (e) {
         OpenAlertUI("SaveTMPDocInfo()" + e.description);
     }

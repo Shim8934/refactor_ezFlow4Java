@@ -2543,8 +2543,7 @@ function RemoveTmpDoc(pDocID) {
 			docID : pDocID
 		},
 		success: function(text){
-			result = text;
-			
+			result = text;	
 			var pAlertContent = strLang802;
 	        //OpenAlertUI(pAlertContent);
 	        alert(pAlertContent);
