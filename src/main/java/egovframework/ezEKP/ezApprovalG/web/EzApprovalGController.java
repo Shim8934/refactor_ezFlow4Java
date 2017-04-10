@@ -2487,9 +2487,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String tempDept = userInfo.getGyumJik();
 		
-		for (String k : tempDept.split(";")) {
-			if (k.split(":")[0].equals(userInfo.getDeptID())) {
-				return "<RESULT></RESULT>";
+		if (tempDept != null) {
+			for (String k : tempDept.split(";")) {
+				if (k.split(":")[0].equals(userInfo.getDeptID())) {
+					return "<RESULT></RESULT>";
+				}
 			}
 		}
 		
@@ -2509,9 +2511,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String tempDept = userInfo.getGyumJik();
 		
-		for (String k : tempDept.split(";")) {
-			if (k.split(":")[0].equals(userInfo.getDeptID())) {
-				return "<RESULT></RESULT>";
+		if (tempDept != null) {
+			for (String k : tempDept.split(";")) {
+				if (k.split(":")[0].equals(userInfo.getDeptID())) {
+					return "<RESULT></RESULT>";
+				}
 			}
 		}
 		
