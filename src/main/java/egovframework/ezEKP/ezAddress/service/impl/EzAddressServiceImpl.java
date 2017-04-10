@@ -950,4 +950,20 @@ public class EzAddressServiceImpl implements EzAddressService {
 		return resultMap;
 	}
 
+	@Override
+	public void removeUserAddress(String userEmailAddress) throws Exception {
+		String inputParams = "userId=" + URLEncoder.encode(userEmailAddress, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/removeUserAddress", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
+        	throw new Exception("Error from JGwServer.");
+        }
+	}
+
 }

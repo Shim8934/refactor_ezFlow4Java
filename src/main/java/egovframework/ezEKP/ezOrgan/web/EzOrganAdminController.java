@@ -33,6 +33,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
@@ -84,6 +85,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 	
 	@Autowired
 	private EzEmailUserAdminService ezEmailUserAdminService;
@@ -919,6 +923,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				
 				// 해당 사용자의 메일박스들을 모두 제거한다.
 				ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				
+				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
+				ezAddressService.removeUserAddress(mailAddr);
 			}
 			// dhlee - end
 		}		
