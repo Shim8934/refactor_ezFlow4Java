@@ -3814,7 +3814,7 @@ function setFirstDrafterAuto() {
     pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>"
 
     xmlpara = loadXMLString(pxml);
-    
+
     $.ajax({
 		type : "POST",
 		dataType : "text",
