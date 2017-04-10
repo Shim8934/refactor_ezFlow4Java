@@ -2161,7 +2161,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //      string eSimpleMIME = xmlDoc.GetElementsByTagName("SIMPLE-MIME").Item(0).InnerText;
 //      string eSimpleMIMEContentTransferEncoding = xmlDoc.GetElementsByTagName("SIMPLE-MIME-CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
 		
-		//TODO: 얘도 while문에 들어가야하나?
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 				userEmail, password);
 		
