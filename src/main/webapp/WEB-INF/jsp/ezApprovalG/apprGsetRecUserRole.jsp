@@ -328,15 +328,16 @@
         xmlhttp.open("POST", "/ezApprovalG/saveRecUserRole.do", false);
         xmlhttp.send(xmlpara);
 
-        var rtnXml = xmlhttp.responseXML;
-        if (getNodeText(GetChildNodes(rtnXml)[0]) == "FALSE") {
-            alert("<spring:message code='ezApprovalG.t1159'/>");
-            return false;
-        }
-        else {
-            return true;
-        }
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+         	 if (xmlhttp.statusText == "OK") {
+         		 return true;
+         	 } else {
+                  alert("<spring:message code='ezApprovalG.t1159'/>");
+                  return false;
+         	 }
+       }
     }
+    
     function GetSelUserInfo() {
         var listview = new ListView();
         listview.LoadFromID("lvSelUserList");
