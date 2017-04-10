@@ -84,24 +84,22 @@
     		},
     		success: function(xml){
     			result = loadXMLString(xml);
-    		}        			
+    			
+    			if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
+					OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
+   	    	    } else {
+    	        	var nodesKeepPeriod = SelectNodes(result, "CODELIST/KEEPINGPERIOD/CODE")
+    	            InitCodeSelectBox(nodesKeepPeriod, selKeepPeriod);
+
+    	            var nodesRecType = SelectNodes(result, "CODELIST/RECORDTYPE/CODE")
+    	            InitCodeSelectBox(nodesRecType, selRecTypeCode);
+    	        }
+    		},
+    		error : function() {
+    			OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
+    		}
     	});
     	g_CodeInfoXml = result;
-
-    	  if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
-    		  OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
-    	    }
-        else {
-            var nodesKeepPeriod = SelectNodes(result, "CODELIST/KEEPINGPERIOD/CODE")
-            InitCodeSelectBox(nodesKeepPeriod, selKeepPeriod);
-
-            var nodesRecType = SelectNodes(result, "CODELIST/RECORDTYPE/CODE")
-
-            InitCodeSelectBox(nodesRecType, selRecTypeCode);
-
-
-        }
-    	  
     }
     function InitCabinetInfo() {
         var CabXml = loadXMLString(g_szCabInfoXml);

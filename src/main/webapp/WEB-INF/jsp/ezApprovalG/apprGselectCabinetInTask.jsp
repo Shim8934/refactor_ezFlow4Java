@@ -167,14 +167,17 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    			
+		    			if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
+				            alert("<spring:message code='ezApprovalG.t952'/>");
+				        }
+		    		},
+		    		error : function() {
+		    			alert("<spring:message code='ezApprovalG.t952'/>");
+		    		}
 		    	});
 		
 		        g_CodeInfoXml = result;
-		
-		        if (SelectSingleNodeValue(g_CodeInfoXml, "RESULT") == "FALSE") {
-		            alert("<spring:message code='ezApprovalG.t952'/>");
-		        }
 		    }
 		    function SelCabinetList_rowdblclick() {
 		        DelListRow(SelCabinetList);

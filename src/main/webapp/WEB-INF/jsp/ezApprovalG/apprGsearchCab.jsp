@@ -68,20 +68,20 @@
     		},
     		success: function(xml){
     			result = loadXMLString(xml);
+    			
+    			var nodesRecType = SelectNodes(result, "CODELIST/RECORDTYPE/CODE");
+    	        InitCodeSelBoxWithNullOpt(nodesRecType, selRecTypeCode);
+
+    	        var nodesKeepPeriod = SelectNodes(result, "CODELIST/KEEPINGPERIOD/CODE");
+    	        InitCodeSelBoxWithNullOpt(nodesKeepPeriod, selKeepPeriod);
+
+    	        var nodesKeepMethod = SelectNodes(result, "CODELIST/KEEPINGMETHOD/CODE");
+    	        InitCodeSelBoxWithNullOpt(nodesKeepMethod, selKeepMethod);
+
+    	        var nodesKeepPlace = SelectNodes(result, "CODELIST/KEEPINGPLACE/CODE");
+    	        InitCodeSelBoxWithNullOpt(nodesKeepPlace, selKeepPlace)
     		}        			
     	});
-
-        var nodesRecType = SelectNodes(result, "CODELIST/RECORDTYPE/CODE");
-        InitCodeSelBoxWithNullOpt(nodesRecType, selRecTypeCode);
-
-        var nodesKeepPeriod = SelectNodes(result, "CODELIST/KEEPINGPERIOD/CODE");
-        InitCodeSelBoxWithNullOpt(nodesKeepPeriod, selKeepPeriod);
-
-        var nodesKeepMethod = SelectNodes(result, "CODELIST/KEEPINGMETHOD/CODE");
-        InitCodeSelBoxWithNullOpt(nodesKeepMethod, selKeepMethod);
-
-        var nodesKeepPlace = SelectNodes(result, "CODELIST/KEEPINGPLACE/CODE");
-        InitCodeSelBoxWithNullOpt(nodesKeepPlace, selKeepPlace)
     }
     function SelectTask_OnClick() {
         SelectTask(g_DeptCode, g_DeptName, "0", "1");
