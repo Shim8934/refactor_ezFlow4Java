@@ -2544,19 +2544,16 @@ function RemoveTmpDoc(pDocID) {
 		},
 		success: function(text){
 			result = text;
+			
+			var pAlertContent = strLang802;
+	        //OpenAlertUI(pAlertContent);
+	        alert(pAlertContent);
+	        openergetDocInfo();
+		},
+		error : function() {
+			var pAlertContent = strLang872;
+	        //OpenAlertUI(pAlertContent);
+	        alert(pAlertContent);
 		}
 	});
-	
-    var RtnVal = result;
-    if (RtnVal.indexOf("TRUE") == -1) {
-        var pAlertContent = strLang872;
-        //OpenAlertUI(pAlertContent);
-        alert(pAlertContent);
-    }
-    else {
-        var pAlertContent = strLang802;
-        //OpenAlertUI(pAlertContent);
-        alert(pAlertContent);
-        openergetDocInfo();
-    }
 }

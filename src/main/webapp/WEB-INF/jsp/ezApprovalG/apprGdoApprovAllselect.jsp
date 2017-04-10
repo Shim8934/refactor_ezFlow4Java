@@ -34,7 +34,7 @@
 		        DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswdall.do");
 		    }
 		    function chk_Passwd_Complete(chkpass) {
-		        if (chkpass == "False") {
+		        if (chkpass == "FALSE") {
 		            var pAlertContent = strLang581;
 		            OpenAlertUI(pAlertContent);
 		            return;
@@ -183,7 +183,7 @@
 		            return;
 		        }
 		        else {
-		            chk_Passwd_Complete("true");
+		            chk_Passwd_Complete("TRUE");
 		        }
 		    }
 		    function btnClose_onclick() {

@@ -3060,16 +3060,20 @@ function UpdateLineHistory() {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+			
+			var DataNodes = GetChildNodes(loadXMLString(result));
+		    if (getNodeText(DataNodes[0]) == "TRUE") {
+		    }
+		    else {
+		        var pAlertContent = strLang91;
+		        OpenAlertUI(pAlertContent);
+		    }
+		},
+		error : function () {
+			var pAlertContent = strLang91;
+	        OpenAlertUI(pAlertContent);
+		}
 	});
-    
-    var DataNodes = GetChildNodes(loadXMLString(result));
-    if (getNodeText(DataNodes[0]) == "TRUE") {
-    }
-    else {
-        var pAlertContent = strLang91;
-        OpenAlertUI(pAlertContent);
-    }
 }
 function getOpinionCount() {
     try {

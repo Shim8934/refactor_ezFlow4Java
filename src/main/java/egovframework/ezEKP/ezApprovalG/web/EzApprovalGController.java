@@ -2617,16 +2617,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht"; 
 		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
+		
 		try {
+			File file = new File(saveDir);
 			
-		File file = new File(saveDir);
-		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
-		
-		
+			if (!file.exists()) {
+				file.mkdirs();
+			}
 
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			
@@ -2643,20 +2640,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			ret = "FALSE";
 		} finally {
-			   if (bos != null) {
-					try {
-					    bos.close();
-					} catch (Exception ignore) {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
 						logger.debug("IGNORED: {}", ignore.getMessage());
-					}
-			    }
-			   if (stream != null) {
-					try {
-						stream.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-					}
-			    }
+				}
+			}
+			
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
 		}
 	    
 		return ret;
@@ -2774,9 +2772,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		if (result.equals("1")) {
-			return "true";
+			return "TRUE";
 		} else {
-			return "False";
+			return "FALSE";
 		}
 	}
 	

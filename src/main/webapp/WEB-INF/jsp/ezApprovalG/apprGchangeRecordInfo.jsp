@@ -97,7 +97,7 @@
     			companyID : CompanyID
     		},
     		success: function(xml){
-    			result = xml;
+    			result = loadXMLString(xml);
     			
     			if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
     	    		OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");

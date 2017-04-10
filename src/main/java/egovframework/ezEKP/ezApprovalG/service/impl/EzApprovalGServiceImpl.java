@@ -7905,26 +7905,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSN", sn);
 		map.put("v_TENANTID", tenantID);
 		
-		try {
-			String href = ezApprovalGDAO.selectHrefDocInfo(map); 
-			ezApprovalGDAO.deleteTmpDocInfo(map);
-			ezApprovalGDAO.deleteTmpDocInfo2(map);
-			ezApprovalGDAO.deleteTmpDocInfo3(map);
-			ezApprovalGDAO.deleteTmpDocInfo4(map);
-			ezApprovalGDAO.deleteTmpDocInfo5(map);
-			ezApprovalGDAO.deleteTmpDocInfo6(map);
-			ezApprovalGDAO.deleteTmpDocInfo7(map);
-			ezApprovalGDAO.deleteTmpDocInfo8(map);
+		String href = ezApprovalGDAO.selectHrefDocInfo(map); 
+		ezApprovalGDAO.deleteTmpDocInfo(map);
+		ezApprovalGDAO.deleteTmpDocInfo2(map);
+		ezApprovalGDAO.deleteTmpDocInfo3(map);
+		ezApprovalGDAO.deleteTmpDocInfo4(map);
+		ezApprovalGDAO.deleteTmpDocInfo5(map);
+		ezApprovalGDAO.deleteTmpDocInfo6(map);
+		ezApprovalGDAO.deleteTmpDocInfo7(map);
+		ezApprovalGDAO.deleteTmpDocInfo8(map);
 
-			File file = new File(path + href);
-			file.delete();
-			
-			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
+		File file = new File(path + href);
+		file.delete();
+		
+		rtnVal = "<RESULT>TRUE</RESULT>";
 		
 		return rtnVal;
 	}
@@ -7943,107 +7937,101 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERID", userID.trim());
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
 
-		try {
-			int aprCount = ezApprovalGDAO.doProcessCount(map);
-		
-			logger.debug("doProcess value : aprCount =" + aprCount);
-			logger.debug("doProcess aprState =" + aprState);
-
-			if (aprCount < 1 && !aprState.equals(staASmikyul)) {
-				rtnVal = false;
-			} else {
-				switch (aprState) {
-				case "000":
-					if (rtnVal) {
-						subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
-					break;
-					
-				case "003":
-					if (rtnVal) {
-						subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
-					
-					if (rtnVal) {
-						subSQL = doApprove(docID, userID, aprState, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
-					
-					break;
-					
-				case "004":
-					if (rtnVal) {
-						subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
-					
-					if (rtnVal) {
-						subSQL = doBansong(docID, userID, aprState, dirPath, deptID, companyID, lang, userInfo);
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
-					
-					break;
-					
-				case "005":
-					if (rtnVal) {
-						subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
-					
-					if (rtnVal) {
-						subSQL = doBoryu(docID, userID, aprState, companyID, lang, userInfo.getTenantId());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
-					
-					break;
-					
-				case "001":
-					if (rtnVal) {
-						subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
+		int aprCount = ezApprovalGDAO.doProcessCount(map);
 	
-					if (rtnVal) {
-						subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
-					}
+		logger.debug("doProcess value : aprCount =" + aprCount);
+		logger.debug("doProcess aprState =" + aprState);
+
+		if (aprCount < 1 && !aprState.equals(staASmikyul)) {
+			rtnVal = false;
+		} else {
+			switch (aprState) {
+			case "000":
+				if (rtnVal) {
+					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
 					
-					break;
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
 				}
+				break;
+				
+			case "003":
+				if (rtnVal) {
+					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				if (rtnVal) {
+					subSQL = doApprove(docID, userID, aprState, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo);
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				break;
+				
+			case "004":
+				if (rtnVal) {
+					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				if (rtnVal) {
+					subSQL = doBansong(docID, userID, aprState, dirPath, deptID, companyID, lang, userInfo);
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				break;
+				
+			case "005":
+				if (rtnVal) {
+					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				if (rtnVal) {
+					subSQL = doBoryu(docID, userID, aprState, companyID, lang, userInfo.getTenantId());
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				break;
+				
+			case "001":
+				if (rtnVal) {
+					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+
+				if (rtnVal) {
+					subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId());
+					
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				}
+				
+				break;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return result = "<RESULT>FALSE</RESULT>";
 		}
 		
 		chkDocDelete(docID, docID, rtnVal, userID, deptID, dirPath, companyID, userInfo.getTenantId());
@@ -8145,8 +8133,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			addFlag = compareLineHistory(docID, companyID, tenantID);
 		}
 		
-		boolean rtn = true;
-		
 		if (addFlag) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_DOCID", docID.trim());
@@ -8162,21 +8148,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("companyID", companyID);
 
-			try {
-				ezApprovalGDAO.updateHistoryForLine(map);
-				rtn = true;
-			} catch (Exception e) {
-				e.printStackTrace();
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				rtn = false;
-			}
+			ezApprovalGDAO.updateHistoryForLine(map);
 		}
 		
-		if (rtn) {
-			return "<RESULT>TRUE</RESULT>";
-		} else {
-			return "<RESULT>FALSE</RESULT>";
-		}
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override
@@ -8415,14 +8390,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SIGNNAME", xmlDom.getElementsByTagName("SIGNNAME").item(k).getTextContent());
 			map.put("v_CONTENT", xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent());
 			
-			try {
-				ezApprovalGDAO.insertSignInfo(map);
-			} catch (Exception e) {
-				e.printStackTrace();
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				return "FALSE";
-			}
+			ezApprovalGDAO.insertSignInfo(map);
 		}
+		
 		return "TRUE";
 	}
 
@@ -9679,9 +9649,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return null;
 		}
 	}
+	
 	private String rollbackSN(String snType1, String snType2, String snType3, String toSN, String companyID, String strLang, int tenantID) throws Exception{
 		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, strLang, tenantID);
-		String result = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_Type1", snType1);
@@ -9693,16 +9663,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 		
-		try {
-			ezApprovalGDAO.spRollbackSN(map);
-			result = "TRUE";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			result = "FALSE";
-		}
+		ezApprovalGDAO.spRollbackSN(map);
 		
-		return result;
+		return "TRUE";
 	}
 
 	private String saveSpecialInfoCab(String specialFlag, String cabinetClassNO, Document xmlDom, int tenantID, String companyID) throws Exception{
@@ -9880,7 +9843,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String rollbackSN(String type1, String type2, String type3, long sn, String companyID, String docID, String langType, int tenantID) throws Exception{
 		String accountYear = "";
-		String result = "";
 		
 		if (!docID.trim().equals("")) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -9909,16 +9871,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 		
-		try {
-			ezApprovalGDAO.spRollbackSN(map);
-			result = "TRUE";
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			result = "FALSE";
-		}
+		ezApprovalGDAO.spRollbackSN(map);
 		
-		return result;
+		return "TRUE";
 	}
 
 	public String getRegSN(String strXML, int tenantID) throws Exception{

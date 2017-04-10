@@ -76,15 +76,19 @@ function GetCabinetClassInfo(pCabID) {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+			
+			var dataNodes = GetChildNodes(loadXMLString(result));
+		    var rtnXml = getNodeText(dataNodes[0]);
+
+		    if (rtnXml == "FALSE") {
+		        alert(strLang483);
+		    }
+		},
+		error : function() {
+			alert(strLang483);
+		}
 	});
     
-    var dataNodes = GetChildNodes(loadXMLString(result));
-    var rtnXml = getNodeText(dataNodes[0]);
-
-    if (rtnXml == "FALSE") {
-        alert(strLang483);
-    }
     return loadXMLString(result);
 }
 

@@ -1647,6 +1647,7 @@ function SaveDraftDocInfo()
             xmlhttp.send(xmlpara);
 
             SetBtnStateFalse();
+            
             return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
         }catch(e){
             alert("SaveDraftDocInfo_ilban " + e.description);
@@ -1726,6 +1727,7 @@ function SaveDraftDocInfo()
             xmlhttp.send(xmlpara);
 	  		
             SetBtnStateFalse();
+            
             return xmlhttp.responseText;
         }catch(e){
             alert("SaveDraftDocInfo_susin : " + e.description);
