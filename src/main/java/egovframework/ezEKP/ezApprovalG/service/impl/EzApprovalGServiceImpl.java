@@ -13984,7 +13984,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_UserRight", "1");
-		map.put("v_UserName2", messageSource.getMessage("ezApprovalG.t999936", locale));
+		map.put("v_UserName2", messageSource.getMessage("ezApprovalG.hyj01", locale));
 
 		
 		ezApprovalGDAO.insertRegSeperateAttach(map);
@@ -16734,38 +16734,40 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale) throws Exception {
-		    String Flag	= "0";
-			String SepAttachNo =xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
-			String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
-			String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
-			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_RecordID", RecID);
-			map.put("v_SepAttachNo", SepAttachNo);
-			map.put("companyID", companyID);
-			map.put("v_TENANTID", tenantID);
-			map.put("v_UserName2", messageSource.getMessage("ezApprovalG.t999936", locale));
-				ezApprovalGDAO.deleteRecRoleInfo(map);
-				if(Flag.equals("0")) {
-					map.put("v_UserRight", "1");
-					ezApprovalGDAO.insertRecRoleInfo(map);
-				}else {
-					map.put("v_UserRight", "0");
-					ezApprovalGDAO.insertRecRoleInfo(map);
-				}
-				for( int i=0; i<xmlDom.getElementsByTagName("USER").getLength(); i++) {
+	    String Flag	= "0";
+		String SepAttachNo =xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
+		String RecID = xmlDom.getElementsByTagName("RECID").item(0).getTextContent().trim();
+		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_RecordID", RecID);
+		map.put("v_SepAttachNo", SepAttachNo);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_UserName2", messageSource.getMessage("ezApprovalG.hyj01", locale));
+		ezApprovalGDAO.deleteRecRoleInfo(map);
+		
+		if(Flag.equals("0")) {
+			map.put("v_UserRight", "1");
+			ezApprovalGDAO.insertRecRoleInfo(map);
+		}else {
+			map.put("v_UserRight", "0");
+			ezApprovalGDAO.insertRecRoleInfo(map);
+		}
+		
+		for( int i=0; i<xmlDom.getElementsByTagName("USER").getLength(); i++) {
+			map.put("v_UserID", xmlDom.getElementsByTagName("ID").item(i).getTextContent());
+			map.put("v_UserName", xmlDom.getElementsByTagName("NAME").item(i).getTextContent());
+			map.put("v_UserName2", xmlDom.getElementsByTagName("NAME2").item(i).getTextContent());
+			map.put("v_UserTitle", xmlDom.getElementsByTagName("TITLE").item(i).getTextContent());
+			map.put("v_UserTitle2", xmlDom.getElementsByTagName("TITLE2").item(i).getTextContent());
+			map.put("v_DeptCode", xmlDom.getElementsByTagName("DEPTCODE").item(i).getTextContent().trim());
+			map.put("v_DeptName", xmlDom.getElementsByTagName("DEPTNAME").item(i).getTextContent());
+			map.put("v_DeptName2", xmlDom.getElementsByTagName("DEPTNAME2").item(i).getTextContent());
 
-					map.put("v_UserID", xmlDom.getElementsByTagName("ID").item(i).getTextContent());
-					map.put("v_UserName", xmlDom.getElementsByTagName("NAME").item(i).getTextContent());
-					map.put("v_UserName2", xmlDom.getElementsByTagName("NAME2").item(i).getTextContent());
-					map.put("v_UserTitle", xmlDom.getElementsByTagName("TITLE").item(i).getTextContent());
-					map.put("v_UserTitle2", xmlDom.getElementsByTagName("TITLE2").item(i).getTextContent());
-					map.put("v_DeptCode", xmlDom.getElementsByTagName("DEPTCODE").item(i).getTextContent().trim());
-					map.put("v_DeptName", xmlDom.getElementsByTagName("DEPTNAME").item(i).getTextContent());
-					map.put("v_DeptName2", xmlDom.getElementsByTagName("DEPTNAME2").item(i).getTextContent());
-
-					ezApprovalGDAO.insertRecRoleInfo2(map);
-				}
+			ezApprovalGDAO.insertRecRoleInfo2(map);
+		}
+		
 		return "<RESULT>TRUE</RESULT>";
 	}
 
