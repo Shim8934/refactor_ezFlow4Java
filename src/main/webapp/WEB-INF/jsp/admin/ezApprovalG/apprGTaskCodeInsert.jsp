@@ -139,7 +139,6 @@
 				            var nodeSecurityLevel = SelectNodes(result, "CODELIST/SECURITYLEVEL/CODE");
 				            InitCodeSelectBox(nodeSecurityLevel, securityLevel);
 		        		}
-		        		
 		        	}
 	        	});
 	        }

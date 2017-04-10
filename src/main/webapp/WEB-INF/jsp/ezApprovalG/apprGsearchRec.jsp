@@ -126,11 +126,11 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
+		    			
+		    			var nodesRegType = SelectNodes(result, "CODELIST/REGISTERTYPE/CODE");
+				        InitCodeSelBoxWithNullOpt(nodesRegType, selRegisterType);
 		    		}        			
 		    	});
-		    	
-		        var nodesRegType = SelectNodes(result, "CODELIST/REGISTERTYPE/CODE");
-		        InitCodeSelBoxWithNullOpt(nodesRegType, selRegisterType);
 		    }
 		    function reset_onclick() {
 		        document.getElementById("txtDeptName").value = "";

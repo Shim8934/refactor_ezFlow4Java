@@ -893,7 +893,11 @@ function GetHearderXml() {
 		},
 		success: function(xml){
 			result = xml;
-		}        			
+		},
+		error : function() {
+			OpenAlertUI(strLang573);
+	        g_HeaderInfoXml = "";
+		}
 	});
 	
     var rtnXml = loadXMLString(result);

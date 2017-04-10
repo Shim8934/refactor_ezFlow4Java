@@ -98,15 +98,18 @@
     		},
     		success: function(xml){
     			result = xml;
-    		}        			
+    			
+    			if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
+    	    		OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
+				}
+    	        else {
+    	        }
+    		},
+    		error : function () {
+    			OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
+    		}
     	});
     	g_CodeInfoXml = result;
-    	  if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
-    		  OpenAlertUI("<spring:message code='ezApprovalG.t952'/>");
-    	    }
-        else {
-        	
-        }
     }
     function InitRecordInfo() {
         var objXml = createXmlDom();

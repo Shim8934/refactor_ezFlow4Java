@@ -101,13 +101,9 @@ function SaveAttachListInfo(Attachxml) {
     var ReturnVal;
     xmlhttp.open("Post", "/ezApprovalG/aprAttachSave.do", false);
     xmlhttp.send(Attachxml);
-
-    if (xmlhttp.responseText == "FALSE") {
-        var pAlertContent = strLang217;
-        OpenAlertUI(pAlertContent);
-    }
-    else {
-        if (CrossYN()) {
+    
+    if (xmlhttp.responseText == "TRUE") {
+    	if (CrossYN()) {
             CheckHistory(1);
             parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
             parent.DivPopUpHidden();
@@ -117,6 +113,10 @@ function SaveAttachListInfo(Attachxml) {
             window.returnValue = Attachxml;
             window.close();
         }
+    }
+    else {
+    	var pAlertContent = strLang217;
+        OpenAlertUI(pAlertContent);
     }
 }
 

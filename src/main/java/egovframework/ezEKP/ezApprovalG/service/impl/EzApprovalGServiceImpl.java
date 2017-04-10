@@ -16815,7 +16815,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
 		sb.append("</DATA>");
 		
-		logger.debug("getAprLineInfoDB ended.");
+		logger.debug("getAprLineInfoDB ended. result = " + sb.toString());
 		
 		return sb.toString();
 	}
