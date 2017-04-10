@@ -9654,7 +9654,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		ezApprovalGDAO.spRollbackSN(map);
 
-		result = "TRUE";
 		return "TRUE";
 	}
 
