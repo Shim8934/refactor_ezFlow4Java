@@ -60,12 +60,15 @@ function GetFormContInfo(ID, DeptID, eventflag) {
 				},
 		success: function(text){
 			result = text;
-		}        			
+		},
+		error : function() {
+			result = "";
+		}
 	});
 
     xmlRtn = loadXMLString(result);
 
-    if (loadXMLString(result) == "") return;
+    if (result == "") return;
 
     if (SelectNodes(xmlRtn, "NODES/NODE/SELECT").length > 0) {
         xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].removeChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("SELECT")[0]);
