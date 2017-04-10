@@ -165,7 +165,7 @@ function InitExtraInfo() {
 
 function InitClassInfo() {
     var rtnXml = GetRecClassInfo();
-    if (getNodeText(GetChildNodes(rtnXml)[0]) == "FALSE") {
+    if (rtnXml == "FALSE") {
         alert(strLang716);
     }
     else {
@@ -199,7 +199,14 @@ function GetRecClassInfo() {
 
     xmlhttp.open("POST", "/ezApprovalG/getRecClassInfo.do", false);
     xmlhttp.send(xmlpara);
-    return xmlhttp.responseXML;
+    
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+     	 if (xmlhttp.statusText == "OK") {
+     		 return xmlhttp.responseXML;
+     	 } else {
+     		return "FALSE";
+     	 }
+   }
 }
 
 

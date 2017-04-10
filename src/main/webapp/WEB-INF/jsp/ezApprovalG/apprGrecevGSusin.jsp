@@ -998,12 +998,11 @@
             			} else {
 	            			var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
 	    		            OpenAlertUI(pAlertContent);
-            			},
-            		error : function() {
+            			}
+            		}, 	error : function() {
             			var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
 	    		        OpenAlertUI(pAlertContent);
             			}
-            		}
             	});
 		    }
 		    
