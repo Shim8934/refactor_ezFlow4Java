@@ -10090,11 +10090,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				if (resultXML.getDocumentElement().getChildNodes().getLength() > 0) {
-					if (resultXML.getElementsByTagName("DISPLAYNAME").item(0) != null) {
-						
-					} else {
+					if (resultXML.getElementsByTagName("DISPLAYNAME").item(0) == null) {
 						rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
-					}
+					} 
 					
 					if (resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0) != null) {
 						if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim())) {
@@ -20926,7 +20924,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			userSecurityCode = ezApprovalGDAO.selectUserSecurityCode(map);
 		}
 				
-		if (userSecurityCode.equals("") || userSecurityCode == null) {
+		if (userSecurityCode == null || userSecurityCode.equals("")) {
 			userSecurityCode = "0";
 			map.put("v_USERSECCODE", userSecurityCode);
 		} else {
