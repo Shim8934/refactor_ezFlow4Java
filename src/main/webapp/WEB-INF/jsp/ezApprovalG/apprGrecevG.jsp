@@ -644,14 +644,18 @@
 	    	                } else {
 	    	                    GetDraftAprLineInfo(retvalue);
 	    	                }
-	    			        btnSendDraftEnable = "true";
-	    			        CurAprType = "<spring:message code='ezApprovalG.t25'/>";
-	    		            LastSignSN = "1";
+	    			        
+	    			        var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
+        		            OpenAlertUI(pAlertContent);"1";
 	    		            btnSendDraft_onclick();
                			} else {
                				var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
         		            OpenAlertUI(pAlertContent);
                			}
+               		},
+               		error : function() {
+	               			var pAlertContent = "<spring:message code='ezApprovalG.t1423'/>";
+	    		            OpenAlertUI(pAlertContent);
                		}
                	});
 		    }
@@ -701,7 +705,7 @@
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun;
-		        var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;help:no;scroll:no;;edge:sunken;";
+		        var feature = "status:no;dialogWidth:1130px;dialogHeight:750px;help:no;scroll:no;;edge:sunken;";
 		        var ret = window.showModalDialog(url, parameter, feature);
 		
 		        if (ret != undefined && ret[0] == "OK") {
@@ -741,14 +745,13 @@
 		                savexmlhttp = createXMLHttpRequest();
 		
 		                if (pGubun != "11" && pGubun != "12") {
-		                    //수신자 저장
-		                    $.ajax({
+							$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
 	                    		async : false,
 	                    		url : "/ezApprovalG/aprDeptSave.do",
 	                    		data : {
-	                    				aprDeptInfo : getXmlString(ret[2])
+	                    				aprDeptInfo : ret[2]
 	                    				},
 	                    		success : function(result){
 	                    			
@@ -782,7 +785,7 @@
 		                savexmlhttp = null;
 		            }
 		            catch (e) {
-		                alert("저장시 오류 발생");
+		                alert(strLang217);
 		            }
 		        }
 		    }
@@ -1134,21 +1137,26 @@
 		
 		    function getLastAprLine() {
 		        try {
-		            var xmlhttp = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-		            createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-		            createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-		
-		            xmlhttp.open("Post", "../ezaprline/aspx/AprLineRequest.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            var NodeList = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+					var result = "";
+		            
+		            $.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/aprLineRequest.do",
+		        		data : {
+		        				docID    : pDocID, 
+		        				userID 	 : pUserID,
+		        				formID   : pFormID
+		        				},
+		        		success: function(xml){
+		        			result = loadXMLString(xml);
+		        		}        			
+		        	});
+		            
+		            var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 		            if (NodeList.length > 0) {
-		                var bResult = CheckFirstDrafter(xmlhttp.responseXML);
+		                var bResult = CheckFirstDrafter(result);
 		                return bResult;
 		            }
 		

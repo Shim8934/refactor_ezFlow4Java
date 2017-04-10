@@ -883,7 +883,7 @@
 	    <iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezAddress/excelImport.do" target="ifrm">
-	        <input type="file" name="file1" id="file1" accept=".csv" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;"/>
+	        <input type="file" name="file1" id="file1" accept=".csv" onchange="btn_AttachAdd_onclick()" style="display: none"/>
 	    </form>
 	</body>
 </html>

@@ -20,6 +20,8 @@ public interface EzOrganAdminService {
 	
 	public List<OrganUserVO> getUserCnList(int tenantID) throws Exception;
 	
+	public int getUserCount(int tenantID) throws Exception;
+	
 	public OrganUserVO getUserInfo(String cn, String lang, int tenantID) throws Exception;
 	
 	public OrganUserVO getRetireEntryInfo(String cn, String lang, int tenantID) throws Exception;

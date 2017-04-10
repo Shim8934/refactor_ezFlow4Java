@@ -280,7 +280,10 @@
 		        				deptName  : arr_userinfo[5],
 		        				deptName2 : arr_userinfo[14],
 		        				position  : arr_userinfo[3],
-		        				position2 : arr_userinfo[16]
+		        				position2 : arr_userinfo[16],
+		        				companyID : CompanyID,
+		        				companyName : "${userInfo.companyName}",
+		        				companyName2 : "${userInfo.companyName2}"
 		        				},
 		        		success: function(xml){
 		        		}        			
@@ -779,7 +782,7 @@
 		    				},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}, error:funtion () {
+		    		}, error:function () {
 		    			return "FALSE";
 		    		}  			
 		    	});
@@ -787,6 +790,7 @@
 		        var dataNodes = GetChildNodes(result);
 		        return getNodeText(dataNodes[0]);
 		    }
+		    
 		    var endcabproduce_cross_dialogArguments = new Array();
 		    function btnEndProduce_onclick() {
 		        var DocList = new ListView();
@@ -1280,7 +1284,10 @@
 		            xmlhttp.open("POST", "/ezApprovalG/resendEndDoc.do", false);
 		            xmlhttp.send(rtn[1]);
 		        }
-		        return;
+		    	if (xmlhttp.statusText == "OK")
+		    		 return;
+		    	else
+		    		alert(strLang223);
 		    }
 		    // END
 		

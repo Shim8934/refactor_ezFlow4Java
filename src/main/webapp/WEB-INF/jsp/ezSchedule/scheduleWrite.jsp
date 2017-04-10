@@ -293,10 +293,10 @@
 		            return;
 		        }		        
 		        
-		        if (specialChk(document.getElementById("TextLocation").value) || specialChk(document.getElementById("TextTitle").value)) {
+		        /* if (specialChk(document.getElementById("TextLocation").value) || specialChk(document.getElementById("TextTitle").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
-		    	}
+		    	} */
 		        
 		        save_schedule();
 		    }
@@ -487,13 +487,13 @@
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t365'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:98%;" value="${scheduleInfo.location}"/>
+	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:98%;" value="<c:out value='${scheduleInfo.location}' />" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t366'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:98%;" value="${scheduleInfo.title}"/>
+	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:98%;" value="<c:out value='${scheduleInfo.title}' />" />
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">

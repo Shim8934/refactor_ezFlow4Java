@@ -582,7 +582,7 @@
 		
 		    function chk_Passwd_Complete(chkpass) {
 		        DivPopUpHidden();
-		        if (chkpass == "False") {
+		        if (chkpass == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;
@@ -1210,8 +1210,8 @@
 		        if (ret != undefined && ret[0] == "OK") {
 		            try {
 		                if (ret[1] != false) {
-		                	var result = "";
-		                	
+							var result = "";
+							
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",

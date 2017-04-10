@@ -182,7 +182,7 @@
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t218' /><span style="color:red"> *</span></th> 
-		    	<td><input type="text" id=DeptID maxlength="50"></td> 
+		    	<td><input type="text" id=DeptID maxlength="20"></td> 
 		  	</tr> 
 		  	<tr> 
 			    <th ><spring:message code='ezOrgan.t219' /></th> 

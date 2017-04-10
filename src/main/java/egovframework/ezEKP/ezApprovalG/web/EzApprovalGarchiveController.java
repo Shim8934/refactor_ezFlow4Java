@@ -1483,15 +1483,14 @@ public class EzApprovalGarchiveController {
 	
 	/** 전자결재 개인 문서함 리스트*/
 	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do")
-	@ResponseBody
 	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
 		StringBuilder resultExcel = new StringBuilder();
 		String excelValue = "";
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		response.setContentType("application/ms-excel");
-		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/vnd.ms-excel");
+		response.setCharacterEncoding("UTF-8");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale())) + ".xls\"");
 		
 		
@@ -1610,15 +1609,14 @@ public class EzApprovalGarchiveController {
 			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
 			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
 			
-			int width = Integer.parseInt(headerWidth) * 2;
+			int width = Integer.parseInt(headerWidth);
 			
-			resultExcel.append("<![CDATA["+"<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'>"+"]]>"
-			+"<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'>"
-			+"<p align=center><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'>"
+			+"<p align='center'><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
 		}
-		resultExcel.append("</tr></table>");
+		resultExcel.append("</tr>");
 		
-		resultExcel.append("<table>");
+		resultExcel.append("");
 
 		NodeList objRow = objXML.getElementsByTagName("ROW");
 		
@@ -1631,9 +1629,9 @@ public class EzApprovalGarchiveController {
 				Element cell = (Element) objCell.item(p);
 				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
-				int width = Integer.parseInt(headerWidth) * 2;
+				int width = Integer.parseInt(headerWidth);
 				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align='left'>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
 			}
 			resultExcel.append("</tr>");
 		}

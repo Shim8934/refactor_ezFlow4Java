@@ -657,12 +657,13 @@ function removeOpinionInfo() {
     		},
     		success: function(text){
     			result = text;
-    		}        			
+    		},
+    		error : function () {
+    			result = "FALSE";
+    		}
     	});
         
-        var RtnVal = result;
-        
-        return RtnVal;
+        return result;
 
     } catch (e) {
         alert("removeOpinionInfo :: " + e.description);

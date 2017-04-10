@@ -142,12 +142,11 @@
 			    			deptList : "", //선택된부서
 			    			companyID : companyID},
 			    	success : function(result) {
-			    		if (result.indexOf("false") > -1) {
-			    			RtnState = false;
-			    		} else {
-			    			RtnState = true;
-			    			gFContID = SelectSingleNodeValueNew(loadXMLString(result), "PARAMETER/FContID");//objChildNode[0].childNodes[0].nodeValue;
-			    		}
+		    			RtnState = true;
+		    			gFContID = SelectSingleNodeValueNew(loadXMLString(result), "PARAMETER/FContID");//objChildNode[0].childNodes[0].nodeValue;
+			    	},
+			    	error : function() {
+			    		RtnState = false;
 			    	}
 			    });
 			}
@@ -177,13 +176,12 @@
 			    			deptList : selDept, //선택된부서
 			    			companyID : companyID},
 			    	success : function(result) {
-			    		if (result.indexOf("false") > -1) {
-			    			RtnState = false;
-			    		} else {
-			    			RtnState = true;
-			    			gFContID = SelectSingleNodeValueNew(loadXMLString(result), "PARAMETER/FContID");//objChildNode[0].childNodes[0].nodeValue;
-			    		}
-			    	}			    	
+		    			RtnState = true;
+		    			gFContID = SelectSingleNodeValueNew(loadXMLString(result), "PARAMETER/FContID");//objChildNode[0].childNodes[0].nodeValue;
+			    	},
+			    	error : function() {
+			    		RtnState = false;
+			    	}
 			    });
 			}
 			
@@ -200,11 +198,10 @@
 			    			fContID : document.getElementById("tbFormContID").value, //양식함 ID
 			    			companyID : companyID},
 			    	success : function(result) {
-			    		if (result.indexOf("FALSE") > -1) {
-					        RtnState = false;
-					    } else {
-					        RtnState = true;
-					    }
+				        RtnState = true;
+			    	},
+			    	error : function() {
+			    		RtnState = false;
 			    	}
 			    });
 			}
@@ -230,11 +227,10 @@
 			    			deptList : selDept, //선택된부서
 			    			companyID : companyID},
 			    	success : function(result) {
-			    		if (result.indexOf("FALSE") > -1) {
-			    			RtnState = false;
-					    } else {
-					    	RtnState = true;
-					    }
+			    	    RtnState = true;
+			    	},
+			    	error : function() {
+			    		RtnState = false;
 			    	}
 			    });
 			}

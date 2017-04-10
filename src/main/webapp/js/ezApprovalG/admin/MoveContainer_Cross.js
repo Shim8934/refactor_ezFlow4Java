@@ -26,6 +26,9 @@
     		},
     		success: function(text){
     			result = text;
+    		},
+    		error : function() {
+    			result = "<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>";
     		}
     	});
 
@@ -311,15 +314,18 @@ function ContMove() {
     xmlhttp.send(xmlpara);
 
     xmlRtn = createXMLDomFromXmlString(xmlhttp.responseText);
-
     Flag = xmlRtn.getElementsByTagName("RESULT")[0].childNodes[0].nodeValue;
-
-    if (Flag == "TRUE") {
-        alert(strLang818);
-        lvTDoc.DataSource = FORMLIST;
-    }
-    else
-        alert(strLang803);
+    
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+		if (xmlhttp.statusText == "OK" && Flag == "TRUE") {
+			alert(strLang818);
+	        lvTDoc.DataSource = FORMLIST;
+		} else {
+			alert(strLang803);
+		}
+	} else {
+		alert(strLang803);
+	}
 
     Check = false;
 }

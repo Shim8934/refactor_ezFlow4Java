@@ -1,6 +1,6 @@
 ﻿function getAutoAprLine() {
     getFormRecv();
-
+    
     var retvalue = new Array();
     retvalue[0] = "NONE";
     retvalue[1] = "NONE";
@@ -25,23 +25,20 @@
 	});
     
     result = loadXMLString(result);
-    
     var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
     if (NodeList.length > 0) {
     	var Resultxml = APRLINEXMLParsing(result);
-    	
     	$.ajax({
     		type : "POST",
     		dataType : "text",
     		async : false,
     		url : "/ezApprovalG/aprLineSave.do",
     		data : {
-    				ret : getXmlString(Resultxml)
+    				ret : Resultxml
     				},
     		success : function(result){
     			if (result == "TRUE") {
-                    retvalue[0] = getXmlString(Resultxml);
-                    return retvalue;
+                    retvalue[0] = Resultxml;
                 }
     		}
     	});
@@ -69,16 +66,19 @@ function APRLINEXMLParsing(APRLINE) {
         var Row = AprLineRow[i];
         var Cell = GetChildNodes(Row);
         if (i == CurListLen - 1) {
+        	var pDraftDay = getGyulJeDate();
+        	var TmpAprLineState = "002";
+        	
             GetXml = GetXml + "<ROW>";
             GetXml = GetXml + "<COLUMN>" + (AprLineTotalLen - k) + "</COLUMN>";
             GetXml = GetXml + "<COLUMN>" + SelectSingleNodeValue(Cell[1], "VALUE") + "</COLUMN>";
             GetXml = GetXml + "<COLUMN>" + MakeXMLString(arr_userinfo[3]) + "</COLUMN>";
             GetXml = GetXml + "<COLUMN>" + MakeXMLString(arr_userinfo[5]) + "</COLUMN>";
-            GetXml = GetXml + "<COLUMN>" + SelectSingleNodeValue(Cell[4], "VALUE") + "</COLUMN>";
+            GetXml = GetXml + "<COLUMN>" + TmpAprLineState + "</COLUMN>";//
             GetXml = GetXml + "<COLUMN>" + SelectSingleNodeValue(Cell[5], "VALUE") + "</COLUMN>";
 
-            GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
-            GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+            GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";//
+            GetXml = GetXml + "<DATA name='ReceivedDate'>" + pDraftDay + "</DATA>";
             GetXml = GetXml + "<DATA name='DocID'>" + pDocID + "</DATA>";
             GetXml = GetXml + "<DATA name='AprMemberID'>" + MakeXMLString(SelectSingleNodeValue(Cell[0], "DATA4")) + "</DATA>";
             GetXml = GetXml + "<DATA name='AprmemberIsDeptYN'>" + SelectSingleNodeValue(Cell[0], "DATA5") + "</DATA>";
@@ -132,21 +132,10 @@ function APRLINEXMLParsing(APRLINE) {
         }
         k = k + 1;
     }
-
+    
     GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
-
-    var TmpAprLineState = "002";
-    TmpAprLineState = strLang18;
-    var ChangeXml = createXmlDom();
-    ChangeXml = loadXMLString(GetXml);
-    var NodeList = SelectNodes(ChangeXml, "LISTVIEWDATA/ROWS/ROW");
-    if (NodeList.length != 0) {
-        var pDraftDay = getGyulJeDate();
-        var child = GetChildNodes(NodeList[NodeList.length - 1]);
-        setNodeText(child[5], TmpAprLineState);
-        setNodeText(child[7], pDraftDay);
-    }
-    return ChangeXml;
+    
+    return GetXml;
 }
 
 function MakeXMLString(p_str) {

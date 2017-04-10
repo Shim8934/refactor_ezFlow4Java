@@ -248,7 +248,7 @@ var strLang229 = "첨부 기능 모두 중단."
 var strLang230 = "넘겨줄 파라미터 노드 생성 DocType"
 var strLang231 = "수신자목록 저장시 오류가 발생하였습니다."
 // ezAPRDEPT\ezDEPTTEMPLET\AprDeptTempletName.js
-var strLang232 = "수신자목록이 중복되었습니다. "
+var strLang232 = "수신처 이름이 중복되었습니다. "
 var strLang233 = "다시 입력하여 주십시오."
 // ezAPRDEPT\AprDept.js
 var strLang234 = "제"
@@ -1547,5 +1547,5 @@ var strLangS64 = "후열";
 var strLangS51 = "합의";
 var strLangS6 = "반송:서명자";
 var strLangS57 = "승인";
-var strLangS957 = "수신처를 지정해 주세요.";
+var strLangS957 = "수신자 리스트에 데이터가 없습니다.<br/>수신자를 지정해 주십시요.";
 var strLangS506 = "결재선에 합의가 있으면";

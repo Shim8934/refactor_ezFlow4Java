@@ -178,13 +178,17 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        vo = ezOrganDAO.getTBLDeptMaster(map2);
 	        
 	        // 지정된 부서의 부모 부서 ID를 구한다.
-	        if (!deptID.toLowerCase().equals(pTopID.toLowerCase())) {	        	
-                deptID = getPropertyValue(deptID, "extensionAttribute1", tenantID);                
+	        if (!deptID.toLowerCase().equals(pTopID.toLowerCase())) {
+	        	if (deptID.toLowerCase().equals("top")) {
+	        		deptID = "";
+	        	} else {
+	        		deptID = getPropertyValue(deptID, "extensionAttribute1", tenantID);         
+	        	}
 	        }
 	        
 	        logger.debug("deptID=" + deptID);
 	        
-	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다.
+	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다. 
         } while (!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
 		
         deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList) + "</TREEVIEWDATA>";

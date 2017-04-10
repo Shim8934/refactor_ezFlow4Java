@@ -153,24 +153,32 @@
 			    <li style="display:none"><span onClick="OpenRightMenu(3)"><spring:message code = 'ezCommunity.t293' /></span></li>
 		  	</ul>
 		</div>
-		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		
-		<table class="content" >
-		  	<tr>
-			    <th ><spring:message code = 'ezCommunity.t306' /></th> 
-				<td><b class="point"><c:out value = '${boardName}' /></b></td> 
-			</tr> 
-			<tr> 
-		    	<td colspan="2" style="padding:15px"> <spring:message code = 'ezCommunity.t332' /><b class="point"><c:out value = '${boardName}' /></b><spring:message code = 'ezCommunity.t333' /><br> <spring:message code = 'ezCommunity.t334' /></td> 
-		  	</tr> 
-		</table> 
-		
-		<div class="btnposition">
-			<a class="imgbtn" onClick="Delete()"><span><spring:message code = 'ezCommunity.t108' /></span></a>
-			<a class="imgbtn" onClick="history.back();"><span><spring:message code = 'ezCommunity.t109' /></span></a>
-		</div>
+		<c:if test="${hasSubBoard == '1'}">
+			<table  class="content">
+				<tr>
+			    	<th><spring:message code="ezCommunity.t306"/></th>
+			    	<td class="point"><c:out value='${boardName}'/></td>
+			  	</tr>
+			</table><br/>
+			<h2><spring:message code="ezCommunity.jsh03"/></h2>
+		</c:if>
+		<c:if test="${hasSubBoard != '1'}">
+			<table class="content" >
+			  	<tr>
+				    <th ><spring:message code = 'ezCommunity.t306' /></th>
+					<td><b class="point"><c:out value = '${boardName}' /></b></td>
+				</tr>
+				<tr>
+			    	<td colspan="2" style="padding:15px"> <spring:message code = 'ezCommunity.t332' /><b class="point"><c:out value = '${boardName}' /></b><spring:message code = 'ezCommunity.t333' /><br> <spring:message code = 'ezCommunity.t334' /></td>
+			  	</tr>
+			</table>
+			<div class="btnposition">
+				<a class="imgbtn" onClick="Delete()"><span><spring:message code = 'ezCommunity.t108' /></span></a>
+				<a class="imgbtn" onClick="history.back();"><span><spring:message code = 'ezCommunity.t109' /></span></a>
+			</div>
+		</c:if>
 	</body>
 </html>

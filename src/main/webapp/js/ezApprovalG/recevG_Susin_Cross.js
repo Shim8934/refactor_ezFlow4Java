@@ -342,12 +342,11 @@ function SGetDraftAprLineInfo(ret) {
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
             DrawAutoAprLine(ret[0], pDraftFlag);
-        }
-        else {
-	        TempsaveAprlineinfo = ret[1];
-	        xmlKuljea = ret[1];
-	        setAprLinesXML(xmlKuljea);
-	        DrawAutoAprLine(ret[1], pDraftFlag);
+        } else {
+        TempsaveAprlineinfo = ret[1];
+        xmlKuljea = ret[1];
+        setAprLinesXML(xmlKuljea);
+        DrawAutoAprLine(ret[1], pDraftFlag);
         }
         xmlReDraft = "R";
         if (xmlReDraft == "C") {
@@ -1570,7 +1569,13 @@ function openFileAttachUI() {
 
 function SaveDraftDocInfo() {
     var rtnVal;
-    SaveFile();
+	
+    // 수정(2008.06.12) : 결재문서 파일 저장 시 임시파일 생성 후 파일크기를 체크하여 원본 파일로 복사하도록 루틴 수정
+    rtnVal = SaveFile();
+    if (rtnVal != "TRUE")
+    {
+        return rtnVal;
+    }
     SignSave();
 
     rtnVal = SaveDraftDocInfo_susin();
@@ -1655,10 +1660,17 @@ function SaveDraftDocInfo_susin() {
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
-        SetBtnStateFalse();
-
-        var dataNodes = GetChildNodes(xmlhttp.responseXML);
-        return getNodeText(dataNodes[0]);
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+        	 if (xmlhttp.statusText == "OK") {
+        		  SetBtnStateFalse();
+        	      var dataNodes = GetChildNodes(xmlhttp.responseXML);
+        	      return getNodeText(dataNodes[0]);
+        	 } else {
+        		return "FALSE";
+        	 }
+      }
+        
+      
 
     } catch (e) {
         alert("SaveDraftDocInfo_susin : " + e.description);

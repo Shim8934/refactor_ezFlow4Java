@@ -27,7 +27,7 @@
 	        };
 	
 	        function Set_EditorContentURL(url) {
-// 	            try {
+	            try {
 	                var tempXML = createXmlDom();
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
@@ -64,8 +64,8 @@
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
 	                    parent.FieldsAvailable2();
 	                }
-// 	            } catch (e)
-// 	            {alert("error : Set_EditorContentURL2() " + e); }
+	            } catch (e)
+	            {alert("error : Set_EditorContentURL2() " + e); }
 	        }
 	        function BodyTagsEnabled(HtmlObject) {
 	            var SelectRows = HtmlObject.getElementsByTagName("SELECT");

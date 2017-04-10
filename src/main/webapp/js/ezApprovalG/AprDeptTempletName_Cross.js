@@ -50,8 +50,9 @@ function AprDeptTempletNameCheck(p_AprDeptTempletName)
 	
 	if(p_AprDeptTempleNameFlag)
 	{
-		var pAlertContent = strLang232 + "<br> " + strLang233;
-		OpenAlertUI(pAlertContent);
+		//var pAlertContent = strLang232 + "<br> " + strLang233;
+		//OpenAlertUI(pAlertContent);
+		alert(strLang232 + "\r\n" + strLang233);
 	    TxtAprDeptTempletName.value = "";
 		TxtAprDeptTempletName.focus();  
 	}

@@ -13,9 +13,9 @@
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezSchedule/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
-        <script type="text/javascript" src="/js/Common.js"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>        
         <script type="text/javascript" src="/js/NameControl.js"></script>
+        <script type="text/javascript" src="/js/Common.js"></script>
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
@@ -660,10 +660,10 @@
 		    }
 			
 		    function close_onclick() {
-		    	if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
+		    	/* if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
-		    	}
+		    	} */
 		    	
 		        if (document.all("groupname").value == "") {
 		            alert("<spring:message code='ezSchedule.t195' />");

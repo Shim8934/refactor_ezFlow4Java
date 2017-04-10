@@ -632,7 +632,7 @@ function UpdateLineHistory(_DOCID) {
 			userDeptName2 : arr_userinfo[16]
 		},
 		success: function(xml){
-			result = loadXMLString(xml);
+			result = xml;
 		}        			
 	});
     

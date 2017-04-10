@@ -161,13 +161,17 @@ function UpdateReceiptOffer(pDocID, pOrgDocID)
 	xmlhttp.open("POST","/ezApprovalG/updateReceiptOffer.do",false);
 	xmlhttp.send(xmlpara);
 	
-	var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-	var rtnVal = getNodeText(dataNodes[0]);	
-	
-	if (rtnVal == "TRUE")
-		return true;
-	else
-		return false;
+    if (xmlhttp != null && xmlhttp.readyState == 4) {
+     	 if (xmlhttp.statusText == "OK") {
+     		var dataNodes = GetChildNodes(xmlhttp.responseXML); 
+     		var rtnVal = getNodeText(dataNodes[0]);	
+     		
+     	 if (rtnVal == "TRUE")
+     			return true;
+     	 } else {
+     		return false;
+     	 }
+   }
 }
 
 function doSendOffer(newDocID, pDocID, array, pHref)
@@ -193,20 +197,21 @@ function doSendOffer(newDocID, pDocID, array, pHref)
 	xmlhttp.open("POST","/ezApprovalG/sendOfferG.do",false);
 	xmlhttp.send(xmlpara);
 	
-	var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-	
-	if(getNodeText(dataNodes[0]) == "TRUE")
-	{
-		var pAlertContent = strLang198;
-		OpenAlertUI(pAlertContent);
-		return true;
-	}
-	else
-	{
-		var pAlertContent = strLang199;
-		OpenAlertUI(pAlertContent);
-		return false;
-	}
+	 if (xmlhttp != null && xmlhttp.readyState == 4) {
+      	 if (xmlhttp.statusText == "OK") {
+      		var dataNodes = GetChildNodes(xmlhttp.responseXML); 
+      		
+      		if(getNodeText(dataNodes[0]) == "TRUE") {
+      			var pAlertContent = strLang198;
+      			OpenAlertUI(pAlertContent);
+      			return true;
+      		} 
+      	 } else {
+      		var pAlertContent = strLang199;
+    		OpenAlertUI(pAlertContent);
+    		return false;
+      	 }
+    }
 }
 var xmlhttp2 = createXMLHttpRequest();
 function SendOfferCheckBtn(pDocID, pUserID)
@@ -431,8 +436,13 @@ function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDe
 		xmlhttp.open("POST","/ezApprovalG/UpdateProcessYN.do",false);
 		xmlhttp.send(xmlpara);
 		
-		var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-	    return getNodeText(dataNodes[0]);	
+		if (xmlhttp.statusText == "OK") {
+			var dataNodes = GetChildNodes(xmlhttp.responseXML); 
+	    	return getNodeText(dataNodes[0]);
+		} else {
+			alert(strLang223);
+			return "";
+		}
 	}
 	catch(e)
 	{

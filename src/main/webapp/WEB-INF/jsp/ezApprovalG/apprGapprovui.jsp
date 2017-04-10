@@ -1261,7 +1261,6 @@
 		        if (ret != undefined && ret[0] == "OK") {
 // 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
-
 		                //결재선 저장
 		                if (approvalFlag == "S") {
 			                if (pGubun != "14" && pGubun != "10") {
@@ -1323,7 +1322,7 @@
 		                    		async : false,
 		                    		url : "/ezApprovalG/aprDeptSave.do",
 		                    		data : {
-		                    				aprDeptInfo : getXmlString(ret[2])
+		                    				aprDeptInfo : ret[2]
 		                    				},
 		                    		success : function(result){
 		                    			if (result == 'TRUE') {

@@ -968,11 +968,14 @@ function isReceiverChk(DeptID)
 				},
 		success: function(text){
 			result = text;
-		}        			
+		},
+		error : function () {
+			result = "false";
+		}
 	});
 	
 			
-	if(result == "False") 
+	if(result == "false") 
 	    return false;
 	else
 	    return true;

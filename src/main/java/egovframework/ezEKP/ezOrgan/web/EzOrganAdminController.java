@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +13,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -93,6 +91,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @Autowired
     private EzEmailUtil ezEmailUtil;	
 	 
+    @Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
+    
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
@@ -925,6 +926,73 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("delUser ended.");
 	}
 	
+	private String checkLicenseKey(int tenantID, String domain) throws Exception {
+		String licenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantID);
+		
+		logger.debug("licenseKey=" + licenseKey);
+		
+		// 입력된 라이센스키가 발견되지 않는 경우
+		if (licenseKey == null || licenseKey.equals("")) {
+			logger.debug("No License Key is found.");
+			
+			return "NO_LICENSE_KEY";
+		}
+		
+		try {
+			// 라이센스키를 복호화한다.
+			licenseKey = egovFileScrty.decryptAES(licenseKey);
+		} catch (Exception e) {
+			logger.debug("License Key Decryption failed.");
+			
+			return "INVALID_LICENSE_KEY";
+		}
+		
+		logger.debug("Decrypted licenseKey=" + licenseKey);
+		
+		String items[] = licenseKey.split(":");
+		
+		if (items.length != 2) {
+			logger.debug("Number of License Key Items is not 2");
+			
+			return "INVALID_LICENSE_KEY";					
+		}
+		
+		String licensedDomainName = items[0];
+		
+		if (!licensedDomainName.equals(domain)) {
+			logger.debug("licensedDomainName=" + licensedDomainName + ",domain=" + domain);
+			
+			return "INVALID_LICENSE_KEY";										
+		}
+		
+		String licensedUserCountStr = items[1];
+		
+		int licensedUserCount = 0; 
+				
+		try {
+			licensedUserCount = Integer.parseInt(licensedUserCountStr);
+		} catch (NumberFormatException e) {
+			logger.debug("Parsing Licensed User Count failed.");
+			
+			return "INVALID_LICENSE_KEY";										
+		}
+		
+		int userCount = ezOrganAdminService.getUserCount(tenantID);
+		
+		// masteradmin 사용자를 제외하기 위해 1을 뺀다.
+		userCount--;
+		
+		logger.debug("licensedUserCount=" + licensedUserCount + ",userCount=" + userCount);
+				
+		if (licensedUserCount <= userCount) {
+			logger.debug("Maximum User Count already reached");
+			
+			return "MAX_USER_REACHED";															
+		}
+		
+		return "OK";
+	}
+	
 	/**
 	 * 조직도관리 사원정보 추가/수정 실행 함수
 	 */
@@ -977,9 +1045,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			if (cnt > 0) {
 				result = "PRE";
 			} else {
+				// 라이센스키를 체크한다.
+				String checkResult = checkLicenseKey(tenantID, domain);
+				
+				if (!checkResult.equals("OK")) {
+					return checkResult;
+				}
+				
 				String mailAddr = cn + "@" + domain;
 
-				// dhlee
 				// 이메일 시스템에 계정을 생성한다.
 				int rc = ezEmailUserAdminService.addUser(mailAddr, vo.getPassword());
 				
@@ -1019,8 +1093,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					}
 				} else {
 					result = "EMAIL_ERROR";
-				}
-				// dhlee - end								
+				}			
 			}
 		}
 		
@@ -1577,6 +1650,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", user.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		
         String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
@@ -1597,7 +1671,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
-        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);		
+        model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);	
+        model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("permissionsList ended.");
 		
@@ -1703,6 +1778,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -1710,6 +1786,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", user);
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("permissionsCheck ended.");
 		

@@ -18,14 +18,14 @@
 				window.open("/admin/ezPortal/portalMain.do", "bottom");
 				</c:if>
 				
-				<c:if test="${IsJMochaStandAlone != 'YES'}">
-				<c:if test="${AdminActiveX == 'YES'}">
+				/* <c:if test="${IsJMochaStandAlone != 'YES'}">
+				 <c:if test="${AdminActiveX == 'YES'}">
 				var ua = navigator.userAgent;
 		    	if ((/msie/i.test(ua)) || (/rv:11.0/i.test(ua))) {
 					GetObject();
 		    	}
-		    	</c:if>
-		    	</c:if>
+		    	</c:if> 
+		    	</c:if> */
 			}
 			function menu_change(width, e){
 		        var menuname = e.target.id;
@@ -88,7 +88,7 @@
 				}
 			}
 			
-			function GetObject() {
+			/* function GetObject() {
                 i_icd2.SetDocumentDisp(window.document);
                 i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/admin/ezApprovalG/componentListTransfer.do?admin=Y";
                 i_icd2.CheckVersion();
@@ -100,7 +100,7 @@
                 else {
                     finish_download();
                 }
-            }
+            } */
 			
 			function finish_download() {
                 OfficeBugPatch();
@@ -118,9 +118,9 @@
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
         <c:if test="${IsJMochaStandAlone != 'YES'}">
-        <c:if test="${AdminActiveX == 'YES'}">
+        <%-- <c:if test="${AdminActiveX == 'YES'}">
 		<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,14" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
-        </c:if>
+        </c:if> --%>
         </c:if>
 		<form method="post">
 			<h1 title="logo"></h1>
@@ -169,7 +169,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
-		<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
+		<!-- <iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe> -->
 	</body>
 </html>
 

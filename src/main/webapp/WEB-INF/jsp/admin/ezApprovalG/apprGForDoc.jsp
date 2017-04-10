@@ -659,7 +659,10 @@
 					            alert("<spring:message code = 'ezApprovalG.t1318' />");
 					        } else {
 					            alert("<spring:message code = 'ezApprovalG.t1319' />" + result);
-					        } 
+					        }
+				    	},
+				    	error : function() {
+				    		alert("<spring:message code = 'ezApprovalG.t1319' />");
 				    	}
 				    });
 				}

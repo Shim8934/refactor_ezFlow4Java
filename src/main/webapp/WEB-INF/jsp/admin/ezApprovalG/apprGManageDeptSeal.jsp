@@ -132,6 +132,9 @@
 		    		},
 		    		success : function (result) {
 		    			tempRet = result;
+		    		},
+		    		error : function() {
+		    			tempRet = "FALSE";
 		    		}
 		    	});
 
@@ -147,6 +150,9 @@
 		    		data : {pSealNum : pSealNum, deptID : pDeptID, companyID : $("#ListCompany option:selected").val()},
 		    		success : function (result) {
 		    			tempRet = result;
+		    		},
+		    		error : function() {
+		    			tempRet = "FALSAE";
 		    		}
 		    	});
 		    	

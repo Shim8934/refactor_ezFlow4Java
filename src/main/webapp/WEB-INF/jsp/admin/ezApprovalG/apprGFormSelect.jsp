@@ -177,6 +177,11 @@
 		        		}
 		        		
 		        		window.close();
+		        	},
+		        	error : function () {
+		        		alert(strLang131);
+		        		
+		        		window.close();
 		        	}
 		        })
 		    }

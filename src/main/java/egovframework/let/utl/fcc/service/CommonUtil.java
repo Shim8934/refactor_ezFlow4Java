@@ -226,13 +226,22 @@ public class CommonUtil {
 					user.setDeptName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI2":
-					user.setTitle1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
+					user.setDeptName2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
+					break;
+				case "APRUI3":
+					user.setCompanyName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI4":
-					user.setDeptName2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
+					user.setCompanyName2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
+					break;
+				case "APRUI5":
+					user.setTitle1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI6":
 					user.setTitle2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
+					break;
+				case "APRUI7":
+					user.setCompanyID(cookie[k].getValue());
 					break;
 				}
 			}

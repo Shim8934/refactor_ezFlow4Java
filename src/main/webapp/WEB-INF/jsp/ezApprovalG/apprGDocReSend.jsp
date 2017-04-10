@@ -285,7 +285,7 @@
 	        function chk_Passwd_Complete(RtnVal) {
 	            DivPopUpHidden();
 	
-	            if (RtnVal == "False") {
+	            if (RtnVal == "FALSE") {
 	                var pAlertContent = "<spring:message code='ezApproval.t26'/>";
 	                OpenAlertUI(pAlertContent);
 	                return;
@@ -447,7 +447,7 @@
 	            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 		        
 	            var url = "/ezApprovalG/ezApprovalInfo.do?guBun=" + pGubun
-	            var result = GetOpenWindow(url, "ezApprovalInfo", 1000, 750, "NO");
+	            var result = GetOpenWindow(url, "ezApprovalInfo", 1130, 750, "NO");
 	        }
 	        function btnApprovalInfo_Complete(RtnVal)
 	        {
@@ -464,7 +464,7 @@
             		async : false,
             		url : "/ezApprovalG/aprDeptSave.do",
             		data : {
-            				aprDeptInfo : getXmlString(ret[2])
+            				aprDeptInfo : ret[2]
             				},
             		success : function(result){
             			if (result == 'TRUE') {

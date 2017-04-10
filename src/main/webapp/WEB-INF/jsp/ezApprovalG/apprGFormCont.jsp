@@ -61,8 +61,8 @@
 		            document.getElementById('Localload').style.display = "none";
 		        }
 		        else if (pFormKind == "999") {
-		            document.getElementById("LocalloadHwp").style.display = "none";
-		            document.getElementById("LocalloadMht").style.display = "none";
+// 		            document.getElementById("LocalloadHwp").style.display = "none";
+// 		            document.getElementById("LocalloadMht").style.display = "none";
 		        }
 		        InitFormCont();
 		
@@ -275,6 +275,9 @@
 				    			} else {
 				    				OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    			}
+				    		},
+				    		error : function() {
+				    			OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    		}
 		                });
 		            }
@@ -533,7 +536,7 @@
 		                <table class="content">
 		                    <tr>
 		                        <th><spring:message code='ezApprovalG.t1543'/></th>
-		                        <td id="descrip" style="width: 100%">&nbsp;</td>
+		                        <td id="descrip" style="width: 340px">&nbsp;</td>
 		                    </tr>
 		                </table>
 		            </td>

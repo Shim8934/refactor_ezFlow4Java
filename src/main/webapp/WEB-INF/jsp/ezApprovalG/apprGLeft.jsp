@@ -476,7 +476,7 @@
 									},
 							success: function(text){
 								getAprCount_temp(text);
-							}        			
+							}
 						});
 	                }
 	            }
@@ -824,6 +824,9 @@
 		            arr_userinfo[14] = UseSelectTitle[6];
 		            arr_userinfo[15] = UseSelectTitle[3];
 		            arr_userinfo[16] = UseSelectTitle[4];
+		            companyID = UseSelectTitle[7];
+		            CompanyName = UseSelectTitle[8];
+		            CompanyName2 = UseSelectTitle[9];
 		            DeptID = UseSelectTitle[0];
 		            ChangeCookies();
 		
@@ -843,8 +846,11 @@
 	        				deptName  : arr_userinfo[5],
 	        				deptName2 : arr_userinfo[16],
 	        				position  : arr_userinfo[3],
-	        				position2 : arr_userinfo[14]
-	        				},
+	        				position2 : arr_userinfo[14],
+	        				companyID : companyID,
+	        				companyName : CompanyName,
+	        				companyName2 : CompanyName2
+	        		},
 	        		success: function(xml){
 	        		}        			
 	        	});

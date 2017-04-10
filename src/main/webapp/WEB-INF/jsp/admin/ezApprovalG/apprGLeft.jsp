@@ -105,7 +105,14 @@
 					</c:otherwise>
 				</c:choose>
 				
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t41'/></span><ul></ul></h2>
+				<c:choose>
+					<c:when test="${approvalFlag == 'S' }">
+						
+					</c:when>
+					<c:otherwise>
+						<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t41'/></span><ul></ul></h2>
+					</c:otherwise>
+				</c:choose>
 				
 				<c:choose>
 					<c:when test="${approvalFlag == 'S' }">

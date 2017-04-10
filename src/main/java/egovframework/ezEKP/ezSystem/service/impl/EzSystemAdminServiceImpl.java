@@ -29,7 +29,9 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	private EgovMessageSource egovMessageSource;
 	
 	@Override
-	public List<SysParamVO> getSysParam(int tenantID) throws Exception {		
+	public List<SysParamVO> getSysParam(int tenantID) throws Exception {	
+		logger.debug("getSysParam started. tenantID=" + tenantID);
+		
 		List<SysParamVO> list = ezSystemAdminDAO.getSysParam(tenantID);
 		List<SysParamVO> afterList = new ArrayList<SysParamVO>();
 		
@@ -40,11 +42,15 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			} catch (IllegalArgumentException e){}
 		}
 
+		logger.debug("getSysParam ended");
+		
 		return afterList;
 	}
 
 	@Override
 	public void updateSysParam(int tenantID, List<Map<String, String>> list, Locale locale) throws Exception {
+		logger.debug("updateSysParam started. tenantID=" + tenantID);
+		
 		SysParamVO sysParamVO = new SysParamVO();
 		sysParamVO.setTenantID(tenantID);		
 		
@@ -129,5 +135,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 				}				
 			}
 		}
+		
+		logger.debug("updateSysParam ended");
 	}
 }

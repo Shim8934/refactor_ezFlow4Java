@@ -1645,10 +1645,17 @@ function SaveDraftDocInfo()
 	
             xmlhttp.open("POST","/ezApprovalG/doDraft.do",false);
             xmlhttp.send(xmlpara);
+            
+            if (xmlhttp != null && xmlhttp.readyState == 4) {
+             	 if (xmlhttp.statusText == "OK") {
+             		SetBtnStateFalse();
+             		 return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
+             	 } else {
+             		return "FALSE";
+             	 }
+           }
+        } catch(e){
 
-            SetBtnStateFalse();
-            return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
-        }catch(e){
             alert("SaveDraftDocInfo_ilban " + e.description);
         }
     }
@@ -1724,10 +1731,16 @@ function SaveDraftDocInfo()
 	
             xmlhttp.open("POST","/ezApprovalG/doDraft.do",false);
             xmlhttp.send(xmlpara);
-	  		
-            SetBtnStateFalse();
-            return xmlhttp.responseText;
-        }catch(e){
+            
+            if (xmlhttp != null && xmlhttp.readyState == 4) {
+             	 if (xmlhttp.statusText == "OK") {
+             		SetBtnStateFalse();
+                    return xmlhttp.responseText;
+             	 } else {
+             		return "FALSE";
+             	 }
+           }
+        } catch(e){
             alert("SaveDraftDocInfo_susin : " + e.description);
         }
     }
@@ -2424,8 +2437,6 @@ function SaveDraftDocInfo()
         pxml = pxml + "<DATA name='SMemberJobTitle'><![CDATA[" + arr_userinfo[14] + "]]></DATA>";	//secondary title
 	
         pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>";
-        xmlpara.loadXML(pxml);
-        
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -2673,8 +2684,6 @@ function SaveDraftDocInfo()
 
         var xmlhttp = createXMLHttpRequest();
 
-        /*var result = "";*/
-        
         $.ajax({
     		type : "POST",
     		dataType : "text",
