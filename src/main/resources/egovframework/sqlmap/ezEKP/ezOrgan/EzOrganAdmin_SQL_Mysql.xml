@@ -694,7 +694,7 @@
           TBL_FormContainer  
             (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID)
         VALUES
-            (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'G버전 기본 양식함 입니다.', N'DEPT003',#tenantID#, #companyID#)
+            (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003',#tenantID#, #companyID#)
       ]]>
     </insert>
     

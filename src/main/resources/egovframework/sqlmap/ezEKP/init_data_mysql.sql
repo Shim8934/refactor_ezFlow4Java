@@ -202,7 +202,7 @@ INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Nam
 
 INSERT INTO TBL_LastDocID  (lastDocID, TENANT_ID, COMPANYID) VALUES ('0                ',0, 'S907000');
 
-INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID) VALUES (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'G버전 기본 양식함 입니다.', N'DEPT003',0, 'S907000');
+INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID) VALUES (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003',0, 'S907000');
 -- INSERT INTO   TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, TENANT_ID, COMPANYID) VALUES (N'2004000003', N'HWP양식함', N'ALL', N'ROOT', NULL, NULL,0, 'S907000');
 
 INSERT INTO   TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID) VALUES (N'100       ', N'품의함', N'Draft',0, 'S907000');
