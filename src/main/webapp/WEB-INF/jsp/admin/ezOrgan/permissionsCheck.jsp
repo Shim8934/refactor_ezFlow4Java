@@ -947,12 +947,14 @@
 			                <DATA1>a</DATA1>
 			            </CELL>
 			        </ROW>
+                    <!-- 구현 완료 시까지 임시 제거함
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t294'/></VALUE>
 			                <DATA1>i</DATA1>
 			            </CELL>
 			        </ROW>
+                    -->
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t297'/></VALUE>
@@ -965,6 +967,7 @@
 			                <DATA1>l</DATA1>
 			            </CELL>
 			        </ROW>
+                    <c:if test="${approvalFlag != 'S'}">
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t301'/></VALUE>
@@ -977,6 +980,7 @@
 			                <DATA1>m</DATA1>
 			            </CELL>
 			        </ROW>   
+                    </c:if>
                     </c:if>
 				</ROWS>
 			</LISTVIEWDATA>

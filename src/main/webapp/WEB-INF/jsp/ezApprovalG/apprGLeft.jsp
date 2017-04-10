@@ -476,7 +476,7 @@
 									},
 							success: function(text){
 								getAprCount_temp(text);
-							}        			
+							}
 						});
 	                }
 	            }

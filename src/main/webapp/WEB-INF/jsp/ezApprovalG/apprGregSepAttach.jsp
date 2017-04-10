@@ -93,21 +93,25 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    			
+		    			if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
+				            alert("<spring:message code='ezApprovalG.t1077'/>");
+				        } else {
+				            var nodesRegType = SelectNodes(result, "CODELIST/REGISTERTYPE/CODE");
+				            InitCodeSelectBox(nodesRegType, selRegisterType);
+				
+				            g_NodesRcdgAVType = SelectNodes(result, "CODELIST/RECORDINGAVTYPE/CODE");
+				            g_NodesPhotoAVType = SelectNodes(result, "CODELIST/PHOTOAVTYPE/CODE");
+				        }
+		    		},
+		    		error : function () {
+		    			alert("<spring:message code='ezApprovalG.t1077'/>");
+		    		}
 		    	});
 		        
-		        g_CodeInfoXml = getXmlString(result);
+		        g_CodeInfoXml = result;
 		
-		        if (SelectSingleNodeValue(result, "RESULT") == "FALSE") {
-		            alert("<spring:message code='ezApprovalG.t1077'/>");
-		        }
-		        else {
-		            var nodesRegType = SelectNodes(result, "CODELIST/REGISTERTYPE/CODE");
-		            InitCodeSelectBox(nodesRegType, selRegisterType);
-		
-		            g_NodesRcdgAVType = SelectNodes(result, "CODELIST/RECORDINGAVTYPE/CODE");
-		            g_NodesPhotoAVType = SelectNodes(result, "CODELIST/PHOTOAVTYPE/CODE");
-		        }
+		        
 		    }
 		    function SwapAVTypeChkBox(bEnable) {
 		        var i;
@@ -174,7 +178,7 @@
 		        var Root, objNode;
 		
 		        var objCodeInfo = createXmlDom();
-		        objCodeInfo = loadXMLString(g_CodeInfoXml);
+		        objCodeInfo = g_CodeInfoXml;
 		
 		        if (navigator.userAgent.indexOf('Trident') == -1) {
 		            Root = "<REGISTERTYPE>";
