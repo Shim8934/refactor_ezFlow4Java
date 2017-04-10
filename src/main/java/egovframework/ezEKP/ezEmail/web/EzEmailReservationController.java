@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -172,7 +174,11 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String cmdOwn = "";
 		String urlOwn = "";
 		
+		String bodyType = "0";
 		String importance = "1";
+		String isEach = "FALSE";
+		String replySendTime = "0";
+		String replyReadTime = "1";
 		String pReservedSaveTime = "";
 		String pCDOMessageID = "";
 		String mailSignSel = "0"; //예약발송 수정에서는 mailsign 수정불가
@@ -424,6 +430,37 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     			}
     		}
 			
+			Enumeration headers = message.getAllHeaders();
+            while (headers.hasMoreElements()) {
+              Header h = (Header) headers.nextElement();
+              logger.debug("@@"+h.getName() + ": " + h.getValue());
+            }
+            //set isEachMail
+        	if (message.getHeader("X-JMocha-Each-Mail") != null) {
+        		isEach = message.getHeader("X-JMocha-Each-Mail")[0];
+    		}  
+			
+        	//set bodyType
+        	if (message.getHeader("Content-Type") != null) {
+        		String tempBodyType = message.getHeader("Content-Type")[0];
+        		if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
+        			bodyType = "1";
+        		}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
+        			bodyType = "0";
+        		}
+    		}
+        	
+        	if (message.getHeader("Return-Receipt-To") != null) {
+        		replySendTime = "1";
+    		} else {
+    			replySendTime = "0";
+    		}
+        	if (message.getHeader("Disposition-Notification-To") != null) {
+        		replyReadTime = "1";
+    		} else {
+    			replyReadTime = "0";
+    		}
+            
 			if (message.getHeader("X-JMocha-EXT-SENDERNAME") != null) {
 				showDisplay = message.getHeader("X-JMocha-EXT-SENDERNAME")[0];
 			}
@@ -468,6 +505,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("urlOwn", urlOwn);
 		model.addAttribute("mailSignSel", mailSignSel);
 		model.addAttribute("importance", importance);
+		model.addAttribute("isEach", isEach);
+		model.addAttribute("bodyType", bodyType);
+		model.addAttribute("replySendTime", replySendTime);
+		model.addAttribute("replyReadTime", replyReadTime);
 		model.addAttribute("senderInfo", senderInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tid", loginInfo.getTenantId());
