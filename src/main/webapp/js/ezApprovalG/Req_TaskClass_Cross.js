@@ -99,6 +99,9 @@ function GetTaskInfo() {
     	data : {taskCode : TaskCode, deptCode : DeptID, companyID : CompanyID},
     	success : function(result) {
     		tempRet = result;
+    	},
+    	error : function() {
+    		tempRet = "<RESULT>FALSE</RESULT>";
     	}
     });
     

@@ -205,6 +205,9 @@
 							},
 					success : function (result) {
 						tempRet = loadXMLString(result);
+					},
+					error : function() {
+						tempRet = loadXMLString("<RESULT>FALSE</RESULT>");
 					}
 				});
 				
@@ -303,6 +306,9 @@
 			    	data :{sCateCode : tempCode, companyID : companyID},
 			    	success : function(result) {
 			    		tempRet = result;
+			    	},
+			    	error : function() {
+			    		tempRet = "FALSE";
 			    	}
 			    });
 		

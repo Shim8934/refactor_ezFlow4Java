@@ -476,6 +476,9 @@
 							},
 					success : function (result) {
 						tempRet = loadXMLString(result);
+					},
+					error : function() {
+						tempRet = loadXMLString("<RESULT>FALSE</RESULT>");
 					}
 				});
 		

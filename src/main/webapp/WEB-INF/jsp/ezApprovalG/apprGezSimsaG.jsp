@@ -790,7 +790,10 @@
 		    		},
 		    		success: function(xml){
 		    			result = loadXMLString(xml);
-		    		}        			
+		    		},
+		    		error : function(jqXHR, textStatus, errorThrown) {
+		        		alert("<spring:message code = 'ezApprovalG.t228' />" + jqXHR.statusText);
+		        	}
 		    	});
 	    		
 		        return result;

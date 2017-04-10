@@ -135,6 +135,9 @@
 		    		},
 		    		success : function (result) {
 		    			tempRet = result;
+		    		},
+		    		error : function() {
+		    			tempRet = "FALSE";
 		    		}
 		    	});
 		    	
@@ -150,6 +153,9 @@
 		    		data : {pSealNum : pSealNum, companyID : pCompanyID},
 		    		success : function (result) {
 		    			tempRet = result;
+		    		},
+		    		error : function() {
+		    			tempRet = "FALSE";
 		    		}
 		    	});
 		    	

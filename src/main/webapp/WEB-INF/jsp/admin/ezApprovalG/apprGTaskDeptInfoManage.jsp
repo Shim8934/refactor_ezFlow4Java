@@ -215,6 +215,9 @@
 		    		data : {taskCode : TaskCode, deptID: pDeptID, deptName : pDeptName, deptName2 : pDeptName2, companyID : companyID},
 		    		success : function (result){
 		    			tempRet = result;
+		    		},
+		    		error : function () {
+		    			tempRet = "FALSE";
 		    		}
 		    	});
 		    	
@@ -231,6 +234,9 @@
 		    		data : {taskCode : TaskCode, deptID: pDeptID, deptName : pDeptName, deptName2 : pDeptName2, companyID : companyID},
 		    		success : function (result){
 		    			tempRet = result;
+		    		},
+		    		error : function() {
+		    			tempRet = "FALSE";
 		    		}
 		    	});
 		    	

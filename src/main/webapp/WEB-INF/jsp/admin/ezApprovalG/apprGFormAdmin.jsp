@@ -256,15 +256,15 @@
 		                    	data : {id : ID, companyID : companyID},
 		                    	success : function(result) {
 		                    		tempRet = result;
+		                    		
+		                    		Tree_setconfig();
+			                        InitFormCont();
+		                    	},
+		                    	error : function() {
+		                    		OpenAlertUI("<spring:message code = 'ezApprovalG.t1615' />");
 		                    	}
 		                    });
 		                	
-		                    if (tempRet == "TRUE") {
-		                        Tree_setconfig();
-		                        InitFormCont();
-		                    } else {
-		                    	OpenAlertUI("<spring:message code = 'ezApprovalG.t1615' />");
-		                    }
 		                } else {
 		                	OpenAlertUI("<spring:message code = 'ezApprovalG.t1613' />");
 		                }
@@ -424,15 +424,15 @@
 		                	data : {formID : GetAttribute(selRow[0], "DATA1"), companyID : companyID},
 		                	success : function (result) {
 		                		tempRet = result;
+		                		
+		                		listview.DeleteRow(GetAttribute(selRow[0], "id"));
+			                    descrip.innerText = "";
+		                	},
+		                	error : function() {
+		                		OpenAlertUI("<spring:message code = 'ezApprovalG.t173' />");
 		                	}
 		                });
-		                
-		                if (tempRet == "TRUE") {
-		                    listview.DeleteRow(GetAttribute(selRow[0], "id"));
-		                    descrip.innerText = "";
-		                } else {
-		                	OpenAlertUI("<spring:message code = 'ezApprovalG.t173' />");
-		                }
+		                		                
 		            } else {
 		                return;
 		            }
@@ -500,8 +500,6 @@
 		        	success : function(result) {
 		        		if (result == "OK") {
 		        			OpenAlertUI("<spring:message code = 'ezApprovalG.t1581' />");
-				        } else {
-				        	OpenAlertUI("<spring:message code = 'ezApprovalG.t391' />");
 				        }
 		        	},
 		        	error : function() {

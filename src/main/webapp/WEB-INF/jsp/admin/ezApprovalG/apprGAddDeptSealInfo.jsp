@@ -215,10 +215,10 @@
 		        		async : false,
 		        		data : {dirPath : dirPath, fileName : fileName},
 		        		success : function(result) {
-		        			if (result == "FALSE") {
-		        				//임시저장된 관인파일 삭제 실패
-		        			}
-		        		}
+		        		
+		        		},
+		        		error : function() {
+// 		        			"FALSE";
 		        	});
 		        }
 		    };
