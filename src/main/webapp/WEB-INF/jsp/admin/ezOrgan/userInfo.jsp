@@ -379,12 +379,19 @@
 							alert("<spring:message code='ezOrgan.t119' />");
 						} else if (result == "EMAIL_ERROR") {
 							alert("<spring:message code='ezOrgan.t269' />");
+						} else if (result == "NO_LICENSE_KEY") {
+							alert("<spring:message code='ezOrgan.x0010' />");
+						} else if (result == "INVALID_LICENSE_KEY") {
+							alert("<spring:message code='ezOrgan.x0011' />");
+						} else if (result == "MAX_USER_REACHED") {
+							alert("<spring:message code='ezOrgan.x0012' />");
 						} else {
-							if (ReturnFunction != null){
+							if (ReturnFunction != null) {
 				                ReturnFunction(DeptID);
-							}else{
+							} else {
 				                window.returnValue = DeptID;
 							}
+							
 				            window.close();
 						}
 					},
@@ -502,7 +509,7 @@
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px">
-	                <input id="UserID" style="ime-mode: disabled; width: 98%;" maxlength="50"/>
+	                <input id="UserID" style="ime-mode: disabled; width: 98%;" maxlength="20"/>
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t277' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px;">

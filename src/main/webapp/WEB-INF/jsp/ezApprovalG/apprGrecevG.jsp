@@ -1137,21 +1137,26 @@
 		
 		    function getLastAprLine() {
 		        try {
-		            var xmlhttp = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-		            createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-		            createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID);
-		
-		            xmlhttp.open("Post", "../ezaprline/aspx/AprLineRequest.aspx", false);
-		            xmlhttp.send(xmlpara);
-		
-		            var NodeList = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS/ROW");
+					var result = "";
+		            
+		            $.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/aprLineRequest.do",
+		        		data : {
+		        				docID    : pDocID, 
+		        				userID 	 : pUserID,
+		        				formID   : pFormID
+		        				},
+		        		success: function(xml){
+		        			result = loadXMLString(xml);
+		        		}        			
+		        	});
+		            
+		            var NodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 		            if (NodeList.length > 0) {
-		                var bResult = CheckFirstDrafter(xmlhttp.responseXML);
+		                var bResult = CheckFirstDrafter(result);
 		                return bResult;
 		            }
 		

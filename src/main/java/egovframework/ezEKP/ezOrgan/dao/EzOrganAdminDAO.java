@@ -453,7 +453,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     @SuppressWarnings("unchecked")
     private List<OrganUserVO> getUserCnListForLocal(int tenantID) throws Exception {
-        return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList");
+        return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
@@ -464,6 +464,58 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }       
     }	
 
+    private int getUserCountForJMocha(int tenantId) throws Exception {
+        logger.debug("getUserCountForJMocha started. tenantId=" + tenantId);
+                
+        int returnValue = 0;
+        
+        String param1 = "tenantId=" + tenantId;
+        String inputParams = param1;
+
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getUserCount";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        returnValue = ((Long)result.get("count")).intValue();
+                    }                   
+                }
+            }
+        }                       
+                
+        logger.debug("getUserCountForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        
+        return returnValue;
+    }
+    
+    private int getUserCountForLocal(int tenantID) throws Exception {
+        return (int) select("EzOrganAdminDAO.userCount", tenantID);
+    }
+    
+    public int getUserCount(int tenantID) throws Exception {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
+            return getUserCountForJMocha(tenantID);
+        } else {
+            return getUserCountForLocal(tenantID);
+        }       
+    }	
+    
     private OrganUserVO getUserInfoForJMocha(Map<String, Object> map) throws Exception {
         String userId = (String)map.get("v_CN");
         String isPrimary = (String)map.get("v_LANGDATA");

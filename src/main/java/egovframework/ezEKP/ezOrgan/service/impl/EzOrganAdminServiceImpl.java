@@ -160,7 +160,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {     
         return ezOrganAdminDao.getUserCnList(tenantID);
     }
-	
+
+    @Override
+    public int getUserCount(int tenantID) throws Exception {     
+        return ezOrganAdminDao.getUserCount(tenantID);
+    }
+    
     // 사원 혹은 부서의 지정된 속성 목록을 XML 형식으로 반환한다.
 	@Override
 	public String getPropertyList(String pCN, String pPropList, String pLangCode, int tenantID) throws Exception {

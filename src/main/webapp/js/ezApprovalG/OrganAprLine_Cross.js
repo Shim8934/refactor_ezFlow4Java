@@ -1,20 +1,25 @@
 ﻿function isgetUser(DeptID, DeptLPath) {
     var rtnVal = true;
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;Description;Title;telephonenumber");
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "Department");
-    createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-
-    xmlhttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    if (xmlhttp.responseXML.xml == "") rtnVal = false;
-    var nodes = SelectNodes(xmlhttp.responseXML, "LISTVIEWDATA/ROWS");
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+				deptID   : DeptID, 
+				cell 	 : "displayName;description;title;telephonenumber",
+				prop     : "department",
+				type 	 : "user"
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
+    
+    if (result == "") rtnVal = false;
+    var nodes = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS");
 
     if (rtnVal) {
         if (nodes.length > 0)

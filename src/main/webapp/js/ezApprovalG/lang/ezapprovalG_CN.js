@@ -248,7 +248,7 @@ var strLang229 = "첨부 기능 모두 중단."
 var strLang230 = "넘겨줄 파라미터 노드 생성 DocType"
 var strLang231 = "수신자목록 저장시 오류가 발생하였습니다."
 // ezAPRDEPT\ezDEPTTEMPLET\AprDeptTempletName.js
-var strLang232 = "수신자목록이 중복되었습니다. "
+var strLang232 = "수신자이름이 중복되었습니다. "
 var strLang233 = "다시 입력하여 주십시오."
 // ezAPRDEPT\AprDept.js
 var strLang234 = "제"

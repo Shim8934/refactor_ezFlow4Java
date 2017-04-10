@@ -190,7 +190,7 @@
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t121' /></th> 
-		    	<td><input id=CompanyID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
+		    	<td><input id=CompanyID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="20"></td> 
 		  	</tr> 
 		  	<tr> 
 		  		<th id="parentHeader"><spring:message code='ezOrgan.t122' /></th> 

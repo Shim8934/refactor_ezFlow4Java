@@ -1,17 +1,22 @@
 ﻿function GetAprLineTempletList()
 {
-    var xmlpara = createXmlDom();
-	var xmlhttp = createXMLHttpRequest();
-    var objNode;
-    
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID );
-    
-	xmlhttp.open ("Post","/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/aspx/AprLineTempletList.aspx",false);
-	xmlhttp.send(xmlpara);
+	var result = "";
 	
-    var NodeList = SelectNodes(xmlhttp.responseXML,"APRTEMP/DATA");
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/aprLineTempletList.do",
+		data : {
+				formID  : pFormID,
+				userID 	: pUserID
+				},
+		success: function(xml){
+			result = xml;
+		}        			
+	});	
+	
+    var NodeList = SelectNodes(loadXMLString(result), "APRTEMP/DATA");
   
 	AddAprLineTempletList(NodeList);
 }
@@ -47,28 +52,28 @@ function AddAprLineTempletList(NodeList)
 
 function GetAprLineTempletInfo(p_AprLineTempletID)
 {
-    var xmlpara = createXmlDom();
-	var xmlhttp = createXMLHttpRequest();
-	
-	var objNode;
-    
-    createNodeInsert(xmlpara, objNode, "APRTEMP");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID );
-    createNodeAndInsertText(xmlpara, objNode, "pAprLineSN", document.getElementById("stl_AprLineTemplet").value ); 
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/aprLineTempletListInfo.do",
+		data : {
+				userID 	 : pUserID,
+				formID   : pFormID,
+				aprLineSN: document.getElementById("stl_AprLineTemplet").value
+				},
+		success: function(text){
+			Resultxml = loadXMLString(text);
+			if(document.getElementById("APRTEMP").innerHTML != "")
+			    document.getElementById("APRTEMP").innerHTML = "";
+			var pAPRTEMP = new ListView();      
+		    pAPRTEMP.SetID("pAPRTEMP");
+		    pAPRTEMP.SetMulSelectable(false);    
+		    pAPRTEMP.DataSource(Resultxml); 
+			pAPRTEMP.DataBind("APRTEMP");
+		}        			
+	});
 	  
-	xmlhttp.open ("Post","/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/aspx/AprLineTempletListInfo.aspx",false);
-	xmlhttp.send(xmlpara);
-	  
-	Resultxml = xmlhttp.responseXML;
-	if(document.getElementById("APRTEMP").innerHTML != "")
-	    document.getElementById("APRTEMP").innerHTML = "";
-	var pAPRTEMP = new ListView();      
-    pAPRTEMP.SetID("pAPRTEMP");
-    pAPRTEMP.SetMulSelectable(false);    
-    pAPRTEMP.DataSource(Resultxml); 
-	pAPRTEMP.DataBind("APRTEMP"); 
-	
 }
 
 function AprLineTempletInfoShow(Resultxml)
@@ -113,34 +118,28 @@ function SetLateststl_AprLineTemplet()
 
 function DelAprLineTempletList(p_SelAprLineTempletSN)
 {
-    var xmlpara   = createXmlDom();
-	var xmlhttp = createXMLHttpRequest();
-	var objNode;
-    
-    createNodeInsert(xmlpara, objNode, "APRTEMP");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID );
-    createNodeAndInsertText(xmlpara, objNode, "pAprLineSN", p_SelAprLineTempletSN ); 
-	  
-	xmlhttp.open ("Post","/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/aspx/DelAprLineTempletList.aspx",false);
-	xmlhttp.send(xmlpara);
-	  
-	var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-    var RtnVal = getNodeText(dataNodes[0]);
-    
-	if(RtnVal != "TRUE")
-	{
-		var parameter = strLang264;
-		var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
-		var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-	    feature =  feature + GetShowModalPosition(330, 205);
-	    
-		var RtnVal = window.showModalDialog(url,parameter,feature);
-	}
-	else
-	{		    
-		InitAprlineTemplet();
-	}
+	var result = "";
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/delAprLineTempletList.do",
+		data : {
+				userID 	 : pUserID,
+				formID   : pFormID,
+				aprLineSN: p_SelAprLineTempletSN
+				},
+		success: function(result){
+			InitAprlineTemplet();
+		}, error : function() {
+			var parameter = strLang264;
+			var url = "/ezApprovalG/ezAprAlert.do";
+			var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		    feature =  feature + GetShowModalPosition(330, 205);
+		    
+			var RtnVal = window.showModalDialog(url,parameter,feature);
+		}
+	});
 	
 }
 
@@ -164,26 +163,29 @@ function FirstAprLineTempletDisplay()
 {
 	var p_AprLineTempletIndex;
 	p_AprLineTempletIndex = GetFirstAprLineTempletIndex();
-    var xmlpara = createXmlDom();
-	var xmlhttp = createXMLHttpRequest();
-    var objNode;
-    
-    createNodeInsert(xmlpara, objNode, "APRTEMP");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID );
-    createNodeAndInsertText(xmlpara, objNode, "p_AprLineTempletIndex", p_AprLineTempletIndex ); 
-	  
-	xmlhttp.open ("Post","/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/aspx/AprLineTempletListInfo.aspx",false);
-	xmlhttp.send(xmlpara);
 	
-	if(document.getElementById("APRTEMP").innerHTML != "")
-	    document.getElementById("APRTEMP").innerHTML = "";
-	    
-	var pAPRTEMP = new ListView();      
-    pAPRTEMP.SetID("pAPRTEMP");
-    pAPRTEMP.SetMulSelectable(false);    
-    pAPRTEMP.DataSource(xmlhttp.responseXML); 
-	pAPRTEMP.DataBind("APRTEMP");
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/aprLineTempletListInfo.do",
+		data : {
+				userID 	 : pUserID,
+				formID   : pFormID,
+				aprLineSN: p_AprLineTempletIndex
+				},
+		success: function(text){
+			if(document.getElementById("APRTEMP").innerHTML != "")
+			    document.getElementById("APRTEMP").innerHTML = "";
+			    
+			var pAPRTEMP = new ListView();      
+		    pAPRTEMP.SetID("pAPRTEMP");
+		    pAPRTEMP.SetMulSelectable(false);    
+		    pAPRTEMP.DataSource(loadXMLString(text)); 
+			pAPRTEMP.DataBind("APRTEMP");
+		}        			
+	});
+	
 }
 
 function GetFirstAprLineTempletIndex()
@@ -209,20 +211,24 @@ function GetFirstAprLineTempletIndex()
 
 function AddToAprLineFromAprLineTemplet( p_CheckAprLineTempletSN)
 {
-    var xmlpara = createXmlDom();
-	var xmlhttp = createXMLHttpRequest();
+	var result = "";
 	
-	var objNode;
-    
-    createNodeInsert(xmlpara, objNode, "APRTEMP");
-    createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-    createNodeAndInsertText(xmlpara, objNode, "pFormID", pFormID );
-    createNodeAndInsertText(xmlpara, objNode, "p_AprLineTempletIndex", p_CheckAprLineTempletSN ); 
-
-	xmlhttp.open ("Post","/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/aspx/AddToaprline.aspx",false);
-	xmlhttp.send(xmlpara);
-	  
-	Resultxml = xmlhttp.responseXML;
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/addToAprLine.do",
+		data : {
+				userID 	 : pUserID,
+				formID   : pFormID,
+				aprSN	 : p_CheckAprLineTempletSN
+				},
+		success: function(xml){
+			result = loadXMLString(xml);
+		}        			
+	});
+	
+	Resultxml = result;
 	
 	if(document.getElementById("APRLINE").innerHTML != "")
 	    document.getElementById("APRLINE").innerHTML = "";
@@ -233,7 +239,7 @@ function AddToAprLineFromAprLineTemplet( p_CheckAprLineTempletSN)
     pAPRLINE.SetRowOnClick("OnSelChange_onclick");           
 	pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");          
 	pAPRLINE.SetSelectFlag(false);
-    pAPRLINE.DataSource(xmlhttp.responseXML); 
+    pAPRLINE.DataSource(Resultxml); 
 	pAPRLINE.DataBind("APRLINE");
 }
 
@@ -260,7 +266,7 @@ function CreateNewAprLineTemplet(p_AprLineTempletName)
          AprLineInfo.documentElement.appendChild(xmlRtn);
 	}
 	
-	xmlhttp.open("Post","/myoffice/ezApprovalG/ezAPRLINE/ezAPRTEMPLET/aspx/CreateAprLineTemplet.aspx",false);
+	xmlhttp.open("Post","/ezApprovalG/createAprLineTemplet.do",false);
 	xmlhttp.send(AprLineInfo);
     
     var dataNodes = GetChildNodes(xmlhttp.responseXML); 
@@ -270,7 +276,7 @@ function CreateNewAprLineTemplet(p_AprLineTempletName)
 	{
 	}else{
 		var parameter = strLang199;
-		var url = "/myoffice/ezApprovalG/ezAPRALERT_Cross.aspx";
+		var url = "/ezApprovalG/ezAprAlert.do";
 		var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	    feature =  feature + GetShowModalPosition(330, 205);
 		var RtnVal = window.showModalDialog(url,parameter,feature);

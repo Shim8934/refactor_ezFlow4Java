@@ -24,6 +24,7 @@ INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'totBigSizeMailAttachLimit','800');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'INDIVIDUALMAILUSER','5');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'USE_FileExtension','*');
+INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'LicenseKey','');
 INSERT INTO `jmocha_tenant_servername` (`SERVER_NAME`,`TENANT_ID`) VALUES ('jtest.kaoni.com',0);
 INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`,`WARN_STORAGE`) VALUES ('jtest.kaoni.com',1024,819.2);
 INSERT INTO `tbl_tenant` (`TENANT_ID`,`TENANT_NAME`,`TENANT_NAME2`) VALUES (0,'조직도','OrganizationChart');
@@ -67,6 +68,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'USE_OCS','NO',NULL);
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'Use_Portal','YES','portal모듈사용 유무');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'signImageSize','50/50','전자결재 사인이미지 크기');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'LicenseKey','','라이센스키');
 INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES ('0', 'UserInfo_ApprovalG_VIEW', 'YYY', '문서 열람 권한 정의 : 문서 열람 권한을 정의한다.1 : 공개/부분공개/비공개 권한 체크.2 : 보안등급 권한 체크.3 : 열람권한 체크.비공개 문서인 경우, 이곳에 속하면 열람 가능.속하지 않으면, 2번, 3번을 추가로 체크함.부분공개 문서인 경우, 이곳에 속하면 열람 가능.속하지 않으면, 2번, 3번을 추가로 체크함.공개 문서인 경우, 2번 3번을 추가로 체크함.');
 INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES ('0', 'UseRunTime', 'NO', '게시판에서 RunTime 사용 시 Value 값 Yes');
 INSERT INTO  tbl_tenant_config  (`TENANT_ID`, `PROPERTY_NAME`, `PROPERTY_VALUE`, `DESCRIPTION`) VALUES ('0', 'JunGyulFlag', '1', '전결 옵션');

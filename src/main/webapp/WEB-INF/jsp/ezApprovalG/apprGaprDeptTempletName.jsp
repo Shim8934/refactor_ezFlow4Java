@@ -21,13 +21,15 @@
 		        var p_AprDeptTempletName = TxtAprDeptTempletName.value;
 		
 		        if (p_AprDeptTempletName == "") {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t309'/>";
-		            OpenAlertUI(pAlertContent);
+		            //var pAlertContent = "<spring:message code='ezApprovalG.t309'/>";
+		            //parent.OpenAlertUI(pAlertContent);		            
+		            alert("<spring:message code='ezApprovalG.t309'/>");
 		            TxtAprDeptTempletName.focus();
 		        }
 		        else if (p_AprDeptTempletName.length > 7) {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t310'/>";
-		            OpenAlertUI(pAlertContent);
+		            //var pAlertContent = "<spring:message code='ezApprovalG.t310'/>";
+		            //OpenAlertUI(pAlertContent);
+		            alert("<spring:message code='ezApprovalG.t310'/>");
 		            TxtAprDeptTempletName.focus();
 		        } else {
 		            AprDeptTempletNameCheck(p_AprDeptTempletName);

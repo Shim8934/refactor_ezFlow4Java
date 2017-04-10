@@ -275,6 +275,9 @@
 				    			} else {
 				    				OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    			}
+				    		},
+				    		error : function() {
+				    			OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    		}
 		                });
 		            }
