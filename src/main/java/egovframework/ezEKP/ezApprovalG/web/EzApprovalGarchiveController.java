@@ -1483,7 +1483,6 @@ public class EzApprovalGarchiveController {
 	
 	/** 전자결재 개인 문서함 리스트*/
 	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do")
-	@ResponseBody
 	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
 		StringBuilder resultExcel = new StringBuilder();
 		String excelValue = "";
