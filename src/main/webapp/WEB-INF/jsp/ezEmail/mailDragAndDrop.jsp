@@ -453,6 +453,14 @@
 		        if (isbigyn == "Y") {
 		            bigFileCheck = true;
 		        }
+		        
+		        if(bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0 ) {
+		        	if("${ userInfo.lang }" == "2")
+		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
+		            else
+		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+		            return false;
+		        }
 
 		        if (bigFileCheck)
 		            alert(window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
