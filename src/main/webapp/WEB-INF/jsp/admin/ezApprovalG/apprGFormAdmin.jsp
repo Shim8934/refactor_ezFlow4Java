@@ -453,7 +453,6 @@
 		    }
 	
 		    function lvtForm_Row_Dbclick() {
-		    	if(isIE)
 		        UpdateForm();
 		    }
 	

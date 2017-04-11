@@ -649,9 +649,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String getFormContainer(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String id = request.getParameter("id");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getFormContainerInfo(id, deptID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormContainerInfo(id, deptID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		
 		return result;
 	}

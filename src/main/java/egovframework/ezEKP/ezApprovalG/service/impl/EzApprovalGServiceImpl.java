@@ -1606,7 +1606,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getFormContainerInfo(String id, String deptID, String companyID, String primary, int tenantID) throws Exception {
+	public String getFormContainerInfo(String id, String deptID, String companyID, String primary, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getFormContainerInfo started");
 		
 		StringBuilder rtnXML = new StringBuilder();
@@ -1668,7 +1668,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL")) {
                 	rtnXML.append("<DATA6>ALL</DATA6>");
                 } else {
-					rtnXML.append("<DATA6>" + commonUtil.cleanValue(makeListField(ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase(), "DisplayName", tenantID).toString())) + "</DATA6>");
+                	if (approvalFlag.equals("S")) {
+                		rtnXML.append("<DATA6> </DATA6>");
+                	} else {
+                		rtnXML.append("<DATA6>" + commonUtil.cleanValue(makeListField(ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase(), "DisplayName", tenantID).toString())) + "</DATA6>");
+                	}
 				}
                 
                 rtnXML.append("<DATA7>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTNAME2").item(k).getTextContent())) + "</DATA7>");
