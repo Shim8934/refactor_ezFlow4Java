@@ -8,7 +8,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/lang/ezApproval.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var bestclick = false;
