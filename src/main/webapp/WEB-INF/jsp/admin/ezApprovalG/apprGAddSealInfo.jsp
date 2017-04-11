@@ -5,9 +5,6 @@
 <html>
 	<head>
 		<title><spring:message code = 'ezApprovalG.t1255' /></title>
-		<style>
-			DIV.IMAGEVIEW {behavior: url("SealView.htc") }
-		</style>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
