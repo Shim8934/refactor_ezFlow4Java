@@ -1652,8 +1652,8 @@
 	                                    <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                        <tr>
 	                                            <td style="text-align: center; padding-top: 3px">
-	                                                <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.t252'/></span></a>
-	                                                <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0006'/></span></a>
+	                                                <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t252'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t219'/></c:if></span></a>
+	                                                <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0006'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0006'/></c:if></span></a>
 	                                                <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                            </td>
 	                                        </tr>
@@ -1719,7 +1719,7 @@
 	                    <table style="margin-left: 5px;">
 	                        <tr>
 	                            <td style="vertical-align: top;" colspan="2">
-	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.t253'/></h2>
+	                                <h2 class="h2_dot"> <c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t253'/></c:if> <c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t220'/></c:if></h2>
 	                                <div class="border_gray" style="margin-top: 4px">
 	                                <c:if test="${approvalFlag == 'G'}">
 	                                    <div id="RECEPTLIST" style="Width: 710px; Height: 500px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
@@ -1746,10 +1746,10 @@
 	                            	<c:if test= "${hideCabinet == '0'}">
 	                                <a style="margin-top: 5px; display: none;"  class="imgbtn" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
 	                                </c:if>
-	                                <a style="margin-top: 5px; display: none;" class="imgbtn" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><spring:message code='ezApprovalG.t348'/></span></a>
+	                                <a style="margin-top: 5px; display: none;" class="imgbtn" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
 	                            </td>
 	                            <td style="text-align:right">
-	                                <a class="imgbtn" style="padding-right: 5px;margin-top:5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t223'/></c:if></span></a>
+	                                <a class="imgbtn" style="padding-right: 5px;margin-top:5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>
 	                    </table>

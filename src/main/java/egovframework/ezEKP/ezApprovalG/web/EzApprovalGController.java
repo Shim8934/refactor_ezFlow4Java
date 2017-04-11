@@ -1220,7 +1220,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 수신처저장얼러트 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprDeptTempletName.do")
-	public String aprDeptTempletName(){
+	public String aprDeptTempletName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		model.addAttribute("approvalFlag", approvalFlag);
 		return "ezApprovalG/apprGaprDeptTempletName";
 	}
 	
