@@ -188,7 +188,7 @@
 	 			    xmlhttp = null;
 	 			    
 	 			    try {
-	 			    	window.opener.location.reload(true);
+	 			    	window.opener.refresh_onclick();
 	 			    } catch (e) {
 	 			    }
 	 			    
