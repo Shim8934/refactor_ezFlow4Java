@@ -331,9 +331,9 @@ var strLangLHM09 = "外部へのメールは10MBまで送信できます。";
 var strLangLHM10 = "大容量";
 var strLangLHM11 = "回収対象を選択してください。";
 var strLangLHM12 = "セッションに問題が発生しました。\n改めてログインしてください。";
-var strLangLHM13 = "메일 전체 크기가 최대 크기를 초과하여 메일 발송 및 저장에 실패하였습니다. 메일 수정 후 다시 시도해주세요.";
-var strLangLHM14 = "\n최대 메일 크기 : ";
-var strLangLHM15 = "\n현재 메일 크기 : ";
+var strLangLHM13 = "메일 크기가 최대 허용 크기를 초과하였습니다. \n메일 수정 후 다시 시도해주세요.";
+var strLangLHM14 = "최대 허용 크기 : ";
+var strLangLHM15 = ", 현재 크기 : ";
 var strLangKMS01 = "添付ファイルが";
 
 function GetLocalTime(Offset , pDateTime)

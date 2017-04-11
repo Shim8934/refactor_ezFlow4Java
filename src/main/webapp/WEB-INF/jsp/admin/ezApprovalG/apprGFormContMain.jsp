@@ -152,10 +152,17 @@
 			}
 			
 			function InsFContGroup() {
-			    if (document.getElementById("tbFormContName").value == "" || document.getElementById("tbManage").value == "") {
-			        RtnState = false;
-			        return;
-			    }
+				if (approvalFlag == 'S') {
+					if (document.getElementById("tbFormContName").value == "") {
+				        RtnState = false;
+				        return;
+				    }
+				} else {
+					if (document.getElementById("tbFormContName").value == "" || document.getElementById("tbManage").value == "") {
+				        RtnState = false;
+				        return;
+				    }
+				}
 			    
 			    var Count = document.getElementById("selDept").length;
 			    var selDept = "";

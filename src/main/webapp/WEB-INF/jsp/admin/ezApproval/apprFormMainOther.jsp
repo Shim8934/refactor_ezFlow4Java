@@ -241,7 +241,7 @@
 		
 		            try {
 		            	window.close();
-		                window.opener.refreshFormList();
+		            	window.opener.refreshFormList();
 		            }
 		            catch (ee) {
 		            	alert("SaveFormInfo_after error :: " + ee);

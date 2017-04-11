@@ -125,7 +125,7 @@
 			    ID =  treeNode.GetNodeData("DATA1");	
 			    DeptID =  treeNode.GetNodeData("DATA2");
 			    KIND = document.getElementById('FromList').value;	
-			
+			    
 			    GetFormInfo(ID, KIND, "", "");
 		    }
 	
@@ -453,7 +453,6 @@
 		    }
 	
 		    function lvtForm_Row_Dbclick() {
-		    	if(isIE)
 		        UpdateForm();
 		    }
 	

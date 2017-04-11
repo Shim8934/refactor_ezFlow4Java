@@ -248,7 +248,7 @@
 		
 		            try {
 		            	window.close();
-		                window.opener.refreshFormList();
+		                window.opener.GetFormInfo(contID, "000", "", "");
 		            }
 		            catch (ee) {
 		            	alert("SaveFormInfo_after error :: " + ee);
@@ -731,7 +731,7 @@
 		    }
 		
 		    function btnClose_onclick() {
-		        window.opener.refreshFormList();
+		    	window.opener.GetFormInfo(contID, "000", "", "");
 		        window.close();
 		    }
 		
