@@ -275,6 +275,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
         String pAttachWarning = egovMessageSource.getMessage("ezEmail.lhm18", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm19", locale) 
         	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale);
+        if(totBigSizeMailAttachLimit.equals("0")){
+        	pAttachWarning = egovMessageSource.getMessage("ezEmail.kms01", locale) + mailAttachLimit +egovMessageSource.getMessage("ezEmail.kms02", locale);
+        }
         logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
         		+ ",pAttachWarning=" + pAttachWarning);
         
@@ -1137,7 +1140,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				f.mkdirs();
             }
 			
-			if (fileSize[i] > bigMaxSize) {
+			if (fileSize[i] > bigMaxSize && bigMaxSize != 0) {
                 resultUpload[i] = "overflow";
             } else {
                 if (useExtension.toLowerCase().indexOf(sExt[i].toLowerCase()) == -1 && !useExtension.equals("*")) {
@@ -1314,7 +1317,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 		
 		// 총 파일의 크기가 대용량첨부 제한크기를 넘는지 체크한다.
-		if (totalFileSize > bigMaxSize) {
+		if (bigMaxSize != 0 && totalFileSize > bigMaxSize ) {
 			logger.debug("totalFileSize is over bigMaxSize. Return OVERFLOW.");
 			logger.debug("mailInterUploadCopy ended.");
 			return "OVERSIZE";
@@ -1960,7 +1963,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	public String mailInterSend(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, Model model, 
-			HttpServletRequest request) throws Exception {
+			HttpServletRequest request,
+			@RequestBody String bodyData) throws Exception {
 		logger.debug("mailInterSend started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2004,7 +2008,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String realPath = commonUtil.getRealPath(request);
 		
 		// 클라이언트로부터 전달된 XML 형태의 요청 데이터를 XML 문서로 변환한다.
-		Document xmlDoc = commonUtil.convertRequestToDocument(request);
+		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
 		Element root = xmlDoc.getDocumentElement();
 		
 		Node tempNode = null;
@@ -2068,12 +2072,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("BCC").item(0);
 			if (tempNode != null) {
 				bcc = tempNode.getTextContent();
-			}
-		}
-		if (root.getElementsByTagName("TEXTBODY") != null) {
-			tempNode = root.getElementsByTagName("TEXTBODY").item(0);
-			if (tempNode != null) {
-				textBody = tempNode.getTextContent();
 			}
 		}
 		if (root.getElementsByTagName("FROM") != null) {
@@ -2153,6 +2151,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (tempNode != null) {
 				stateName = tempNode.getTextContent();
 			}
+		}
+		
+		// set textBody
+		// tempNode.getTextContent()로 가져오면 whitespace가 모두 없어져서 bodyData에서 잘라서 가져오도록 수정함.
+		int sTextBodyIndex = bodyData.indexOf("<TEXTBODY>");
+		int eTextBodyIndex = bodyData.indexOf("</TEXTBODY>");
+		if (sTextBodyIndex > -1 && eTextBodyIndex > sTextBodyIndex) {
+			textBody = bodyData.substring(sTextBodyIndex + 10, eTextBodyIndex);
 		}
 		
 //		// 다국어 발송 관련 변수들
