@@ -10077,16 +10077,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 				}
 				
-				if (resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0) != null) {
-					if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent().trim())) {
-						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
-						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent());
-						rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
-					}
-				} else {
-					rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
-				}
-				
 				boolean subTitleFlag = false;
 				
 				if (resultXML.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0) != null) {
@@ -10103,21 +10093,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						String[] userDNames2 = new String[arr1.length +1];
 						String[] userTitles = new String[arr1.length +1];
 						String[] userTitles2 = new String[arr1.length +1];
+						String[] userCompanyIDs = new String[arr1.length +1];
 						
 						for (int k = 0; k < arr1.length; k++) {
 							String[] arr2 = arr1[k].split(":");
 							userDIDs[k + 1] = arr2[0].trim();
 							userDNames[k + 1] = ezOrganService.getPropertyValue(arr2[0], "displayName", userInfo.getTenantId());
 							userDNames2[k + 1] = ezOrganService.getPropertyValue(arr2[0], "displayName2", userInfo.getTenantId());
+							userCompanyIDs[k + 1] = ezOrganService.getPropertyValue(arr2[0], "extensionAttribute2", userInfo.getTenantId());
 							
 							if(arr2.length > 1) {
-							if (arr2[1].trim().equals("")) {
-								userTitles[k + 1] = userJobTitle;
-								userTitles2[k + 1] = userJobTitle2;
-							} else {
-								userTitles[k + 1] = arr2[1].trim();
-								userTitles2[k + 1] = arr2[2].trim();
-							}
+								if (arr2[1].trim().equals("")) {
+									userTitles[k + 1] = userJobTitle;
+									userTitles2[k + 1] = userJobTitle2;
+								} else {
+									userTitles[k + 1] = arr2[1].trim();
+									userTitles2[k + 1] = arr2[2].trim();
+								}
 							}
 						}
 						
@@ -10126,27 +10118,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						userDNames2[0] = resultXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent().trim();
 						userTitles[0] = resultXML.getElementsByTagName("TITLE1").item(0).getTextContent().trim();
 						userTitles2[0] = resultXML.getElementsByTagName("TITLE2").item(0).getTextContent().trim();
+						userCompanyIDs[0] = resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent().trim();
 						
 						subTitleFlag = false;
 						
 						for (int k = 0; k < userDIDs.length; k++) {
 							if (userDIDs[k].trim().equals(userDeptID.trim()) && userDNames[k].trim().equals(userDeptName.trim()) && userDNames2[k].trim().equals(userDeptName2.trim()) 
-									&& userTitles[k].trim().equals(userJobTitle.trim()) && userTitles2[k].trim().equals(userJobTitle2.trim())){
+									&& userCompanyIDs[k].trim().equals(userCompanyID.trim()) && userTitles[k].trim().equals(userJobTitle.trim()) && userTitles2[k].trim().equals(userJobTitle2.trim())){
 								subTitleFlag = true;
 							}
 						}
 						
 						if (!subTitleFlag) {
 							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()));
-                            rtnVal.append(userDeptID + ", " + userDeptName + "(" + userDeptName2 + "), ");
-                            rtnVal.append(userJobTitle + "(" + userJobTitle2 + ")"+ messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
+                            rtnVal.append(userCompanyID + ", " + userDeptID + ", " + userDeptName + "(" + userDeptName2 + "), ");
+                            rtnVal.append(userJobTitle + "(" + userJobTitle2 + ")" + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
                             
                             for (int k = 0; k < userDIDs.length; k++) {
                             	if (!userDIDs[k].trim().equals("")) {
                             		if (k == 0) {
-                            			 rtnVal.append("<" + userDIDs[k] + ", " + userDNames[k] + "(" + userDNames2[k] + "), " + userTitles[k] + "(" + userTitles2[k] + ")>");
+                            			 rtnVal.append("<" + userCompanyIDs[k] + ", " + userDIDs[k] + ", " + userDNames[k] + "(" + userDNames2[k] + "), " + userTitles[k] + "(" + userTitles2[k] + ")>");
 									} else {
-                                        rtnVal.append(", <" + userDIDs[k] + ", " + userDNames[k] + "(" + userDNames2[k] + "), " + userTitles[k] + "(" + userTitles2[k] + ")>");
+                                        rtnVal.append(", <" + userCompanyIDs[k] + ", " + userDIDs[k] + ", " + userDNames[k] + "(" + userDNames2[k] + "), " + userTitles[k] + "(" + userTitles2[k] + ")>");
                             		}
                             	}
                             }
@@ -10157,6 +10150,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj17", userInfo.getLocale()));
 					}
 				} else {
+					if (resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0) != null) {
+						if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent().trim())) {
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
+							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()) + resultXML.getElementsByTagName("PHYSICALDELIVERYOFFICENAME").item(0).getTextContent());
+							rtnVal.append(messageSource.getMessage("ezApprovalG.pjj11", userInfo.getLocale()));
+						}
+					} else {
+						rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj12", userInfo.getLocale()));
+					}
+					
 					if (resultXML.getElementsByTagName("DEPARTMENT").item(0) != null) {
 						if (!userDeptID.trim().equals(resultXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent().trim())) {
 							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()) + userDeptID);
