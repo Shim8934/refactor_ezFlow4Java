@@ -2485,16 +2485,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String checkAprLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String tempDept = userInfo.getGyumJik();
-		
-		if (tempDept != null) {
-			for (String k : tempDept.split(";")) {
-				if (k.split(":")[0].equals(userInfo.getDeptID())) {
-					return "<RESULT></RESULT>";
-				}
-			}
-		}
-		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), userInfo);
 		
@@ -2508,16 +2498,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String checkDeptLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		String tempDept = userInfo.getGyumJik();
-		
-		if (tempDept != null) {
-			for (String k : tempDept.split(";")) {
-				if (k.split(":")[0].equals(userInfo.getDeptID())) {
-					return "<RESULT></RESULT>";
-				}
-			}
-		}
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkDeptLines(doc, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
