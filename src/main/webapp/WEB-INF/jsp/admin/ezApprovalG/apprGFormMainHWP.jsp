@@ -237,7 +237,7 @@
 	                }
 	
 	                try {
-	                    window.opener.refreshFormList();
+	                	window.opener.GetFormInfo(contID, "000", "", "");
 	                }
 	                catch (e) {
 	                }
@@ -649,7 +649,7 @@
 	        }
 	
 	        function btnClose_onclick() {
-	            window.opener.refreshFormList();
+	        	window.opener.GetFormInfo(contID, "000", "", "");
 	            window.close();
 	        }
 	

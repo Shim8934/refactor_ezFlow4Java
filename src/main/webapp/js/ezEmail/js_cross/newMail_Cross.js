@@ -1011,7 +1011,7 @@ function event_SaveonClick() {
             	// 메시지 크기 초과한 경우
                 else if (pRtnMessage.indexOf("OVERMESSAGESIZE") > -1) {
                 	var messageArr = pRtnMessage.split(":");
-                    alert(strLangLHM13 + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2]);
+                    alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
                 }
                 // 그 외
                 else {
@@ -1074,7 +1074,7 @@ function event_SaveonClick() {
             	// 메시지 크기 초과한 경우
                 else if (pRtnMessage.indexOf("OVERMESSAGESIZE") > -1) {
                 	var messageArr = pRtnMessage.split(":");
-                	alert(strLangLHM13 + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2]);
+                	alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
                 }
                 // 그 외
                 else {

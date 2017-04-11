@@ -141,7 +141,7 @@
 	
 		            try{
 		            	window.close();
-		                window.opener.refreshFormList();
+		            	window.opener.GetFormInfo(contID, "000", "", "");
 		            } catch (ee) {
 		            }
 		        } catch (e) {

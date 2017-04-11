@@ -649,9 +649,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String getFormContainer(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String id = request.getParameter("id");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getFormContainerInfo(id, deptID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormContainerInfo(id, deptID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		
 		return result;
 	}
@@ -2485,16 +2486,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String checkAprLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String tempDept = userInfo.getGyumJik();
-		
-		if (tempDept != null) {
-			for (String k : tempDept.split(";")) {
-				if (k.split(":")[0].equals(userInfo.getDeptID())) {
-					return "<RESULT></RESULT>";
-				}
-			}
-		}
-		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), userInfo);
 		
@@ -2508,16 +2499,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String checkDeptLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		String tempDept = userInfo.getGyumJik();
-		
-		if (tempDept != null) {
-			for (String k : tempDept.split(";")) {
-				if (k.split(":")[0].equals(userInfo.getDeptID())) {
-					return "<RESULT></RESULT>";
-				}
-			}
-		}
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkDeptLines(doc, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
