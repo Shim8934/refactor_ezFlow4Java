@@ -29,7 +29,7 @@
 					alert("<spring:message code='main.jjh04'/>");
 					document.getElementById('NewPassword').focus();
 					return;
-				};
+				}
 				if (NewPassword.value != ConfirmPassword.value){
 					alert("<spring:message code='ezOrgan.t230' />");
 					document.getElementById('ConfirmPassword').focus();
