@@ -50,7 +50,7 @@ public interface EzApprovalGService {
 	
 	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception;
 
-	public String getFormContainerInfo(String id, String deptID, String companyID, String primary, int tenantID) throws Exception;
+	public String getFormContainerInfo(String id, String deptID, String companyID, String primary, int tenantID, String approvalFlag) throws Exception;
 	
 	public String setUserFormInfo(String formID, String userID, String companyID, int tenantID) throws Exception;
 	
