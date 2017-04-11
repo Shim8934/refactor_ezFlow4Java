@@ -1191,7 +1191,7 @@ function check_presence2() {
         var selRow = DocList.GetSelectedRows();
 
         if (selRow.length <= 0) {
-            var InformationString = strLang385;
+            var InformationString = strLangS385;
             OpenAlertUI(InformationString);
             return;
         }
@@ -1211,7 +1211,7 @@ function check_presence2() {
             }
             var InformationString
             if (xmlhttp.responseText.indexOf("TRUE") > -1)
-                InformationString = strLang386;
+                InformationString = strLangS386;
             else
                 InformationString = strLangS1124;
             alert(InformationString);

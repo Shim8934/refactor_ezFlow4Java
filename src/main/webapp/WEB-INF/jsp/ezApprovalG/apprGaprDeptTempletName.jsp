@@ -1,9 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
+	<c:if test ="${approvalFlag =='G'}">
 		<title><spring:message code='ezApprovalG.t308'/></title>
+	</c:if>
+	<c:if test = "${approvalFlag == 'S'}" >
+		<title><spring:message code='ezApprovalG.G0009'/></title>
+	</c:if>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
@@ -17,13 +24,19 @@
 		    var pDeptTempletName = "";
 		    var ConnectFlag = true;
 		    var Resultxml = createXmlDom();
+		    var approvalFlag = "${approvalFlag}";
 		    function btn_SaveAprDeptTempletName_onclick() {
 		        var p_AprDeptTempletName = TxtAprDeptTempletName.value;
 		
 		        if (p_AprDeptTempletName == "") {
 		            //var pAlertContent = "<spring:message code='ezApprovalG.t309'/>";
-		            //parent.OpenAlertUI(pAlertContent);		            
-		            alert("<spring:message code='ezApprovalG.t309'/>");
+		            //parent.OpenAlertUI(pAlertContent);	
+		           if(approvalFlag == "S") {
+		            	alert("<spring:message code='ezApprovalG.t309'/>");
+		           } else {
+		        	   alert("<spring:message code='ezApprovalG.t311'/>");
+		           }
+		            
 		            TxtAprDeptTempletName.focus();
 		        }
 		        else if (p_AprDeptTempletName.length > 7) {
@@ -77,7 +90,14 @@
 		</script>
 	</head>
 	<body class="popup">
-		<h1><spring:message code='ezApprovalG.t308'/></h1>
+		<h1>	
+		<c:if test ="${approvalFlag =='G'}">
+			<spring:message code='ezApprovalG.t308'/></title>
+		</c:if>
+		<c:if test = "${approvalFlag == 'S'}" >
+			<spring:message code='ezApprovalG.G0009'/>
+		</c:if>
+		</h1>
 		<span>▒ <spring:message code='ezApprovalG.t311'/></span>
 		<div class="nobox" style="margin-top:7px">
 		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%" maxlength="7">

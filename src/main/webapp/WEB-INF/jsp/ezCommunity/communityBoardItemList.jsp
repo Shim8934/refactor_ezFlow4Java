@@ -331,7 +331,25 @@
     		}
 
     		function refresh_onclick() {
-    			window.location.reload(false);
+				if ($('#tblList tbody').children().length == '2') {
+					newPage = CurPage - 1;
+					
+					if (newPage == 0) newPage = 1;
+					
+					if (newPage > 0) {
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;						
+					}
+				} else if ($('#tblList tbody').children().length == strListInfo.split(";").length) {
+	    			newPage = CurPage - 1;    			
+	    			
+	    			if (newPage == 0) newPage = 1;
+					
+	    			if (newPage > 0) {
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;						
+					}
+    			} else {
+    				window.location.reload(false);
+    			}
     		}
 
     		function AddToMyBoards() {

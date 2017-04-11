@@ -383,6 +383,11 @@ public class EzPortalController extends EgovFileMngUtil {
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
 			mode = req.getParameter("mode");
 		}
+		
+		//체크, 삭제 쿼리 실행
+		result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1(),userInfo.getTenantId());
+		//관리자 권한체크
+		ezPortalService.ezCkAdminACL(userInfo.getId(), pageID, result, userInfo.getLang(), userInfo.getTenantId());
 
 		if (mode.equals("edit")) {
 			//관리자 권한체크
@@ -463,12 +468,15 @@ public class EzPortalController extends EgovFileMngUtil {
 				logger.debug("strHTML=" + strHTML);
 			}
 		}
+		
 		if ((width == null  || width.equals("")) || width.equals("-1") || width.equals("0")) {
 			width = "100%";
 		}
+		
 		if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
 			height = "100%";
 		}
+		
 		if (!mode.equals("view")) {
 			displayName = ezPortalService.getTopMenuConfigItem("DisplayName", pageID,userInfo.getTenantId());
 			displayName2 = ezPortalService.getTopMenuConfigItem("DisplayName2", pageID,userInfo.getTenantId());
@@ -487,9 +495,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				} else {
 					pThemeSelectObject += "<option value='" + list.get(i).getuID() + "'>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+ "</option>";
 				}
-				
 			}
-			
 		}
 			
 		//사용자 영역에서만 팝업 공지사항을 오픈한다.
@@ -502,6 +508,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			int popUpHeight = 0;
 			String popUpPosition = "";
 			String cookieValue = "";
+			
 			for (int i=0; i<infoList.size(); i++) {
 				int itemSeq = infoList.get(i).getItemSeq();
 				Cookie[] cookies = req.getCookies();
@@ -518,8 +525,6 @@ public class EzPortalController extends EgovFileMngUtil {
 						popUp += "openPopup(" + itemSeq + ", " + popUpWidth + ", " + popUpHeight + ", " + popUpPosition + ");";
 					}
 				}
-			
-				
 			}
 			
 			if (popUp != null && !popUp.equals("")) {
@@ -527,39 +532,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			//스킨정보
-			
-			//권한체크
-			result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1(),userInfo.getTenantId());
-			logger.debug("ezAclCheck="+result);
-			String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID,userInfo.getLang());
-			logger.debug("ezCKAdminACL="+ezCKAdminACL);
-			logger.debug("pageID="+pageID);
-			
-		/*	if (result.equals("3")) {
-				//삭제 쿼리 실행
-				if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) != null && !ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
-					ezPortalService.deleteTBLPortalACL(ezCKAdminACL, userInfo.getId());
-				}
-				
-			} else {
-				//체크 쿼리
-				if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) == null || ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
-					ezPortalService.insertTBLPortalACL(ezCKAdminACL, userInfo.getId());
-				} else {
-					ezPortalService.updateTBLPortalACL(ezCKAdminACL, userInfo.getId());
-				}
-			}*/
-			
-			
-				//체크, 삭제 쿼리 실행
-			ezPortalService.ezCkAdminACL(userInfo.getId(), pageID, result, userInfo.getLang(), userInfo.getTenantId());
-			
 			strHTML = strHTML.replace("table-layout:fixed;", "");
 			
 			if (!mode.equals("edit") || !mode.equals("view")) {
 				mode = "view";
 			}
-			
 		}
 		
 		//jgw 관리자체크
@@ -594,11 +571,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("skinExist", skinExist);
 		model.addAttribute("script1", script1);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
-	
 		
 		return "/ezPortal/portalTopMenu";
 	}
-	
 	
 	@RequestMapping(value = "/ezPortal/portalPage.do")
 	public String portalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {

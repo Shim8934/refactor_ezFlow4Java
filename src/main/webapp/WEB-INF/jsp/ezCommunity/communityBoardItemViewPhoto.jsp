@@ -201,7 +201,7 @@
 	            xmlhttp = null;
 	            
 	            try {
-	                window.opener.refresh_onclick();
+	                window.opener.refresh_onclick2();
 	            } catch (e) {
 	            }
 	            
@@ -580,11 +580,11 @@
 	            }
 	        }
 
-	        window.onbeforeunload = function () {
-	            try {
-	                window.opener.document.Script.refresh_onclick2();
-	            } catch (e) { }
-	        }
+// 	        window.onbeforeunload = function () {
+// 	            try {
+// 	                window.opener.document.Script.refresh_onclick2();
+// 	            } catch (e) { }
+// 	        }
 		</script>
 		
 		

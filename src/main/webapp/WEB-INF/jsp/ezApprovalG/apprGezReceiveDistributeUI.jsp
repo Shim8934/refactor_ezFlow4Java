@@ -1380,7 +1380,7 @@
 	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
 	                </div>
 	                <div style="text-align: right;">
-	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.t432'/> <spring:message code='ezApprovalG.t1767'/></span></a>
+	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.t308'/> <spring:message code='ezApprovalG.t1767'/></span></a>
 	                </div>
 	            </td>
 	        </tr>
