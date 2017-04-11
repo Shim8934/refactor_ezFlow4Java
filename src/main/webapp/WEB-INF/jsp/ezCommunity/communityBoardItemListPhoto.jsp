@@ -372,6 +372,20 @@
 	        function refresh_onclick() {
 	            window.location.reload(false);
 	        }
+	        
+	        function refresh_onclick2() {
+	        	if ($('#tblList tbody tr').children().length == '11') {
+	        		newPage = parseInt(CurPage) - 1;
+		            
+	        		if (newPage == 0) newPage = 1;
+	        		
+		            if (newPage > 0) {
+		                window.location.href = "/ezCommunity/boardItemListPhoto.do?page=" + newPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + "<c:out value = '${code}' />";
+					}	
+	        	} else {
+		            window.location.reload(false);        		
+	        	}
+	        }
 	
 	        function AddToMyBoards() {
 	            var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");

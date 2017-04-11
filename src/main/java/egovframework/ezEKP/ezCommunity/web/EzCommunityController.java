@@ -4287,7 +4287,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return response.encodeRedirectURL("/error.do");
 		}
 		
-		if (EgovDateUtil.getDaysDiff(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("YYYY-MM-DD"), userInfo.getOffset(), false), item.getParentWriteDate().substring(0, 10)) > 0) {
+		if (EgovDateUtil.getDaysDiff(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), item.getParentWriteDate().substring(0, 10)) > 0) {
 			pReservedItem = "true";
 		}
 		
