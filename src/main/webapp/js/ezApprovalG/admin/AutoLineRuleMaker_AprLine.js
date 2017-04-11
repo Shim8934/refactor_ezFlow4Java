@@ -265,79 +265,79 @@ function AprTypeToName(tempCode) {
 
     switch (tempCode) {
         case "A03001":
-            retVal = strLangAprTypeS1;
+            retVal = strLangAprType1;
             break;
 
         case "A03002":
-            retVal = strLangAprTypeS2;
+            retVal = strLangAprType2;
             break;
 
         case "A03003":
-            retVal = strLangAprTypeS3;
+            retVal = strLangAprType3;
             break;
 
         case "A03004":
-            retVal = strLangAprTypeS4;
+            retVal = strLangAprType4;
             break;
 
         case "A03005":
-            retVal = strLangAprTypeS5;
+            retVal = strLangAprType5;
             break;
 
         case "A03006":
-            retVal = strLangAprTypeS6;
+            retVal = strLangAprType6;
             break;
 
         case "A03007":
-            retVal = strLangAprTypeS7;
+            retVal = strLangAprType7;
             break;
 
         case "A03008":
-            retVal = strLangAprTypeS8;
+            retVal = strLangAprType8;
             break;
 
         case "A03009":
-            retVal = strLangAprTypeS9;
+            retVal = strLangAprType9;
             break;
 
         case "A03011":
-            retVal = strLangAprTypeS11;
+            retVal = strLangAprType11;
             break;
 
         case "A03012":
-            retVal = strLangAprTypeS12;
+            retVal = strLangAprType12;
             break;
 
         case "A03013":
-            retVal = strLangAprTypeS13;
+            retVal = strLangAprType13;
             break;
 
         case "A03014":
-            retVal = strLangAprTypeS14;
+            retVal = strLangAprType14;
             break;
 
         case "A03015":
-            retVal = strLangAprTypeS15;
+            retVal = strLangAprType15;
             break;
 
         case "A03016":
-            retVal = strLangAprTypeS16;
+            retVal = strLangAprType16;
             break;
 
         case "A03017":
-            retVal = strLangAprTypeS17;
+            retVal = strLangAprType17;
             break;
 
         case "A03031":
-            retVal = strLangAprTypeS31;
+            retVal = strLangAprType31;
             break;
 
         case "A03032":
-            retVal = strLangAprTypeS32;
+            retVal = strLangAprType32;
             break;
 
         case "A03040":
-            retVal = strLangAprTypeS40;
+            retVal = strLangAprType40;
             break;
 
         default:
@@ -499,7 +499,7 @@ function MakeAprLineListXML (pAutoRuleGuid) {
             pListXml = pListXml + "<VALUE>" + "" + "</VALUE>";
             pListXml = pListXml + "</CELL>";
             pListXml = pListXml + "<CELL>";
-            pListXml = pListXml + "<VALUE>" + strLangAprStateS1 + "</VALUE>";
+            pListXml = pListXml + "<VALUE>" + strLangAprState1 + "</VALUE>";
             pListXml = pListXml + "</CELL>";
             pListXml = pListXml + "<CELL><VALUE></VALUE></CELL>"
             pListXml = pListXml + "</ROW>";
@@ -630,22 +630,22 @@ function GetProcessAprType(AprLineAddIndex, AprLineRow, pClass) {
 function AprlineNullAdd_onclick(Mode) {
     switch (Mode) {
         case "all":
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#drafter", "N", strResx436, strResx436, "", "", "", "", "", companyID);
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#boss", "N", strLangS1115, strLangS1115, "", "", "", "", "", companyID);
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#upboss", "N", strLangS1116, strLangS1116, "", "", "", "", "", companyID);
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#upupboss", "N", strLangS1117, strLangS1117, "", "", "", "", "", companyID);
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#upupupboss", "N", strLangS1118, strLangS1118, "", "", "", "", "", companyID);
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#upupupupboss", "N", strLangS1119, strLangS1119, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#drafter", "N", strResx436, strResx436, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#boss", "N", strLangS1115, strLangS1115, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#upboss", "N", strLangS1116, strLangS1116, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#upupboss", "N", strLangS1117, strLangS1117, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#upupupboss", "N", strLangS1118, strLangS1118, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#upupupupboss", "N", strLangS1119, strLangS1119, "", "", "", "", "", companyID);
             break;
         case "temp":
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#drafter", "N", strResx436, strResx436, "", "", "", "", "", companyID);
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#boss", "N", strLangS1115, strLangS1115, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#drafter", "N", strResx436, strResx436, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#boss", "N", strLangS1115, strLangS1115, "", "", "", "", "", companyID);
             break;
         case "user":
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "", "N", "", "", "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "", "N", "", "", "", "", "", "", "", companyID);
             break;
         case "draft":
-            AddRow_AprLine(strAprTypeS1, strAprStateS1, "#drafter", "N", strResx436, strResx436, "", "", "", "", "", companyID);
+            AddRow_AprLine(strAprType1, strAprState1, "#drafter", "N", strResx436, strResx436, "", "", "", "", "", companyID);
             break;
         case "dept":
             var treeView = new TreeView();
@@ -734,7 +734,7 @@ function AddRow_AprLine(pAPRTYPE, pAPRSTATE, pAPRMEMBERID, pAPRMEMBERISDEPTYN, p
     ListXML = ListXML + "<VALUE>" + AprTypeToName(pAPRTYPE) + "</VALUE>";
     ListXML = ListXML + "</CELL>";
     ListXML = ListXML + "<CELL>";
-    ListXML = ListXML + "<VALUE>" + strLangAprStateS1 + "</VALUE>";
+    ListXML = ListXML + "<VALUE>" + strLangAprState1 + "</VALUE>";
     ListXML = ListXML + "</CELL>";
     ListXML = ListXML + "<CELL><VALUE></VALUE></CELL>";
     ListXML = ListXML + "</ROW></ROWS></LISTVIEWDATA>";
@@ -831,7 +831,7 @@ function AddAprLine_Person(pCurSelectedRow) {
 //            }
         }
 
-        AddRow_AprLine(strAprTypeS1, strAprStateS1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
+        AddRow_AprLine(strAprType1, strAprState1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
             pAPRMEMBERJOBTITLE2, pAPRMEMBERDEPTID, pAPRMEMBERDEPTNAME, pAPRMEMBERDEPTNAME2, pAPRMEMBERLDAPPATH);
     }
 }
@@ -878,11 +878,11 @@ function AddAprLine_Dept(pCurSelectedRow) {
 //            }
         }
         
-        var AprTypeTopValue = ChangeAprlineType("group", strAprTypeS1);
+        var AprTypeTopValue = ChangeAprlineType("group", strAprType1);
         AprTypeTopValue = AprTypeTopValue.substring(AprTypeTopValue.indexOf("value=") + 7, AprTypeTopValue.indexOf(" value2=") - 1);
-        strAprTypeS1 = AprTypeTopValue;
+        strAprType1 = AprTypeTopValue;
         
-        AddRow_AprLine(strAprTypeS1, strAprStateS1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
+        AddRow_AprLine(strAprType1, strAprState1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
             pAPRMEMBERJOBTITLE2, pAPRMEMBERDEPTID, pAPRMEMBERDEPTNAME, pAPRMEMBERDEPTNAME2, pAPRMEMBERLDAPPATH);
     }
 }
@@ -929,7 +929,7 @@ function AddAprLine_DeptHeader(pCurSelectedRow) {
 //            }
         }
 
-        AddRow_AprLine(strAprTypeS1, strAprStateS1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
+        AddRow_AprLine(strAprType1, strAprState1, pAPRMEMBERID, pAPRMEMBERISDEPTYN, pAPRMEMBERNAME, pAPRMEMBERNAME2, pAPRMEMBERJOBTITLE,
             pAPRMEMBERJOBTITLE2, pAPRMEMBERDEPTID, pAPRMEMBERDEPTNAME, pAPRMEMBERDEPTNAME2, pAPRMEMBERLDAPPATH);
     }
 }
@@ -950,7 +950,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
             var j = 0;
             
             for (i = 0; i < SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE").length; i++) {
-                if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprTypeS13) {
+                if (SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE") == strAprType13) {
                     p_AprlineValue[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "NAME");
                     p_AprlineCode[j] = SelectSingleNodeValue(SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[i], "CODE");
                     j = j + 1;
@@ -1079,19 +1079,19 @@ function initJunGyul() {
     for (var i = pTotalRowsLen - 1; i > 0; i--) {
         if (GetAttribute(pTotalRows[i], "DATA7") == "N") {
             for (var z = 0; z < pTotalRows[i].cells[4].childNodes[0].length; z++) {
-                if (pTotalRows[i].cells[4].childNodes[0].options[z].selected && getNodeText(pTotalRows[i].cells[4].childNodes[0].options[z]) == strLangAprTypeS4) {
+                if (pTotalRows[i].cells[4].childNodes[0].options[z].selected && getNodeText(pTotalRows[i].cells[4].childNodes[0].options[z]) == strLangAprType4) {
                     for (var y = 0; y < i; y++) {
                         var SelectObjectId = GetAttribute(pTotalRows[y], "id") + "select";
 
                         var p_Option = document.createElement("OPTION");
-                        setNodeText(p_Option,strLangAprTypeS3);
+                        setNodeText(p_Option,strLangAprType3);
                         p_Option.setAttribute("value", "A03003");
-                        p_Option.setAttribute("value2", strLangAprTypeS3);
+                        p_Option.setAttribute("value2", strLangAprType3);
 
                         var AprTypeObj = "<select id='" + SelectObjectId + "' disabled style='width:100px;'>" + p_Option.outerHTML + "</select>";
                         pTotalRows[y].cells[4].innerHTML = AprTypeObj;
 
-                        SetAttribute(pTotalRows[y], "DATA11", strAprTypeS3);
+                        SetAttribute(pTotalRows[y], "DATA11", strAprType3);
                     }
                 }
             }
@@ -1142,8 +1142,8 @@ function AprLineTypeCheck(p_AprLineValueName, p_AprLineValueCode, CurSelRow) {
             if (p_AprLineValueCode == "A03004") {
                 var pCurSelIndex = getNodeText(CurSelRow[0].cells[0]);
                 var pTmpAprLineTypeCode, pTmpAprLineTypeName;
-                pTmpAprLineTypeCode = strAprTypeS3;
-                pTmpAprLineTypeName = strLangAprTypeS3;
+                pTmpAprLineTypeCode = strAprType3;
+                pTmpAprLineTypeName = strLangAprType3;
                 rtnvalue = ApplyJunGyulFunction(pCurSelIndex, pTmpAprLineTypeCode, pTmpAprLineTypeName);
                 if (rtnvalue == "check") {
                     return;
@@ -1161,16 +1161,16 @@ function AprLineTypeCheck(p_AprLineValueName, p_AprLineValueCode, CurSelRow) {
                     
 
                     if (templinevalue > temprowvalue) {
-                        if (GetAttribute(pAprLineRow[i], "DATA4") == strAprTypeS3) {
+                        if (GetAttribute(pAprLineRow[i], "DATA4") == strAprType3) {
 
                             var cnt = pAprLineRow[i].cells[4].childNodes[0].length;
-                            if (pAprLineRow[i].cells[4].childNodes[0].value == strAprTypeS3) {
+                            if (pAprLineRow[i].cells[4].childNodes[0].value == strAprType3) {
                                 if (pAprLineRow[i].cells[4].childNodes[0].disabled) {
-                                    var AprTypeObj = ChangeAprlineType("user", strAprTypeS1);
+                                    var AprTypeObj = ChangeAprlineType("user", strAprType1);
                                     AprTyepID = GetAttribute(pAprLineRow[i], "id") + "select";
                                     AprTypeObj = "<select id='" + AprTyepID + "' onChange=\"return AprlineType_onchange(this)\" >" + AprTypeObj + "</select>";
                                     pAprLineRow[i].cells[4].innerHTML = AprTypeObj;
-                                    SetAttribute(pAprLineRow[i], "DATA11", strAprTypeS1);
+                                    SetAttribute(pAprLineRow[i], "DATA11", strAprType1);
                                 }
                             }
                         }
@@ -1217,13 +1217,13 @@ function APRLINESNDownFunction() {
 
 
             if (GetAttribute(pSelectedRow[0], "DATA7") == "N") {
-                if (pSelectedRow[0].cells[4].childNodes[0].value == strAprTypeS3 || pSelectedRow[0].cells[4].childNodes[0].value == strAprTypeS4) {
+                if (pSelectedRow[0].cells[4].childNodes[0].value == strAprType3 || pSelectedRow[0].cells[4].childNodes[0].value == strAprType4) {
                     OpenAlertUI(strLangS577);
                     return;
                 }
 
                 if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
-                    if (p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS3 || p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS4) {
+                    if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                         OpenAlertUI(strLangS576);
                         return;
                     }
@@ -1232,7 +1232,7 @@ function APRLINESNDownFunction() {
             }
             else {
                 if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
-                    if (p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS3 || p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS4) {
+                    if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                         OpenAlertUI(strLangS576);
                         return;
                     }
@@ -1394,17 +1394,17 @@ function APRLINESNUPPERFunction() {
                 return;
 
             if (GetAttribute(pSelectedRows[0], "DATA7") == "N") {
-                if (pSelectedRows[0].cells[4].childNodes[0].value == strAprTypeS3 || pSelectedRows[0].cells[4].childNodes[0].value == strAprTypeS4) {
+                if (pSelectedRows[0].cells[4].childNodes[0].value == strAprType3 || pSelectedRows[0].cells[4].childNodes[0].value == strAprType4) {
                     OpenAlertUI(strLangS577);
                     return;
                 }
-                if (p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS4) {
+                if (p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                     OpenAlertUI(strLangS287);
                     return;
                 }
                 if (pAPRLINE.GetDataRows().length != parseInt(pSelectedRows[0].childNodes[0].innerHTML)) {
                     if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
-                        if (p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS3 || p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS4) {
+                        if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                             OpenAlertUI(strLangS576);
                             return;
                         }
@@ -1413,7 +1413,7 @@ function APRLINESNUPPERFunction() {
             }
             else {
                 if (GetAttribute(p_NextSelRow, "DATA7") == "N") {
-                    if (p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS3 || p_NextSelRow.cells[4].childNodes[0].value == strAprTypeS4) {
+                    if (p_NextSelRow.cells[4].childNodes[0].value == strAprType3 || p_NextSelRow.cells[4].childNodes[0].value == strAprType4) {
                         OpenAlertUI(strLangS576);
                         return;
                     }
