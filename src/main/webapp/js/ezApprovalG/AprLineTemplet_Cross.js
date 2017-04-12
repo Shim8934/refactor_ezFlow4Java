@@ -268,13 +268,11 @@ function CreateNewAprLineTemplet(p_AprLineTempletName)
 	
 	xmlhttp.open("Post","/ezApprovalG/createAprLineTemplet.do",false);
 	xmlhttp.send(AprLineInfo);
-    
-    var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-    var RtnVal = getNodeText(dataNodes[0]);
+	
+    var RtnVal = xmlhttp.responseText;
     	
-	if(RtnVal == "TRUE")
-	{
-	}else{
+	if(RtnVal == "TRUE") {
+	} else {
 		var parameter = strLang199;
 		var url = "/ezApprovalG/ezAprAlert.do";
 		var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
