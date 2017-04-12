@@ -8,6 +8,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
@@ -43,12 +44,11 @@
 	        var m_tabDialogState = { "org": "select", "contact": "normal", "dl": "normal" };
 	        var AddressTreeView = null;
 	        var ua = navigator.userAgent;
+	        var strLang_1 = "<spring:message code='ezAddress.t315' />";
+	        var strLang_2 = "<spring:message code='ezAddress.jsh04' />";
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
-	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1)
-	                window.resizeTo(970, 680);
-	            else
-	                window.resizeTo(970, 720);
+                window.resizeTo(970, 680 + (window.outerHeight - window.innerHeight));
 	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -271,7 +271,6 @@
 	        }
 	        var BlockSize = "5";
 	        function makePageSelPage() {
-	
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
@@ -400,33 +399,101 @@
 				    }
 	            }
 	
-	            function check_length(chkstr, maxlength, fieldname) {
-	                var length = 0;
-	                var i;
-	
-	                length = chkstr.length;
-	
-	                if (length > maxlength) {
-	                    alert(fieldname + "<spring:message code='ezAddress.t227' />" + maxlength + "<spring:message code='ezAddress.t228' />");
-	                      return false
-	                  }
-	
-	                  return true;
-	              }
-	
-	              function delete_member() {
-	                  g_bChanged = true;
-	
-	                  while (true) {
-	                      selectindex = document.all("ListMember").selectedIndex;
-	
-	                      if (selectindex < 0 || selectindex >= document.all("ListMember").length)
-	                          return;
-	
-	                      document.all("ListMember").options[selectindex] = null;
-	                  }
-	              }
-	
+            function check_length(chkstr, maxlength, fieldname) {
+                var length = 0;
+                var i;
+
+                length = chkstr.length;
+
+                if (length > maxlength) {
+                    alert(fieldname + "<spring:message code='ezAddress.t227' />" + maxlength + "<spring:message code='ezAddress.t228' />");
+                      return false
+                  }
+
+                  return true;
+              }
+
+            function delete_member() {
+                  g_bChanged = true;
+
+                  while (true) {
+                      selectindex = document.all("ListMember").selectedIndex;
+
+                      if (selectindex < 0 || selectindex >= document.all("ListMember").length)
+                          return;
+
+                      document.all("ListMember").options[selectindex] = null;
+                  }
+              }
+		
+            function search_press(e) {
+  		        if (window.event) {
+  	            	if (window.event.keyCode == 13) {
+  		                search_click("search");
+  	            	}
+  	        	} else {
+  	            	if (e.which == 13)
+  		                search_click("search");
+  	        	}
+  		    }
+            
+            function keyword_Clear() {
+		        document.getElementById("keyword").value = "";
+	    	}
+            
+  	    	var issearch = false;
+  	    	function search_click(type) {
+  		        if (document.getElementById("keyword").value == "") {
+  	            	alert("<spring:message code='ezAddress.jsh05'/>");
+  	            	document.getElementById("keyword").focus();
+  	            	return;
+  	        	}
+  	        	if (type == "search") {
+  		            CurPage = "1";
+  	            	issearch = true;
+  	        	}
+
+  	        	$.ajax({
+  					url : '/ezOrgan/getSearchList.do',
+  					method : 'POST',
+  					dataType : "text",
+  					data : {
+  						search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value,
+  						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						page : CurPage,
+  						type : "user"
+  					},
+     					success : function(xml) {
+     						event_displayUserList2(loadXMLString(xml));
+  					},
+  					error : function(jqXHR, textStatus, errorThrown) {
+  						alert("<spring:message code='ezAddress.t353'/>" + textStatus);
+  					}
+  				});
+  	        	
+  	        	var usedefault;
+  	        	if (CrossYN()) {
+  	        		usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
+  	        	} else {
+  	        		usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");
+  	        	}
+  	        	
+  	    	}
+  	    	
+  	    	function event_displayUserList2(xml) {
+		        if (xml != null) {
+	                if (SelectNodes(xml, "LISTVIEWDATA/ROWS/ROW").length == 0) {
+                    	alert("<spring:message code='ezAddress.jsh06'/>");
+	                } else {
+	                    pListXML_Info = xml;
+                    	pSeach = true;
+                    	DisplayUserImageList();
+                    	makePageSelPage();
+                	}
+	    	    }
+	    	}
+	              
 	        function applyCurrentData() {
 	            var XmlText = getOrganinfo();
 	            if (typeof (XmlText) == "undefined")
@@ -494,8 +561,6 @@
 	                listview.GetDataRows()[i].childNodes[0].style.textOverflow = "";
 	            }
 	        }
-	
-	
 	
 	        function getOrganinfo() {
 	            if (addressid != "") {
@@ -947,7 +1012,7 @@
 	                document.getElementById("txtlist_table").style.display = "none";
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                if (pSeach) {
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -962,7 +1027,7 @@
 	                else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang_1 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang_2 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -1724,7 +1789,7 @@
 	                <td>
 	                    <table style="width: 100%">
 	                        <tr>
-	                            <td style="height: 25px;">
+	                            <td style="height: 35px;">
 	                                <h2 id="subtitle" style="display: none"><spring:message code='ezAddress.t231' /></h2>
 	                                <div id="tabnav" style="float: left; width: 100%;">
 	                                    <ul>
@@ -1772,6 +1837,29 @@
 	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
+				            <div class="portlet_tabpart03_top" id="tab1" style="border-left:1px solid #d3d2d2;">
+			    	           <table style="margin-top:5px;width:100%;">
+									<tr>
+			                       		<td>
+			                           		<div style="margin-left:5px;">
+			                            		<select id="search_type">
+			                            			<option selected value="displayname" usedefault="1"><spring:message code='ezAddress.t124'/></option>
+			                            			<option value="description" usedefault="1"><spring:message code='ezAddress.t54'/></option>
+			                            			<option value="title" usedefault="1"><spring:message code='ezAddress.t359'/></option>
+			                            			<option value="telephonenumber" usedefault="1"><spring:message code='ezAddress.t999900005'/></option>
+			                            			<option value="mobile" usedefault="0"><spring:message code='ezAddress.t999900006'/></option>
+			                            			<option value="HomePhone" usedefault="0"><spring:message code='ezAddress.t192'/></option>
+			                            			<option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezAddress.t333'/></option>
+			                            			<option value="mail" usedefault="0"><spring:message code='ezAddress.t264'/></option>
+			                            			<option value="streetAddress" usedefault="0"><spring:message code='ezAddress.t296'/></option>
+			                            		</select>
+			                            		<input id="keyword" value="" onKeyPress="search_press(event)" onmousedown="keyword_Clear();" style="width:130px;margin:0px;">
+			                            			<a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezAddress.t142'/></span></a>
+			                           		</div>
+			                       		</td>
+			                   		</tr>
+			               		</table>
+			            	</div>
 	                        <table style="border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:3px;">
 	                            <tr>
 	                                <td>
@@ -1794,17 +1882,17 @@
 	                                    <div style="vertical-align: top; height: 433px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                        <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                            <tr>
-	                                                <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t124' /></td>
-	                                                <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t359' /></td>
+	                                                <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t124' /></td>
+	                                                <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t359' /></td>
 	                                                <td class="td_gray" style="font-weight: bold;"><spring:message code='ezAddress.t192' /></td>
 	                                            </tr>
 	                                        </table>
 	                                        <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                            <tr>
-	                                                <td style="width: 110px; font-weight: bold;" class="td_gray">1</td>
-	                                                <td style="width: 90px; font-weight: bold;" class="td_gray">2</td>
-	                                                <td style="width: 80px; font-weight: bold;" class="td_gray">3</td>
-	                                                <td class="td_gray" style="font-weight: bold;">4</td>
+	                                                <td style="width: 110px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t54' /></td>
+	                                                <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t358' /></td>
+	                                                <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezAddress.t359' /></td>
+	                                                <td class="td_gray" style="font-weight: bold;"><spring:message code='ezAddress.t192' /></td>
 	                                            </tr>
 	                                        </table>
 	                                    </div>
