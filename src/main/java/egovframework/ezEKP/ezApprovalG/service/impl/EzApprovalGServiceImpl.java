@@ -2925,7 +2925,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateLineTempletDetailInfo(Document xmlDom, Locale locale, String companyID, String lang, int tenantID) throws Exception {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
-		String rtnVal = "";
+		String rtnVal = "TRUE";
 		
 		NodeList docNode = xmlDom.getElementsByTagName("APRTEMP");
 		NodeList rowNode = xmlDom.getElementsByTagName("ROW");

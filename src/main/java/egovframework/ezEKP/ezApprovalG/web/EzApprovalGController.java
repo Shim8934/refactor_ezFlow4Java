@@ -1156,11 +1156,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/createAprLineTemplet.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String createAprLineTemplet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String aprLineXml) throws Exception{
+		logger.debug("createAprLineTemplet started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(aprLineXml);
 		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-
+		
+		logger.debug("createAprLineTemplet ended. result = " + result);
+		
 		return result;
 	}
 	
