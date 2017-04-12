@@ -2055,6 +2055,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertGongRamAprAttachInfo(map);
 
 		}
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
 		map.put("v_GONGRAMDOCID", gongRamDocID.trim());
 		map.put("v_DATE", "EndDate");
 		ezApprovalGDAO.updateGongRamAprDocInfo(map);
