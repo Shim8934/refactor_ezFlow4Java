@@ -82,9 +82,9 @@
 		
 		        if(bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0 ) {
 		        	if("${ userInfo.lang }" == "2")
-		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
 		            else
-		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
 		
 		            file.splice(file.length - filelist.length, filelist.length);
 		            return;
@@ -456,9 +456,9 @@
 		        
 		        if(bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0 ) {
 		        	if("${ userInfo.lang }" == "2")
-		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
 		            else
-		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
 		            return false;
 		        }
 
