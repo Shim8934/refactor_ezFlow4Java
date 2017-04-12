@@ -40,6 +40,7 @@
 	    <script src="/js/Common.js" type="text/javascript"></script>
 	    
 	    <script type="text/javascript">
+	    	var approvalFlag = "${approvalFlag}";
 	        var OrderCell = "";
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user"; 							// 사용자-부서구분
@@ -79,7 +80,12 @@
 	        var linealt13 = "<spring:message code='ezApprovalG.t2001'/>";
 	        var linealt14 = "<spring:message code='ezApprovalG.t322'/>";
 	        var linealt15 = "<spring:message code='ezApprovalG.t323'/>";
-	        var linealt16 = "<spring:message code='ezApprovalG.t324'/>";
+	        if(approvalFlag == "G"){
+	        	var linealt16 = "<spring:message code='ezApprovalG.t324'/>";	
+	        } else {
+	        	var linealt16 = "<spring:message code='ezApproval.t212'/>";
+	        }
+	       
 	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
@@ -167,7 +173,7 @@
 	        /* 2015-06-23 추가 - KSK */
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
-	        var approvalFlag = "${approvalFlag}";
+	        
 	        var hideCabinet = "${hideCabinet}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var checkdocinfo = false;
@@ -1574,24 +1580,24 @@
 	                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
 	                            </c:if>
 	                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
-	                            <p><span id="3tab3" divname="Group"><spring:message code='ezApprovalG.t1568'/></span></p>
+	                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 	                        </div>
 	                    </div>
 	                    <div id="ReceptOrgan" style="display: none;">
 	                        <table style="margin-left: 0px;table-layout: fixed;width:99.5%">
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                	<c:if test="${approvalFlag eq 'G' }">
+	                                	<c:if test="${approvalFlag =='G' }">
 		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 524px; width: 388px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
 		                                    </div>
 	                                    </c:if>
-	                                    <c:if test="${approvalFlag eq 'S' }">
+	                                    <c:if test="${approvalFlag == 'S' }">
                                         	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
 		                                    </div>
 	                                    </c:if>
 	                                </td>
 	                            </tr>
-	                            <c:if test="${approvalFlag eq 'S' }">
+	                            <c:if test="${approvalFlag == 'S' }">
 	                            <tr>
                                     <td style="border: 1px solid #b6b6b6;">
                                         <div class="border_gray" style="border: 0px;">
