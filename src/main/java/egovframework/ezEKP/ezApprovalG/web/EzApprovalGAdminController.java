@@ -603,13 +603,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag);
 		
-		logger.debug("formSave started. result = " + result);
+		logger.debug("formSave ended. result = " + result);
 		
-		if (result.indexOf("ERROR") > 0) {
-			return "<DATA>" + result + "</DATA>";
-		} else {
-			return "<DATA>OK</DATA>";
-		}
+		
+		return "<DATA>OK</DATA>";
 	}
 	
 	/**

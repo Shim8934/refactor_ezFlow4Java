@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<style>
 		#lstAttachLink {
@@ -73,15 +74,25 @@
 		                tempfilesize += filelist[i].size;
 		            }
 		        }
-		
+				
 		        if (isbigyn == "Y")
 		        {
 		            bigFileCheck = true;
 		        }
 		
+		        if(bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0 ) {
+		        	if("${ userInfo.lang }" == "2")
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
+		            else
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+		
+		            file.splice(file.length - filelist.length, filelist.length);
+		            return;
+		        }
+		        
 		        if (bigFileCheck)
 		            alert(strLangKMS01+window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang26 + strLang79);
-		
+
 		        if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize) {
 		            if("${ userInfo.lang }" == "2")
 		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
@@ -91,19 +102,21 @@
 		            file.splice(file.length - filelist.length, filelist.length);
 		            return;
 		        }
-		
+
 		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
-		            if ("${ userInfo.lang }" == "2")
+		        	
+		        	if ("${ userInfo.lang }" == "2")
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
 		            else
 		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
-		            file.splice(file.length - filelist.length, filelist.length);
+		            
+		        	file.splice(file.length - filelist.length, filelist.length);
 		            return;
 		        }
 		
 		        filesize += tempfilesize;
 		        bigfilesize += tempbigfilesize;
-		
+
 		        checkMailStatusAndFileUpload();
 		        
 		        if (CrossYN()) {
@@ -181,6 +194,10 @@
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
 		        parent.DragObjectComplet();
+		        
+		        if(window.parent.totBigSizeAttachMBSize == 0) {
+				$("body div:first span:first a:nth-child(2)").css("display","none");
+		        }
 		    }
 		    var AttatchReturnValue;
 		    function uploadComplete(evt) {
@@ -375,7 +392,7 @@
 		        fd.append("changesize", window.parent.FBigSizeAttachSize);
 		        fd.append("txtName", window.parent.filedate);
 		        fd.append("endDay", window.parent.BigSizeMailAttachDelDay);
-		
+
 		        xhr.upload.addEventListener("progress", uploadProgress, false);
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
@@ -414,7 +431,7 @@
 		    }
 		    
 		    function filesizecheck(fileXml) {
-		        var attachFileXml = fileXml;
+				var attachFileXml = fileXml;
 		        
 		        var tempfilesize = 0;
 		        var tempbigfilesize = 0;
@@ -435,6 +452,14 @@
 
 		        if (isbigyn == "Y") {
 		            bigFileCheck = true;
+		        }
+		        
+		        if(bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0 ) {
+		        	if("${ userInfo.lang }" == "2")
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
+		            else
+		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+		            return false;
 		        }
 
 		        if (bigFileCheck)
