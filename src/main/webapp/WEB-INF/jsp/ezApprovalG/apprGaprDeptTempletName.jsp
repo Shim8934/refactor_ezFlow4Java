@@ -98,7 +98,7 @@
 			<spring:message code='ezApprovalG.G0009'/>
 		</c:if>
 		</h1>
-		<span>▒ <spring:message code='ezApprovalG.t311'/></span>
+		<span>▒ <c:if test ="${approvalFlag =='G'}"><spring:message code='ezApprovalG.t311'/></c:if><c:if test ="${approvalFlag =='S'}"><spring:message code='ezApproval.t199'/></c:if></span>
 		<div class="nobox" style="margin-top:7px">
 		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%" maxlength="7">
 		</div>
