@@ -298,14 +298,14 @@
 		   <tr id="HisDoc"> 
 		    <td>
 		    	<div class="listview" style="overflow:auto;">
-		      		<div ID="divlvDocList" style="border:0; width:696px; Height:349px;margin:1px 1px 1px 1px;"></div>
+		      		<div ID="divlvDocList" style="border:0; width:696px; Height:340px;margin:1px 1px 1px 1px;"></div>
 		      	</div>
 		    </td>
 		  </tr>
 		  <tr  id="HisAttach" > 
 		    <td>
 		    	<div class="listview" style="overflow:auto;">
-		      		<div ID="divlvAttachList" style="border:0; width:696px; Height:349px;margin:1px 1px 1px 1px;"></div>
+		      		<div ID="divlvAttachList" style="border:0; width:696px; Height:340px;margin:1px 1px 1px 1px;"></div>
 		      	</div>
 		    </td>
 		  </tr>
