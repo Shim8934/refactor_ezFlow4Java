@@ -2203,7 +2203,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String cabinetID = request.getParameter("cabinetID");
 		String taskCode = request.getParameter("taskCode");
 		String type = request.getParameter("type");
+		
+		logger.debug("type = " + type);
+		
 		String result = ezApprovalGService.setMyTaskCode(userInfo.getId(), userInfo.getDeptID(), cabinetID, taskCode, type, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		logger.debug("setMyTaskCode ended.");
 
 		return result;

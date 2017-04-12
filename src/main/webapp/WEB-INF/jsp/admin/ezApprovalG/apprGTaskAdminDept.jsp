@@ -185,7 +185,7 @@
 		                alert("<spring:message code = 'ezApprovalG.lhj02' />");
 		            } else {
 		                DisplayTaskList_Admin(Resultxml);
-		                listcount.innerHTML = "<b>" + deptName + "</b>의 " + ListName + " : <span class='point'>" + NodeListLen + "</span> 개";
+		                listcount.innerHTML = "<b>" + deptName + "</b><spring:message code = 'ezApprovalG.t363' />" + ListName + " : <span class='point'>" + NodeListLen + "</span> <spring:message code = 'ezApprovalG.t1003' />";
 		            }
 		        }
 		    }
