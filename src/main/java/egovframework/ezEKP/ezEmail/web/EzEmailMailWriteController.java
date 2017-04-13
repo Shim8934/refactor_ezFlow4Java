@@ -2950,8 +2950,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			} catch (Exception e) {
 				e.printStackTrace();
 				
-				//OVERQUOTA/OVERMESSAGESIZE exception이 아니면 retry한다.
-				if (e.getMessage().indexOf("OVERQUOTA") == -1 && e.getMessage().indexOf("OVERMESSAGESIZE") == -1 ) {
+				//OVERQUOTA / OVERMESSAGESIZE / Invalid Addresses exception이 아니면 retry한다.
+				if (e.getMessage().indexOf("OVERQUOTA") == -1 && e.getMessage().indexOf("OVERMESSAGESIZE") == -1
+						&& e.getMessage().indexOf("Invalid Addresses") == -1) {
 					retryFlag = true;
 					--retryCount;
 					
