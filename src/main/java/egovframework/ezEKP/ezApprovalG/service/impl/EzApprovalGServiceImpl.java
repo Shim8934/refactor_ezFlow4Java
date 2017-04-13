@@ -19920,7 +19920,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			userSecurityCode = ezApprovalGDAO.selectUserSecurityCode(map);
 		}
 				
-		if (userSecurityCode.equals("") || userSecurityCode == null) {
+		if (userSecurityCode == null || userSecurityCode.equals("")) {
 			map.put("v_USERSECCODE", "0");
 		} else {
 			map.put("v_USERSECCODE", userSecurityCode);
@@ -19993,7 +19993,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
 		}
 		
-		if (contID.equals("") || contID == null) {
+		if (contID == null || contID.equals("")) {
 			map.put("v_CONTFLAG", "0");
 		} else {
 			map.put("v_CONTFLAG", "1");
@@ -20420,7 +20420,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		//조직도 사용자 보안등급 가져오기
 		
-		if(!userID.equals("") && userID != null) {
+		if(userID != null && !userID.equals("")) {
 			userSecurityCode = ezApprovalGDAO.selectUserSecurityCode(map);
 		}
 				
