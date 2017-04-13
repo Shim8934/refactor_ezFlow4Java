@@ -14,18 +14,17 @@
 			 var RetValue;
 			 
 			 $(document).ready(function() {
-		            try {
-		                RetValue = opener.personsearch_print_dialogArguments[0];
-		            } catch (e) {
-		                RetValue = dialogArguments
-		            }
-		        
+				try {
+		        	RetValue = opener.personsearch_print_dialogArguments[0];
+		        } catch (e) {
+		        	RetValue = dialogArguments
+		        }
 	
-		            var xmlRtn = RetValue["TreeXml"];
-		            var pListType = RetValue["ListType"];
-		            var pSeach = RetValue["Search"];
+		        var xmlRtn = RetValue["TreeXml"];
+		        var pListType = RetValue["ListType"];
+		        var pSeach = RetValue["Search"];
 	
-		            document.getElementById("SelectDeptNM").innerHTML = RetValue["Dept"];
+		        document.getElementById("SelectDeptNM").innerHTML = RetValue["Dept"];
 	
 		        document.getElementById("Print_DeptUserImgList").innerHTML = "";
 		        document.getElementById("Print_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes
@@ -65,7 +64,7 @@
 		                MainTable.style.marginLeft = "auto";
 		                MainTable.style.marginRight = "auto";
 		                var M_TR = document.createElement("TR");
-		           /*      if (CrossYN()) {
+		                /*  if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
 		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
@@ -78,12 +77,12 @@
 		                        M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
 		                                          SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
 		                    }
-		                } */
+		                }  */
 		                
-		                for (var NodeCount = 0; NodeCount < GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]).length; NodeCount++) {
+		                 for (var NodeCount = 0; NodeCount < GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]).length; NodeCount++) {
 		                    var Nodes = GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]);
 		                    M_TR.setAttribute("_" + Nodes[NodeCount].nodeName, trim_Cross(getNodeText(Nodes[NodeCount])));
-		                }
+		                } 
 	
 		                var M_TR_TD = document.createElement("TD");
 		                M_TR_TD.setAttribute("class", "pictd");
@@ -153,7 +152,7 @@
 		            }
 		            else {
 		                var M_TR = document.createElement("TR");
-		   /*              if (CrossYN()) {
+		               /*  if (CrossYN()) {
 		                    for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
 		                        if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
 		                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
@@ -166,12 +165,12 @@
 		                        M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
 		                                          SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
 		                    }
-		                } */
+		                }  */
 		                
-		                for (var NodeCount = 0; NodeCount < GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]).length; NodeCount++) {
+		                 for (var NodeCount = 0; NodeCount < GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]).length; NodeCount++) {
 		                    var Nodes = GetChildNodes(GetChildNodes(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i))[0]);
 		                    M_TR.setAttribute("_" + Nodes[NodeCount].nodeName, trim_Cross(getNodeText(Nodes[NodeCount])));
-		                }
+		                } 
 	
 		                if (pSeach) {
 		                    var M_TR_TD1 = document.createElement("TD");

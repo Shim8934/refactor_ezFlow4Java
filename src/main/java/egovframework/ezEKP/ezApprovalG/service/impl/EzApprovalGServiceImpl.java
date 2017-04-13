@@ -9536,8 +9536,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.insertBebuAprReceiptProcessInfoS(map);
 				} else {
 					map.put("v_APRSTATE", staASBaeBu);
-					map.put("v_maxSN", Integer.toString(maxSN));
-					map.put("v_TEMPSN", Integer.toString(maxSN-1));
+					map.put("v_maxSN", Integer.toString(maxSN)+1);
+					map.put("v_TEMPSN", Integer.toString(maxSN)+1);
 					ezApprovalGDAO.insertSetBebuAprReceiptProcessInfoS(map);
 				}
 				// 표준모듈 (2007.05.07) : 다국어
@@ -9767,7 +9767,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		List<ApprGReceiveDocVO> apprGReceiveDocVOList = ezApprovalGDAO.getReceiveDocList(map);
-		
+		 
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
