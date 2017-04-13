@@ -58,16 +58,13 @@ var strLang56 = "결재선 변경 Flag; ";
 var strLang57 = "감사사인칸 지정..";
 var strLang58 = "원결재자ID";
 var strLang59 = "결재선 지정화면";
-var strLang60 = "수발신 사인정보 , 2000.9.5";
 var strLang61 = "결재유형";
 var strLang62 = "부서명";
 var strLang63 = "사용자명";
-var strLang64 = "결재상태 . 2000.8.21 김성헌";
 var strLang65 = "결재안함 사유";
 var strLang66 = "발의자";
 var strLang67 = "보고자";
 var strLang68 = "결재선 변경 Flag ";
-var strLang69 = "결재상태 2000.8.21 김성헌";
 var strLang70 = "결재안함사유";
 var strLang71 = "리스트 중에 몇번째부터 작업할 것인가.";
 var strLang72 = "대기";
@@ -96,8 +93,6 @@ var strLang94 = "수신자:";
 var strLang95 = "넘겨줄 파라미터 노드 생성 ListType";
 // conn\conn.js
 var strLang96 = "기안:draft, 수신:susin"
-var strLang97 = "가 없는 ASP"
-var strLang98 = "가 있는 ASP"
 var strLang99 = "데이터전송에 실패하여 결재를 완료할 수 없습니다!"
 var strLang100 = "원인:"
 var strLang101 = "단위로 가지고 온다. "
@@ -145,9 +140,7 @@ var strLang132 = "문서를 다시 선택하여 주십시요!"
 var strLang133 = "문서번호-기안시채번"
 var strLang134 = "문서번호"
 var strLang135 = "시행일자"
-var strLang136 = "표준모듈 (2007.02.28) 수정 :완료문서 pc 저장후 기안시 시행일자 초기화"
 var strLang137 = "접수일자"
-var strLang138 = "표준모듈 (2007.02.28) 수정 :완료문서 pc 저장후 기안시 접수일자 초기화"
 var strLang139 = "수신"
 var strLang140 = "우편번호"
 var strLang141 = "주소"
@@ -160,7 +153,6 @@ var strLang147 = "담당상위책임자 직위"
 var strLang148 = "담당상위책임자명"
 var strLang149 = "담당자"
 var strLang150 = "담당자 직위"
-var strLang151 = "이멜"
 var strLang152 = "보존기간"
 var strLang153 = "공개유무"
 var strLang154 = "심사자명"
@@ -193,12 +185,10 @@ var strLang178 = "관인"
 var strLang179 = "서명"
 var strLang180 = "심볼"
 var strLang181 = "로고"
-var strLang182 = "파서 오류(Pubdoc) : "
 var strLang183 = "암호화가 가능한 부서"
 var strLang184 = "암호화 불가능한 부서..."
 var strLang185 = "문서가 발송 되지 않았습니다."
 var strLang186 = "재요청"
-var strLang187 = "파서 오류(PackDoc) : "
 var strLang188 = "업로드중 입니다.\n\n잠시만 기다려 주십시오..."
 var strLang189 = "수신기관["
 var strLang190 = "의 인증서가 존재하지 않거나, 올바르지 않아 암호화에 실패하였습니다.(77020,77021,77035,77037) 평문으로 전송합니다."
@@ -282,7 +272,6 @@ var strLang258 = "이미 등록되어 있는 문서입니다."
 // ezAPRDOCATTACH\getDocAttach.js
 var strLang259 = "파일"
 var strLang260 = "내용이 존재하지 않는 문서입니다."
-var strLang261 = "국가핵융합연구소 : 김왕용 : 문서첨부 된 결재문서 Open 시 새로운 창의 Width 변경"
 // ezAPRDOCATTACH\pagenation.js
 var strLang262 = "선택한 페이지"
 // ezAPRLINE\ezAPRTEMPLET\AprLineTemplet.js
@@ -294,7 +283,6 @@ var strLang265 = "결재선목록이 중복되었습니다. "
 var strLang266 = "기안시 , 결재선 변경시 승인자 처리"
 var strLang267 = "기안시 , 일반 결재참가자 처리 "
 var strLang268 = "결재선 변경시 "
-var strLang269 = "자신이던 아니던 바꿀수 없다. && pSelectedRow.cells(0).DATA4 == pUserID)  //다음결재자가 결재선변경자인경우"
 var strLang270 = "결재안함 체크 -"
 var strLang271 = "전결에 의한 여부 조사"
 var strLang272 = "사인칸 수"
@@ -423,9 +411,9 @@ var strLang389 = "저장"
 var strLang390 = "수정"
 var strLang391 = "작성"
 var strLang392 = "의견 추가 Flag가 0 , 의견 버튼이 의견저장 , 의견입력 내용 ,, 의견저장"
-var strLang393 = "의견 내용이 없는 경우..추가할수 없다.                            "
+var strLang393 = "의견 내용이 없는 경우..추가할수 없다. "
 var strLang394 = "의견 목록에 리스트가 없는경우 "
-var strLang395 = "의견 목록에 리스트가 있는 경우         "
+var strLang395 = "의견 목록에 리스트가 있는 경우 "
 var strLang396 = "의견 StateFlage Setting"
 var strLang397 = "닫기"
 var strLang398 = "의견을 수정하는 경우"
@@ -439,23 +427,15 @@ var strLang405 = "회송의견"
 var strLang406 = "의견 내용을 삭제 하시겠습니까?"
 var strLang407 = "취소"
 var strLang408 = "삭제하실수 없습니다.!"
-var strLang409 = "의견목록에 사용자가 추가한지 여부 판단      "
 var strLang410 = "을 추가하여 주십시오."
 var strLang411 = "의견을 저장하시겠습니까?"
 var strLang412 = "의견을 입력하지 않으셨습니다. "
 var strLang413 = "의견을 입력하여 주십시오"
-var strLang414 = "아름"
-var strLang415 = "부서        "
 var strLang416 = "다시 입력하여 주십시오!"
 var strLang417 = "의견정보 저장시 오류가 발생하였습니다.!"
 // ezAPRSIGN\AprSign.js
 var strLang418 = "싸인"
 var strLang419 = "서명 선택"
-// ezCabinet\Manage\AdminPage.js
-var strLang420 = "회사 아이디"
-var strLang421 = "처리과 코드"
-var strLang422 = "반려철일경우"
-var strLang423 = "반려사유보기"
 // ezCabinet\Manage\Req_TaskClass.js
 var strLang424 = "신설기준일을 모두 입력하세요!"
 var strLang425 = "특수목록이 있을 때"
@@ -1041,11 +1021,9 @@ var strLang943 = "개"
 var strLang944 = "데이터가 없습니다.";
 var strLang945 = "기안자는 삭제가 될 수 없습니다."
 // TreeViewCtrl.js
-
 var strLang1000 = "잘못된 양식 문서입니다.";
 var strLang1001 = "선택하신 항목이 없습니다. 문서만 인쇄하시겠습니까?";
 var strLang1002 = "외부 수신자는 저장할 수 없습니다.";
-
 var strLang1003 = "즐겨찾기에 등록되었습니다.";
 var strLang1004 = "즐겨찾기에서 제거되었습니다.";
 var strLang1005 = "등록할 수 없는 기록물철입니다.";
@@ -1053,8 +1031,6 @@ var strLang1006 = "회계연도가 지난 기록물철입니다.";
 var strLang1007 = "해당부서의 기록물철이 아닙니다.";
 var strLang1008 = "편철 확정 기록물철 입니다.";
 var strLang1009 = "이미 등록된 기록물철입니다.";
-
-
 var strLang1010 = "양식명이 지정되지 않았습니다.";
 var strLang1011 = "분류코드가 지정되지 않았습니다.";
 var strLang1012 = "body 필드는 한개의 필드만 지정해주십시오.";
@@ -1073,11 +1049,9 @@ var strLang1024 = "양식을 확인하여 주시기 바랍니다.";
 var strLang1025 = "결재선을 수정하시겠습니까 ? ";
 var strLang1026 = "업로드 제한 확장명 파일입니다.";
 var strLang1027 = "의견을 수정하였습니다.";
-
 var strLang1028 = "년";
 var strLang1029 = "월";
 var strLang1030 = "일";
-
 var strLang1031 = "익명게시판 또는 포토게시판 또는 URL링크 게시판에는 메일/결재문서 게시를 할 수 없습니다.";
 
 // DocType : 문서형태 A01
@@ -1223,18 +1197,19 @@ var strLangAprState15 = "회송";
 var strLangAprState16 = "수신진행";
 var strLangAprState17 = "수신완료";
 var strLangAprState18 = "미접수";
+
 //2011.06.17 추가
 var strLangAprState19 = "전송실패";
 var strLangAprState20 = "수신";
 var strLangAprState21 = "도달";
 var strLangAprState22 = "재요청";
 
-
 // OpinionGB : 의견 종류
 var strOpinionType1 = "001";
 var strOpinionType2 = "002";
 var strOpinionType3 = "003";
 var strOpinionType4 = "004";
+
 //2011.06.17 추가
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
@@ -1242,6 +1217,7 @@ var strLangOpinionType1 = "일반의견";
 var strLangOpinionType2 = "반송의견";
 var strLangOpinionType3 = "보류의견";
 var strLangOpinionType4 = "회송의견";
+
 //2011.06.17 추가
 var strLangOpinionType5 = "지시사항";
 var strLangOpinionType6 = "메모";
@@ -1259,20 +1235,16 @@ var strLangEtcAprType4 = "전결";	// 문서 싸인칸에 표시하는 전결문
 var strLangEtcAprState4 = "반송";	// 문서 싸인칸에 표시하는 반송문자
 var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept.xml"; // xml 파일 처리
 var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept.xml"; // xml 파일 처리
-
 var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept.xml";
 var strLang1101 = "해당 부서에 수발신 담당자가 존재하지 않아 "
 var strLang1102 = "수신처에 등록할 수 없는 부서 입니다."
 var strLang1103 = "한글양식은 기안 또는 재기안을 지원하지 않습니다."
-
 var strLangFromFile = "/xml/ezApprovalG/ezFormInfo.xml";
+
 /* 2015-06-30 표준모듈:추가 - KSK */
 var strLang1104 = "전자문서를 수신할 수 없는 기관 입니다.\n추가 할 수 없습니다.";
 var strLang1105 = "결재문서를 수신하지 않는 부서 입니다.\n추가 할 수 없습니다.";
-
 var strLang1106 = "검색어를 입력해주세요.";
-
-
 var strLang1107 = "발송자";
 var strLang1108 = "심사자";
 var strLang1109 = "기안자";
@@ -1326,7 +1298,6 @@ var strLangS68 = "수신처참조";
 var strLangS70 = "수신처:";
 var strLangS75 = "기안:draft, 수신:susin";
 var strLangS76 = "연동 파일을 로드하지 못했습니다.";
-
 var strLangS106 = "결재순번";
 var strLangS107 = "성명";
 var strLangS108 = "부서";
@@ -1336,7 +1307,6 @@ var strLangS111 = "수신일";
 var strLangS131 = "수신";
 var strLangS163 = "수신처목록 저장시 오류가 ";
 var strLangS174 ="추가할 문서를 선택하세요.";
-
 var strLangS214 = "일반";
 var strLangS222 = "해당 부서에 사원이 존재하지 않아 ";
 var strLangS223 = "결재선에 등록할 수 없는 부서 입니다.";
@@ -1383,7 +1353,6 @@ var strLangS296 = "결재방법이 ";
 var strLangS297 = "일수 없습니다. ";
 var strLangS298 = "를 사용할 수 없습니다.";
 var strLangS299 = "동일인이 ";
-
 var strLangS300 = "로 2번이상 지정될 수 없습니다.";
 var strLangS301 = "기안자나 최종결재자는 ";
 var strLangS302 = "일 수 없습니다.";
@@ -1396,7 +1365,6 @@ var strLangS313 = "조직도 정보를 읽고 있습니다.";
 var strLangS385 = "문서를 선택하여 주십시오";
 var strLangS386 = "문서를 등록하였습니다.";
 var strLangS387 = "문서를 문서함에서 삭제하시겠습니까?";
-
 var strLangS506 = "결재선에 합의가 있으면";
 var strLangS514 = "기안자";
 var strLangS554 = "검색어를 입력해주세요.";
@@ -1405,7 +1373,6 @@ var strLangS575 = "기안자는 이동할 수 없습니다.";
 var strLangS576 = "이동 할 수 없습니다.";
 var strLangS577 = "전결 상태에서 이동 할 수 없습니다.";
 var strLangS599 = "분류 코드가 지정되어 있지 않습니다.";
-
 var strLangS600 = "분류 코드를 선택하세요.";
 var strLangS601 = "이미 등록된 분류 코드입니다.";
 var strLangS602 = "즐겨찾기에 등록되었습니다.";
@@ -1414,9 +1381,7 @@ var strLangS604 = "분류코드 등록 오류입니다.";
 var strLangS605 = "분류코드 삭제 오류입니다.";
 var strLangS606 = "권한이 없습니다.";
 var strLangS626 = "관리자 변경불가 항목으로 삭제할 수 없습니다.";
-
 var strLangS957 = "수신자 리스트에 데이터가 없습니다.<br/>수신자를 지정해 주십시요.";
-
 var strLangS1108 = "조건을 선택해주세요.";
 var strLangS1109 = "선택된 조건이 없습니다.";
 var strLangS1110 = "체크항목이 지정되지 않았습니다.";
@@ -1431,7 +1396,6 @@ var strLangS1118 = "차차상위부서장";
 var strLangS1119 = "차차차상위부서장";
 var strLangS1120 = "선택된부서장";
 var strLangS1124 = "등록된 문서입니다.";
-
 var strLangyjS1 = "직접입력";
 var strLangyjS2 = "문자";
 var strLangyjS3 = "숫자";
