@@ -124,32 +124,6 @@
 			        selectdept_cross_dialogArguments[1] = Restore_onclick_Complete;
 			        var OpenWin = window.open("/admin/ezOrgan/selectDept.do", "SelectDept_Cross", GetOpenWindowfeature(302, 390));
 			        try { OpenWin.focus(); } catch (e) { }
-				    /* } else {
-				        var rtnValue = '';
-				        rtnValue = window.showModalDialog("/admin/ezOrgan/selectDept.do", strLang8, "dialogHeight:390px; dialogWidth:302px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(302, 390));
-
-				        if (typeof (rtnValue) != "undefined") {
-				            var xmlHTTP = createXMLHttpRequest();
-				            var xmlDom = createXmlDom();
-
-				            var objNode;
-				            createNodeInsert(xmlDom, objNode, "DATA");
-				            createNodeAndInsertText(xmlDom, objNode, "DEPTID", rtnValue);
-				            
-				            for (var i = 0 ; i < CheckBoxArr.length ; i++) {
-				                createNodeAndInsertText(xmlDom, objNode, "CN", CheckBoxArr[i]);
-				            }
-				            xmlHTTP.open("POST", "Restore_RetireUser.aspx", false);
-				            xmlHTTP.send(xmlDom);
-
-				            if (xmlHTTP.status != 200 || SelectSingleNodeValueNew(xmlHTTP.responseXML, "DATA") != "OK") {
-				                alert(strLang10);
-				            } else {
-				                alert(strLang9);
-				            }
-				            refresh_onclick();
-				        }
-				    } */
 				}
 			}
 			
@@ -183,6 +157,54 @@
 			    }
 			}
 			
+			var inputpassword_dialogArguments = new Array();
+			
+			function mod_password() {
+			    funCheckBox('get');
+			    
+			    if (CheckBoxArr.length == 0) {
+			        alert("<spring:message code='ezOrgan.t39' />"); 
+			        return;
+			    }
+			    
+		        inputpassword_dialogArguments[1] = mod_password_Complete;
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
+		        try { OpenWin.focus(); } catch (e) { }			    
+			}
+			
+		    function mod_password_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		            var length = CheckBoxArr.length;
+		            if (!confirm(length + "<spring:message code='ezOrgan.t40' />")){
+			        	return;
+		            }		            
+		            
+			    	var data = "";
+			    	
+			        for (var i = 0 ; i < length ; i++) {
+			        	data += CheckBoxArr[i];
+			        	
+			        	if (i != length-1) {
+			        		data += ",";
+			        	}
+			        }		            
+		            
+		            $.ajax({
+		            	type : "POST",
+		            	dataType : "xml",
+		            	url : "/admin/ezOrgan/changePassword.do",
+		            	async : false,
+		            	data : {password : rtnValue, cn : data},
+		            	success : function(result){
+		            		alert(length + "<spring:message code='ezOrgan.t42' />");
+		            	},
+		            	error : function(){
+		            		alert("<spring:message code='ezOrgan.t41' />");		            		
+		            	}
+		            });
+	            }		        
+		    }		    
+		    
 			function refresh_onclick() {
 				window.location.reload(false);
 			}
@@ -198,6 +220,7 @@
 			<ul>
 		    	<li><span onClick="Restore_onclick()"><spring:message code='ezOrgan.t312'/></span></li>
 		        <li><span onClick="Delete_onclick()"><spring:message code='ezOrgan.t142'/></span></li>
+                <li><span onClick="mod_password()"><spring:message code='ezOrgan.t90'/></span></li>
 		  	</ul>
 		</div>
 		<div class="page">
