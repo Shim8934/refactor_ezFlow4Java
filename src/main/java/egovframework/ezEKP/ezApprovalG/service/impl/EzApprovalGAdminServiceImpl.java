@@ -266,8 +266,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</HEADERS><ROWS>");
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("v_LISTTYPE", "111");
-		map1.put("v_LANGTYPE", primary);
+//		map1.put("v_LISTTYPE", "111");
+//		map1.put("v_LANGTYPE", primary);
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
 		map1.put("approvalFlag", approvalFlag);
