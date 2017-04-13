@@ -2288,7 +2288,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String listString = getListHeader("013", companyID, lang, tenantID);
 		
@@ -2314,7 +2314,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
-		if (dlength <= 0) {
+		if (dlength <= 0 || reDraftFlag.equals("REDRAFT")) {
 			String isLastAprLine = getCode2Name("A44", "001", companyID, lang, tenantID);
 
 			if (isLastAprLine.equals("1")) {
@@ -5072,7 +5072,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strSeumyungDate = "";
 		String strSql = "TRUE";
 		
-		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
+		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), "DRAFT");
 		
 		Document lineXml = commonUtil.convertStringToDocument(lineResult);
 		NodeList docListNode = lineXml.getElementsByTagName("ROW");
@@ -8264,7 +8264,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append(getAttachInfo(docID, "APR", "", "", companyID, lang, tenantID, offset));
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<APRLINEINFO>");
-		rtnVal.append(getAprLineInfo(docID, "", "", companyID, lang, tenantID, offset));
+		rtnVal.append(getAprLineInfo(docID, "", "", companyID, lang, tenantID, offset, "DRAFT"));
 		rtnVal.append("</APRLINEINFO></APROVEDATA>");
 		
 		return rtnVal.toString();

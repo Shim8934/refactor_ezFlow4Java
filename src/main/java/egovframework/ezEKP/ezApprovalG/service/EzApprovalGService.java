@@ -62,7 +62,7 @@ public interface EzApprovalGService {
 	
 	public String getAprType(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag) throws Exception;
 	
 	public String getTempList(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 	
