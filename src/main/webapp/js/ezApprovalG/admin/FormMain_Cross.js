@@ -393,7 +393,6 @@ function MakeFormConnXML() {
             xmldom = loadXMLString("<CONNINFO>\n" + getNodeText(txt_OpinionContent) + "\n</CONNINFO>");
 
             if (xmldom.getElementsByTagName("conn").length == 0) {
-
                 pDataCheck = false;
                 pErrorMsg = strLang1016;
             }
@@ -448,7 +447,6 @@ function MakeFormConnXML() {
             pErrorMsg = e.message;
         }
     }
-
     if (pDataCheck) {
         retValue[0] = "TRUE";
         retValue[1] = MakeFormConnXML_Detail();
@@ -463,11 +461,7 @@ function MakeFormConnXML() {
 }
 
 function MakeFormConnXML_Detail() {
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "CONNXML");    
-    createNodeAndInsertCDataText(xmlpara, objNode, "CONNINFO", MakeXMLString(txt_OpinionContent.value)); 
-    return getXmlString(xmlpara.childNodes[0]);
+    return "<CONNXML><CONNINFO>" + txt_OpinionContent.value + "</CONNINFO></CONNXML>"
 }
 
 function MakeFormWorkFlow() {
