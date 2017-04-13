@@ -321,11 +321,14 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("deleteContainerDocState ended.");
 			
 			for (int i = 0; i < docData.getLength(); i++) {
-				String data1 = docData.item(i).getChildNodes().item(1).getTextContent();
-				String data2 = docData.item(i).getChildNodes().item(0).getTextContent();
+				String data1 = docData.item(i).getChildNodes().item(1).getTextContent().trim();
+				String data2 = docData.item(i).getChildNodes().item(0).getTextContent().trim();
 				
-				map.put("data1", data1.trim());
-				map.put("data2", data2.trim());
+				if (data1.equals("")) {
+					data1 = null;
+				}
+				map.put("data1", data1);
+				map.put("data2", data2);
 				
 				logger.debug("insertContainerDocState started.");
 				ezApprovalGAdminDAO.insertContainerDocState(map);
