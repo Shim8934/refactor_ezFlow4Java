@@ -996,38 +996,9 @@
 					return;
 				}
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
-			    //if (CrossYN()){
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
 		        try { OpenWin.focus(); } catch (e) { }
-			    <%-- }else{
-			        var rtnValue = window.showModalDialog("InputPassword.aspx", "", "dialogHeight:185px; dialogWidth:330px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(330, 185));
-
-			        if (typeof (rtnValue) != "undefined") {
-			            var length = listview.GetSelectedRows().length;
-			            if (!confirm(length + "<%=RM.GetString("t40")%>")){
-			                return;
-			            }
-			            var xmlDom = createXmlDom();
-			            var xmlHTTP = createXMLHttpRequest();
-
-			            var objNode = "";
-			            createNodeInsert(xmlDom, objNode, "DATA");
-			            createNodeAndInsertText(xmlDom, objNode, "PASSWORD", rtnValue);
-			            
-			            for (var i = 0; i < length; i++) {
-			                createNodeAndInsertText(xmlDom, objNode, "CN", listview.GetSelectedRows()[i].getAttribute("DATA2"));
-			            }
-			            xmlHTTP.open("POST", "ChangePassword.aspx", false);
-			            xmlHTTP.send(xmlDom);
-
-			            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK"){
-			                alert("<%=RM.GetString("t41")%>");
-			            }else{
-			                alert(length + "<%=RM.GetString("t42")%>");
-			            }
-			        }
-			    } --%>
 			}
 			
 		    function mod_password_Complete(rtnValue) {
