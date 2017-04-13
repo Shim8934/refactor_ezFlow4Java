@@ -501,17 +501,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 부서이동 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/selectDept.do")	
-	public String selectDept(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {	    
-		String companyID = request.getParameter("companyID");
+	public String selectDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		LoginVO user = commonUtil.userInfo(loginCookie);		
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+				
+		String topid = "";
 		
-        logger.debug("selectDept started. companyID=" + companyID);
-
-       
-		if (companyID == null || companyID.equals("")) {
-			companyID = "Top";
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			topid = user.getCompanyID();
+		} else {
+			topid = "Top";
 		}
 		
-		model.addAttribute("companyID", companyID);
+		model.addAttribute("companyID", topid);
 		
         logger.debug("selectDept ended.");
         

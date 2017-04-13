@@ -217,6 +217,15 @@ public class EzStatisticsApprController {
 				}
 			}
 			
+			String topid = "";
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				topid = userInfo.getCompanyID();
+			} else {
+				topid = "Top";
+			}
+			
+			model.addAttribute("companyID", topid);					
 			model.addAttribute("companySel", companySel);
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
@@ -250,6 +259,15 @@ public class EzStatisticsApprController {
 				}
 			}
 			
+			String topid = "";
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				topid = userInfo.getCompanyID();
+			} else {
+				topid = "Top";
+			}
+			
+			model.addAttribute("companyID", topid);					
 			model.addAttribute("companySel", companySel);
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
@@ -306,6 +324,15 @@ public class EzStatisticsApprController {
 				}
 			}
 			
+			String topid = "";
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				topid = userInfo.getCompanyID();
+			} else {
+				topid = "Top";
+			}
+			
+			model.addAttribute("companyID", topid);					
 			model.addAttribute("companySel", companySel);
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
@@ -372,6 +399,15 @@ public class EzStatisticsApprController {
 				}
 			}
 			
+			String topid = "";
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				topid = userInfo.getCompanyID();
+			} else {
+				topid = "Top";
+			}
+			
+			model.addAttribute("companyID", topid);					
 			model.addAttribute("companySel", companySel);
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
@@ -453,6 +489,15 @@ public class EzStatisticsApprController {
 				}
 			}
 			
+			String topid = "";
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				topid = userInfo.getCompanyID();
+			} else {
+				topid = "Top";
+			}
+			
+			model.addAttribute("companyID", topid);					
 			model.addAttribute("companySel", companySel);
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {
@@ -486,6 +531,15 @@ public class EzStatisticsApprController {
 				}
 			}
 			
+			String topid = "";
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+				topid = userInfo.getCompanyID();
+			} else {
+				topid = "Top";
+			}
+			
+			model.addAttribute("companyID", topid);					
 			model.addAttribute("companySel", companySel);
 			model.addAttribute("userInfo", userInfo);
 		} catch (Exception e) {

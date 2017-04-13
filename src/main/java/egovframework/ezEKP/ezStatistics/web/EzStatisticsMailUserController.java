@@ -61,6 +61,15 @@ public class EzStatisticsMailUserController {
 			return "cmm/error/adminDenied";
 		}
 		
+		String topid = "";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topid = userInfo.getCompanyID();
+		} else {
+			topid = "Top";
+		}
+		
+		model.addAttribute("companyID", topid);				
 		model.addAttribute("deptID", userInfo.getDeptID());
 		
 		return "ezStatistics/statisticsMailUser";
