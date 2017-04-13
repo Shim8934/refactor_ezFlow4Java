@@ -156,11 +156,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return retireList;
 	}
 
+	// 퇴직자 포함하여 사용자 아이디 목록을 반환한다.
     @Override
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {     
         return ezOrganAdminDao.getUserCnList(tenantID);
     }
 
+    // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
     @Override
     public int getUserCount(int tenantID) throws Exception {     
         return ezOrganAdminDao.getUserCount(tenantID);
@@ -362,14 +364,55 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void retireEntry(String cn, int tenantID) throws Exception {
+	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception {
+		logger.debug("setPasswordWithEmailSystem started");
+		logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID);
+		
+		String mailAddr = cn + "@" + domain;
+		
+		logger.debug("mailAddr=" + mailAddr);
+		
+		// 기존 이메일 계정의 Encrypt된 암호를 가져온다.
+		String existingEncryptedPassword = ezEmailUserAdminService.getEncryptedUserPassword(mailAddr);
+		
+		if (existingEncryptedPassword != null) {
+			// 이메일 계정의 암호를 새 암호로 설정한다.
+			int rc = ezEmailUserAdminService.updateUserPassword(mailAddr, password);
+			
+			logger.debug("updateUserPassword rc=" + rc);
+			
+			if (rc == 0) { // updateUserPassword 성공													
+				try {
+					// 로컬 시스템에서 해당 User의 암호를 변경한다.
+					setPassword(cn, password, tenantID);
+				} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+					ezEmailUserAdminService.updateUserPasswordWithEncryptedPassword(mailAddr, existingEncryptedPassword);
+					
+					throw e;
+				}										
+			} else {
+				throw new Exception("setting the user '" + mailAddr + "' password failed.");
+			}
+		} else {
+			throw new Exception("getting the user '" + mailAddr + "' encrypted password failed.");
+		}		
+		
+		logger.debug("setPasswordWithEmailSystem ended");
+	}
+	
+	@Override
+	public void retireEntry(String cn, String domain, String adminPassword, int tenantID) throws Exception {
 	    logger.debug("retireEntry started");
-	    logger.debug("cn=" + cn + ",tenantID=" + tenantID);
+	    logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantID);
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
+		
+		// 퇴직자의 암호를 현재 관리자의 암호와 동일하게 변경한다.
+		// 이후 과정에서 에러가 발생했을 때 암호를 롤백할 방법이 없는 문제가 있다. 
+		setPasswordWithEmailSystem(cn, domain, adminPassword, tenantID);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));

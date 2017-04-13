@@ -56,7 +56,9 @@ public interface EzOrganAdminService {
 
 	public void setPassword(String cn, String password, int tenantID) throws Exception;
 
-	public void retireEntry(String cn, int tenantID) throws Exception;
+	public void setPasswordWithEmailSystem(String cn, String domain, String password, int tenantID) throws Exception;
+	
+	public void retireEntry(String cn, String domain, String adminPassword, int tenantID) throws Exception;
 
 	public void updateDBData_user(OrganUserVO vo) throws Exception;
 

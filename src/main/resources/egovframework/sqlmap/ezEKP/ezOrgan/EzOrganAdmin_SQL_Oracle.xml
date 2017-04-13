@@ -710,6 +710,8 @@
 				NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
        		AND
        			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+            AND 
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                
        		AND
        			TENANT_ID = #v_TENANT_ID#	
       		ORDER BY
@@ -850,6 +852,8 @@
    				NULLIF(EXTENSIONATTRIBUTE1, NULL) IS NOT NULL 
       		AND
       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+            AND 
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                           
       		AND
       			TENANT_ID = #v_TENANT_ID#	
       		AND
@@ -921,6 +925,8 @@
         					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
         				AND
         					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+                        AND 
+                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                      
         				AND
         					TENANT_ID = #v_TENANT_ID#	
       				) A
@@ -1051,7 +1057,7 @@
               	 )
 		]]>
 	</insert>
-	
+	 
 	<delete id="EzOrganAdminDAO.restoreRetireEntry_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -1303,21 +1309,23 @@
      				FROM
      					TBL_USERMASTER
      				WHERE
-     					tenant_id = #tenantID#	
+     					tenant_id = #tenantID# AND cn = #cn#
+                    AND 
+                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)          
      				UNION
      				SELECT 
      					cn
      				FROM
      					TBL_DEPTMASTER
      				WHERE
-     					tenant_id = #tenantID#	
+     					tenant_id = #tenantID# AND cn = #cn#
      				UNION
      				SELECT 
      					cn
      				FROM
      					TBL_USERMASTER_RETIRE
      				WHERE
-     					tenant_id = #tenantID#	
+     					tenant_id = #tenantID# AND cn = #cn#
      			 )
       		WHERE  
       			cn = #cn#
@@ -1332,6 +1340,8 @@
      			TBL_USERMASTER 
       		WHERE  
       			department = #cn#
+            AND 
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                              
       		AND
       			tenant_id = #tenantID#	
 	     ]]>

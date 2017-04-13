@@ -526,7 +526,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String movDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	    logger.debug("movDept started.");
 	    
-	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
+        }
 	    
         int tenantID = userInfo.getTenantId();        
         
@@ -562,7 +566,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String saveOrderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.debug("saveOrderList started.");
         
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	throw new Exception("saveOrderList failed.");
+        }        
+        
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);
@@ -686,8 +695,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("cn=" + request.getParameter("cn")); 
 		
-		// dhlee
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	throw new Exception("changePassword failed.");
+        }
+
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);		
@@ -697,37 +710,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("domain=" + domain);
 		// dhlee - end
 		
-		for (int i=0; i < cn.length; i++) {		
-			// dhlee
-			String mailAddr = cn[i] + "@" + domain;
-			
-			logger.debug("mailAddr=" + mailAddr);
-			
-			// 기존 이메일 계정의 Encrypt된 암호를 가져온다.
-			String existingEncryptedPassword = ezEmailUserAdminService.getEncryptedUserPassword(mailAddr);
-			
-			if (existingEncryptedPassword != null) {
-				// 이메일 계정의 암호를 새 암호로 설정한다.
-				int rc = ezEmailUserAdminService.updateUserPassword(mailAddr, pw);
-				
-				logger.debug("updateUserPassword rc=" + rc);
-				
-				if (rc == 0) { // updateUserPassword 성공													
-					try {
-						// 로컬 시스템에서 해당 User의 암호를 변경한다.
-						ezOrganAdminService.setPassword(cn[i], pw, tenantID);
-					} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-						ezEmailUserAdminService.updateUserPasswordWithEncryptedPassword(mailAddr, existingEncryptedPassword);
-						
-						throw e;
-					}										
-				} else {
-					throw new Exception("setting the user '" + mailAddr + "' password failed.");
-				}
-			} else {
-				throw new Exception("getting the user '" + mailAddr + "' encrypted password failed.");
-			}
-			// dhlee - end
+		for (int i = 0; i < cn.length; i++) {
+			ezOrganAdminService.setPasswordWithEmailSystem(cn[i], domain, pw, tenantID);
 		}
 		
 		logger.debug("changePassword ended.");
@@ -745,6 +729,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         if (userInfo == null) {
         	throw new Exception("retireUser failed.");
         }
+        
+		// 현재 관리자의 암호를 구한다.
+		List<String> userCookieInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String adminPassword = userCookieInfo.get(1);
         
         int tenantID = userInfo.getTenantId();        
         
@@ -779,7 +767,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				if (rc != -100) { // updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
 					try {
 						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
-						ezOrganAdminService.retireEntry(cn[i], tenantID);
+						ezOrganAdminService.retireEntry(cn[i], domain, adminPassword, tenantID);
 					} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);
@@ -807,7 +795,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String movUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("movUser started.");
 	    
-	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
+        }
+	    
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);
@@ -1467,7 +1460,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String saveSubTitle(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, Model model) throws Exception{
         logger.debug("saveSubTitle started.");
         
-        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+        
+        if (userInfo == null) {
+        	return "EMAIL_ERROR";
+        }
+        
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);
