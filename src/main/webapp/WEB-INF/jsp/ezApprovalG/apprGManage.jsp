@@ -1398,7 +1398,6 @@
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
 				} else {
-					
 					 if (condition[0] != "") {
 					        TYPE += "DOCNO;"
 					        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
