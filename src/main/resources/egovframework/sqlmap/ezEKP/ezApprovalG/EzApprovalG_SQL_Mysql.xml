@@ -8372,53 +8372,46 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.returnContainerID" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 	ContainerID
-		 FROM ( 
-				 SELECT 
-				 	TBL_Container.ContainerID ContainerID
-			     FROM 
-			     	TBL_Container 
-			     JOIN 
-			     	TBL_CONTAINERTODOCSTATE    
-			     ON 
-			     	TBL_Container.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
-			     AND
-			     	TBL_Container.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
-			     AND
-			     	TBL_Container.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
-			     WHERE  
-			     	TBL_Container.ContainerOwnDepID = #v_DEPTID#
-			     AND 
-			     	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
-			     AND
-			     	TBL_Container.TENANT_ID = #v_TENANTID#
-			     AND
-			     	TBL_Container.COMPANYID = #companyID# ) A
+		 	TBL_Container.ContainerID ContainerID
+	     FROM 
+	     	TBL_Container 
+	     JOIN 
+	     	TBL_CONTAINERTODOCSTATE    
+	     ON 
+	     	TBL_Container.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
+	     AND
+	     	TBL_Container.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
+	     AND
+	     	TBL_Container.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
+	     WHERE  
+	     	TBL_Container.ContainerOwnDepID = #v_DEPTID#
+	     AND 
+	     	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
+	     AND
+	     	TBL_Container.TENANT_ID = #v_TENANTID#
+	     AND
+	     	TBL_Container.COMPANYID = #companyID#
 	</select>
 	
 	<select id="EzApprovalG.returnContainerID2" parameterClass="Map" resultClass="String">
-		SELECT
-			 ContainerTypeID
-		FROM (
-				 SELECT 
-				 	TBL_ContainerType.ContainerTypeID ContainerTypeID
-		         FROM 
-		         	TBL_ContainerType 
-		         JOIN 
-		         	TBL_CONTAINERTODOCSTATE    
-		         ON 
-		         	TBL_ContainerType.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
-		         AND
-		         	TBL_ContainerType.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
-		         AND
-		         	TBL_ContainerType.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
-		         WHERE  
-		         	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
-		         AND
-		         	TBL_CONTAINERTODOCSTATE.TENANT_ID = #v_TENANTID#
-		         AND
-		         	TBL_CONTAINERTODOCSTATE.COMPANYID = #companyID#
-		) A
+		 SELECT 
+		 	TBL_ContainerType.ContainerTypeID ContainerTypeID
+         FROM 
+         	TBL_ContainerType 
+         JOIN 
+         	TBL_CONTAINERTODOCSTATE    
+         ON 
+         	TBL_ContainerType.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
+         AND
+         	TBL_ContainerType.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
+         AND
+         	TBL_ContainerType.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
+         WHERE  
+         	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
+         AND
+         	TBL_CONTAINERTODOCSTATE.TENANT_ID = #v_TENANTID#
+         AND
+         	TBL_CONTAINERTODOCSTATE.COMPANYID = #companyID#
 	</select>
 	
 	<select id="EzApprovalG.returnContainerID3" parameterClass="Map" resultClass="String">
