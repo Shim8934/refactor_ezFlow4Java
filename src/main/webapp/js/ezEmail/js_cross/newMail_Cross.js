@@ -1013,6 +1013,10 @@ function event_SaveonClick() {
                 	var messageArr = pRtnMessage.split(":");
                     alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
                 }
+                //유효하지 않은 메일주소(내부)가 있을 경우
+                else if (pRtnMessage.indexOf("Invalid Addresses") > -1) {
+                	alert(strLangLHM16);
+                }
                 // 그 외
                 else {
             		alert(pRtnMessage);
@@ -1075,6 +1079,10 @@ function event_SaveonClick() {
                 else if (pRtnMessage.indexOf("OVERMESSAGESIZE") > -1) {
                 	var messageArr = pRtnMessage.split(":");
                 	alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
+                }
+                //유효하지 않은 메일주소(내부)가 있을 경우
+                else if (pRtnMessage.indexOf("Invalid Addresses") > -1) {
+                	alert(strLangLHM16);
                 }
                 // 그 외
                 else {

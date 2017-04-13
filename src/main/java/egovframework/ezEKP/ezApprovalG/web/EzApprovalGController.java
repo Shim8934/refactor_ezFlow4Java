@@ -2063,18 +2063,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String title = request.getParameter("title");
 		String uFlag = request.getParameter("uFlag");
 		String admin = request.getParameter("admin");
-		
-		if(orgDocID == null){
-			orgDocID ="";
-		}
-		if (!orgDocID.equals("") && orgDocID!=null) {
+		String pass = "";
+		if (orgDocID != null  && !orgDocID.equals("")) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
 		
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			 pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		} else {
+			pass = "<RESULT>TRUE</RESULT>";
+		}
 		
-		if (pass.equals("<RESULT>TRUE</RESULT>") || admin.equals("Y")) {
+		if (pass.equals("<RESULT>TRUE</RESULT>") ) {
 			if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0 || docHref.split("/").length == 1) {
 				String strXML = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 				Document resultXML = commonUtil.convertStringToDocument(strXML);
@@ -2102,7 +2103,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (resultXML.getElementsByTagName("SIGNCHECK").item(0) != null && !resultXML.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim().equals("")) {
 				signCheck = resultXML.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim();
 			}
-		}
+		} 
 		
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);

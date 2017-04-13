@@ -456,6 +456,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
+    // 퇴직자 포함하여 사용자 아이디 목록을 반환한다.
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
         if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getUserCnListForJMocha(tenantID);
@@ -508,6 +509,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return (int) select("EzOrganAdminDAO.userCount", tenantID);
     }
     
+    // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
     public int getUserCount(int tenantID) throws Exception {
         if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getUserCountForJMocha(tenantID);
@@ -1581,14 +1583,21 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private void restoreRetireEntryForLocal(Map<String, Object> map) throws Exception {
-        update("EzOrganAdminDAO.restoreRetireEntry", map);
+        moveGroupUser_U(map);
     }
 	
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
 	    restoreRetireEntryForJMocha(map);
 
 	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            restoreRetireEntryForLocal(map);       
+	    	try {
+	    		restoreRetireEntryForLocal(map);
+	    	} catch (Exception e) {
+	    		// Local에서의 복원 작업이 실패하면 JMocha 테이블에서 다시 퇴직처리를 한다.
+	    		retireDBDataForJMocha(map);
+	    		
+	    		throw e;
+	    	}
 	    }
 	}
 
@@ -1761,9 +1770,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void retireDBData(Map<String, Object> map) throws Exception {
 	    retireDBDataForJMocha(map);
 
+	    /* retire 시 기존 사용자 레코드를 유지하는 것으로 로직을 변경하여 제거함
 	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
             retireDBDataForLocal(map);       
 	    }
+	    */
 	}
 
     private void setAddJobForJMocha(Map<String, Object> map) throws Exception {
