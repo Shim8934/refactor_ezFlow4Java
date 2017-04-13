@@ -280,7 +280,7 @@
 	            
 	            var ticks = "<spring:message code='ezStatistics.t218'/>".split(";");
 	            plot2 = $.jqplot('statisticschart', [data, data2, data3, data4], {
-	                animate: true,
+	                animate: false,
 	                seriesDefaults: {
 	                    renderer: $.jqplot.BarRenderer,
 	                    pointLabels: { show: true }
