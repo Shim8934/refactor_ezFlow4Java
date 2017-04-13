@@ -2214,7 +2214,8 @@ function SetAutoPropertyValue() {
                         break;
 
                     case "draftdate":
-                        field.textContent = FullDate;
+                        /*field.textContent = FullDate;*/
+                        field.textContent = CurrentDate;
                         break;
 
                     case "deptshortedname":

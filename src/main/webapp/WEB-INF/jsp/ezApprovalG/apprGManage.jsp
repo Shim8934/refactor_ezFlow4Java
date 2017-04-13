@@ -89,7 +89,7 @@
 		    var CurrentWidth = 0;
 		    var approvalFlag = "${approvalFlag}";
 		    var SubQuery = "${SubQuery}";
-		    
+		    var condition = new Array();
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -1398,7 +1398,6 @@
 			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
 			        }
 				} else {
-					
 					 if (condition[0] != "") {
 					        TYPE += "DOCNO;"
 					        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
@@ -1438,8 +1437,8 @@
 					        TYPE += "FORMID;"
 					        DATA += "<FORMID>" + condition[9] + "</FORMID>";
 					    }
-
-					    if (condition[11] != "") {
+					    
+					    if (condition[10] != "") {
 					        TYPE += "WRITERDEPTNAME;"
 					        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
 					    }
@@ -1496,17 +1495,28 @@
 		        pChackYN = "SEARCH";
 		        if (document.getElementById("txt_keyword").value != "") {
 		            var radiosearch = document.getElementsByName('searchCheck');
-		
-		            for (var i = 0; i < 25; i++) {
-		                SearchCond[i] = "";
-		            }
-		
-		            if (radiosearch.item(0).checked) {
-		                SearchCond[1] = document.getElementById("txt_keyword").value;
-		            }
-		            else if (radiosearch.item(1).checked) {
-		                SearchCond[2] = document.getElementById("txt_keyword").value;
-		            }
+					if (approvalFlag == "G") {
+			            for (var i = 0; i < 25; i++) {
+			                SearchCond[i] = "";
+			            }
+			
+			            if (radiosearch.item(0).checked) {
+			                SearchCond[1] = document.getElementById("txt_keyword").value;
+			            }
+			            else if (radiosearch.item(1).checked) {
+			                SearchCond[2] = document.getElementById("txt_keyword").value;
+			            }
+					} else {
+						for (i = 0; i < 11; i++)
+							condition[i] = "";
+
+		                if (radiosearch.item(0).checked) {
+		                	condition[1] = document.getElementById("txt_keyword").value;
+		                }
+		                else if (radiosearch.item(1).checked) {
+		                	condition[2] = document.getElementById("txt_keyword").value;
+		                }
+					}
 		        }
 		        else {
 		            alert("<spring:message code='ezApprovalG.t1160'/>");

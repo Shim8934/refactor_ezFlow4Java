@@ -1142,10 +1142,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/undoDoc.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String undoDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("undoDoc started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.deleteDocInfo(docID, "CHECK", userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("undoDoc ended.");
 		
 		return result;
 	}
@@ -1156,11 +1160,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/createAprLineTemplet.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String createAprLineTemplet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String aprLineXml) throws Exception{
+		logger.debug("createAprLineTemplet started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(aprLineXml);
 		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-
+		
+		logger.debug("createAprLineTemplet ended. result = " + result);
+		
 		return result;
 	}
 	
@@ -2055,18 +2063,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String title = request.getParameter("title");
 		String uFlag = request.getParameter("uFlag");
 		String admin = request.getParameter("admin");
-		
-		if(orgDocID == null){
-			orgDocID ="";
-		}
-		if (!orgDocID.equals("") && orgDocID!=null) {
+		String pass = "";
+		if (orgDocID != null  && !orgDocID.equals("")) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
 		
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			 pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		} else {
+			pass = "<RESULT>TRUE</RESULT>";
+		}
 		
-		if (pass.equals("<RESULT>TRUE</RESULT>") || admin.equals("Y")) {
+		if (pass.equals("<RESULT>TRUE</RESULT>") ) {
 			if (docHref.trim().equals("") || docHref.indexOf("/1000/") >= 0 || docHref.split("/").length == 1) {
 				String strXML = ezApprovalGService.getDocInfo(docID, "END", "Href", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 				Document resultXML = commonUtil.convertStringToDocument(strXML);
@@ -2094,7 +2103,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (resultXML.getElementsByTagName("SIGNCHECK").item(0) != null && !resultXML.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim().equals("")) {
 				signCheck = resultXML.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim();
 			}
-		}
+		} 
 		
 		model.addAttribute("editor", editor);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -2199,7 +2208,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String cabinetID = request.getParameter("cabinetID");
 		String taskCode = request.getParameter("taskCode");
 		String type = request.getParameter("type");
+		
+		logger.debug("type = " + type);
+		
 		String result = ezApprovalGService.setMyTaskCode(userInfo.getId(), userInfo.getDeptID(), cabinetID, taskCode, type, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		logger.debug("setMyTaskCode ended.");
 
 		return result;

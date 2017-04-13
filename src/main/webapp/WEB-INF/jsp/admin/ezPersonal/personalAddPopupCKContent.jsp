@@ -194,7 +194,7 @@
 		<script type="text/javascript">
 			//CKEDITOR.event.prototype.on( 'configLoaded', function(){alert("test");});
 			// js\_source\core\config.js
-			CKEDITOR.config.language = 'ko'; // default : ko, en, ja, zh
+			CKEDITOR.config.language = '<spring:message code='main.t0619' />'; // default : ko, en, ja, zh
 			//CKEDITOR.config.defaultLanguage = 'ko'; // default : en, ko, ja, zh, it
 			CKEDITOR.config.enterMode = CKEDITOR.ENTER_P; // CKEDITOR.ENTER_P, CKEDITOR.ENTER_BR, CKEDITOR.ENTER_DIV
 			CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_P; // CKEDITOR.ENTER_BR, CKEDITOR.ENTER_P, CKEDITOR.ENTER_DIV

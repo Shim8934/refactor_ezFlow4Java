@@ -865,8 +865,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				if (publicityCode.equals("Y")){
 					publicityCode = "1";
-				} if (publicityCode.length() <= 0) {
-					publicityCode = "1";
 				} else {
 					publicityCode = "3"; 
 				}
@@ -2055,6 +2053,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertGongRamAprAttachInfo(map);
 
 		}
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
 		map.put("v_GONGRAMDOCID", gongRamDocID.trim());
 		map.put("v_DATE", "EndDate");
 		ezApprovalGDAO.updateGongRamAprDocInfo(map);
@@ -2923,7 +2923,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateLineTempletDetailInfo(Document xmlDom, Locale locale, String companyID, String lang, int tenantID) throws Exception {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
-		String rtnVal = "";
+		String rtnVal = "TRUE";
 		
 		NodeList docNode = xmlDom.getElementsByTagName("APRTEMP");
 		NodeList rowNode = xmlDom.getElementsByTagName("ROW");
@@ -9534,8 +9534,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.insertBebuAprReceiptProcessInfoS(map);
 				} else {
 					map.put("v_APRSTATE", staASBaeBu);
-					map.put("v_maxSN", Integer.toString(maxSN));
-					map.put("v_TEMPSN", Integer.toString(maxSN-1));
+					map.put("v_maxSN", Integer.toString(maxSN)+1);
+					map.put("v_TEMPSN", Integer.toString(maxSN)+1);
 					ezApprovalGDAO.insertSetBebuAprReceiptProcessInfoS(map);
 				}
 				// 표준모듈 (2007.05.07) : 다국어
@@ -9765,7 +9765,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		List<ApprGReceiveDocVO> apprGReceiveDocVOList = ezApprovalGDAO.getReceiveDocList(map);
-		
+		 
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
@@ -19918,7 +19918,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			userSecurityCode = ezApprovalGDAO.selectUserSecurityCode(map);
 		}
 				
-		if (userSecurityCode.equals("") || userSecurityCode == null) {
+		if (userSecurityCode == null || userSecurityCode.equals("")) {
 			map.put("v_USERSECCODE", "0");
 		} else {
 			map.put("v_USERSECCODE", userSecurityCode);
@@ -19991,7 +19991,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
 		}
 		
-		if (contID.equals("") || contID == null) {
+		if (contID == null || contID.equals("")) {
 			map.put("v_CONTFLAG", "0");
 		} else {
 			map.put("v_CONTFLAG", "1");
@@ -20418,7 +20418,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		//조직도 사용자 보안등급 가져오기
 		
-		if(!userID.equals("") && userID != null) {
+		if(userID != null && !userID.equals("")) {
 			userSecurityCode = ezApprovalGDAO.selectUserSecurityCode(map);
 		}
 				

@@ -2478,6 +2478,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				}
 			}
 		} else {
+			result = formID;
 			map.put("v_PFORMID", formID);
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
 			

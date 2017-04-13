@@ -4319,129 +4319,131 @@
 	<select id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEmpty property="approvalFlag">
 			SELECT 
-					DISTINCT TBL_CABINET.CabinetID , 
-		                     TBL_CABINETCLASS.TaskCode ,
-		                     TBL_CABINET.CabinetClassNo ,
-		                     TBL_CABINETCLASS.OwnerID ,
-		                     TBL_CABINETCLASS.Title ,
-		                     TBL_CABINETCLASS.Title2 ,
-		                     VTASKCLASS.KEEPINGPERIOD , 
-		                     VTASKCLASS.TEMPFLAG ,
-		                     VTASKCLASS.DISPLAYRECFLAG ,
-		                     VTASKCLASS.SPECIALCATALOGFLAG ,
-		                     VTASKCLASS.SC1 ,
-		                     VTASKCLASS.SC2 ,
-		                     VTASKCLASS.SC3 ,
-		                     VTASKCLASS.KEEPINGMETHOD ,
-		                     VTASKCLASS.KEEPINGPLACE ,
-		                     VTASKCLASS.TASKNAME ,
-		                     VTASKCLASS.TASKNAME2 ,
-		                     VTASKCLASS.SCName ,
-		                     VTASKCLASS.SubCategoryCode ,
-		                     TBL_CABINETCLASS.RecTypeCode ,
-		                     TBL_CABINETCLASS.RegSerialNo ,
-		                     TBL_CABINET.VolumeNo 
-	        FROM 
-	        		TBL_CABINETCLASS 
-	        JOIN 
-	        		TBL_CABINET    
-	        ON 
-	        		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
-	        AND
-	        		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
-	        AND
-	        		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
-	        JOIN 
-	        		TBL_MYTASKCODE   
-	        ON 
-	        		TBL_MYTASKCODE.CabinetID = TBL_CABINET.CabinetID
-	        AND
-	        		TBL_MYTASKCODE.TENANT_ID = TBL_CABINET.TENANT_ID
-	        AND
-	        		TBL_MYTASKCODE.COMPANYID = TBL_CABINET.COMPANYID
-	        JOIN 
-	        		VTASKCLASS    
-	        ON 
-	        		VTASKCLASS.TaskCode = TBL_MYTASKCODE.TaskCode 
-	        AND
-	        		VTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
-	       	AND
-	        		VTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
-	<!-- 		        AND VTASKCLASS.ProcessDeptCode = TBMYTASKCODE.DEPTID -->
-	       WHERE  
-	       			TBL_CABINET.DelFlag = '0'
-	       AND 
-	      			TBL_CABINETCLASS.DelFlag = '0'
-	       AND 
-	       			NOT ( TBL_CABINET.CabinetTransferFlag = '2'
-	        				AND CONFIRMFLAG = '0' )
-	       AND 
-	       			TBL_MYTASKCODE.CN = #v_USERID#
-	       AND
-	       			TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
-	       AND
-	       			TBL_CABINETCLASS.COMPANYID = #companyID#
-	       ORDER BY 
-	       			TBL_CABINETCLASS.Title 
+				DISTINCT TBL_CABINET.CabinetID , 
+				TBL_CABINETCLASS.TaskCode ,
+				TBL_CABINET.CabinetClassNo ,
+				TBL_CABINETCLASS.OwnerID ,
+				TBL_CABINETCLASS.Title ,
+				TBL_CABINETCLASS.Title2 ,
+				VTASKCLASS.KEEPINGPERIOD , 
+				VTASKCLASS.TEMPFLAG ,
+				VTASKCLASS.DISPLAYRECFLAG ,
+				VTASKCLASS.SPECIALCATALOGFLAG ,
+				VTASKCLASS.SC1 ,
+				VTASKCLASS.SC2 ,
+				VTASKCLASS.SC3 ,
+				VTASKCLASS.KEEPINGMETHOD ,
+				VTASKCLASS.KEEPINGPLACE ,
+				VTASKCLASS.TASKNAME ,
+				VTASKCLASS.TASKNAME2 ,
+				VTASKCLASS.SCName ,
+				VTASKCLASS.SubCategoryCode ,
+				TBL_CABINETCLASS.RecTypeCode ,
+				TBL_CABINETCLASS.RegSerialNo ,
+				TBL_CABINET.VolumeNo 
+			FROM 
+				TBL_CABINETCLASS 
+			JOIN 
+				TBL_CABINET    
+			ON 
+				TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+			AND
+				TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+			AND
+				TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+			JOIN 
+				TBL_MYTASKCODE   
+			ON 
+				TBL_MYTASKCODE.CabinetID = TBL_CABINET.CabinetID
+			AND
+				TBL_MYTASKCODE.TENANT_ID = TBL_CABINET.TENANT_ID
+			AND
+				TBL_MYTASKCODE.COMPANYID = TBL_CABINET.COMPANYID
+			JOIN 
+				VTASKCLASS    
+			ON 
+				VTASKCLASS.TaskCode = TBL_MYTASKCODE.TaskCode 
+			AND
+				VTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
+			AND
+				VTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
+<!-- 		        AND VTASKCLASS.ProcessDeptCode = TBMYTASKCODE.DEPTID -->
+			WHERE  
+				TBL_CABINET.DelFlag = '0'
+			AND 
+				TBL_CABINETCLASS.DelFlag = '0'
+			AND 
+				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
+			AND 
+				TBL_MYTASKCODE.CN = #v_USERID#
+			AND
+				TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_CABINETCLASS.COMPANYID = #companyID#
+			AND
+				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
+			ORDER BY 
+				TBL_CABINETCLASS.Title 
 		</isEmpty>
 		<isNotEmpty property="approvalFlag">
 			SELECT 
-					DISTINCT TBL_CABINET.CabinetID , 
-                    SVTASKCLASS.TaskCode ,
-                    SVTASKCLASS.KEEPINGPERIOD , 
-                    SVTASKCLASS.TEMPFLAG ,
-                    SVTASKCLASS.KEEPINGMETHOD ,
-                    SVTASKCLASS.KEEPINGPLACE ,
-                    SVTASKCLASS.TASKNAME$lang$ ,
-                    SVTASKCLASS.SCName$lang$ SCName,
-                    SVTASKCLASS.SubCategoryCode ,
-                    SVTASKCLASS.MCName$lang$ MCName,
-                    SVTASKCLASS.mCategoryCode ,
-                    SVTASKCLASS.CName$lang$ CName,
-                    SVTASKCLASS.CategoryCode ,
-                    SVTASKCLASS.ISPUBLIC ,
-                    SVTASKCLASS.ITEMSECURITY
-	        FROM 
-	        		TBL_CABINETCLASS 
-	        JOIN 
-	        		TBL_CABINET    
-	        ON 
-	        		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
-	        AND
-	        		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
-	        AND
-	        		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
-	        JOIN 
-	        		TBL_MYTASKCODE   
-	        ON 
-	        		TBL_MYTASKCODE.CabinetID = TBL_CABINET.CabinetID
-	        AND
-	        		TBL_MYTASKCODE.TENANT_ID = TBL_CABINET.TENANT_ID
-	        AND
-	        		TBL_MYTASKCODE.COMPANYID = TBL_CABINET.COMPANYID
-	        JOIN 
-	        		SVTASKCLASS    
-	        ON 
-	        		SVTASKCLASS.TaskCode = TBL_MYTASKCODE.TaskCode 
-	        AND
-	        		SVTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
-	       	AND
-	        		SVTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
-	       WHERE  
-	       			TBL_CABINET.DelFlag = '0'
-	       AND 
-	      			TBL_CABINETCLASS.DelFlag = '0'
-	       AND 
-	       			NOT ( TBL_CABINET.CabinetTransferFlag = '2'
-	        				AND CONFIRMFLAG = '0' )
-	       AND 
-	       			TBL_MYTASKCODE.CN = #v_USERID#
-	       AND
-	       			TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
-	       AND
-	       			TBL_CABINETCLASS.COMPANYID = #companyID#
-	       ORDER BY 
-	       			TBL_CABINETCLASS.Title 
+				DISTINCT TBL_CABINET.CabinetID , 
+				SVTASKCLASS.TaskCode ,
+				SVTASKCLASS.KEEPINGPERIOD , 
+				SVTASKCLASS.TEMPFLAG ,
+				SVTASKCLASS.KEEPINGMETHOD ,
+				SVTASKCLASS.KEEPINGPLACE ,
+				SVTASKCLASS.TASKNAME$lang$ ,
+				SVTASKCLASS.SCName$lang$ SCName,
+				SVTASKCLASS.SubCategoryCode ,
+				SVTASKCLASS.MCName$lang$ MCName,
+				SVTASKCLASS.mCategoryCode ,
+				SVTASKCLASS.CName$lang$ CName,
+				SVTASKCLASS.CategoryCode ,
+				SVTASKCLASS.ISPUBLIC ,
+				SVTASKCLASS.ITEMSECURITY
+			FROM 
+				TBL_CABINETCLASS 
+			JOIN 
+				TBL_CABINET    
+			ON 
+				TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+			AND
+				TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+			AND
+				TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+			JOIN 
+				TBL_MYTASKCODE   
+			ON 
+				TBL_MYTASKCODE.CabinetID = TBL_CABINET.CabinetID
+			AND
+				TBL_MYTASKCODE.TENANT_ID = TBL_CABINET.TENANT_ID
+			AND
+				TBL_MYTASKCODE.COMPANYID = TBL_CABINET.COMPANYID
+			JOIN 
+				SVTASKCLASS    
+			ON 
+				SVTASKCLASS.TaskCode = TBL_MYTASKCODE.TaskCode 
+			AND
+				SVTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
+			AND
+				SVTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
+			WHERE  
+				TBL_CABINET.DelFlag = '0'
+			AND 
+				TBL_CABINETCLASS.DelFlag = '0'
+			AND 
+				NOT ( TBL_CABINET.CabinetTransferFlag = '2' AND CONFIRMFLAG = '0' )
+			AND 
+				TBL_MYTASKCODE.CN = #v_USERID#
+			AND
+				TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
+			AND
+				TBL_CABINETCLASS.COMPANYID = #companyID#
+			AND
+				TBL_MYTASKCODE.DEPTID = #v_DEPTID#
+			ORDER BY 
+				TBL_CABINETCLASS.Title 
 		</isNotEmpty>
 	</select>
 	
@@ -8370,53 +8372,46 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.returnContainerID" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 	ContainerID
-		 FROM ( 
-				 SELECT 
-				 	TBL_Container.ContainerID ContainerID
-			     FROM 
-			     	TBL_Container 
-			     JOIN 
-			     	TBL_CONTAINERTODOCSTATE    
-			     ON 
-			     	TBL_Container.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
-			     AND
-			     	TBL_Container.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
-			     AND
-			     	TBL_Container.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
-			     WHERE  
-			     	TBL_Container.ContainerOwnDepID = #v_DEPTID#
-			     AND 
-			     	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
-			     AND
-			     	TBL_Container.TENANT_ID = #v_TENANTID#
-			     AND
-			     	TBL_Container.COMPANYID = #companyID# ) A
+		 	TBL_Container.ContainerID ContainerID
+	     FROM 
+	     	TBL_Container 
+	     JOIN 
+	     	TBL_CONTAINERTODOCSTATE    
+	     ON 
+	     	TBL_Container.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
+	     AND
+	     	TBL_Container.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
+	     AND
+	     	TBL_Container.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
+	     WHERE  
+	     	TBL_Container.ContainerOwnDepID = #v_DEPTID#
+	     AND 
+	     	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
+	     AND
+	     	TBL_Container.TENANT_ID = #v_TENANTID#
+	     AND
+	     	TBL_Container.COMPANYID = #companyID#
 	</select>
 	
 	<select id="EzApprovalG.returnContainerID2" parameterClass="Map" resultClass="String">
-		SELECT
-			 ContainerTypeID
-		FROM (
-				 SELECT 
-				 	TBL_ContainerType.ContainerTypeID ContainerTypeID
-		         FROM 
-		         	TBL_ContainerType 
-		         JOIN 
-		         	TBL_CONTAINERTODOCSTATE    
-		         ON 
-		         	TBL_ContainerType.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
-		         AND
-		         	TBL_ContainerType.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
-		         AND
-		         	TBL_ContainerType.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
-		         WHERE  
-		         	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
-		         AND
-		         	TBL_CONTAINERTODOCSTATE.TENANT_ID = #v_TENANTID#
-		         AND
-		         	TBL_CONTAINERTODOCSTATE.COMPANYID = #companyID#
-		) A
+		 SELECT 
+		 	TBL_ContainerType.ContainerTypeID ContainerTypeID
+         FROM 
+         	TBL_ContainerType 
+         JOIN 
+         	TBL_CONTAINERTODOCSTATE    
+         ON 
+         	TBL_ContainerType.ContainerTypeID = TBL_CONTAINERTODOCSTATE.ContainerTypeID
+         AND
+         	TBL_ContainerType.TENANT_ID = TBL_CONTAINERTODOCSTATE.TENANT_ID
+         AND
+         	TBL_ContainerType.COMPANYID = TBL_CONTAINERTODOCSTATE.COMPANYID
+         WHERE  
+         	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
+         AND
+         	TBL_CONTAINERTODOCSTATE.TENANT_ID = #v_TENANTID#
+         AND
+         	TBL_CONTAINERTODOCSTATE.COMPANYID = #companyID#
 	</select>
 	
 	<select id="EzApprovalG.returnContainerID3" parameterClass="Map" resultClass="String">
