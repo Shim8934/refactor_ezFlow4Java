@@ -819,7 +819,7 @@
 		
 		    function btnApprove_chkpassword_Complete(chkpass) {
 		        DivPopUpHidden();
-		        if (chkpass == "False") {
+		        if (chkpass == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            setMenuDisable("btnApprove", false);
@@ -851,7 +851,7 @@
 		    }
 		    function btnReject_chkpassword_Complete(chkpass) {
 		        DivPopUpHidden();
-		        if (chkpass == "False") {
+		        if (chkpass == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;
@@ -925,7 +925,7 @@
 		
 		    function btnStay_chkpassword_Complete(chkpass) {
 		        DivPopUpHidden();
-		        if (chkpass == "False") {
+		        if (chkpass == "FALSE") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;
