@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
+<!-- <html style="height: 99%;"> -->
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -253,7 +254,8 @@
 	        }
 	    </script>
 	</head>
-	<body class="mainbody" style="height: 89%;">
+	<!-- <body class="mainbody" style="height: 89%;"> -->
+	<body class="mainbody" style="height: 95%; overflow:hidden;">
 	    <h1><spring:message code='ezBoard.t10031'/><span id='mailBoxInfo'></span></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
