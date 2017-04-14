@@ -129,9 +129,9 @@
 	    <table id="toggle_tbl1" class="content" style="width:450px;height:300px">
 			<tr>
 	            <td style="text-align:center;height:295px">
-	                <span id="previewtext" style="width:100%;height:100%"><spring:message code='main.t4009'/></span>
-	                <div id="previewimg_div" style="display:none;">
-		                <img id="previewimg" style="width:100%;height:100%" />
+	                <span id="previewtext" style="width:100%;height:100%"><spring:message code='main.t4009'/></span>	                
+	                <div id="previewimg_div" style="display:none;height: auto; overflow-y: auto; max-height: 295px;">
+		                <img id="previewimg" style="width:100%;height:auto" />
 	                </div>
 	            </td>
 	            <td style="vertical-align:top">
