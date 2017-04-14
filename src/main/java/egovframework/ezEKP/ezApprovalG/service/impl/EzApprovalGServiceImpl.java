@@ -865,6 +865,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				if (publicityCode.equals("Y")){
 					publicityCode = "1";
+				} else if (publicityCode.length() <= 0) {
+					publicityCode = "1";
 				} else {
 					publicityCode = "3"; 
 				}
