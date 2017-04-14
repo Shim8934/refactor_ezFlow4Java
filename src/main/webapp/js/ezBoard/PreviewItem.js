@@ -104,7 +104,12 @@ function PreviewRayerChange(pGubun) {
             }
             if (onclickFlag) {
             }
-            CurrenWidth = document.documentElement.clientWidth - 20;
+
+			if (parent.document.getElementById("tab1")) {
+				CurrenWidth = document.documentElement.clientWidth + 7;
+			} else {
+				CurrenWidth = document.documentElement.clientWidth - 20;
+			}
             CurrentHeight = document.documentElement.clientHeight - 110;
             pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
             pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
