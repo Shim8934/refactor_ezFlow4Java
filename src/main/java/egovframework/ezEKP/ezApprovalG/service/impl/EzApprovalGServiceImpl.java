@@ -2319,7 +2319,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (dlength <= 0 || reDraftFlag.equals("REDRAFT")) {
 			String isLastAprLine = getCode2Name("A44", "001", companyID, lang, tenantID);
 
-			if (isLastAprLine.equals("1")) {
+			if (isLastAprLine != null && isLastAprLine.equals("1")) {
 				docList = getAprLineInfoDB(docID, "2", userID, formID, companyID, tenantID);
 				docXML = commonUtil.convertStringToDocument(docList);
 				dlength = docXML.getElementsByTagName("ROW").getLength();

@@ -354,6 +354,8 @@
    			WHERE  
    				A.TENANT_ID = #tenantID#
    			AND
+   				B.COMPANYID = #company#
+   			AND
    				REGDATE >= #startDate#
    			AND 
    				REGDATE < #endDate# 
