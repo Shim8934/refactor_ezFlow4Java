@@ -870,8 +870,8 @@ CREATE TABLE `jmocha_stat_mailboxqty_info` (
   `TENANT_ID` int(11) NOT NULL,
   `USERID` varchar(20) NOT NULL,
   `DT_MM` varchar(15) NOT NULL,
-  `QTY` int(11) DEFAULT '0',
-  `ALLOT` int(11) DEFAULT '0',
+  `QTY` bigint(20) DEFAULT '0',
+  `ALLOT` bigint(20) DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`USERID`,`DT_MM`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
