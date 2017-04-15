@@ -274,6 +274,7 @@ public class EzEmailScheduler {
 
     /**
      * Processes Mail Statistics Logs.
+     * 매일 자정 1분 30초에 실행된다.
      */
     @Scheduled(cron = "30 01 00 * * *")
     public void processMailStatLogs() throws Exception {
@@ -287,8 +288,10 @@ public class EzEmailScheduler {
         
         logger.debug("processMailStatLogs scheduler elected.");
         
+        // 모든 테넌트의 목록을 가져온다.
         List<TenantVO> tenantList = ezCommonService.getTenantList();
         
+        // 각 테넌트별로 처리한다.
         for (TenantVO tenant : tenantList) {
             logger.debug("tenantId=" + tenant.getTenantId() + ",tenantName=" + tenant.getTenantName());
         
@@ -309,18 +312,22 @@ public class EzEmailScheduler {
             
             logger.debug("dayOfMonth=" + dayOfMonth);
             
+            // 매월 초 1일 처리를 매일 처리로 변경함
             // 메일박스 사용량 통계는 매월 초 1일에 한 번 처리한다.
-            if (dayOfMonth == 1) {  
+//            if (dayOfMonth == 1) {  
+            	// 모든 사용자의 목록을 가져온다.
                 List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenant.getTenantId());
+                
                 IMAPAccess ia = null;
                 Locale locale = Locale.getDefault();
                 String password = jspw;
                 String userId = null;
                 String email = null;
                 
-                calendar.add(Calendar.DAY_OF_MONTH, -1);
+//                calendar.add(Calendar.DAY_OF_MONTH, -1);
                 String yearMonth = String.format("%04d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
                 
+                // 각 사용자별로 처리한다.
                 for (OrganUserVO organUser : userCnList) {
                     userId = organUser.getCn();
                     logger.debug("userId=" + userId);
@@ -332,12 +339,13 @@ public class EzEmailScheduler {
                                 
                         long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
                         
+                        // 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
                         long mailboxUsage = storageUsageAndLimit[0]; // in KBs
                         long mailboxQuota = storageUsageAndLimit[1]; // in KBs
                         
                         logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);     
                         
-                        // 메일박스 쿼터와 사용량을 통계 테이블에 저장하는 API를 호출한다.
+                        // 메일박스 쿼터와 사용량을 통계 테이블에 저장하는 Web Service API를 호출한다.
                         requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/setMailboxUsageLog";
                         
                         String tenantIdParam = "tenantId=" + tenant.getTenantId();
@@ -362,7 +370,7 @@ public class EzEmailScheduler {
                         }
                     }
                 }
-            }
+//            }
         }
         
         logger.debug("processMailStatLogs scheduler ended.");
