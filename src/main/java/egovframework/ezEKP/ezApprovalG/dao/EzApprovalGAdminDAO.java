@@ -475,4 +475,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void changeSpecialContSN3(ApprGContInfoVO vo) throws Exception {
 		update("EzApprovalGAdminDAO.changeSpecialContSN3", vo);
 	}
+
+	public String checkContainer(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdminDAO.checkContainer", map);
+	}
 }
