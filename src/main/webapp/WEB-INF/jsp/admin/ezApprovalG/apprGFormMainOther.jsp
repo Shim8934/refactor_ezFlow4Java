@@ -913,7 +913,7 @@
                 <tr>
                     <td style="height:800px">&lt;xml id=conn&gt;<br>
                         &lt;connroot&gt;<br>
-                        <textarea class="textarea" ID="txt_OpinionContent" style="FONT-SIZE:9pt; WIDTH:98%; HEIGHT:734px"></textarea>
+                        <textarea class="textarea" ID="txt_OpinionContent" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:734px"></textarea>
                         <br>
                         &lt;/connroot&gt;<br>
                         &lt;/xml&gt;
@@ -932,10 +932,10 @@
                 	<td>&lt;xml id=WORKFLOW&gt;<br> 
 	                    &lt;WORKFLOW&gt;<br> 
 	                    &lt;VALIDATIONS&gt;<br> 
-	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
+	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
 	                    <br> &lt;/VALIDATIONS&gt;<br> 
 	                    &lt;STATUS&gt;<br> 
-	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
+	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
 	                    <br> &lt;/STATUS&gt;<br> 
 	                    &lt;/WORKFLOW&gt;<br> 
 	                    &lt;/xml&gt;

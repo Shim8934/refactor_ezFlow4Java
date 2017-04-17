@@ -2379,8 +2379,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			tempPMonth = "0" + tempPMonth;
 		}
 		
-		logger.debug("tempMonth" + tempMonth);
-		logger.debug("tempPMonth" + tempPMonth);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
 		model.addAttribute("tempPYear", tempPYear);
