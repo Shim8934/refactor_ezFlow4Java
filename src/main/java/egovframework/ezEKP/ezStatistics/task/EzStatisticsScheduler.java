@@ -26,7 +26,7 @@ public class EzStatisticsScheduler {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsScheduler.class);
 	
-	@Scheduled(cron = "{config.cron.apprStatisticsDailybatch}")
+	@Scheduled(cron = "${config.cron.apprStatisticsDailybatch}")
 	public void apprStatisticsDailybatch() throws Exception {
 		logger.debug("apprStatisticsDailybatch started");
 
