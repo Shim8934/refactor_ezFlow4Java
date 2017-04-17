@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -20,12 +21,21 @@ public class EzStatisticsScheduler {
 	@Resource(name = "EzStatisticsAdminService")
 	private EzStatisticsAdminService ezStatisticsAdminService;
 	
+	@Autowired
+	private EzEmailScheduler ezEmailScheduler;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsScheduler.class);
 	
-	@Scheduled(cron = "55 55 23 * * *")
+	@Scheduled(cron = "{config.cron.apprStatisticsDailybatch}")
 	public void apprStatisticsDailybatch() throws Exception {
 		logger.debug("apprStatisticsDailybatch started");
 
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("apprStatisticsDailybatch")) {
+			logger.debug("apprStatisticsDailybatch scheduler ended.");
+			return;
+		}
+		
 		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
 		
 		StatApprVO statApprVO = new StatApprVO();

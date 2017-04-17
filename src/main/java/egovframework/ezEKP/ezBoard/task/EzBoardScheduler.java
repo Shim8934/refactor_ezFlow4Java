@@ -34,7 +34,7 @@ public class EzBoardScheduler {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardScheduler.class);
 
-	@Scheduled(cron = "37 00 02 * * *")
+	@Scheduled(cron = "${config.cron.boardGarbageClear}")
 	public void boardGarbageClear() throws Exception {
 		logger.debug("boardGarbageClear started");
 		
