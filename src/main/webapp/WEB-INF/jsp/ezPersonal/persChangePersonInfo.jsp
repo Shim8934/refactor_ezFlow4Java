@@ -211,11 +211,17 @@
 				        return;
 				    }
 			        
-			        /* if (document.getElementById('txtNewPassword').value.Length > 100) {
-			            alert("<spring:message code='ezPersonal.t196'/>");
-				        document.all['txtNewPassword'].focus();
-				        return;
-				    } */
+			       if (document.getElementById('txtNewPassword').value.Length > 100) {
+						alert("<spring:message code='ezPersonal.t196'/>");
+				    	document.all['txtNewPassword'].focus();
+				    	return;
+				  } 
+				    
+				  if (document.getElementById('txtNewPassword').value.indexOf(':') > -1) {
+			      	alert("<spring:message code='ezPersonal.t999900036'/>");
+			        document.all['txtNewPassword'].focus();
+			        return;
+			     }
 			        
 			        var xmlHTTP = createXMLHttpRequest();
 			        var xmlPara = createXmlDom();
