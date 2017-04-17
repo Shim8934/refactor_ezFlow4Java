@@ -48,7 +48,7 @@
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/appr_12" target="right"><span>분류코드별문서함</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/appr_13" target="right"><span>개인및부서문서함</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/appr_13" target="right"><span>개인문서함</span></a></h2>
 				<ul>
 				</ul>
 			</c:when>
