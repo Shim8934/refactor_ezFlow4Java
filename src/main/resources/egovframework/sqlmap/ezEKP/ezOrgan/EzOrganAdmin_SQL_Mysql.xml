@@ -704,14 +704,14 @@
             TBL_ContainerType
               (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, TENANT_ID, COMPANYID)
           VALUES
-              (N'100       ', N'품의함', N'Draft',#tenantID#, #companyID#),
-              (N'200       ', N'협조함', N'Support',#tenantID#, #companyID#),
-              (N'300       ', N'감사함', N'Audit',#tenantID#, #companyID#),
-              (N'500       ', N'수신함', N'Receive',#tenantID#, #companyID#),
-              (N'600       ', N'합의함', N'Agree',#tenantID#, #companyID#),
-              (N'610       ', N'발신함', N'Send',#tenantID#, #companyID#),
-              (N'700       ', N'반송함', N'Reject',#tenantID#, #companyID#),
-              (N'999       ', N'폐기함', N'Obsolete',#tenantID#, #companyID#)
+              (N'100', N'품의함', N'Draft',#tenantID#, #companyID#),
+              (N'200', N'협조함', N'Support',#tenantID#, #companyID#),
+              (N'300', N'감사함', N'Audit',#tenantID#, #companyID#),
+              (N'500', N'수신함', N'Receive',#tenantID#, #companyID#),
+              (N'600', N'합의함', N'Agree',#tenantID#, #companyID#),
+              (N'610', N'발신함', N'Send',#tenantID#, #companyID#),
+              (N'700', N'반송함', N'Reject',#tenantID#, #companyID#),
+              (N'999', N'폐기함', N'Obsolete',#tenantID#, #companyID#)
       ]]>
     </insert>
     
@@ -721,19 +721,19 @@
             TBL_CONTAINERTODOCSTATE
               (ContainerTypeID,  DocumentState, TENANT_ID, COMPANYID) 
          VALUES
-              (N'100       ', N'001',#tenantID#, #companyID#),
-              (N'200       ', N'002',#tenantID#, #companyID#),
-              (N'300       ', N'003',#tenantID#, #companyID#),
-              (N'300       ', N'014',#tenantID#, #companyID#),
-              (N'300       ', N'018',#tenantID#, #companyID#),
-              (N'500       ', N'011',#tenantID#, #companyID#),
-              (N'500       ', N'015',#tenantID#, #companyID#),
-              (N'600       ', N'012',#tenantID#, #companyID#),
-              (N'610       ', N'019',#tenantID#, #companyID#),
-              (NULL         , N'022',#tenantID#, #companyID#),
-              (NULL         , N'023',#tenantID#, #companyID#),
-              (N'700       ', N'031',#tenantID#, #companyID#),
-              (N'700       ', N'032',#tenantID#, #companyID#)
+              (N'100', N'001',#tenantID#, #companyID#),
+              (N'200', N'002',#tenantID#, #companyID#),
+              (N'300', N'003',#tenantID#, #companyID#),
+              (N'300', N'014',#tenantID#, #companyID#),
+              (N'300', N'018',#tenantID#, #companyID#),
+              (N'500', N'011',#tenantID#, #companyID#),
+              (N'500', N'015',#tenantID#, #companyID#),
+              (N'600', N'012',#tenantID#, #companyID#),
+              (N'610', N'019',#tenantID#, #companyID#),
+              (NULL, N'022',#tenantID#, #companyID#),
+              (NULL, N'023',#tenantID#, #companyID#),
+              (N'700', N'031',#tenantID#, #companyID#),
+              (N'700', N'032',#tenantID#, #companyID#)
       ]]>
     </insert>
     

@@ -408,25 +408,33 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("contType", pContType);
 		map.put("deptID", pOwnDeptID);
 		
-		logger.debug("insertContainer started.");
-		ezApprovalGAdminDAO.insertContainer(map);
-		logger.debug("insertContainer ended.");
+		String duplicated = ezApprovalGAdminDAO.checkContainer(map);
 		
-		pMaxContainerIDLength = xmlData.getDocumentElement().getChildNodes().getLength();
-
-		if (pMaxContainerIDLength > 2) {
-		    for (i = 2; i < pMaxContainerIDLength - 1; i++) {		
-				map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
-				
-				logger.debug("insertContainer ended.");
-		    	ezApprovalGAdminDAO.insertContainerUseDep(map);
-		    	logger.debug("insertContainer ended.");
-		    }
+		if (duplicated == null) {
+			logger.debug("insertContainer duplicated.");
+			
+			return "FALSE";
+		} else {
+			logger.debug("insertContainer started.");
+			ezApprovalGAdminDAO.insertContainer(map);
+			logger.debug("insertContainer ended.");
+			
+			pMaxContainerIDLength = xmlData.getDocumentElement().getChildNodes().getLength();
+			
+			if (pMaxContainerIDLength > 2) {
+				for (i = 2; i < pMaxContainerIDLength - 1; i++) {		
+					map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+					
+					logger.debug("insertContainer ended.");
+					ezApprovalGAdminDAO.insertContainerUseDep(map);
+					logger.debug("insertContainer ended.");
+				}
+			}
+			
+			logger.debug("insertContainer ended");
+			
+			return "TRUE";
 		}
-		
-		logger.debug("insertContainer ended");
-		
-		return "TRUE";
 	}
 
 	@Override

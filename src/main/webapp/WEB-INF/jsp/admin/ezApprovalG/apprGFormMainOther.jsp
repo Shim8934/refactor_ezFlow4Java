@@ -913,7 +913,7 @@
                 <tr>
                     <td style="height:800px">&lt;xml id=conn&gt;<br>
                         &lt;connroot&gt;<br>
-                        <textarea class="textarea" ID="txt_OpinionContent" style="FONT-SIZE:9pt; WIDTH:98%; HEIGHT:734px"></textarea>
+                        <textarea class="textarea" ID="txt_OpinionContent" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:734px"></textarea>
                         <br>
                         &lt;/connroot&gt;<br>
                         &lt;/xml&gt;
@@ -932,10 +932,10 @@
                 	<td>&lt;xml id=WORKFLOW&gt;<br> 
 	                    &lt;WORKFLOW&gt;<br> 
 	                    &lt;VALIDATIONS&gt;<br> 
-	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
+	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
 	                    <br> &lt;/VALIDATIONS&gt;<br> 
 	                    &lt;STATUS&gt;<br> 
-	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:100%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
+	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
 	                    <br> &lt;/STATUS&gt;<br> 
 	                    &lt;/WORKFLOW&gt;<br> 
 	                    &lt;/xml&gt;
@@ -953,14 +953,14 @@
             	<span style="min-width: 45px;" id="groupstr"><spring:message code='ezApproval.t646'/></span>
             </h2>
             
-            <table style="width:100%; height:750px;">
+            <table style="width:100%; height:810px;">
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
                         <h2><spring:message code='ezApprovalG.t232'/></h2>
-                        <div id="divUserContTree" style="height: 330px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="divUserContTree" style="height: 355px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                         <br />
                         <div class="div_scroll" style="border:none;">
-                            <div id="UserList" style="height: 280px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
+                            <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
                     </td>
                     <td style="text-align:center; width:50px; border-left:none; border-right:none">
@@ -975,7 +975,7 @@
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
                         <h2><spring:message code='ezApproval.t61'/></h2>
-                        <div class="div_scroll" style="border:none; height:625px;">
+                        <div class="div_scroll" style="border:none; height:775px;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%;overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
                         </div>
                     </td>

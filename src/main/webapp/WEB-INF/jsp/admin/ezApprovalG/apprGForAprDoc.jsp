@@ -641,7 +641,7 @@
 			            var isExtYN = GetAttribute(tr, "DATA3");  //TODO 외부부서일때 isExtYN ==Y
 
 			            if (isExtYN.toUpperCase() == "Y") {
-			            	var url = "/myoffice/ezApprovalG/ezDocInfo/ezReceiptHistoryInfo_Cross.aspx?pDocID=" + DocID + "&pDeptID=" + escape(GetAttribute(tr, "DATA1"));
+			            	var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + DocID + "&deptID=" + encodeURIComponent(GetAttribute(tr, "DATA1"));
 			                var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
 			                feature = feature + GetShowModalPosition(555, 240);
 			                var ret = window.showModalDialog(url, "", feature);
