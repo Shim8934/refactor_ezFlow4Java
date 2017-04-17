@@ -346,19 +346,22 @@
 		        try {
 		            var RecevState = getDocRecevState();
   
-		            if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
-		                if (RecevState == "015") {
-		                    var pAlertContent = strLang912;
-		                    OpenAlertUI(pAlertContent);
-		                }
-		                else if (RecevState == "013") {
-		                    var pAlertContent = strLang913;
-		                    OpenAlertUI(pAlertContent);
-		                }
+		            if (isReDraft != "Y") {
+			            if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
+			                if (RecevState == "015") {
+			                    var pAlertContent = strLang912;
+			                    OpenAlertUI(pAlertContent);
+			                }
+			                else if (RecevState == "013") {
+			                    var pAlertContent = strLang913;
+			                    OpenAlertUI(pAlertContent);
+			                }
 		
-		                btnClose_onclick();
-		                return false;
+			                btnClose_onclick();
+			                return false;
+			            }
 		            }
+		            
 		            var rtnSignInfo;
 		            var fields = message.GetFieldsList();
 		            var field = message.GetListItem(fields, "doctitle");

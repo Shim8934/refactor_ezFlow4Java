@@ -486,7 +486,7 @@ public class EzEmailScheduler {
 		return path.delete();
 	}
 	
-	private boolean preScheduler(String scheduler) {
+	public boolean preScheduler(String scheduler) {
 		logger.debug("preScheduler started.");
 		
 		boolean isSchedulerServer = false;

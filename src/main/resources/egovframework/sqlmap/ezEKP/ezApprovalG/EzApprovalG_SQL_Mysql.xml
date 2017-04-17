@@ -8662,48 +8662,45 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getDocRecvState" parameterClass="Map" resultClass="String">
 		SELECT 
-		   * 
-		FROM (
-				SELECT 
-					CASE WHEN DOCID > 0 THEN  ( 
-												SELECT 
-													AprState 
-	           									FROM 
-	           										TBL_APRRECEIPTPROCESSINFO 
-	          									WHERE  
-	          										DOCID = #v_DOCID#
-	                   							AND 
-	                   								RECEIVEDDEPTID = #v_DEPTID#
-	                   							AND
-	                   								TENANT_ID = #v_TENANTID#
-	                   							AND
-            										COMPANYID = #companyID#) 
-	       			ELSE  (
-	       					SELECT 
-	       						AprState 
-	           				FROM 
-	           					TBL_ENDRECEIPTPROCESSINFO 
-	          				WHERE  
-	          					DOCID = #v_DOCID#
-	                   		AND 
-	                   			RECEIVEDDEPTID = #v_DEPTID#
-	                   		AND
-	                   			TENANT_ID = #v_TENANTID#
-	                   		AND
-            					COMPANYID = #companyID#)  END
-	       		  FROM (
-	       		  		 SELECT 
-	       		  		 	COUNT(DOCID)  DOCID
-	               		 FROM 
-	               		 	TBL_APRRECEIPTPROCESSINFO 
-	                	 WHERE  
-	                	 	DOCID =  #v_DOCID#
-	                     AND 
-	                     	RECEIVEDDEPTID = #v_DEPTID# 
-	                     AND
-	                   		TENANT_ID = #v_TENANTID#
-	                     AND
-            				COMPANYID = #companyID#) B )A
+			CASE WHEN DOCID > 0 THEN  ( 
+										SELECT 
+											AprState 
+          									FROM 
+          										TBL_APRRECEIPTPROCESSINFO 
+         									WHERE  
+         										DOCID = #v_DOCID#
+                  							AND 
+                  								RECEIVEDDEPTID = #v_DEPTID#
+                  							AND
+                  								TENANT_ID = #v_TENANTID#
+                  							AND
+          										COMPANYID = #companyID#) 
+      			ELSE  (
+      					SELECT 
+      						AprState 
+          				FROM 
+          					TBL_ENDRECEIPTPROCESSINFO 
+         				WHERE  
+         					DOCID = #v_DOCID#
+                  		AND 
+                  			RECEIVEDDEPTID = #v_DEPTID#
+                  		AND
+                  			TENANT_ID = #v_TENANTID#
+                  		AND
+          					COMPANYID = #companyID#)  END
+     		  FROM (
+   		  		 SELECT 
+   		  		 	COUNT(DOCID)  DOCID
+           		 FROM 
+           		 	TBL_APRRECEIPTPROCESSINFO 
+               	 WHERE  
+               	 	DOCID =  #v_DOCID#
+                 AND 
+                 	RECEIVEDDEPTID = #v_DEPTID# 
+                 AND
+               		TENANT_ID = #v_TENANTID#
+                 AND
+       				COMPANYID = #companyID#) B
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String"> -->
