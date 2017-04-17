@@ -29,18 +29,19 @@
 			var getBirthDay = "${birthDay}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			
-			    $(function () {
-			        document.getElementById("TempCalImage").style.display = "none";
-			        $("#txtBirth").datepicker({
-			            changeMonth: true,
-			            changeYear: true,
-			            autoSize: true,
-			            showOn: "both",
-			            buttonImage: "/images/ImgIcon/calendar-month.gif",
-			            buttonImageOnly: true
-			        });
-			        $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");
-			        if (getBirthDay == "") {
+			$(function () {
+				document.getElementById("TempCalImage").style.display = "none";
+			    $("#txtBirth").datepicker({
+			    	changeMonth: true,
+			        changeYear: true,
+			        autoSize: true,
+			        showOn: "both",
+			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImageOnly: true
+				});
+			    
+			    $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");
+			    	if (getBirthDay == "") {
 			            //var NowDate = new Date();
 			            //$("#txtBirth").datepicker('setDate', NowDate);
 			        }
@@ -179,7 +180,7 @@
 			    	});
 			     }
 			    
-			    function PassWordChange() {
+				function PassWordChange() {
 			    	if (document.getElementById('txtOldPassword').value == "") {
 						alert("<spring:message code='ezPersonal.t947'/>");
 					    document.all['txtOldPassword'].focus();
@@ -187,7 +188,7 @@
 					}
 			    	
 			    	if (document.getElementById('txtNewPassword').value == "") {
-			            //alert("<spring:message code='ezPersonal.t195'/>");
+			        	//alert("<spring:message code='ezPersonal.t195'/>");
 			            alert("<spring:message code='main.jjh01'/>");
 				        document.all['txtNewPassword'].focus();
 				        return;
@@ -208,20 +209,20 @@
 			        if (document.getElementById('txtOldPassword').value == document.getElementById('txtNewPassword').value) {
 			            alert("<spring:message code='ezPersonal.t194'/>");
 				        document.all['txtNewPassword'].focus();
-				        return;
+				    	return;
 				    }
 			        
 			       if (document.getElementById('txtNewPassword').value.Length > 100) {
 						alert("<spring:message code='ezPersonal.t196'/>");
 				    	document.all['txtNewPassword'].focus();
 				    	return;
-				  } 
+					} 
 				    
-				  if (document.getElementById('txtNewPassword').value.indexOf(':') > -1) {
-			      	alert("<spring:message code='ezPersonal.t999900036'/>");
-			        document.all['txtNewPassword'].focus();
-			        return;
-			     }
+					if (document.getElementById('txtNewPassword').value.indexOf(':') > -1) {
+						alert("<spring:message code='ezPersonal.t999900036'/>");
+			        	document.all['txtNewPassword'].focus();
+			     		return;
+			     	}
 			        
 			        var xmlHTTP = createXMLHttpRequest();
 			        var xmlPara = createXmlDom();
