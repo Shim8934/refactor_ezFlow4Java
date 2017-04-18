@@ -210,7 +210,7 @@
 			    	document.getElementById('Makedate').style.display = "none";
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
-			        document.getElementById("txtTitle").value = ConvMakeXMLString("${strTitle}");
+			        document.getElementById("txtTitle").value = "<c:out value = '${strTitle}' />";
 				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
@@ -220,7 +220,7 @@
 			        }
 			    }
 			    if (pMode == "reply") {
-			        document.getElementById("txtTitle").value = ConvMakeXMLString("${strTitle}");
+			        document.getElementById("txtTitle").value = "<c:out value = '${strTitle}' />";
 				}
 			    if (pReservedItem != "true") {
 			        //var nowDate = new Date();
@@ -381,7 +381,7 @@
 					data : { itemID : strItemID, 
 							 mode   : pMode,
 							 conLocation : strContentLocation,
-							 title  : "${strTitle}"
+							 title  : "<c:out value = '${strTitle}' />"
 						   },
 					success: function(result){
 						resText = result;
@@ -1343,9 +1343,9 @@
 		                        
 		                        htmlData = "<body free>" + htmlData + "</body>";
 		                        if (gubun != "2"){
-		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "${boardListVO.title}" + "<br><br>" + htmlData;
+		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + htmlData;
 		                        }else{
-		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterFakeName + "<br><B><spring:message code='ezBoard.t413' /></B>" + "${boardListVO.title}" + "<br><br>" + htmlData;
+		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterFakeName + "<br><B><spring:message code='ezBoard.t413' /></B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + htmlData;
 		                        }
 		                        message.SetEditorContent(htmlData);
 		                    }else {
