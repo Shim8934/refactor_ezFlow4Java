@@ -98,10 +98,7 @@
 		    	<th><spring:message code = 'ezApprovalG.t1448' /></th>
 		    	<td>
 		    		<select id="processidx" name="select" style="WIDTH:185px" onChange="return processidx_onchange()">
-						<c:forEach var="item" items="${processIdxList}">
-							<c:set var="item" value="${fn:split(item,';')}" />
-	            			<option value="<c:out value='${item[1]}'/>" ><c:out value='${item[0]}'/></option>
-	            		</c:forEach>
+						${processIdx}
 		      		</select>
 		    	</td>
 		  	</tr>
@@ -113,10 +110,7 @@
 		    	<th><spring:message code = 'ezApprovalG.t1449' /></th>
 		    	<td>
 		    		<select id="processtime" name="select" style="WIDTH:185px" onChange="return processtime_onchange()">
-						<c:forEach var="item" items="${processTimeList}">
-							<c:set var="item" value="${fn:split(item,';')}" />
-	            			<option value="<c:out value='${item[1]}'/>" ><c:out value='${item[0]}'/></option>
-	            		</c:forEach>
+						${processTime}
 		      		</select>
 		    	</td>
 		  	</tr>
@@ -128,10 +122,7 @@
 		    	<th><spring:message code = 'ezApprovalG.t1450' /></th>
 		    	<td>
 		    		<select id="connstringflag" name="select" style="WIDTH:185px" onChange="return connstringflag_onchange()">
-						<c:forEach var="item" items="${connStringFlagList}">
-							<c:set var="item" value="${fn:split(item,';')}" />
-	            			<option value="<c:out value='${item[1]}'/>" ><c:out value='${item[0]}'/></option>
-	            		</c:forEach>
+						${connStringFlag}
 		      		</select>
 		    	</td>
 		  	</tr>
@@ -149,10 +140,7 @@
 		    	<th><spring:message code = 'ezApprovalG.t1452' /></th>
 		    	<td>
 		    		<select id="querytype" name="select" style="WIDTH:185px" onChange="return querytype_onchange()">
-						<c:forEach var="item" items="${queryTypeList}">
-							<c:set var="item" value="${fn:split(item,';')}" />
-	            			<option value="<c:out value='${item[1]}'/>" ><c:out value='${item[0]}'/></option>
-	            		</c:forEach>
+						${queryType}
 		      		</select>
 		    	</td>
 		  	</tr>
@@ -169,10 +157,7 @@
 		    	<th>Key <spring:message code = 'ezApprovalG.t1454' /></th>
 		    	<td height="23">
 		    		<select id="keykind" name="select" style="WIDTH:185px" onChange="return keykind_onchange()">
-						<c:forEach var="item" items="${keyKindList}">
-							<c:set var="item" value="${fn:split(item,';')}" />
-	            			<option value="<c:out value='${item[1]}'/>" ><c:out value='${item[0]}'/></option>
-	            		</c:forEach>
+						${keyKind}
 		      		</select>
 		    	</td>
 		  	</tr>

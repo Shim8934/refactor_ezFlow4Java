@@ -1,10 +1,12 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -154,4 +156,6 @@ public interface EzApprovalGAdminService {
 	public String delSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception;
 	
 	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception;
+
+	public List<ApprGFormConnInfoVO> getFormConnInfo() throws Exception;
 }

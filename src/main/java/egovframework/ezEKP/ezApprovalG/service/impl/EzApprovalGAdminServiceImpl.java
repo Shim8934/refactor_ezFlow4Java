@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -31,6 +30,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
@@ -3206,6 +3206,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return "TRUE";
 	}
-	
-	
+
+	@Override
+	public List<ApprGFormConnInfoVO> getFormConnInfo() throws Exception {
+		List<ApprGFormConnInfoVO> list = ezApprovalGAdminDAO.getFormConnInfo();
+		
+		return list;
+	}
 }
