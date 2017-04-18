@@ -495,12 +495,12 @@ public class EzAddressController{
 			}
 			
 			if (addressId.equals("")) { //주소록 생성
-				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
 						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, sType);
 			} else { //주소록 수정
-				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(),
+				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sName, sEmail, sCompany, sDept, sTitle, 
 						sCompanyPhone, sFax, sMobile, sHomePage, 
 						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo);
@@ -654,12 +654,12 @@ public class EzAddressController{
 			String sType = "G";
 			
 			if (addressId.equals("")) {
-				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
 						"", "", "", "", sMemo, sType);
 			} else {
-				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), 
+				ezAddressService.updateAddress(userInfo.getTenantId(), addressId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), 
 						sGroupName, sEmail, "", "", "", 
 						"", "", "", "", 
 						"", "", "", "", sMemo);
@@ -869,7 +869,7 @@ public class EzAddressController{
 			if (cmd.equals("MOVE")) {
 				ezAddressService.moveAddress(userInfo.getTenantId(), addressIds, folderId, ownerId);
 			} else if (cmd.equals("COPY")) {
-				ezAddressService.copyAddress(userInfo.getTenantId(), addressIds, folderId, ownerId, userInfo.getId());
+				ezAddressService.copyAddress(userInfo.getTenantId(), addressIds, folderId, ownerId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2());
 			}
 			
 		} catch (Exception e) {
@@ -1326,7 +1326,7 @@ public class EzAddressController{
 			if (cmd.equals("MOVE")) {
 				ezAddressService.moveFolder(userInfo.getTenantId(), folderId, newParentId, newOwnerId, newFolderType);
 			} else if (cmd.equals("COPY")) {
-				ezAddressService.copyFolder(userInfo.getTenantId(), folderId, newParentId, newOwnerId, newFolderType, userInfo.getId());
+				ezAddressService.copyFolder(userInfo.getTenantId(), folderId, newParentId, newOwnerId, newFolderType, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2());
 			}
 			
 		} catch (Exception e) {
@@ -2055,12 +2055,12 @@ public class EzAddressController{
 	        	}
 	        	
         		if (csvBody[8].equals(groupMailStr)) {
-        			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+        			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(),
         					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
         					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G");
         		} else {
-        			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+        			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), userInfo.getDisplayName(), userInfo.getDisplayName2(),
         					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
         					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
         					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P");

@@ -20,24 +20,24 @@ public interface EzAddressService {
 	public List<AddressVO> getSearchList(int tenantId, String[] pIdLists, String pOrderOption, String pFilter, int pListPageSize, int pStart) throws Exception;
 	public boolean checkDuplicateAddress(int tenantId, String ownerId, String sEmail) throws Exception;
 	public AddressVO getAddressInfo(int tenantId, String primary, String pAddressId) throws Exception;
-	public void insertAddress(int tenantId, String pOwnerId, String pFolderId, String pCreatorId, 
+	public void insertAddress(int tenantId, String pOwnerId, String pFolderId, String pCreatorId, String pCreatorName, String pCreatorName2,
 			String sName, String sEmail, String sCompany, String sDept, String sTitle, 
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
 			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo, String sType) throws Exception;
-	public void updateAddress(int tenantId, String pAddressId, String pModifierId, 
+	public void updateAddress(int tenantId, String pAddressId, String pModifierId, String pModifierName, String pModifierName2,
 			String sName, String sEmail, String sCompany, String sDept, String sTitle,
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
 			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo) throws Exception;
 	public void deleteAddress(String[] pAddressIds) throws Exception;
 	public void moveAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId) throws Exception;
-	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId) throws Exception;
+	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId, String pCreatorName, String pCreatorName2) throws Exception;
 	public List<AddressFolderVO> getSubTreeInfo(int tenantId, String pParentID, String pOwnerID) throws Exception;
 	public AddressFolderVO getFolderInfo(String pFolderId) throws Exception;
 	public void insertFolder(int tenantId, String pParentId, String pOwnerId, String pFolderType, String pFolderName) throws Exception;
 	public void updateFolder(String pFolderId, String pFolderName) throws Exception;
 	public void deleteFolder(String pFolderId) throws Exception;
 	public void moveFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType) throws Exception;
-	public void copyFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType, String pCreatorId) throws Exception;
+	public void copyFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType, String pCreatorId, String pCreatorName, String pCreatorName2) throws Exception;
 	public List<SimpleAddressVO> getSimpleAddress(int tenantId, String userId) throws Exception;
 	public void setSimpleAddress(int tenantId, String pUserId, String pMailList) throws Exception;
 	public void removeUserAddress(String userEmailAddress) throws Exception;
