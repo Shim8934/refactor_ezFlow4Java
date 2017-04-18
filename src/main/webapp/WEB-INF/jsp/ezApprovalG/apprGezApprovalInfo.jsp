@@ -1766,11 +1766,11 @@
 	    <c:if test="${approvalFlag eq 'G' }">
 		    <!-- 기록물철 -->
 		    <div id="Cabinetinfo" style="width: 1110px; height: 597px; display: none;">
-		        <table>
+		        <table style="width: 100%">
 		            <tr>
 		                <td colspan="2">
 		                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t1039'/></h2>
-		                    <table class="content" style="width: 100%; margin-left: 2px;">
+		                    <table class="content" style="width: 100%; ">
 		                        <tr>
 		                            <th style="width: 50px"><spring:message code='ezApprovalG.t592'/></th>
 		                            <td style="width: 105px">
@@ -1806,7 +1806,7 @@
 		                        </tr>
 		                    </table>
 		                    <div class="border_gray" style="margin-top: 5px; margin-left: 3px">
-		                        <div id="TaskSCateList" style="border: 0; HEIGHT: 295px; WIDTH: 968px; overflow-x: hidden; overflow-y: auto; margin: 0px 1px 1px 1px;"></div>
+		                        <div id="TaskSCateList" style="border: 0; HEIGHT: 295px; WIDTH: 99.9%; overflow-x: hidden; overflow-y: auto; margin: 0px 1px 1px 1px;"></div>
 		                    </div>
 		                </td>
 		            </tr>
@@ -1824,7 +1824,7 @@
 		            <tr>
 		                <td colspan="2">
 		                    <div class="border_gray" style="margin-top: 5px; margin-left: 3px">
-		                        <div id="MyTaskSCateList" style="border: 0; HEIGHT: 180px; WIDTH: 968px; overflow-x: hidden; overflow-y: auto; margin: 0px 1px 1px 1px;"></div>
+		                        <div id="MyTaskSCateList" style="border: 0; HEIGHT: 180px; WIDTH: 99.9%; overflow-x: hidden; overflow-y: auto; margin: 0px 1px 1px 1px;"></div>
 		                    </div>
 		                </td>
 		            </tr>
