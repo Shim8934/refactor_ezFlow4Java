@@ -351,7 +351,9 @@
 					}        			
 				});	
 //FreeT 요구사항 마이게시판 트리 없을때 안보여주기~
-		    	if (returnXML != "<TREEVIEWDATA></TREEVIEWDATA>") {
+		    	if (returnXML == "<TREEVIEWDATA></TREEVIEWDATA>") {
+		    		$("#TreeCtrl_MyBoardTree").css("display", "none");
+		    	} else {
 		    		$("#TreeCtrl_MyBoardTree").css("display", "");
 		    	}
 		    	
