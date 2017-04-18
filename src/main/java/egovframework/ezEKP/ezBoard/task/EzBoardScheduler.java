@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.let.utl.fcc.service.CommonUtil;
 	
 @Component
@@ -28,11 +29,20 @@ public class EzBoardScheduler {
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
 	
+	@Autowired
+	private EzEmailScheduler ezEmailScheduler;
+	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardScheduler.class);
 
-	@Scheduled(cron = "37 00 02 * * *")
+	@Scheduled(cron = "${config.cron.boardGarbageClear}")
 	public void boardGarbageClear() throws Exception {
 		logger.debug("boardGarbageClear started");
+		
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("boardGarbageClear")) {
+			logger.debug("boardGarbageClear scheduler ended.");
+			return;
+		}
 
 		String realPath = config.getProperty("data_root");
 		

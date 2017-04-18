@@ -456,10 +456,10 @@
 			    		type : "POST",
 			    		dataType : "text",
 			    		async : false,
+			    		url : "/ezApprovalG/getExtTotalAttachSize.do",
 			    		data : {
 			    			docID : pDocID
 			    		},
-			    		url : "/ezApprovalG/getExtTotalAttachSize.do",
 			    		success: function(text){
 			    			result = text;
 			    		}        			
