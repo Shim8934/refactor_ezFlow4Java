@@ -3736,6 +3736,23 @@ CREATE TABLE `tbl_form_autoruleline` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_formconninfo`
+--
+
+DROP TABLE IF EXISTS `tbl_formconninfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_formconninfo` (
+  `SN` bigint(10) NOT NULL AUTO_INCREMENT,
+  `CONNNODE` varchar(40) NOT NULL,
+  `CONNINFO` varchar(40) NOT NULL,
+  `DESCRIPTION` varchar(100) DEFAULT NULL,
+  `UPPERNODE` varchar(100) NOT NULL,
+  PRIMARY KEY (`SN`)
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_formcontainer`
 --
 
