@@ -2047,7 +2047,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
            				sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" vAlign=top style=\"padding-left:20px;\">\n");
             		} else {
             			sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" valign=top");
-            			if (!pageColumnSplit.equals("")) {
+            			if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
             				if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
             					columnWidth = pageColumnSplit.split(";")[i] + "px";
             					if (columnWidth.equals("9999px")) {
@@ -2174,6 +2174,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			} else {
 				logger.debug("no edit");
 				logger.debug("userInfo tableViewOption="+userInfo.getTableViewOption());
+				
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (i == 0) {
 						sb.append("<div class='section1_bg'><section class='section1'>\n");
@@ -2281,6 +2282,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 		
 		for (int i=0; i<result.size(); i++) {
+			String portletWidthStr = "";
 			int portletType = result.get(i).getPortletType();
 			String portletUID = result.get(i).getuID();
 			String portletPageUID = result.get(i).getPageUID();
@@ -2320,7 +2322,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							if (portletWidth == 9999) {
-								String portletWidthStr = "100%"; 
+								portletWidthStr = "100%"; 
 								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							} else {
 								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
@@ -2331,18 +2333,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						
 					}
 				} else {
+					logger.debug("portletType="+portletType);
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							
 							if (portletWidth == 9999) {
-								String portletWidthStr = "100%"; 
-								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-							} else {
-								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+								portletWidthStr = "100%"; 
 							}
-							
-							sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +" align=\"middle\"\" valign=top uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
+							sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
 					} else {
 						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
