@@ -70,6 +70,9 @@
 		</script>
 	</head>
 	<body>
-		${strHTML}
+		<div class="photobox" style="height:226px;">
+     		<p class="title"><spring:message code='main.t00030' /></p>
+			${strHTML}
+		</div>
 	</body>
 </html>
