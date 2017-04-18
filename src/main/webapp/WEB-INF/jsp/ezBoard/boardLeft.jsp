@@ -350,6 +350,13 @@
 						returnXML = xml;
 					}        			
 				});	
+//FreeT 요구사항 마이게시판 트리 없을때 안보여주기~
+		    	if (returnXML == "<TREEVIEWDATA></TREEVIEWDATA>") {
+		    		$("#TreeCtrl_MyBoardTree").css("display", "none");
+		    	} else {
+		    		$("#TreeCtrl_MyBoardTree").css("display", "");
+		    	}
+		    	
 		    	return loadXMLString(returnXML);
 		    }
 		    var tempID;
@@ -507,7 +514,7 @@
 	        </div>
 	        <ul id="TreeCtrl_MyBoardTree_ul">
 	            <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span  style="width: 100%; display: inline-block;width: 100%;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
-	            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
+	            <div class="tree" style='display: none; width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 150px;' id='TreeCtrl_MyBoardTree'></div>
 	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 	            <h3><span  style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>

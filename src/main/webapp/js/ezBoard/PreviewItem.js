@@ -770,8 +770,12 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.display = "inline-block";
                 document.getElementById("PreviewRayerW").style.display = "none";
                 document.getElementById("PreviewRayerH").style.display = "inline-block";
-
-                CurrenWidth = document.documentElement.clientWidth - 20;
+                
+                if (parent.document.getElementById("tab1")) {
+    				CurrenWidth = document.documentElement.clientWidth + 7;
+    			} else {
+    				CurrenWidth = document.documentElement.clientWidth - 20;
+    			}
                 CurrentHeight = document.documentElement.clientHeight - 110;
                 pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
                 pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;

@@ -26,6 +26,30 @@ function btnSetTaskCode_onclick_Complete(rtn) {
     TaskCode_Save();
 }
 
+function setPublicFlag() {
+    var fields = message.GetFieldsList();
+    var field = message.GetListItem(fields, "publication");
+    if (!field) return;
+
+    var PublicType = pPublicityCode.substring(0, 1);
+    var PublicLevel = pPublicityCode.substring(1, 9);
+    var PublicText = "";
+
+    if (pLimitRange != "")
+        PublicText = " (" + pLimitRange + ")";
+
+    if (PublicType == "1")
+        PublicText = strLang82;
+    else if (PublicType == "2")
+        PublicText = strLang83 + getPublicLevel(PublicLevel);
+    else if (PublicType == "3")
+        PublicText = strLang84 + getPublicLevel(PublicLevel);
+    else
+        PublicText = " ";
+
+    field.innerHTML = PublicText;
+}
+
 function GetDraftAprLineInfo(ret) {
     try {
         var xmlKuljea;
