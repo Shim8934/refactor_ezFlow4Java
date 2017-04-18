@@ -12,7 +12,6 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -35,6 +34,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -634,44 +634,47 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
 	public String formConnInfo (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		String companyID = request.getParameter("companyID");
-		String realPath = commonUtil.getRealPath(request);
-		String path = config.getProperty("upload_approvalG.ROOT");
+				
+		StringBuilder processIdx = new StringBuilder();
+		StringBuilder processTime = new StringBuilder();
+		StringBuilder connStringFlag = new StringBuilder();
+		StringBuilder queryType = new StringBuilder();
+		StringBuilder keyKind = new StringBuilder();
 		
-		File file = new File(realPath + path + commonUtil.separator + "form" + commonUtil.separator + "conninfo.xml");
+		List<ApprGFormConnInfoVO> list = ezApprovalGAdminService.getFormConnInfo();
 		
-		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
-		
-		List<String> processIdxList = new ArrayList<String>();
-		for (int i = 0; i < doc.getElementsByTagName("PROCESSIDX").getLength(); i ++) {
-			processIdxList.add(doc.getElementsByTagName("PROCESSIDX").item(i).getTextContent());
+		for (ApprGFormConnInfoVO vo : list) {
+			switch (vo.getConnNode()) {
+				case "PROCESSIDX":
+					processIdx.append("<option value='" + vo.getDescription() + "'>" + vo.getConnInfo() + "</option>");
+					break;
+
+				case "PROCESSTIME":
+					processTime.append("<option value='" + vo.getDescription() + "'>" + vo.getConnInfo() + "</option>");
+					break;
+
+				case "CONNSTRINGFLAG":
+					connStringFlag.append("<option value='" + vo.getDescription() + "'>" + vo.getConnInfo() + "</option>");
+					break;
+
+				case "QUERYTYPE":
+					queryType.append("<option value='" + vo.getDescription() + "'>" + vo.getConnInfo() + "</option>");
+					break;
+
+				case "KEYKIND":
+					keyKind.append("<option value='" + vo.getDescription() + "'>" + vo.getConnInfo() + "</option>");
+					break;
+
+				default:
+					break;
+			}
 		}
 		
-		List<String> processTimeList = new ArrayList<String>();
-		for (int i = 0; i < doc.getElementsByTagName("PROCESSTIME").getLength(); i ++) {
-			processTimeList.add(doc.getElementsByTagName("PROCESSTIME").item(i).getTextContent());
-		}
-		
-		List<String> connStringFlagList = new ArrayList<String>();
-		for (int i = 0; i < doc.getElementsByTagName("CONNSTRINGFLAG").getLength(); i ++) {
-			connStringFlagList.add(doc.getElementsByTagName("CONNSTRINGFLAG").item(i).getTextContent());
-		}
-		
-		List<String> queryTypeList = new ArrayList<String>();
-		for (int i = 0; i < doc.getElementsByTagName("QUERYTYPE").getLength(); i ++) {
-			queryTypeList.add(doc.getElementsByTagName("QUERYTYPE").item(i).getTextContent());
-		}
-		
-		List<String> keyKindList = new ArrayList<String>();
-		for (int i = 0; i < doc.getElementsByTagName("KEYKIND").getLength(); i ++) {
-			keyKindList.add(doc.getElementsByTagName("KEYKIND").item(i).getTextContent());
-		}
-		
-		model.addAttribute("processIdxList", processIdxList);
-		model.addAttribute("processTimeList", processTimeList);
-		model.addAttribute("connStringFlagList", connStringFlagList);
-		model.addAttribute("queryTypeList", queryTypeList);
-		model.addAttribute("keyKindList", keyKindList);
-		
+		model.addAttribute("processIdx", processIdx);
+		model.addAttribute("processTime", processTime);
+		model.addAttribute("connStringFlag", connStringFlag);
+		model.addAttribute("queryType", queryType);
+		model.addAttribute("keyKind", keyKind);
 		model.addAttribute("companyID", companyID);
 		
 		return "admin/ezApprovalG/apprGFormConnInfo";
