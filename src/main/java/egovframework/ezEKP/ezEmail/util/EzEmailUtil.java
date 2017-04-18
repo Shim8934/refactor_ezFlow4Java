@@ -505,7 +505,7 @@ public class EzEmailUtil {
 		    
             String NonAsciiFilename = null;
             String originalFilename = null;
-		    String[] headers = ((MimeBodyPart)part).getHeader("Content-Disposition");
+		    String[] headers = part.getHeader("Content-Disposition");
 		    
 		    if (headers != null && headers.length > 0) {
 		        String contentDisposition = headers[0];

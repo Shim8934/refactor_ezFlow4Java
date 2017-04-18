@@ -84,7 +84,7 @@ public class EzEmailScheduler {
 	/**
 	 * 환경설정 - 자동삭제 스케줄러
 	 */
-	@Scheduled(cron = "00 00 05 * * *")
+	@Scheduled(cron = "${config.cron.autoDelete}")
 	public void autoDelete() throws Exception{
 		logger.debug("autoDelete scheduler started.");
 		
@@ -151,7 +151,7 @@ public class EzEmailScheduler {
 	/**
 	 * 메일 예약발송 스케줄러
 	 */
-	@Scheduled(cron = "30 0/10 * * * *")
+	@Scheduled(cron = "${config.cron.reservedMailSend}")
 	public void reservedMailSend() throws Exception{
 		logger.debug("reservedMailSend scheduler started.");
 		
@@ -276,7 +276,7 @@ public class EzEmailScheduler {
      * Processes Mail Statistics Logs.
      * 매일 자정 1분 30초에 실행된다.
      */
-    @Scheduled(cron = "30 01 00 * * *")
+    @Scheduled(cron = "${config.cron.processMailStatLogs}")
     public void processMailStatLogs() throws Exception {
         logger.debug("processMailStatLogs scheduler started.");
         
@@ -379,7 +379,7 @@ public class EzEmailScheduler {
 	/**
 	 * delete garbage files
 	 */
-	@Scheduled(cron = "30 02 00 * * *")
+	@Scheduled(cron = "${config.cron.dailyFileManage}")
 	public void dailyFileManage() throws Exception{
 		logger.debug("dailyFileManage scheduler started.");
 		
@@ -486,7 +486,7 @@ public class EzEmailScheduler {
 		return path.delete();
 	}
 	
-	private boolean preScheduler(String scheduler) {
+	public boolean preScheduler(String scheduler) {
 		logger.debug("preScheduler started.");
 		
 		boolean isSchedulerServer = false;

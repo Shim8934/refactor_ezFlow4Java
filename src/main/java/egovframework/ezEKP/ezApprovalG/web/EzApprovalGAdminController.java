@@ -2368,13 +2368,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String tempMonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("MM"), userInfo.getOffset(), false);
 		
 		int tempPYear = Integer.parseInt(tempYear);
-		int tempPMonth = Integer.parseInt(tempMonth) - 1;
+		String tempPMonth = Integer.toString(Integer.parseInt(tempMonth) - 1);
 		
-		if (tempPMonth <= 0) {
+		if (Integer.parseInt(tempPMonth) <= 0) {
 			tempPYear = tempPYear - 1;
-			tempPMonth = 12;
+			tempPMonth = "12";
 		}
-				
+		
+		if (tempPMonth.length() == 1) {
+			tempPMonth = "0" + tempPMonth;
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
 		model.addAttribute("tempPYear", tempPYear);

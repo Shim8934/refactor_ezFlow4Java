@@ -4034,4 +4034,21 @@
 		  		docid in ( $subQuery$ )
 		]]>
 	</update>
+	
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map">
+		<![CDATA[
+			SELECT 
+				count(*)
+			FROM 
+				TBL_CONTAINER 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containertypeid = #contType#
+			AND
+				containerowndepid = #deptID#
+		]]>
+	</select>
 </sqlMap>
