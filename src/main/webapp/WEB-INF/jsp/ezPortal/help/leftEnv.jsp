@@ -21,7 +21,7 @@
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_03" target="right"><span>메일환경설정</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_04" target="right"><span>PIMS환경설정</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_04" target="right"><span>일정관리환경설정</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_05" target="right"><span>결재환경설정</span></a></h2>
