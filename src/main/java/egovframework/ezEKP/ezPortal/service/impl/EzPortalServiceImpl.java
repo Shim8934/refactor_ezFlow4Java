@@ -1475,6 +1475,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		
+		logger.debug("getImageHTML sb="+sb.toString());
 		logger.debug("getImageHTML ended");
 		return sb.toString();
 	}
@@ -1896,7 +1897,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						sb.append(">\n");
 					}
 				} else {
-					sb.append("<td id=\"td" + String.valueOf(i + 1) + "\" valign=top");
+					sb.append("<td id=\"td" + String.valueOf(i + 1) + "\" valign=\"top\"");
 					if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
 						if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
 							columnWidth = pageColumnSplit.split(";")[i] + "px";
@@ -1962,7 +1963,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         StringBuilder dsb = new StringBuilder();
         dsb.append("<table id=\"main_table_"+ UUID.randomUUID().toString().substring(0, 4)  +"\" border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style=\"table-layout:fixed;boarder-collapse:collapse\">\n");
         dsb.append("<tr id=\"main_row\">\n");
-        dsb.append("<td id=\"td"+ UUID.randomUUID().toString().substring(0, 4) +"\" valign=top onclick=\"selectcell(event)\"><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+        dsb.append("<td id=\"td"+ UUID.randomUUID().toString().substring(0, 4) +"\" valign=\"top\" onclick=\"selectcell(event)\"><table border=0 cellpadding=0 cellspacing=0 width=100% valign=\"top\">\n");
         dsb.append("<TBODY>");
         if (pMode.equals("edit")) {
         	dsb.append("<TR style=\"WIDTH: 100%; HEIGHT: 10px\" onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR>");
@@ -2044,9 +2045,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         		} else {
         			String columnWidth = "*";
             		if (i == Integer.parseInt(pageColumnLength) - 1) {
-           				sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" vAlign=top style=\"padding-left:20px;\">\n");
+           				sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" vAlign=\"top\" style=\"padding-left:20px;\">\n");
             		} else {
-            			sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" valign=top");
+            			sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" valign=\"top\"");
             			if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
             				if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
             					columnWidth = pageColumnSplit.split(";")[i] + "px";
@@ -2340,6 +2341,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 							
 							if (portletWidth == 9999) {
 								portletWidthStr = "100%"; 
+							} else {
+								portletWidthStr = String.valueOf(portletWidth);
 							}
 							sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
