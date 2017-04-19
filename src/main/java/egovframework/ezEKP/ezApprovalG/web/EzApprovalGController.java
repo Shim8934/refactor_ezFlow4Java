@@ -6256,4 +6256,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/hyoTest.do")
+	public String hyoTest() throws Exception {
+		return "ezApprovalG/hyoTest";
+	}
+	
 }
