@@ -1,7 +1,6 @@
 ﻿var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
-function GetDraftAprLineInfo(ret)
-{
+function GetDraftAprLineInfo(ret) {
   try{
       DraftLastFlag = false;
 
@@ -61,18 +60,15 @@ function GetDraftAprLineInfo(ret)
 	count = objNodes.length;
 	
 	 
-	for(i=1;i<20;i++)
-	{
+	for(i=1;i<20;i++) {
 	   	name = "habyuisign" + i;
 	  	field = message.GetListItem(fields, name);
 	  
-	  	if(field)
-	  	{
+	  	if(field) {
 	  		name = "habyui" + i;
 	  		field = message.GetListItem(fields, name);
 	  	
-            if(field)
-	  	    {
+            if(field) {
 	  	        field.textContent= "";
 	  	        if(new RegExp(/Firefox/).test(navigator.userAgent))
 	            field.innerHTML = "<br type='_moz'>";
@@ -81,8 +77,7 @@ function GetDraftAprLineInfo(ret)
 	  		fieldname = "habyuisign" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
-            if(field)
-	  	    {
+            if(field) {
 	  	        field.textContent= "";
 	  	        if(new RegExp(/Firefox/).test(navigator.userAgent))
 	            field.innerHTML = "<br type='_moz'>";
@@ -91,26 +86,21 @@ function GetDraftAprLineInfo(ret)
 	  		fieldname = "habyuipositon" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
-            if(field)
-	  	    {
+            if(field) {
 	  	        field.textContent= "";
 	  	        if(new RegExp(/Firefox/).test(navigator.userAgent))
 	            field.innerHTML = "<br type='_moz'>";
             }
-	  		
 	  		
 	  		fieldname = "habyuidate" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
-            if(field)
-	  	    {
+            if(field) {
 	  	        field.textContent= "";
 	  	        if(new RegExp(/Firefox/).test(navigator.userAgent))
 	            field.innerHTML = "<br type='_moz'>";
             }
-	  	}
-	  	else
-	  	{
+	  	} else	{
 	  	   break;
 	  	}
 	}
@@ -123,7 +113,6 @@ function GetDraftAprLineInfo(ret)
                 field.innerHTML = "<br type='_moz'>";
         }
     }
-	
 	
 	field = message.GetListItem(fields, "hgamsa");
 	if (field) {
@@ -141,8 +130,7 @@ function GetDraftAprLineInfo(ret)
 	    }
 	}
 		
-	for(i=0;i < count;i++)
-	{
+	for(i=0;i < count;i++) {
 	    var Cell = GetChildNodes(objNodes[i]);
 	    var KyljeaOrder = getNodeText(Cell[0]);
 	    var KyljeaName = getNodeText(Cell[1]);
@@ -176,15 +164,12 @@ function GetDraftAprLineInfo(ret)
 		SplitSign(OrderType,OrderName,OrderDept,OrderStat,OrderJobtitle);
     
 	LastSignSN = OrderType.length;
-    for(i=1;i<OrderType.length;i++)
-    {
-		if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16)
-		{
+	
+    for(i=1;i<OrderType.length;i++) {
+		if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16) {
 			LastSignSN = i;
 			i = OrderType.length;
-		}
-		else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 ||  OrderType[i] == strAprType1 ||  OrderType[i] == strAprType3)
-		{
+		} else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 ||  OrderType[i] == strAprType1 ||  OrderType[i] == strAprType3) {
     		LastSignSN = i;
         }
     }
@@ -206,42 +191,35 @@ function GetDraftAprLineInfo(ret)
 	
 	var fieldname;
 	var field;
-	  
 	
-	for(i=1;i < 10;i++)
-	{
+	for(i=1;i < 10;i++) {
 	  	fieldname = "jikwe" + i;
 		field = message.GetListItem(fields, fieldname);
 	  
-		if(field)
-		{
+		if(field) {
             field.textContent= " ";	
             if(new RegExp(/Firefox/).test(navigator.userAgent))
 	            field.innerHTML = "<br type='_moz'>";
 			fieldname = "sign" + i;
 			field = message.GetListItem(fields, fieldname);
-			if(field)
-			{
+			
+			if(field) {
 				field.textContent= " ";	
 				if(new RegExp(/Firefox/).test(navigator.userAgent))
 	                field.innerHTML = "<br type='_moz'>";
-
 			}
-		}else{
+		} else {
 			break;
 		}	
 	}
 	var idx = 1;
 	var hidx = 1;	  
-	for(i=1;i < OrderJobtitle.length;i ++)
-	{
-		if(OrderType[i] == strAprType18 || OrderType[i] == strAprType19  || OrderType[i] == strAprType1 || OrderType[i] == strAprType4  || OrderType[i] == strAprType16 || OrderType[i] == strAprType3)
-		{
+	for(i=1;i < OrderJobtitle.length;i ++) {
+		if(OrderType[i] == strAprType18 || OrderType[i] == strAprType19  || OrderType[i] == strAprType1 || OrderType[i] == strAprType4  || OrderType[i] == strAprType16 || OrderType[i] == strAprType3) 	{
 			fieldname = "jikwe" + idx;
 			field = message.GetListItem(fields, fieldname);
 	  	
-			if(field)
-			{
+			if(field) {
 			    var jikweName = trim(field.textContent);					
 				field.textContent =  OrderJobtitle[i];
 						
@@ -253,19 +231,16 @@ function GetDraftAprLineInfo(ret)
 			}
 			idx = idx + 1;
 	  	}
-		else if(OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12)
-		{
+		else if(OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) 	{
 			fieldname = "habyui" + hidx;
 			field = message.GetListItem(fields, fieldname);
-	  		if(field)
-	  		{
+	  		if(field) {
 	  			field.textContent = OrderDept[i];
 	  		}
 			
 			fieldname = "habyuipositon" + hidx;
 			field = message.GetListItem(fields, fieldname);
-			if(field)
-			{
+			if(field) {
 			    var jikweName = trim(field.textContent);
 			    field.textContent = OrderJobtitle[i];
 
@@ -279,39 +254,30 @@ function GetDraftAprLineInfo(ret)
 		}	
 	}
     var field = message.GetListItem(fields, "lineapr");
-    if (field)
-	{
-		if (idx > 5)
-		{
+    if (field) {
+		if (idx > 5) {
 			field.style.display = "";
 			for (i=0; i<field.childElementCount; i++)
 			    field.children[i].style.display = "";
-		}
-		else
-		{
+		} else {
 			field.style.display = "none";
 			for (i=0; i<field.childElementCount; i++)
 			    field.children[i].style.display = "none";
 		}
 	}
     field = message.GetListItem(fields, "linehab");
-	if (field)
-	{
-		if (hidx > 5)
-		{
+	if (field) {
+		if (hidx > 5) {
 			field.style.display = "";
 			for (i=0; i<field.childElementCount; i++)
 			    field.children[i].style.display = "";
-		}
-		else
-		{
+		} else {
 			field.style.display = "none";
 			for (i=0; i<field.childElementCount; i++)
 			    field.children[i].style.display = "none";
 		}	
 	}		
-		
-  }catch(e){
+  } catch(e) {
     alert("GetDraftAprLineInfo(ret)" + e.description);
   }	
 }
@@ -354,8 +320,7 @@ function SGetDraftAprLineInfo(ret) {
             xmlKuljea = ret[0];
             setAprLinesXML(xmlKuljea);
             DrawAutoAprLine(ret[0], pDraftFlag);
-        }
-        else {
+        } else {
 	        TempsaveAprlineinfo = ret[1];
 	        xmlKuljea = ret[1];
 	        setAprLinesXML(xmlKuljea);
@@ -364,8 +329,7 @@ function SGetDraftAprLineInfo(ret) {
 
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
-        }
-        else if (xmlReDraft == "R") {
+        } else if (xmlReDraft == "R") {
             ClearDocCellInfo();
         }
 
@@ -693,8 +657,7 @@ function SGetDraftAprLineInfo(ret) {
                         if (field) {
                             setNodeText(field , OrderJobtitle[i]);
                         }
-                    }
-                    else if (xmlReDraft == "C") {
+                    } else if (xmlReDraft == "C") {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 
@@ -729,8 +692,7 @@ function SGetDraftAprLineInfo(ret) {
                         }
                         
                         IsSkipDrafter = "TRUE";
-                    }
-                    else {
+                    } else {
                         fieldname = "habyui" + hapyuiCnt;
                         field = message.GetListItem(fields, fieldname);
 

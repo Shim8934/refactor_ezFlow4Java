@@ -1,9 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
+		<c:if test="${type !=''}">
+		<title><spring:message code='ezApprovalG.t6000'/></title>
+		</c:if>
+		<c:if test="${type ==''}">
 		<title><spring:message code='ezApprovalG.t384'/></title>
+		</c:if>
+		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -18,11 +26,18 @@
 		    var Resultxml = createXmlDom();
 		    var g_TemplateSN = "";
 		    var g_TemplateName = "";
-		
+		    var type = "${type}";
+		    
 		    function btn_SaveAprLineTempletName_onclick() {
 		        var p_AprLineTempletName = document.getElementById("TxtAprLineTempletName").value;
 		        if (p_AprLineTempletName == "") {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t387'/>";
+		        	var pAlertContent;
+		        	if (type == "") {
+	                    pAlertContent = "<spring:message code='ezApprovalG.t387'/>";
+		        	} else {
+		        		pAlertContent = "<spring:message code='ezApprovalG.t6003'/>";
+		        	}
+		        	
 		            OpenAlertUI(pAlertContent);
 		            if (!CrossYN())
 		                document.getElementById("TxtAprLineTempletName").focus();
@@ -99,8 +114,14 @@
 		</script>
 	</head>
 	<body class="popup">
+		<c:if test="${type == ''}">
 		<h1><spring:message code='ezApprovalG.t384'/></h1>
 		<span>▒ <spring:message code='ezApprovalG.t2107'/></span>
+		</c:if>
+		<c:if test="${type != ''}">
+		<h1><spring:message code='ezApprovalG.t6000'/></h1>
+		<span>▒ <spring:message code='ezApprovalG.t6003'/></span>
+		</c:if>
 		<div class="nobox" style="margin-top:10px">
 		<input type="text" class="text" style="width:100%" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">
 		</div>		

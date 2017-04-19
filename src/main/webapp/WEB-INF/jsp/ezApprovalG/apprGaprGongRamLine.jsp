@@ -749,7 +749,7 @@
 	            }
 	
 	            if (ListViewLen.length != "0" && ListViewLen[0].id != "lvRecSaveList_TR_noItems") {
-	                var windowName = "/ezApprovalG/aprLineTempletName.do";
+	                var windowName = "/ezApprovalG/aprLineTempletName.do?type=gonram";
 	                var parameter = "status:no;dialogWidth:340px;dialogHeight:205px;scroll:no;edge:sunken";
 	                var dialogValue = new Array();
 	                dialogValue[0] = pUserID;
@@ -1088,7 +1088,7 @@
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 550px; height: 550px; background-color: #ffffff; margin: 1px 1px 1px 1px;"></div>
 	                </div>
 	                <div style="text-align: right;">
-	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.t1689'/> <spring:message code='ezApprovalG.t1767'/></span></a>
+	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.t6000'/> </span></a>
 	                </div>
 	            </td>
 	        </tr>

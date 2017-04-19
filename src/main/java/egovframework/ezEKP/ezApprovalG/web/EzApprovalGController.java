@@ -1038,7 +1038,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 결재선저장 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprLineTempletName.do")
-	public String aprLineTempletName(){
+	public String aprLineTempletName(Model model, HttpServletRequest request){
+		model.addAttribute("type", request.getParameter("type")== null? "" : request.getParameter("type"));
 		return "ezApprovalG/apprGaprLineTempletName";
 	}
 	
