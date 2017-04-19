@@ -101,14 +101,14 @@ function ExcuteInfo(pprocessIdx, currTD) {
             break;
         }
     }
-
+    
     if (findFlag) {
         var subNodes = GetChildNodes(connNode);
         connFlag = GetAttribute(subNodes[0], "flag");
         connString = getNodeText(subNodes[0]);
         queryType = GetAttribute(subNodes[1], "qtype");
         queryString = getNodeText(subNodes[1]);
-
+        
         var strItemNames = "SA_DocID";
         var arrItemNames = strItemNames.split(",");
         var objNewItem;

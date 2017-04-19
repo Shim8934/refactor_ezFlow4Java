@@ -372,10 +372,10 @@ function MakeFormMHTXML_Detail() {
         Div.innerHTML = message.GetEditorContent();
         
         if (message.GetEditorContent().indexOf("BodyContent") > -1)
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "<br>").replace( /\n/g, "<br>").replace(/\r/g, "<br>") + Div.innerHTML;
+            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.innerHTML;
         else {
             Div.id = "BodyContent";
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "<br>").replace( /\n/g, "<br>").replace(/\r/g, "<br>") + Div.outerHTML;
+            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.outerHTML;
         }
         
         HTML.appendChild(BODY);
