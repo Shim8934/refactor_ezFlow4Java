@@ -27,27 +27,29 @@
 					url : "/ezCommunity/getLeftCommunity.do",
 					dataType : "json",
 					success : function(result) {
-						getCommunityList_after(result["list"]);
+						//getCommunityList_after(result["list"]);
+						var commu = CheckCommu(result["list"]);
+		                //var commu = CheckCommu(loadXMLString(result));
+		                document.getElementById("commu_list").innerHTML = "";
+		                switch (commu) {
+		                    case 1:
+		                        document.getElementById("community_title").innerText = "<spring:message code='main.t272' />";
+		                        document.getElementById("content_commu").className = "content_community01";
+		                        GetBoardList();
+		                        break;
+		
+		                    case 2:
+		                        document.getElementById("community_title").innerText = "<spring:message code='main.t00051' />";
+		                        document.getElementById("content_commu").className = "content_community02";
+		                        GetMyComm(xmlhttp.responseXML);
+		                        break;
 					}
-				});
-	            if (result == null || xmlhttp.readyState != 4) return;
+				}
+	/*             if (result == null || xmlhttp.readyState != 4) return;
 	            else {
-	                var commu = CheckCommu(xmlhttp.responseXML);
-	                document.getElementById("commu_list").innerHTML = "";
-	                switch (commu) {
-	                    case 1:
-	                        document.getElementById("community_title").innerText = "<spring:message code='main.t272' />";
-	                        document.getElementById("content_commu").className = "content_community01";
-	                        GetBoardList();
-	                        break;
 	
-	                    case 2:
-	                        document.getElementById("community_title").innerText = "<spring:message code='main.t00051' />";
-	                        document.getElementById("content_commu").className = "content_community02";
-	                        GetMyComm(xmlhttp.responseXML);
-	                        break;
-	                }
-	            }
+	                } */ 
+	            }); 
 	        }
 	        function GetMyComm(list) {
 	            var listHTML = "<div class='content_list04'><dl class='topTitle'><dt><select id='myComm' onchange='getCommList()'>";
@@ -148,13 +150,21 @@
 	            }
 	        }
 	        function GetBoardList() {
-	            xmlhttp = null;
+	/*             xmlhttp = null;
 	            xmlhttp = createXMLHttpRequest();
 	
 	            xmlhttp.open("POST", "/ezCommunity/getLeftBoardList.do", false);
-	            xmlhttp.send();
+	            xmlhttp.send(); */
+	            $.ajax({
+					type : "POST",
+					url : "/ezCommunity/getLeftBoardList.do",
+					dataType : "json",
+					success : function(result) {
+						getBoardList_after(result["list"]);
+					}
+				});
 	
-	            if (xmlhttp == null || xmlhttp.readyState != 4) return;
+	       /*      if (xmlhttp == null || xmlhttp.readyState != 4) return;
 	            else {
 	                var xmlpara = createXmlDom();
 	                xmlpara = xmlhttp.responseXML;
@@ -223,8 +233,95 @@
 	                    listHTML += "</dl></div><div id='newcomm' class='layout_bg' style='display:none'></div></div></div>";
 	                }
 	                document.getElementById("commu_list").innerHTML = listHTML;
-	            }
+	            } */
 	        }
+	        
+	    	function getBoardList_after(list) {
+	                var no, title;
+	                var listHTML = "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li><strong><spring:message code='main.t00041' /></strong></li></ul><div class='layout_bg'><ul class='communityLiist01'>";
+	                /* if (xmlpara.getElementsByTagName("NO").length != 0) {
+	                    for (var i = 0; i < 5; i++) {
+	                        no = getNodeText(xmlpara.getElementsByTagName("NO").item(i));
+	                        title = getNodeText(xmlpara.getElementsByTagName("TITLE").item(i));
+	                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";
+	                    }
+	                } */
+	                
+	                list.forEach(function(cBoardVO, index) {
+	                	//for (var i = 0; i < 5; i++) {
+	                        no = cBoardVO.no;
+	                        title = cBoardVO.title;
+	                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";
+	                    //}
+	                	if (index == 5) {
+	                		break;
+	                	}
+		            });
+	                
+	                listHTML += "</ul></div></div></div>";
+	
+	/*                 xmlpara = null;
+	                xmlpara = createXmlDom();
+	                var objRoot, objNode;
+	                objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
+	                objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "MODE", "BEST");
+	                xmlhttp = null;
+	                xmlhttp = createXMLHttpRequest();
+	
+	                xmlhttp.open("POST", "/ezCommunity/getBestNewCommunity.do", false);
+	                xmlhttp.send(xmlpara); */
+	                $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : true,
+						url : "/ezCommunity/getBestNewCommunity.do",
+						data : { mode   : "BEST"
+						},
+						success: function(result){
+		                    if (strlang == "" || strlang == "1") {
+		                        var listdom = loadXMLString(result);
+		                        listHTML += "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li onclick=\"change_tab('best')\" id='best' class='on'><spring:message code='main.t00036' /></li><li onclick=\"change_tab('new')\" id='new'><spring:message code='main.t00035' /></li></ul>";
+		                        listHTML += "<div id='bestcomm' class='layout_bg'><dl class='communityLiist01'><dt><span class='img_community'>"
+		                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
+		                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+		                        else
+		                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+		                        listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
+		                        listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
+		                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
+		                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
+		                        listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
+		                    }
+		                    else {
+		                        var listdom = loadXMLString(result);
+		                        listHTML += "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li onclick=\"change_tab('best')\" id='best' class='on'><spring:message code='main.t00036' /></li><li onclick=\"change_tab('new')\" id='new'><spring:message code='main.t00035' /></li></ul>";
+		                        listHTML += "<div id='bestcomm' class='layout_bg' style=''><dl class='communityLiist01'><dt><span class='img_community'>"
+		                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
+		                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+		                        else
+		                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+		                        listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
+		                        listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
+		                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");
+		                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
+		                        listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
+		                    }
+		                    for (var i = 1 ; i < SelectNodes(listdom, "DATA/ROW").length; i++) {
+		                        listHTML += "<dd><img src='/images/kr/theme01/main/img_dotCommunity" + (i + 1) + ".png' alt='' />";
+		                        listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNO") + "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE") + "' onclick='move_cop(this)'>";
+		                        if (strlang == "" || strlang == "1")
+		                            listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME");
+		                        else
+		                            listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME2");
+		                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong></dd>";
+		                    }
+		
+		                    listHTML += "</dl></div><div id='newcomm' class='layout_bg' style='display:none'></div></div></div>";
+						}
+					});
+	                document.getElementById("commu_list").innerHTML = listHTML;
+	        }
+	        
 	        function move_cop(val) {
 	            var xmlhttp = createXMLHttpRequest();
 	            var xmldom = createXmlDom();
@@ -300,11 +397,18 @@
 	            }
 	        }
 	
-	        function CheckCommu(xmlpara) {
-	            if (xmlpara.getElementsByTagName("ROW").length > 0) {
+	        function CheckCommu(list) {
+	        	var length = list.length;
+	        	if (length > 0) {
+	        		return 2;
+	        	} else {
+	        		return 1;
+	        	}
+	        	
+	            /* if (xmlpara.getElementsByTagName("ROW").length > 0) {
 	                return 2
 	            }
-	            else return 1;
+	            else return 1; */
 	        }
 	
 	        function btn_bbsView(sURL, ttt) {
@@ -315,31 +419,28 @@
 	            pheigth = pheigth - 350;
 	            pwidth = pwidth - 350;
 	
-	            window.open("/myoffice/ezCommunity/board/bbs_view_new.aspx?mode=content&no=" + sURL + "&bname=" + ttt, "<spring:message code='ezCommunity.t166'/>", "width=760,height=720,top=" + pheigth + ",left=" + pwidth);
+	            window.open("/ezCommunity/board/bbsViewNew.do?mode=content&no=" + sURL + "&bName=" + ttt, "<spring:message code='ezCommunity.t166'/>", "width=760,height=720,top=" + pheigth + ",left=" + pwidth);
 	        }
 	
 	        function Copmore_btnClick() {
 	            window.open("/ezCommunity/communityMain.do?funCode=5", "main", "");
 	        }
 	        function get_newCommunity() {
-	            xmlhttp = null;
-	            xmlhttp = createXMLHttpRequest();
-	
-	            var xmlDom = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlDom, objNode, "DATA");
-	
-	            createNodeAndInsertText(xmlDom, objNode, "MODE", "NEW");
-	
-	            xmlhttp.open("POST", "/ezCommunity/getBestNewCommunity.do", true);
-	            xmlhttp.onreadystatechange = event_get_newCommunity;
-	            xmlhttp.send(xmlDom);
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/getBestNewCommunity.do",
+					data : { mode   : "NEW"
+					},
+					success: function(result){
+						event_get_newCommunity(result);
+					}
+				});
 	        }
-	        function event_get_newCommunity(listdom) {
-	            if (xmlhttp == null || xmlhttp.readyState != 4) return;
-	            
+	        function event_get_newCommunity(result) {
 	            var listHTML = "";
-	            var listdom = loadXMLString(xmlhttp.responseText);
+	            var listdom = loadXMLString(result);
 	            if (strlang == "" || strlang == "1") {
 	                listHTML += "<dl class='communityLiist01'><dt><span class='img_community'>"
 	                if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
