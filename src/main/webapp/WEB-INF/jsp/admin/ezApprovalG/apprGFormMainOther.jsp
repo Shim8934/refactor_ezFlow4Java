@@ -544,7 +544,7 @@
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
 		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 430, 450, "NO");
+		        GetOpenWindow(url, "FormConnInfo", 440, 470, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {

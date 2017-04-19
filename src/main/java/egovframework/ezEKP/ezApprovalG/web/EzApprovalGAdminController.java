@@ -506,7 +506,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("selectEditor ended.");
 		
-		return "admin/ezApprovalG/apprGCKEditor";
+		if (useEditor.equals("CK")) {
+			return "admin/ezApprovalG/apprGCKEditor";
+		} else {
+			// 그 외 에디터 dext
+			return "";
+		}
+		
 	}
 		
 	/**
