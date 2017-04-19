@@ -75,8 +75,8 @@
                         <c:if test="${usePrimaryLangOnly == 'NO'}">
                         <input type="radio" id="1" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
                         <img name="1" src="../../../images/lang/icon_flag_kr.gif" alt="" title="<spring:message code='ezPersonal.s81'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer;"/>
-                        <input type="radio" id="2" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-                        <img name="2" src="../../../images/lang/icon_flag_us.gif" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
+                        <input style="display:none;" type="radio" id="2" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
+                        <img style="display:none;" name="2" src="../../../images/lang/icon_flag_us.gif" alt="" title="<spring:message code='ezPersonal.s82'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
                         <input type="radio" id="3" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
                         <img name="3" src="../../../images/lang/icon_flag_jp.gif" alt="" title="<spring:message code='ezPersonal.s84'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>                        
                         </c:if>
@@ -102,10 +102,9 @@
                         </c:choose>
                         </c:if>
                         
-                        <!-- 현재는 중국어 지원 작업이 되어 있지 않아 일단 제외함. 
-          				<input type="radio" id="4" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
-            			<img name="4" src="../../../images/lang/icon_flag_cn.gif" alt="" title="<spring:message code='ezPersonal.s85'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
-                        -->
+                        <!-- 현재는 중국어 지원 작업이 되어 있지 않아 일단 제외함 -->
+          				<input style="display:none;" type="radio" id="4" name="rad_flag" onclick="flag_onClick(this, 'rad');" />
+            			<img style="display:none;" name="4" src="../../../images/lang/icon_flag_cn.gif" alt="" title="<spring:message code='ezPersonal.s85'/>"  onclick="flag_onClick(this, 'img');" style="cursor:pointer"/>
       				</td>
     			</tr>
     			<tr>

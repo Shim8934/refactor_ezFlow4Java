@@ -501,11 +501,14 @@ public class EzAddressServiceImpl implements EzAddressService {
     		vo.setsMemo((String)resultObject.get("sMemo"));
     		vo.setsType((String)resultObject.get("sType"));
     		
-    		OrganUserVO creatorVO = ezOrganAdminService.getUserInfo(((String)resultObject.get("creatorId")).split("@")[0], primary, tenantId);
-    		vo.setCreatorName(creatorVO.getDisplayName());
+    		if (primary.equals("1")) {
+    			vo.setCreatorName((String)resultObject.get("creatorName"));
+    			vo.setModifierName((String)resultObject.get("modifierName"));
+    		} else {
+    			vo.setCreatorName((String)resultObject.get("creatorName2"));
+    			vo.setModifierName((String)resultObject.get("modifierName2"));
+    		}
     		
-    		OrganUserVO modifierVO = ezOrganAdminService.getUserInfo(((String)resultObject.get("modifierId")).split("@")[0], primary, tenantId);
-    		vo.setModifierName(modifierVO.getDisplayName());
         } else {
         	throw new Exception("Error from JGwServer.");
         }
@@ -514,7 +517,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	}
 	
 	@Override
-	public void insertAddress(int tenantId, String pOwnerId, String pFolderId, String pCreatorId,
+	public void insertAddress(int tenantId, String pOwnerId, String pFolderId, String pCreatorId, String pCreatorName, String pCreatorName2,
 			String sName, String sEmail, String sCompany, String sDept, String sTitle,
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
 			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr,
@@ -524,6 +527,8 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String folderIdIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
 		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerId + "@" + domainName, "UTF-8");
 		String creatorIdParam = "creatorId=" + URLEncoder.encode(pCreatorId + "@" + domainName, "UTF-8");
+		String creatorNameParam = "creatorName=" + URLEncoder.encode(pCreatorName, "UTF-8");
+		String creatorName2Param = "creatorName2=" + URLEncoder.encode(pCreatorName2, "UTF-8");
 		String sNameParam = "sName=" + URLEncoder.encode(sName, "UTF-8");
 		String sEmailParam = "sEmail=" + URLEncoder.encode(sEmail, "UTF-8");
 		String sCompanyParam = "sCompany=" + URLEncoder.encode(sCompany, "UTF-8");
@@ -540,7 +545,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String sMemoParam = "sMemo=" + URLEncoder.encode(sMemo, "UTF-8");
 		String sTypeParam = "sType=" + URLEncoder.encode(sType, "UTF-8");
 		
-		String inputParams = folderIdIdParam + "&" + ownerIdParam + "&" + creatorIdParam
+		String inputParams = folderIdIdParam + "&" + ownerIdParam + "&" + creatorIdParam + "&" + creatorNameParam + "&" + creatorName2Param
 				 + "&" + sNameParam + "&" + sEmailParam + "&" + sCompanyParam + "&" + sDeptParam + "&" + sTitleParam
 				 + "&" + sCompanyPhoneParam + "&" + sFaxParam + "&" + sMobileParam + "&" + sHomepageParam
 				 + "&" + sCompanyZipParam + "&" + sCompanyAddrParam + "&" + sHomeZipParam + "&" + sHomeAddrParam
@@ -559,7 +564,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	}
 	
 	@Override
-	public void updateAddress(int tenantId, String pAddressId, String pModifierId, 
+	public void updateAddress(int tenantId, String pAddressId, String pModifierId, String pModifierName, String pModifierName2, 
 			String sName, String sEmail, String sCompany, String sDept, String sTitle,
 			String sCompanyPhone, String sFax, String sMobile, String sHomePage, 
 			String sCompanyZip, String sCompanyAddr, String sHomeZip, String sHomeAddr, String sMemo) throws Exception {
@@ -567,6 +572,8 @@ public class EzAddressServiceImpl implements EzAddressService {
 		
 		String addressIdIdParam = "addressId=" + URLEncoder.encode(pAddressId, "UTF-8");
 		String modifierIdParam = "modifierId=" + URLEncoder.encode(pModifierId + "@" + domainName, "UTF-8");
+		String modifierNameParam = "modifierName=" + URLEncoder.encode(pModifierName, "UTF-8");
+		String modifierName2Param = "modifierName2=" + URLEncoder.encode(pModifierName2, "UTF-8");
 		String sNameParam = "sName=" + URLEncoder.encode(sName, "UTF-8");
 		String sEmailParam = "sEmail=" + URLEncoder.encode(sEmail, "UTF-8");
 		String sCompanyParam = "sCompany=" + URLEncoder.encode(sCompany, "UTF-8");
@@ -582,7 +589,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String sHomeAddrParam = "sHomeAddr=" + URLEncoder.encode(sHomeAddr, "UTF-8");
 		String sMemoParam = "sMemo=" + URLEncoder.encode(sMemo, "UTF-8");
 		
-		String inputParams = addressIdIdParam + "&" + modifierIdParam
+		String inputParams = addressIdIdParam + "&" + modifierIdParam + "&" + modifierNameParam + "&" + modifierName2Param
 				 + "&" + sNameParam + "&" + sEmailParam + "&" + sCompanyParam + "&" + sDeptParam + "&" + sTitleParam
 				 + "&" + sCompanyPhoneParam + "&" + sFaxParam + "&" + sMobileParam + "&" + sHomepageParam
 				 + "&" + sCompanyZipParam + "&" + sCompanyAddrParam + "&" + sHomeZipParam + "&" + sHomeAddrParam
@@ -647,14 +654,16 @@ public class EzAddressServiceImpl implements EzAddressService {
 	}
 	
 	@Override
-	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId) throws Exception {
+	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId, String pCreatorName, String pCreatorName2) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String folderIdParam = "folderId=" + URLEncoder.encode(pFolderId, "UTF-8");
 		String ownerIdParam = "ownerId=" + URLEncoder.encode(pOwnerId + "@" + domainName, "UTF-8");
 		String creatorIdParam = "creatorId=" + URLEncoder.encode(pCreatorId + "@" + domainName, "UTF-8");
+		String creatorNameParam = "creatorName=" + URLEncoder.encode(pCreatorName, "UTF-8");
+		String creatorName2Param = "creatorName2=" + URLEncoder.encode(pCreatorName2, "UTF-8");
 		
-		String inputParams = folderIdParam + "&" + ownerIdParam + "&" + creatorIdParam;
+		String inputParams = folderIdParam + "&" + ownerIdParam + "&" + creatorIdParam + "&" + creatorNameParam + "&" + creatorName2Param;
 		
 		for (String addressId : pAddressIds) {
 			inputParams += "&addressId=" + URLEncoder.encode(addressId, "UTF-8");
@@ -820,7 +829,7 @@ public class EzAddressServiceImpl implements EzAddressService {
 	}
 	
 	@Override
-	public void copyFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType, String pCreatorId) 
+	public void copyFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType, String pCreatorId, String pCreatorName, String pCreatorName2) 
 			throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
@@ -829,8 +838,11 @@ public class EzAddressServiceImpl implements EzAddressService {
 		String newOwnerIdParam = "newOwnerId=" + URLEncoder.encode(pNewOwnerId + "@" + domainName, "UTF-8");
 		String newFolderTypeParam = "newFolderType=" + URLEncoder.encode(pNewFolderType, "UTF-8");
 		String creatorIdParam = "creatorId=" + URLEncoder.encode(pCreatorId + "@" + domainName, "UTF-8");
+		String creatorNameParam = "creatorName=" + URLEncoder.encode(pCreatorName, "UTF-8");
+		String creatorName2Param = "creatorName2=" + URLEncoder.encode(pCreatorName2, "UTF-8");
 		
-		String inputParams = folderIdParam + "&" + newParentIdParam + "&" + newOwnerIdParam + "&" + newFolderTypeParam + "&" + creatorIdParam;
+		String inputParams = folderIdParam + "&" + newParentIdParam + "&" + newOwnerIdParam + "&" + newFolderTypeParam 
+				+ "&" + creatorIdParam + "&" + creatorNameParam + "&" + creatorName2Param;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/copyFolder", inputParams);

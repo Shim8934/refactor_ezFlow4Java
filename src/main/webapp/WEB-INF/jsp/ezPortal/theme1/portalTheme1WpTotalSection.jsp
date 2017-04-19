@@ -142,10 +142,10 @@
 						break;
 						
 					case "Schedule" : 
-						window.open("/myoffice/main/index_pims.aspx?funCode=2","main");
+						window.open("/ezSchedule/scheduleIndex.do?funCode=2","main");
 						break;
 					case "schedulenum" :
-						window.open("/myoffice/main/index_pims.aspx?funCode=2","main");
+						window.open("/ezSchedule/scheduleIndex.do?funCode=2","main");
 						break;
 						
 					case "Poll" :
@@ -196,7 +196,7 @@
 		                    var left = (width - wWeight) / 2;
 		                    var top = (heigth - wHeight) / 2;
 		                    
-		                        window.open("/myoffice/ezschedule/schedule_write_Cross.aspx?defaultid=0", "",
+		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
 		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                }
 		                else {
@@ -275,6 +275,15 @@
 		                window.open("/ezBoard/writeBoardSelect.do", "",
 		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                break;
+		                
+		            case "help":
+	                    var pheight = window.screen.availHeight;
+	                    var pwidth = window.screen.availWidth;
+	                    var pTop = (pheight - 750) / 2;
+	                    var pLeft = (pwidth - 1000) / 2;
+
+	                    window.open("/ezPortal/help/help.do", "", "height=700px,width=1000px,top=" + pTop + ",left = " + pLeft + "status = no, toolbar=no, menubar=no, location=no, resizable=0");
+	                    break;
 		        }
 		    }
 		    
@@ -687,16 +696,17 @@
 			     			<span class="icon"><img src="/images/kr/theme01/main/quickmenu_icon06.gif"  ></span>
 			     			<span class="txt"><spring:message code="main.t00039" /></span>
 			     		</li>
-			     		<li>
+			     		<%-- <li>
 			     			<span class="icon"><img src="/images/kr/theme01/main/quickmenu_icon07.gif"  ></span>
 			     			<span class="txt"><spring:message code="main.t00040" /></span>
-			     		</li>
+			     		</li> --%>
 			      		<li id="help" onclick="btnWrite_onclick(this)">
 			      			<span class="icon"><img src="/images/kr/theme01/main/quickmenu_icon08.gif"  ></span>
 			     			<span class="txt"><spring:message code="main.t00037" /></span></li>
-			      		<li>
+			      		<!-- <li>
 			      			<span class="icon"><img src="/images/kr/theme01/main/quickmenu_icon09.gif"  ></span>
-			     			<span class="txt">홈페이지</span></li>
+			     			<span class="txt">홈페이지</span>
+			     		</li> -->
 					</ul>
 					<p class="btn_quick_right"><img src="/images/kr/theme01/main/quickmenu_btn_down.gif" ></p>
 				</div>
