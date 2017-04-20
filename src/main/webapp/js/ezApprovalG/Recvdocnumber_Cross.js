@@ -89,9 +89,14 @@ function setDocNumFormat() {
             	
             case "YM":
             	numHeader = numHeader + d.getYear();
+            	
             	var mmonth = d.getMonth() + 1;
                 if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-                numHeader = numHeader + mmonth + Tail;
+                numHeader = numHeader + mmonth;
+                
+                var mdate = d.getDate();
+                if (parseInt(mdate) < 10) mdate = "0" + mdate;
+                numHeader = numHeader + mdate + Tail;
                 break;
 
             default:

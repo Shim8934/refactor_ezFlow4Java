@@ -3064,7 +3064,12 @@ function setDocNumFormat(pPrefix) {
                 
             	var mmonth = d.getMonth() + 1;
                 if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-                numHeader += mmonth + Tail;
+                numHeader += mmonth;
+                
+                var mdate = d.getDate();
+                if (parseInt(mdate) < 10) mdate = "0" + mdate;
+                numHeader += mdate + Tail;
+                
                 break;
 
             default:

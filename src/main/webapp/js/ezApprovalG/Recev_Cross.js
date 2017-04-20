@@ -2541,7 +2541,9 @@ function SaveDraftDocInfo()
                 	
                 case "YM":
                 	numHeader = numHeader + szYear;
-                	numHeader = numHeader + szMonth + Tail;
+                	numHeader = numHeader + szMonth;
+                	numHeader = numHeader + szDay + Tail;
+                	
                 	break;
                 	
                 default:
