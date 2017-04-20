@@ -280,14 +280,24 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
 }
 function getKeyValue(fieldID, num) {
     var rtnVal;
+    var field;
     var fields;
+    //이쪽에서  GetFieldsList 이거타면 전체체크  Get_ConnFieldList이거 탈땐 body(에디터) 내부에 써진 거만 체크함
+    //message.DocumentBodyGetAttribute(fieldID) 여긴 왜 계속 null
     if (pPageType == "APPROVUI" || pPageType == "SUSIN")
         fields = message.GetFieldsList();
     else
         fields = message.Get_ConnFieldList();
 
     if (num != "") fieldID = num + fieldID;
-    var field = message.GetListItem(fields, fieldID);
+    field = message.GetListItem(fields, fieldID);
+    
+    if (field == undefined)
+    {
+        fields = message.GetFieldsList();
+        field = message.GetListItem(fields, fieldID);
+    }
+    
     rtnVal = "";
     if (field && field != null) {
         switch (field.tagName) {
