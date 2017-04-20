@@ -4987,11 +4987,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String signInfo2 = "";
 		String signText2 = "";
 		String signAdd = "";
-		//TODO 代 코드화?
+
 		if (!userID.equals(orgUID)) {
-			proxySign = "代 ";
+			proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
 		}
-		//<DATA><DOCSTATE>001</DOCSTATE></DATA> 추출해서 비교해야함
+		
 		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId());
 		
 		Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
