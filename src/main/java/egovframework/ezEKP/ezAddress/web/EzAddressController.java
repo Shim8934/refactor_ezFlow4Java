@@ -2068,6 +2068,36 @@ public class EzAddressController{
         	} catch (Exception e) {
         		result = "ERROR";
         		logger.error("Import address fail. CSV " + i + "th line.");
+        		
+        		try {
+	        		csvHeader = csvList.get(0);
+	        		csvBody = csvList.get(i);
+	        		
+	        		if (csvHeader != null) {
+	        			String csvHeaderStr = "";
+	        			
+	        			for (int j=0; j<csvHeader.length; j++) {
+	        				csvHeaderStr += csvHeader[j] + ", ";
+	            		}
+	        			
+	        			logger.error("header line=" + csvHeaderStr);
+	        		} else {
+	        			logger.error("header line is null.");
+	        		}
+	        		
+	        		if (csvBody != null) {
+	        			String csvBodyStr = "";
+	        			
+	        			for (int j=0; j<csvBody.length; j++) {
+	        				csvBodyStr += csvBody[j] + ", ";
+	            		}
+	        			
+	        			logger.error(i + "th line=" + csvBodyStr);
+	        		} else {
+	        			logger.error(i + "th line is null.");
+	        		}
+        		} catch (Exception e1) {}
+        		
         		e.printStackTrace();
         	}
         }

@@ -440,4 +440,6 @@ public interface EzApprovalGService {
 
 	public String getSameOrgHAPYUIDoc(String docID, String companyID, String lang, int tenantID) throws Exception;
 
+	public String getDocHref(String docID, String docStatus, String type, String companyID, int tenantId) throws Exception;
+
 }
