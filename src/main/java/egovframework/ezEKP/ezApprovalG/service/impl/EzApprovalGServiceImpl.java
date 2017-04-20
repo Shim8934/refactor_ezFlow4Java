@@ -13387,7 +13387,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		tempValue = docXML.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();
+ 		tempValue = docXML.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
@@ -20780,5 +20780,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ezApprovalGDAO.deleteSignCheck(map);
 		
 		return rtnVal;
+	}
+
+	@Override
+	public String getDocHref(String docID, String docStatus, String type, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID.trim());
+		map.put("v_FLAG", docStatus);
+		map.put("v_TENANTID", tenantID);
+		
+		String href = ezApprovalGDAO.getDocInfoHref(map);
+		
+		return href;
 	}
 }
