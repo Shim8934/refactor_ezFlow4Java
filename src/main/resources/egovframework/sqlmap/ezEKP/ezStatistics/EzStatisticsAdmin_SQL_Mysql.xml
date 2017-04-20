@@ -25,21 +25,27 @@
          				FORMID, 
          				SUM(DRAFTENDCNT) AS DRAFTENDCNT, 
          				SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
-         				TENANT_ID
+         				TENANT_ID,
+         				COMPANYID
          		  FROM  
          		  		TBL_DAILYFORMCOUNTLOG 
          		  WHERE 
          		  		TENANT_ID = #tenantID#
          		  AND
-         		  		REGDATE >=  #startDate# 
+         		  		COMPANYID = #company#
+         		  AND
+         		  		REGDATE >= #startDate# 
          		  AND 
          		  		REGDATE < #endDate#
          		  GROUP BY 
          		  		SUBSTR(REGDATE, 1, 7), 
          		  		FORMID,
-         		  		TENANT_ID ) B  
+         		  		TENANT_ID,
+         		  		COMPANYID ) B  
          	ON 
          		A.TENANT_ID = B.TENANT_ID
+         	AND
+         		A.COMPANYID = B.COMPANYID
          	AND
          		A.FORMID = B.FORMID
          	INNER JOIN 
@@ -47,9 +53,13 @@
          	ON 
          		A.TENANT_ID = C.TENANT_ID
          	AND
+         		A.COMPANYID = C.COMPANYID
+         	AND
          		A.FORMCONTID = C.FORMCONTID
          	WHERE
          		A.TENANT_ID = #tenantID#
+         	AND 
+         		A.COMPANYID = #company#
          	AND 
          		(REGDATE IS NOT NULL AND REGDATE <> '') 
          	AND 
@@ -83,11 +93,14 @@
             			DEPTID ,
                         SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
-                        TENANT_ID  
+                        TENANT_ID,
+                        COMPANYID
                   FROM 
                   		TBL_DAILYDOCCOUNTLOG 
                   WHERE 
                   		TENANT_ID = #tenantID#
+                  AND 
+                  		COMPANYID = #company#
                   AND
                   		REGDATE >= #startDate#
                   AND 
@@ -95,13 +108,18 @@
                   GROUP BY 
                   		SUBSTR(REGDATE, 1, 7),
                   		DEPTID,
-                  		TENANT_ID ) B   
+                  		TENANT_ID,
+                  		COMPANYID ) B   
             ON 
             	B.TENANT_ID = A.TENANT_ID
+            AND 
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
             AND
             	B.DEPTID = A.CN
           	WHERE
           		A.TENANT_ID = #tenantID#
+          	AND
+				A.EXTENSIONATTRIBUTE2 = #company#
           	AND  
           		B.DEPTID = #searchID#
             AND 
@@ -135,11 +153,14 @@
                         USERID ,
                         SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
-                        TENANT_ID  
+                        TENANT_ID,
+                        COMPANYID
                   FROM 
                   		TBL_DAILYDOCCOUNTLOG 
                   WHERE
                   		TENANT_ID = #tenantID#
+                  AND
+                  		COMPANYID = #company#
                   AND  
                   		REGDATE >= #startDate#
                   AND 
@@ -147,13 +168,18 @@
                   GROUP BY 
                   		SUBSTR(REGDATE, 1, 7),
                   		USERID,
-                  		TENANT_ID ) B   
+                  		TENANT_ID,
+                  		COMPANYID ) B   
             ON 
             	B.TENANT_ID = A.TENANT_ID
+            AND 
+            	B.COMPANYID = A.PHYSICALDELIVERYOFFICENAME
             AND
             	B.USERID = A.CN
           	WHERE
           		A.TENANT_ID = #tenantID#
+          	AND  
+          		B.COMPANYID = #company#
           	AND  
           		B.USERID = #searchID#
             AND 
@@ -187,11 +213,14 @@
             			SUM(DRAFTINGCNT + SUSININGCNT) AS  DRAFTINGCNT, 
             			SUM(DRAFTENDCNT + SUSINENDCNT) AS DRAFTENDCNT, 
             			SUM(RETURNCNT) AS RETURNCNT,
-            			TENANT_ID
+            			TENANT_ID,
+            			COMPANYID
             	  FROM 
             	  		TBL_DAILYFORMCOUNTLOG
             	  WHERE 
             	  		TENANT_ID = #tenantID#
+            	  AND 
+            	  		COMPANYID = #company#
             	  AND
             	  		REGDATE >= #startDate# 
             	  AND 
@@ -199,9 +228,12 @@
             	  GROUP BY 
             	  		SUBSTR(REGDATE, 1, 7), 
             	  		FORMID,
-            	  		TENANT_ID ) B  
+            	  		TENANT_ID,
+            	  		COMPANYID ) B  
             ON 
             	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.COMPANYID = B.COMPANYID
             AND
             	A.FORMID = B.FORMID
             INNER JOIN 
@@ -209,9 +241,13 @@
             ON 
             	A.TENANT_ID = C.TENANT_ID
             AND
+            	A.COMPANYID = C.COMPANYID
+            AND
             	A.FORMCONTID = C.FORMCONTID
             WHERE
             	A.TENANT_ID = #tenantID#
+            AND
+            	A.COMPANYID = #company#
             AND
             	(REGDATE IS NOT NULL AND REGDATE <> '')
             AND 
@@ -245,11 +281,14 @@
                     SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
                     SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
                     SUM(RETURNCNT)  RETURNCNT,
-                    TENANT_ID  
+                    TENANT_ID,
+                    COMPANYID
                   FROM 
                   	TBL_DAILYDOCCOUNTLOG 
                   WHERE  
                   	TENANT_ID = #tenantID#
+                  AND  
+                  	COMPANYID = #company#
                   AND
                   	REGDATE >= #startDate#
                   AND 
@@ -257,15 +296,20 @@
                   GROUP BY 
                   	SUBSTR(REGDATE, 1, 7),
                   	USERID,
-                  	TENANT_ID ) B   
+                  	TENANT_ID,
+                  	COMPANYID ) B   
              ON 
              	B.TENANT_ID = A.TENANT_ID
+             AND
+             	B.COMPANYID = A.PHYSICALDELIVERYOFFICENAME
              AND
              	B.USERID = A.CN
              AND 
              	(REGDATE IS NOT NULL AND REGDATE <> '')
              WHERE  
              	A.TENANT_ID = #tenantID#
+             AND
+             	B.COMPANYID = #company#
              AND
              	B.USERID = #searchID#
              AND 
@@ -297,11 +341,14 @@
                         SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
                         SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
                         SUM(RETURNCNT)  RETURNCNT,
-                        TENANT_ID  
+                        TENANT_ID,
+                        COMPANYID
                   FROM 
                   		TBL_DAILYDOCCOUNTLOG 
                   WHERE 
                   		TENANT_ID = #tenantID#
+                  AND 
+                  		COMPANYID = #company#
                   AND
                   		REGDATE >= #startDate#
                   AND 
@@ -309,13 +356,18 @@
                   GROUP BY 
                   		SUBSTR(REGDATE, 1, 7),
                   		DEPTID,
-                  		TENANT_ID ) B   
+                  		TENANT_ID,
+                  		COMPANYID ) B   
             ON 
             	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
             AND
             	B.DEPTID = A.CN
           	WHERE
           		A.TENANT_ID = #tenantID#
+          	AND
+          		A.EXTENSIONATTRIBUTE2 = #company#
           	AND  
           		(REGDATE IS NOT NULL AND REGDATE <> '')
             AND 
@@ -344,17 +396,21 @@
    			ON 
    				A.TENANT_ID = B.TENANT_ID
    			AND
+   				A.COMPANYID = B.COMPANYID
+   			AND
    				A.FORMID = B.FORMID
    			JOIN 
    				TBL_FORMCONTAINER C  
    			ON 
    				A.TENANT_ID = C.TENANT_ID
    			AND
+   				A.COMPANYID = C.COMPANYID
+   			AND
    				A.FORMCONTID = C.FORMCONTID
    			WHERE  
    				A.TENANT_ID = #tenantID#
    			AND
-   				B.COMPANYID = #company#
+   				A.COMPANYID = #company#
    			AND
    				REGDATE >= #startDate#
    			AND 
@@ -395,20 +451,26 @@
             			SUM(DRAFTENDCNT + SUSINENDCNT) AS DRAFTENDCNT, 
             			SUM(RETURNCNT) AS RETURNCNT,
             			SUM(DRAFTENDCNT) AS DRAFTEND, SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
-            			TENANT_ID
+            			TENANT_ID,
+            			COMPANYID
             	  FROM 
             	  		TBL_DAILYFORMCOUNTLOG
             	  WHERE 
             	  		TENANT_ID = #tenantID#
+            	  AND 
+            	  		COMPANYID = #company#
             	  AND
             	  		REGDATE >= #startDate# 
             	  AND 
             	  		REGDATE < #endDate#
             	  GROUP BY 
             	  		FORMID,
-            	  		TENANT_ID ) B  
+            	  		TENANT_ID,
+            	  		COMPANYID ) B  
             ON 
             	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.COMPANYID = B.COMPANYID
             AND
             	A.FORMID = B.FORMID
             INNER JOIN 
@@ -416,9 +478,13 @@
             ON 
             	A.TENANT_ID = C.TENANT_ID
             AND
+            	A.COMPANYID = C.COMPANYID
+            AND
             	A.FORMCONTID = C.FORMCONTID
             WHERE 
             	A.TENANT_ID = #tenantID#
+            AND 
+            	A.COMPANYID = #company#
            	AND
             	(DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0)
             AND 
@@ -455,24 +521,32 @@
                         SUM(RETURNCNT)  RETURNCNT  ,
                         SUM(DRAFTENDCNT)  DRAFTEND  ,
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
-                        TENANT_ID  
+                        TENANT_ID,
+                        COMPANYID
                   FROM 
                   		TBL_DAILYDOCCOUNTLOG 
                   WHERE  
                   		TENANT_ID = #tenantID#
+                  AND  
+                  		COMPANYID = #company#
                   AND
                   		REGDATE >= #startDate#
                   AND 
                   		REGDATE < #endDate#
                   GROUP BY 
                   		DEPTID,
-                  		TENANT_ID ) B   
+                  		TENANT_ID,
+                  		COMPANYID ) B   
             ON 
             	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
            	AND
             	B.DEPTID = A.CN
           	WHERE
           		A.TENANT_ID = #tenantID#
+          	AND 
+            	A.EXTENSIONATTRIBUTE2 = #company#
           	AND  
           		( DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0 )
             AND 
@@ -509,24 +583,32 @@
                         SUM(RETURNCNT)  RETURNCNT  ,
                         SUM(DRAFTENDCNT)  DRAFTEND  ,
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
-                        TENANT_ID  
+                        TENANT_ID,
+                        COMPANYID
                   FROM 
                   		TBL_DAILYDOCCOUNTLOG 
                   WHERE
                   		TENANT_ID = #tenantID#
+                  AND
+                  		COMPANYID = #company#
                   AND  
                   		REGDATE >= #startDate#
                   AND 
                   		REGDATE < #endDate#
                   GROUP BY 
                   		USERID,
-                  		TENANT_ID ) B   
+                  		TENANT_ID,
+                  		COMPANYID ) B   
             ON 
             	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.COMPANYID = A.PHYSICALDELIVERYOFFICENAME
             AND
             	B.USERID = A.CN
             WHERE
             	A.TENANT_ID = #tenantID#
+            AND 
+            	A.PHYSICALDELIVERYOFFICENAME = #company#
             AND 
             	( DRAFTCNT != '0' OR DRAFTINGCNT != '0' OR DRAFTENDCNT != '0' OR RETURNCNT != '0' )
             AND 
@@ -552,9 +634,13 @@
             ON 
             	B.TENANT_ID = A.TENANT_ID
             AND
+            	B.COMPANYID = A.EXTENSIONATTRIBUTE2
+            AND
             	B.DeptID = A.CN
        		WHERE  
        			A.TENANT_ID = #tenantID#
+       		AND  
+       			A.EXTENSIONATTRIBUTE2 = #company#
        		AND
        			REGDATE >= #startDate#
             AND 

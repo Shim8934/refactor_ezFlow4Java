@@ -129,6 +129,7 @@ public class EzStatisticsApprController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
+		statApprVO.setCompany(userInfo.getCompanyID());
 		
 		String result = ezStatisticsAdminService.getMainList(statApprVO);
 
@@ -181,6 +182,7 @@ public class EzStatisticsApprController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
+		statApprVO.setCompany(userInfo.getCompanyID());
 		
 		String result = ezStatisticsAdminService.getCountList(statApprVO);
 
@@ -200,6 +202,7 @@ public class EzStatisticsApprController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
+		statApprVO.setCompany(userInfo.getCompanyID());
 		statApprVO.setLang(userInfo.getLang());
 		
 		String result = ezStatisticsAdminService.getFormInfo(statApprVO);
@@ -304,6 +307,7 @@ public class EzStatisticsApprController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
+		statApprVO.setCompany(userInfo.getCompanyID());
 		
 		String result = ezStatisticsAdminService.getTimeList(statApprVO);
 		
@@ -485,6 +489,7 @@ public class EzStatisticsApprController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
+		statApprVO.setCompany(userInfo.getCompanyID());
 		
 		String result = ezStatisticsAdminService.getSearchList(statApprVO);
 		
