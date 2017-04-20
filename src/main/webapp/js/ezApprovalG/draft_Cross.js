@@ -3057,6 +3057,15 @@ function setDocNumFormat(pPrefix) {
             case "MV":
             	numHeader += "MV" + Tail;
             	break;
+            	
+            case "YM":
+            	var yyear = d.getYear();
+                numHeader += yyear.toString().substr(1);
+                
+            	var mmonth = d.getMonth() + 1;
+                if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                numHeader += mmonth + Tail;
+                break;
 
             default:
                 numHeader += fieldValue;

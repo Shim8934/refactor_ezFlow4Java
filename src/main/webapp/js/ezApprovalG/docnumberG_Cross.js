@@ -43,7 +43,7 @@ function getDocNumber(pDeptID, pPrefix) {
         			tempNumString = "0" + tempNumString;
         		DocNumCode = pDeptID + tempNumString;
         		
-        		field.textContent = fractionsymbol + tempNumString.substring(2);
+        		field.textContent = fractionsymbol + tempNumString.substring(4);
         		
         		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
         		message.DocumentBodySetAttribute("deptid", pDeptID);

@@ -2539,6 +2539,11 @@ function SaveDraftDocInfo()
                 	numHeader += "MV" + Tail;
                 	break;
                 	
+                case "YM":
+                	numHeader = numHeader + szYear;
+                	numHeader = numHeader + szMonth + Tail;
+                	break;
+                	
                 default:
                     numHeader = numHeader + fieldValue;
                     break;
