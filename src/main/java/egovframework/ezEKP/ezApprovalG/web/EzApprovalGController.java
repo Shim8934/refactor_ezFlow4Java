@@ -1885,6 +1885,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 통합pc 저장 리스트 더블클릭 다운
+	 */
+	@RequestMapping(value = "/ezApprovalG/downloadAttachDbClick.do")
+	public void downloadAttachDbClick(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String type = request.getParameter("type");
+		String docStatus = request.getParameter("docStatus");
+		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
+
+		String href = ezApprovalGService.getDocHref(docID, docStatus, type, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		downFile(request, response, realPath + href, fileName);
+	}
+	
+	/**
 	 * 전자결재G 기안 문서첨부 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprCabinetAttach.do")
