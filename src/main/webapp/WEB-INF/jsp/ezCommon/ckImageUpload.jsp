@@ -49,9 +49,20 @@
 		        return check;
 		    }
 		    var isuload = false;
-		    function fileupload() {
-		        if (isuload || document.form.file1.value == "")
+		    function fileupload() {		    	
+		    	var file = document.form.file1.value;
+		    	
+		        if (isuload || file == "")
 		            return;
+		        
+		        var fileExt = file.substring(file.lastIndexOf(".") + 1);
+		        var reg = /gif|GIF|jpg|JPG|jpeg|JPEG|png|PNG/i;
+		        
+		        if (reg.test(fileExt) == false) {
+		        	alert("<spring:message code='ezCommunity.lhj03'/>");
+		        	return;
+		        }		        
+		        
 		        var frm = document.getElementById('form');
 		        frm.action = "/ezCommon/ckUpload.do";
 		        frm.submit();

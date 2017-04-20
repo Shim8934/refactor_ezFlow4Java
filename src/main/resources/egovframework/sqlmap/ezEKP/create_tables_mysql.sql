@@ -244,8 +244,12 @@ CREATE TABLE `jmocha_address_info` (
   `folder_id` int(11) DEFAULT NULL,
   `owner_id` varchar(100) DEFAULT NULL,
   `creator_id` varchar(100) DEFAULT NULL,
+  `creator_name` varchar(100) DEFAULT NULL,
+  `creator_name2` varchar(100) DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
   `modifier_id` varchar(100) DEFAULT NULL,
+  `modifier_name` varchar(100) DEFAULT NULL,
+  `modifier_name2` varchar(100) DEFAULT NULL,
   `modify_date` datetime DEFAULT NULL,
   `s_name` varchar(100) DEFAULT NULL,
   `s_email` varchar(100) DEFAULT NULL,
@@ -3130,8 +3134,7 @@ CREATE TABLE `tbl_dailydoccountlog` (
   `SUSINTIME` double(126,0) NOT NULL,
   `RETURNCNT` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  `COMPANYID` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`DEPTID`,`USERID`,`COMPANYID`)
+  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`DEPTID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3156,8 +3159,7 @@ CREATE TABLE `tbl_dailyformcountlog` (
   `SUSINTIME` double(126,0) NOT NULL,
   `RETURNCNT` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  `COMPANYID` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`FORMID`,`FORMCONTID`,`COMPANYID`)
+  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`FORMID`,`FORMCONTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3745,7 +3747,7 @@ CREATE TABLE `tbl_formconninfo` (
   `DESCRIPTION` varchar(100) DEFAULT NULL,
   `UPPERNODE` varchar(100) NOT NULL,
   PRIMARY KEY (`SN`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

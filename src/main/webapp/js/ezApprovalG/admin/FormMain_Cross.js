@@ -358,7 +358,7 @@ function MakeFormMHTXML_Detail() {
         var ConnVal = "";
         var XMLInfo = "";
         if (txt_OpinionContent.value != "") {
-            ConnVal = "<CONNINFO>\n" + txt_OpinionContent.value + "\n</CONNINFO>";
+            ConnVal = "<conninfo>\n" + txt_OpinionContent.value + "\n</conninfo>";
             XMLInfo = "<xml id='conn' style='display:none'>" + ConnVal + "</xml>\n";
         }
 
@@ -372,10 +372,10 @@ function MakeFormMHTXML_Detail() {
         Div.innerHTML = message.GetEditorContent();
         
         if (message.GetEditorContent().indexOf("BodyContent") > -1)
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "<br>").replace( /\n/g, "<br>").replace(/\r/g, "<br>") + Div.innerHTML;
+            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.innerHTML;
         else {
             Div.id = "BodyContent";
-            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "<br>").replace( /\n/g, "<br>").replace(/\r/g, "<br>") + Div.outerHTML;
+            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.outerHTML;
         }
         
         HTML.appendChild(BODY);
@@ -390,7 +390,7 @@ function MakeFormConnXML() {
     if (getNodeText(txt_OpinionContent).replace(/\r\n/g, "").replace(/ /g, "") != "") {
         try {
             var xmldom = createXmlDom();
-            xmldom = loadXMLString("<CONNINFO>\n" + getNodeText(txt_OpinionContent) + "\n</CONNINFO>");
+            xmldom = loadXMLString("<conninfo>\n" + getNodeText(txt_OpinionContent) + "\n</conninfo>");
 
             if (xmldom.getElementsByTagName("conn").length == 0) {
                 pDataCheck = false;
@@ -461,7 +461,7 @@ function MakeFormConnXML() {
 }
 
 function MakeFormConnXML_Detail() {
-    return "<CONNXML><CONNINFO>" + txt_OpinionContent.value + "</CONNINFO></CONNXML>"
+    return "<CONNXML><conninfo>" + txt_OpinionContent.value + "</conninfo></CONNXML>"
 }
 
 function MakeFormWorkFlow() {

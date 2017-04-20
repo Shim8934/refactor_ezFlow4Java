@@ -111,12 +111,12 @@
 	            var pSourcePath = obj.getAttribute("FILEPATH").split('.')[1];
 	            var pDocID_mht = obj.getAttribute("FILEPATH").substring(obj.getAttribute("FILEPATH").lastIndexOf("/") + 1, obj.getAttribute("FILEPATH").length).split('.')[0];
 	            if (obj.getAttribute("DATA1") == "ATT")
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?type=APPROVALG&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA3");
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA3");
 	            else if (obj.getAttribute("DATA1") == "ATTDOC") {
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?type=APPROVALGMHT&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END";
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END";
 	            }
 	            else {
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttach.do?type=APPROVALGMHT&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType;
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType;
 	            }
 	        }
 	

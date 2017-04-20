@@ -1038,7 +1038,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 결재선저장 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprLineTempletName.do")
-	public String aprLineTempletName(){
+	public String aprLineTempletName(Model model, HttpServletRequest request){
+		model.addAttribute("type", request.getParameter("type")== null? "" : request.getParameter("type"));
 		return "ezApprovalG/apprGaprLineTempletName";
 	}
 	
@@ -1881,6 +1882,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (!result.equals("NOTPERMISSION")) {
 			downFile(request, response, realPath + filePath, fileName);
 		}
+	}
+	
+	/**
+	 * 전자결재G 통합pc 저장 리스트 더블클릭 다운
+	 */
+	@RequestMapping(value = "/ezApprovalG/downloadAttachDbClick.do")
+	public void downloadAttachDbClick(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String type = request.getParameter("type");
+		String docStatus = request.getParameter("docStatus");
+		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
+
+		String href = ezApprovalGService.getDocHref(docID, docStatus, type, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		downFile(request, response, realPath + href, fileName);
 	}
 	
 	/**
@@ -6254,5 +6273,4 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
-	
 }

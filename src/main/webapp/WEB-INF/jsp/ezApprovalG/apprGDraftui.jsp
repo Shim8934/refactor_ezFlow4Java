@@ -238,7 +238,7 @@
 		                    tempItemName2 = arrayVal[3];
 		                    tempSecurityValue = arrayVal[6];
 			                pPublicityCode = arrayVal[0];
-		                    
+			                SummaryFlag = true;
 		                    SetDocOption(arrayVal[5]);
 		                }
 		    		}        			

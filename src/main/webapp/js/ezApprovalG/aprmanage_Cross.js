@@ -1649,22 +1649,18 @@ function setbuttonenable() {
                 if (GetAttribute(tr, "DATA10") == "002") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";		
                     document.getElementById("tbtnSimsa").style.display = "";
-                }
-                else if (GetAttribute(tr, "DATA10") == "004") {
+                } else if (GetAttribute(tr, "DATA10") == "004") {
                     document.getElementById("tbtnRemoveDoc").style.display = "";	
                     document.getElementById("tbtnSimsa").style.display = "none";
-                }
-                else {
+                } else {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";		
                     document.getElementById("tbtnSimsa").style.display = "none";
                 }
-            }
-            else {
+            } else {
                 document.getElementById("tbtnRemoveDoc").style.display = "none";			
                 document.getElementById("tbtnSimsa").style.display = "none";
             }
-        }
-        else if (pListTypeValue == "7") {
+        } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
         }
         document.getElementById("tbtnRegList").style.display = "none";
@@ -1675,12 +1671,9 @@ function setbuttonenable() {
             document.getElementById("tbtnRedraft").style.display = "";
             document.getElementById("tbtnRemoveDoc").style.display = "";
             document.getElementById("tbtnTotalSave").style.display = "none";
-        }
-        else
+        } else
             document.getElementById("tbtnTotalSave").style.display = "";
-    }
-    else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99)
-    {
+    } else if (pListTypeValue == 1 || pListTypeValue == 10 || pListTypeValue == 99) {
         document.getElementById("tbtnTotalSave").style.display = "";
         document.getElementById("tbtnSimsa").style.display = "none";
         //document.getElementById("tbtnGongRam").style.display = "";
@@ -1694,9 +1687,7 @@ function setbuttonenable() {
             else
                 document.getElementById("tbtnGongRam").style.display = "none";
 
-
-            if (pFunctionType == "001")
-            {
+            if (pFunctionType == "001") {
                 document.getElementById("tbtnDraft").style.display = "";
                 //SwapImage(document.getElementById("btnDraft"), "");
                 //document.getElementById("tbtnLinkDraft").style.display = "";
@@ -1710,9 +1701,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
-            }
-            else if (GetAttribute(tr, "DATA12") == "015")
-            {
+            } else if (GetAttribute(tr, "DATA12") == "015") {
                 document.getElementById("tbtnDraft").style.display = "";
                 //SwapImage(document.getElementById("btnDraft"), "");
                 document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -1726,8 +1715,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
-            }
-            else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
+            } else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
                 if (pFunctionType == "004")
                 	if(approvalFlag == "G") {
                 		document.getElementById("tbtnRegList").style.display = "";
@@ -1755,20 +1743,17 @@ function setbuttonenable() {
 
                     if (GetAttribute(tr, "DATA15") == "001")
                         document.getElementById("tbtnReturn").style.display = "none";;
-                }
-                else if (GetAttribute(tr, "DATA12") == "011" || GetAttribute(tr, "DATA12") == "012") {
+                } else if (GetAttribute(tr, "DATA12") == "011" || GetAttribute(tr, "DATA12") == "012") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
                     returnYN(GetAttribute(tr, "DATA1"));
 
                     if (GetAttribute(tr, "DATA15") == "001")
                         document.getElementById("tbtnReturn").style.display = "none";;
-                }
-                else {
+                } else {
                     document.getElementById("tbtnRemoveDoc").style.display = "";
                     document.getElementById("tbtnReturn").style.display = "none";
                 }
-            }
-            else {
+            } else {
                 document.getElementById("tbtnDraft").style.display = "";
                 //SwapImage(document.getElementById("btnDraft"), "");
                 document.getElementById("tbtnRedraft").style.display = "none";
@@ -1784,8 +1769,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnLinkDraft").style.display = "none";
             }
             document.getElementById("tbtnViewDoc").style.display = "";
-        }
-        else {
+        } else {
             document.getElementById("tbtnDraft").style.display = "";
             //SwapImage(document.getElementById("btnDraft"), "");
             document.getElementById("tbtnRedraft").style.display = "none";
@@ -1830,8 +1814,7 @@ function setbuttonenable() {
                     if (tr.getAttribute("DATA15") == "001")
                         document.getElementById("tbtnReturn").style.display = "none";
                 }
-            }
-            else if (pFunctionType == "015") {
+            } else if (pFunctionType == "015") {
                 document.getElementById("tbtnDraft").style.display = "";
                 //SwapImage(document.getElementById("btnDraft"), "");
                 document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -1851,8 +1834,7 @@ function setbuttonenable() {
                 }
             }
             document.getElementById("tbtnViewDoc").style.display = "";
-        }
-        else {
+        } else {
             document.getElementById("tbtnDraft").style.display = "";
             //SwapImage(document.getElementById("btnDraft"), "");
             document.getElementById("tbtnRedraft").style.display = "none";
@@ -1882,8 +1864,7 @@ function setbuttonenable() {
         } else {
             document.getElementById("tDocInfo").style.display = "none";
         }
-    }
-    else
+    } else
         document.getElementById("tDocInfo").style.display = "none";
 
     if (pListTypeValue != "2" && pListTypeValue != "3") {
