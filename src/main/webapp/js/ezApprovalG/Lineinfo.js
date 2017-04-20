@@ -3088,7 +3088,6 @@ function ReDraftSaveAprLine() {
         }
     }
     else if (pReDraftFlag == "REDRAFT") {
-    	//TODO
     	$.ajax({
     		type : "POST",
     		dataType : "text",
