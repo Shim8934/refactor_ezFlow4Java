@@ -6,7 +6,7 @@ function ConnExist(pprocessIdx, currTD) {
     var xmlData = createXmlDom();
     xmlData.async = false;
     if (message.CONNINFO.getElementsByTagName("XML").length > 0)
-        xmlData = loadXMLString(message.CONNINFO.getElementsByTagName("XML").item(0).outerHTML);
+    	xmlData = loadXMLString(message.CONNINFO.getElementsByTagName("XML").item(0).outerHTML.replace("<!--[CDATA[", "<![CDATA[").replace("-->", ">"));
     else
         return false;
 
@@ -78,9 +78,8 @@ function ExcuteInfo(pprocessIdx, currTD) {
     var connNodes, connNode, keyNodes;
     var i, findFlag;
     var processIdx;
-    var rtnVal;
+    var rtnVal = true;
 
-    rtnVal = true;
     var xmlData = createXmlDom();
 
     try {
@@ -101,14 +100,14 @@ function ExcuteInfo(pprocessIdx, currTD) {
             break;
         }
     }
-    
+
     if (findFlag) {
         var subNodes = GetChildNodes(connNode);
         connFlag = GetAttribute(subNodes[0], "flag");
         connString = getNodeText(subNodes[0]);
         queryType = GetAttribute(subNodes[1], "qtype");
         queryString = getNodeText(subNodes[1]);
-        
+
         var strItemNames = "SA_DocID";
         var arrItemNames = strItemNames.split(",");
         var objNewItem;
@@ -281,14 +280,24 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
 }
 function getKeyValue(fieldID, num) {
     var rtnVal;
+    var field;
     var fields;
+    //이쪽에서  GetFieldsList 이거타면 전체체크  Get_ConnFieldList이거 탈땐 body(에디터) 내부에 써진 거만 체크함
+    //message.DocumentBodyGetAttribute(fieldID) 여긴 왜 계속 null
     if (pPageType == "APPROVUI" || pPageType == "SUSIN")
         fields = message.GetFieldsList();
     else
         fields = message.Get_ConnFieldList();
 
     if (num != "") fieldID = num + fieldID;
-    var field = message.GetListItem(fields, fieldID);
+    field = message.GetListItem(fields, fieldID);
+    
+    if (field == undefined)
+    {
+        fields = message.GetFieldsList();
+        field = message.GetListItem(fields, fieldID);
+    }
+    
     rtnVal = "";
     if (field && field != null) {
         switch (field.tagName) {

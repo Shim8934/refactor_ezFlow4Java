@@ -365,7 +365,13 @@
 		        var tempCode = trim(document.getElementById("tbTaskCode").value);
 		        
 		        if (approvalFlag == 'S') {
-		        	
+		        	if (tempCode == "") {
+			            OpenAlertUI("<spring:message code = 'ezApprovalG.t743' />");
+			            return;
+			        } else if (tempCode.length < 6) {
+			            OpenAlertUI("<spring:message code = 'ezApprovalG.t744' />");
+			            return;
+			        }
 		        } else {
 		        	if (tempCode == "") {
 			            OpenAlertUI("<spring:message code = 'ezApprovalG.t743' />");

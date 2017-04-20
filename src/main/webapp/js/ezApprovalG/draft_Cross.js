@@ -2199,6 +2199,19 @@ function SetAutoPropertyValue() {
                     case pSusinSN + "receiptdate":
                         field.textContent = CurrentDate;
                         break;
+                    
+                    case "bedocnumber":
+                        setDocNumFormat("be");
+                        break;
+
+                    case "docnumber":
+                        setDocNumFormat("");
+                        break;
+
+                    case "draftdate":
+                    	/*field.textContent = FullDate;*/
+                        field.textContent = CurrentDate;
+                    	break;
                 }
             }
             if (pDraftFlag == "SUSIN" || pDocState == "011") {
@@ -3057,6 +3070,20 @@ function setDocNumFormat(pPrefix) {
             case "MV":
             	numHeader += "MV" + Tail;
             	break;
+            	
+            case "YM":
+            	var yyear = d.getYear();
+                numHeader += yyear.toString().substr(1);
+                
+            	var mmonth = d.getMonth() + 1;
+                if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                numHeader += mmonth;
+                
+                var mdate = d.getDate();
+                if (parseInt(mdate) < 10) mdate = "0" + mdate;
+                numHeader += mdate + Tail;
+                
+                break;
 
             default:
                 numHeader += fieldValue;
