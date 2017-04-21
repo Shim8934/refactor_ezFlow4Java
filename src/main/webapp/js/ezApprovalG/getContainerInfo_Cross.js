@@ -311,22 +311,22 @@ function GetUserContListSave(AllFG) {
             var blob = new Blob([this.response] ,{ type: "application/vnd.ms-excel" });
             //Create a link element, hide it, direct 
             //it towards the blob, and then 'click' it programatically
-            let a = document.createElement("a");
+            var a = document.createElement("a");
             a.setAttribute("type", "hidden");
             //Create a DOMString representing the blob 
             //and point the link element towards it
             var ua = window.navigator.userAgent;
             if(ua.indexOf('MSIE') > 0 || ua.indexOf('Trident') > 0) {
-            navigator.msSaveBlob(blob,period+'.xls');
-            }else{
-            let url = window.URL.createObjectURL(blob);
-            a.href = url;
-            a.download = period+'.xls';
-            document.body.appendChild(a);
-            //programatically click the link to trigger the download
-            a.click();
-            //release the reference to the file by revoking the Object URL
-            window.URL.revokeObjectURL(url);
+            	navigator.msSaveBlob(blob,period+'.xls');
+            } else {
+	            var url = window.URL.createObjectURL(blob);
+	            a.href = url;
+	            a.download = period+'.xls';
+	            document.body.appendChild(a);
+	            //programatically click the link to trigger the download
+	            a.click();
+	            //release the reference to the file by revoking the Object URL
+	            window.URL.revokeObjectURL(url);
             }
         } else {
             //deal with your error state here
