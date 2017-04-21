@@ -54,6 +54,12 @@
 	            try {
 		        	$('#div_Content #body').css('overflow', 'auto');
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
+		        	
+		        	if($('#frame_doctitle')) {
+		        		if($('#frame_doctitle').html() == "&nbsp;") {
+		        			$('#frame_doctitle').html("");
+		        		}
+		        	}
 		        } catch (e)
 		        { }
 	        };
