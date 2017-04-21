@@ -8,6 +8,11 @@ p
 	padding : 0px;
 }
 
+table
+{
+	table-layout: fixed;
+}
+
 body
 {
 	/* Font */
