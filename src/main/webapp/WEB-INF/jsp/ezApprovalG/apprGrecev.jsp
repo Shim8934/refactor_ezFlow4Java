@@ -108,6 +108,7 @@
 			var approvalFlag = "${approvalFlag}";
 			var junGyulFlag = "${junGyulFlag}";
 			var pSignImage_Size = "${signImageSize}";
+			var docNumZeroCnt = "${docNumZeroCnt}";
 			
 			window.onload = function () {
 			};
@@ -623,11 +624,11 @@
 		        }
 		        else {
 		            if (LastSignSN == 1 || DraftLastFlag) {
-		                rtnval = getDocNumber(arr_userinfo[4], "");
+		                rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
 		                if (rtnval) docAccess = 2; 
 		            }
 		            else {
-		                rtnval = getDocNumber(arr_userinfo[4], "be");
+		                rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
 		                if (rtnval) docAccess = 1; 
 		            }
 		        }

@@ -1394,3 +1394,5 @@ var strLangyjS16 = "기";
 var strLangyjS17 = "안";
 var strLangyjS18 = "합";
 var strLangyjS19 = "의";
+var strLangS194 = "既に登録されている決裁経路です。";
+var strLangS195 = "入力し直してください";

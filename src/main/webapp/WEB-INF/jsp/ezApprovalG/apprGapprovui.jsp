@@ -133,6 +133,7 @@
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
 		    var hideCabinet = "${hideCabinet}";
+		    var docNumZeroCnt = "${docNumZeroCnt}";
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -625,7 +626,7 @@
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
 			                    var rtnval;
-			                    rtnval = getDocNumber(drafterDeptid, "");
+			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
 			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 			                        OpenAlertUI(pAlertContent);
@@ -638,7 +639,7 @@
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                    var rtnval;
-			                    rtnval = getDocNumber(drafterDeptid, "");
+			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
 			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 			                        OpenAlertUI(pAlertContent);

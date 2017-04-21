@@ -114,7 +114,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGFormVO> getFormInfo(Map<String, Object> map) throws Exception{ return (List<ApprGFormVO>) list("EzApprovalG.getFormInfo", map);
+	public List<ApprGFormVO> getFormInfo(Map<String, Object> map) throws Exception{ 
+		return (List<ApprGFormVO>) list("EzApprovalG.getFormInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")

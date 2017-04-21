@@ -1,5 +1,5 @@
 ﻿var fractionsymbol;
-function getDocNumber(pDeptID, pPrefix) {
+function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
     try {
         var fields = message.GetFieldsList();
         var name, docnumber;
@@ -43,7 +43,7 @@ function getDocNumber(pDeptID, pPrefix) {
         			tempNumString = "0" + tempNumString;
         		DocNumCode = pDeptID + tempNumString;
         		
-        		field.textContent = fractionsymbol + tempNumString.substring(4);
+        		field.textContent = fractionsymbol + tempNumString.substring(6 - docNumZeroCnt);
         		
         		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
         		message.DocumentBodySetAttribute("deptid", pDeptID);

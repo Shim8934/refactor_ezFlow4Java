@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.util.ChineseCalendar;
+
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -316,7 +318,6 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		
 		for (OrganUserVO orgranUserInfo : list) {
 			solarValue = orgranUserInfo.getBirth();
-			
 			if (orgranUserInfo.getBirthType().equals("N")) {
 				String[] birthArray = solarValue.split("-");
 				solarValue = changeSolarCalendar(Integer.parseInt(birthArray[0]), Integer.parseInt(birthArray[1]), Integer.parseInt(birthArray[2]), false);
@@ -363,10 +364,11 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	public String changeSolarCalendar(int pYear, int mon, int day, boolean bDay) {
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
-		int nYoonMonth;
+		logger.debug("pYear="+pYear + ",mon="+mon+",day="+day+",bDay="+bDay);
 		
+		//int nYoonMonth;
 		//윤달이 껴있는 경우
-		if (monthsInYear(year) > 12) {
+		/*if (monthsInYear(year) > 12) {
 			// 해당 년도의 윤월을 계산 (추후 수정)
 			nYoonMonth = 0;
 			
@@ -376,14 +378,47 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 			if (mon > nYoonMonth) {
 				mon ++;
 			}
-		}
+		}*/
 		
-		if (day > daysInMonth(year, mon)) {
+		if (day > daysInMonth(mon, year)) {
 			return "FALSE";
 		}
 		
-		String result = String.valueOf(year) + String.valueOf(mon) + String.valueOf(day);
-		return result;
+		//음력->양력으로 변환
+		String month = ((mon < 10) ? "0"+String.valueOf(mon) : String.valueOf(mon));
+		String days = ((day < 10) ? "0"+String.valueOf(day) : String.valueOf(day));
+		ChineseCalendar cc = new ChineseCalendar();
+		cc.set(ChineseCalendar.EXTENDED_YEAR, year+2637);
+		cc.set(ChineseCalendar.MONTH, Integer.parseInt(month)-1);
+		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(days));
+		
+		cal.setTimeInMillis(cc.getTimeInMillis());
+
+		int y = cal.get(Calendar.YEAR); 
+	    int m = cal.get(Calendar.MONTH)+1; 
+	    int d = cal.get(Calendar.DAY_OF_MONTH); 
+		
+		StringBuffer ret = new StringBuffer() ; 
+	      if( y < 1000 ) 
+	         ret.append( "0" ) ; 
+	      else if( y < 100 ) 
+	         ret.append( "00" ) ; 
+	      else if( y < 10 ) 
+	         ret.append( "000" ) ; 
+	      ret.append( y + "-") ; 
+
+	      if( m < 10 ) {
+	    	  ret.append( "0" ) ; 
+	      }
+	      ret.append( m + "-") ; 
+
+	      if( d < 10 ) {
+	    	  ret.append( "0" ) ; 
+	      }
+	      ret.append( d ) ; 
+		
+	      logger.debug("sbresult="+ret.toString());
+	      return ret.toString();
 	}
 	
 	//현재 연대에 있는 지정된 연도의 월 수를 반환(윤년, 평년)
