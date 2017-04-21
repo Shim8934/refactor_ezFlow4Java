@@ -1839,6 +1839,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/downloadAttach.do")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadAttach started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -1864,6 +1866,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 					result = "NOTPERMISSION";
 				}
+				
+				logger.debug("docStatus = " + docStatus + "|| result = " + result);
 			}
 		} else if (docStatus != null && docStatus.toUpperCase().equals("END")) {
 			String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
@@ -1872,6 +1876,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 				result = "NOTPERMISSION";
 			}
+			
+			logger.debug("docStatus = " + docStatus + "|| result = " + result);
 		}
 
 		if (fileName == null || fileName.equals("")) {
@@ -1880,6 +1886,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
 		//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
+		
+		logger.debug("downloadAttach ended.");
 		
 		if (!result.equals("NOTPERMISSION")) {
 			downFile(request, response, realPath + filePath, fileName);
