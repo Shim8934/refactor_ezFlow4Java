@@ -88,12 +88,14 @@
 			    if (!check) {
 	    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
 	        		document.getElementById("file1").value = "";
+	    		} else {
+	    			var frm = document.getElementById('form');
+		    		frm.action = "/ezPersonal/photoUploadByUser.do";
+		    		frm.submit();
+		    		document.form.file1.value = "";	
 	    		}
 
-			    var frm = document.getElementById('form');
-	    		frm.action = "/ezPersonal/photoUploadByUser.do";
-	    		frm.submit();
-	    		document.form.file1.value = "";
+			    
 			}
 
 			function compareExtension(check, extension) {
