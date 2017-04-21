@@ -15811,7 +15811,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         for (int i = 0; i < leftCounts.size(); i++) {
         	sb.append("<ROW>");
-        	sb.append("<COUNT>"+ leftCounts.get(i) +"</COUNT>");
+        	sb.append("<COUNT>" + leftCounts.get(i) + "</COUNT>");
         	sb.append("</ROW>");
 		}
         
