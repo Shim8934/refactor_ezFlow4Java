@@ -10,6 +10,7 @@
 	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 	type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
 	<typeAlias  alias="PersonalGetWebPartGroupVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
+    <typeAlias  alias="PersonalNoticeVO"        type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
 	
 	<select id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO">
 		<isEqual property="v_MODE" compareValue="ADMIN">
@@ -658,5 +659,147 @@
 				CN = #cn#
 		]]>
 	</select>
+  
+    <select id="EzPersonalDAO.getNoticeListMain" parameterClass="Map"    resultClass="PersonalNoticeVO">
+          <![CDATA[
+              SELECT
+                  * 
+              FROM (   SELECT
+                                TITLE,
+                                TITLE2,
+                                ITEMSEQ
+                            FROM
+                                TBL_PS_NOTICE 
+                            WHERE
+                                COMPANYID = #v_pCompanyID#
+                            AND
+                                 TENANT_ID = #tenantID#  
+                            ORDER BY
+                                 POSTDATE DESC ) A
+                            LIMIT
+                                  5
+          ]]>
+     </select>
+  
+    <select id="EzPersonalDAO.getNoticeListUser" parameterClass="Map"    resultClass="PersonalNoticeVO">
+          <isEqual property="v_pStart" compareValue="0">
+              <isNotEmpty property="v_pCompanyID">
+                  <![CDATA[
+                     SELECT
+                          * 
+                       FROM ( SELECT
+                                      ITEMSEQ ,
+                                      POSTDATE ,
+                                      TITLE ,
+                                      TITLE2 
+                                  FROM
+                                      TBL_PS_NOTICE 
+                                  WHERE
+                                      (COMPANYID = 'Top'
+                                  OR
+                                      COMPANYID = #v_pCompanyID#)
+                                  AND
+                                      TENANT_ID = #tenantID#    
+                                  ORDER BY
+                                      ITEMSEQ DESC ) A
+                       LIMIT
+                            #v_pCount#
+              ]]>
+              </isNotEmpty>
+              <isEmpty property="v_pCompanyID">
+                  <![CDATA[
+                      SELECT
+                          * 
+                      FROM ( SELECT
+                                      ITEMSEQ ,
+                                      POSTDATE ,
+                                      TITLE ,
+                                      TITLE2 
+                                  FROM
+                                      TBL_PS_NOTICE 
+                                  WHERE
+                                      TENANT_ID = #tenantID#
+                                  AND
+                                      (COMPANYID = 'Top'
+                                  OR
+                                      CompanyID = 'S907000')
+                                  ORDER BY
+                                      ITEMSEQ DESC ) A
+                      LIMIT
+                            #v_pCount#
+              ]]>
+              </isEmpty>
+          </isEqual>
+           <isNotEqual property="v_pStart" compareValue="0">
+                <isNotEmpty property="v_pCompanyID">
+                  <![CDATA[
+                     SELECT
+                        * 
+                     FROM ( SELECT
+                                    ITEMSEQ ,
+                                    POSTDATE ,
+                                    TITLE ,
+                                    TITLE2 
+                                FROM ( SELECT
+                                              * 
+                                           FROM (   SELECT
+                                                            ITEMSEQ ,
+                                                            POSTDATE ,
+                                                            TITLE ,
+                                                            TITLE2 
+                                                        FROM
+                                                            TBL_PS_NOTICE 
+                                                        WHERE
+                                                            TENANT_ID = #tenantID#
+                                                        AND    
+                                                            (COMPANYID = 'Top'
+                                                        OR
+                                                            COMPANYID = #v_pCompanyID#)
+                                                        ORDER BY
+                                                            ITEMSEQ ASC ) A
+                                            LIMIT
+                                                #v_pTotal - v_pStart# ) TEMPTBLNOTICE
+                                            ORDER BY
+                                                ITEMSEQ DESC ) B
+                      LIMIT
+                          #v_pCount#
+              ]]>
+              </isNotEmpty>
+               <isEmpty property="v_pCompanyID">
+                  <![CDATA[
+                      SELECT
+                          * 
+                      FROM ( SELECT
+                                      ITEMSEQ ,
+                                      POSTDATE ,
+                                      TITLE ,
+                                      TITLE2 
+                                  FROM ( SELECT
+                                                * 
+                                              FROM ( SELECT
+                                                             ITEMSEQ ,
+                                                             POSTDATE ,
+                                                             TITLE ,
+                                                             TITLE2 
+                                                         FROM
+                                                             TBL_PS_NOTICE 
+                                                         WHERE
+                                                             TENANT_ID = #tenantID#
+                                                         AND    
+                                                             (COMPANYID = 'Top'
+                                                         OR
+                                                             CompanyID = 'S907000')
+                                                         ORDER BY
+                                                              ITEMSEQ ASC ) A
+                                             LIMIT
+                                                #v_pTotal - v_pStart# ) TEMPTBLNOTICE
+                                             ORDER BY
+                                                ITEMSEQ DESC ) B
+                      LIMIT
+                          #v_pCount#
+                  ]]>
+              </isEmpty>              
+          </isNotEqual>
+     </select>
 </sqlMap>
 

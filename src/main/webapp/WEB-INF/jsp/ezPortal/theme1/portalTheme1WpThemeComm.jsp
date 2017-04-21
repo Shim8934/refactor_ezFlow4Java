@@ -247,16 +247,19 @@
 	                    }
 	                } */
 	                
-	                list.forEach(function(cBoardVO, index) {
+	                /* list.forEach(function(cBoardVO, index) {
 	                	//for (var i = 0; i < 5; i++) {
 	                        no = cBoardVO.no;
 	                        title = cBoardVO.title;
 	                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";
 	                    //}
-	                	if (index == 5) {
-	                		break;
-	                	}
-		            });
+		            }); */
+	                
+	              	for (var i = 0; i < 5; i++) {
+	              		no = list[i].no;
+                        title = list[i].title;
+                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";	
+	                }
 	                
 	                listHTML += "</ul></div></div></div>";
 	

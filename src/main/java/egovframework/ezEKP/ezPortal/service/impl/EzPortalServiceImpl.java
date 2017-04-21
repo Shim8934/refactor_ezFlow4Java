@@ -2047,18 +2047,18 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             		if (i == Integer.parseInt(pageColumnLength) - 1) {
            				sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" vAlign=\"top\" style=\"padding-left:20px;\">\n");
             		} else {
-            			sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" valign=\"top\"");
+            			sb.append("<TD id=\"td"+UUID.randomUUID().toString().substring(0, 4) +"\" valign=\"top\"");
             			if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
             				if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
             					columnWidth = pageColumnSplit.split(";")[i] + "px";
             					if (columnWidth.equals("9999px")) {
             						columnWidth = "100%";
-            						if (i == 0) {
-            							sb.append(" style=\"width:" + columnWidth + ";padding-right:20px;padding-left:5px;\">\n");
-            						} else {
-            							sb.append(" style=\"width:" + columnWidth + "\">\n");
-            						}
-            					} 
+            					}
+            					if (i == 0) {
+            						sb.append(" style=\"width:" + columnWidth + ";padding-right:20px;padding-left:5px;\">\n");
+            					} else {
+            						sb.append(" style=\"width:" + columnWidth + "\">\n");
+            					}
             				} 
             			} else {
             				sb.append(">\n");

@@ -1898,8 +1898,6 @@ function openFormUI_Complete(ret) {
         if (pFormHref != "cancel") {
             pReadPC = false;
 
-            pFormID = "";
-            pDocID = "";
             SetBtnStateTrue();
             lstAttachLink.innerHTML = "";
             AppendFileAttach = "";

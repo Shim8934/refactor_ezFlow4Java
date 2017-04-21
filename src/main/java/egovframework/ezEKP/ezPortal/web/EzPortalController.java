@@ -1888,14 +1888,14 @@ public class EzPortalController extends EgovFileMngUtil {
 			sb.append("<div class=\"images_container\" id=\"images_container\">");
             
 			for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-				String imgSrc = xmlDom.getElementsByTagName("FILEPATH").item(i).getTextContent();
-				String itemID = xmlDom.getElementsByTagName("ITEMID").item(i).getTextContent();
-				String boardID = xmlDom.getElementsByTagName("BOARDID").item(i).getTextContent();
+				String imgSrc = xmlDom.getElementsByTagName("DATA5").item(i).getTextContent();
+				String itemID = xmlDom.getElementsByTagName("DATA2").item(i).getTextContent();
+				String boardID = xmlDom.getElementsByTagName("DATA1").item(i).getTextContent();
 				
 				if (i % 2 == 0) {
 					sb.append("<ul>");
 					sb.append("<li>");
-					sb.append("<img style=\"cursor:pointer;\" onclick=\"ItemRead_onclick(this)\" src=\"" + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + boardID + "&FILENAME=" + imgSrc.split("/")[imgSrc.split("/").length - 1] + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
+					sb.append("<img style=\"cursor:pointer;\" onclick=\"ItemRead_onclick(this)\" src=\"" + "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + imgSrc.substring(imgSrc.lastIndexOf("/") + 1, imgSrc.length()) + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
                     
 					sb.append("</li>");
                     if (i == (xmlDom.getElementsByTagName("ROW").getLength() - 1)) {
@@ -1903,7 +1903,7 @@ public class EzPortalController extends EgovFileMngUtil {
                     }
 				} else {
 					sb.append("<li>");
-					sb.append("<img style='cursor:pointer;' onclick='ItemRead_onclick(this)' src=\"" + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + boardID + "&FILENAME=" + imgSrc.split("/")[imgSrc.split("/").length - 1] + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
+					sb.append("<img style='cursor:pointer;' onclick='ItemRead_onclick(this)' src=\"" + "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + imgSrc.substring(imgSrc.lastIndexOf("/") + 1, imgSrc.length()) + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
 					sb.append("</li>");
 					sb.append("</ul>");
 				}

@@ -4372,7 +4372,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					if (!docListNode.item(k).getChildNodes().item(0).getChildNodes().item(7).getTextContent().equals(userInfo.getDeptID()) && useAdditionalRole.equals("YES")) {
 						docListNode.item(k).removeChild(docListNode.item(k).getFirstChild());
 					} else {
-						aprType_aprState = ezApprovalGService.getAprType_AprState(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent(), userID, companyID, userInfo.getTenantId());
+						aprType_aprState = ezApprovalGService.getAprType_AprState(docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent(), docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent(), companyID, userInfo.getTenantId());
 						
 						String mhtOrHwp = "MHT";
 						

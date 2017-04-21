@@ -221,7 +221,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ApprGTaskVO tempApprGTaskVO = new ApprGTaskVO();
 		tempApprGTaskVO.setCategoryCode("0");
 		tempApprGTaskVO.setLevel("0");
-		tempApprGTaskVO.setName("문서분류");
+		tempApprGTaskVO.setName(messageSource.getMessage("ezApprovalG.t114", userInfo.getLocale()));
 		tempApprGTaskVO.setIsLeaf(1);
 		
 		switch (level) {
@@ -376,7 +376,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<HEADERS>");
 		resultXML.append("<HEADER>");
 		//임시로 해놓음 코드박자
-		resultXML.append("<NAME>문서분류</NAME>");
+		resultXML.append("<NAME>" + messageSource.getMessage("ezApprovalG.t114", userInfo.getLocale()) + "</NAME>");
 		resultXML.append("<WIDTH>105</WIDTH>");
 		resultXML.append("<COLNAME>GROUPNAME</COLNAME>");
 		resultXML.append("</HEADER>");
@@ -4752,6 +4752,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String docState = getDocAprState(docID, userID, companyID, userInfo.getTenantId());
+		
+		if (docState == null || docState.equals("")) {
+			docState = getDocAprState(docID, orgUID, companyID, userInfo.getTenantId());
+		}
+		
 		String docType = getDocInfo(docID, "APR", "FUNCTIONTYPE", userInfo, companyID, userInfo.getTenantId());
 		
 		if (docType.equals("004") || docType.equals("015")) {
@@ -4762,7 +4767,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return messageSource.getMessage("ezApprovalG.t2104", userInfo.getLocale());
 		}
 		
-		String rValue = getDocAprLine(docID, userID, docState, companyID,userInfo.getTenantId());
+		String rValue = getDocAprLine(docID, userID, docState, companyID, userInfo.getTenantId());
+		
+		if (rValue == null || rValue.equals("<DATA></DATA>")) {
+			rValue = getDocAprLine(docID, orgUID, docState, companyID, userInfo.getTenantId());
+		}
+		
 		Document xmlDom = commonUtil.convertStringToDocument(rValue);
 		
 		String signNum = xmlDom.getElementsByTagName("APRMEMBERSN").item(0).getTextContent();
@@ -5091,8 +5101,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (pType.equals("003") || pType.equals("007")) {
 					totalLineSN = totalLineSN - 1;
-				} else {
-					break;
 				}
 			}
 			
@@ -6001,7 +6009,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Document xmlDom = commonUtil.convertStringToDocument(sb.toString());
 		
-		String state = xmlDom.getElementsByTagName("APRSTATE").item(0).getTextContent();
+		String state = "";
+		
+		if (apprGAprLineVOList.size() > 0) {
+			state = xmlDom.getElementsByTagName("APRSTATE").item(0).getTextContent();
+		}
 		
 		return state;
 	}
