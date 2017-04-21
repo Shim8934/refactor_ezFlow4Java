@@ -2026,7 +2026,7 @@
                ('006','7','7등급',1,'7등급',null,'7 Level',#tenantID#, #companyID#),
                ('006','8','8등급',1,'8등급',null,'8 Level',#tenantID#, #companyID#),
                ('007','1','채번 구분필드1',1,'채번 구분필드1 이용여부','채번 플래그','채번 구분필드1',#tenantID#, #companyID#),
-               ('007','2','채번 구분필드2',1,'채번 구분필드2 이용여부',null,'채번 구분필드2',#tenantID#, #companyID#),
+               ('007','2','채번 구분필드2',0,'채번 구분필드2 이용여부',null,'채번 구분필드2',#tenantID#, #companyID#),
                ('007','3','채번 구분필드3',0,'채번 구분필드3 이용여부',null,'채번 구분필드3',#tenantID#, #companyID#),
                ('007','4','채번 구분시간',1,'0: 이용하지 않음, 1:연도별 구분, 2: 월별 구분',null,'채번 구분시간',#tenantID#, #companyID#),
                ('008','DA','녹음테이프 카세트',1,'녹음테이프 카세트','녹음/동영상류 시청각 기록물 코드','Cassette tape recording of',#tenantID#, #companyID#),
