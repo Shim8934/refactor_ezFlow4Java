@@ -963,25 +963,25 @@ var strLang910 = "부서병렬협조"
 var strLang911 = "첨부된 파일이 없습니다."
 var strLang912 = "다른 수발신담당자가 회송처리 하였습니다.";
 var strLang913 = "다른 수발신담당자가 접수처리 하였습니다.";
-//ezAPRATTACH/RegRecord_Attach.aspx
-var strLang914 ="빈 파일은 첨부할 수 없습니다.";
-var strLang915 ="첨부파일은 크기가 ";
-var strLang916 ="MB를 넘을 수 없습니다.";
-var strLang917 ="를 업로드 중입니다. ";
-var strLang918 =" 을 업로드 중 에러가 발생했습니다.\n\n서버측 오류";
-var strLang919 ="첨부하시려는 파일이 열려 있습니다. \n\n 파일을 닫고 첨부하시 바랍니다.";
+// ezAPRATTACH/RegRecord_Attach.aspx
+var strLang914 = "빈 파일은 첨부할 수 없습니다.";
+var strLang915 = "첨부파일은 크기가 ";
+var strLang916 = "MB를 넘을 수 없습니다.";
+var strLang917 = "를 업로드 중입니다. ";
+var strLang918 = " 을 업로드 중 에러가 발생했습니다.\n\n서버측 오류";
+var strLang919 = "첨부하시려는 파일이 열려 있습니다. \n\n 파일을 닫고 첨부하시 바랍니다.";
 var strLang920 = "을 업로드 중 에러가 발생했습니다.";
-var strLang921 ="첨부자만이 삭제가 가능합니다.";
-var strLang922 ="첨부파일을 삭제 하시겠습니까?";
-var strLang923 ="삭제하실 첨부파일을 선택하여 주십시오.";
-var strLang924 ="첨부의 정보를 수정할 권한이 없습니다. <br>등록자만이 첨부의 정보를 수정할 수 있습니다.";
-var strLang925 ="수정할 첨부를 선택하여 주십시오.";
-var strLang926 =" 을 업로드 중 에러가 발생했습니다.\n\n파일유형(확장자)를 확인해주시기 바랍니다.";
-var strLang927 ="본문추가"
-//formContainer/ContDocView_NoDoc.aspx
-var strLang928 ="기록물정보를 가져오는데 실패하였습니다!";
-var strLang929 ="이 문서를 열람할 권한이 없습니다. <br>기안자나 담당자에게 문의하시기 바랍니다.";
-//ApprovUI/doApprovAllSelect.aspx
+var strLang921 = "첨부자만이 삭제가 가능합니다.";
+var strLang922 = "첨부파일을 삭제 하시겠습니까?";
+var strLang923 = "삭제하실 첨부파일을 선택하여 주십시오.";
+var strLang924 = "첨부의 정보를 수정할 권한이 없습니다. <br>등록자만이 첨부의 정보를 수정할 수 있습니다.";
+var strLang925 = "수정할 첨부를 선택하여 주십시오.";
+var strLang926 = " 을 업로드 중 에러가 발생했습니다.\n\n파일유형(확장자)를 확인해주시기 바랍니다.";
+var strLang927 = "본문추가"
+// formContainer/ContDocView_NoDoc.aspx
+var strLang928 = "기록물정보를 가져오는데 실패하였습니다!";
+var strLang929 = "이 문서를 열람할 권한이 없습니다. <br>기안자나 담당자에게 문의하시기 바랍니다.";
+// ApprovUI/doApprovAllSelect.aspx
 var strLang930 = "선택된 문서가 없습니다.";
 var strLang931 = "<br>일괄결재 완료되었습니다.";
 var strLang932 = "일괄결재 중 오류가 발생하였습니다.<br>";
@@ -990,9 +990,9 @@ var strLang934 = " 건 <br>";
 var strLang935 = "성공 : ";
 var strLang936 = "실패 : ";
 var strLang937 = "일괄결재할 문서가 없습니다.";
-//ezViewHWP/ezDeptRecev_HWP.js
-var strLang938 ="반려에 실패 하였습니다.";
-var strLang939="반려 하였습니다.";
+// ezViewHWP/ezDeptRecev_HWP.js
+var strLang938 = "반려에 실패 하였습니다.";
+var strLang939 = "반려 하였습니다.";
 var strLang940 = "이전"
 var strLang941 = "다음"
 var strLang942 = "총 "
@@ -1054,10 +1054,10 @@ var strLangDocType8 = "대외접수";
 var strLangDocType9 = "대외발송";
 
 // DocState : 문서상태A02
-var strDocState1  = "001";
-var strDocState2  = "002";
-var strDocState3  = "003";
-var strDocState4  = "004";
+var strDocState1 = "001";
+var strDocState2 = "002";
+var strDocState3 = "003";
+var strDocState4 = "004";
 var strDocState11 = "011";
 var strDocState12 = "012";
 var strDocState13 = "013";
@@ -1079,7 +1079,7 @@ var strLangDocState3 = "준법감시";
 var strLangDocState4 = "심사";
 var strLangDocState11 = "수신";
 var strLangDocState12 = "합의";
-var strLangDocState13= "시행";
+var strLangDocState13 = "시행";
 var strLangDocState14 = "감사";
 var strLangDocState15 = "공람";
 var strLangDocState16 = "회람1";
@@ -1169,7 +1169,7 @@ var strLangAprState5 = "보류";
 var strLangAprState6 = "회수";
 var strLangAprState10 = "완료";
 var strLangAprState11 = "도착";
-var strLangAprState12 = "미접수"; //지정
+var strLangAprState12 = "미접수"; // 지정
 var strLangAprState13 = "접수";
 var strLangAprState14 = "배부";
 var strLangAprState15 = "회송";
@@ -1177,7 +1177,7 @@ var strLangAprState16 = "수신진행";
 var strLangAprState17 = "수신완료";
 var strLangAprState18 = "미접수";
 
-//2011.06.17 추가
+// 2011.06.17 추가
 var strLangAprState19 = "전송실패";
 var strLangAprState20 = "수신";
 var strLangAprState21 = "도달";
@@ -1189,7 +1189,7 @@ var strOpinionType2 = "002";
 var strOpinionType3 = "003";
 var strOpinionType4 = "004";
 
-//2011.06.17 추가
+// 2011.06.17 추가
 var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strLangOpinionType1 = "일반의견";
@@ -1197,7 +1197,7 @@ var strLangOpinionType2 = "반송의견";
 var strLangOpinionType3 = "보류의견";
 var strLangOpinionType4 = "회송의견";
 
-//2011.06.17 추가
+// 2011.06.17 추가
 var strLangOpinionType5 = "지시사항";
 var strLangOpinionType6 = "메모";
 
@@ -1210,8 +1210,8 @@ var strLangModifyFlag2 = "추가";
 var strLangModifyFlag3 = "수정";
 
 // Etc
-var strLangEtcAprType4 = "전결";	// 문서 싸인칸에 표시하는 전결문자
-var strLangEtcAprState4 = "반송";	// 문서 싸인칸에 표시하는 반송문자
+var strLangEtcAprType4 = "전결"; // 문서 싸인칸에 표시하는 전결문자
+var strLangEtcAprState4 = "반송"; // 문서 싸인칸에 표시하는 반송문자
 var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept.xml"; // xml 파일 처리
 var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept.xml"; // xml 파일 처리
 var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept.xml";
@@ -1262,7 +1262,7 @@ var strLang1139 = "이 문서를 열람할 권한이 없습니다.";
 var strLang1148 = "첨부 정보";
 var strLang1149 = "결재선 정보";
 
-//일반용 S를 붙일 것
+// 일반용 S를 붙일 것
 var strLangS6 = "반송:서명자";
 var strLangS26 = "임시코드";
 var strLangS38 = "결재유형";
@@ -1285,7 +1285,7 @@ var strLangS110 = "결재일";
 var strLangS111 = "수신일";
 var strLangS131 = "수신";
 var strLangS163 = "수신처목록 저장시 오류가 ";
-var strLangS174 ="추가할 문서를 선택하세요.";
+var strLangS174 = "추가할 문서를 선택하세요.";
 var strLangS214 = "일반";
 var strLangS222 = "해당 부서에 사원이 존재하지 않아 ";
 var strLangS223 = "결재선에 등록할 수 없는 부서 입니다.";
@@ -1314,7 +1314,7 @@ var strLangS266 = "결재선이 지정되어있지 않습니다. ";
 var strLangS267 = "다시 확인해주십시오.";
 var strLangS275 = "후결";
 var strLangS276 = "결재칸 수는 ";
-var strLangS277 = "입니다. ";	
+var strLangS277 = "입니다. ";
 var strLangS281 = "합의칸 수는 ";
 var strLangS283 = "부서합의에 같은 부서를 지정하실 수 없습니다. ";
 var strLangS285 = "참석칸 수는 ";

@@ -1839,6 +1839,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/downloadAttach.do")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadAttach started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -1881,15 +1883,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 					result = "NOTPERMISSION";
 				}
+				
+				logger.debug("docStatus = " + docStatus + "|| result = " + result);
 			}
 			
 			if (fileName == null || fileName.equals("")) {
 				fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
 			}
+			
+			logger.debug("docStatus = " + docStatus + "|| result = " + result);
 		}
 		
 		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
 		//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
+		
+		logger.debug("downloadAttach ended.");
 		
 		if (!result.equals("NOTPERMISSION")) {
 			downFile(request, response, realPath + filePath, fileName);
@@ -2537,10 +2545,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/checkAprLines.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String checkAprLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("checkAprLines started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), userInfo);
+		
+		logger.debug("checkAprLines ended.");
 		
 		return result;
 	}
@@ -2551,10 +2563,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/checkDeptLines.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String checkDeptLines(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("checkDeptLines started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.chkDeptLines(doc, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
+		
+		logger.debug("checkDeptLines ended.");
 		
 		return result;
 	}
