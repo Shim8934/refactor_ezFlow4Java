@@ -270,7 +270,7 @@ function MakeFormInfoXML_Detail() {
     } else {
         createNodeAndInsertText(xmlpara, objNode, "USEFLAG", "N"); 
     }
-    
+
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);
     createNodeAndInsertText(xmlpara, objNode, "SECURITYLEVEL", document.getElementById("securitylevel").value);

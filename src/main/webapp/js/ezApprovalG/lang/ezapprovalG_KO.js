@@ -1394,3 +1394,5 @@ var strLangyjS16 = "기";
 var strLangyjS17 = "안";
 var strLangyjS18 = "합";
 var strLangyjS19 = "의";
+var strLangS194 = "결재선목록이 중복되었습니다 "
+var strLangS195 = "다시 입력하여 주십시요!"
