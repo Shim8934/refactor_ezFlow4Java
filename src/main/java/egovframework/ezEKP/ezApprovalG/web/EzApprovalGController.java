@@ -712,6 +712,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		
 		String docSN = "";
 		
@@ -811,6 +812,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		
 		return "ezApprovalG/apprGDraftui";
 	}
@@ -1885,6 +1887,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 통합pc 저장 리스트 더블클릭 다운
+	 */
+	@RequestMapping(value = "/ezApprovalG/downloadAttachDbClick.do")
+	public void downloadAttachDbClick(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String type = request.getParameter("type");
+		String docStatus = request.getParameter("docStatus");
+		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
+
+		String href = ezApprovalGService.getDocHref(docID, docStatus, type, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		downFile(request, response, realPath + href, fileName);
+	}
+	
+	/**
 	 * 전자결재G 기안 문서첨부 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprCabinetAttach.do")
@@ -2824,6 +2844,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", tenantID);
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String susinAdmin = "";
 		String hideCabinet = config.getProperty("config.hideCabinet");
 
@@ -2923,6 +2944,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("hideCabinet", hideCabinet);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		
 		return "ezApprovalG/apprGapprovui";
 	}
@@ -3640,6 +3662,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optisSplit = "";
@@ -3709,6 +3732,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		
 		return "ezApprovalG/apprGrecevG";
 	}

@@ -224,7 +224,7 @@
 				                    document.getElementById("tbItemCode").value = result.vo.itemCode;
 				                    document.getElementById("tbItemName").value = result.vo.itemName;
 				                    document.getElementById("tbItemName2").value = result.vo.itemName2;
-				                    document.getElementById("keepperiod").value = result.vo.keepPeriod;
+				                    document.getElementById("keepperiod").value = result.vo.keepPeriodCode;
 				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
 			                	}
 			                }

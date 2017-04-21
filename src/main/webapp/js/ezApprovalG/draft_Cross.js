@@ -2199,6 +2199,19 @@ function SetAutoPropertyValue() {
                     case pSusinSN + "receiptdate":
                         field.textContent = CurrentDate;
                         break;
+                    
+                    case "bedocnumber":
+                        setDocNumFormat("be");
+                        break;
+
+                    case "docnumber":
+                        setDocNumFormat("");
+                        break;
+
+                    case "draftdate":
+                    	/*field.textContent = FullDate;*/
+                        field.textContent = CurrentDate;
+                    	break;
                 }
             }
             if (pDraftFlag == "SUSIN" || pDocState == "011") {
