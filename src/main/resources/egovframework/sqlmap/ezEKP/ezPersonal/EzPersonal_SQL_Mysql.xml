@@ -660,6 +660,27 @@
 		]]>
 	</select>
   
+    <select id="EzPersonalDAO.getNoticeListMain" parameterClass="Map"    resultClass="PersonalNoticeVO">
+          <![CDATA[
+              SELECT
+                  * 
+              FROM (   SELECT
+                                TITLE,
+                                TITLE2,
+                                ITEMSEQ
+                            FROM
+                                TBL_PS_NOTICE 
+                            WHERE
+                                COMPANYID = #v_pCompanyID#
+                            AND
+                                 TENANT_ID = #tenantID#  
+                            ORDER BY
+                                 POSTDATE DESC ) A
+                            LIMIT
+                                  5
+          ]]>
+     </select>
+  
     <select id="EzPersonalDAO.getNoticeListUser" parameterClass="Map"    resultClass="PersonalNoticeVO">
           <isEqual property="v_pStart" compareValue="0">
               <isNotEmpty property="v_pCompanyID">
