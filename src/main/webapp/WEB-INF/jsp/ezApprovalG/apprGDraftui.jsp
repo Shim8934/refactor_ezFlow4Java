@@ -253,9 +253,6 @@
 		        else {
 		            setMenuBar("btnHelper", false);
 		        }
-		        
-		        if (DraftFlag == "REDRAFT")
-					setMenuBar("btnSaveServer", false);
 		
 		        var rtnVal = ExcuteInfo("INIT", "");
 		        if (!rtnVal) {
