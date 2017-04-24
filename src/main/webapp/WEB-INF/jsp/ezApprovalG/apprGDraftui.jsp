@@ -200,6 +200,10 @@
 		            process_AfterOpen();
 		            
 		            if (pDraftFlag == "REDRAFT") {
+		            	if (ListType == "21") {
+		            		setFirstDrafter();
+		            	}
+		            	
 		                getFormRecv();
 		                message.SetEditable(true);
 		            }
