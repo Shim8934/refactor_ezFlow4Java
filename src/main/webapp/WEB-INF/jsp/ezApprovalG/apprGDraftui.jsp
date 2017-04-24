@@ -253,6 +253,9 @@
 		        else {
 		            setMenuBar("btnHelper", false);
 		        }
+		        
+		        if (DraftFlag == "REDRAFT")
+					setMenuBar("btnSaveServer", false);
 		
 		        var rtnVal = ExcuteInfo("INIT", "");
 		        if (!rtnVal) {
@@ -524,7 +527,7 @@
 		            
 		            if (btnSendDraftEnable == "false") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
-		               OpenInformationUI(pAlertContent, check_btnSendDraft2);
+						OpenInformationUI(pAlertContent, check_btnSendDraft2);
 		                return;
 		            }
 		            if (!checkLines())

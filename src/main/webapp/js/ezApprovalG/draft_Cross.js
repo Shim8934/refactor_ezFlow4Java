@@ -314,7 +314,7 @@ function SGetDraftAprLineInfo(ret) {
         else {
             xmlReDraft = "C";
         }
-
+        
         if (ret[5] == undefined) {
             TempsaveAprlineinfo = ret[0];
             xmlKuljea = ret[0];
