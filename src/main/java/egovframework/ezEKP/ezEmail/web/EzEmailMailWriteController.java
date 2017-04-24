@@ -3681,8 +3681,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		for (SimpleAddressVO vo : addressList) {
 			sb.append("<Table>");
-			sb.append("<NAME>" + vo.getName() + "</NAME>");
-			sb.append("<EMAIL>" + vo.getEmail() + "</EMAIL>");
+			sb.append("<NAME><![CDATA[" + vo.getName() + "]]></NAME>");
+			sb.append("<EMAIL><![CDATA[" + vo.getEmail() + "]]></EMAIL>");
 			sb.append("</Table>");
 		}
 		
@@ -3700,14 +3700,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
 			Model model, 
-			HttpServletRequest request) throws Exception{
-		
-		Document xmlDoc = commonUtil.convertRequestToDocument(request);
-		String mailList = xmlDoc.getElementsByTagName("SMEMO").item(0).getTextContent();
+			@RequestBody String bodyData) throws Exception{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		ezAddressService.setSimpleAddress(userInfo.getTenantId(), userInfo.getId(), mailList);
+		ezAddressService.setSimpleAddress(userInfo.getTenantId(), userInfo.getId(), bodyData);
 		
 		return "<DATA>OK</DATA>";
 	}
