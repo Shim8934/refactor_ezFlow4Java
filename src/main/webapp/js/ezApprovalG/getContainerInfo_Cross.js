@@ -1044,27 +1044,32 @@ function chk_Passwd(pUserID, CompleteFunction) {
     else
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    var url = "/myoffice/ezApprovalG/ezchkPasswd_Cross.aspx";
+    var url = "/ezApprovalG/ezchkPasswd.do";
     var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 200));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
 
 function CheckAprLine(pDocID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);             
-    createNodeAndInsertText(xmlpara, objNode, "MODE", "END");
-    createNodeAndInsertText(xmlpara, objNode, "USERID", UserID);            
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", CompanyID);      
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ezaprline/aspx/CheckAprLineUser.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var dataNodes = GetChildNodes(xmlhttp.responseXML);
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/checkAprLineUser.do",
+		data : {
+			companyID : CompanyID,
+			docID     : pDocID,
+			mode  	  : "END",
+			userID    : UserID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(loadXMLString(result));
     return getNodeText(dataNodes[0]);
 }
 
