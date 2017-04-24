@@ -746,9 +746,6 @@ function lvtDoclist_SelChange() {
     SelList.LoadFromID("DocList");
     var oArrRows = SelList.GetSelectedRows();
 
-    if (oArrRowsid == oArrRows[0].id)
-        return;
-
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
 
