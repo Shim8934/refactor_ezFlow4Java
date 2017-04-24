@@ -1851,37 +1851,47 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
-		if (docStatus != null && (docStatus.toUpperCase().equals("APR") || docStatus.toUpperCase().equals("TMP"))) {
-			if (docID != null && !docID.equals("")) {
-				String checkMode = "";
-				
-				if (docStatus.toCharArray().equals("TMP")) {
-					checkMode = "TMP";
-				} else {
-					checkMode = "REC";
+		logger.debug("docID : " + docID);
+		logger.debug("docStatus : " + docStatus);
+		logger.debug("filePath : " + filePath);
+		logger.debug("fileName : " + fileName);
+		
+		//관리자는 권한 제한없도록 추가
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
+			result = "PERMISSION";
+		} else {
+			if (docStatus != null && (docStatus.toUpperCase().equals("APR") || docStatus.toUpperCase().equals("TMP"))) {
+				if (docID != null && !docID.equals("")) {
+					String checkMode = "";
+					
+					if (docStatus.toCharArray().equals("TMP")) {
+						checkMode = "TMP";
+					} else {
+						checkMode = "REC";
+					}
+					
+					Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId());
+					
+					if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+						result = "NOTPERMISSION";
+					}
 				}
+			} else if (docStatus != null && docStatus.toUpperCase().equals("END")) {
+				String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
+				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 				
-				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId());
-				
-				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
 					result = "NOTPERMISSION";
 				}
 				
 				logger.debug("docStatus = " + docStatus + "|| result = " + result);
 			}
-		} else if (docStatus != null && docStatus.toUpperCase().equals("END")) {
-			String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
-			String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 			
-			if (!pass.equals("<RESULT>TRUE</RESULT>")) {
-				result = "NOTPERMISSION";
+			if (fileName == null || fileName.equals("")) {
+				fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
 			}
 			
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
-		}
-
-		if (fileName == null || fileName.equals("")) {
-			fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
 		}
 		
 		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
@@ -2105,7 +2115,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
-			 pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		} else {
 			pass = "<RESULT>TRUE</RESULT>";
 		}
@@ -2639,8 +2649,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = signatureDir + commonUtil.separator + fileName;
 
 		ezCommonService.responseAttach(result, fileName, true, request, response);
+		
 		logger.debug("approvalGSign ended");
-
 	}
 	
 	/**
@@ -2650,6 +2660,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String getOpinionCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getOpinionCount started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -2658,8 +2669,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.getOpinionCount(docID, userID, ingFlag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		result = "<RESULT>" + result + "</RESULT>";
+		
 		logger.debug("getOpinionCount result=" + result);
 		logger.debug("getOpinionCount ended");
+		
 		return result;
 	}
 	
@@ -2734,6 +2747,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@ResponseBody
 	public String updateLineHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("updateLineHistory started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");

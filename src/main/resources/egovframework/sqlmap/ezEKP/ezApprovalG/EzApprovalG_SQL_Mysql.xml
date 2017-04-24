@@ -7995,7 +7995,7 @@
   			FROM 
   				TBL_TMPAPRDOCINFO 
    			WHERE 
-   				OWNERID IN ($v_USERIDS$) 
+   				OWNERID = #v_USERID# 
    			AND 
    				STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
