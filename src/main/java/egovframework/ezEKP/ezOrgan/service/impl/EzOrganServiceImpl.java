@@ -825,12 +825,12 @@ public class EzOrganServiceImpl implements EzOrganService {
          
          List<OrganDeptVO> list = ezOrganDAO.organSearchListPage(map);
          
-         //여기까지 구현
          StringBuilder memberlist2 = null;
-         int totalcount = ezOrganDAO.getSearchListCount(map);
+         
          if(pClass.equals("user")){
-               memberlist2 = new StringBuilder("<LISTVIEWDATA>");
-               memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+        	 int totalcount = ezOrganDAO.getSearchListCount(map);
+             memberlist2 = new StringBuilder("<LISTVIEWDATA>");
+             memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
          }else{
              memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
          }

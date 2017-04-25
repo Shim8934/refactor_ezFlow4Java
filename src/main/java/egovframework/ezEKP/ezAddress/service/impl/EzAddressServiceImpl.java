@@ -16,18 +16,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezAddress.dao.EzAddressDAO;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
-import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAddressService")
 public class EzAddressServiceImpl implements EzAddressService {
@@ -44,7 +43,7 @@ public class EzAddressServiceImpl implements EzAddressService {
     private EzCommonService ezCommonService;
 	
 	@Autowired
-	private EzOrganAdminService ezOrganAdminService;
+	private CommonUtil commonUtil;
 	
 	@Resource(name = "EzAddressDAO")
 	private EzAddressDAO ezAddressDAO;
@@ -890,16 +889,18 @@ public class EzAddressServiceImpl implements EzAddressService {
 	}
 	
 	@Override
-	public void setSimpleAddress(int tenantId, String pUserId, String pMailList) throws Exception {
+	public void setSimpleAddress(int tenantId, String pUserId, String bodyData) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String inputParams = "userId=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
 		
-		String[] mailList = pMailList.split("\\|");
+		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
 		
-		for (int i=0; i<mailList.length; i++) {
-			inputParams += "&simpleName=" + URLEncoder.encode(mailList[i].split(";")[0], "UTF-8");
-			inputParams += "&simpleEmail=" + URLEncoder.encode(mailList[i].split(";")[1], "UTF-8");
+		int mailListLen = xmlDoc.getElementsByTagName("ROW").getLength();
+		
+		for (int i=0; i<mailListLen; i++) {
+			inputParams += "&simpleName=" + URLEncoder.encode(xmlDoc.getElementsByTagName("NAME").item(i).getTextContent(), "UTF-8");
+			inputParams += "&simpleEmail=" + URLEncoder.encode(xmlDoc.getElementsByTagName("MAIL").item(i).getTextContent(), "UTF-8");
 		}
 		
 		logger.debug("inputParams=" + inputParams);

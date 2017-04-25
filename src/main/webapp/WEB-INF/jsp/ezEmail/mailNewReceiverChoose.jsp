@@ -665,34 +665,38 @@
 	            return returnData;
 	        }
 	        function confirm_onClick_config() {
-	            var addrlist = "";
+	            var xmlHTTP = createXMLHttpRequest();
+	            
 	            var aa = document.getElementById("ListViewMsgTo").children.item(0).childNodes.length;
 	            var bb = 0;
+	            var saveLength = 0;
+	            
+	            var strXML = "<DATA>";
+	            strXML += "<OWNERID><![CDATA[" + userid + "]]></OWNERID>";
+	            strXML += "<ADDRLIST>";
+	            
 	            for (var z = 1; z < aa; z++) {
-	                var saveLength = 0;
 	                saveLength = saveLength + document.getElementById("ListViewMsgTo").children.item(0).children.item(z).childNodes.length;
+	                
 	                if (saveLength > 100) {
 	                    alert(strLang194);
 	                    saveLength = 100;
 	                    return;
 	                }
+	                
 	                for (var i = 0; i < saveLength; i++) {
-	                    if (addrlist == "") {
-	                        addrlist = document.getElementById("ListViewMsgTo").children.item(0).children.item(z).children.item(i).getAttribute("data1") + ";" + document.getElementById("ListViewMsgTo").children.item(0).children.item(z).children.item(i).getAttribute("data2");
-	                    }
-	                    else {
-	                        addrlist += "|" + document.getElementById("ListViewMsgTo").children.item(0).children.item(z).children.item(i).getAttribute("data1") + ";" + document.getElementById("ListViewMsgTo").children.item(0).children.item(z).children.item(i).getAttribute("data2");
-	                    }
+	                	strXML += "<ROW>";
+	                	strXML += "<NAME><![CDATA[" + document.getElementById("ListViewMsgTo").children.item(0).children.item(z).children.item(i).getAttribute("data1") + "]]></NAME>";
+	                	strXML += "<MAIL><![CDATA[" + document.getElementById("ListViewMsgTo").children.item(0).children.item(z).children.item(i).getAttribute("data2") + "]]></MAIL>";
+	                	strXML += "</ROW>";
 	                }
 	            }
-	            var xmlDom = createXmlDom();
-	            var xmlHTTP = createXMLHttpRequest();
-	            var objRoot, objNode;
-	            objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-	            createNodeAndInsertText(xmlDom, objNode, "OWNERID", userid);
-	            createNodeAndInsertText(xmlDom, objNode, "SMEMO", addrlist);
+	            
+	            strXML += "</ADDRLIST>";
+	            strXML += "</DATA>";
+	            
 	            xmlHTTP.open("POST", "/ezEmail/mailSetAddress.do", false);
-	            xmlHTTP.send(xmlDom);
+	            xmlHTTP.send(strXML);
 	            if (xmlHTTP.status != 200) {
 	                alert(strLang195);
 	            }
