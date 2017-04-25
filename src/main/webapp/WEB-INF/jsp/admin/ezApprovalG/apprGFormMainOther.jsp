@@ -4,8 +4,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-<!-- 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/ezApproval/Common_Function.js"></script> -->
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
