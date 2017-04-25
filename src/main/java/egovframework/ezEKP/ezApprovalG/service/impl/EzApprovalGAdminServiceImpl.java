@@ -20,7 +20,6 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -28,6 +27,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
@@ -2911,7 +2911,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		List<ApprAutoRuleVO> apprAutoRuleVOs = ezApprovalGAdminDAO.getFormAprRule(map);
+		List<ApprGAutoRuleVO> apprAutoRuleVOs = ezApprovalGAdminDAO.getFormAprRule(map);
 
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -2936,7 +2936,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		List<ApprAutoRuleVO> apprAutoRuleVOs = ezApprovalGAdminDAO.getFormAprRuleLine(map);
+		List<ApprGAutoRuleVO> apprAutoRuleVOs = ezApprovalGAdminDAO.getFormAprRuleLine(map);
 
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
