@@ -2352,7 +2352,6 @@ function openOpinionUI_Complete(ret) {
         var objXML = createXmlDom();
         objXML = loadXMLString(ret);
         NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
-        
         if (NodeList.length != 0) {
             pHasOpinionYN = "Y";
         } else {
@@ -2360,6 +2359,8 @@ function openOpinionUI_Complete(ret) {
             ret = "cancel";
         }
         makeOpinionList(objXML);
+    } else if (ret == "Clear") {
+    	pHasOpinionYN = "N";
     }
 }
 
