@@ -122,7 +122,7 @@
 			<ul>
   				<li><span onClick="Add()"><spring:message code='ezPortal.t99'/></span></li>
   				<li><span onClick="Delete()"><spring:message code='ezPortal.t67'/></span></li>
-  				<li><span onClick="SetPosition()"><spring:message code='ezPortal.t100'/></span></li>
+  				<%-- <li><span onClick="SetPosition()"><spring:message code='ezPortal.t100'/></span></li> --%>
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
 			</ul>
 		</div>
