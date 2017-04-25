@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -201,6 +202,7 @@
 		            
 		            if (pDraftFlag == "REDRAFT") {
 		            	if (ListType == "21") {
+		            		//임시보관함일경우 사인 초기화
 		            		setFirstDrafter();
 		            	}
 		            	
@@ -1331,9 +1333,8 @@
 		                setFirstDrafterAuto();//저장된 결재선 없을때 기안자를 결재선에 등록
 		            }
 		        }        
-		        if (ListType == "21" && DraftFlag == "REDRAFT") //수정일시 기존 삭제후 재임시저장
-		        {
-		            RemoveTmpDoc(DocSN);
+		        if (DraftFlag == "REDRAFT" && ListType == "21") {
+					RemoveTmpDoc(DocSN);
 		        }
 		
 		        var rtnVal = SaveTMPFile(AutoSave);
@@ -1341,7 +1342,30 @@
 		            rtnVal = SaveTMPDocInfo(AutoSave);
 		
 		            if (rtnVal.indexOf("TRUE") > -1) {
-		                savetempflag = false; //닫기시 임시저장 로직 타지 않음 (바로 닫힘) - noonpark   		    
+		                savetempflag = false; //닫기시 임시저장 로직 타지 않음 (바로 닫힘) - noonpark
+		                
+		                if (ListType == "1") {
+			                $.ajax({
+								type : "POST",
+								dataType : "text",
+								async : false,
+								url : "/ezApprovalG/delDocInfo.do",
+								data : {
+										docID : pDocID,
+										field  : "MUST"
+										},
+								success: function(result){
+									if (result == "FALSE") {
+										var pAlertContent = strLang872;
+										OpenAlertUI(pAlertContent);
+									}
+								}, error : function () {
+									var pAlertContent = strLang872;
+									OpenAlertUI(pAlertContent);
+								}
+							});
+		                }
+		                
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1581'/>";
 		                OpenAlertUI(pAlertContent, btnSaveServer_onclick_Complete);
 		                //if(AutoSave != "Save")

@@ -4007,11 +4007,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/delDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String delDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("delDocInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("field");
 		String result = ezApprovalGService.deleteDocInfo(docID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("delDocInfo ended.");
 		
 		return result;
 	}
