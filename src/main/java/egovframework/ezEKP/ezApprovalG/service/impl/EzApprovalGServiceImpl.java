@@ -16539,9 +16539,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_temp2", v_temp2);
 			} else {
 				v_temp3 = ezApprovalGDAO.countVieTempDocID(map);
-				map.put("v_temp3", v_temp3);
-				
-				if( v_temp3 > 0 ) {
+				if (v_temp3 < 0) {
+					map.put("v_temp3", v_temp3);
+				}				
+				if (v_temp3 > 0 ) {
 					List<ApprGAprLineVO> tempList = ezApprovalGDAO.countRecTempDocID3(map);
 					map.put("v_temp4", tempList.size());
 				}
