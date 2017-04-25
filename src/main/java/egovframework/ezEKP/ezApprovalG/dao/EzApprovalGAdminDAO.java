@@ -5,11 +5,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
-import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
@@ -410,13 +409,13 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprAutoRuleVO> getFormAprRule(Map<String, Object> map) throws Exception {
-		return (List<ApprAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRule", map);
+	public List<ApprGAutoRuleVO> getFormAprRule(Map<String, Object> map) throws Exception {
+		return (List<ApprGAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRule", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprAutoRuleVO> getFormAprRuleLine(Map<String, Object> map) throws Exception{
-		return (List<ApprAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRuleLine", map);
+	public List<ApprGAutoRuleVO> getFormAprRuleLine(Map<String, Object> map) throws Exception{
+		return (List<ApprGAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRuleLine", map);
 	}
 
 	public void insertAutoRule(Map<String, Object> map) throws Exception {
@@ -460,11 +459,7 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void insertSpecialContInfo(ApprGContInfoVO vo) throws Exception {
 		insert("EzApprovalGAdminDAO.insertSpecialContInfo", vo);
 	}
-
-	public void deleteSpecialContInfo(ApprContInfoVO vo) throws Exception {
-		delete("EzApprovalGAdminDAO.deleteSpecialContInfo", vo);
-	}
-
+	
 	public void changeSpecialContSN1(ApprGContInfoVO vo) throws Exception {
 		update("EzApprovalGAdminDAO.changeSpecialContSN1", vo);
 	}
