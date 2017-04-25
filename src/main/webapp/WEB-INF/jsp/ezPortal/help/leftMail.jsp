@@ -33,9 +33,6 @@
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_07" target="right"><span>메일 삭제</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_08" target="right"><span>삭제메일관리</span></a></h2>
-				<ul>
-				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_09" target="right"><span>메일검색</span></a></h2>
 				<ul>
 				</ul>
@@ -46,9 +43,6 @@
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_12" target="right"><span>예약발송관리</span></a></h2>
-				<ul>
-				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_13" target="right"><span>PC 보관함 관리</span></a></h2>
 				<ul>
 				</ul>
 			</c:when>
