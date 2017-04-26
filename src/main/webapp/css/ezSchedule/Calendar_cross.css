@@ -56,7 +56,7 @@
 .calendar_week_title{table-layout:fixed; height:26px; line-height:26px; vertical-align:top; border-bottom:1px solid #9b9b9b;}
 .calendar_week_title th{background:#f6f6f6; border-top:1px solid #cbcbcb; border-right:1px solid #cbcbcb; border-bottom:1px solid #b6b6b6; border-left:1px solid #cbcbcb; padding:0; margin:0;}
 .calendar_week_title .calendar_th_time{width:69px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; margin:0; text-align:left;}
-.calendar_week_title .calendar_th_list{background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0; text-align:left;}
+.calendar_week_title .calendar_th_list{background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0;}
 .calendar_week_title .calendar_th_last{width:16px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
 .calendar_week_title .calendar_td_last{width:16px; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
 .calendar_week_title .sun{color:#ee1c25; }
@@ -84,31 +84,31 @@
 .calendar_week .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer; white-space:nowrap;}
 .calendar_week .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #e6e6e8; vertical-align:top;}
 .calendar_week .td_list .calendar_row .calendar_t_text{vertical-align:top;}
-.calendar_week .td_list .today td{background:#eaf2f5;}/* 오늘의 일 표시배경 */
+.calendar_week .td_list .today td{background:#FFFDF2;}/* 오늘의 일 표시배경 */
 /*.calendar_week .td_list .calendar_t_time table{margin:0px 2px 0px 1px;} */
 /*.calendar_week .td_list .calendar_t_text table{margin:0px 2px 0px 1px;} */
 
 
 /* 20130419 수정 주보기,일보기 PIMS데이터 */
-.calendar_data_individual{height:18px; background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* PIMS 데이터 백그라운드 개인 */
-.calendar_data_individual table td{background:#818f98 !important; color:#fff;}
+.calendar_data_individual{height:18px; background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* PIMS 데이터 백그라운드 개인 */
+.calendar_data_individual table td{background:#f2f2f2 !important; color:black;}
 .calendar_data_individual .individual{display:inline-block; width:11px; height:11px; border:1px solid #017ddf; background:#018bfa; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}
 .calendar_data_individual .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_data_individual .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 살표 */
-.calendar_data_department{height:18px; background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* PIMS 데이터 백그라운드 부서 */
-.calendar_data_department table td{background:#818f98 !important; color:#fff;}
+.calendar_data_department{height:18px; background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* PIMS 데이터 백그라운드 부서 */
+.calendar_data_department table td{background:#818f98 !important; color:black;}
 .calendar_data_department .department{display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}
 .calendar_data_department .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_data_department .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
 
-.calendar_data_Group{height:18px; background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* PIMS 데이터 백그라운드 회사 */
-.calendar_data_Group table td{background:#818f98 !important; color:#fff;}
+.calendar_data_Group{height:18px; background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* PIMS 데이터 백그라운드 회사 */
+.calendar_data_Group table td{background:#818f98 !important; color:black;}
 .calendar_data_Group .Group{display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}
 .calendar_data_Group .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_data_Group .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
 
-.calendar_data_company{height:18px; background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* PIMS 데이터 백그라운드 회사 */
-.calendar_data_company table td{background:#818f98 !important; color:#fff;}
+.calendar_data_company{height:18px; background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* PIMS 데이터 백그라운드 회사 */
+.calendar_data_company table td{background:#818f98 !important; color:black;}
 .calendar_data_company .company{display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}
 .calendar_data_company .icon_h{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_h.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 상 화살표 */
 .calendar_data_company .icon_l{display:inline-block; width:13px; height:13px; background:url(/images/calendar/i_l.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 중요도 하 화살표 */
@@ -146,7 +146,7 @@
 .calendar_day .td_list .calendar_row td{height:22px; padding:0px 0px 0px 0px; cursor:pointer;}
 .calendar_day .td_list .calendar_row .calendar_t_time{height:21px; border-bottom:1px solid #e6e6e8; vertical-align:top;}
 .calendar_day .td_list .calendar_row .calendar_t_text{vertical-align:top;}
-.calendar_day .td_list .today td{background:#eaf2f5;}
+.calendar_day .td_list .today td{background:#FFFDF2;}
 
 /* //일보기 */
 
@@ -168,7 +168,7 @@
 .calendar_mini td.sun{color:#ee1c25;}
 .calendar_mini td.sat{color:#0032cf;}
 .calendar_mini td.gray{color:#aaa;}
-.calendar_mini td.today{background:#c0cae5;}
+.calendar_mini td.today{background:#eaf2f5;}
 /* //미니달력 */
 
 

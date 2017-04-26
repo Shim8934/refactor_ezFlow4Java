@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	</head>
-	<frameset cols="200,*" frameborder="0" border="0">
+	<frameset cols="220,*" frameborder="0" border="0">
 		<frame src="${url}" name="left" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
         	<c:if test="${IsJMochaStandAlone != 'YES'}">
 				<frame src="/ezPortal/myPortalPageList.do" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">

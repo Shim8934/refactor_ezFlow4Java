@@ -12,7 +12,7 @@
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var bestclick = false;
-	        var strlang = "{userInfo.lang}";
+	        var strlang = "${userInfo.lang}";
 	        var pUse_IE11Browser = "${useIE11Browser}";
 	
 	        window.onload = function () {
@@ -21,15 +21,14 @@
 	            try { top.onresize() } catch (e) { }
 	        }
 	
-	        function getCommu() {
+			function getCommu() {
 	        	$.ajax({
 					type : "POST",
 					url : "/ezCommunity/getLeftCommunity.do",
 					dataType : "json",
 					success : function(result) {
-						//getCommunityList_after(result["list"]);
 						var commu = CheckCommu(result["list"]);
-		                //var commu = CheckCommu(loadXMLString(result));
+		                
 		                document.getElementById("commu_list").innerHTML = "";
 		                switch (commu) {
 		                    case 1:
@@ -41,16 +40,13 @@
 		                    case 2:
 		                        document.getElementById("community_title").innerText = "<spring:message code='main.t00051' />";
 		                        document.getElementById("content_commu").className = "content_community02";
-		                        GetMyComm(xmlhttp.responseXML);
+		                        GetMyComm(loadXMLString(result));
 		                        break;
+						}
 					}
-				}
-	/*             if (result == null || xmlhttp.readyState != 4) return;
-	            else {
-	
-	                } */ 
-	            }); 
-	        }
+				}); 
+			}
+			
 	        function GetMyComm(list) {
 	            var listHTML = "<div class='content_list04'><dl class='topTitle'><dt><select id='myComm' onchange='getCommList()'>";
 	            for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
@@ -67,6 +63,7 @@
 	            document.getElementById("commu_list").innerHTML = listHTML;
 	            getCommList();
 	        }
+	        
 	        function goComm() {
 	            for (var i = 0; i < document.getElementById("myComm").options.length; i++) {
 	                if (document.getElementById("myComm").options[i].selected) {
@@ -75,6 +72,7 @@
 	                }
 	            }
 	        }
+	        
 	        function getCommList() {
 	            xmlhttp = null;
 	            xmlhttp = createXMLHttpRequest();
@@ -150,11 +148,6 @@
 	            }
 	        }
 	        function GetBoardList() {
-	/*             xmlhttp = null;
-	            xmlhttp = createXMLHttpRequest();
-	
-	            xmlhttp.open("POST", "/ezCommunity/getLeftBoardList.do", false);
-	            xmlhttp.send(); */
 	            $.ajax({
 					type : "POST",
 					url : "/ezCommunity/getLeftBoardList.do",
@@ -163,43 +156,36 @@
 						getBoardList_after(result["list"]);
 					}
 				});
-	
-	       /*      if (xmlhttp == null || xmlhttp.readyState != 4) return;
-	            else {
-	                var xmlpara = createXmlDom();
-	                xmlpara = xmlhttp.responseXML;
-	                var no, title;
-	                var listHTML = "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li><strong><spring:message code='main.t00041' /></strong></li></ul><div class='layout_bg'><ul class='communityLiist01'>";
-	                if (xmlpara.getElementsByTagName("NO").length != 0) {
-	                    for (var i = 0; i < 5; i++) {
-	                        no = getNodeText(xmlpara.getElementsByTagName("NO").item(i));
-	                        title = getNodeText(xmlpara.getElementsByTagName("TITLE").item(i));
-	                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";
-	                    }
-	                }
-	                listHTML += "</ul></div></div></div>";
-	
-	                xmlpara = null;
-	                xmlpara = createXmlDom();
-	                var objRoot, objNode;
-	                objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
-	                objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "MODE", "BEST");
-	                xmlhttp = null;
-	                xmlhttp = createXMLHttpRequest();
-	
-	                xmlhttp.open("POST", "/ezCommunity/getBestNewCommunity.do", false);
-	                xmlhttp.send(xmlpara);
-	
-	                if (xmlhttp == null || xmlhttp.readyState != 4) return;
-	                else {
+	        }
+	        
+	    	function getBoardList_after(list) {
+                var no, title;
+                var listHTML = "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li><strong><spring:message code='main.t00041' /></strong></li></ul><div class='layout_bg'><ul class='communityLiist01'>";
+                
+              	for (var i = 0; i < 5; i++) {
+              		no = list[i].no;
+                       title = list[i].title;
+                       listHTML += "<li onClick=\"btn_bbsView(" + no + ",'tbl_c_board')\" style='cursor:pointer'>" + title + "</li>";	
+                }
+                
+                listHTML += "</ul></div></div></div>";
+
+                $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : "/ezCommunity/getBestNewCommunity.do",
+					data : { mode   : "BEST"
+					},
+					success: function(result){
 	                    if (strlang == "" || strlang == "1") {
-	                        var listdom = loadXMLString(xmlhttp.responseText);
+	                        var listdom = loadXMLString(result);
 	                        listHTML += "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li onclick=\"change_tab('best')\" id='best' class='on'><spring:message code='main.t00036' /></li><li onclick=\"change_tab('new')\" id='new'><spring:message code='main.t00035' /></li></ul>";
 	                        listHTML += "<div id='bestcomm' class='layout_bg'><dl class='communityLiist01'><dt><span class='img_community'>"
 	                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 	                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                        else
-	                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+	                            listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                        listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
 	                        listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
@@ -207,13 +193,13 @@
 	                        listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
 	                    }
 	                    else {
-	                        var listdom = loadXMLString(xmlhttp.responseText);
+	                        var listdom = loadXMLString(result);
 	                        listHTML += "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li onclick=\"change_tab('best')\" id='best' class='on'><spring:message code='main.t00036' /></li><li onclick=\"change_tab('new')\" id='new'><spring:message code='main.t00035' /></li></ul>";
 	                        listHTML += "<div id='bestcomm' class='layout_bg' style=''><dl class='communityLiist01'><dt><span class='img_community'>"
 	                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 	                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                        else
-	                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+	                            listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                        listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
 	                        listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");
@@ -231,98 +217,9 @@
 	                    }
 	
 	                    listHTML += "</dl></div><div id='newcomm' class='layout_bg' style='display:none'></div></div></div>";
-	                }
-	                document.getElementById("commu_list").innerHTML = listHTML;
-	            } */
-	        }
-	        
-	    	function getBoardList_after(list) {
-	                var no, title;
-	                var listHTML = "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li><strong><spring:message code='main.t00041' /></strong></li></ul><div class='layout_bg'><ul class='communityLiist01'>";
-	                /* if (xmlpara.getElementsByTagName("NO").length != 0) {
-	                    for (var i = 0; i < 5; i++) {
-	                        no = getNodeText(xmlpara.getElementsByTagName("NO").item(i));
-	                        title = getNodeText(xmlpara.getElementsByTagName("TITLE").item(i));
-	                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";
-	                    }
-	                } */
-	                
-	                /* list.forEach(function(cBoardVO, index) {
-	                	//for (var i = 0; i < 5; i++) {
-	                        no = cBoardVO.no;
-	                        title = cBoardVO.title;
-	                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";
-	                    //}
-		            }); */
-	                
-	              	for (var i = 0; i < 5; i++) {
-	              		no = list[i].no;
-                        title = list[i].title;
-                        listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";	
-	                }
-	                
-	                listHTML += "</ul></div></div></div>";
-	
-	/*                 xmlpara = null;
-	                xmlpara = createXmlDom();
-	                var objRoot, objNode;
-	                objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
-	                objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "MODE", "BEST");
-	                xmlhttp = null;
-	                xmlhttp = createXMLHttpRequest();
-	
-	                xmlhttp.open("POST", "/ezCommunity/getBestNewCommunity.do", false);
-	                xmlhttp.send(xmlpara); */
-	                $.ajax({
-						type : "POST",
-						dataType : "text",
-						async : true,
-						url : "/ezCommunity/getBestNewCommunity.do",
-						data : { mode   : "BEST"
-						},
-						success: function(result){
-		                    if (strlang == "" || strlang == "1") {
-		                        var listdom = loadXMLString(result);
-		                        listHTML += "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li onclick=\"change_tab('best')\" id='best' class='on'><spring:message code='main.t00036' /></li><li onclick=\"change_tab('new')\" id='new'><spring:message code='main.t00035' /></li></ul>";
-		                        listHTML += "<div id='bestcomm' class='layout_bg'><dl class='communityLiist01'><dt><span class='img_community'>"
-		                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
-		                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
-		                        else
-		                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
-		                        listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
-		                        listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
-		                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
-		                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
-		                        listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
-		                    }
-		                    else {
-		                        var listdom = loadXMLString(result);
-		                        listHTML += "<div class='content_list02'><div class='layout_margin3'><ul class='title'><li onclick=\"change_tab('best')\" id='best' class='on'><spring:message code='main.t00036' /></li><li onclick=\"change_tab('new')\" id='new'><spring:message code='main.t00035' /></li></ul>";
-		                        listHTML += "<div id='bestcomm' class='layout_bg' style=''><dl class='communityLiist01'><dt><span class='img_community'>"
-		                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
-		                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
-		                        else
-		                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
-		                        listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
-		                        listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
-		                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");
-		                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
-		                        listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
-		                    }
-		                    for (var i = 1 ; i < SelectNodes(listdom, "DATA/ROW").length; i++) {
-		                        listHTML += "<dd><img src='/images/kr/theme01/main/img_dotCommunity" + (i + 1) + ".png' alt='' />";
-		                        listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNO") + "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE") + "' onclick='move_cop(this)'>";
-		                        if (strlang == "" || strlang == "1")
-		                            listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME");
-		                        else
-		                            listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME2");
-		                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong></dd>";
-		                    }
-		
-		                    listHTML += "</dl></div><div id='newcomm' class='layout_bg' style='display:none'></div></div></div>";
-						}
-					});
-	                document.getElementById("commu_list").innerHTML = listHTML;
+	                    document.getElementById("commu_list").innerHTML = listHTML;
+					}
+				});
 	        }
 	        
 	        function move_cop(val) {
@@ -379,7 +276,6 @@
 	        }
 	
 	        function GoFunc(obj) {
-	
 	            code = obj.getAttribute("code");
 	            codeName = obj.innerText;
 	            if (code == "0") {
@@ -407,11 +303,6 @@
 	        	} else {
 	        		return 1;
 	        	}
-	        	
-	            /* if (xmlpara.getElementsByTagName("ROW").length > 0) {
-	                return 2
-	            }
-	            else return 1; */
 	        }
 	
 	        function btn_bbsView(sURL, ttt) {
@@ -428,6 +319,7 @@
 	        function Copmore_btnClick() {
 	            window.open("/ezCommunity/communityMain.do?funCode=5", "main", "");
 	        }
+	        
 	        function get_newCommunity() {
 	        	$.ajax({
 					type : "POST",
@@ -441,6 +333,7 @@
 					}
 				});
 	        }
+	        
 	        function event_get_newCommunity(result) {
 	            var listHTML = "";
 	            var listdom = loadXMLString(result);
@@ -449,7 +342,7 @@
 	                if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 	                    listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                else
-	                    listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+	                    listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/community/icon_newCommunity04.png' alt='' /></span>";
 	                listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
@@ -461,7 +354,7 @@
 	                if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 	                    listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                else
-	                    listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+	                    listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/community/icon_newCommunity04.png' alt='' /></span>";
 	                listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");

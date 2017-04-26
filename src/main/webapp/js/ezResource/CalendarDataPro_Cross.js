@@ -1370,7 +1370,7 @@ function mfFormatTime(iMin) {
 
 //날짜에 마우스 오버시
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#c0cae5";
+    pThis.style.backgroundColor = "#eaf2f5";
 }
 
 //마우스 아웃시
@@ -1387,7 +1387,7 @@ function Schedule_onMouseClick(event, type) {
         if (g_szCurrentApptDivID != null && document.getElementById(g_szCurrentApptDivID))
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
 
-        event.style.backgroundColor = "#B2CCFF";
+        event.style.backgroundColor = "#FFEAEA";
 
         //M:월, W:주, D:일
         if (type == "M") {
@@ -1395,7 +1395,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("resource_ok") : document.querySelectorAll('.resource_ok'); //월에 표시된 승인된 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#FF9696";
+                var bgColor = "#F2FFEB";
                 var checkOwnerID = GetAttribute(resDate[i].parentNode,"num");
                 if (eventOwnerID == checkOwnerID) {
                     resDate[i].parentNode.style.backgroundColor = bgColor;
@@ -1408,7 +1408,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 승인된 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#FF9696";
+                var bgColor = "#F2FFEB";
 
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
@@ -1424,7 +1424,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 승인된 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#FF9696";
+                var bgColor = "#F2FFEB";
 
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
@@ -1465,7 +1465,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("resource_ok") : document.querySelectorAll('.resource_ok'); //월에 표시된 모든 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#FF9696";
+                var bgColor = "#F2FFEB";
                 var checkOwnerID = GetAttribute(resDate[i].parentNode,"num");
                 if (eventOwnerID == checkOwnerID) {
                     resDate[i].parentNode.style.backgroundColor = bgColor;
@@ -1478,7 +1478,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 모든 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#FF9696";
+                var bgColor = "#F2FFEB";
 
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
@@ -1494,7 +1494,7 @@ function Schedule_onMouseClick(event, type) {
             var resDate = (document.getElementsByClassName) ? document.getElementsByClassName("calendar_data_ok") : document.querySelectorAll('.calendar_data_ok'); //주에 표시된 모든 자원들
             var eventOwnerID = GetAttribute(event,"num");
             for (var i = 0; i < resDate.length; i++) {
-                var bgColor = "#FF9696";
+                var bgColor = "#F2FFEB";
 
                 //시간영역
                 var checkOwnerID = GetAttribute(resDate[i],"num");
