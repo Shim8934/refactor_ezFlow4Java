@@ -1156,6 +1156,7 @@
 		                    message.Set_EditorContentURL(sihangURL);
 		                }
 		            }
+			        document.getElementById("regNum1").value = message.DocumentBodyGetAttribute("orgdocnum", 0);
 		        }
 		        catch (e) {
 		            OpenAlertUI("DocumentComplete : " + e.description);
@@ -1390,6 +1391,7 @@
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">
+			<input type="hidden" id="regNum1" value="">
 		<table  class="layout" ID="Table1">
 		  <tr>
 		    <td style="height:20px;">
