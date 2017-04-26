@@ -36,7 +36,7 @@
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_08" target="right"><span>메일검색</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_9" target="right"><span>외부메일확인</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_09" target="right"><span>외부메일확인</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_10" target="right"><span>메일내보내기/가져오기</span></a></h2>
