@@ -240,12 +240,12 @@
 			    }
 			    else {
 			        message2.Set_EditorContentURL(pFormHref);
+			        
 			    }
 			}
 			
 			var setFildAvailable;
 			function FieldsAvailable2() {
-			
 			    messageload2 = true;
 			    if (!messageload || !messageload2) {
 			        setFildAvailable = setInterval(FieldsAvailable2, 1000);
@@ -322,6 +322,12 @@
 			                message.GetListItem(fields, "keepperiod").options.textContent = c;
 			            else
 			                message.GetListItem(fields, "keepperiod").textContent = "<spring:message code='ezApprovalG.t1692'/>";
+			        }
+			    }
+			    
+			    if (message.GetListItem(fields, "docnumber")) {
+			        if (message2.GetListItem(fields2, "docnumber")) {
+			            message.GetListItem(fields, "docnumber").innerHTML = message2.GetListItem(fields2, "docnumber").innerHTML;
 			        }
 			    }
 			

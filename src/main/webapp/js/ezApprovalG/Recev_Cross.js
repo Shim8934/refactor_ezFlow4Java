@@ -1289,15 +1289,15 @@ function SetAutoPropertyValue()
 	{
 		var field = fields[i];
 		if(!fields) return;
-	
+		
 		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL")
 		{
 	  		switch (field.id)
 	  		{
-	  			case "bedocnumber" :				  
+	  			case "bedocnumber" :
 	  				setDocNumFormat("be");
 	  				break;
-	  			case "docnumber" :				   
+	  			case "docnumber" :
 	  				setDocNumFormat("");
 	  				break;
 	  			case "enforcedate" :		
@@ -2476,7 +2476,8 @@ function SaveDraftDocInfo()
         var field = GetListItem(fields, pPrefix + "docnumber");//CKEDITOR-원본 : var field = pzFormProc.fields(pPrefix + "docnumber")
         if(!field) return 
 		
-        var fieldValue = getfieldValue(field);//pzFormProc.editor.DOM.body.getAttribute("orgdocnum");
+//        var fieldValue = getfieldValue(field);//pzFormProc.editor.DOM.body.getAttribute("orgdocnum");
+        var fieldValue = message2.DocumentBodyGetAttribute("orgdocnum", 0);
         Arr_Header = fieldValue.split("@");
 	   
         for(i=1;i<Arr_Header.length;i++)
@@ -2551,8 +2552,10 @@ function SaveDraftDocInfo()
                     break;
             }
         }
-			
-        field.textContent = numHeader;
+        
+        message.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
+        message2.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
+//        field.textContent = numHeader;
     }
 
 
