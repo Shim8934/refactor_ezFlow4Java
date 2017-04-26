@@ -1156,7 +1156,6 @@
 		                    message.Set_EditorContentURL(sihangURL);
 		                }
 		            }
-			        document.getElementById("regNum1").value = message.DocumentBodyGetAttribute("orgdocnum", 0);
 		        }
 		        catch (e) {
 		            OpenAlertUI("DocumentComplete : " + e.description);
