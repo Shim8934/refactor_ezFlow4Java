@@ -3460,3 +3460,98 @@ function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
 		}
 	});
 }
+
+function setDocNumFormat(pPrefix) {
+    var Arr_Header = new Array();
+    var Header, Tail;
+    var i;
+    var d = new Date();
+
+    var numHeader = "";
+
+    var fields = message.GetFieldsList();
+
+    var field = message.GetListItem(fields, pPrefix + "docnumber");
+    
+    if (!field) {
+    	return
+    }
+    
+    var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
+
+    Arr_Header = fieldValue.split("@");
+    
+    for (i = 1; i < Arr_Header.length; i++) {
+        Header = Arr_Header[i].substr(0, 2);
+        Tail = Arr_Header[i].substr(2);
+
+        switch (Header) {
+            case "DP":
+                numHeader += DeptSymbol + Tail;
+                break;
+
+            case "dp":
+                numHeader += DeptSymbol + Tail;
+                break;
+
+            case "YY":
+                numHeader += d.getYear() + Tail;
+                break;
+                
+            case "yy":
+                var yyear = d.getYear();
+                numHeader += yyear.toString().substr(1) + Tail;
+                break;
+
+            case "MM":
+                var mmonth = d.getMonth() + 1;
+                if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                numHeader += mmonth + Tail;
+                break;
+
+            case "mm":
+                numHeader += (d.getMonth() + 1) + Tail;
+                break;
+
+            case "NN":
+                break;
+
+            case "nn":
+                break;
+
+            case "cs":
+                numHeader += strLang107 + Tail;
+                break;
+                
+            case "FT":
+            	numHeader += "FT" + Tail;
+            	break;
+            	
+            case "MV":
+            	numHeader += "MV" + Tail;
+            	break;
+            	
+            case "YM":
+            	var yyear = d.getYear();
+                numHeader += yyear.toString().substr(1);
+                
+            	var mmonth = d.getMonth() + 1;
+                if (parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+                numHeader += mmonth;
+                
+                var mdate = d.getDate();
+                if (parseInt(mdate) < 10) mdate = "0" + mdate;
+                numHeader += mdate + Tail;
+                
+                break;
+
+            default:
+                numHeader += fieldValue;
+                break;
+        }
+    }
+    
+    field.textContent = numHeader;
+    if (numHeader.indexOf(strLang107) > 0)
+        message.DocumentBodySetAttribute("docnum", numHeader);
+}

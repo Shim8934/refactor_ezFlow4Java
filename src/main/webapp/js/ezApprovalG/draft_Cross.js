@@ -3011,11 +3011,16 @@ function setDocNumFormat(pPrefix) {
 
     var fields = message.GetFieldsList();
 
-    if (pDraftFlag == "REDRAFT") return;
+    if (pDraftFlag == "REDRAFT" && ListType != "21") {
+    	return;
+    }
 
     var field = message.GetListItem(fields, pPrefix + "docnumber");
-    if (!field) return
-
+    
+    if (!field) {
+    	return
+    }
+    
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
 
     Arr_Header = fieldValue.split("@");
@@ -3089,7 +3094,7 @@ function setDocNumFormat(pPrefix) {
                 break;
         }
     }
-
+    
     field.textContent = numHeader;
     if (numHeader.indexOf(strLang107) > 0)
         message.DocumentBodySetAttribute("docnum", numHeader);
