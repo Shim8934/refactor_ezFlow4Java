@@ -165,7 +165,7 @@
               	for (var i = 0; i < 5; i++) {
               		no = list[i].no;
                        title = list[i].title;
-                       listHTML += "<li onClick=\"btn_bbsView(" + no + ",'c_board')\" style='cursor:pointer'>" + title + "</li>";	
+                       listHTML += "<li onClick=\"btn_bbsView(" + no + ",'tbl_c_board')\" style='cursor:pointer'>" + title + "</li>";	
                 }
                 
                 listHTML += "</ul></div></div></div>";
