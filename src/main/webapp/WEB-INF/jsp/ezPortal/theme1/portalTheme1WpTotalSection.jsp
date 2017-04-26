@@ -7,6 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";
 		    var pUse_IE11Browser = "${useIE11Browser}";
@@ -87,12 +88,27 @@
 			}
 			
 			var xmlHttp_GetScheduleCount_total = null;
-			function GetScheduleCount()
-			{
-			    xmlHttp_GetScheduleCount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
-			    xmlHttp_GetScheduleCount_total.open("POST", "/myoffice/ezSchedule/remote/schedule_get_count.aspx", true);
-			    xmlHttp_GetScheduleCount_total.onreadystatechange = event_GetScheduleCount;
-			    xmlHttp_GetScheduleCount_total.send();
+			function GetScheduleCount() {
+				var newDate = new Date();
+				var date = newDate.getFullYear() + "-" + (parseInt((newDate.getMonth()+1)) < 10 ? "0"+(newDate.getMonth()+1) : newDate.getMonth()+1) + "-" +(newDate.getDate() < 10 ? "0"+newDate.getDate() : newDate.getDate());
+
+				$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezSchedule/scheduleNewWebPartList.do",
+		    		data : {
+		    			selectDate  : date		    			
+		    		},
+		    		success: function(text){
+						var xmldom = createXmlDom();
+						xmldom = loadXMLString(text);
+			        	if(CrossYN())
+			            	document.getElementById("schedulenum").textContent = xmldom.getElementsByTagName("ROW").length;
+			            else
+			            	document.getElementById("schedulenum").innerText = xmldom.getElementsByTagName("ROW").length;
+		    		}    	
+			    });
 			}
 				
 			function event_GetScheduleCount()
