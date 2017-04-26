@@ -8,6 +8,7 @@
 		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/theme1/CalendarMini_Cross.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>  
 		<script type="text/javascript">
 			 //달력 관련
 	        var strLang5 = "<spring:message code='main.t00052'/>;<spring:message code='main.t00053'/>;<spring:message code='main.t00054'/>;<spring:message code='main.t00055'/>;<spring:message code='main.t00056'/>;<spring:message code='main.t00057'/>;<spring:message code='main.t00058'/>"
@@ -34,27 +35,25 @@
 	        function getScheduleUserList(date) {
 	            selDate = date;
 	            document.getElementById("seldate_span").innerHTML = date.split("-")[0] + "." + date.split("-")[1] + "." + date.split("-")[2];
-	            var xmlpara = createXmlDom();
 	
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "pSelectDate", date);
-	            createNodeAndInsertText(xmlpara, objNode, "MODE", "P");
-	
-	
-	            xmlSchedulehttp = null;
-	            xmlSchedulehttp = createXMLHttpRequest();
-	            xmlSchedulehttp.open("POST", "/myoffice/ezSchedule/schedule_newwebpartlist.aspx", true);
-	            xmlSchedulehttp.onreadystatechange = getScheduleUserList_after;
-	            xmlSchedulehttp.send(xmlpara);
+	            $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezSchedule/scheduleNewWebPartList.do",
+		    		data : {
+		    			selectDate  : date,
+		    			mode  : "P"	
+		    		},
+		    		success: function(text){
+		    			getScheduleUserList_after(text);
+		    		}
+			    });
 	        }
-	        function getScheduleUserList_after() {
-	
-	            if (xmlSchedulehttp == null || xmlSchedulehttp.readyState != 4) return;
-	
+	        function getScheduleUserList_after(text) {
 	            try {
 	                var xmldom = createXmlDom();
-	                xmldom = xmlSchedulehttp.responseXML;
+	                xmldom = loadXMLString(text);
 	                var count = 1;
 	                try {
 	                    document.getElementById("scheduleDate1").innerHTML = "";
@@ -173,10 +172,10 @@
 	
 	            //PNO-3
 	            if (CrossYN())
-	                window.open("/myoffice/ezSchedule/schedule_read_Cross.aspx" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+	                window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
 	                    "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            else
-	                window.open("/myoffice/ezSchedule/schedule_read.aspx" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+	                window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
 	                    "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            //PNO-3 END
 	        }
