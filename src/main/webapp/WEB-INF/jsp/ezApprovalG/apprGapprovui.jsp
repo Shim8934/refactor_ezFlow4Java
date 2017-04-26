@@ -303,6 +303,7 @@
 		            if (pDocHref != "")
 		            {
 		                message.Set_EditorContentURL(pDocHref);
+		                setDocNumFormat("");
 		            }
 		        }
 		    }
