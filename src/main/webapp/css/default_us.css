@@ -232,26 +232,26 @@ form{display:inline;margin:0}
 	border:none;
 }
 
-.left_myoffice{background: url(/images/left/left_myoffice.jpg) no-repeat ;height: 40px;}
-.left_mail{background:url(/images/us/left/left_mail.gif) no-repeat ;height: 51px;}
-.left_pims{background:url(/images/us/left/left_pims.gif) no-repeat ;height: 51px;}
-.left_board{background:url(/images/us/left/left_board.gif) no-repeat ;height: 51px;}
-.left_appr{background:url(/images/us/left/left_appr.gif) no-repeat ;height: 51px;}
-.left_resource{background:url(/images/us/left/left_resource.gif) no-repeat ; height: 51px;}
-.left_kms{background:url(/images/us/left/left_kms.gif) no-repeat ;height: 51px;}
-.left_dms{background:url(/images/us/left/left_dms.gif) no-repeat ;height: 51px;}
-.left_cop{background:url(/images/us/left/left_community.gif) no-repeat ;height: 51px;}
-.left_copadmin{background:url(/images/comm/admin_left.jpg) no-repeat #184c8b;height: 40px;}
-.left_webdisk{background:url(/images/left/left_webdisk.jpg) no-repeat #184c8b;height: 40px;}
-.left_ezprocess{background:url(/images/left/left_ezprocess.jpg) no-repeat #184c8b;height: 40px;}
-.left_env{background:url(/images/us/left/left_env.gif) no-repeat ;height: 51px;}
-.left_sitemap{background:url(/images/us/left/left_sitemap.gif) no-repeat ;height: 51px;}
-.left_notice{background:url(/images/left/left_notice.jpg) no-repeat #184c8b;height: 40px;}
-.left_memo{background:url(/images/left/left_memo.jpg) no-repeat #184c8b;height: 40px;}
-.left_poll{background:url(/images/left/left_poll.jpg) no-repeat #184c8b;height: 40px;}
-.left_search{background:url(/images/left/left_search.jpg) no-repeat #184c8b;height: 40px;}
-.left_diary{background:url(/images/left/left_diary.jpg) left top no-repeat ;width:170px; height: 40px;}
-.left_tasktime{background:url(/images/left/left_tasktime.jpg) left top no-repeat ;width:170px; height: 40px;}
+.left_myoffice{background: url(/images/left/left_myoffice.jpg) repeat ;height: 40px;}
+.left_mail{background:url(/images/us/left/left_mail.gif) repeat ;height: 51px;}
+.left_pims{background:url(/images/us/left/left_pims.gif) repeat ;height: 51px;}
+.left_board{background:url(/images/us/left/left_board.gif) repeat ;height: 51px;}
+.left_appr{background:url(/images/us/left/left_appr.gif) repeat ;height: 51px;}
+.left_resource{background:url(/images/us/left/left_resource.gif) repeat ; height: 51px;}
+.left_kms{background:url(/images/us/left/left_kms.gif) repeat ;height: 51px;}
+.left_dms{background:url(/images/us/left/left_dms.gif) repeat ;height: 51px;}
+.left_cop{background:url(/images/us/left/left_community.gif) repeat ;height: 51px;}
+.left_copadmin{background:url(/images/comm/admin_left.jpg) repeat #184c8b;height: 40px;}
+.left_webdisk{background:url(/images/left/left_webdisk.jpg) repeat #184c8b;height: 40px;}
+.left_ezprocess{background:url(/images/left/left_ezprocess.jpg) repeat #184c8b;height: 40px;}
+.left_env{background:url(/images/us/left/left_env.gif) repeat ;height: 51px;}
+.left_sitemap{background:url(/images/us/left/left_sitemap.gif) repeat ;height: 51px;}
+.left_notice{background:url(/images/left/left_notice.jpg) repeat #184c8b;height: 40px;}
+.left_memo{background:url(/images/left/left_memo.jpg) repeat #184c8b;height: 40px;}
+.left_poll{background:url(/images/left/left_poll.jpg) repeat #184c8b;height: 40px;}
+.left_search{background:url(/images/left/left_search.jpg) repeat #184c8b;height: 40px;}
+.left_diary{background:url(/images/left/left_diary.jpg) left top repeat ;width:170px; height: 40px;}
+.left_tasktime{background:url(/images/left/left_tasktime.jpg) left top repeat ;width:170px; height: 40px;}
 
 .tasktime { background: url(/images/main/time_bg.gif) no-repeat left top; 
 	width:232px; height:58px; margin:0; border-top:2px solid #efefef}
@@ -994,8 +994,8 @@ form{display:inline;margin:0}
 }
 .tbresult { background:#fafafa}
 
-.icon_01{background:url(/images/icon_resource_no.png) no-repeat left top; padding-left:15px; height:16px;}
-.icon_02{background:url(/images/icon_resource_ok.png) no-repeat left top; padding-left:15px; height:16px;}
+.icon_01{background:url(/images/icon_resource_no.png) no-repeat left top; padding-left:17px; height:16px;}
+.icon_02{background:url(/images/icon_resource_ok.png) no-repeat left top; padding-left:17px; height:16px;}
 
 
 .table_layout 

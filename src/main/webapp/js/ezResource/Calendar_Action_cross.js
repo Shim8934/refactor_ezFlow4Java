@@ -408,14 +408,15 @@ function tableListControl_Week()
             _mtd.setAttribute("DATA1", title_name[k].split("/")[0]);
             _mtd.setAttribute("DATA2", title_name[k].split("/")[1]);
             _mtd.align = "left";
+            _mtd.style.height = "60px";
             //_mtd.onselectstart = "return false";
             _mtd.onselectstart = function () { return false; };
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
             if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;margin-right:5px'>" + title_name[k].split("/")[1];
             else
-                _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;margin-right:3px'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -493,7 +494,7 @@ function tableListControl_Week()
                 var _td = document.createElement("TD");
                 var _span = document.createElement("SPAN");
 
-                _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin:0; white-space:nowrap; overflow:hidden;");
+                _table.setAttribute("style", "width:100%;text-align:left;table-layout:fixed;margin-bottom:5px; white-space:nowrap; overflow:hidden;");
 
                 _td.rowSpan = "2";
                 var tdwidth = 3;
@@ -830,9 +831,9 @@ function tableListControl_today() {
             _TD.onselectstart = function () { return false; };
 
             if (title_name[k].split("/")[2] == "1")
-                _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+                _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;margin-right:5px'>" + title_name[k].split("/")[1];
             else
-                _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+                _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;margin-right:3px'>" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
@@ -1006,9 +1007,9 @@ function tableListControl_today() {
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:middle;margin-right:5px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;margin-right:3px'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);

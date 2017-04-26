@@ -55,7 +55,7 @@
 .calendar_week_title{table-layout:fixed; height:26px; line-height:26px; vertical-align:top; border-bottom:1px solid #9b9b9b;}
 .calendar_week_title th{background:#f6f6f6; border-top:1px solid #cbcbcb; border-right:1px solid #cbcbcb; border-bottom:1px solid #b6b6b6; border-left:1px solid #cbcbcb; padding:0; margin:0;}
 .calendar_week_title .calendar_th_time{width:69px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; margin:0; text-align:left;}
-.calendar_week_title .calendar_th_list{background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0; text-align:left;}
+.calendar_week_title .calendar_th_list{background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 8px; margin:0;}
 .calendar_week_title .calendar_th_last{width:16px; background:url(/images/calendar/bg_calendar_title.gif) repeat-x; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 th last영역 */
 .calendar_week_title .calendar_td_last{width:16px; border-top:0 none; border-right:1px solid #b5b5b5; border-bottom:1px solid #b6b6b6; border-left:1px solid #b5b5b5; padding:0px 0px 0px 0px; margin:0; text-align:left;}/* 20130412추가 td last영역 */
 .calendar_week_title .sun{color:#ee1c25; }
@@ -85,15 +85,15 @@
 .calendar_week .td_list .calendar_row .calendar_t_text{vertical-align:top;}
 /*.calendar_week .td_list .calendar_t_time table{margin:0px 2px 0px 1px;} */
 /*.calendar_week .td_list .calendar_t_text table{margin:0px 2px 0px 1px;} */
-.calendar_week .td_list .today td{background:#eaf2f5;}/* 오늘의 일 표시배경 */
+.calendar_week .td_list .today td{background:#f2f2f2;}/* 오늘의 일 표시배경 */
 
 
-.calendar_data_ok{background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
+.calendar_data_ok{background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
 .calendar_data_ok .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 승인 주보기,일보기 데이터 */
-.calendar_data_ok table td{background:#818f98 !important;} /* 20130418_임의로 작업 추후변경 */
-.calendar_data_no{background:#939ea4; border:1px solid #9198a0; line-height:150%; color:#ffffff;}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
+.calendar_data_ok table td{background:#f2f2f2 !important;} /* 20130418_임의로 작업 추후변경 */
+.calendar_data_no{background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
 .calendar_data_no .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 비승인 주보기,일보기 데이터 */
-.calendar_data_no table td{background:#818f98 !important; color:#fff;} /* 20130418_임의로 작업 추후변경 */
+.calendar_data_no table td{background:#f2f2f2 !important; color:black} /* 20130418_임의로 작업 추후변경 */
 /* //주보기 */
 
 /* 일보기 */
@@ -145,7 +145,7 @@
 .calendar_mini td.sun{color:#ee1c25;}
 .calendar_mini td.sat{color:#0032cf;}
 .calendar_mini td.gray{color:#aaa;}
-.calendar_mini td.today{background:#c0cae5;}
+.calendar_mini td.today{background:#eaf2f5;}
 /* //미니달력 */
 
 
