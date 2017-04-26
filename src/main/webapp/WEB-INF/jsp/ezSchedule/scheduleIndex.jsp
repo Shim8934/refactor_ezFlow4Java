@@ -8,7 +8,7 @@
 	</head>
 	<frameset rows="0,*" frameborder="0" border="0">
 		<frame src="/blank.htm" name="white" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" />
-	    <frameset cols="200,*" frameborder="0" border="0">
+	    <frameset cols="220,*" frameborder="0" border="0">
 		    <frame src="/ezSchedule/scheduleLeft.do?funCode=${funCode}&subfunction=${subCode}" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
             <frame src="/blank.htm" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
 	    </frameset>
