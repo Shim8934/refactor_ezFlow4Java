@@ -41,7 +41,8 @@
 		                    case 2:
 		                        document.getElementById("community_title").innerText = "<spring:message code='main.t00051' />";
 		                        document.getElementById("content_commu").className = "content_community02";
-		                        GetMyComm(xmlhttp.responseXML);
+		                        //GetMyComm(xmlhttp.responseXML);
+		                        GetMyComm(loadXMLString(result));
 		                        break;
 					}
 				}
@@ -288,7 +289,7 @@
 		                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 		                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 		                        else
-		                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+		                            listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 		                        listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
 		                        listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 		                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
@@ -302,7 +303,7 @@
 		                        if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 		                            listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 		                        else
-		                            listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+		                            listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 		                        listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
 		                        listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 		                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");
@@ -320,9 +321,11 @@
 		                    }
 		
 		                    listHTML += "</dl></div><div id='newcomm' class='layout_bg' style='display:none'></div></div></div>";
+		                    document.getElementById("commu_list").innerHTML = listHTML;
 						}
 					});
-	                document.getElementById("commu_list").innerHTML = listHTML;
+alert(listHTML);
+	                
 	        }
 	        
 	        function move_cop(val) {
@@ -449,7 +452,7 @@
 	                if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 	                    listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                else
-	                    listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+	                    listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/community/icon_newCommunity04.png' alt='' /></span>";
 	                listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
@@ -461,7 +464,7 @@
 	                if (SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL").indexOf("default_logo_type") > -1)
 	                    listHTML += "<img src='/images/ezCommunity/logo/" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                else
-	                    listHTML += "<img src='/myoffice/Common/ezCommon_InterFace.aspx?TYPE=COMMUNITYLOGO&FILENAME=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
+	                    listHTML += "<img src='/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYLOGO&fileName=" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_LOGO_THUMBNAIL") + "' width='56' height='40' alt='' /></span>";
 	                listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/community/icon_newCommunity04.png' alt='' /></span>";
 	                listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");
