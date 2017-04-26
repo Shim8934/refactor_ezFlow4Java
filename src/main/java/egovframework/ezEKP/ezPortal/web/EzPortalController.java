@@ -1323,6 +1323,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String strHTML = ezPortalService.addBestTable(userInfo);
 		
+		model.addAttribute("userLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strHTML", strHTML);
 		
