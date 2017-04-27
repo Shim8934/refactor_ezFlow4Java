@@ -2898,6 +2898,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String deleteDocInfo(String docID, String mode, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteDocInfo started.");
+		logger.debug("docID = " + docID + " || mode = " + mode);
+		
 		Map<String, Object> map	= new HashMap<>();
 		map.put("v_DocID", docID);
 		map.put("v_TENANTID", tenantID);
@@ -2918,6 +2921,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
 		} 
 
+		logger.debug("deleteDocInfo ended.");
+		
 		return "TRUE";
 	}
 
@@ -10432,6 +10437,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String makeTmpDocInfo(String userID, String docID, String updateFlag, String companyID, String lang, int tenantID) throws Exception{
+		logger.debug("makeTmpDocInfo started.");
+		logger.debug("updateFlag = " + updateFlag + " || docID = " + docID);
+		
 		if (updateFlag.equals("UPDATE")) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -10481,6 +10489,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertTmpExpAprDocInfo(map);
 			ezApprovalGDAO.insertTmpAprDocInfo(map);
 		}
+		
+		logger.debug("makeTmpDocInfo ended.");
 		
 		return "TRUE";
 	}

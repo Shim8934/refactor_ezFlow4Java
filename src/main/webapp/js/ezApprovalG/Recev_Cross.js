@@ -2541,7 +2541,7 @@ function SaveDraftDocInfo()
                 	break;
                 	
                 case "YM":
-                	numHeader = numHeader + szYear;
+                	numHeader = numHeader + szYear.toString().substr(2);
                 	numHeader = numHeader + szMonth;
                 	numHeader = numHeader + szDay + Tail;
                 	

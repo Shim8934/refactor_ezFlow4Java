@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumber_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
