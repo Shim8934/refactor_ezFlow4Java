@@ -714,9 +714,9 @@ form{display:inline;margin:0}
 	padding-top:12px;
 	height:51px;
 	margin:0px;
-	padding:0px 0px 0px 40px;
-	line-height:55px;
-	background:url('/images/admin/lefttitle_bg.gif') repeat-x ;
+	padding:0px 0px 0px 15px;
+	line-height:55px;	
+	background:url('/images/kr/cm/bg_main.gif') repeat-x ;
 }
 .poll, .question{
 	border:2px solid #ececec; 
