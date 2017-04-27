@@ -7026,5 +7026,29 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         logger.debug("okNoSetSendMail ended.");
 	}
 	
+	@Override
+	public String getMyCoummunityBoardList(LoginVO userInfo, String clubNo) throws Exception {
+		logger.debug("getMyCoummunityBoardList started.");
+		
+		StringBuilder rtnVal = new StringBuilder();
+		
+		rtnVal.append("<ITEM><DATA>");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_copNo", clubNo);
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", userInfo.getTenantId());
+			
+		List<CommunityMyCommunityVO> myCommunityList = ezCommunityDAO.myCommunityItemGet(map);
+		
+		for(CommunityMyCommunityVO myCommunity : myCommunityList) {
+			rtnVal.append(commonUtil.getQueryResult(myCommunity));
+		}
+		
+		rtnVal.append("</DATA></ITEM>");
+		
+		logger.debug("getMyCoummunityBoardList ended.");
+		return rtnVal.toString();
+	}
 	
 }

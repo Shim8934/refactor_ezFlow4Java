@@ -40,7 +40,7 @@
 		                    case 2:
 		                        document.getElementById("community_title").innerText = "<spring:message code='main.t00051' />";
 		                        document.getElementById("content_commu").className = "content_community02";
-		                        GetMyComm(loadXMLString(result));
+		                        GetMyComm(result["list"]);
 		                        break;
 						}
 					}
@@ -49,12 +49,12 @@
 			
 	        function GetMyComm(list) {
 	            var listHTML = "<div class='content_list04'><dl class='topTitle'><dt><select id='myComm' onchange='getCommList()'>";
-	            for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
+	            for (var i = 0; i < list.length; i++) {
 	                if (strlang == "" || strlang == "1") {
-	                    listHTML += "<option code='" + getNodeText(xmldom.getElementsByTagName("C_CLUBNO").item(i)) + "'>" + getNodeText(xmldom.getElementsByTagName("C_CLUBNAME").item(i)) + "</option>";
+	                    listHTML += "<option code='" + list[i].c_ClubNo + "'>" + list[i].c_ClubName + "</option>";
 	                }
 	                else {
-	                    listHTML += "<option code='" + getNodeText(xmldom.getElementsByTagName("C_CLUBNO").item(i)) + "'>" + getNodeText(xmldom.getElementsByTagName("C_CLUBNAME2").item(i)) + "</option>";
+	                    listHTML += "<option code='" + list[i].c_ClubNo + "'>" + list[i].c_ClubName2 + "</option>";
 	                }
 	            }
 	            listHTML += "</select></dt><dd><span onclick='goComm()'><spring:message code='main.t00043' /></span></dd></dl>";
@@ -87,12 +87,12 @@
 	                    break;
 	                }
 	            }
-	
-	            //xmlhttp.open("POST", "/myoffice/ezcommunity/aspx/getmycoummunityboardlist.aspx", true);
-	            xmlhttp.open("POST", "/ezCommunity/myCopNewBoardItem.do", true);
+	            
+	            xmlhttp.open("POST", "/ezCommunity/getMyCoummunityBoardList.do", true);
 	            xmlhttp.onreadystatechange = getCommList_after;
 	            xmlhttp.send(xmlpara);
 	        }
+	        
 	        function getCommList_after() {
 	            if (xmlhttp == null || xmlhttp.readyState != 4) return;
 	
