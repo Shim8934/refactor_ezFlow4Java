@@ -8199,7 +8199,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 
 				if (rtnVal) {
+					logger.debug("doapprov makeTmpDocInfo started. userID = " + userID + " || docID = " + docID + " || proxyUserID = " + proxyUserID + " || companyID = " + companyID + " || tenantID = " + userInfo.getTenantId());
+					
 					subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId());
+					
+					logger.debug("doapprov makeTmpDocInfo ended.");
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;

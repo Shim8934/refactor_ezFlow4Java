@@ -908,8 +908,9 @@
 		    }
 		    function window_onbeforeunload() {
 		        if (bAttachProcess == false) {
-		            if (!draftFlag)
+		            if (!draftFlag) {
 		                UndoDoc();
+		            }
 		        }
 		        try {
 		            if (bAttachProcess == false)
@@ -1359,6 +1360,8 @@
 										var pAlertContent = strLang872;
 										OpenAlertUI(pAlertContent);
 									}
+									
+									draftFlag = "true";
 								}, error : function () {
 									var pAlertContent = strLang872;
 									OpenAlertUI(pAlertContent);
