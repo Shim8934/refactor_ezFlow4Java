@@ -4534,5 +4534,22 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		return "json";
 	}
+	
+	/**
+	 * 테마1 My 커뮤니티 새글 목록 호출함수
+	 */
+	@RequestMapping(value = "/ezCommunity/getMyCoummunityBoardList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getMyCoummunityBoardList (@RequestBody String xmlStr,@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getMyCoummunityBoardList started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		String clubNo = xmlDom.getElementsByTagName("C_CLUBNO").item(0).getTextContent();
+		String result = ezCommunityService.getMyCoummunityBoardList(userInfo, clubNo);
+		
+		logger.debug("getMyCoummunityBoardList ended.");
+		return result;
+	}
 }
 
