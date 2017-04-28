@@ -146,7 +146,7 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align:top">
-	                <table style="vertical-align:top;width:230px" class="content">
+	                <table style="vertical-align:top;width:230px;margin-top:2px" class="content">
 	                    <tr>
 	                        <th>
 	                            <spring:message code='main.t4003'/>
@@ -157,7 +157,7 @@
 	                    </tr>
 	                    <tr>
 	                        <td colspan="4" style="border:1px solid rgb(182, 182, 182);">
-	                            <div class="btnposition" style="padding-top:0px">
+	                            <div class="btnposition" style="padding-top:0px;margin-bottom:10px">
 	                                <a href="#" class="imgbtn" onclick ="filesearch()"><span><spring:message code='main.t4004'/></span></a>
 	                                <a href="#" class="imgbtn"><span onclick="fileupload()"><spring:message code='main.t4005'/></span></a>
 	                            </div>
@@ -168,13 +168,13 @@
 	                            <spring:message code='main.t4006'/>
 	                        </th>
 	                        <td style="width:50%">
-	                            <input id="imgwidth" type="text" style="width:30px" />px
+	                            &nbsp;<input id="imgwidth" type="text" style="width:30px" /> px
 	                        </td>
 	                        <th>
 	                            <spring:message code='main.t4007'/>
 	                        </th>
 	                        <td>
-	                            <input id="imgheight" type="text" style="width:30px" />px
+	                            &nbsp;<input id="imgheight" type="text" style="width:30px" /> px
 	                        </td>
 	                    </tr>
 	                </table>
