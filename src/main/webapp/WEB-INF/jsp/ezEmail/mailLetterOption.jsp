@@ -98,7 +98,6 @@
 		            } catch (e) { rgParams = dialogArguments; }
 		        }
 		
-	            document.getElementById("importantid").selectedIndex = parseInt(rgParams.important);
 	            document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
 		
 		        if (rgParams["replySendTime"] == "1") {
@@ -214,10 +213,6 @@
 	            }
 		    }
 		
-		    function important_onChange() {
-		    	RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
-		    }
-		
 		    function GetStartDate() {
 		        var pReservationTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 		        pReservationTime = pReservationTime.replace(/-/gi, "/");
@@ -225,8 +220,6 @@
 		    }
 		
 		    function confirm() {
-	            RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
-	
 	            if (document.getElementById("responseSendid").checked == true)
 	                RetValue["replySendTime"] = "1";
 	            else
@@ -295,18 +288,8 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.t353' /></h1>
-		<h2><spring:message code='ezEmail.t358' /></h2>
 		<table style="width:100%;" class="content">
-		  <tr>
-		    <th><spring:message code='ezEmail.t359' /></th>
-		    <td><select name="important" style="Width:100px;" onChange="" id="importantid">
-		        <option><spring:message code='ezEmail.t360' /></option>
-		        <option 1><spring:message code='ezEmail.t361' /></option>
-		        <option><spring:message code='ezEmail.t362' /></option>
-		      </select>
-		    </td>
-		  </tr>
-		  <tr style="display:none">
+		  <tr style="display:none;">
 		    <th><spring:message code='ezEmail.t363' /></th>
 		    <td><select name="postType" style="Width:100px;" onChange="" id="postTypeid">
 		        <option 1><spring:message code='ezEmail.t361' /></option>
@@ -321,7 +304,6 @@
 		    <td colspan="3"><input type="checkbox" name="SecurityMail" value="checkbox" onClick="SecurityMail_onClick()"><spring:message code='ezEmail.t750' /></td>
 		  </tr>
 		</table>
-		<br>
 		<h2><spring:message code='ezEmail.t368' /></h2>
 		<table style="width:100%;" class="content">
 		  <tr>
