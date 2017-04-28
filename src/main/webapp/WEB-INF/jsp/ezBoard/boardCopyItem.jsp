@@ -26,10 +26,12 @@
 		            alert("<spring:message code='ezBoard.t179'/>");
 		            return;
 		        }
+
 		        if (BoardID.indexOf(selectedBoard) != -1) {
 		            alert("<spring:message code='ezBoard.t351'/>");
 		            return;
 		        }
+
 		        if (oldguBun > 0) {
 			    	if (oldguBun != newguBun) {
 			        	alert("<spring:message code='ezBoard.jsh02'/>");
@@ -40,14 +42,12 @@
 			            return;
 			        }
 		    	} else {
-		    		if (newguBun == "2" || newguBun == "3" || newguBun == "4") {
-			        	alert("<spring:message code='ezBoard.jsh02'/>");
-			            return;
-			        } else if (newguBun == "1" || newguBun == "5") {
+		    		if (newguBun != "0") {
 			        	alert("<spring:message code='ezBoard.jsh02'/>");
 			            return;
 			        }
 		    	}
+
 		        CopyItem(selectedBoard);
 		    }
 		    function cancel() {

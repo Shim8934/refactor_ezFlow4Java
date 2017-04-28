@@ -328,7 +328,7 @@ function showHideSubTable() {
     }
 }
 
-var BottomValue = new Array("ClassName", "ID", strLang29, strLang783);
+var BottomValue = new Array("ClassName", "ID", strLang30, strLang783);
 var BottonTDValue = new Array();
 var rootBottom;
 function BottomPropertyTable(parentTD) {

@@ -299,7 +299,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	/**
 	 * 게시판 ck에디터 심플업로드화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public String ckSimpleUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -320,8 +320,8 @@ public class EzCommonController extends EgovFileMngUtil{
         }
         
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		
-		return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "', '')</script>";
+		//return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "', '')</script>";
+		return "{\"uploaded\": 1,\"fileName\": \""+fileName+"\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
 	}
 	
 	/**

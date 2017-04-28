@@ -5,7 +5,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
 	</head>
-	<frameset cols="200,*" frameborder="NO" border="0" framespacing="0">
+	<frameset cols="220,*" frameborder="NO" border="0" framespacing="0">
 		<frame src="/admin/ezSchedule/scheduleLeft.do" name="lef" scrolling="NO" noresize marginwidth="0" marginheight="0" id="lef" frameborder="NO" />
 		<frame src="/admin/ezSchedule/scheduleAdminShareManage.do" name="right" scrolling="auto" marginwidth="0" marginheight="0" id="right" frameborder="NO" />
 	</frameset>

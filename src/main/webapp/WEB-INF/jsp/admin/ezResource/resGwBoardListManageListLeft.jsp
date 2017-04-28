@@ -156,7 +156,7 @@
 	</head>
 	<body class="leftbody" style="overflow-y: auto;overflow-x: hidden">	
 		<div id="left">
-  			<div class="left_admin"><spring:message code="ezResource.t17" /></div>
+  			<div class="left_admin"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code="ezResource.t17" /></div>
 			<h2><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span><ul></ul></h2>
 			<h2><span onClick="NavigateBrdAdmin_Res('NEW')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t23" /></span><ul></ul></h2>
 			<h2><span onClick="NavigateBrdAdmin_Res('ACL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t24" /></span><ul></ul></h2>

@@ -5,7 +5,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	</head>
-	<frameset cols="200,*" border="0" framespacing="0" frameborder="NO">
+	<frameset cols="220,*" border="0" framespacing="0" frameborder="NO">
 	  <frame src="/admin/ezSystem/systemLeftMenu.do" name="stat_left" marginwidth="0" marginheight="0" scrolling="NO" frameborder="NO">
 	  <frame src="" name="stat_main" marginwidth="0" marginheight="0" scrolling="AUTO" frameborder="NO">
 	</frameset>	

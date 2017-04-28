@@ -2898,6 +2898,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String deleteDocInfo(String docID, String mode, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteDocInfo started.");
+		logger.debug("docID = " + docID + " || mode = " + mode);
+		
 		Map<String, Object> map	= new HashMap<>();
 		map.put("v_DocID", docID);
 		map.put("v_TENANTID", tenantID);
@@ -2918,6 +2921,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
 		} 
 
+		logger.debug("deleteDocInfo ended.");
+		
 		return "TRUE";
 	}
 
@@ -5027,7 +5032,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String domain = request.getServerName() + ":" + request.getServerPort();
 		
 		content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), realPath, userInfo.getLocale(), domain);
-
 		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
 		
@@ -5318,7 +5322,83 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
 				//0박아주는거 하면된다
 				if (!ret.equals("") && doc.getElementById("docnumber") != null) {
-					docNO = doc.getElementById("docnumber").text() + getNDigitNum(cabinetSN.substring(cabinetSN.length() - Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt));
+					String fieldValue = doc.body().getAllElements().attr("orgdocnum");
+					String numHeader = "";
+					String Header = "";
+					String Tail = "";
+				    String arry[] = fieldValue.split("@");
+				    String yyear = "";
+				    String mmonth = "";
+				    String mdate = "";
+				    for (int i = 1; i < arry.length; i++) {
+				        Header = arry[i].substring(0, 2);
+				        Tail = arry[i].substring(2);
+
+				        switch (Header) {
+				            case "DP":
+				                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
+				                break;
+
+				            case "dp":
+				                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
+				                break;
+
+				            case "YY":
+				                numHeader += commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4) + Tail;
+				                break;
+				                
+				            case "yy":
+				                yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
+				                numHeader += yyear.toString().substring(2,4) + Tail;
+				                break;
+
+				            case "MM":
+				                mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
+				                if (Integer.parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+				                numHeader += mmonth + Tail;
+				                break;
+
+				            case "mm":
+				                numHeader += (commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7)) + Tail;
+				                break;
+
+				            case "NN":
+				                break;
+
+				            case "nn":
+				                break;
+
+				            case "cs":
+				                numHeader += messageSource.getMessage("ezApprovalG.t45",  userInfo.getLocale()) + Tail;
+				                break;
+				                
+				            case "FT":
+				            	numHeader += "FT" + Tail;
+				            	break;
+				            	
+				            case "MV":
+				            	numHeader += "MV" + Tail;
+				            	break;
+				            	
+				            case "YM":
+				            	yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
+				                numHeader += yyear.toString().substring(2,4);
+				                
+				            	mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
+				                numHeader += mmonth;
+				                
+				                mdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(8,10);
+				                numHeader += mdate + Tail;
+				                
+				                break;
+
+				            default:
+				                numHeader += fieldValue;
+				                break;
+				        }
+				    }
+					
+					docNO = numHeader + getNDigitNum(cabinetSN.substring(cabinetSN.length() - Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt));
 					doc.getElementById("docnumber").text(docNO);
 					
 					if (doc.getElementById("enforcedate") != null) {
@@ -8119,7 +8199,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 
 				if (rtnVal) {
+					logger.debug("doapprov makeTmpDocInfo started. userID = " + userID + " || docID = " + docID + " || proxyUserID = " + proxyUserID + " || companyID = " + companyID + " || tenantID = " + userInfo.getTenantId());
+					
 					subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId());
+					
+					logger.debug("doapprov makeTmpDocInfo ended.");
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -10357,6 +10441,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String makeTmpDocInfo(String userID, String docID, String updateFlag, String companyID, String lang, int tenantID) throws Exception{
+		logger.debug("makeTmpDocInfo started.");
+		logger.debug("updateFlag = " + updateFlag + " || docID = " + docID);
+		
 		if (updateFlag.equals("UPDATE")) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -10406,6 +10493,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertTmpExpAprDocInfo(map);
 			ezApprovalGDAO.insertTmpAprDocInfo(map);
 		}
+		
+		logger.debug("makeTmpDocInfo ended.");
 		
 		return "TRUE";
 	}
@@ -16539,9 +16628,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_temp2", v_temp2);
 			} else {
 				v_temp3 = ezApprovalGDAO.countVieTempDocID(map);
-				map.put("v_temp3", v_temp3);
-				
-				if( v_temp3 > 0 ) {
+				if (v_temp3 < 0) {
+					map.put("v_temp3", v_temp3);
+				}				
+				if (v_temp3 > 0 ) {
 					List<ApprGAprLineVO> tempList = ezApprovalGDAO.countRecTempDocID3(map);
 					map.put("v_temp4", tempList.size());
 				}

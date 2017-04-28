@@ -9,7 +9,7 @@
 		<script type="text/javascript">
 		</script>
 	</head>
-	<frameset cols="200,*" framespacing="0" border="0">
+	<frameset cols="220,*" framespacing="0" border="0">
 		<frame src="/admin/ezPortal/leftTop.do" name="left" frameborder="no" scrolling="NO" noresize marginwidth="0" marginheight="0">
 		<frame src="/admin/ezPortal/themeList.do" name="right" frameborder="no" scrolling="AUTO" marginwidth="0" marginheight="0">
   	</frameset>

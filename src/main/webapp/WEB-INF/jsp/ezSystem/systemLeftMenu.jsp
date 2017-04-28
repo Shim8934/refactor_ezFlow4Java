@@ -64,7 +64,7 @@
 
     <body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 	    <div id="left">
-		    <div class="left_admin" title="<spring:message code='main.t10011' />"><spring:message code='main.t10011' /></div>
+		    <div class="left_admin" title="<spring:message code='main.t10011' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='main.t10011' /></div>
             <c:if test="${IsJMochaStandAlone != 'YES'}">
             <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="menu_change('PARAMETER')" ><spring:message code='main.kms1' /></span>
             <ul class="on"></ul>

@@ -1138,8 +1138,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getDate.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
-	public String getDate() throws Exception{
-		String fullDate = commonUtil.getTodayUTCTime("");
+	public String getDate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String fullDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() ,false);
 		fullDate = fullDate.substring(0, 10).replace("-", ".");
 		
 		return fullDate;
@@ -4007,11 +4008,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/delDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String delDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("delDocInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("field");
 		String result = ezApprovalGService.deleteDocInfo(docID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("delDocInfo ended.");
 		
 		return result;
 	}

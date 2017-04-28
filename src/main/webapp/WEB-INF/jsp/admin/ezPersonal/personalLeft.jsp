@@ -64,7 +64,7 @@
 	</head>
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
-			<div class="left_admin" title="<spring:message code = 'main.t7' />"><spring:message code = 'main.t7' /></div>   
+			<div class="left_admin" title="<spring:message code = 'main.t7' />"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code = 'main.t7' /></div>   
 		  	<h2>
 		  		<span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'main.t65' /></span>
 		    	<ul></ul>

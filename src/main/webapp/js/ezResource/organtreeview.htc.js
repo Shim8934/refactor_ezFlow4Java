@@ -1124,7 +1124,7 @@ function organtreeview(thisobjid, elobjid) {
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
 				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "'>&nbsp;");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='margin-right:2px'>");
 				}
 
                 //if (childNode.selectSingleNode("SELECT") != null) {
@@ -1249,7 +1249,7 @@ function organtreeview(thisobjid, elobjid) {
 				        if (childNode.selectSingleNode("DATA15").text == 1)
 				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "'>&nbsp;");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='margin-right:2px'>");
 				}
 
                 if (childNode.selectSingleNode("SELECT") != null) {

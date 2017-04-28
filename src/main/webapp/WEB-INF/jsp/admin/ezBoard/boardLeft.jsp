@@ -272,7 +272,7 @@
 	</head>
 	<body class="leftbody" style="overflow-y: auto; overflow-x: hidden">
 	    <div id="left">
-	        <div class="left_admin"><spring:message code="ezBoard.t58" /></div>
+	        <div class="left_admin"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code="ezBoard.t58" /></div>
 	        <div id="TopBoard"></div>	
 	        <h3><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t0004" /></span></h3>

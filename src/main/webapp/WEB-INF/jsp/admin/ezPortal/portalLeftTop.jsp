@@ -91,7 +91,7 @@
 	</head>
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 		<div id="left">
-			<div class="left_admin" title="<spring:message code='ezPortal.t228'/>"><spring:message code='ezPortal.t228'/></div>
+			<div class="left_admin" title="<spring:message code='ezPortal.t228'/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezPortal.t228'/></div>
         	<h2><span onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t990010'/></span><ul></ul></h2>	
 			<h2><span onClick="goPage(7)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t409'/></span><ul></ul></h2>	
 			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t410'/></span><ul></ul></h2>	

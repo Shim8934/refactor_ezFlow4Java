@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/docnumber_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/docnumberG_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
@@ -240,12 +240,12 @@
 			    }
 			    else {
 			        message2.Set_EditorContentURL(pFormHref);
+			        
 			    }
 			}
 			
 			var setFildAvailable;
 			function FieldsAvailable2() {
-			
 			    messageload2 = true;
 			    if (!messageload || !messageload2) {
 			        setFildAvailable = setInterval(FieldsAvailable2, 1000);
@@ -322,6 +322,12 @@
 			                message.GetListItem(fields, "keepperiod").options.textContent = c;
 			            else
 			                message.GetListItem(fields, "keepperiod").textContent = "<spring:message code='ezApprovalG.t1692'/>";
+			        }
+			    }
+			    
+			    if (message.GetListItem(fields, "docnumber")) {
+			        if (message2.GetListItem(fields2, "docnumber")) {
+			            message.GetListItem(fields, "docnumber").innerHTML = message2.GetListItem(fields2, "docnumber").innerHTML;
 			        }
 			    }
 			
