@@ -100,7 +100,6 @@
 		
 	            document.getElementById("importantid").selectedIndex = parseInt(rgParams.important);
 	            document.getElementById("postTypeid").selectedIndex = parseInt(rgParams.postType);
-	            document.getElementById("bodyType").selectedIndex = parseInt(rgParams.bodyType);
 		
 		        if (rgParams["replySendTime"] == "1") {
 		            document.getElementById("responseSendid").checked = true;
@@ -219,10 +218,6 @@
 		    	RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
 		    }
 		
-		    function postType_onChange() {
-		        RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
-		    }
-		
 		    function GetStartDate() {
 		        var pReservationTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 		        pReservationTime = pReservationTime.replace(/-/gi, "/");
@@ -230,7 +225,6 @@
 		    }
 		
 		    function confirm() {
-	            RetValue["bodyType"] = document.getElementById("bodyType").selectedIndex.toString();
 	            RetValue["important"] = document.getElementById("importantid").selectedIndex.toString();
 	
 	            if (document.getElementById("responseSendid").checked == true)
@@ -262,8 +256,6 @@
 	            else
 	                RetValue["delaySendDate"] = "";
 	
-	            RetValue["bodyType"] = bodyType.selectedIndex.toString();
-		
 	            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
 	                alert("<spring:message code='ezEmail.t354' />");
 	                return;
@@ -321,14 +313,6 @@
 		        <option><spring:message code='ezEmail.t364' /></option>
 		        <option><spring:message code='ezEmail.t365' /></option>
 		        <option><spring:message code='ezEmail.t366' /></option>
-		      </select>
-		    </td>
-		  </tr>
-		  <tr>
-		    <th><spring:message code='ezEmail.t367' /></th>
-		    <td><select id="bodyType" style="Width:100px;" onChange="" NAME="bodyType">
-		        <option 1>HTML</option>
-		        <option>Plain Text</option>
 		      </select>
 		    </td>
 		  </tr>

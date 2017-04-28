@@ -106,6 +106,8 @@
 	    var pDocID = "${docID}";
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
+	    var oldConfig;
+	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -179,6 +181,22 @@
 			
 			if (document.getElementById("eSubject").value == "") {
 			    document.getElementById("MsgTo").focus();
+			}
+			
+			oldConfig = message.CKEDITOR.instances.editor1.config;
+			
+			if (m_rgParams4PostOption["bodyType"] == "1") {
+				document.getElementById("bodyType").options[1].selected = true;
+				
+				var config = {};
+	        	
+	        	config.toolbar = [['Print']];
+	        	config.resize_enabled = false;
+	        	config.removePlugins = 'elementspath';
+	        	config.forcePasteAsPlainText = true;
+	        	
+	        	message.CKEDITOR.instances.editor1.destroy();
+	        	message.CKEDITOR.replace('editor1', config);
 			}
 			
 			// 전달의 경우 쿼터 초과 시 팝업창띄움
@@ -779,7 +797,44 @@
                 </c:if>             
             }	        
 	    }
-	
+		
+	    function changeTextOption(bodyType) {
+	    	m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
+	    	
+	        if (bodyType == "1") {
+	        	var mhtBody = "";
+	            var div_ = document.createElement("DIV");
+	            div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
+	            mhtBody = div_.textContent;
+	            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
+	            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
+	            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
+	            
+	        	var textData = mhtBody.split("\n").join("<br/>");
+	        	var config = {};
+	        	
+	        	config.toolbar = [['Print']];
+	        	config.resize_enabled = false;
+	        	config.removePlugins = 'elementspath';
+	        	config.forcePasteAsPlainText = true;
+	        	
+	        	message.CKEDITOR.instances.editor1.destroy();
+	        	message.CKEDITOR.replace('editor1', config);
+	        	setTimeout( function(a) {
+	        		message.SetEditorContent(a);
+	        	}, 500, textData);
+	        } else {
+	        	var textData = message.GetEditorContent();
+	        	
+        		message.CKEDITOR.instances.editor1.destroy();
+        		message.CKEDITOR.replace('editor1', oldConfig);
+        		
+        		setTimeout( function(a) {
+	        		message.SetEditorContent(a);
+	        	}, 500, textData);
+	        }
+	    }
+	    
 	    function ChangeSenderName(obj) {
 	        if (obj.value != "NONE")
 	            g_showdisplay = obj.value;
@@ -860,6 +915,14 @@
 	                                    <spring:message code='ezEmail.t827' /></option>
 	                                <option value='3'>
 	                                    <spring:message code='ezEmail.t828' /></option>
+	                            </select>
+	                        </li>
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+	                            <img src="/images/pbar.gif"></li> 
+	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+	                            <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
+	                            	<option value="0">HTML</option>
+	                            	<option value="1">Plain Text</option>
 	                            </select>
 	                        </li>
 	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
