@@ -567,17 +567,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(userInfo.getTenantId(), userInfo.getId());
-
+		
+		String defalutFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		
 		if (mailSignatureVO != null) {
 			signState = mailSignatureVO.getUseFlag().trim();
-			signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent1();
-			signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent2();
-			signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div>&nbsp;</div>" : mailSignatureVO.getContent3();
+			signature1 = EgovStringUtil.isEmpty(mailSignatureVO.getContent1()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent1();
+			signature2 = EgovStringUtil.isEmpty(mailSignatureVO.getContent2()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent2();
+			signature3 = EgovStringUtil.isEmpty(mailSignatureVO.getContent3()) ? "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>" : mailSignatureVO.getContent3();
 		} else {
-			signature1 = "<div>&nbsp;</div>";
-			signature2 = "<div>&nbsp;</div>";
-			signature3 = "<div>&nbsp;</div>";
-
+			signature1 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
+			signature2 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
+			signature3 = "<div><p " + defalutFontAndSize + ">&nbsp;</p></div>";
 		}
 
 		serverName = userInfo.getServerName();
