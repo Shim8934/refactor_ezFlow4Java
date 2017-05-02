@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezEmail.service;
 
-import java.util.List;
-
 /**
  * Email Server의 User Account를 관리할 수 있는 기능을 제공한다.
  * 

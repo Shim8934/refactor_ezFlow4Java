@@ -18,7 +18,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzBoardAdminDAO extends EgovAbstractDAO {	
 		
 	@SuppressWarnings("unchecked")
-	public List<BoardVO> checkApplyUser(int tenantID) throws Exception{
+	public List<BoardVO> checkApplyUser(int tenantID) throws Exception {
 		return (List<BoardVO>) list("EzBoardAdminDAO.checkApplyUser", tenantID);
 	}
 	
@@ -236,7 +236,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 
 	public void deleteACL(Map<String, Object> map) throws Exception{
 		delete("EzBoardAdminDAO.deleteACL", map);		
-	}
+	}
 	public void trunkBoard(int tenantID) throws Exception{
 		delete("EzBoardAdminDAO.trunkBoard", tenantID);
 	}

@@ -26,7 +26,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalDAO")
-public class EzPersonalDAO extends EgovAbstractDAO{
+public class EzPersonalDAO extends EgovAbstractDAO {
 	
     private static final Logger logger = LoggerFactory.getLogger(EzPersonalDAO.class);
     

@@ -14,7 +14,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalAdminDAO")
-public class EzPersonalAdminDAO extends EgovAbstractDAO{
+public class EzPersonalAdminDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<PersonalNoticeVO> getNoticeList(Map<String, Object> map) throws Exception {
 		return (List<PersonalNoticeVO>) list("EzPersonalAdmin.EZSP_GETNOTICELIST", map);

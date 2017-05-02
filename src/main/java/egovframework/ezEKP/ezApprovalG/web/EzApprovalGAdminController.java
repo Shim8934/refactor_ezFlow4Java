@@ -59,6 +59,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller
 public class EzApprovalGAdminController extends EgovFileMngUtil {
+	
 	@Autowired	
 	private CommonUtil commonUtil;
 	
