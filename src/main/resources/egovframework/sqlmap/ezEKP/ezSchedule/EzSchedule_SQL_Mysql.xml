@@ -151,6 +151,7 @@
 		<result property="title2"				column="TITLE2"				columnIndex="7"/>
 		<result property="telephoneNumber"		column="TELEPHONENUMBER"	columnIndex="8"/>
 	</resultMap>
+	
 	<!-- checked -->			
 	<select id="EzScheduleDAO.getScheduleConfig" resultMap="scheduleConfigVO">
 		<![CDATA[

@@ -375,7 +375,6 @@ public class CommonUtil {
 	                            isCookie = true;
 	                        }
 	                    } catch (Exception e) {
-	                        // TODO Auto-generated catch block
 	                        //e.printStackTrace();
 	                    }
 	                }

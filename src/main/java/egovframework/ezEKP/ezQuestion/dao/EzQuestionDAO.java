@@ -19,7 +19,7 @@ import egovframework.ezEKP.ezQuestion.vo.QstVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzQuestionDAO")
-public class EzQuestionDAO extends EgovAbstractDAO{
+public class EzQuestionDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<QstListVO> getQstList(Map<String, Object> map){
 		return (List<QstListVO>) list("EzQuestionDAO.getQstList", map);

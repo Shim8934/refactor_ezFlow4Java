@@ -23,6 +23,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPortaAdminDAO")
 public class EzPortalAdminDAO extends EgovAbstractDAO {
+	
 	@SuppressWarnings("unchecked")
 	public List<String> deleteTopPage (Map<String, Object> map) {
 		return  (List<String>)list("EzPortalAdminDAO.deleteTopPage", map);

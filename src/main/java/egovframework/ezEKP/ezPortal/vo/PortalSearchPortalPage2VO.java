@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPortal.vo;
 
 public class PortalSearchPortalPage2VO {
+	
 	/** 아이디*/
 	private String uID_;
 	/** 부모 아이디*/

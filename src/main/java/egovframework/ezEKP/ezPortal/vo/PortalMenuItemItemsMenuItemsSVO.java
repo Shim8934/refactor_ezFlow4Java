@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPortal.vo;
 
 public class PortalMenuItemItemsMenuItemsSVO {
+	
 	/** */
 	private String uID;
 	/** */
