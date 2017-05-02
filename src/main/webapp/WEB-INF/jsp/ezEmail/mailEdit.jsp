@@ -96,6 +96,7 @@
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 		    var defaultFont = "<spring:message code='main.t246' />";
+		    var oldConfig;
 		    
 			function window_onload()
 			{
@@ -166,19 +167,32 @@
 				{
 					if (confirm("<spring:message code='ezEmail.t665' />"))
 					{
-							location.href = location.href + "&attach=1";
+						location.href = location.href + "&attach=1";
 					}
 				}
-				
-		            
 		        
 			    if (document.getElementById("AttachXmlList").innerHTML != "") {
 			        AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML);
 			    }
 		
-		        
 		        MailSignLoad();
 		        Simple_Choice();
+		        
+		        oldConfig = message.CKEDITOR.instances.editor1.config;
+				
+				if (m_rgParams4PostOption["bodyType"] == "1") {
+					document.getElementById("bodyType").options[1].selected = true;
+					
+					var config = {};
+		        	
+		        	config.toolbar = [['Print']];
+		        	config.resize_enabled = false;
+		        	config.removePlugins = 'elementspath';
+		        	config.forcePasteAsPlainText = true;
+		        	
+		        	message.CKEDITOR.instances.editor1.destroy();
+		        	message.CKEDITOR.replace('editor1', config);
+				}
 			}
 			
 			var MailStatus = "NO";
@@ -665,7 +679,62 @@
 		        }
 		        return xmlReturnValue;
 		    }
-		
+			
+		    function changeTextOption(bodyType) {
+		        if (bodyType == "1") {
+		        	
+		        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
+		        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
+		        		
+			        	var mhtBody = "";
+			            var div_ = document.createElement("DIV");
+			            div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
+			            mhtBody = div_.textContent;
+			            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
+			            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
+			            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
+			            
+			            var texts = mhtBody.split("\n");
+			            
+			            var textData = "";
+			            
+			            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
+			            for (var i=0; i<texts.length; i++) {
+			            	if (texts[i] != "") {
+			            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+			            	}
+			            }
+			        	
+			        	var config = {};
+			        	
+			        	config.toolbar = [['Print']];
+			        	config.resize_enabled = false;
+			        	config.removePlugins = 'elementspath';
+			        	config.forcePasteAsPlainText = true;
+			        	
+			        	message.CKEDITOR.instances.editor1.destroy();
+			        	message.CKEDITOR.replace('editor1', config);
+			        	
+			        	setTimeout( function(a) {
+			        		message.SetEditorContent(a);
+			        	}, 500, textData);
+		        	} else {
+		        		document.getElementById("bodyType").options[0].selected = true;
+		        	}
+		        	
+		        } else {
+		        	m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
+		        	
+		        	var textData = message.GetEditorContent();
+		        	
+	        		message.CKEDITOR.instances.editor1.destroy();
+	        		message.CKEDITOR.replace('editor1', oldConfig);
+	        		
+	        		setTimeout( function(a) {
+		        		message.SetEditorContent(a);
+		        	}, 500, textData);
+		        }
+		    }
 		</script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -701,7 +770,15 @@
 		            </li>
 		            <li style="display:none;" class="sel" style="background:none; border:none; padding:0 5px">${strSelectHtml}</li>&nbsp;&nbsp;
 		            <li class="bar" style="background:none; border:0;padding-left:0;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif" align="absmiddle"></li>                        
-		            
+		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+                        <img src="/images/pbar.gif"></li> 
+                    <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+                        <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
+                        	<option value="0">HTML</option>
+                        	<option value="1">Plain Text</option>
+                        </select>
+                    </li>
+                    
 		            <li style="display:none;">
 		                <select id="SelMailSign" onchange="MailSignSel()">
 		                    <option value='0' selected><spring:message code='ezEmail.t825' /></option>
@@ -709,9 +786,8 @@
 		                    <option value='2'><spring:message code='ezEmail.t827' /></option>
 		                    <option value='3'><spring:message code='ezEmail.t828' /></option>
 		                </select>
-		                </li>
-					<li class="bar" style="background:none; border:0;padding-left:10px;padding-right:0;cursor:default;display:none;" nowrap="nowrap"><input  type="checkbox" style="display:inline;" id="chkeachmail" onclick="setEachMail()" /><spring:message code='ezEmail.t748' /></li>
-		                
+	                </li>
+					 
 		          </ul>
 		        </div>
 		        <div id="close">
