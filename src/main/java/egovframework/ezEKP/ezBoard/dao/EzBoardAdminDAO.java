@@ -23,7 +23,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<BoardVO> getBoardTree_Get2(Map<String, Object> map) throws Exception{		
+	public List<BoardVO> getBoardTree_Get2(Map<String, Object> map) throws Exception {		
 		return (List<BoardVO>) list("EzBoardAdminDAO.getBoardTree_Get2", map);
 	}
 	
