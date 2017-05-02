@@ -802,44 +802,52 @@
 	    }
 		
 	    function changeTextOption(bodyType) {
-	    	m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
-	    	
 	        if (bodyType == "1") {
-	        	var mhtBody = "";
-	            var div_ = document.createElement("DIV");
-	            div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
-	            mhtBody = div_.textContent;
-	            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
-	            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
-	            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
-	            
-	            var texts = mhtBody.split("\n");
-	            
-	            var textData = "";
-	            
-	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
-	            for (var i=0; i<texts.length; i++) {
-	            	if (texts[i] != "") {
-	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
-	            	}
-	            }
 	        	
-	        	var config = {};
+	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
+	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
+	        		
+		        	var mhtBody = "";
+		            var div_ = document.createElement("DIV");
+		            div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
+		            mhtBody = div_.textContent;
+		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
+		            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
+		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
+		            
+		            var texts = mhtBody.split("\n");
+		            
+		            var textData = "";
+		            
+		            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
+		            for (var i=0; i<texts.length; i++) {
+		            	if (texts[i] != "") {
+		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+		            	}
+		            }
+		        	
+		        	var config = {};
+		        	
+		        	config.toolbar = [['Print']];
+		        	config.resize_enabled = false;
+		        	config.removePlugins = 'elementspath';
+		        	config.forcePasteAsPlainText = true;
+		        	
+		        	message.CKEDITOR.instances.editor1.destroy();
+		        	message.CKEDITOR.replace('editor1', config);
+		        	
+		        	document.getElementById("SelMailSign").disabled = true;
+		        	
+		        	setTimeout( function(a) {
+		        		message.SetEditorContent(a);
+		        	}, 500, textData);
+	        	} else {
+	        		document.getElementById("bodyType").options[0].selected = true;
+	        	}
 	        	
-	        	config.toolbar = [['Print']];
-	        	config.resize_enabled = false;
-	        	config.removePlugins = 'elementspath';
-	        	config.forcePasteAsPlainText = true;
-	        	
-	        	message.CKEDITOR.instances.editor1.destroy();
-	        	message.CKEDITOR.replace('editor1', config);
-	        	
-	        	document.getElementById("SelMailSign").disabled = true;
-	        	
-	        	setTimeout( function(a) {
-	        		message.SetEditorContent(a);
-	        	}, 500, textData);
 	        } else {
+	        	m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
+	        	
 	        	var textData = message.GetEditorContent();
 	        	
         		message.CKEDITOR.instances.editor1.destroy();
