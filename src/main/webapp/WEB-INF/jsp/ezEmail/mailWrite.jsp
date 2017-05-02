@@ -198,6 +198,8 @@
 	        	
 	        	message.CKEDITOR.instances.editor1.destroy();
 	        	message.CKEDITOR.replace('editor1', config);
+	        	
+	        	document.getElementById("SelMailSign").disabled = true;
 			}
 			
 			// 전달의 경우 쿼터 초과 시 팝업창띄움
@@ -831,6 +833,9 @@
 	        	
 	        	message.CKEDITOR.instances.editor1.destroy();
 	        	message.CKEDITOR.replace('editor1', config);
+	        	
+	        	document.getElementById("SelMailSign").disabled = true;
+	        	
 	        	setTimeout( function(a) {
 	        		message.SetEditorContent(a);
 	        	}, 500, textData);
@@ -839,6 +844,8 @@
 	        	
         		message.CKEDITOR.instances.editor1.destroy();
         		message.CKEDITOR.replace('editor1', oldConfig);
+        		
+        		document.getElementById("SelMailSign").disabled = false;
         		
         		setTimeout( function(a) {
 	        		message.SetEditorContent(a);
