@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>   
 		<script type="text/javascript">
+		
 		    var pUserID = "${userInfo.id}";
 		    var gSentBox = "Y";
 		

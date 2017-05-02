@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>		
 	    <script type="text/javascript">
+	    
 		    var holidayid = "<c:out value='${id}'/>";		    
 		    var issolar = "<c:out value='${isSolar}'/>";
 		    var holidaydate = "<c:out value='${date}'/>";

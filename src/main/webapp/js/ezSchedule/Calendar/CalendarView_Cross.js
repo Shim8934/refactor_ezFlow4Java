@@ -3,7 +3,6 @@ var sStartDate, sEndDate;
 var typeCal = 0;
 var sDate = parent.frames["left"].sDate;
 
-
 var startOfWeek, endOfWeek;
 
 var xmlhttp;

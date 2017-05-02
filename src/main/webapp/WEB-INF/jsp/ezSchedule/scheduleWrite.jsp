@@ -53,8 +53,6 @@
 	        var pCompanyAdmin = "<c:out value='${pCompanyAdmin}'/>";
 	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
 	        var offSetMin = "<c:out value='${offSetMin}'/>";	        
-	        /* var use_exchange_pims = "NO"; */
-	        /* var NoneActiveX = "NO"; */
 		    
 		    document.onselectstart = function () { return false; };		    
 		    window.onload = function () {
