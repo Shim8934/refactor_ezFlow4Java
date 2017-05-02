@@ -55,8 +55,6 @@ function disable_browser_selection() {
     document.body.style.cursor = "default";
 }
 
-
-
 function ListView() {
     this.DataSource = DataSource;
     this.DataBind = DataBind;

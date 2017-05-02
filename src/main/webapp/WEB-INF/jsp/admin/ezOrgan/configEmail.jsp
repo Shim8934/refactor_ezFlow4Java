@@ -9,8 +9,6 @@
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript">
-		//TODO: delete (쓰는지 보고 안쓰면 삭제)
-		//var pNoneActiveX = "${noneActiveX}";
 		
 		function Delete_Address()
 		{

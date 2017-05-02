@@ -97,10 +97,10 @@
 	</resultMap>
 	
 	<resultMap class="QstAnswerVO" id="qstAnswerVO">
-		<result property="brdID"				column="BRD_ID"						columnIndex="1"/>
-		<result property="itemNo"				column="ITEM_NO"						columnIndex="2"/>
-		<result property="questionNo"			column="QUESTION_NO"				columnIndex="3"/>
-		<result property="answerNo"				column="ANSWERNO"					columnIndex="4"/>
+		<result property="brdID"				column="BRD_ID"				columnIndex="1"/>
+		<result property="itemNo"				column="ITEM_NO"			columnIndex="2"/>
+		<result property="questionNo"			column="QUESTION_NO"		columnIndex="3"/>
+		<result property="answerNo"				column="ANSWERNO"			columnIndex="4"/>
 		<result property="answerContent"		column="ANSWERCONTENT"		columnIndex="5"/>
 	</resultMap>
 	

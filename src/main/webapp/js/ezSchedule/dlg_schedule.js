@@ -6,7 +6,6 @@ var m_objStartTime;
 var m_objEndTime;
 var m_objStartOnDate;
 var m_objEndByDate;
-
 var m_msDateDiffStartEnd;
 var CONST_MS_IN_24HRS = 86400000;
 

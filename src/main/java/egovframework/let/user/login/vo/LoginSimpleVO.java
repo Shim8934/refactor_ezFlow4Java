@@ -22,7 +22,7 @@ import java.util.Locale;
  * @author YOON
  *
  */
-public class LoginSimpleVO implements Serializable{	
+public class LoginSimpleVO implements Serializable {	
 
 	private static final long serialVersionUID = -8274004534207618049L;
 		

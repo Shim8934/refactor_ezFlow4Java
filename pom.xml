@@ -71,7 +71,6 @@
 			<artifactId>egovframework.rte.fdl.string</artifactId>
 			<version>${egovframework.rte.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>

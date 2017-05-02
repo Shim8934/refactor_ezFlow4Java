@@ -24,3 +24,4 @@ var strLang22 = "Total";
 var strLang23 = "items";
 var strLang24 = "Prev";
 var strLang25 = "Next";
+

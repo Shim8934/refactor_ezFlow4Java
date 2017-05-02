@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 
-public class EzScheduleCompareUtil implements Comparator<ScheduleInfoVO>{
+public class EzScheduleCompareUtil implements Comparator<ScheduleInfoVO> {
 
 	@Override
 	public int compare(ScheduleInfoVO o1, ScheduleInfoVO o2) {
@@ -26,4 +26,5 @@ public class EzScheduleCompareUtil implements Comparator<ScheduleInfoVO>{
 			return o1.getDateType().compareTo(o2.getDateType());
 		}		
 	}	
+	
 }

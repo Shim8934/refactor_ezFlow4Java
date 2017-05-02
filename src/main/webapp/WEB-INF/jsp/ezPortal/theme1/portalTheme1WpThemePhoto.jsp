@@ -29,7 +29,7 @@
 	<body>
 		<div class="photobox" style="height:226px;">
      		<p class="title"><spring:message code='main.t00030' /></p>
-			${strHTML}
+			${strHTML}	
 		</div>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.min.js"></script>
@@ -50,6 +50,7 @@
 	                		onScroll: function () { snapScrollbar(); }
 	             		}
 	         		});
+					
 		         	/* toggle buttons scroll type */
 		         	var content = $("#content_1");
 		         	$("a[rel='toggle-buttons-scroll-type']").html("<code>scrollType: \"" + content.data("scrollButtons_scrollType") + "\"</code>");

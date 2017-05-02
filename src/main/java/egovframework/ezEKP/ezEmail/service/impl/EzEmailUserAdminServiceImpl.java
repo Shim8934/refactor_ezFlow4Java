@@ -232,7 +232,6 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	
 	@Override
 	public boolean testUserPassword(String userEmailAddress, String password) throws Exception {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

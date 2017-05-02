@@ -72,12 +72,4 @@ public interface EzPersonalAdminService {
 
 	void delQuickLink(String quickLinkID, int tenantID) throws Exception;
 
-	
-
-	
-
-	
-
-	
-
 }

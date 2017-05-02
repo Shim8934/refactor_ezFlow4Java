@@ -2729,6 +2729,11 @@ function SCheckLineUser() {
     if (!pChkFlag)
         pAlertContent = pAlertContent + " " + strLangS303 + "<br>";
 
+    var pChkFlag = CheckChamjo(AprLineRow);
+    if (!pChkFlag)
+        pAlertContent = pAlertContent + " " + strLangSHJ1 + "<br>";
+
+    
     if (pAlertContent != "") {
         var pAlertContent = pAlertContent + "" + strLangS304;
         OpenAlertUI(pAlertContent);
@@ -3081,6 +3086,22 @@ function CheckDraftDeptID( AprLineRow )
 	
 	return true;
 }
+
+function CheckChamjo(AprLineRow) {
+	var i, rtnVal;
+	var aprtype;
+	rtnVal = true;
+	for(i=0;i < AprLineRow.length - 1; i++)	{
+		aprtype = GetAttribute(AprLineRow[i],"DATA11");
+		if (aprtype == strLangS214 || aprtype == strAprType1) break;
+		if (aprtype == strAprType7) {
+			rtnVal = false;
+			break;
+		}
+	}
+	return rtnVal;
+}
+
 function ReDraftSaveAprLine() {
     if (pReDraftFlag == "DRAFT" || pReDraftFlag == "SUSIN" || pReDraftFlag == "HAPYUI" || pReDraftFlag == "HABYUI" || pReDraftFlag == "GAMSABU" || pReDraftFlag == "WHOKYUL") {
         if (!pReDraftAprLineFlag) {

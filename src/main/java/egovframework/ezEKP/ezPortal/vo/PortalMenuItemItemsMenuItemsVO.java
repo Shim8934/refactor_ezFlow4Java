@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPortal.vo;
 
 public class PortalMenuItemItemsMenuItemsVO {
+	
 	/** */
 	private String uID;
 	/** */
@@ -114,4 +115,5 @@ public class PortalMenuItemItemsMenuItemsVO {
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
 	}
+	
 }

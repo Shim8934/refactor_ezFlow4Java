@@ -3,7 +3,7 @@
 
 <sqlMap namespace="ezPortal">
 	<typeAlias  alias="PortalTBLTopMenuItemsVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO"/>
-	<typeAlias  alias="PortalGetRenderedTopMenuInsertVO" 			type="egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO"/>
+	<typeAlias  alias="PortalGetRenderedTopMenuInsertVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalGetRenderedTopMenuInsertVO"/>
 	<typeAlias  alias="PortalTBLPortalPageGeneralVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageGeneralVO"/>
 	<typeAlias  alias="PortalTBLTopMenuGeneralVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuGeneralVO"/>
 	<typeAlias  alias="PortalTBLUserInfoVO" 									type="egovframework.ezEKP.ezPortal.vo.PortalTBLUserInfoVO"/>

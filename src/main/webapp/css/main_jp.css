@@ -42,7 +42,7 @@ aside {position:absolute; top:0px; right:0; width:88px; height:100%; z-index:9; 
 .section3 {width:1140px; margin:30px auto 0px;vertical-align:top;overflow:hidden;}
 .section4 {width:1140px;margin:30px auto 0px;vertical-align:top; overflow:hidden;}
 .section5 {width:1140px;margin:30px auto 0px;vertical-align:top; overflow:hidden;}
-aside {position:absolute; top:0px; right:0; width:70px; z-index:9; overflow:visible; }
+aside {position:absolute; top:0px; right:0; width:70px; z-index:9; overflow:visible;}
 
 /*------------ header ------------*/
 header .logo {float:left;margin:0px; padding:0px; width:200px;height:42px;  display:inline-block;}

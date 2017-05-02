@@ -44,7 +44,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGDAO")
-public class EzApprovalGDAO extends EgovAbstractDAO{
+public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<ApprGListHeaderVO> getListHeader(Map<String, Object> map) throws Exception{

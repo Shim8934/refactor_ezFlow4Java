@@ -227,6 +227,7 @@
 	       		A.TENANT_ID = #v_TENANTID#	
 		]]>
 	</select>
+	
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
 		<![CDATA[
 			SELECT 

@@ -32,7 +32,6 @@ function CalViewSource() {
 function sDataTemp() {
 }
 
-
 var OrgDataSDT;
 var OrgDataEDT;
 function getCalMonthViewSource_after(text) {
