@@ -106,6 +106,7 @@
 	    var pDocID = "${docID}";
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
+	    var defaultFont = "<spring:message code='main.t246' />";
 	    var oldConfig;
 	    
 	    window.onload = function () {
@@ -352,7 +353,7 @@
 	        return "<span><P>&nbsp;</P><P>&nbsp;</P>" + BodyHtml + "</span>"
 	    }
 	    function Rebody() {
-	        var defaultFontAndSize = "style='font-size:13px;font-family:Gulim'";
+	        var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 	        
 	    	if (gg_cmd == "RESEND" && document.getElementById("bodyValue").innerHTML != "") { //재전송 시
 	    		document.getElementById("bodyValue").innerHTML = document.getElementById("bodyValue").innerHTML.replace("id=\"MailSignSent\"", "id=\"MailSign\"");
@@ -810,7 +811,17 @@
 	            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
 	            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
 	            
-	        	var textData = mhtBody.split("\n").join("<br/>");
+	            var texts = mhtBody.split("\n");
+	            
+	            var textData = "";
+	            
+	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
+	            for (var i=0; i<texts.length; i++) {
+	            	if (texts[i] != "") {
+	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+	            	}
+	            }
+	        	
 	        	var config = {};
 	        	
 	        	config.toolbar = [['Print']];

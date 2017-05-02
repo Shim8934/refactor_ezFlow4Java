@@ -95,6 +95,8 @@
 		    var folderDate = "${folderDate}";
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
+		    var defaultFont = "<spring:message code='main.t246' />";
+		    
 			function window_onload()
 			{
 	            if (!CrossYN()) {
