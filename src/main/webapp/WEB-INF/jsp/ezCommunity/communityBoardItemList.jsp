@@ -645,7 +645,7 @@
     			}
     					
     			var OrgBoardParameters = "page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
-    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + OrgBoardParameters + "&code=" + encodeURIComponent(code);
+    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code);
     		}
 
     		function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
