@@ -3134,7 +3134,8 @@ CREATE TABLE `tbl_dailydoccountlog` (
   `SUSINTIME` double(126,0) NOT NULL,
   `RETURNCNT` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`DEPTID`,`USERID`)
+  `COMPANYID` varchar(100) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`DEPTID`,`USERID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3159,7 +3160,8 @@ CREATE TABLE `tbl_dailyformcountlog` (
   `SUSINTIME` double(126,0) NOT NULL,
   `RETURNCNT` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`FORMID`,`FORMCONTID`)
+  `COMPANYID` varchar(100) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`REGDATE`,`FORMID`,`FORMCONTID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
