@@ -542,7 +542,6 @@
 		            }
 		        }
 		        if (formURL != "cancel") {
-		        	alert(100);
 		            openDraftUI("DRAFT", "");
 		        }
 		    }
@@ -599,7 +598,7 @@
 		                    openLocation = "/myoffice/ezApproval/DraftUI/draftui_IE.aspx";
 		                }
 		            }
-		            alert(pArgument[1]);
+
 		            openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=" + escape(pListTypeValue) + "&aprState=" + escape(pArgument[6]);
 		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
