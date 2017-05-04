@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/aprmanage_Cross.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = '${docID}';
 		    var pDocHref = '${docHref}';
@@ -54,7 +55,8 @@
 		    var pUse_Editor = "${editor}";
 		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 		    var admin = "${admin}";
-		    
+		    var formDocType = "${formDocType}";
+		    var formUrl = "${formUrl}";
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
 		    		QuitWindow();
@@ -502,6 +504,111 @@
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
+		    //재사용 추가
+		    var getformcont_cross_dialogArguments = new Array();
+		    function btnReuse_onclick() {
+		        
+		        if (true) {
+		            formURL = formUrl;
+		            formDocType = formDocType;
+		        }
+		        else {
+		            var parameter = new Array();
+		            parameter[0] = arr_userinfo[4];
+		            parameter[1] = "A01000";
+
+		            if (CrossYN() || pNoneActiveX == "YES") {
+		            	getformcont_cross_dialogArguments[0] = parameter;
+		            	getformcont_cross_dialogArguments[1] = AprManage_B_Complete;
+		                var getFormCont = GetOpenWindow("/ezApprovalG/getFormCont.do", "getFormCont", 713, 570, "NO");
+		                try { getFormCont.focus(); } catch (e) {
+		                }
+		            }
+		            else {
+		                var url = "/ezApprovalG/getFormCont.do";
+		                var feature = "center:yes;status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no;";
+		                feature = feature + GetShowModalPosition(713, 570);
+
+		                var ret;
+		                if (window.showModalDialog) {
+		                    ret = window.showModalDialog(url, parameter, feature);
+		                }
+		                else {
+		                    ret = GetOpenWindow(url, "", 713, 570, "NO");
+		                }
+		                formURL = ret[0];
+		                formDocType = ret[1];         
+		            }
+		        }
+		        if (formURL != "cancel") {
+		        	alert(100);
+		            openDraftUI("DRAFT", "");
+		        }
+		    }
+		    
+		    function openDraftUI(pDraftFlag, pCurSelRow) {
+		        var pArgument = new Array();
+
+		        pArgument[0] = pUserID;
+		        pArgument[1] = formUrl;
+		        pArgument[2] = pDraftFlag;
+		        pArgument[3] = formDocType;
+
+		        if (pCurSelRow) {
+		            if (pListTypeValue != "5") {
+		                pArgument[4] = GetAttribute(pCurSelRow, "DATA9");
+		                pArgument[5] = GetAttribute(pCurSelRow, "DATA12");
+		                pArgument[6] = GetAttribute(pCurSelRow, "DATA10");
+		                pArgument[7] = "";
+		            }
+		            else {
+		                pArgument[4] = "0";    
+		                pArgument[5] = "";     
+		                pArgument[6] = "";
+		                pArgument[7] = newDocID;
+		            }
+		            pArgument[3] = GetAttribute(pCurSelRow, "DATA15");
+		        }
+		        else {
+		            pArgument[4] = "0"
+		            pArgument[5] = ""
+		            pArgument[6] = ""
+		            pArgument[7] = "";
+		        }
+		        var temppListTypeValue = pListTypeValue;
+		        pListTypeValue = "1";
+		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+		            if (CrossYN() || pNoneActiveX == "YES") {
+		                alert(strLang1103);
+		                return;
+		            }
+		            else {
+		                var openLocation = "/myoffice/ezApproval/ezViewHWP/ezDraftUI_HWP.aspx";
+		            }
+		        }
+		        else {
+		            var openLocation = "";
+		            if (CrossYN() || pNoneActiveX == "YES") {
+		                openLocation = "/ezApprovalG/draftui.do";
+		            }
+		            else {
+		                if (pUse_Editor == "")
+		                    openLocation = "/myoffice/ezApproval/DraftUI/draftui.aspx";
+		                else {
+		                    openLocation = "/myoffice/ezApproval/DraftUI/draftui_IE.aspx";
+		                }
+		            }
+		            alert(pArgument[1]);
+		            openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=" + escape(pListTypeValue) + "&aprState=" + escape(pArgument[6]);
+		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
+		        }
+		        openLocation += "&beforeDocID=" + pDocID;
+		        pListTypeValue = temppListTypeValue;
+		        var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
+		        window.close();
+		    }
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -515,6 +622,7 @@
 		          <li id="btnDocInfo" class ="approvalG"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		          <li id="btnReuse"><span onClick="return btnReuse_onclick()"><spring:message code='ezApprovalG.t990048'/></span></li>
 		        </ul>
 		      </div>
 		      <div id="close">

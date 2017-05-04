@@ -140,7 +140,7 @@
 		    var junGyulFlag = "${junGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
 		    var docNumZeroCnt = "${docNumZeroCnt}";
-
+			var beforeUrl = "${beforeUrl}";
 		    	
 		    window.onload = function ()
 		    {
@@ -1150,6 +1150,10 @@
 		                    } else {
 		                        message.Set_EditorContentURL(pFormHref);
 		                    }
+		                    
+		                    if (beforeUrl != "") {
+	                            Insert_ReUse_Content();
+	                        }
 		                }
 		                else {
 		                    DraftFlag = "DRAFT";
@@ -1258,7 +1262,7 @@
 			                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */
 			                    SummaryOuterReceiverList = ret[15];
 		                    }
-		                    
+
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
 		                }
@@ -1389,6 +1393,31 @@
 		    function btnSaveServer_onclick_Complete() {
 		        window.close();
 		    }
+		    
+	        function Insert_ReUse_Content() {
+	            var tempXML = createXmlDom();
+	            var XmlBodyDATA = createXmlDom();
+	            var tempStr = "";
+	            var URL = escape(beforeUrl);
+	            tempStr = ConvertMHTtoHTML(URL);
+	            
+	            tempXML = loadXMLString(tempStr);
+	            XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
+	            XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+	            var _DocContentHtml = getNodeText(XmlBodyDATA);
+	            var ConXmlDiv = document.createElement("DIV");
+	            ConXmlDiv.innerHTML = _DocContentHtml;
+	            var TDRows = ConXmlDiv.getElementsByTagName("TD");
+	            var reUseContent = "";
+
+	            for (var i = 0; i < TDRows.length; i++) {
+	                if (GetAttribute(TDRows.item(i), "id") == "body") {
+	                    reUseContent = TDRows.item(i).innerHTML;
+	                    break;
+	                }
+	            }
+	            message.Editor_ReUseContent(reUseContent);
+	        }
 		
 		</script>
 	</head>

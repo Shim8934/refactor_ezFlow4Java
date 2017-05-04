@@ -4313,6 +4313,35 @@
 		</isNotEqual>
 	</select>
 	
+	<select id="EzApprovalG.getDocInfoS" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		SELECT 
+			$v_COLS$ 
+		FROM 
+			TBL_ENDAPRDOCINFO 
+		INNER JOIN 
+				TBL_EXPENDAPRDOCINFO 
+		ON 
+				TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID
+		AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+		AND
+				TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+		INNER JOIN 
+			TBL_FORMINFO     
+		ON 
+			TBL_ENDAPRDOCINFO.FormID = TBL_FORMINFO.FormID
+		AND
+			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_FORMINFO.TENANT_ID
+		AND
+			TBL_ENDAPRDOCINFO.COMPANYID = TBL_FORMINFO.COMPANYID
+		WHERE 
+				TBL_ENDAPRDOCINFO.DOCID = #v_DOCID#
+		AND
+				TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+		AND		
+				TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETMYTASKCODE(#v_USERID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->

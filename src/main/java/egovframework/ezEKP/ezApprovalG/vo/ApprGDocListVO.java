@@ -133,8 +133,21 @@ public class ApprGDocListVO {
 	private String linkDate;
 	private String sendFlag;
 	private String docstateName;
-
+	private String formFileLocation;
+	private String formDocType;
 	
+	public String getFormFileLocation() {
+		return formFileLocation;
+	}
+	public void setFormFileLocation(String formFileLocation) {
+		this.formFileLocation = formFileLocation;
+	}
+	public String getFormDocType() {
+		return formDocType;
+	}
+	public void setFormDocType(String formDocType) {
+		this.formDocType = formDocType;
+	}
 	public String getDocstateName() {
 		return docstateName;
 	}

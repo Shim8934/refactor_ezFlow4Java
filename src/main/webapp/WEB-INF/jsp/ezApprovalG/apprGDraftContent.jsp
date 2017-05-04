@@ -209,7 +209,7 @@
 	                var tempXML = createXmlDom();
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
-	                var URL = encodeURI(url);
+ 	                var URL = encodeURI(url);
 	                tempStr = ConvertMHTtoHTML(URL);
 	                if (tempStr.indexOf("MIME-Version: 1.0") > 0) {
 	                    Set_EditorContentURL(url);
@@ -708,6 +708,15 @@
 	
 	        function Conn_BodyFieldWrite(FieldName, FieldValue) {
 	            document.getElementById(FieldName).textContent = FieldValue;
+	        }
+	        
+	        var _reUseContent = "";
+	        function Editor_ReUseContent(content) {
+	            _reUseContent = content;
+	            try{
+	            	div_BODY.innerHTML = _reUseContent;
+	            }
+	            catch (e) { }
 	        }
 	    </script>
 	</head>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -440,5 +441,7 @@ public interface EzApprovalGService {
 	public String getSameOrgHAPYUIDoc(String docID, String companyID, String lang, int tenantID) throws Exception;
 
 	public String getDocHref(String docID, String docStatus, String type, String companyID, int tenantId) throws Exception;
+
+	public String getDocInfoS(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 
 }

@@ -705,6 +705,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (List<ApprGAprDocInfoVO>) list("EzApprovalG.doSusinHesongAprDocInfoS", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getDocInfoS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDocInfoS", map);
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}
@@ -2630,5 +2635,4 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getHapyuiCount(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getHapyuiCount", map);
 	}
-
 }

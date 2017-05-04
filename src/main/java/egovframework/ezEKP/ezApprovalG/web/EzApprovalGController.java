@@ -326,6 +326,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String selMenu = "all";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
 		String subQuery = request.getParameter("SubQuery");
 		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId());
 		
@@ -354,7 +355,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useMobile", useMobile);
 		model.addAttribute("listType", listType);
 		model.addAttribute("proxyInfo", proxyInfo);
-		
+		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		logger.debug("aprManage ended.");
 		
 		return "ezApprovalG/apprGManage";
@@ -715,6 +716,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		
 		String docSN = "";
+		String beforeUrl = "";
+		String beforeDocID = request.getParameter("beforeDocID");
+		
+		if (beforeDocID == null) {
+			beforeDocID = "";
+		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -791,6 +798,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		
+		
+	//재사용 추가
+		if (approvalFlag.equals("S")) {
+			if (!beforeDocID.equals("")) {
+				beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+		}
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optisSplit", optisSplit);
@@ -813,7 +827,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
-		
+		model.addAttribute("beforeUrl", beforeUrl);
+
 		return "ezApprovalG/apprGDraftui";
 	}
 	
@@ -2110,6 +2125,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String uFlag = request.getParameter("uFlag");
 		String admin = request.getParameter("admin");
 		String pass = "";
+		String formUrl = "";
+		String formDocType = "";
 		if (orgDocID != null  && !orgDocID.equals("")) {
 			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
 		}
@@ -2149,6 +2166,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (resultXML.getElementsByTagName("SIGNCHECK").item(0) != null && !resultXML.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim().equals("")) {
 				signCheck = resultXML.getElementsByTagName("SIGNCHECK").item(0).getTextContent().trim();
 			}
+			
+			//일반 결재 일 때 재사용 기능 사용
+			if (approvalFlag.equals("S")) {
+				if (title == null || title.equals("")) {
+					String reUseInfo = ezApprovalGService.getDocInfoS(docID, "END", "DOCTITLE, FORMFILELOCATION, FORMDOCTYPE", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+					Document resultXML2 = commonUtil.convertStringToDocument(reUseInfo);
+					formUrl = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim();
+					formDocType = resultXML2.getElementsByTagName("FORMDOCTYPE").item(0).getTextContent().trim(); 
+				}
+			}
 		} 
 		
 		model.addAttribute("editor", editor);
@@ -2165,6 +2192,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		model.addAttribute("uFlag", uFlag);
 		model.addAttribute("admin", admin);
+		model.addAttribute("formUrl", formUrl);
+		model.addAttribute("formDocType", formDocType);
 		
 		return "ezApprovalG/apprGcontDocView";
 	}

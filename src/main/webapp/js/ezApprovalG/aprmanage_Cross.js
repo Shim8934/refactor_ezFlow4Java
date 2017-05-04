@@ -2208,6 +2208,7 @@ function cancelYN_after(xml) {
         document.getElementById("tbtnforcecallback").style.display = "none";
     }
     else {
+    	if (forceCallBackYN != "NO") {
     	var result = "";
     	
     	$.ajax({
@@ -2226,12 +2227,16 @@ function cancelYN_after(xml) {
     	
         var RtnVal = getNodeText(loadXMLString(result).documentElement);
         if (RtnVal == "TRUE")
-            document.getElementById("tbtnforcecallback").style.display = "";
+        	document.getElementById("tbtnforcecallback").style.display = "";
         else
             document.getElementById("tbtnforcecallback").style.display = "none";
 
         document.getElementById("tbtncallback").style.display = "none";
         temppDocID = null;
+    	} else {
+    		 document.getElementById("tbtnforcecallback").style.display = "none";
+    	     document.getElementById("tbtncallback").style.display = "none";
+    	}
     }
 }
 

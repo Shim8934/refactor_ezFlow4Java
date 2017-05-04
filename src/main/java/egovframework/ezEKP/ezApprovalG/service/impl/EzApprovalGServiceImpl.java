@@ -7428,7 +7428,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_MODE", mode.toUpperCase());
 		map.put("v_COLS", selectSQL);
 		map.put("v_TENANTID", tenantID);
-		
+
 		logger.debug("getDocInfo Param : v_DOCID = " + docID + " v_MODE = " + " v_TENANTID = " + tenantID + " companyID = " + companyID);
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getDocInfo(map);
 		
@@ -10210,7 +10210,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if (resultXML.getElementsByTagName("DISPLAYNAME").item(0) == null) {
 						rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj08", userInfo.getLocale()));
 					} 
-					
+				
 					if (resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0) != null) {
 						if (!userCompanyID.trim().equals(resultXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().trim())) {
 							rtnVal.append("- " + tempDeptName + messageSource.getMessage("ezApprovalG.pjj09", userInfo.getLocale()) + userCompanyID);
@@ -10226,7 +10226,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			String tmpUserName = "";
 			
-			strXML = ezOrganService.getPropertyList(userID, "displayName;department;description;physicalDeliveryOfficeName;title;extensionAttribute4", strLang, userInfo.getTenantId());
+ 			strXML = ezOrganService.getPropertyList(userID, "displayName;department;description;physicalDeliveryOfficeName;title;extensionAttribute4", strLang, userInfo.getTenantId());
 			resultXML = commonUtil.convertStringToDocument(strXML);
 			
 			if (resultXML.getElementsByTagName("DISPLAYNAME").item(0) != null) {
@@ -20944,5 +20944,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String href = ezApprovalGDAO.getDocInfoHref(map);
 		
 		return href;
+	}
+
+	@Override
+	public String getDocInfoS(String docID, String mode, String selectSQL, LoginVO userInfo, String companyID, int tenantID) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_MODE", mode.toUpperCase());
+		map.put("v_COLS", selectSQL);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getDocInfo Param : v_DOCID = " + docID + " v_MODE = " + " v_TENANTID = " + tenantID + " companyID = " + companyID);
+		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getDocInfoS(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGDocListVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
 	}
 }
