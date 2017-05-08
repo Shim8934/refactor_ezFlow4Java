@@ -3093,7 +3093,7 @@ function CheckChamjo(AprLineRow) {
 	rtnVal = true;
 	for(i=0;i < AprLineRow.length - 1; i++)	{
 		aprtype = GetAttribute(AprLineRow[i],"DATA11");
-		if (aprtype == strLangS214 || aprtype == strAprType1) break;
+		if (aprtype == strLangS214 || aprtype == strAprType1 || aprtype == strAprType4) break;
 		if (aprtype == strAprType7) {
 			rtnVal = false;
 			break;
