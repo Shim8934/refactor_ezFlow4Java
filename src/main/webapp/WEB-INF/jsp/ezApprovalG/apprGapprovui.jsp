@@ -111,7 +111,7 @@
 		    var signDateFormat = "${optSignDateFormat}";
 		    var isSplit = "${optIsSplit}";
 		    var SplitKind = "${optSplitKind}";
-		    var junKyukInfo = "${optjunKyukInfo}";
+		    var junKyulInfo = "${optJunKyulInfo}";
 		    var FirstHtml = "";
 		    var beforeHtml;
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pLimitRange = "", pPageNum = "";

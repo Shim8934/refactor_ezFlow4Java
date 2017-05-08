@@ -520,7 +520,6 @@
 		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            } else if (jobState == "ATTACH") {
-		            	//여기여기여기
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
 		            	
 	                    if (AttachfilenameA1 != null) {
