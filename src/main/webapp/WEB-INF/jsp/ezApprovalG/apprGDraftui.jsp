@@ -138,6 +138,7 @@
 		    var checkdocinfo = false;
 		    var DocType = "";
 		    var junGyulFlag = "${junGyulFlag}";
+		    var draftJunGyulFlag = "${draftJunGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
 		    var docNumZeroCnt = "${docNumZeroCnt}";
 			var beforeUrl = "${beforeUrl}";

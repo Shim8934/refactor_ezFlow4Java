@@ -1176,7 +1176,7 @@ function SGetDraftAprLineInfo(ret) {
                 field = message.GetListItem(fields, fieldname);
 
                 if (field) {
-                	if (OrderType[i] == "004") {
+                	if (draftJunGyulFlag == '1' && OrderType[i] == "004") {
                 		setNodeText(field , strLang6 + "\n" + OrderName[i]);
                         idx = idx + 1;
                         field.setAttribute("style", field.getAttribute("style") + " white-space : pre;"); 

@@ -712,6 +712,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		
@@ -824,6 +825,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("dirPath", dirPath);
 		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
