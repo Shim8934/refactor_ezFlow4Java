@@ -1263,7 +1263,9 @@ function setRecevInfo(ret) {
         }
         return;
     }
-
+    
+    btnReceivLineEnable = true;
+    
     var field = message.GetListItem(fields, "hrecipients");
     if (field) {
         field.innerHTML = "&nbsp;";
