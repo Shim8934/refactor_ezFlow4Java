@@ -23,8 +23,10 @@ function Insert_ImageCmd_Complete(rtn) {
 		    	
 		    	if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1) {
 		    		rtn = showModalDialog("/ezEmail/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
+		    		parent.document.getElementById("iFramePanel").style.left = "165px";
 		    	} else {
 		    		rtn = showModalDialog("/ezCommon/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
+		    		parent.document.getElementById("iFramePanel").style.left = "165px";
 		    	}
 		    	
 		        if (rtn == undefined)
@@ -35,10 +37,14 @@ function Insert_ImageCmd_Complete(rtn) {
 		        CKEDITOR.instances.editor1.insertHtml('<img src=\"' + imgSrc + '\" width=\"' + imgWidth + '\"  height=\"' + imgHeight + '\" />')
 		    } else {
 			    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1) {
-			    	if (parent.document.getElementById("mailPanel") != null)
+			    	if (parent.document.getElementById("mailPanel") != null) {
 			            parent.DivPopUpShow(470, 400, "/ezEmail/ckImageUpload.do");
-			        else
+			    		parent.document.getElementById("iFramePanel").style.left = "165px";
+			    	}
+			        else {
 			            parent.parent.DivPopUpShow(470, 400, "/ezEmail/ckImageUpload.do");
+			            parent.document.getElementById("iFramePanel").style.left = "165px";
+			        }
 			    } else {
 			    	if (parent.document.getElementById("mailPanel") != null) {
 			    		parent.DivPopUpShow(470, 400, "/ezCommon/ckImageUpload.do");
