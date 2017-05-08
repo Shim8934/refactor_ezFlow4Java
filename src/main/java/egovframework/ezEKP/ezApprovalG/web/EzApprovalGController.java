@@ -2948,7 +2948,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
 		}
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
-		String optJunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
+		String optJunKyulInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
 		
 		if (docID != null && !docID.equals("")) {
 			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());
@@ -2986,7 +2986,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
-		model.addAttribute("optJunKyukInfo", optJunKyukInfo);
+		model.addAttribute("optJunKyulInfo", optJunKyulInfo);
 		model.addAttribute("uID", uID);
 		model.addAttribute("name", name);
 		model.addAttribute("deptID", deptID);
