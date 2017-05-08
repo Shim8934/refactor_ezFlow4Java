@@ -5211,21 +5211,38 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo2 = habSem;
 					signText2 = commonUtil.getTodayUTCTime("");
 				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
-					int tmps = Integer.parseInt(signCnt) - refResult;
-					String tempSign = signAdd + "sign" + lastSignNum;
-					String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+					String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 					
-					for (int k = tmps; k < lastAprLineSN; k++) {
-						doc.getElementById(signAdd + "sign" + k).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "</P>");
+					if (junGyulFlag.equals("1")) {
+						int tmps = Integer.parseInt(signCnt) - refResult;
+						String tempSign = signAdd + "sign" + lastSignNum;
+						String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+						
+						for (int k = tmps; k < lastAprLineSN; k++) {
+							doc.getElementById(signAdd + "sign" + k).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "</P>");
+						}
+						
+						doc.getElementById(tempSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
+						doc.getElementById(tempSeumyungDate).html(lastCnt);
+						
+						signInfo = tempSign;
+						signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
+						signInfo2 = tempSeumyungDate;
+						signText2 = commonUtil.getTodayUTCTime("");
+					} else if (junGyulFlag.equals("4")) {
+						int tmps = Integer.parseInt(signCnt) - refResult;
+						String tempSign = signAdd + "sign" + tmps;
+						String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
+						
+						doc.getElementById(signAdd + "sign" + tmps).html(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
+						doc.getElementById(tempSeumyungDate).html(lastCnt);
+						
+						signInfo = tempSign;
+						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
+						signInfo2 = tempSeumyungDate;
+						signText2 = commonUtil.getTodayUTCTime("");
 					}
-					
-					doc.getElementById(tempSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
-					doc.getElementById(tempSeumyungDate).html(lastCnt);
-					
-					signInfo = tempSign;
-					signText = "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
-					signInfo2 = tempSeumyungDate;
-					signText2 = commonUtil.getTodayUTCTime("");
+					//TODO: junGyulFlag 2,3 인 경우 전결 일괄결재 처리
 				}
 			} else {
 				if (aprType.equals("016")) {
