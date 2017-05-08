@@ -349,7 +349,6 @@ function AprrovMappingSign(ret) {
 
                         var contents = OpinionText;
                         
-                        //TODO: signInfo[signCnt]... 에 담아야하나?
                         field.innerHTML = strimg;
                         signInfo[signCnt] = signID;
                         SignName[signCnt] = signID;
@@ -379,7 +378,7 @@ function AprrovMappingSign(ret) {
                     }
 //                }
             }
-    	} else { //junGyulFlag == "4" (2,3은 추후개발)
+    	} else if (junGyulFlag == "4") {
     		signID = pSusinSN2 + "sign" + pAprMemberSignSN;
             seumyungID = pSusinSN2 + "jikwe" + pAprMemberSignSN;
             seumyungdateID = pSusinSN2 + "seumyungdate" + pAprMemberSignSN;
@@ -471,6 +470,7 @@ function AprrovMappingSign(ret) {
 //                }
             }
     	} 
+        //TODO: junGyulFlag 2,3 일때 처리
     } else {
     	var pAprMemberSignSN = pAprMemberSN;
     	var signID;
@@ -478,7 +478,7 @@ function AprrovMappingSign(ret) {
     	var seumyungdateID;
     	
     	//S버젼 추가
-    	
+    	//approvalFlag == "S" && pAprLineType == strAprType4인 경우는 없음(위에서 처리하였음)
     	if (approvalFlag == "S") {
     		if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
     			for (i = 1; i < 20; i++) {
@@ -664,6 +664,8 @@ function AprrovMappingSign(ret) {
                     SingFlag = true;
                 }
                 else {
+                	var strimg;
+                	
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     else
