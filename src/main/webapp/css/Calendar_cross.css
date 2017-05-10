@@ -39,9 +39,9 @@
 
 /* 자원관리 승인,비승인아이콘 */
 .calendar_month .td_list td.resource_ok{color:#666666;}
-.calendar_month .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
+.calendar_month .td_list td .resource_ok{display:inline-block; width:18px; height:18px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; background-size:18px;overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
 .calendar_month .td_list td.resource_no{color:#666666;}
-.calendar_month .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
+.calendar_month .td_list td .resource_no{display:inline-block; width:18px; height:18px; background:url(/images/calendar/icon_resource_no.png) no-repeat; background-size:18px;overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
 /* //월보기 */
 
 
@@ -89,10 +89,10 @@
 
 
 .calendar_data_ok{background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* 자원관리 승인 백그라운드 주보기,일보기 데이터 */
-.calendar_data_ok .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 승인 주보기,일보기 데이터 */
+.calendar_data_ok .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat;background-size:18px;overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 승인 주보기,일보기 데이터 */
 .calendar_data_ok table td{background:#f2f2f2 !important;} /* 20130418_임의로 작업 추후변경 */
 .calendar_data_no{background:#f2f2f2; border:1px solid #f2f2f2; line-height:150%; color:black;}/* 자원관리 비승인 백그라운드 주보기,일보기 데이터 */
-.calendar_data_no .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 비승인 주보기,일보기 데이터 */
+.calendar_data_no .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat;background-size:18px;overflow:hidden; margin:-2px 5px 0px 2px; padding:0; vertical-align:middle;}/* 자원관리 비승인 주보기,일보기 데이터 */
 .calendar_data_no table td{background:#f2f2f2 !important; color:black} /* 20130418_임의로 작업 추후변경 */
 /* //주보기 */
 
@@ -166,9 +166,9 @@
 
 /* 자원관리 승인,비승인아이콘 */
 .calendar_layer .text .td_list td.resource_ok{color:#00b43b;}
-.calendar_layer .text .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
+.calendar_layer .text .td_list td .resource_ok{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_ok.png) no-repeat;background-size:18px;overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 승인 */
 .calendar_layer .text .td_list td.resource_no{color:#999999;}
-.calendar_layer .text .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
+.calendar_layer .text .td_list td .resource_no{display:inline-block; width:16px; height:16px; background:url(/images/calendar/icon_resource_no.png) no-repeat;background-size:18px;overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 비승인 */
 .calendar_layer .text .td_list td .width_16{display:inline-block; width:16px; height:16px; background:transparent; overflow:hidden; margin:-2px 5px 0px 0px; padding:0; vertical-align:middle;}/* 공백width */
 /* //달력layer 팝업 */
 

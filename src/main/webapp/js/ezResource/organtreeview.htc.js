@@ -1122,9 +1122,9 @@ function organtreeview(thisobjid, elobjid) {
 					    nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
 				    else
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
-				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
+				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png' width='18px' style='padding-top:4px'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='margin-right:2px'>");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' width='18px' style='margin-right:2px;padding-top:4px'>");
 				}
 
                 //if (childNode.selectSingleNode("SELECT") != null) {
@@ -1247,9 +1247,9 @@ function organtreeview(thisobjid, elobjid) {
 				        nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
 				    else
 				        if (childNode.selectSingleNode("DATA15").text == 1)
-				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
+				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png' width='18px' style='padding-top:4px'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='margin-right:2px'>");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' width='18px' style='margin-right:2px;padding-top:4px'>");
 				}
 
                 if (childNode.selectSingleNode("SELECT") != null) {

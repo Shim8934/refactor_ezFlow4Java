@@ -1568,8 +1568,9 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     var sSpan = document.createElement("SPAN");
     var _img = document.createElement("IMG");
     if (pApproveFlag == "1") {
-        _img.src = "/images/calendar/icon_resource_ok.png"
+        _img.src = "/images/calendar/icon_resource_ok.png";
         _img.style.verticalAlign = "middle";
+        _img.style.width = "18px";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
@@ -1577,6 +1578,7 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     else {
         _img.src = "/images/calendar/icon_resource_no.png"
         _img.style.verticalAlign = "middle";
+        _img.style.width = "18px";
         sSpan.appendChild(_img);
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang308;
