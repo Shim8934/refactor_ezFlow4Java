@@ -4957,7 +4957,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String realPath = commonUtil.getRealPath(request);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
-		String updAprNum = signNum;
 		String content = "";
 		String pTitle = "";
 		String jikwe = "";
@@ -5041,7 +5040,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			signAdd = "";
 		}
 		
-		String signCnt = signNum;
 		String signImage = "";
 		String propList = "extensionAttribute3;title;title2;displayName;displayName2;department;description;description2;extensionAttribute14";
 		String results = ezOrganService.getPropertyList(userID, propList, strLang, userInfo.getTenantId());
@@ -5082,6 +5080,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			signTextArray[0] = "defaultsign.gif";
 		}
 		
+		int signCnt = Integer.parseInt(signNum);
 		int tempLength = signTextArray.length;
 		int pCnt = getDocAprCnt(docID, companyID, userInfo.getTenantId());
 		int refResult = getDocInfoRef(docID, orgUID, aprState, companyID, userInfo.getTenantId());
@@ -5100,10 +5099,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (docListNode.getLength() > 0) {
 			totalLineSN = docListNode.getLength();
 			
+			for (int k = totalLineSN - Integer.parseInt(signNum); k < totalLineSN; k++) {
+				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+				
+				if (pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
+					signNum =  String.valueOf(Integer.parseInt(signNum) - 1);
+				}
+			}
+			
 			for (int k = 0; k < docListNode.getLength(); k++) {
 				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
 				
-				if (pType.equals("003") || pType.equals("007")) {
+				if (pType.equals("003") || pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
 					totalLineSN = totalLineSN - 1;
 				}
 			}
@@ -5163,7 +5170,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (aprType.equals("001")) {
 					if (refResult > 0) {
 						//분석해야함
-						int tmps = Integer.parseInt(signCnt) - refResult;
+						int tmps = signCnt - refResult;
 						
 						if (totalLineSN == tmps) {
 							doc.getElementById(signAdd + "sign" + lastSignNum).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
@@ -5177,7 +5184,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							doc.getElementById(strSeumyungDate).html(lastCnt);
 						}
 					} else {
-						int tmps = Integer.parseInt(signCnt) - refResult;
+						int tmps = signCnt - refResult;
 						
 						if (totalLineSN == tmps) {
 							strSign = signAdd + "sign" + lastSignNum;
@@ -5200,7 +5207,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo2 = strSeumyungDate;
 					signText2 = commonUtil.getTodayUTCTime("");
 				} else if (aprType.equals("008") || aprType.equals("009")) {
-					int tmps = Integer.parseInt(signCnt) - habResult;
+					int tmps = signCnt - habResult;
 					String habSign = signAdd + "habyuisign" + tmps;
 					String habSem = signAdd + "habyuidate" + tmps;
 					
@@ -5214,7 +5221,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 					
 					if (junGyulFlag.equals("1")) {
-						int tmps = Integer.parseInt(signCnt) - refResult;
+						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + lastSignNum;
 						String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
 						
@@ -5230,7 +5237,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						signInfo2 = tempSeumyungDate;
 						signText2 = commonUtil.getTodayUTCTime("");
 					} else if (junGyulFlag.equals("4")) {
-						int tmps = Integer.parseInt(signCnt) - refResult;
+						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
 						String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
 						
@@ -5246,7 +5253,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			} else {
 				if (aprType.equals("016")) {
-					int tmps = Integer.parseInt(signCnt) - refResult;
+					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
 					String tempJik = signAdd + "jikwe" + tmps;
 					String tempSem = signAdd + "seumyungdate" + tmps;
@@ -5270,13 +5277,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (refResult > 0) {
-						int tmps = Integer.parseInt(signCnt) - refResult;
+						int tmps = signCnt - refResult;
 						strSign = signAdd + "sign" + tmps;
 						strJikwe = signAdd + "jikew" + tmps;
 						
 						doc.getElementById(strSign).html(lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 					} else {
-						int tmps = Integer.parseInt(signCnt) - refResult;
+						int tmps = signCnt - refResult;
 						strSign = signAdd + "sign" + tmps;
 						strSeumyungDate = signAdd + "seumyungdate" + tmps;
 						strJikwe = signAdd + "jikwe" + tmps;
@@ -5287,7 +5294,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo = strSign;
 					signText = lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 				} else if (aprType.equals("008") || aprType.equals("009")) {
-					int tmps = Integer.parseInt(signCnt) - habResult;
+					int tmps = signCnt - habResult;
 					String habSign = signAdd + "habyuisign" + tmps;
 					String habSem = signAdd + "habyuidate" + tmps;
 					
@@ -5298,7 +5305,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signInfo2 = habSem;
 					signText2 = commonUtil.getTodayUTCTime("");
 				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
-					int tmps = Integer.parseInt(signCnt) - refResult;
+					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
 					
 					doc.getElementById(tempSign).html(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
@@ -5635,7 +5642,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				if (signSaveFlag) {
-					rollBackSignInfo(signCnt, docID, companyID, signAdd, userInfo.getTenantId());
+					rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 				}
 				
 				return "Link ERROR";
@@ -5682,7 +5689,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (signSaveFlag) {
-						rollBackSignInfo(signCnt, docID, companyID, signAdd, userInfo.getTenantId());
+						rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 					}
 					
 					return "Link ERROR";
@@ -5736,7 +5743,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (signSaveFlag) {
-						rollBackSignInfo(signCnt, docID, companyID, signAdd, userInfo.getTenantId());
+						rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 					}
 					
 					return "Link ERROR";
