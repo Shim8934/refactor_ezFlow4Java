@@ -148,7 +148,7 @@
             width: '100%',
             height: (document.documentElement.clientHeight) + "px",
             //initFilePath : "http://192.168.0.1/test/config/env.xml",
-            initFontFamily : "굴림",
+            initFontFamily : "<spring:message code='main.t246' />",
             initFontSize : "13px"
 
         });
