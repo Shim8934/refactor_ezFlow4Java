@@ -550,8 +550,8 @@ function tableListControl_Week()
                 _span.onmouseover = function (event) { onmouse_over(this, event); };
                 _span.onmouseout = new Function("onmouse_out(this);");
                 var pResourceName = "";
-                pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
-                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + encodeURIComponent(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();             
+                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                 setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[j]));
                 _td.appendChild(_span);
                 _tr.appendChild(_td);

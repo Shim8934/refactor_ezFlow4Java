@@ -11,6 +11,10 @@
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		
 		<script type="text/javascript">
+			window.onload = function () {	        	
+	        	window.resizeTo(550, 360 + window.outerHeight - window.innerHeight);
+			}
+			
 			var code = "<c:out value = '${code}' />";
 			
 			function comClose_onclick( code, pType ) {

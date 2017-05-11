@@ -10,6 +10,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -50,6 +56,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardDeleteItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
@@ -7049,6 +7056,120 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		logger.debug("getMyCoummunityBoardList ended.");
 		return rtnVal.toString();
+	}
+	
+	public List<CommunityBoardDeleteItemVO> getExpiredItems() throws Exception {
+		logger.debug("getExpiredItems started");
+
+		List<CommunityBoardDeleteItemVO> expiredItemList = ezCommunityDAO.getExpiredItems();
+
+		logger.debug("getExpiredItems ended");
+		
+		return expiredItemList;
+	}
+
+	@Override
+	public void deleteExpiredItems(String realPath) throws Exception {
+		logger.debug("deleteExpiredItems started");
+
+		List<CommunityBoardDeleteItemVO> expiredItemList = getExpiredItems();
+		
+		for (CommunityBoardDeleteItemVO k : expiredItemList) {
+			deleteItem(k.getItemID(), k.getTenantID());
+		}
+
+		logger.debug("deleteExpiredItems ended");
+	}
+
+	@Override
+	public void deleteReservedBoard(String realPath) throws Exception {
+		logger.debug("deleteReservedBoard started");
+		
+		int deleteCnt = 0;
+		List<CommunityBoardDeleteItemVO> boardInfoList = ezCommunityDAO.getDeleteReservedBoard();
+		
+		for (CommunityBoardDeleteItemVO k : boardInfoList) {
+			logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
+			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
+			
+			//커뮤니티 게시판 디렉토리 하위 이미지, 게시물 관련 파일 모두 지우기
+			try {
+				Files.walkFileTree(docPath, new FileVisitor<Path>() {
+					@Override
+					public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+						logger.debug("delete preVisitDirectory :: " + docPath);
+						return FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						Files.deleteIfExists(file);
+						logger.debug("delete File :: " + docPath);
+						return FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+						logger.debug("delete visitFileFailed :: " + docPath);
+						return FileVisitResult.CONTINUE;
+					}
+
+					@Override
+					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+						if (exc == null) {
+							Files.deleteIfExists(dir);
+							logger.debug("delete Directory :: " + docPath);
+							return FileVisitResult.CONTINUE;
+						} else {
+							throw exc;
+						}
+					}
+				});
+				
+				deleteCnt++;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			ezCommunityDAO.deleteReservedBoard(k);
+			logger.debug("delete boardID : " + k.getBoardID() + " is Done");
+		}
+		
+		logger.debug("deleteReservedBoard:::deleteBoardCount = " + deleteCnt);
+		logger.debug("deleteReservedBoard ended");
+	}
+
+	@Override
+	public void deleteReservedBoardItem(String realPath) throws Exception {
+		logger.debug("deleteReservedBoardItem started");
+
+		List<CommunityBoardDeleteItemVO> boardItemList = ezCommunityDAO.getDeleteReservedBoardItem();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (CommunityBoardDeleteItemVO k : boardItemList) {
+			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()
+					+ commonUtil.separator + "doc" + commonUtil.separator + k.getItemID() + ".mht");
+			
+			Files.deleteIfExists(docPath);
+			
+			map.put("itemID", k.getItemID());
+			map.put("boardID", k.getBoardID());
+			map.put("tenantID", k.getTenantID());
+			
+			List<String> filePathList = ezCommunityDAO.getCopyItemAttach(map);
+			
+			for (String h : filePathList) {
+				Path filePath = Paths.get(realPath + h);
+				
+				Files.deleteIfExists(filePath);
+			}
+			
+			ezCommunityDAO.deleteBoardItemAttach(map);
+			ezCommunityDAO.deleteReservedBoardItem(k);
+			logger.debug("delete itemID : " + k.getItemID() + " is Done");
+		}
+
+		logger.debug("deleteReservedBoardItem ended");
 	}
 	
 }

@@ -1068,10 +1068,10 @@
 						<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
 						<c:choose>
 							<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-								<td id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap"><div style="vertical-align:middle;width:100px;height:21px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div></td>
+								<td id="EndDate" style="padding-right:5px; width:120px; white-space:nowrap"><div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div></td>
 							</c:when>
 							<c:otherwise>
-								<td id="EndDate" style="padding-right:15px; width:120px; white-space:nowrap"><div style="vertical-align:middle;width:100px;height:21px;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div></td>
+								<td id="EndDate" style="padding-right:15px; width:120px; white-space:nowrap"><div style="vertical-align:middle;width:100px;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div></td>
 							</c:otherwise>
 						</c:choose>
 						</tr>

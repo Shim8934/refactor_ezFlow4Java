@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezCommunity.vo.CommunityBoardDeleteItemVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemAttachmentVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
@@ -267,6 +268,26 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<CommunityBoardPropertyVO> adminMemberListGoSESelect(Map<String, Object> map) throws Exception {
 		return (List<CommunityBoardPropertyVO>) list("EzCommunityDAO.adminMemberListGoSESelect", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardDeleteItemVO> getExpiredItems() throws Exception {
+		return (List<CommunityBoardDeleteItemVO>) list("EzCommunityDAO.getExpiredItems");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardDeleteItemVO> getDeleteReservedBoard() throws Exception {
+		return (List<CommunityBoardDeleteItemVO>) list("EzCommunityDAO.getDeleteReservedBoard");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityBoardDeleteItemVO> getDeleteReservedBoardItem() throws Exception {
+		return (List<CommunityBoardDeleteItemVO>) list("EzCommunityDAO.getDeleteReservedBoardItem");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getCopyItemAttach(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzCommunityDAO.getCopyItemAttach", map);
 	}
 	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
@@ -1090,6 +1111,18 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		delete("EzCommunityDAO.brdDeleteBoardInsert", map);
 	}
 
+	public void deleteReservedBoardItem(CommunityBoardDeleteItemVO k) throws Exception {
+		delete("EzCommunityDAO.deleteReservedBoardItem", k);
+	}
+	
+	public void deleteReservedBoard(CommunityBoardDeleteItemVO k) throws Exception {
+		delete("EzCommunityDAO.deleteReservedBoard", k);
+	}
+	
+	public void deleteBoardItemAttach(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteBoardItemAttach", map);
+	}
+	
 	public String joinOkSendMailGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.joinOkSendMailGet1", map);
 	}
@@ -1097,4 +1130,5 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public LoginVO joinOkSendMailGet2(Map<String, Object> map) throws Exception {
 		return (LoginVO) select("EzCommunityDAO.joinOkSendMailGet2", map);
 	}
+
 }
