@@ -14,7 +14,7 @@
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js/dhtml.js"></script>
 		<script type="text/javascript">
-		    var pUserID = "${userId}"; //TODO: userinfo.userID 로 수정해야함
+		    var pUserID = "${userId}";
 		    var pSigState = "0";
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
