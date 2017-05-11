@@ -5374,7 +5374,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (xmlDom.getElementsByTagName("DOCID").getLength() > 0) {
 			totCnt = xmlDom.getElementsByTagName("DOCID").getLength();
 			
-			for (int k = 0; k < xmlDom.getElementsByTagName("DOCID").getLength(); k++) {
+			for (int k = xmlDom.getElementsByTagName("DOCID").getLength() - 1; k > -1; k--) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent();
 				
 				  if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
