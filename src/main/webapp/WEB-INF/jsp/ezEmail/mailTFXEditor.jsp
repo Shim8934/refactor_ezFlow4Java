@@ -144,14 +144,14 @@
 <body style="margin: 0px; padding: 0px;" id="xfe_ex">
     <script type="text/javascript">
         xfe = new XFE({
-            basePath: "/js/tfxEditor",
-            width: '100%',
-            height: (document.documentElement.clientHeight) + "px",
-            //initFilePath : "http://192.168.0.1/test/config/env.xml",
+            basePath : "/js/tfxEditor",
+            width : '100%',
+            height : (document.documentElement.clientHeight) + "px",
             initFontFamily : "<spring:message code='main.t246' />",
-            initFontSize : "13px"
-
+            initFontSize : "13px",
+            skin : 'classic'
         });
+        
         xfe.render('xfe_ex');
         window.onload = parent.Editor_Complete;
     </script>
