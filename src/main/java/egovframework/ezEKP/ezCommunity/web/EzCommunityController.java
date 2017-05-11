@@ -206,7 +206,11 @@ public class EzCommunityController extends EgovFileMngUtil{
         String imgUrl = request.getParameter("imgUrl");
 		String pfileName = request.getParameter("fileName");
 		String pFilePath = "", pBoardID = "";
-
+		
+		if (imgUrl == null) {
+			imgUrl = pfileName;
+		}
+		
 		if (request.getParameter("boardID") != null) {
 			pBoardID = request.getParameter("boardID");
 		}
