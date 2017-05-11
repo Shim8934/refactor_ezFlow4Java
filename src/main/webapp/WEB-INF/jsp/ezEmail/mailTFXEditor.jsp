@@ -149,7 +149,7 @@
             height: (document.documentElement.clientHeight) + "px",
             //initFilePath : "http://192.168.0.1/test/config/env.xml",
             initFontFamily : "굴림",
-            initFontSize : "11pt"
+            initFontSize : "13px"
 
         });
         xfe.render('xfe_ex');
