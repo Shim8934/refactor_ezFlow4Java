@@ -992,8 +992,9 @@ form{display:inline;margin:0}
 }
 .tbresult { background:#fafafa}
 
-.icon_01{background:url(/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:17px; height:18px; width:18px; background-size: 18px}
-.icon_02{background:url(/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:17px; height:18px; width:18px; background-size: 18px}
+.icon_01{background:url(/images/calendar/icon_resource_no.png) no-repeat left top; padding-left:17px; height:16px;}
+.icon_02{background:url(/images/calendar/icon_resource_ok.png) no-repeat left top; padding-left:17px; height:16px;}
+
 
 .table_layout 
 { 
