@@ -973,6 +973,34 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 메일 에디터 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSelectEditor.do")
+	public String mailSelectEditor(
+			@CookieValue("loginCookie") String loginCookie, 
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String returnPath = "ezEmail/mailCKEditor";
+		
+		switch (useEditor) {
+			case "CK": 
+				returnPath = "ezEmail/mailCKEditor";
+				break;
+			case "TAGFREE":
+				returnPath = "ezEmail/mailTFXEditor";
+				break;
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		return returnPath;
+	}
+	
+	/**
 	 * 메일 CK에디터 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailCKEditor.do")

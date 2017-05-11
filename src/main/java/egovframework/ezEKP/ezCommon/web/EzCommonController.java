@@ -501,4 +501,37 @@ public class EzCommonController extends EgovFileMngUtil{
 			response.getWriter().print();
 		}*/
 	}
+	
+	
+	/**
+	 * 게시판 TagFree에디터 업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezCommon/tfxUpload.do")
+	public String tfxUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		MultipartFile multiFile = request.getFile("FILE_PATH");
+		
+		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String today = EgovDateUtil.getToday("");
+		String fileName = UUID.randomUUID() + "." + fileType;
+		
+		filePath = filePath + commonUtil.separator + today;
+		File file = new File(realPath + filePath);
+        if (!file.exists()) {
+        	file.mkdirs();
+        }
+		
+		writeUploadedFile(multiFile, fileName, realPath + filePath);
+		
+		model.addAttribute("sContentType", request.getParameter("content_type"));
+		model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
+		
+		//TODO: string
+		model.addAttribute("sErrorLog", "에러염");
+		
+		return "ezCommon/tfxUpload";
+	}
 }

@@ -1084,9 +1084,12 @@
 	                                <iframe id="tbContentElement" class="viewbox" src="TagFree_TFX_Editor.aspx" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	                            <% } else if (Use_Editor == "DEXT") { %>
 	                                <iframe id="tbContentElement" class="viewbox" src="DEXT_Editor.aspx" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	                            <% } else { --%>
+	                            <% } else { %>
 	                                <iframe id="tbContentElement" class="viewbox" src="/ezEmail/mailCKEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	                            <%-- } --%>
+	                            <% } --%>
+	                            
+	                            <iframe id="tbContentElement" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	                            
 	                        </td>
 	                    </tr>
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리
