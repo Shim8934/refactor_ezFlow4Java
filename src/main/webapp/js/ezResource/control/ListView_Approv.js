@@ -656,12 +656,10 @@ function ListView() {
                     if (strValue == 1) {
                         oText.src = "/images/calendar/icon_resource_ok.png";
                         oText.style.paddingLeft = "5px";
-                        oText.width = "18px";
                     }
                     else {
                         oText.src = "/images/calendar/icon_resource_no.png";
                         oText.style.paddingLeft = "5px";
-                        oText.width = "18px";
                     }
                 }
                 else if (j == 8) {

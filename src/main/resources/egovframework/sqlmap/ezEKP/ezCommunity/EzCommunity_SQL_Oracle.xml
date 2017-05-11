@@ -23,6 +23,7 @@
 	<typeAlias alias="CommunityCOutApplicationVO"		type="egovframework.ezEKP.ezCommunity.vo.CommunityCOutApplicationVO"/>
 	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
 	<typeAlias alias="CommunityMyCommunityVO"			type="egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO"/>
+	<typeAlias alias="CommunityBoardDeleteItemVO" 		type="egovframework.ezEKP.ezCommunity.vo.CommunityBoardDeleteItemVO"/>
 	
 	<resultMap class="CommunityCBoardVO" id="LeftBBSList">
 		<result property="no"							column="NO"							columnIndex="1"/>
@@ -6734,4 +6735,95 @@
 				tenant_id = #tenantID#
 		]]>
 	</select>
+	
+	<select id="EzCommunityDAO.getExpiredItems" resultClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT 
+				B.BOARDID, 
+				B.ITEMID, 
+			    B.TENANT_ID
+			FROM
+				TBL_COMM_BOARDINFO A
+			JOIN
+				TBL_COMM_ITEM B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BOARDID = B.BOARDID
+			WHERE
+				A.BOARDID IN ( SELECT
+									BOARDID
+								FROM
+									TBL_COMM_BOARDINFO
+								WHERE
+									DELETEAFTER > -1
+								AND
+									BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
+			AND
+				B.ENDDATE < ADDDATE(utc_timestamp(), - A.DELETEAFTER)
+		]]>
+  	</select>
+  
+  	<select id="EzCommunityDAO.getDeleteReservedBoard" resultClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT
+  				*
+  			FROM
+  				TBL_COMM_DELETERESERVEDBOARD
+		]]>
+  	</select>
+  
+  	<select id="EzCommunityDAO.getDeleteReservedBoardItem" resultClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT
+  				*
+  			FROM
+  				TBL_COMM_DELETERESERVEDITEM
+		]]>
+  	</select>
+  
+  	<delete id="EzCommunityDAO.deleteReservedBoardItem" parameterClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_COMM_DELETERESERVEDITEM
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+  			AND
+  				itemID = #itemID#
+		]]>
+  	</delete>
+  
+  	<delete id="EzCommunityDAO.deleteReservedBoard" parameterClass="CommunityBoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_COMM_DELETERESERVEDBOARD
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+		]]>
+  	</delete>
+  
+  	<select id="EzCommunityDAO.getCopyItemAttach" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				FILEPATH 
+        	FROM 
+        		TBL_COMM_Item_Attachments 
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND  
+       			ITEMID = #itemID#
+		]]>
+	</select>
+	
+	<delete id="EzCommunityDAO.deleteBoardItemAttach" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_COMM_Item_Attachments
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			ITEMID = #itemID#
+		]]>
+	</delete>
 </sqlMap>

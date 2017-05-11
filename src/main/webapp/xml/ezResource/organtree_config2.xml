@@ -26,7 +26,7 @@
 			<image idx="BASE" path="/images/OrganTree_cross/fldr.gif" />
 			<image idx="1" path="/images/OrganTree_cross/fldr.gif" />
 			<image idx="ICONCOMP" path="/images/OrganTree_cross/fldr.gif" />
-			<image idx="SUB_BASE" path="/images/calendar/icon_resource_default.png" />
+			<image idx="SUB_BASE" path="/images/OrganTree_cross/ic-Item.gif" />
 		</images>
 	</config>
 </tree>
