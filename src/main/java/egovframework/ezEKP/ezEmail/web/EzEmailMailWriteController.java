@@ -985,7 +985,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-		String returnPath = "ezEmail/mailCKEditor";
+		String returnPath = "";
 		
 		switch (useEditor) {
 			case "CK": 
@@ -994,6 +994,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			case "TAGFREE":
 				returnPath = "ezEmail/mailTFXEditor";
 				break;
+			default :
+				returnPath = "ezEmail/mailCKEditor";
 		}
 		
 		model.addAttribute("userInfo", userInfo);

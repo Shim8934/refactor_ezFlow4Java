@@ -144,7 +144,7 @@
 <body style="margin: 0px; padding: 0px;" id="xfe_ex">
     <script type="text/javascript">
     	var userLang = "${userInfo.lang}";
-    	var lang = "korean";
+    	var lang = "";
     	
     	switch (userLang) {
 	    	case "1": 
@@ -159,6 +159,9 @@
 	    	case "4": 
 	    		//중국어 간체 (번체는 chinese_t)
 	    		lang = "chinese_s";
+	    		break;
+	    	default :
+	    		lang = "korean";
 	    		break;
     	}
     	
