@@ -165,11 +165,14 @@
 	    		break;
     	}
     	
+    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
+    	
         xfe = new XFE({
         	lang : lang,
             basePath : "/js/tfxEditor",
             width : '100%',
             height : (document.documentElement.clientHeight) + "px",
+            initFontFamilyMenu : initFontFamilyMenu,
             initFontFamily : "<spring:message code='main.t246' />",
             initFontSize : "13px",
             skin : 'classic'
