@@ -4752,6 +4752,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Override
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("mobileSrvConn started.");
+		
 		if (userID.equals("") || result.equals("") || formID.equals("") || docID.equals("") || orgUID.equals("") || companyID.equals("")) {
 			return "ERROR";
 		}
@@ -4785,6 +4787,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String aprType = xmlDom.getElementsByTagName("APRTYPE").item(0).getTextContent();
 		
 		String resultVal = createMhtFile(formID, userID, signNum, docID, aprState, aprType, result, orgUID, strLang, companyID, passWord, request, userInfo);
+		
+		logger.debug("mobileSrvConn ended.");
 		
 		return resultVal;
 	}
@@ -4954,6 +4958,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String createMhtFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang, String companyID,
 			String passWord, HttpServletRequest request,LoginVO userInfo) throws Exception{
+		logger.debug("createMhtFile started.");
+		
 		String realPath = commonUtil.getRealPath(request);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
@@ -5007,6 +5013,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId());
+		
+		logger.debug("aprStateSign = " + aprStateSign);
 		
 		Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
 		aprStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
@@ -5138,6 +5146,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 }
 			}
 		}
+		
+		logger.debug("lastAprLineSN = " + lastAprLineSN);
 		
 		int LSignNum = 0;
 		int lastSignNum = 0;
@@ -5338,101 +5348,105 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					return "Link ERROR";
 				}
 				
-				String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId());
-				
-				docNumFlag = true;
-				
-				Document docXML = commonUtil.convertStringToDocument(ret);
-				cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-				//0박아주는거 하면된다
-				if (!ret.equals("") && doc.getElementById("docnumber") != null) {
-					String fieldValue = doc.body().getAllElements().attr("orgdocnum");
-					String numHeader = "";
-					String Header = "";
-					String Tail = "";
-				    String arry[] = fieldValue.split("@");
-				    String yyear = "";
-				    String mmonth = "";
-				    String mdate = "";
-				    for (int i = 1; i < arry.length; i++) {
-				        Header = arry[i].substring(0, 2);
-				        Tail = arry[i].substring(2);
-
-				        switch (Header) {
-				            case "DP":
-				                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
-				                break;
-
-				            case "dp":
-				                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
-				                break;
-
-				            case "YY":
-				                numHeader += commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4) + Tail;
-				                break;
-				                
-				            case "yy":
-				                yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
-				                numHeader += yyear.toString().substring(2,4) + Tail;
-				                break;
-
-				            case "MM":
-				                mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
-				                if (Integer.parseInt(mmonth) < 10) mmonth = "0" + mmonth;
-				                numHeader += mmonth + Tail;
-				                break;
-
-				            case "mm":
-				                numHeader += (commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7)) + Tail;
-				                break;
-
-				            case "NN":
-				                break;
-
-				            case "nn":
-				                break;
-
-				            case "cs":
-				                numHeader += messageSource.getMessage("ezApprovalG.t45",  userInfo.getLocale()) + Tail;
-				                break;
-				                
-				            case "FT":
-				            	numHeader += "FT" + Tail;
-				            	break;
-				            	
-				            case "MV":
-				            	numHeader += "MV" + Tail;
-				            	break;
-				            	
-				            case "YM":
-				            	yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
-				                numHeader += yyear.toString().substring(2,4);
-				                
-				            	mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
-				                numHeader += mmonth;
-				                
-				                mdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(8,10);
-				                numHeader += mdate + Tail;
-				                
-				                break;
-
-				            default:
-				                numHeader += fieldValue;
-				                break;
-				        }
-				    }
+				if (totalLineSN == Integer.parseInt(signNum.trim())) {
+					String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId());
 					
-					docNO = numHeader + getNDigitNum(cabinetSN.substring(cabinetSN.length() - Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt));
-					doc.getElementById("docnumber").text(docNO);
+					logger.debug("serialNum = " + ret);
 					
-					if (doc.getElementById("enforcedate") != null) {
-						doc.getElementById("enforcedate").text(commonUtil.getTodayUTCTime("yyyy").replace("-", "."));
+					docNumFlag = true;
+					
+					Document docXML = commonUtil.convertStringToDocument(ret);
+					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
+					//0박아주는거 하면된다
+					if (!ret.equals("") && doc.getElementById("docnumber") != null) {
+						String fieldValue = doc.body().getAllElements().attr("orgdocnum");
+						String numHeader = "";
+						String Header = "";
+						String Tail = "";
+					    String arry[] = fieldValue.split("@");
+					    String yyear = "";
+					    String mmonth = "";
+					    String mdate = "";
+					    for (int i = 1; i < arry.length; i++) {
+					        Header = arry[i].substring(0, 2);
+					        Tail = arry[i].substring(2);
+
+					        switch (Header) {
+					            case "DP":
+					                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
+					                break;
+
+					            case "dp":
+					                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
+					                break;
+
+					            case "YY":
+					                numHeader += commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4) + Tail;
+					                break;
+					                
+					            case "yy":
+					                yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
+					                numHeader += yyear.toString().substring(2,4) + Tail;
+					                break;
+
+					            case "MM":
+					                mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
+					                if (Integer.parseInt(mmonth) < 10) mmonth = "0" + mmonth;
+					                numHeader += mmonth + Tail;
+					                break;
+
+					            case "mm":
+					                numHeader += (commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7)) + Tail;
+					                break;
+
+					            case "NN":
+					                break;
+
+					            case "nn":
+					                break;
+
+					            case "cs":
+					                numHeader += messageSource.getMessage("ezApprovalG.t45",  userInfo.getLocale()) + Tail;
+					                break;
+					                
+					            case "FT":
+					            	numHeader += "FT" + Tail;
+					            	break;
+					            	
+					            case "MV":
+					            	numHeader += "MV" + Tail;
+					            	break;
+					            	
+					            case "YM":
+					            	yyear = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(0,4);
+					                numHeader += yyear.toString().substring(2,4);
+					                
+					            	mmonth = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(5,7);
+					                numHeader += mmonth;
+					                
+					                mdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() , false).substring(8,10);
+					                numHeader += mdate + Tail;
+					                
+					                break;
+
+					            default:
+					                numHeader += fieldValue;
+					                break;
+					        }
+					    }
+					    
+						docNO = numHeader + getNDigitNum(cabinetSN.substring(cabinetSN.length() - Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt));
+						doc.getElementById("docnumber").text(docNO);
+						
+						if (doc.getElementById("enforcedate") != null) {
+							doc.getElementById("enforcedate").text(commonUtil.getTodayUTCTime("yyyy").replace("-", "."));
+						}
+						
+						retNum = getNDigitNum(cabinetSN, 6);
+						
+						doc.body().attr("regnumbercode", retNum);
+						doc.body().attr("deptid", strDeptID);
 					}
-					
-					retNum = getNDigitNum(cabinetSN, 6);
-					
-					doc.body().attr("regnumbercode", retNum);
-					doc.body().attr("deptid", strDeptID);
 				}
 				
 				linkCheck = excuteInfo("DOCNUM_AFTER", "DRAFT", doc, docID, userID, passWord, formURL);
@@ -5506,8 +5520,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			tempMht = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.mht";
 			FileUtils.copyFile(new File(formURL), new File(tempMht));
 			
-			 outputStream = new FileOutputStream(new File(formURL));
-			 output = new OutputStreamWriter(outputStream);
+			outputStream = new FileOutputStream(new File(formURL));
+			output = new OutputStreamWriter(outputStream);
 			
 			output.write(convertedMHT);
 		}  catch (FileNotFoundException fnfe) {
@@ -5534,6 +5548,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 		    }
 		}
+		
 		mhtSaveFlag = true;
 		
 		if (docNO.equals("") && doc.getElementById("docnumber") != null) {
@@ -5748,6 +5763,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					return "Link ERROR";
 				}
+				
+				logger.debug("createMhtFile ended.");
 				
 				return "001";
 			}
@@ -12444,6 +12461,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getSerialNum(String snType1, String snType2, String snType3, String companyID, String langType, int tenantID) throws Exception{
+		logger.debug("getSerialNum started.");
+		
 		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType ,tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -12458,6 +12477,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
 		if (result == null) {
+			logger.debug("insert");
+			
 			map.put("v_CurSN", "1");
 			ezApprovalGDAO.insertSerialNo(map);
 			result = "1";
@@ -12466,11 +12487,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int rollBackFlag =  ezApprovalGDAO.rollBackFlag(map);
 		
 		if (rollBackFlag == 1) {
+			logger.debug("delete");
 			 ezApprovalGDAO.deleteSerialNo(map);
 		} else {
+			logger.debug("update");
 			ezApprovalGDAO.updateSerialNo(map);
 			result = Integer.toString((Integer.parseInt(result) + 1));
 		}
+		
+		logger.debug("getSerialNum ended.");
+		
 		return String.valueOf(result);
 	}
 

@@ -1177,9 +1177,8 @@ function SGetDraftAprLineInfo(ret) {
 
                 if (field) {
                 	if (draftJunGyulFlag == '1' && OrderType[i] == "004") {
-                		setNodeText(field , strLang6 + "\n" + OrderName[i]);
+                		field.innerHTML = strLang6 + "<br>" + OrderName[i];
                         idx = idx + 1;
-                        field.setAttribute("style", field.getAttribute("style") + " white-space : pre;"); 
                 	} else {
                 		setNodeText(field , OrderName[i]);
                         idx = idx + 1;
