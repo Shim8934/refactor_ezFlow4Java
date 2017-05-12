@@ -1974,13 +1974,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		String strXML = ezCommunityService.pollMain(userInfo, code);
-		
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("guest", guest);
 		model.addAttribute("code", code);
 		model.addAttribute("userLevel", userLevel);
 		model.addAttribute("disable", disable);
-		model.addAttribute("strXML", strXML);
+		model.addAttribute("strXML", strXML.replaceAll("&lt;br&gt;", "&nbsp"));
 //		model.addAttribute("chCommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		
 		return "ezCommunity/communityPollMain";
