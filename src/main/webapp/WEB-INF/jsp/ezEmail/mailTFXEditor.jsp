@@ -141,7 +141,7 @@
         }
     </script>
 </head>
-<body style="margin: 0px; padding: 0px;" id="xfe_ex">
+<body style="margin: 0px; padding: 0px;" id="xfe">
     <script type="text/javascript">
     	var userLang = "${userInfo.lang}";
     	var lang = "";
@@ -178,7 +178,7 @@
             skin : 'classic'
         });
         
-        xfe.render('xfe_ex');
+        xfe.render('xfe');
         window.onload = parent.Editor_Complete;
     </script>
 </body>
