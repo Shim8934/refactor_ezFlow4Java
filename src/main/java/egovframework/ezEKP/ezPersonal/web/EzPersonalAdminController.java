@@ -93,12 +93,15 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/personalLeft.do")
 	public String personalLeft (@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("personalLeft started");
+
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String usePortal = ezCommonService.getTenantConfig("Use_portal", userInfo.getTenantId());
 		
 		model.addAttribute("usePortal", usePortal);
-		
+
+		logger.debug("personalLeft ended");
 		return "admin/ezPersonal/personalLeft";
 	}
 	
@@ -107,6 +110,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageNotice.do")
 	public String manageNotice (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("manageNotice started");
+
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -121,7 +126,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("list", resultList);
-		
+
+		logger.debug("manageNotice ended");
 		return "admin/ezPersonal/personalManageNotice";
 	}
 	
@@ -131,6 +137,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/manageNoticeList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String manageNoticeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("manageNoticeList started");
+
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String companyID = request.getParameter("id");
@@ -175,6 +183,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		result.append("</ROWS></LISTVIEWDATA>");
 		
+		logger.debug("manageNoticeList ended");
 		return result.toString();
 	}
 	
@@ -184,11 +193,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/delNotice.do", produces = "text/xml; charset=utf-8") 
 	@ResponseBody
 	public String delNotice(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		logger.debug("delNotice started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
 		String result = ezPersonalAdminService.deleteNotice(itemSeq, userInfo.getTenantId());
-		
+
+		logger.debug("delNotice ended");
 		return result;
 	}
 	
@@ -197,6 +209,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addNoticeCK.do")
 	public String addNoticeCK(@CookieValue("loginCookie") String loginCookie, PersonalNoticeVO vo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("addNoticeCK started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
@@ -214,7 +228,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("personalNoticeVO", vo);
-		
+
+		logger.debug("addNoticeCK ended");
 		return "admin/ezPersonal/personalAddNoticeCK";
 	}
 	
@@ -223,10 +238,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addNoticeCKContent.do")
 	public String addNoticeCKContent(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("addNoticeCKContent started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
-				
+
+		logger.debug("addNoticeCKContent ended");
 		return "admin/ezPersonal/personalAddNoticeCKContent";
 	}
 	
@@ -236,6 +254,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/saveNotice.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveNotice(@CookieValue("loginCookie") String loginCookie,@ModelAttribute PersonalNoticeVO vo) throws Exception {
+		logger.debug("saveNotice started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (vo.getTitle2() == null) {
@@ -244,9 +264,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		if (vo.getItemSeq() == null) {
 			String result = ezPersonalAdminService.insertNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent(), userInfo.getTenantId());
+			logger.debug("saveNotice ended");
 			return result;
 		} else {
 			String result = ezPersonalAdminService.updateNotice(vo.getCompanyID(), vo.getTitle(), vo.getTitle2(), vo.getContent(), vo.getItemSeq(), userInfo.getTenantId());
+			logger.debug("saveNotice ended");
 			return result;
 		}
 	}
@@ -256,11 +278,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/showNotice.do")
 	public String showNotice(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("showNotice started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
 		PersonalNoticeVO vo = ezPersonalAdminService.getNoticeInfo(itemSeq, userInfo.getTenantId());
-
+		
 		if (vo.getTitle2() == null) {
 			vo.setTitle2(vo.getTitle());
 		}
@@ -269,7 +293,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("personalNoticeVO", vo);
-		
+
+		logger.debug("showNotice ended");
 		return "admin/ezPersonal/personalShowNotice";
 	}
 	
@@ -278,6 +303,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
 	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("manageQuickLink started");
+
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		
 		if (auth == null) {
@@ -285,7 +312,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("host", auth.getServerName());
-		
+
+		logger.debug("manageQuickLink ended");
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
 	
@@ -295,8 +323,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getQuickLinkList started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String result = ezPersonalAdminService.getQuickLinkList(userInfo);
+
+		logger.debug("getQuickLinkList ended");
 		return result;
 	}
 	
@@ -305,6 +337,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addQuickLink.do")
 	public String addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("addQuickLink started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = "new";
 		
@@ -316,7 +350,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("mode", mode);
 		model.addAttribute("host", userInfo.getServerName());
-		
+
+		logger.debug("addQuickLink ended");
 		return "admin/ezPersonal/personalAddQuickLink";
 	}
 	
@@ -326,11 +361,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getQuickLink(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		logger.debug("getQuickLink started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
 		String result = ezPersonalAdminService.getQuickLink(quickLinkID, userInfo.getTenantId());
-		
+
+		logger.debug("getQuickLink ended");
 		return result;
 	}
 	
@@ -340,11 +378,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkACL.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getQuickLinkACL(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		logger.debug("getQuickLinkACL started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
 		String result = ezPersonalAdminService.getQuickLinkACL(quickLinkID, userInfo.getTenantId());
-		
+
+		logger.debug("getQuickLinkACL ended");
 		return result;
 	}
 	
@@ -353,6 +394,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/selectTarget.do")
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("selectTarget started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String topID = "";
 		
@@ -365,7 +408,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("topID", topID);
-		
+
+		logger.debug("selectTarget ended");
 		return "admin/ezPersonal/personalSelectTarget";
 	}
 	
@@ -375,10 +419,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/saveQuickLink.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public void  saveQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+		logger.debug("saveQuickLink started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		ezPersonalAdminService.saveQuickLink(userInfo, doc);
+
+		logger.debug("saveQuickLink ended");
 	}
 	
 	/**
@@ -386,6 +434,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/managePoll.do")
 	public String managePoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("managePoll started");
+
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -400,7 +450,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("list", resultList);
-		
+
+		logger.debug("managePoll ended");
 		return "admin/ezPersonal/personalManagePoll";
 	}
 	
@@ -410,6 +461,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/managePollList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String managePollList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("managePollList started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int currentPage = 1, pageSize = 12;
 		String progressPollFlag = "false";
@@ -463,11 +516,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			result.append("</ROW>");
 		}
-
+		
 		result.append("</ROWS>");
 		result.append("<PROFLAG>" + progressPollFlag + "</PROFLAG>");
 		result.append("</LISTVIEWDATA>");
 		
+		logger.debug("managePollList ended");
 		return result.toString();
 	}
 	
@@ -476,6 +530,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addPoll.do")
 	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("addPoll started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
@@ -483,7 +539,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
-		
+
+		logger.debug("addPoll ended");
 		return "admin/ezPersonal/personalAddPoll";
 	}
 	
@@ -493,11 +550,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/savePoll.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePoll(@CookieValue("loginCookie") String loginCookie,@RequestBody String data) throws Exception {
+		logger.debug("savePoll started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String result = ezPersonalAdminService.insertPoll(doc, userInfo.getTenantId());
-		
+
+		logger.debug("savePoll ended");
 		return result;
 	}
 	
@@ -507,11 +567,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/delPoll.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String delPoll(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		logger.debug("delPoll started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
 		String result = ezPersonalAdminService.deletePoll(itemSeq, userInfo.getTenantId());
-		
+
+		logger.debug("delPoll ended");
 		return result;
 	}
 	
@@ -520,6 +583,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/pollResult.do")
 	public String pollResult(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("pollResult started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String subject = "", title = "";
 		
@@ -542,7 +607,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollResult(itemSeq, userInfo.getTenantId());
-
+		
 		StringBuilder result = new StringBuilder();
 		int count = Integer.parseInt(infoVO.getPollSelectionCount());
 		double totalCount = 0;
@@ -560,12 +625,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			String fieldValue = "";
 			
 			for (Field field : infoVO.getClass().getDeclaredFields()) {
-		        field.setAccessible(true);
-									
+				field.setAccessible(true);
+				
 				if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
 					fieldValue = commonUtil.cleanValue(String.valueOf(field.get(infoVO)));
 				}
-		    }
+			}
 			
 			result.append("<TITLE>" + i + ". " + fieldValue + "</TITLE>");
 			
@@ -589,7 +654,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("subject", subject);
 		model.addAttribute("title", title);
 		model.addAttribute("result", result.toString());
-		
+
+		logger.debug("pollResult ended");
 		return "admin/ezPersonal/personalPollResult";
 	}
 	
@@ -598,6 +664,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/managePopup.do")
 	public String managePopup(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("managePopup started");
+
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String noneActiveX = config.getProperty("NONEACTIVEX");
 		String useEditor = config.getProperty("EDITOR");
@@ -616,7 +684,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useEditor", useEditor);
-		
+
+		logger.debug("managePopup ended");
 		return "admin/ezPersonal/personalManagePopup";
 	}
 	
@@ -626,10 +695,12 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/managePopupList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String managePopupList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("managePopupList started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		
-
+		
 		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, userInfo.getTenantId());
 		
 		StringBuilder result = new StringBuilder();
@@ -674,10 +745,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			result.append("</ROW>");
 		}
-
+		
 		result.append("</ROWS>");
 		result.append("</LISTVIEWDATA>");
-		
+
+		logger.debug("managePopupList ended");
 		return result.toString();
 	}
 	
@@ -686,6 +758,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addPopupCK.do")
 	public String addPopupCK(@CookieValue("loginCookie") String loginCookie, PersonalPopupVO vo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("addPopupCK started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = "";
 		
@@ -711,12 +785,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("initDate", initDate);
-		//model.addAttribute("isoUTFstartDate", commonUtil.isoUTFDate(vo.getStartDate()));
-		//model.addAttribute("isoUTFEndDate", commonUtil.isoUTFDate(vo.getEndDate()));
 		model.addAttribute("isoUTFstartDate", commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
 		model.addAttribute("isoUTFEndDate", commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
 		model.addAttribute("personalPopupVO", vo);
-		
+
+		logger.debug("addPopupCK ended");
 		return "admin/ezPersonal/personalAddPopupCK";
 	}
 	
@@ -725,10 +798,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addPopupCKContent.do")
 	public String addPopupCKContent(@CookieValue("loginCookie") String loginCookie, Model model) {
+		logger.debug("addPopupCKContent started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
 
+		logger.debug("addPopupCKContent ended");
 		return "admin/ezPersonal/personalAddPopupCKContent";
 	}
 	
@@ -739,6 +815,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePopup(@CookieValue("loginCookie") String loginCookie,PersonalPopupVO vo) throws Exception {
+		logger.debug("savePopup started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (vo.getTitle2().equals("")) {
@@ -750,7 +828,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		} else {
 			ezPersonalAdminService.updatePopup(vo, userInfo.getTenantId(), userInfo.getOffset());
 		}
-			
+
+		logger.debug("savePopup ended");
 		return "OK";
 	}
 	
@@ -760,11 +839,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/delPopup.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String deletePopup(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		logger.debug("deletePopup started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		
 		ezPersonalAdminService.deletePopup(itemSeq, userInfo.getTenantId());
-			
+
+		logger.debug("deletePopup ended");
 		return "OK";
 	}
 	
@@ -773,6 +855,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/showPopup.do")
 	public String showPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, PersonalPopupVO vo, Model model) throws Exception {
+		logger.debug("showPopup started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		String title = "";
@@ -793,6 +877,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("content", content);
 		
+		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";
 	}
 	
@@ -801,6 +886,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do")
 	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("employeeOfMonth started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID(), userInfo.getTenantId());
@@ -815,7 +902,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("list", list);
-		
+
+		logger.debug("employeeOfMonth ended");
 		return "admin/ezPersonal/personalEmployeeOfMonth";
 	}
 	
@@ -824,7 +912,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/selectBest.do")
 	public String selectBest(Model model) {
+		logger.debug("selectBest started");
+
 		model.addAttribute("nowYear", EgovDateUtil.getCurrentDate("").substring(0, 4));
+		
+		logger.debug("selectBest ended");
 		return "admin/ezPersonal/personalSelectBest";
 	}
 	
@@ -834,6 +926,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do")
 	@ResponseBody
 	public String setEmployeeMonth(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("setEmployeeMonth started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String userID = "", deptID = "";
 		String type = request.getParameter("type");
@@ -849,7 +943,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
-			
+
+		logger.debug("setEmployeeMonth ended");
 		return "OK";
 	}
 	
@@ -888,6 +983,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/selectImage.do")
 	public String selectImage(@CookieValue("loginCookie") String loginCookie ,HttpServletRequest request, Model model) throws Exception {
+		logger.debug("selectImage started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sliderID = "";
 		
@@ -899,7 +996,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("sliderID", sliderID);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
-		
+
+		logger.debug("selectImage ended");
 		return "admin/ezPersonal/personalSelectImage";
 	}
 	
@@ -908,8 +1006,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/saveSliderImage.do")
 	public String saveSliderImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
+		logger.debug("saveSliderImage started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		//String dirPath = config.getProperty("upload_portal.ROOT");
 		String dirPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
 		String resultUpload = "false";
 		String uploadSN = "{" + UUID.randomUUID() + "}";
@@ -972,9 +1071,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		strXML.append("</ROOT>");
 		
 		model.addAttribute("strXML", strXML);
-		
+
+		logger.debug("saveSliderImage ended");
 		return "/admin/ezPortal/portalPortletImageUpload";
-		//return result.toString();
 	}
 	
 	/**
@@ -983,6 +1082,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/saveSlider.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("saveSlider started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sliderID = request.getParameter("sliderID");
 		String displayName = request.getParameter("displayName");
@@ -992,7 +1093,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String mode = request.getParameter("mode");
 		
 		ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo);
-			
+
+		logger.debug("saveSlider ended");
 		return "OK";
 	}
 	
@@ -1002,6 +1104,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/statusChangeSlider.do")
 	@ResponseBody
 	public String statusChangeSlider(@CookieValue("loginCookie") String loginCookie ,HttpServletRequest request) throws Exception {
+		logger.debug("statusChangeSlider started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String result = "";
 		String mode = request.getParameter("mode");
@@ -1019,16 +1123,21 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			
 			result = ezPersonalAdminService.statusChangeSlider2(aRuleID, aPriority, bRuleID, bPriority, mode, userInfo.getTenantId());
 		}
-		
+
+		logger.debug("statusChangeSlider ended");
 		return result;
 	}
 	
 	@RequestMapping(value = "/admin/ezPersonal/deleteSlider.do")
 	@ResponseBody
 	public String deleteSlider(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+		logger.debug("deleteSlider started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sliderID = request.getParameter("sliderID");
 		ezPersonalAdminService.deleteSlider(sliderID, userInfo.getTenantId());
+
+		logger.debug("deleteSlider ended");
 		return "OK";
 	}
 	
@@ -1038,9 +1147,13 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String  delQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+		logger.debug("delQuickLink started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		ezPersonalAdminService.delQuickLink(doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent(), userInfo.getTenantId());
+
+		logger.debug("delQuickLink ended");
 		return "OK";
 	}
 }
