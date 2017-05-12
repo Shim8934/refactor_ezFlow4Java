@@ -529,9 +529,6 @@ public class EzCommonController extends EgovFileMngUtil{
 		model.addAttribute("sContentType", request.getParameter("content_type"));
 		model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
 		
-		//TODO: string
-		model.addAttribute("sErrorLog", "에러염");
-		
 		return "ezCommon/tfxUpload";
 	}
 }

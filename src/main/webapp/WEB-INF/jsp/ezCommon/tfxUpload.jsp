@@ -55,9 +55,8 @@
 					}
 					
 				} else {
-					alert("${sErrorLog}");
+					alert("ERROR");
 				}
-								
 		
 			};
 		</script>
@@ -65,6 +64,5 @@
 	<body>
 		<div id="divContentType">${sContentType}</div>
 		<div id="divImagePath">${sUploadedPath}</div>
-		<div>${sErrorLog}</div>
 	</body>
 </html>
