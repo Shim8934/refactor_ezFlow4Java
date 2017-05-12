@@ -5357,6 +5357,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doApprovAllG.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doApprovAllG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("doApprovAllG started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String rtnVal = "OK/0/0/0";
@@ -5377,17 +5379,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			for (int k = xmlDom.getElementsByTagName("DOCID").getLength() - 1; k > -1; k--) {
 				orgUID = xmlDom.getElementsByTagName("ORGAPRUSERID").item(k).getTextContent();
 				
-				  if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
-                      if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("MHT")) {
-                          rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
-                      }
-                      else {
-                          rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
-                      }
-                  }
-                  else {
-                      rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
-                  }
+				if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
+					if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("MHT")) {
+						logger.debug("type = MHT");
+						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+					} else {
+						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+					}
+				} else {
+					rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+				}
 				
 				if (rtnVal.equals("ERROR")) {
 					falseCnt++;
@@ -5402,6 +5403,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				rtnVal = "OK/" + totCnt + "/" + trueCnt + "/" + falseCnt;
 			}
 		}
+		
+		logger.debug("doApprovAllG ended.");
 		
 		return rtnVal;
 	}

@@ -4752,6 +4752,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Override
 	public String mobileSrvConn(String userID, String result, String formID, String keyVal, String docID, String orgUID, String strLang, String companyID, String passWord, HttpServletRequest request, LoginVO userInfo) throws Exception {
+		logger.debug("mobileSrvConn started.");
+		
 		if (userID.equals("") || result.equals("") || formID.equals("") || docID.equals("") || orgUID.equals("") || companyID.equals("")) {
 			return "ERROR";
 		}
@@ -4785,6 +4787,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String aprType = xmlDom.getElementsByTagName("APRTYPE").item(0).getTextContent();
 		
 		String resultVal = createMhtFile(formID, userID, signNum, docID, aprState, aprType, result, orgUID, strLang, companyID, passWord, request, userInfo);
+		
+		logger.debug("mobileSrvConn ended.");
 		
 		return resultVal;
 	}
@@ -4954,6 +4958,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String createMhtFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang, String companyID,
 			String passWord, HttpServletRequest request,LoginVO userInfo) throws Exception{
+		logger.debug("createMhtFile started.");
+		
 		String realPath = commonUtil.getRealPath(request);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
@@ -5098,6 +5104,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		if (docListNode.getLength() > 0) {
 			totalLineSN = docListNode.getLength();
+			logger.debug("totalLineSN = " + totalLineSN);
 			
 			for (int k = totalLineSN - Integer.parseInt(signNum); k < totalLineSN; k++) {
 				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
@@ -5339,6 +5346,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId());
+				
+				logger.debug("serialNum = " + ret);
 				
 				docNumFlag = true;
 				
@@ -5748,6 +5757,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					return "Link ERROR";
 				}
+				
+				logger.debug("createMhtFile ended.");
 				
 				return "001";
 			}
@@ -12444,6 +12455,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getSerialNum(String snType1, String snType2, String snType3, String companyID, String langType, int tenantID) throws Exception{
+		logger.debug("getSerialNum started.");
+		
 		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType ,tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -12458,6 +12471,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
 		if (result == null) {
+			logger.debug("insert");
+			
 			map.put("v_CurSN", "1");
 			ezApprovalGDAO.insertSerialNo(map);
 			result = "1";
@@ -12466,11 +12481,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int rollBackFlag =  ezApprovalGDAO.rollBackFlag(map);
 		
 		if (rollBackFlag == 1) {
+			logger.debug("delete");
 			 ezApprovalGDAO.deleteSerialNo(map);
 		} else {
+			logger.debug("update");
 			ezApprovalGDAO.updateSerialNo(map);
 			result = Integer.toString((Integer.parseInt(result) + 1));
 		}
+		
+		logger.debug("getSerialNum ended.");
+		
 		return String.valueOf(result);
 	}
 
