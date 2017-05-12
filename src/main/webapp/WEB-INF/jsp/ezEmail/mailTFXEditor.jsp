@@ -143,7 +143,27 @@
 </head>
 <body style="margin: 0px; padding: 0px;" id="xfe_ex">
     <script type="text/javascript">
+    	var userLang = "${userInfo.lang}";
+    	var lang = "korean";
+    	
+    	switch (userLang) {
+	    	case "1": 
+	    		lang = "korean";
+	    		break;
+	    	case "2": 
+	    		lang = "english";
+	    		break;
+	    	case "3": 
+	    		lang = "japanese";
+	    		break;
+	    	case "4": 
+	    		//중국어 간체 (번체는 chinese_t)
+	    		lang = "chinese_s";
+	    		break;
+    	}
+    	
         xfe = new XFE({
+        	lang : lang,
             basePath : "/js/tfxEditor",
             width : '100%',
             height : (document.documentElement.clientHeight) + "px",

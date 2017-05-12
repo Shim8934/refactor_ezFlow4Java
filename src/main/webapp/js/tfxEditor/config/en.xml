@@ -1,17 +1,13 @@
 ﻿<?xml version="1.0"?>
-
 <xfeEditor>
 <menu1>
-	<newfile visible="true">New File</newfile>	
+	<!--<newfile visible="true">New File</newfile>	
 	<savefile visible="true">Save File</savefile>
 	<print visible="true">Print</print>
-	
-	<split/>
-	
+	<split/>-->
 	<cut visible="true">Cut</cut>
 	<copy visible="true">Copy</copy>
 	<paste visible="true">Paste</paste>
-	
 	<split/>
 	
 	<Undo visible="true">Undo</Undo>
@@ -21,46 +17,36 @@
 	
 	<InsertHyperlink visible="true">Insert Hyperlink</InsertHyperlink>
 	<RemoveHyperlink visible="true">Remove Hyperlink</RemoveHyperlink>
-	
 	<split/>
-	
 	<InsertImage visible="true">Insert Image</InsertImage>
 	<ImageProperty visible="true">Image Property</ImageProperty>
-	
-	<split/>
-	
+	<!--<split/>
 	<InsertFlash visible="true">Insert Flash</InsertFlash>
 	<InsertMediaLink visible="true">Insert Media Link</InsertMediaLink>
-	<InsertChart visible="false">Insert Chart</InsertChart>
 	
+	<InsertChart visible="false">Insert Chart</InsertChart>-->
 	<split/>
-	
 	<InsertSymbol visible="true">Insert Symbol</InsertSymbol>
 	<HorizontalRule visible="true">Horizontal Rule</HorizontalRule>
 	
 	<split/>
-	
 	<Search visible="true">Search</Search>
 	<Replace visible="true">Replace</Replace>
-	
 	<split/>
-	
 	<SelectAll visible="true">Select All</SelectAll>
 	
-	<split/>
+	<!--<layout visible="true">Insert Layout</layout>
+	<FullScreen visible="true">Full Screen</FullScreen>-->
 	
-	<layout visible="true">Insert Layout</layout>
-	<split/>
-	
-	<FullScreen visible="true">Full Screen</FullScreen>
 	<TagDiet visible="false">Format protected</TagDiet>
+	
 </menu1>
 <menu2>	
+
+
 	<inserttable visible="true">Insert Table</inserttable>
 	<drawtable visible="true">Draw Table</drawtable>
-	
 	<split/>
-	
 	<insertrowabove visible="true">Insert Row above</insertrowabove>
 	<insertrowbelow visible="true">Insert Row below</insertrowbelow>
 	<insertcolumnleft visible="true">Insert Column to the left</insertcolumnleft>
@@ -72,7 +58,6 @@
 	
 	<mergecell visible="true">Merge Cells</mergecell>
 	<splitcell visible="true">Split Cell</splitcell>
-	
 	<split/>	
 	
 	<tableproperty visible="true">Table Property</tableproperty>
@@ -85,11 +70,12 @@
 		<alignmiddle visible="true">Align Center</alignmiddle>
 		<alignbottom visible="true">Align Bottom</alignbottom>
 	</group>
+	
 	<group>
 		<AlignLeft visible="true">Align Left</AlignLeft>
 		<AlignCenter visible="true">Align Center</AlignCenter>
 		<AlignRight visible="true">Align Right</AlignRight>
-		<Justify visible="false">Justify</Justify>
+		<Justify visible="true">Justify</Justify>
 	</group>
 	
 	<group>
@@ -107,19 +93,43 @@
 		<Bullets visible="true">Bullets</Bullets>
 	</group>
 	
+	<!--<cust_test1 visible="true">커스텀 버튼1</cust_test1>-->
+	<!--<cust_test2 visible="true">커스텀 버튼2</cust_test2>-->
+	<!--<cust_test3 visible="true">커스텀 버튼3</cust_test3>-->
+	
 </menu2>
 <menu3>
-	<Template visible="true">		
-		<!--<item title="입사지원서" show="true">
+	<Template visible="false">
+		<!-- 불러올 양식들을 설정 해줍니다. -->
+		<!-- ie 의 경우 경로 또는 파일명이 한글일 경우 불러오지 못합니다. -->
+		<!-- xhtml 문법에 어긋나는 문서는 에러 메세지가 발생 할 수 있습니다. -->
+		<!--
+		<base title="템플릿"/>
+		<item title="이력서" show="true">
+			http://192.168.0.1/ex_documents/doc1.html			
+		</item>
+		<item title="업무일지" show="true">
+			http://192.168.0.1/ex_documents/doc2.htm
+		</item>
+		<item title="사업계획서" show="true">
+			http://192.168.0.1/ex_documents/doc3.htm
+		</item>		
+		<item title="급여지급명세서" show="true">
+			http://192.168.0.1/ex_documents/doc4.htm
+		</item>
+		<item title="공문양식" show="true">
+			http://192.168.0.1/ex_documents/doc5.htm
+		</item>		
+		<item title="기안지" show="true">
+			http://192.168.0.1/ex_documents/doc6.htm			
+		</item>
+		<item title="입사지원서" show="true">
 			http://192.168.0.1/test.html			
-		</item>-->
-		<!--<item title="업무일지" show="true"></item>-->
-		<!--<item title="소프트웨어신청서" show="true"></item>-->
-		<!--<item title="표준검사신청서" show="true"></item>-->
-		<!--<item title="업무협조" show="true"></item>-->
-		<!--<item title="출장품의서" show="true"></item>-->		
+		</item>
+		-->
+			
 	</Template>		
-	<Format visible="true">Style</Format>
+	
 	<FontFamily visible="true">Font</FontFamily>
 	<FontSize visible="true">Font Size</FontSize>
 	<LineHeight visible="true">Line Height</LineHeight>
@@ -132,7 +142,6 @@
 		<Strikethrough visible="true">Strikethrough</Strikethrough>
 		<RemoveFormatting visible="true">Remove Formatting</RemoveFormatting>
 	</group>
-	
 	<group>	
 		<fontcolor visible="true">Font Color</fontcolor>
 		<fontbgcolor visible="true">Font bgColor</fontbgcolor>		
@@ -140,7 +149,7 @@
 	
 	<AdminLock visible="true">EditableOn</AdminLock>
 	<AdminUnlock visible="true">EditableOff</AdminUnlock>	
-	<Userguide visible="true">User Guide</Userguide>
+	<!-- <Userguide visible="true">User Guide</Userguide> -->
 	<about visible="true">About X-free Editor</about>
 </menu3>
 </xfeEditor>

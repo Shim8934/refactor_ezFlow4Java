@@ -28,15 +28,15 @@
 	<split/>
 	<InsertSymbol visible="true">기호 삽입</InsertSymbol>
 	<HorizontalRule visible="true">가로줄 삽입</HorizontalRule>	
-	<Bookmark visible="true">책갈피 삽입</Bookmark>
+	<!-- <Bookmark visible="true">책갈피 삽입</Bookmark> -->
 	<split/>
 	<Search visible="true">찾기</Search>
 	<Replace visible="true">바꾸기</Replace>
 	<split/>	
 	<SelectAll visible="true">전체 선택</SelectAll>
 	
-	<!--<layout visible="true">레이아웃</layout>-->
-	<!--<FullScreen visible="true">전체화면</FullScreen>-->
+	<!--<layout visible="true">레이아웃</layout>
+	<FullScreen visible="true">전체화면</FullScreen>-->
 	
 	<TagDiet visible="false">서식 정리</TagDiet>
 		
@@ -129,7 +129,7 @@
 		-->
 			
 	</Template>	
-		
+	
 	<Fontfamily visible="true">폰트 종류</Fontfamily>
 	<Fontsize visible="true">폰트 크기</Fontsize>
 	<LineHeight visible="true">줄 간격</LineHeight>

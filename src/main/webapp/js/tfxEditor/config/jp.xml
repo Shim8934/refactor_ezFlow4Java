@@ -1,12 +1,10 @@
 ﻿<?xml version="1.0"?>
-
 <xfeEditor>
 <menu1>
-	<newfile visible="true">新しいドキュメント</newfile>
-	<openfile visible="false">ファイルを開く</openfile>
+	<!-- <newfile visible="true">新しいドキュメント</newfile>
 	<savefile visible="true">ファイルの保存</savefile>
 	<print visible="true">印刷</print>
-	<split/>
+	<split/> -->
 	<cut visible="true">カット</cut>
 	<copy visible="true">コピー</copy>
 	<paste visible="true">貼り付け</paste>
@@ -22,23 +20,23 @@
 	<split/>
 	<InsertImage visible="true">画像の挿入</InsertImage>
 	<ImageProperty visible="true">画像編集</ImageProperty>
-	<split/>
+	<!--<split/>
 	<InsertFlash visible="true">Flashの挿入</InsertFlash>
 	<InsertMediaLink visible="true">外部ビデオの挿入</InsertMediaLink>
 	<Background visible="true">背景画像の挿入</Background>
-	<InsertChart visible="false">グラフの挿入</InsertChart>
+	<InsertChart visible="false">グラフの挿入</InsertChart>-->
 	<split/>
 	<InsertSymbol visible="true">記号を挿入</InsertSymbol>
 	<HorizontalRule visible="true">水平線の挿入</HorizontalRule>	
+	
 	<split/>
 	<Search visible="true">検索</Search>
 	<Replace visible="true">置換</Replace>
 	<split/>	
 	<SelectAll visible="true">すべて選択</SelectAll>
-	<split/>
-	<layout visible="true">レイアウト</layout>
-	<split/>			
-	<FullScreen visible="true">フルスクリーン</FullScreen>
+	
+	<!--<layout visible="true">レイアウト</layout>
+	<FullScreen visible="true">フルスクリーン</FullScreen>-->
 	
 	<TagDiet visible="false">書式まとめ</TagDiet>
 		
@@ -94,12 +92,19 @@
 		<Numbering visible="true">番号付け</Numbering>
 		<Bullets visible="true">箇条書き</Bullets>
 	</group>			
+	
+	<!--<cust_test1 visible="true">커스텀 버튼1</cust_test1>-->
+	<!--<cust_test2 visible="true">커스텀 버튼2</cust_test2>-->
+	<!--<cust_test3 visible="true">커스텀 버튼3</cust_test3>-->
+	
 </menu2>
 <menu3>
 	<Template visible="true">
 		<!-- 불러올 양식들을 설정 해줍니다. -->
 		<!-- ie 의 경우 경로 또는 파일명이 한글일 경우 불러오지 못합니다. -->
 		<!-- xhtml 문법에 어긋나는 문서는 에러 메세지가 발생 할 수 있습니다. -->
+		<!--
+		<base title="템플릿"/>
 		<item title="履歴書" show="true">
 			http://192.168.0.156:55/eclipse_workspace/xfree_new/branches/source_rebuild/ex_documents/doc1.html			
 		</item>
@@ -118,17 +123,13 @@
 		<item title="起案か" show="true">
 			http://192.168.0.156:55/eclipse_workspace/xfree_new/branches/source_rebuild/ex_documents/doc6.htm			
 		</item>
-		<!--<item title="입사지원서" show="true">
+		<item title="입사지원서" show="true">
 			http://192.168.0.1/test.html			
-		</item>-->
-		<!--<item title="업무일지" show="true"></item>-->
-		<!--<item title="소프트웨어신청서" show="true"></item>-->
-		<!--<item title="표준검사신청서" show="true"></item>-->
-		<!--<item title="업무협조" show="true"></item>-->
-		<!--<item title="출장품의서" show="true"></item>-->		
+		</item>
+		-->
+		
 	</Template>	
 	
-	<Format visible="true">書式スタイル</Format>
 	<Fontfamily visible="true">フォントの種類</Fontfamily>
 	<Fontsize visible="true">フォントサイズ</Fontsize>
 	<LineHeight visible="true">行間隔</LineHeight>
@@ -148,7 +149,7 @@
 	
 	<AdminLock visible="true">書き込み領域の設定</AdminLock>
 	<AdminUnlock visible="true">書き込み領域を解除</AdminUnlock>		
-	<Userguide visible="true">ユーザーヘルプ</Userguide>
+	<!--<Userguide visible="true">ユーザーヘルプ</Userguide>-->
 	<about visible="true">製品情報</about>
 </menu3>
 </xfeEditor>
