@@ -118,12 +118,15 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalMain started");
+
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
+
+		logger.debug("portalMain ended");
 		return "/admin/ezPortal/portalMain";
 	}
 	
@@ -132,12 +135,15 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/leftTop.do")
 	public String leftTop(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("leftTop started");
+
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
+
+		logger.debug("leftTop ended");
 		return "/admin/ezPortal/portalLeftTop";
 	}
 	
@@ -146,6 +152,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/themeList.do")
 	public String themeList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("themeList started");
+
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -163,11 +171,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				list.get(i).setModifyDate(commonUtil.getDateStringInUTC(date.format(date.parse(list.get(i).getModifyDate())), userInfo.getOffset(), false));
 			}
 		}
-
+		
 		model.addAttribute("result", result);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", list);
-		
+
+		logger.debug("themeList ended");
 		return "/admin/ezPortal/portalThemeList";
 	}
 	
@@ -176,6 +185,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/themeInfo.do")
 	public String themeInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("themeInfo started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String mode = "new";
 		String strUserLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
@@ -231,6 +242,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("mode", mode);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
+		logger.debug("themeInfo ended");
 		return "/admin/ezPortal/portalThemeInfo";
 	}
 	
@@ -289,6 +301,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portletImageUpload.do")
 	public String portletImageUpload(MultipartHttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portletImageUpload started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int cnt = 1;
@@ -348,12 +362,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		for (int i=0; i<cnt; i++) {
 			fileSize[i] = String.valueOf(req.getFiles("file1").get(i).getSize());
 			pUniqueName = ezPortalAdminService.getUniqueFileName(pServerPath, pFileName[i]);
-
+			
 			String pAttachPath = pDirPath + userInfo.getCompanyID() + commonUtil.separator + pBoardID + commonUtil.separator + pUniqueName;
 			writeUploadedFile(req.getFiles("file1").get(i), pUniqueName, pServerPath);
 			
 			fileLocation[i] = userInfo.getCompanyID() + commonUtil.separator + pBoardID + commonUtil.separator + pUniqueName;
-
+			
 			File imageFile = new File(pServerPath + commonUtil.separator + pUniqueName);
 			
 			int nImgWidth = 0;
@@ -367,22 +381,22 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				int nWidth = 0, nHeight = 0;
 				
 				if (nImgWidth > nImgHeight) {
-                    nWidth = 200;
-                    nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
-                } else {
-                    nHeight = 200;
-                    nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
-                }
+					nWidth = 200;
+					nHeight = (bi.getHeight() * nWidth) / bi.getWidth();
+				} else {
+					nHeight = 200;
+					nWidth = (bi.getWidth() * nHeight) / bi.getHeight();
+				}
 				
 				
 				if (mode.equals("Theme")) {
 					String pSaveName = UUID.randomUUID().toString() + ".jpg";
 					BufferedImage bufferedImage = new BufferedImage(170, 140, bi.getType());
 					bufferedImage.createGraphics().drawImage(bi, 0, 0, 170, 140, null);
-
+					
 					ImageIO.write(bufferedImage, "jpg", new File(pServerPath + commonUtil.separator + pSaveName));
 					//ImageIO.write(bufferedImage, "png", new File(pAttachPath));
-
+					
 					File file1 = new File(pAttachPath);
 					if (file1.exists()) {
 						FileUtils.deleteQuietly(file1);
@@ -391,23 +405,25 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				}
 				
 				resultUpload[i] = "true";
-			
+				
 			}
 		}
+		
 		String strXML = "<ROOT><NODES>";
 		
 		for (int i=0; i < cnt; i++) {
-			 strXML += "<NODE><PUPLOADSN><![CDATA[" + pUniqueName + "]]></PUPLOADSN>";
-             strXML += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
-             strXML += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
-             strXML += "<FILESIZE>" + fileSize[i] + "</FILESIZE>";
-             strXML += "<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>";
-             strXML += "</NODE>"; 
+			strXML += "<NODE><PUPLOADSN><![CDATA[" + pUniqueName + "]]></PUPLOADSN>";
+			strXML += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+			strXML += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+			strXML += "<FILESIZE>" + fileSize[i] + "</FILESIZE>";
+			strXML += "<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>";
+			strXML += "</NODE>"; 
 		}
 		strXML += "</NODES></ROOT>";
 		
 		model.addAttribute("strXML", strXML);
-		
+
+		logger.debug("portletImageUpload ended");
 		return "/admin/ezPortal/portalPortletImageUpload";
 	
 	}
@@ -476,6 +492,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/deleteTopPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String deleteTopPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("deleteTopPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -484,7 +502,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		ezPortalAdminService.deleteTopPage(uID, userInfo.getTenantId(), userInfo.getCompanyID());
-		
+
+		logger.debug("deleteTopPage ended");
 		return "OK";
 	}
 	
@@ -494,6 +513,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/useTopPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String useTopPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("useTopPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -503,6 +524,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		ezPortalAdminService.topSetUsePage2(uID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		logger.debug("useTopPage ended");
 		return "OK";
 	}
 	
@@ -512,6 +534,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/outOfUseTopMenu.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String outOfSetUsePage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("outOfSetUsePage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -521,6 +545,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		ezPortalAdminService.topOutOfSetUsePage(uID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		logger.debug("outOfSetUsePage ended");
 		return "OK";
 	}
 	
@@ -530,6 +555,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/setLang.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String setLang(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("setLang started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -543,7 +570,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		ezPortalAdminService.setUseLang(uID, userInfo.getCompanyID(), lang, userInfo.getTenantId());
-		
+
+		logger.debug("setLang ended");
 		return "OK";
 	}
 	
@@ -553,6 +581,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/portalSaveSkin.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String portalSaveSkin(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("portalSaveSkin started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pageID = "";
@@ -584,6 +614,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 		}
 		
+		logger.debug("portalSaveSkin ended");
 		return "OK";
 	}
 	
@@ -593,11 +624,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/portalSaveTopMenu.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String portalSaveTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("portalSaveTopMenu started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pageID = "";
 		String parentPageID = "";
-
+		
 		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
 			pageID = req.getParameter("pageID");
 		}
@@ -608,6 +641,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String ret = ezPortalAdminService.saveTopMenu(pageID, parentPageID, userInfo.getId(), userInfo.getDisplayName(), xmlStr, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		logger.debug("portalSaveTopMenu ended");
 		return ret;
 	}
 	
@@ -733,13 +767,16 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/deletePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String deletePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("deletePortalPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		String uID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
 		
 		String ret = ezPortalAdminService.deletePortalPage(uID, userInfo.getTenantId(), userInfo.getCompanyID());
-		
+
+		logger.debug("deletePortalPage ended");
 		return ret;
 	}
 	
@@ -784,6 +821,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/usePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String usePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("usePortalPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -798,6 +837,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String result = ezPortalAdminService.setUsePage(uID, gubunFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		logger.debug("usePortalPage ended");
 		return result;
 	}
 	
@@ -807,6 +847,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/outOfUsePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String outOfUsePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("outOfUsePortalPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -821,6 +863,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String result = ezPortalAdminService.outOfSetUsePage(uID, gubunFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		logger.debug("outOfUsePortalPage ended");
 		return result;
 	}
 	
@@ -830,6 +873,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/setDefaultPortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String setDefaultPortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("setDefaultPortalPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
@@ -838,7 +883,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String pFlag = xmlDom.getElementsByTagName("FLAG").item(0).getTextContent();
 		
 		ezPortalAdminService.setDefaultPage(pUID, pFlag, pGubunFlag, userInfo.getCompanyID(), userInfo.getTenantId());
-		
+
+		logger.debug("setDefaultPortalPage ended");
 		return "OK";
 	}
 	
@@ -848,9 +894,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/addRight.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addRight(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("addRight started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String ret = ezPortalAdminService.insertAclItem(xmlStr, userInfo.getTenantId());
+
+		logger.debug("addRight ended");
 		return ret;
 	}
 	
@@ -860,9 +910,13 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/removeACL.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String removeACL(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("removeACL started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String ret = ezPortalAdminService.deleteAclItem(xmlStr, userInfo.getTenantId());
+
+		logger.debug("removeACL ended");
 		return ret;
 	}
 	
@@ -872,6 +926,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/selectTarget.do")
 	public String selectTarget(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("selectTarget started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String topID = "";
 		
@@ -890,9 +946,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("useOCS", "");
 		model.addAttribute("pSearchString", "");
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
-		
+
+		logger.debug("selectTarget ended");
 		return "/admin/ezPortal/portalSelectTarget";
-		
 	}
 	
 	/**
@@ -900,6 +956,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portletList.do")
 	public String portletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portletList started");
+
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -964,7 +1022,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String strXML = ezPortalAdminService.searchPortlet(pSearchString, portalGubun, portalPageGubun, pStartRow, pEndRow, "", userInfo.getCompanyID(), userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(strXML);
 		String strHtml = "";
-
+		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			strHtml += "<tr style=\"cursor:pointer\" onClick=\"setValue('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\" onDblClick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 			strHtml += "<td width='300'>"+xmlDom.getElementsByTagName("DISPLAYNAME" + commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+"</td>";
@@ -980,7 +1038,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
 		model.addAttribute("portalGubun", portalGubun);
 		model.addAttribute("noneActiveX", noneActiveX);
-		
+
+		logger.debug("portletList ended");
 		return "/admin/ezPortal/portalPortletList";
 		
 	}
@@ -990,6 +1049,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portletEdit.do")
 	public String portletEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portletEdit started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
@@ -999,21 +1060,21 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String mode = "edit";
 		String pDocPath = "";
 		String pOpenMode = "";
-        String pWindowOption = "";
-        String pImageType = "";
-        String pImagePath = "";
-        String pImageWidth = "";
-        String pImageHeight = "";
-        String pCreatorID = "";
-        String pUsertype = "";
-        String pBoardID = "";
-        String pBoardName = "";
-        String pItemCount = "";
-        String pItemFields = "";
-        String pMoveURL = "";
-        String portletCategoryXML = "";
-        String portalPageCategoryXML = "";
-        String portletFrameType = "";
+		String pWindowOption = "";
+		String pImageType = "";
+		String pImagePath = "";
+		String pImageWidth = "";
+		String pImageHeight = "";
+		String pCreatorID = "";
+		String pUsertype = "";
+		String pBoardID = "";
+		String pBoardName = "";
+		String pItemCount = "";
+		String pItemFields = "";
+		String pMoveURL = "";
+		String portletCategoryXML = "";
+		String portalPageCategoryXML = "";
+		String portletFrameType = "";
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -1055,7 +1116,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String portletType = String.valueOf(prop.getPortlet_Type());
 		String subData = ezPortalService.getPortletSubProperties(uID, portletType, userInfo.getTenantId());
-
+		
 		Document subProp = commonUtil.convertStringToDocument(subData);
 		
 		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.menuItemEdit(userInfo.getTenantId());
@@ -1114,15 +1175,15 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (param.get(i).getParamType() == 0) {
 				paramHtml += "<tr>";
 				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
-    			paramHtml += "<td>"+param.get(i).getParamValue()+"</td>";
-    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
-  			    paramHtml += "</tr>";
+				paramHtml += "<td>"+param.get(i).getParamValue()+"</td>";
+				paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+				paramHtml += "</tr>";
 			} else {
 				paramHtml += "<tr>";
 				paramHtml += "<td>"+param.get(i).getParamName()+"</td>";
-    			paramHtml += "<td>"+param.get(i).getDescription()+"</td>";
-    			paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
-  			    paramHtml += "</tr>";
+				paramHtml += "<td>"+param.get(i).getDescription()+"</td>";
+				paramHtml += "<td width='39' align='center'><a class='imgbtn'><span onClick=\"RemoveParameter('"+param.get(i).getParamName()+"')\" >"+egovMessageSource.getMessage("ezPortal.t67", locale)+"</span></a></td>"; 
+				paramHtml += "</tr>";
 			}
 		}
 		
@@ -1157,8 +1218,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("mode", mode);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
+		logger.debug("portletEdit ended");
 		return "/admin/ezPortal/portalPortletEdit";
-		
 	}
 	
 	/**
@@ -1167,8 +1228,12 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/savePortletProperty.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePortletProperty(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("savePortletProperty started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String ret = ezPortalAdminService.savePortletProperties(xmlStr, userInfo.getTenantId(), userInfo.getCompanyID());
+
+		logger.debug("savePortletProperty ended");
 		return ret;
 	}
 	
@@ -1178,6 +1243,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/savePortletSubProperty.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String savePortletSubProperty(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("savePortletSubProperty started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -1233,7 +1300,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			mhtFilePath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + "mht" + commonUtil.separator + uID + ".mht";
 			//bResult = saveMHT(pContent, uID, config.getProperty("upload_portal.ROOT") + commonUtil.separator, realPath);
 			bResult = saveMHT(pContent, uID, commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator, realPath);
-
+			
 			if (bResult == true) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("v_UID", uID);
@@ -1274,15 +1341,19 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			ezPortalAdminService.savePortletSubProperty4(oldUserType, uID, oldCreatorID, boardID, userType, userInfo.getId(), itemCount, itemFields, userInfo.getTenantId());
 		}
+
+		logger.debug("savePortletSubProperty ended");
 		return "OK";
 	}
 	
 	public boolean saveMHT (String strHTML, String strMHTFileName, String strFilePath, String realPath) {
+		logger.debug("saveMHT started");
+
 		String docPath = "";
 		String mhtFilePath = "";
 		try {
 			docPath = realPath + strFilePath + commonUtil.separator +"mht";
-
+			
 			if (!new File(docPath).exists()) {
 				File dir = new File(docPath);
 				dir.mkdirs();
@@ -1299,11 +1370,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pw.flush();
 			pw.close();
 			
+			logger.debug("saveMHT ended");
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
-		
 	}
 	
 	/**
@@ -1312,6 +1383,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/removeParameter.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	
 	public void removeParameter(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("removeParameter started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -1334,6 +1407,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		ezPortalAdminService.removeParameter(Integer.parseInt(mode), uID, paramName, userInfo.getTenantId());
 		
+		logger.debug("removeParameter ended");
 	}
 	
 	/**
@@ -1342,6 +1416,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/addParameter.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String addParameter(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("addParameter started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String mode = "";
 		String ret = "";
@@ -1355,6 +1431,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			ret = ezPortalAdminService.saveMenuItemParameters(xmlStr, userInfo.getTenantId());
 		}
 		
+		logger.debug("addParameter ended");
 		return ret;
 	}
 	
@@ -1363,6 +1440,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portletEditCKContent.do")
 	public String portletEditCKContent(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portletEditCKContent started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pMode= "";
 		
@@ -1371,9 +1450,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("pMode", pMode);
+
+		logger.debug("portletEditCKContent ended");
 		return "/admin/ezPortal/portalPortletCKContent";
-		
-		
 	}
 	
 	/**
@@ -1382,14 +1461,18 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/deletePortlet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String deletePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("deletePortlet started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String uID = "";
+		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
 		
 		String ret = ezPortalAdminService.deletePortlet(uID, userInfo.getTenantId(), userInfo.getCompanyID());
-		
+
+		logger.debug("deletePortlet ended");
 		return ret;
 	}
 	
@@ -1398,6 +1481,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/portletPreview.do")
 	public String portletPreview(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portletPreview started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String strHTML= "";
 		String height= "";
@@ -1418,28 +1503,28 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		height = String.valueOf(prop.getHeight());
 		portletWidth = String.valueOf(prop.getWidth());
 		portletHeight = String.valueOf(prop.getHeight());
-
+		
 		StringBuilder sb = new StringBuilder();
-		 sb.append("<table id='main_table' border=0 cellpadding=0 cellspacing=0 width=100% style='table-layout:fixed;'>");
-
-         if (showTitleBar.trim().equals("1")) {
-             sb.append("<TR>\n");
-             sb.append("<TD class='portlet' align=left><img src='/css/ezPortal/portlet_bar.gif' width=3 height=15 border=0 align=absmiddle> <span class='portletfont'>" + displayName + "</span></TD>\n");
-             sb.append("</TR>\n");
-         }
-         sb.append("<TR style='WIDTH:100%; HEIGHT:" + height + "px'>\n");
-         sb.append("<TD style='WIDTH:100%' align=middle valign=top><iframe width=100% height=" + height + " border=0 src='" + url + ezPortalService.loadGetParameters(url, uID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
-         sb.append("</TR>\n");
-         sb.append("</table>\n");
-
-         strHTML = sb.toString();
+		sb.append("<table id='main_table' border=0 cellpadding=0 cellspacing=0 width=100% style='table-layout:fixed;'>");
+		
+		if (showTitleBar.trim().equals("1")) {
+			sb.append("<TR>\n");
+			sb.append("<TD class='portlet' align=left><img src='/css/ezPortal/portlet_bar.gif' width=3 height=15 border=0 align=absmiddle> <span class='portletfont'>" + displayName + "</span></TD>\n");
+			sb.append("</TR>\n");
+		}
+		sb.append("<TR style='WIDTH:100%; HEIGHT:" + height + "px'>\n");
+		sb.append("<TD style='WIDTH:100%' align=middle valign=top><iframe width=100% height=" + height + " border=0 src='" + url + ezPortalService.loadGetParameters(url, uID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+		sb.append("</TR>\n");
+		sb.append("</table>\n");
+		
+		strHTML = sb.toString();
 		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("portletWidth", portletWidth);
 		model.addAttribute("portletHeight", portletHeight);
-		
+
+		logger.debug("portletPreview ended");
 		return "/admin/ezPortal/portalPortletPreview";
-		
 	}
 	
 	/**
@@ -1447,6 +1532,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/logoList.do")
 	public String logoList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("logoList started");
+
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -1513,8 +1600,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("mainHTML", mainHTML);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("layoutList", layoutList);
-		return "/admin/ezPortal/portalLogoList";
 		
+		logger.debug("logoList ended");
+		return "/admin/ezPortal/portalLogoList";
 	}
 	
 	/**
@@ -1522,6 +1610,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/logoEdit.do")
 	public String logoEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("logoEdit started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
@@ -1529,17 +1619,17 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String uID = "";
 		String menuIndex = "1";
 		String mode = "edit";
-        String windowOption = "";
-        String imagePath = "";
-        String imageWidth = "";
-        String imageHeight = "";
-        String displayName = "";
-        String displayName2 = "";
-        String linkURL = "";
-        String linkLocation = "";
-        String parentUID = "";
+		String windowOption = "";
+		String imagePath = "";
+		String imageWidth = "";
+		String imageHeight = "";
+		String displayName = "";
+		String displayName2 = "";
+		String linkURL = "";
+		String linkLocation = "";
+		String parentUID = "";
 		String pageID = "";
-        
+		
 		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
@@ -1561,7 +1651,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID, userInfo.getTenantId());
 		}
-
+		
 		List<PortalMenuItemItemsImageVO> result = ezPortalAdminService.logoEdit(uID, pageID, userInfo.getTenantId());
 		
 		if (result != null) {
@@ -1600,8 +1690,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("imageHeight", imageHeight);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 		
+		logger.debug("logoEdit ended");
 		return "/admin/ezPortal/portalLogoEdit";
-		
 	}
 	
 	/**
@@ -1610,6 +1700,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/saveLogoImage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveLogoImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("saveLogoImage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pageID = "";
@@ -1689,6 +1781,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			map.put("tenantID", userInfo.getTenantId());
 			ezPortalAdminService.saveLogoImage2(map);
 		}
+
+		logger.debug("saveLogoImage ended");
 		return "OK";
 	}
 	
@@ -1761,10 +1855,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("bottomMargin", bottomMargin);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("parentUID", parentUID);
-		
 
 		logger.debug("menuPosition ended");
-		
 		return "/admin/ezPortal/portalMenuPosition";
 	}
 	
@@ -1897,10 +1989,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("mainHTML", mainHTML);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("layoutList", layoutList);
-		
 
 		logger.debug("utilMenuAreaEdit ended");
-		
 		return "/admin/ezPortal/portalUtilMenuAreaEdit";
 	}
 	
@@ -2049,12 +2139,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("imageDataLinkLocation", imageDataLinkLocation);
 		model.addAttribute("imageDataWindowOption", imageDataWindowOption);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
-		
 
 		logger.debug("menuItemEdit ended");
-		
 		return "/admin/ezPortal/portalMenuItemEdit";
-		
 	}
 	
 	/**
@@ -2177,9 +2264,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("menuList", menuList);
 		
 		logger.debug("menuSortOrder ended");
-		
 		return "/admin/ezPortal/portalMenuSortOrder";
-		
 	}
 	
 	/**
@@ -2345,10 +2430,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("mainHTML", mainHTML);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("layoutList", layoutList);
-		
 
 		logger.debug("mainMenuAreaEdit ended");
-		
 		return "/admin/ezPortal/portalMainMenuAreaEdit";
 	}
 	
@@ -2511,9 +2594,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("layoutList", layoutList);
 		model.addAttribute("menuList", menuList);
 		
-
 		logger.debug("subMenuItemsEdit ended");
-		
 		return "/admin/ezPortal/portalSubMenuItemsEdit";
 	}	
 	
@@ -2522,9 +2603,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/subMenuSortOrder.do")
 	public String subMenuSortOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("subMenuSortOrder started");
 
-        String parentUID = "";
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String parentUID = "";
 		String pageID = "";
 		String menuList = "";
 		
@@ -2549,7 +2632,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("parentUID", parentUID);
 		model.addAttribute("pageID", pageID);
 		model.addAttribute("menuList", menuList);
-		
+
+		logger.debug("subMenuSortOrder ended");
 		return "/admin/ezPortal/portalSubMenuSortOrder";
 	}
 	
@@ -2688,7 +2772,6 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
 		logger.debug("subMenuItemEdit ended");
-		
 		return "/admin/ezPortal/portalSubMenuItemEdit";
 	}
 	
@@ -2698,6 +2781,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/saveSubMenuItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveSubMenuItem(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("saveSubMenuItem started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pageID = "";
 		
@@ -2706,6 +2791,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		logger.debug("xmlStr="+xmlStr);
 		String ret = ezPortalAdminService.saveSubMenuItemConfig(xmlStr, pageID, userInfo.getTenantId());
+		
+		logger.debug("saveSubMenuItem ended");
 		return ret;
 	}
 	
@@ -2724,6 +2811,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezPortal/imageView.do")
 	public String imageView(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("imageView started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String imageName = "";
 		if (req.getParameter("imageName") != null && !req.getParameter("imageName").equals("")) {
@@ -2741,8 +2830,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("imageName", imageName);
 		
+		logger.debug("imageView ended");
 		return "/admin/ezPortal/portalImageView";
-		
 	}
 	
 	/**
@@ -2751,6 +2840,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/saveDelPortletInfo.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveDelPortletInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlStr,HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("saveDelPortletInfo started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String userID = "";
 		String userName = "";
@@ -2764,11 +2855,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String result = ezPortalAdminService.saveDelPortletInfo(userID, userName, xmlStr, userInfo.getTenantId());
-		
+
+		logger.debug("saveDelPortletInfo ended");
 		return result;
 	}
-	
-	
 	
 	/**
 	 * 관리자 포탈 IE9 이미지 업로드 실행 함수
@@ -2776,6 +2866,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/uploadMenuImage.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String uploadMenuImage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("uploadMenuImage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -2784,7 +2876,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
 			mode = req.getParameter("mode");
 		}
-	
+		
 		String realPath = req.getServletContext().getRealPath("");
 		//String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
 		String pDirPath = realPath+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
@@ -2811,48 +2903,50 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			String pSaveName = UUID.randomUUID().toString() + ".jpg";
 			BufferedImage bufferedImage = new BufferedImage(170, 140, bi.getType());
 			bufferedImage.createGraphics().drawImage(bi, 0, 0, 170, 140, null);
-
+			
 			ImageIO.write(bufferedImage, "jpg", new File(pServerPath + commonUtil.separator + pSaveName));
 			//ImageIO.write(bufferedImage, "png", new File(pAttachPath));
-
+			
 			File file1 = new File(savePath);
 			if (file1.exists()) {
 				FileUtils.deleteQuietly(file1);
 			}
 			//return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
+			logger.debug("uploadMenuImage ended");
 			return commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pSaveName;
+			
 		} else {
 			logger.debug("path="+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator +userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName);
 			//return config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
+			logger.debug("uploadMenuImage ended");
 			return commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator + pUniqueName;
 		}
-		
-		
 	}
 	
     protected void writeUploadedFile(InputStream stream, String newName, String stordFilePath) throws Exception {
-		
+		logger.debug("writeUploadedFile started");
+
 		OutputStream bos = null;
 		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
 		
 		try {
-		    File cFile = new File(stordFilePathReal);
-	
-		    if (!cFile.isDirectory()) {
+			File cFile = new File(stordFilePathReal);
+			
+			if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdir();
 				if (!_flag) {
-				    throw new IOException("Directory creation Failed ");
+					throw new IOException("Directory creation Failed ");
 				}
-		    }
-	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-	
-		    int bytesRead = 0;
-		    byte[] buffer = new byte[BUFF_SIZE];
-	
-		    while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-		    	bos.write(buffer, 0, bytesRead);
-		    }
+			}
+			
+			bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
 		} catch (FileNotFoundException fnfe) {
 			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
@@ -2860,23 +2954,21 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
 		} finally {
-		    if (bos != null) {
+			if (bos != null) {
 				try {
-				    bos.close();
+					bos.close();
 				} catch (Exception ignore) {
 					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
-		    }
-		    if (stream != null) {
+			}
+			if (stream != null) {
 				try {
-				    stream.close();
+					stream.close();
 				} catch (Exception ignore) {
 					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
-		    }
+			}
 		}
+		logger.debug("writeUploadedFile ended");
     }
-    
-    
-	
 }
