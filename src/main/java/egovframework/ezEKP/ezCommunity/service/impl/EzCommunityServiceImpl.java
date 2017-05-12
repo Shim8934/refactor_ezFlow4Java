@@ -1010,7 +1010,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			int strResponseCnt = ezCommunityDAO.pollMainGet4(map);
 			
 			logger.debug("pollMainGet4 ended.");
-			
+
 			sb.append("<tr>");
 			sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
@@ -1161,7 +1161,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String mode = request.getParameter("mode");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		String subject = request.getParameter("pollSubject");
+		String subject = request.getParameter("pollSubject").replaceAll("\r\n", "<br>");
 		/*String selRes = request.getParameter("selRes");
 		String sel = request.getParameter("sel");*/
 		String selType = request.getParameter("selType");
@@ -1173,7 +1173,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";
-		
+
 		logger.debug("startDate : " + startDate);
 		logger.debug("endDate : " + endDate);
 		
@@ -3581,7 +3581,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         
         for (CommunityCClubGuestVO item : list) {
         	i++;
-        	
+
         	if (i > comNoPerPage * curPage) {
         		break;
         	}
@@ -3621,7 +3621,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		switch (mode) {
 			case "write" :
-				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
+				guestEditOkInsert(code, userInfo, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
 				
 				break;
 			case "delete" :

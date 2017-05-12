@@ -17,7 +17,7 @@
 		    var UserLevel = "<c:out value ='${userLevel}' />";
 		    
 		    window.onload = function () {
-				$("#tblList").html($("#tblList").html() + '${strXML}'); 
+				$("#tblList").html($("#tblList").html() + '${strXML}');
 			}
 		    
 		    function alertMessage() {
