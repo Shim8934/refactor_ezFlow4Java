@@ -3581,7 +3581,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         
         for (CommunityCClubGuestVO item : list) {
         	i++;
-        	
+logger.debug("### " + commonUtil.cleanValue(item.getContent().replace("\r\n", "<br>")));
         	if (i > comNoPerPage * curPage) {
         		break;
         	}
@@ -3621,7 +3621,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		switch (mode) {
 			case "write" :
-				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
+				guestEditOkInsert(code, userInfo, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
 				
 				break;
 			case "delete" :
