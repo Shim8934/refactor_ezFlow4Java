@@ -989,7 +989,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		switch (useEditor) {
 			case "CK": 
-				returnPath = "ezEmail/mailCKEditor";
+				//TODO: 되돌려놓기
+				if (userInfo.getTenantId() == 0) {
+					returnPath = "ezEmail/mailTFXEditor";
+				} else {
+					returnPath = "ezEmail/mailCKEditor";
+				}
 				break;
 			case "TAGFREE":
 				returnPath = "ezEmail/mailTFXEditor";
