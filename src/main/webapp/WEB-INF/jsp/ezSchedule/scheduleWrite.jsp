@@ -585,7 +585,7 @@
 		                            <iframe id="message" class="viewbox" name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
 		                        </c:when>
 		                        <c:otherwise>
-		                            <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
+		                            <iframe id="message" class="viewbox" name="message" src="/ezBoard/selectEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
 		                        </c:otherwise>
 	                        </c:choose>
 	                    </td>
