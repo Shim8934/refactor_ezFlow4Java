@@ -19877,7 +19877,7 @@
    			TBL_APRDOCINFO 
    		(    DocID,     FormID, OrgDocID,     DocType, DocState,      FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, 'N',            #v_SYSDATE#,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID
+   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, 'N',            NULL,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID
    		 FROM 
    		 	TBL_APRDOCINFO A 
    		 WHERE 
