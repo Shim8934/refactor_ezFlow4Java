@@ -180,6 +180,7 @@
 			var startDateTime = '${startDateTime}';
 			var pSignImage_Size = "${signImageSize}";
 			var pAdmin = "N";
+			var chamjoAfterYN = "${chamjoAfterYN}";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){

@@ -922,6 +922,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String aprTypeXML = "";
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String chamjoAfterYN = ezCommonService.getTenantConfig("chamjoAfterYN", userInfo.getTenantId());
 
 		if (request.getParameter("docSN") != null) {
 			docSN = request.getParameter("docSN");
@@ -959,6 +960,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("signImageSize", signImageSize);
+		model.addAttribute("chamjoAfterYN", chamjoAfterYN);
 		
 		return "ezApprovalG/apprGezApprovalInfo";
 	}
