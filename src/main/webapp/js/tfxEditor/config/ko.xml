@@ -85,10 +85,10 @@
 		<IncreaseIndent visible="true">들여쓰기</IncreaseIndent>
 	</group>
 	
-	<group>
+	<!-- <group>
 		<Superscript visible="true">위 첨자</Superscript>
 		<Subscript visible="true">아래 첨자</Subscript>	
-	</group>	
+	</group> -->	
 	
 	<group>
 		<Numbering visible="true">번호 매기기</Numbering>

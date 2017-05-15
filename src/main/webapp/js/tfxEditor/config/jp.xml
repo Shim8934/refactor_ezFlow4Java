@@ -85,10 +85,10 @@
 		<IncreaseIndent visible="true">インデント</IncreaseIndent>
 	</group>
 	
-	<group>
+	<!-- <group>
 		<Superscript visible="true">上付き文字</Superscript>
 		<Subscript visible="true">下付き文字</Subscript>	
-	</group>	
+	</group> -->	
 	
 	<group>
 		<Numbering visible="true">番号付け</Numbering>
