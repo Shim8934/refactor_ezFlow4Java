@@ -294,15 +294,18 @@
 			            				VAPRWILLDOCLIST  
 			            			WHERE 
 			            				APRMEMBERID = #v_USERID# 
-			            			AND	    
-										AprState != '001'
+			            				 ]]>
+<!-- 			            			AND	     -->
+<!-- 										AprState != '001' -->
+							<![CDATA[
 									AND
 			            				AprType <> '015'
+			            	]]>
 			            			AND 
 					      				TENANT_ID = #v_TENANTID# 
 					      			AND
 					      				COMPANYID = #companyID#	
-            ]]>
+           
 			                <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
 				      		 		AND 
 				      		 			$v_SPSUBQUERY$
@@ -7789,8 +7792,10 @@
 	   			VAPRWILLDOCLIST 
 	   		WHERE 
 	   			APRMEMBERID = #v_USERID# 
-			AND
-				AprState != '001'
+	   	]]>
+<!-- 			AND -->
+<!-- 				AprState != '001' -->
+		<![CDATA[
            	AND
 	   			AprType <> '015'  
 	   		AND 
@@ -8861,13 +8866,14 @@
            		APRMEMBERID = #v_USERID# 
            	AND 
            		AprType <> '015'
-           	AND
-				AprState != '001'
+          ]]>
+<!--            	AND -->
+<!-- 				AprState != '001' -->
            	AND
 				TENANT_ID = #v_TENANTID#
 			AND
 				COMPANYID = #companyID#
-		]]>
+		
 		</isEqual>
 		<!-- 공람할 문서 -->
 		<isEqual property="v_LISTTYPE" compareValue="99">
@@ -19871,7 +19877,7 @@
    			TBL_APRDOCINFO 
    		(    DocID,     FormID, OrgDocID,     DocType, DocState,      FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
    		(SELECT 
-   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, 'N',            #v_SYSDATE#,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID
+   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, 'N',            NULL,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID
    		 FROM 
    		 	TBL_APRDOCINFO A 
    		 WHERE 

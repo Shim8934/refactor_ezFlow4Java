@@ -869,8 +869,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							return;
 						}
-						output.flush();
-						output.close();
+
+						try {
+							output.flush();
+						} catch (IOException e) {
+						}
+						
+						try {
+							output.close();
+						} catch (IOException e) {
+						}
 					}
 				}
 			}
