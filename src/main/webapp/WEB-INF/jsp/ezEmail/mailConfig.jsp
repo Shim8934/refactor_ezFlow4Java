@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <script type = "text/javascript">
-	        var pUse_Editor = "${useEditor}";
+	        var pUse_Editor = "${userEditor}";
 	        var p_Use_IE11Browser = "${useIE11Browser}";
 	        var pNoneActiveX = "${noneActiveX}";
 	        window.onload = window_onload;
@@ -54,40 +54,10 @@
 	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailAutoDelete.do";
 	                    break;
 	                case "MailEnv_div7":
-	                    if (CrossYN()) {
-	                        if (pUse_Editor == "TAGFREE")
-	                            document.getElementById("MailEnv_ifrm").src = "mail_signature_TFX.aspx";
-	                        else
-	                            document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailSignatureCK.do";
-	                    }
-	                    else {
-	                        if (pNoneActiveX == "YES")
-	                            document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailSignatureCK.do";
-	                        else {
-	                            if (pUse_Editor == "TAGFREE")
-	                                document.getElementById("MailEnv_ifrm").src = "mail_signature_TFI.aspx";
-	                            else {
-	                                if (p_Use_IE11Browser == "CK")
-	                                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailSignatureCK.do";
-	                                else
-	                                    document.getElementById("MailEnv_ifrm").src = "mail_signature.aspx";
-	                            }
-	                        }
-	                    }
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailSignature.do";
 	                    break;
 	                case "MailEnv_div8":
-	                    if (CrossYN()) {
-	                        if (pUse_Editor == "TAGFREE")
-	                            document.getElementById("MailEnv_ifrm").src = "mail_outofoffice_TFX.aspx";
-	                        else
-	                            document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOfficeCK.do";
-	                    }
-	                    else {
-	                        if (pUse_Editor == "TAGFREE")
-	                            document.getElementById("MailEnv_ifrm").src = "mail_outofoffice_TFX.aspx";
-	                        else
-	                            document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOfficeCK.do";
-	                    }
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailOutOfOffice.do";
 	                    break;
 	                case "MailEnv_div9":
 	                    document.getElementById("MailEnv_ifrm").src = "mail_ReceiveDeny.aspx";

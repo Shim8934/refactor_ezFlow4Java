@@ -554,9 +554,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 서명관리 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSignatureCK.do")
-	public String mailSignatureCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		logger.debug("mailSignatureCK started.");
+	@RequestMapping(value="/ezEmail/mailSignature.do")
+	public String mailSignature(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailSignature started.");
 		
 		String signState = "0";
 		String signature1 = "";
@@ -597,9 +597,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userId", userInfo.getId());
 		
-		logger.debug("mailSignatureCK ended.");
+		logger.debug("mailSignature ended.");
 		
-		return "ezEmail/mailSignatureCK";
+		return "ezEmail/mailSignature";
 	}
 
 	/**
@@ -1229,9 +1229,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOfficeCK.do")
-	public String mailOutOfOfficeCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
-		logger.debug("mailOutOfOfficeCK started.");
+	@RequestMapping(value="/ezEmail/mailOutOfOffice.do")
+	public String mailOutOfOffice(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+		logger.debug("mailOutOfOffice started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1302,9 +1302,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("gExternal", gExternal);
 		model.addAttribute("userLang", userLang);
 		
-		logger.debug("mailOutOfOfficeCK ended.");
+		logger.debug("mailOutOfOffice ended.");
 		
-		return "ezEmail/mailOutOfOfficeCK";
+		return "ezEmail/mailOutOfOffice";
 	}
 
 	/**
