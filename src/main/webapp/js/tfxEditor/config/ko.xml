@@ -3,8 +3,10 @@
 <menu1>
 	<!--<newfile visible="true">새 문서</newfile>	
 	<savefile visible="true">파일 저장</savefile>
-	<print visible="true">인쇄</print>
 	<split/>-->
+	<print visible="true">인쇄</print>
+	<split/>
+	
 	<cut visible="true">잘라 내기</cut>
 	<copy visible="true">복사</copy>
 	<paste visible="true">붙여 넣기</paste>

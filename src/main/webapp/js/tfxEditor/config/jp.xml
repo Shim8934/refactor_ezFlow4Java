@@ -3,8 +3,10 @@
 <menu1>
 	<!-- <newfile visible="true">新しいドキュメント</newfile>
 	<savefile visible="true">ファイルの保存</savefile>
-	<print visible="true">印刷</print>
 	<split/> -->
+	<print visible="true">印刷</print>
+	<split/>
+	
 	<cut visible="true">カット</cut>
 	<copy visible="true">コピー</copy>
 	<paste visible="true">貼り付け</paste>

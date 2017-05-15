@@ -3,8 +3,10 @@
 <menu1>
 	<!--<newfile visible="true">New File</newfile>	
 	<savefile visible="true">Save File</savefile>
-	<print visible="true">Print</print>
 	<split/>-->
+	<print visible="true">Print</print>
+	<split/>
+	
 	<cut visible="true">Cut</cut>
 	<copy visible="true">Copy</copy>
 	<paste visible="true">Paste</paste>
