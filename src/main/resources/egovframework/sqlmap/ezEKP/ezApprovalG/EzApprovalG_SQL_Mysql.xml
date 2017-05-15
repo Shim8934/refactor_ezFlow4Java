@@ -294,7 +294,9 @@
 			            				VAPRWILLDOCLIST  
 			            			WHERE 
 			            				APRMEMBERID = #v_USERID# 
-			            			AND 
+			            			AND	    
+										AprState != '001'
+									AND
 			            				AprType <> '015'
 			            			AND 
 					      				TENANT_ID = #v_TENANTID# 
@@ -7787,7 +7789,9 @@
 	   			VAPRWILLDOCLIST 
 	   		WHERE 
 	   			APRMEMBERID = #v_USERID# 
-	   		AND 
+			AND
+				AprState != '001'
+           	AND
 	   			AprType <> '015'  
 	   		AND 
 	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')  
@@ -8857,6 +8861,8 @@
            		APRMEMBERID = #v_USERID# 
            	AND 
            		AprType <> '015'
+           	AND
+				AprState != '001'
            	AND
 				TENANT_ID = #v_TENANTID#
 			AND
