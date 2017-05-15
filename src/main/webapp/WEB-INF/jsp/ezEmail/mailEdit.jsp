@@ -862,17 +862,7 @@
 				  <table width="100%" height="100%"> 
 			          <tr> 
 			            <td style="height:100%;">
-			            	<c:choose> 
-								<c:when test="${useEditor == 'TAGFREE'}">
-									<iframe id="message" frameborder="0" class="viewbox" src="TagFree_TFX_Editor.aspx" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-								</c:when>
-								<c:when test="${useEditor == 'DEXT'}">
-									<iframe id="message" frameborder="0" class="viewbox" src="DEXT_Editor.aspx" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-								</c:when>
-								<c:otherwise>
-									<iframe id="message" frameborder="0" class="viewbox" src="/ezEmail/mailCKEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-								</c:otherwise>
-							</c:choose>
+							<iframe id="message" frameborder="0" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
 			            </td> 
 			          </tr> 
 			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
