@@ -2729,10 +2729,12 @@ function SCheckLineUser() {
     if (!pChkFlag)
         pAlertContent = pAlertContent + " " + strLangS303 + "<br>";
 
-    var pChkFlag = CheckChamjo(AprLineRow);
-    if (!pChkFlag)
-        pAlertContent = pAlertContent + " " + strLangSHJ1 + "<br>";
-
+    if (chamjoAfterYN == 'NO') {
+    	var pChkFlag = CheckChamjo(AprLineRow);
+    	
+        if (!pChkFlag)
+            pAlertContent = pAlertContent + " " + strLangSHJ1 + "<br>";
+    }
     
     if (pAlertContent != "") {
         var pAlertContent = pAlertContent + "" + strLangS304;
