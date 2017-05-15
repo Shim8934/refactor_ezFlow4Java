@@ -255,8 +255,8 @@
 		        setAutoProperty();
 		        process_AfterOpen();
 		
-		        //접수눌렀을때 최근결재선이 박히는건데 없는게 맞을듯
 		        setFirstDrafter();
+		        
 		        if (SignCount < 1) {
 		            pGubun = "12";
 		            document.getElementById("btnSetAprLine").style.display = "none";
@@ -266,8 +266,6 @@
 		            else
 		                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
 		
-		
-		            document.getElementById("btnSendAround").style.display = "";
 		            document.getElementById("btntotaldocinfo").style.display = "none";
 		        }
 		        getGongRamDocInfo();
@@ -1096,20 +1094,6 @@
 	            }
 	        }
 		    
-		    function btnSendAround_onclick() {
-		        var para = new Array();
-		        para[0] = pDocID;
-		
-		        var url = "AprGongRamLine_Cross.aspx";
-		        var feature = "dialogWidth:557px;dialogHeight:530px;scroll:no;resizable:yes;status:no;help:no;edge:sunken";
-		        feature = feature + GetShowModalPosition(557, 530);
-		        var rtn = window.showModalDialog(url, para, feature);
-		        if (rtn == "OK") {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1424'/>";
-		            OpenAlertUI(pAlertContent);
-		            JiJungBeBuDisable();
-		        }
-		    }
 		    function JiJungBeBuDisable() {
 		        btnAssign.style.display = "none";
 		        btnDistribute.style.display = "none";
@@ -1337,7 +1321,6 @@
 			<li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 <%-- 			<li id="btnRJunkyul" class = 'approvalG'><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li> --%>
 			<li id="btnRJunkyul"><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
-			<span style ="display:none" ><li id="btnSendAround" style="display:none"><span  onClick="return btnSendAround_onclick()" ><spring:message code='ezApprovalG.t1428'/></span></li></span>
 			<span style ="display:none" ><li id="btnSetTaskCode"><span onClick="btnSetTaskCode_onclick()"  ><spring:message code='ezApprovalG.t51'/></span></li></span>
 			<span style ="display:none" ><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>
 			<li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>

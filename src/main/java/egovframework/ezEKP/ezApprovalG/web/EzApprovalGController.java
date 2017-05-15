@@ -125,7 +125,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/apprGLeft.do")
 	public String apprGLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
-        logger.debug("apprGLeft Started");  
+        logger.debug("apprGLeft Started");
+        
         userInfo = commonUtil.aprUserInfo(loginCookie);
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId());
 		String listType = request.getParameter("listType");
@@ -264,9 +265,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
         	
         	for (int k = 0; k < deptList.length; k++) {
         		String[] subList = deptList[k].split(":");
-        		String pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
+        		String pTitle_ = "";
                 String pTitle1_ = ""; 
                 String pTitle2_ = "";
+                
+                
+                if (subList.length > 2) {
+                	pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
+                }
                 
                 if (subList.length > 1) {
                     pTitle1_ = commonUtil.cleanValue(subList[1]);
@@ -3899,6 +3905,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String susinAdmin = "";
 		String hasOpinionYN = "";
 		String realPath = commonUtil.getRealPath(request);
@@ -3997,6 +4004,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("listType", listType);
 		model.addAttribute("mode", mode);
 		model.addAttribute("callBackType", callBackType);
+		model.addAttribute("approvalFlag", approvalFlag);
 
 		return "ezApprovalG/apprGaprDocView";
 	}
@@ -4603,64 +4611,61 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = "";
 	
-			docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-            drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-            String draftfrom = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
-            String draftto = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
-            String apprfrom = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
-            String papprto = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
-            String mypapprfrom = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
-            String mypapprto = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
-            formID = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
-            String endaprYEAR = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
-            draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-            containerID = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
-            userID = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
-            String deptID = xmlDom.getDocumentElement().getChildNodes().item(14).getTextContent();
-            String flag = xmlDom.getDocumentElement().getChildNodes().item(15).getTextContent();
-            pageNum = xmlDom.getDocumentElement().getChildNodes().item(16).getTextContent();
-            pageSize = xmlDom.getDocumentElement().getChildNodes().item(17).getTextContent();
-            docState = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
-            orderCell = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
-            orderOption = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
-            String ReturnQuery = "(1 = 1) ";
-            Document xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent());
-            String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
-            
-            if(TempQuery.indexOf("KAPR;") > -1) {
-            	ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
-            }
-            if (TempQuery.indexOf("KEND;") != -1)
-            {
-                ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
-            }
-            if (TempQuery.indexOf("CAPR;") != -1)
-            {
-                ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
-            }
-            if (TempQuery.indexOf("CEND;") != -1)
-            {
-                ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
-            }
-            
-            if (TempQuery.indexOf("EAPRTYPE;") != -1)
-            {
-                ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprType = '" + xmldomsub.getElementsByTagName("ENDAPRTYPE").item(0).getChildNodes().item(0).getTextContent()  + "' ";
-            }
-            if (TempQuery.indexOf("EAPRSTATE;") != -1)
-            {
-                ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprState = '" + xmldomsub.getElementsByTagName("ENDAPRSTATE").item(0).getChildNodes().item(0).getTextContent() + "' ";
-            }
-            subQuery = ReturnQuery;
-            
-            if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
-            {
-                if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
-                    subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
-            }
-             result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
-                    papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
+		docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+		docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+        drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+        String draftfrom = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+        String draftto = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+        String apprfrom = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
+        String papprto = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+        String mypapprfrom = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
+        String mypapprto = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
+        formID = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
+        draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+        containerID = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
+        userID = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
+        pageNum = xmlDom.getDocumentElement().getChildNodes().item(16).getTextContent();
+        pageSize = xmlDom.getDocumentElement().getChildNodes().item(17).getTextContent();
+        docState = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
+        orderCell = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
+        orderOption = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+        String ReturnQuery = "(1 = 1) ";
+        Document xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent());
+        String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+        
+        if(TempQuery.indexOf("KAPR;") > -1) {
+        	ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+        }
+        if (TempQuery.indexOf("KEND;") != -1)
+        {
+            ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+        }
+        if (TempQuery.indexOf("CAPR;") != -1)
+        {
+            ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+        }
+        if (TempQuery.indexOf("CEND;") != -1)
+        {
+            ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+        }
+        
+        if (TempQuery.indexOf("EAPRTYPE;") != -1)
+        {
+            ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprType = '" + xmldomsub.getElementsByTagName("ENDAPRTYPE").item(0).getChildNodes().item(0).getTextContent()  + "' ";
+        }
+        if (TempQuery.indexOf("EAPRSTATE;") != -1)
+        {
+            ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprState = '" + xmldomsub.getElementsByTagName("ENDAPRSTATE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+        }
+        subQuery = ReturnQuery;
+        
+        if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
+        {
+            if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
+                subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
+        }
+         result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
+                papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
 		return result;
 	}
@@ -5728,6 +5733,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		if (type.equals("APR")) {
 			result = ezApprovalGService.gongRamSave(xmlDom, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		} else if (type.equals("ING")) {
+			result = ezApprovalGService.gongRamSaveIng(xmlDom, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		} else {
 			result = ezApprovalGService.gongRamSaveEnd(xmlDom, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		}
@@ -6347,5 +6354,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("deleteSignInfo ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/delCirculation.do")
+	public void delCirculation(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("delCirculation started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		logger.debug("docID : " + docID);
+		//회람 했다가 다시 다빼면 지워야해서 만듬
+		ezApprovalGService.delCirculation(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		logger.debug("delCirculation ended");
 	}
 }

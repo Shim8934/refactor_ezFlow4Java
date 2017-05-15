@@ -38,7 +38,6 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script src="/js/Common.js" type="text/javascript"></script>
-	    
 	    <script type="text/javascript">
 	    	var approvalFlag = "${approvalFlag}";
 	        var OrderCell = "";
@@ -173,13 +172,13 @@
 	        /* 2015-06-23 추가 - KSK */
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
-	        
 	        var hideCabinet = "${hideCabinet}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var checkdocinfo = false;
 			var startDateTime = '${startDateTime}';
 			var pSignImage_Size = "${signImageSize}";
 			var pAdmin = "N";
+			var pGongRamDocID;
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -504,6 +503,7 @@
 	        var bool2 = false;
 	        var bool3 = false;
 	        var bool4 = false;
+	        var bool5 = false;
 	        function ChangeTab(obj) {
 	            //DisabledTab();
 	            var pSelectTab = obj.getAttribute("divname");
@@ -514,6 +514,11 @@
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "S") {
+		                    document.getElementById("Circulation").style.display = "none";
+	                    }
+	                    
 	                    if (!bool)
 	                        Lineinfo_ini();
 	                    bool = true;
@@ -522,6 +527,11 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "S") {
+		                    document.getElementById("Circulation").style.display = "none";
+	                    }
+	                    
 	                    if (!bool2)
 	                        Receptinfo_ini();
 	                    bool2 = true;
@@ -530,6 +540,10 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    
+	                    if (approvalFlag == "S") {
+		                    document.getElementById("Circulation").style.display = "none";
+	                    }
 	                    
 	                    if (!bool3) {
 	                    	if (approvalFlag == "G") {
@@ -549,6 +563,10 @@
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    
+	                    if (approvalFlag == "S") {
+		                    document.getElementById("Circulation").style.display = "none";
+	                    }
+	                    
 	                    if (approvalFlag == "G") {
 		                    if (!bool4) {
 		                        Docinfo_ini();
@@ -567,7 +585,16 @@
 	                    break;
 	                case "Opinioninfo":
 	                    break;
-	
+					//회람 추가
+	                case "Circulation":
+	                	document.getElementById("Lineinfo").style.display = "none";
+	                    document.getElementById("Receptinfo").style.display = "none";
+	                    document.getElementById("Cabinetinfo").style.display = "none";
+	                    document.getElementById("Docinfo").style.display = "none";
+	                    if (!bool5)
+	                        circulation_ini();
+	                    bool5 = true;
+	                    break;
 	            }
 	        }
 	
@@ -737,7 +764,7 @@
 		    }
 		
 		    function btn_OK() {
-		        try {
+// 		        try {
 		            if (!onlydocinfiview) {
 		                var line = Checkline();
 		                if (line == false) {
@@ -810,6 +837,17 @@
 		                        return;
 		                    }
 		                    
+		                    //회람
+		                    var lineUserCC = CheckAprlineCC();
+		                    
+		                    if (lineUserCC == 1 || lineUserCC == 2) {
+		                    	ret[22] = APRLINEXMLParsingCC();
+		                    } else if (lineUserCC == -1) {
+		                    	ret[22] = "noItem";
+		                    } else if (lineUserCC == 0) {
+		                    	ret[22] = "sameItem";
+		                    }
+
 		                	docinfo = MakeDocInfo();
 		                	ReDraftSaveAprLine();
 			                ret[0] = "OK";
@@ -934,11 +972,11 @@
 		            	
                         window.close();
 		            }
-		        }
-		        catch (e) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-		            ret[0] = "FALSE";
-		        }
+// 		        }
+// 		        catch (e) {
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+// 		            ret[0] = "FALSE";
+// 		        }
 		    }
 		    
 		    function setCabInfoXML() {
@@ -1363,6 +1401,34 @@
 	            else
 	                document.getElementById("1tab3").click();
 	        }
+	        
+	        function getGongRamDocInfo() {
+	            try {
+	            	var result = "";
+	            	
+	            	$.ajax({
+	            		type : "POST",
+	            		dataType : "text",
+	            		async : false,
+	            		url : "/ezApprovalG/gongRamDocInfo.do",
+	            		data : {
+	            			docID : pDocID
+	            		},
+	            		success: function(xml){
+	            			result = xml;
+	            		}
+	            	});
+	            	
+	                pGongRamDocID = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+
+	                if (pGongRamDocID == "NONE")
+	                    pGongRamDocID = "";
+
+	            } catch (e) {
+	                pGongRamDocID = "";
+	                alert("getGongRamDocInfo :: " + e.description);
+	            }
+	        }
 	    </script>
 	    <style>
 	    	.mainlist_free tr th {text-align:center}
@@ -1393,6 +1459,9 @@
 		           	</c:if>
 	            </c:if>
 	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4"><c:if test="${approvalFlag eq 'G' }"><spring:message code='ezApprovalG.t1204'/></c:if><c:if test="${approvalFlag eq 'S' }"><spring:message code='ezApproval.t62'/></c:if></span></p>
+	            <c:if test="${approvalFlag eq 'S' }">
+		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
+	            </c:if>
 	        </div>
 	    </div>
 	    <div id="Approvallist">
@@ -1424,7 +1493,7 @@
 	                            <c:if test="${approvalFlag =='S'}">
 	                               <tr>
                                     <td style="vertical-align: top;">                                    	
-                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
                                         </div>
                                     </td>
                                	 	</tr>
@@ -1489,7 +1558,7 @@
 	                        </div>
 	                    </td>
 	                    <td style="vertical-align: top">
-	                        <table style="margin-left: 5px;">
+	                        <table>
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t407'/>
@@ -1502,11 +1571,11 @@
 	                                    </h2>
 	                                    <div class="border_gray" style="margin-top:4px">
 	                                        <c:if test="${approvalFlag == 'G' }">
-	                                        <div id="APRLINE" style="Width: 710px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="APRLINE" style="Width: 717px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
-	                                        <div id="APRLINE" style="Width: 710px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                         	</div>
                                         	</c:if>
 	                                    </div>
@@ -1559,7 +1628,6 @@
 	                    </td>
 	                </tr>
 	            </table>
-	
 	        </div>
 	    </div>
 	
@@ -2082,6 +2150,107 @@
 		        </td>
 		    </div>
 	    </c:if>
+	    <c:if test="${approvalFlag eq 'S' }">
+<!-- 	    회람 -->
+	    	<div id="Circulation" style="border-bottom: 1px solid #dbdbda; width: 1110px; height: 597px; display: none;">
+        		<table>
+			        <tr>
+			            <td style="vertical-align: top">
+			                <div class="portlet_tabpart01" style="margin-top: 3px; ">
+			                    <div class="portlet_tabpart01_top" id="tab5">
+			                        <p><span id="5tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+			                        <p><span id="5tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
+			                    </div>
+			                </div>
+			                <!-- 조직도 -->
+			                <div id="Organ" style="width:390px">
+			                	<table style="width:99.5%;table-layout: fixed">
+			                		<tr>
+	                                    <td style="vertical-align: top;">                                    	
+	                                        <div id="TreeViewCC" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 387px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 0px;">
+	                                        </div>
+	                                    </td>
+                               	 	</tr>
+                                	<tr>
+	                                    <td style="border: 1px solid #b6b6b6;">
+                                        <div class="border_gray" style="border: 0px;">
+                                            <div id="UserListCC" style="border: 0px; margin: 0px 1px 1px 1px; Width: 386px; Height: 223px; overflow: auto;">
+                                            </div>
+                                        </div>
+                                    </td>
+                                	</tr>
+			                    	<tr>
+	                                    <td style="background-color: transparent; height: 28px;">
+	                                        <input id="textUserCC" style="width: 150px" name="textUserCC" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+<!-- 	                                        부서추가 -->
+<%-- 	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a> --%>
+	                                    </td>
+	                                </tr>
+			                    </table>
+			                </div>
+			                <!-- 즐겨찾기 -->
+			                <div id="ReceptTempCC" style="display: none">
+			                    <table style="padding-left: 5px">
+			                        <tr>
+			                            <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+			                                <h2 class="h2_dot"><spring:message code='ezApprovalG.G0003'/></h2>
+			                                <div class="border_gray">
+			                                    <div id="RecSaveListCC" style="border: 0px; Width: 388px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+			                                    </div>
+			                                </div>
+			                            </td>
+			                        </tr>
+			                        <tr>
+			                            <td style="background-color: transparent; text-align: center; height: 30px;">
+			                                <table class="content" style="margin-bottom: 5px; width: 100%;">
+			                                    <tr>
+			                                        <td style="text-align: center;">
+			                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
+			                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+			                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+			                                        </td>
+			                                    </tr>
+			                                </table>
+			                            </td>
+			                        </tr>
+			                        <tr>
+			                            <td style="vertical-align: top;">
+			                                <div class="border_gray">
+			                                    <div id="RecSaveDetailCC" style="Width: 388px; Height: 240px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+			                                    </div>
+			                                </div>
+			                        	</td>
+			                    	</tr>
+			                	</table>
+		                    	<table style="width: 100%;">
+		                        	<tr>
+		                            	<td style="text-align: left; height: 30px;">
+		                        	</tr>
+		                    	</table>
+			                </div>
+			            </td>
+			            <td style="vertical-align: top;">
+			                <h2 class="h2_dot"><spring:message code='ezApprovalG.hyj20'/>
+			                    <div style="text-align: right; margin-top: -23px; padding-right: 5px">
+			                        <a class="imgbtn" onclick="return AprlineUpper_onclick();"><span>
+			                            <img src="/images/ImgIcon/prev.gif" height="16" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align: middle" /></span></a>
+			                        <a class="imgbtn" onclick="return AprlineDown_onclick();"><span>
+			                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
+			                	</div>
+			                </h2>
+			                <div class="border_gray" style="margin-top:4px">
+                                <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                              	</div>
+                            </div>
+			                <div style="text-align: right;">
+			                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.hyj07'/> </span></a>
+			                </div>
+			            </td>
+			        </tr>
+			    </table>
+		    </div>
+	    </c:if>
 	    
 	    <br />
 	    <div style="text-align: center;" id="orgbtnArea">
@@ -2159,5 +2328,6 @@
 	    Tab1_NewTabIni("tab1");
 	    Tab2_NewTabIni("tab2");
 	    Tab3_NewTabIni("tab3");
+	    Tab5_NewTabIni("tab5");
 	</script>
 </html>

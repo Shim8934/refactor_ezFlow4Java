@@ -19,16 +19,23 @@ function Lineinfo_ini() {
     	}
     }
 }
+
+function circulation_ini() {
+	getGongRamDocInfo();
+	Tree_setconfig();
+	TreeViewinitialize(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "", "circulation");
+    displayUserListCC(DeptID);
+    InitListViewCC();
+    ChangeLineTabCC("Organ");
+}
 //#############################################################################################################################################결재선 내부 탭 이벤트
 var internalTab = false;
 function ChangeLineTab(divname) {
-
     if (divname == "Organ") {
         document.getElementById("OrganLineTab").style.display = "";
         document.getElementById("TempLineTab").style.display = "none";
         internalTab = true;
-    }
-    else {
+    } else {
         if(!Lineinfoini2)
         {            
             Lineinfoini2 = true;
@@ -38,6 +45,121 @@ function ChangeLineTab(divname) {
         document.getElementById("TempLineTab").style.display = "";
     }
 }
+
+function ChangeLineTabCC(divname) {
+    try {
+        if (divname == "Organ") {
+            document.getElementById("Organ").style.display = "";
+            document.getElementById("ReceptTempCC").style.display = "none";
+        } else if (divname == "Save") {
+            document.getElementById("Organ").style.display = "none";
+            document.getElementById("ReceptTempCC").style.display = "";
+            GetReceptTempletListCC();
+        }
+    } catch (e) {
+        alert("ChangeReceptTab::" + e.description);
+    }
+}
+
+function GetReceptTempletListCC() {
+    try {
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : true,
+    		url : "/ezApprovalG/getLineTemplist.do",
+    		data : {
+    				userID 	 : pUserID,
+    				formID   : pFormID
+    				},
+    		success: function(text){
+    			event_GetReceptTempletListCC(text);
+    		}        			
+    	});
+    	
+    } catch (e) {
+        alert("GetReceptTempletListCC::" + e.description);
+    }
+}
+function event_GetReceptTempletListCC(result) {
+    try {
+        if (document.getElementById("RecSaveListCC").innerHTML != "") {
+        	document.getElementById("RecSaveListCC").innerHTML = "";
+        }
+        
+        var liveView = new ListView();
+        liveView.SetID("lvRecSaveListCC");
+        liveView.SetRowOnClick("lvRecSaveListCC_onSel_Click");
+        liveView.SetSelectFlag(true);
+        liveView.SetHeightFree(true);
+        liveView.DataSource(loadXMLString(result));
+        liveView.DataBind("RecSaveListCC");
+
+        var pCurSelRow = liveView.GetSelectedRows();
+        if (pCurSelRow.length != 0) {
+            GetReceptTempletInfoCC(pCurSelRow[0].getAttribute("DATA1"));
+        }
+        else {
+            document.getElementById("RecSaveDetailCC").innerHTML = "";
+        }
+        xmlhttp = null;
+    }
+    catch (e) {
+        alert("event_GetReceptTempletListCC::" + e.description);
+    }
+}
+
+function lvRecSaveListCC_onSel_Click() {
+    try {
+        var liveView = new ListView();
+        liveView.SetID("lvRecSaveListCC");
+        var pCurSelRow = liveView.GetSelectedRows();
+        if (pCurSelRow.length != 0) {
+            GetReceptTempletInfoCC(pCurSelRow[0].getAttribute("DATA1"));
+        }
+    } catch (e) {
+        alert("lvRecSaveListCC_onSel_Click::" + e.description);
+    }
+}
+
+function GetReceptTempletInfoCC(p_AprLineTempletID) {
+    try {
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : true,
+    		url : "/ezApprovalG/aprLineTempletListInfo.do",
+    		data : {
+    				userID 	 : pUserID,
+    				formID   : pFormID,
+    				aprLineSN: p_AprLineTempletID
+    				},
+    		success: function(text){
+    			event_GetReceptTempletInfoCC(text);
+    		}        			
+    	});
+    } catch (e) {
+        alert("GetReceptTempletInfoCC::" + e.description);
+    }
+}
+function event_GetReceptTempletInfoCC(result) {
+    try {
+        if (document.getElementById("RecSaveDetailCC").innerHTML != "")
+            document.getElementById("RecSaveDetailCC").innerHTML = "";
+        var pAPRTEMP = new ListView();
+        pAPRTEMP.SetID("lvRecSaveDetailCC");
+        pAPRTEMP.SetMulSelectable(false);
+        pAPRTEMP.SetHeightFree(true);
+        pAPRTEMP.SetSelectFlag(false);
+        pAPRTEMP.DataSource(loadXMLString(result));
+        pAPRTEMP.DataBind("RecSaveDetailCC");
+        xmlHTTP = null;
+    }
+    catch (e) {
+        alert("event_GetReceptTempletInfoCC::" + e.description);
+    }
+}
+
 function CheckCurAprLine()
 {
     var pAPRLINE = new ListView();    
@@ -178,11 +300,6 @@ function LineAprTyepSetAll() {
 			if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
 				p_StatusDis = "disabled";
 			
-//        if (approvalFlag == "S") {
-//        	if (pTotalRows[i].getAttribute("DATA12") == "002" && parseInt(CurrentSn) == parseInt(ProSn)) {
-//        		p_StatusDis = "disabled";
-//        	}
-//        }
 			if (p_isDept == "Y") {
 				var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
 				AprTyepID = pTotalRows[i].getAttribute("id") + "select";
@@ -204,11 +321,6 @@ function LineAprTyepSetAll() {
 				var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
 				pTotalRows[i].setAttribute("DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
 				
-//        	if (approvalFlag == "S") {
-//        		if (pTotalRows.length == "1" && pTotalRows[i].getAttribute("DATA12") == "002") {
-//        			pTotalRows[i].setAttribute("DATA11", "001");
-//        		}
-//        	}
 			}
 		}
 	}
@@ -448,6 +560,82 @@ function InitListView() {
     }
 }
 
+function InitListViewCC() {
+    try {
+    	var result = "";
+
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getLineList.do",
+    		data : {
+    			docID : pGongRamDocID,
+    			mode  : "APR",
+    			docState : "015"
+    		},
+    		success: function(text){
+    			result = text;
+    		}			
+    	});
+
+        var LVData = null;
+        if (result == "NOTPERMISSION") {
+            alert(strLang1132);
+            window.close();
+        } else {
+            LVData = createXmlDom();
+            LVData = loadXMLString(result);
+        }
+
+        var pAPRLINE = new ListView();
+        pAPRLINE.SetID("pAPRLINE");
+        pAPRLINE.SetMulSelectable(false);
+        pAPRLINE.SetRowOnDblClick("AprlineDel_onclickCC");
+        pAPRLINE.SetSelectFlag(false);
+        pAPRLINE.SetHeightFree(true);
+        pAPRLINE.DataSource(loadXMLString(result));
+        pAPRLINE.DataBind("APRLINECC");
+    }
+    catch (e) {
+        alert("InitListViewCC :: " + e.description);
+    }
+}
+
+//회람
+function CheckAprlineCC() {
+    var listview = new ListView();
+    listview.LoadFromID("pAPRLINE");
+
+    var objRows = listview.GetDataRows();
+
+    //회람탭 안눌렀을떄
+	if (objRows == undefined) {
+		getGongRamDocInfo();
+	    InitListViewCC();
+	    
+	    return CheckAprlineCC();
+	}
+    var totCnt = objRows.length;
+    var newCnt = 0;
+
+    for (var i = 0 ; i < totCnt ; i++) {
+        if (GetAttribute(objRows[i], "DATA12") == "001") {
+            newCnt++;
+        }
+    }
+    var beforeCnt = totCnt - newCnt;
+
+    if (totCnt == 0)
+        return -1;
+    else if (beforeCnt == totCnt)
+        return 0;
+    else if (beforeCnt != 0 && beforeCnt < totCnt)
+        return 1;
+    else
+        return 2;
+}
+
 function initJunGyul() {
     var pAPRLINE = new ListView();
     pAPRLINE.LoadFromID("lvAPRLINE");
@@ -497,6 +685,66 @@ function TreeViewNodeClick() {
 function TreeViewNodeDbClick() {
     return;
 }
+
+function TreeViewNodeClickCC() {
+	var nodeIdx = 1;
+	var treeView = new TreeView();
+	treeView.LoadFromID("FromTreeViewCC");
+	var selnode = treeView.GetSelectNode();
+	DeptID = selnode.GetNodeData("CN");
+	displayUserListCC(DeptID);
+}
+function TreeViewNodeDbClickCC() {
+	return;
+}
+
+function displayUserListCC(DeptID) {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+				deptID   : DeptID,
+				cell 	 : "displayName;description;title;telephoneNumber",
+				prop     : "department;extensionAttribute4;displayName;description;title",
+				type 	 : "user"
+		},
+		success: function(xml){
+			xml = loadXMLString(xml);
+			
+			if (document.getElementById("UserListCC").innerHTML != "")
+		        document.getElementById("UserListCC").innerHTML = "";
+			
+			var headerData = createXmlDom();
+		    headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+		    
+		    if (xml != "") {
+		        if (CrossYN()) {
+		            var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+		            var Node = headerData.importNode(xmlRtn, true);
+		            headerData.documentElement.appendChild(Node);
+		        } else {
+		            var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+		            headerData.documentElement.appendChild(xmlRtn);
+		        }
+		    }
+		    
+			var listview = new ListView();
+		    listview.SetID("DivUserList");
+		    listview.SetMulSelectable(false);
+		    listview.SetRowOnClick("list3_onSel_Click");
+		    listview.SetRowOnDblClick("list3_onSel_DBclick");
+		    listview.SetSelectFlag(false);
+		    listview.SetHeightFree(true);
+		    listview.DataSource(headerData);
+		    listview.DataBind("UserListCC");
+		},
+		error: function(request) {
+			alert(strLang821 + request.responseText);
+		}
+	});
+}
 //#############################################################################################################################################조직도 트리 및 사용자 리스트 함수 사용 부분 displayUserList()
 var xmlhttpUserlist;
 function displayUserList(DeptID) {
@@ -510,7 +758,7 @@ function displayUserList(DeptID) {
 				cell 	 : "displayName;description;title;telephoneNumber",
 				prop     : "department;displayName;description;title",
 				type 	 : "user"
-				},
+		},
 		success: function(xml){
 			event_displayUserList(loadXMLString(xml));
 		}        			

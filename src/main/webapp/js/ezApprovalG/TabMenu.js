@@ -149,18 +149,21 @@
 
             obj.className = "tabon";
             Tab5_SelectID = obj.id;
+            ChangeReceptTabCC(obj.divname);
         }
     }
     function Tab5_NewTabIni(pTabNodeID) {
-        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
-            if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
-                document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab5_MouserOver(this); }; ;
-                document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab5_MouserOut(this); }; ;
-                document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab5_MouseClick(this); }; ;
-                if (i == 1) {
-                    document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
-                    Tab5_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
-                }
-            }
-        }
+    	if (document.getElementById(pTabNodeID).childNodes.item(i).nodeName == "P") {
+    		for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
+    			if (document.getElementById(pTabNodeID).childNodes[i].childNodes[0].nodeName == "SPAN") {
+    				document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseover = function () { Tab5_MouserOver(this); }; ;
+    				document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onmouseout = function () { Tab5_MouserOut(this); }; ;
+    				document.getElementById(pTabNodeID).childNodes[i].childNodes[0].onclick = function () { Tab5_MouseClick(this); }; ;
+    				if (i == 1) {
+    					document.getElementById(pTabNodeID).childNodes[i].childNodes[0].className = "tabon";
+    					Tab5_SelectID = document.getElementById(pTabNodeID).childNodes[i].childNodes[0].id;
+    				}
+    			}
+    		}
+    	}
     }

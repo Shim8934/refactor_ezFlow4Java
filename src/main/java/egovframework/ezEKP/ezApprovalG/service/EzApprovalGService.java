@@ -444,4 +444,8 @@ public interface EzApprovalGService {
 
 	public String getDocInfoS(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 
+	public String gongRamSaveIng(Document xmlDom, String dirPath, String companyID, String lang, int tenantId, String offset) throws Exception;
+
+	public void delCirculation(String docID, String companyID, int tenantID) throws Exception;
+
 }

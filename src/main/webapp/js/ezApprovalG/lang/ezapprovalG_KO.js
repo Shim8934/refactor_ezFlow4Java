@@ -1397,3 +1397,6 @@ var strLangyjS19 = "의";
 var strLangS194 = "결재선목록이 중복되었습니다. "
 var strLangS195 = "다시 입력하여 주세요."
 var strLangSHJ1 = "참조이후 최종결재자를 지정해 주세요. ";
+var strLangS824 = "회람자가 중복되었습니다.";
+var strLangS825 = "회람자를 지정하시기 바랍니다.";
+var strLangS826 = "회람을 발송하지 못하였습니다.";

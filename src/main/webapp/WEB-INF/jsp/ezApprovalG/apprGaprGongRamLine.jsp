@@ -225,6 +225,7 @@
 	            alert(ErrMsg.description);
 	        }
 	    }
+	    
 	    function SaveAprline_onclick() {
 	        var pAlertContent = "";
 	        var ret = CheckAprline();
@@ -245,17 +246,14 @@
 	        pAlertContent += "<spring:message code='ezApprovalG.t1686'/>";
 	
 	        OpenInformationUI(pAlertContent, SaveAprline_onclick_Complete);
-	        try {
-	
-	        } catch (e) {
-	
-	        }
 	    }
+	    
 	    function SaveAprline_onclick_Complete(ret) {
 	        DivPopUpHidden();
 	        if (ret)
 	            APRLINEATTENDSAVEFunction();
 	    }
+	    
 	    function CheckAprline() {
 	        var listview = new ListView();
 	        listview.LoadFromID("pAPRLINE");
@@ -584,7 +582,6 @@
 	        }
 	    }
 	    function SetGongRamList(pstrXML) {
-	
 	        try {
 	
 	            var listnodes = SelectNodes(pstrXML, "LISTVIEWDATA/ROWS/ROW");

@@ -548,7 +548,6 @@ function SaveAprLineInfo() {
                 return;
           	 }
           } 
-
     } catch (e) {
         alert("SaveAprLineInfo :: " + e.description);
     }
@@ -607,7 +606,6 @@ function APRLINEXMLParsing() {
     }
 }
 function UpdateLineHistory(_DOCID) {
-
     if (_DOCID == "") {
         return;
     }
