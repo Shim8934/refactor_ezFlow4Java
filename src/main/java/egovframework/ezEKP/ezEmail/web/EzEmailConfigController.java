@@ -670,7 +670,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 메일 서명관리 ck에디터 업로드 화면 호출 Method
+	 * 메일 서명관리 ck에디터 업로드 실행 Method
 	 */
 	@RequestMapping(value = "/ezEmail/ckUpload.do")
 	public String ckUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
@@ -713,8 +713,38 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		return "ezEmail/ckUpload";
 	}
+	
+	/**
+	 * 메일 서명관리 ck에디터 심플업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezEmail/ckSimpleUpload.do", produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public String ckSimpleUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		logger.debug("ckSimpleUpload started");
 
-
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		MultipartFile multiFile = request.getFile("upload");
+		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+		
+		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String today = EgovDateUtil.getToday("");
+		String fileName = UUID.randomUUID() + "." + fileType;
+		
+		filePath = filePath + commonUtil.separator + today;
+		File file = new File(realPath + filePath);
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		writeUploadedFile(multiFile, fileName, realPath + filePath);
+		
+		logger.debug("ckSimpleUpload ended");
+		return "{\"uploaded\": 1,\"fileName\": \""+fileName+"\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
+	}
+	
 	/**
 	 * 메일 자동삭제 화면 호출 함수
 	 */

@@ -8165,7 +8165,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERID", userID.trim());
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
 
-
 		int aprCount = ezApprovalGDAO.doProcessCount(map);
 	
 		logger.debug("doProcess value : aprCount =" + aprCount);
@@ -13537,6 +13536,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		
+		logger.debug("notifyItem param : userID = " + userID + " subject = " + subject);
 		
 		String itemSeq = ezApprovalGDAO.notifiCationSeq(map);
 		
