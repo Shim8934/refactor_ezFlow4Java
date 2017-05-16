@@ -152,7 +152,7 @@
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
 		    
-		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1) {
+		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
 		    	CKEDITOR.config.imageUploadUrl = "/ezEmail/ckSimpleUpload.do";
 		    }
 		</script>
