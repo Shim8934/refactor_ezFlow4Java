@@ -778,6 +778,9 @@
 		                    setMenuDisable("btnApprove", false);
 		                    return;
 		                }
+		                CurrentAprType = pAprLineType;
+                        CurrentAprUserID = pUserID;
+		                sendAlertMail("APR", pAprMemberSN, "APPROV");
 		            }
 		            if ((pDraftFlag == "SUSIN" || pAprLineType == strAprType7) && KuyjeType == "001") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t35'/>";
