@@ -1907,17 +1907,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				logger.debug("docStatus = " + docStatus + "|| result = " + result);
 			}
 			
-			if (fileName == null || fileName.equals("")) {
-				fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
-			}
-			
 			logger.debug("docStatus = " + docStatus + "|| result = " + result);
 		}
 		
 		//2017-04-02 클라이언트단에서 replace해서 받아와야함.
 		//fileName = fileName.replaceAll("&amp;", "&").replaceAll("&lt", "<").replaceAll("&gt;", ">");
 		
-		logger.debug("downloadAttach ended.");
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
+		}
+		
+		logger.debug("downloadAttach ended. result = " + result);
 		
 		if (!result.equals("NOTPERMISSION")) {
 			downFile(request, response, realPath + filePath, fileName);
