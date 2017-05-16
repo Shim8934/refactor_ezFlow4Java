@@ -148,22 +148,13 @@
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">    CKEDITOR.replace('editor1', { fullPage: false });</script>
 		<script type="text/javascript">
-			/* if (!CrossYN()) {
-				CKEDITOR.config.toolbar = 'NODRAGIMAGE';
-			}			
-		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofoffice.do") > -1) {
-		        CKEDITOR.config.toolbar = 'NOIMAGE';
-		    }
-		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
-		        CKEDITOR.config.toolbar = 'NODRAGIMAGE';
-		    } */
-			
 		    CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
 		    
-		    console.log(CKEDITOR.config.font_names);
-		    
+		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1) {
+		    	CKEDITOR.config.imageUploadUrl = "/ezEmail/ckSimpleUpload.do";
+		    }
 		</script>
 	</body>
 </html>
