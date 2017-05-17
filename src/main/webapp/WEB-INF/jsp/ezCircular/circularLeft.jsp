@@ -48,6 +48,7 @@
 	            }	            
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
+	            newCircular();
 	        }
 	        function write_Letter() {
 	            var pheight = window.screen.availHeight;
@@ -433,30 +434,37 @@
 		        	$("#PostTreeView").height("0px");	        	
 		        	$("#PostTreeView").css("padding","0px");
 		        	$("#openImg").attr("src", "/images/expnd.gif");
+		        	$("#circularDoc").css("border-bottom", "0px");
 	        	} else {
 	        		$("#PostTreeView").height("200px");	        	
 		        	$("#PostTreeView").css("padding","10px 20px");
 		        	$("#openImg").attr("src", "/images/cllps.gif");
+		        	$("#circularDoc").css("border-bottom", "1px solid #dedede");
 	        	}
+	        }
+	        
+	        /* 2017-05-17 정수현 구현 */
+	        function newCircular() {
+	        	window.parent.frames["right"].location.href = "/ezcircular/newCircular.do";
 	        }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: hidden;">
 	    <div id="left">
 	        <div class="left_mail" title="회람판"></div>
-	        <h2><span style="width: 100%; display: inline-block;">회람판</span></h2>				
+	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
 	        <ul id="iconul">
-	        	<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon">신규회람판<span id=count1></span></span></li>
-				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon">확인완료회람판</span></li>
-				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon">작성한회람판</span></li>				
-				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon">임시회람판</span></li>
-				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><span style="margin-left:1px">휴지통</span></span></li>
-				<li><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span>회람문서함</span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	        
+	        	<li><span style="width:100%;display:inline-block;" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id=count1></span></span></li>
+				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t3" /></span></li>
+				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t4" /></span></li>				
+				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t5" /></span></li>
+				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><span style="margin-left:1px"><spring:message code="ezCircular.t6" /></span></span></li>
+				<li id="circularDoc"><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	        
 	            <div class="tree" style="height: 200px; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="PostTreeView"></div>
-	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;">회람판 검색</span></li>
-	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;">회람문서함 관리</span></li>	            
+	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
+	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
 	        </ul>	        
-	        <h3><span onclick="" style="width:100%;display:inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
+	        <h3><span onclick="" style="width:100%;display:inline-block;"><spring:message code="ezCircular.t10" /></span></h3>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

@@ -7,7 +7,7 @@
 	</head>
 	<frameset cols="220,*" frameborder="0" border="0">
 		<frame src="/ezCircular/circularLeft.do" name="left" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
-        <frame src="/blank.htm" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
+        <frame src="about:blank" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0" noresize />
 	</frameset>    
 	<body>		
 	</body>
