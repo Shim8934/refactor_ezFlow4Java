@@ -21925,4 +21925,28 @@
 				DOCID = #v_gongRamDocID#
 		]]>
 	</delete>
+	
+	<select id="EzApprovalG.getCirculationInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<![CDATA[
+			SELECT
+				APRMEMBERSN,
+			    APRMEMBERNAME,
+			    APRMEMBERNAME2,
+			    APRMEMBERJOBTITLE,
+			    APRMEMBERJOBTITLE2,
+			    APRMEMBERDEPTNAME,
+			    APRMEMBERDEPTNAME2,
+			    PROCESSDATE
+			FROM
+				TBL_APRLINEINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+			AND
+				APRTYPE = '015'
+		]]>
+	</select>
 </sqlMap>

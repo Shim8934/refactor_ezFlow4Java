@@ -929,6 +929,20 @@
 		            setbuttonenable();
 		        }
 		    }
+		    function Circulation_onclick() {
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var oArrRows = DocList.GetSelectedRows();
+		        if (oArrRows.length > 0) {
+		            var tr = oArrRows[0];
+		
+		            if (pListTypeValue != "5")
+		                getAprDocAproveInfo(tr);
+		            else
+		                getDataInfo("5");
+		            setbuttonenable();
+		        }
+		    }
 		    function Attach_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
@@ -1639,6 +1653,9 @@
 		    <li id="tagsub2"><span onClick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()" ><spring:message code='ezApprovalG.t950'/></span></li>
 		    <li id="tagsub3"><span onClick="pDocInfoValue='4'; MM_swapImagesub('3', event);Attach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>
 		    <li id="tagsub4"><span onClick="pDocInfoValue='3'; MM_swapImagesub('4', event);Opinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
+		    <c:if test="${approvalFlag != 'G'}">
+			    <li id="tagsub5"><span onClick="pDocInfoValue='5'; MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
+		    </c:if>
 		  </ul>
 		</div>
 		

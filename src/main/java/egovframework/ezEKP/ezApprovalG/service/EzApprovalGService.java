@@ -448,4 +448,6 @@ public interface EzApprovalGService {
 
 	public void delCirculation(String docID, String companyID, int tenantID) throws Exception;
 
+	public String getCirculationinfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception;
+
 }

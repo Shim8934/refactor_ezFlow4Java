@@ -1185,7 +1185,7 @@
 		        parameter[9] = false;
 		        parameter[10] = pDocType;
 		        parameter[11] = "";
-		        parameter[12] = "DRAFT";
+		        parameter[12] = "RECV";
 		        parameter[28] = onlydocinfiview;
 		        parameter[30] = cabinetID;
 		        parameter[31] = tempSecurity;

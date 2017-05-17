@@ -2635,4 +2635,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void delCirculation(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.delCirculation", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getCirculationInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getCirculationInfo", map);
+	}
 }

@@ -1282,6 +1282,26 @@ function getAprDocAproveInfo(tr) {
     		}
     	});
     }
+    else if (pDocInfoValue == "5") {
+    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99")
+    		pFlag = "END";
+    	else
+    		pFlag = "APR";
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getCirculationinfo.do",
+    		data : {
+    			docID : pDocID,
+    			mode  : pFlag
+    		},
+    		success: function(xml){
+    			RtnVal = xml;
+    		}
+    	});
+    }
 
     if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
 

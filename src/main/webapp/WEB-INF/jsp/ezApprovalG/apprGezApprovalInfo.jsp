@@ -179,6 +179,8 @@
 			var pSignImage_Size = "${signImageSize}";
 			var pAdmin = "N";
 			var pGongRamDocID;
+			//기안(DRAFT), 접수(RECV), 합의(HABYUI) 여부
+			var approvalType;
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -220,7 +222,7 @@
 	                document.getElementById("btnArea").style.display = "inline";
 	            }
 	
-	            GetDocInfo();            
+	            GetDocInfo(); 
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
 	            document.getElementById('textUser').focus();            
@@ -240,6 +242,10 @@
 		                document.getElementById("htmlhag").style.overflow = "auto";
 		            }
 	            } else {
+	            	//회람 추가
+	            	if (approvalType != "DRAFT") {
+	            		document.getElementById("showHRAprLine").style.display = "none";
+	            	}
 	            	 try {
 	                     if (pIniGubun == "1") {
 	                         if (CrossYN())
@@ -355,6 +361,7 @@
 	            pReDraftAprLineFlag = RetValue[9]; //결재기:결재선 변경 Flag
 	            pDocType = RetValue[10];
 	            pGamSaCount = RetValue[11];
+	            approvalType = RetValue[12];
 	            chkReDraft = RetValue[13];
 	            if (pReDraftAprLineFlag) pOrgApruserid = RetValue[13];
 	
