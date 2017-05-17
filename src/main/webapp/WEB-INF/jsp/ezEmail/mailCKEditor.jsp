@@ -146,8 +146,20 @@
 
 	<body>
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
-		<script type="text/javascript">    CKEDITOR.replace('editor1', { fullPage: false });</script>
 		<script type="text/javascript">
+			if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofofficeck.do") > -1) {
+				CKEDITOR.replace('editor1', { fullPage: false, removePlugins: '_Insert_Image' });
+				
+				CKEDITOR.on('instanceReady', function (ev) {
+				   // Prevent drag-and-drop.
+				   ev.editor.document.on('drop', function (ev) {
+				      ev.data.preventDefault(true);
+				   });
+				});
+			} else {
+				CKEDITOR.replace('editor1', { fullPage: false });
+			}
+			
 		    CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
