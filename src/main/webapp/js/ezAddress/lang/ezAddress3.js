@@ -1,17 +1,17 @@
 ﻿// js/address_tree.js	해당사항 없음
 // js/string_component.js	해당사항 없음
-var strLang39 = "上一页"
-var strLang40 = "下一页"
-var strLang41 = "总"
+var strLang39 = "以前"
+var strLang40 = "次"
+var strLang41 = "総 "
 var strLang42 = "件"
-var strLang43 = "集团成员不能被添加到该组。"
-var strLang258 = "上一页";
-var strLang259 = "下一页";
+var strLang43 = "グループメンバーリストにグループは追加できません。"
+var strLang258 = "以前";
+var strLang259 = "次";
 var strLang91001 = "人";
-var strLang100 = "検索結果がないです.";
-var strLang101 = "而试图获取组织发生错误。 - ";
-var strLang102 = "有没有发现部门。";
-var strLang103 = "输入您的搜索字词。";
+var strLang100 = "データが存在しません";
+var strLang101 = "組織図を検索中にエラーが発生しました。 - ";
+var strLang102 = "検索結果がありません。";
+var strLang103 = "検索語を入力してください。";
 
 //추가
 var strLang91002 = "リストのIDが指定されていません。";
