@@ -1415,10 +1415,10 @@ public class EzApprovalGarchiveController {
                     }
                 }
                 if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-                    ReturnQuery += " AND STARTDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
                 }
                 if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-                    ReturnQuery += " AND STARTDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
                 }
                 if (TempQuery.indexOf("ENDDATEAF;") != -1) {
                     ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
@@ -1427,7 +1427,7 @@ public class EzApprovalGarchiveController {
                     ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
                 }
                 if (TempQuery.indexOf("FORMID;") != -1) {
-                    ReturnQuery += " AND TBENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+                    ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
                 }
                 if (p_UserLang.equals("2")) {
                     if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
@@ -1443,19 +1443,19 @@ public class EzApprovalGarchiveController {
                 }
                 if (TempQuery.indexOf("KAPR;") != -1)
                 {
-                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
                 }
                 if (TempQuery.indexOf("KEND;") != -1)
                 {
-                    ReturnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
                 }
                 if (TempQuery.indexOf("CAPR;") != -1)
                 {
-                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
                 }
                 if (TempQuery.indexOf("CEND;") != -1)
                 {
-                    ReturnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
                 }
 
                 pSubQuery = ReturnQuery;
