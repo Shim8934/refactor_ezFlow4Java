@@ -48,6 +48,9 @@
 	            }	            
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
+	            
+	            /* 2017-05-18 장진혁 신규회람판에 클릭이벤트 생성 */ 
+	            $("#first").click();
 	            newCircular();
 	        }
 	        function write_Letter() {
@@ -444,7 +447,7 @@
 	        }
 	        
 	        /* 2017-05-17 정수현 구현 */
-	        function newCircular() {
+	        function newCircular() {                
 	        	window.parent.frames["right"].location.href = "/ezcircular/newCircular.do";
 	        }
 	    </script>
@@ -454,7 +457,7 @@
 	        <div class="left_mail" title="회람판"></div>
 	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
 	        <ul id="iconul">
-	        	<li><span style="width:100%;display:inline-block;" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id=count1></span></span></li>
+	        	<li><span style="width:100%;display:inline-block;" id="first" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id=count1></span></span></li>
 				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t3" /></span></li>
 				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t4" /></span></li>				
 				<li><span style="width:100%;display:inline-block;" onClick=""><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t5" /></span></li>
