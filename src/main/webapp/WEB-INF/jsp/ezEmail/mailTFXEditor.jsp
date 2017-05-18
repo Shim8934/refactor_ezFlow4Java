@@ -167,15 +167,25 @@
     	
     	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
     	
+    	var uploadFilePath = "/ezCommon/tfxUpload.do";
+    	var uploadPasteContentsPath = "/ezCommon/tfxSimpleUpload.do";
+    	
+   		if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
+   			uploadFilePath = "/ezEmail/tfxUpload.do";
+   			uploadPasteContentsPath = "/ezEmail/tfxSimpleUpload.do";
+   		}
+    	
         xfe = new XFE({
         	lang : lang,
             basePath : "/js/tfxEditor",
-            width : '100%',
+            width : "100%",
             height : (document.documentElement.clientHeight) + "px",
             initFontFamilyMenu : initFontFamilyMenu,
             initFontFamily : "<spring:message code='main.t246' />",
             initFontSize : "13px",
-            skin : 'classic'
+            skin : "classic",
+            uploadFilePath : uploadFilePath,
+            uploadPasteContentsPath : uploadPasteContentsPath
         });
         
         xfe.render('xfe');
