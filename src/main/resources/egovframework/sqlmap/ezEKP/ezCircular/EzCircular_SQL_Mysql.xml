@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezCircular">
+	
+	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
+	
+	<select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
+		<![CDATA[
+			SELECT
+				LISTCNT,
+				ISPREVIEW,
+				PREVIEWLISTVALUE,
+				PREVIEWCONTENTVALUE
+			FROM
+				TBL_CIRCULAR_OPTION
+			WHERE
+				TENANTID = #v_TENANTID#
+			AND
+				MEMBERID = #v_MEMBERID#
+		]]>
+	</select>
+</sqlMap>

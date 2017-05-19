@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezCircular.service;
 
+import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+
 public interface EzCircularService {
 
-	public String getSubClsTree(String xmlReq, String primary, String companyID, String deptID, String id, int tenantId) throws Exception;
+	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
 }

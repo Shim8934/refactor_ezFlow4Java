@@ -450,6 +450,10 @@
 	        function newCircular() {                
 	        	window.parent.frames["right"].location.href = "/ezcircular/newCircular.do";
 	        }
+	        
+	        function circularConfig() {                
+	        	window.parent.frames["right"].location.href = "/ezCircular/circularConfig.do";
+	        }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: hidden;">
@@ -467,7 +471,7 @@
 	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
 	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
 	        </ul>	        
-	        <h3><span onclick="" style="width:100%;display:inline-block;"><spring:message code="ezCircular.t10" /></span></h3>
+	        <h3><span onclick="circularConfig()" style="width:100%;display:inline-block;"><spring:message code="ezCircular.t10" /></span></h3>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

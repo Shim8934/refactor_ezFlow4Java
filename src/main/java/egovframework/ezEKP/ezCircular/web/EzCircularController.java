@@ -29,6 +29,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
+import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.let.user.login.vo.LoginVO;
@@ -242,7 +243,7 @@ public class EzCircularController {
 	/**
 	 * 작성분 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/circular2.do")
+	@RequestMapping(value = "/ezCircular/circular2.do")
 	public String circular2(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		
 		logger.debug("Circular2 started");
@@ -257,7 +258,7 @@ public class EzCircularController {
 	/**
 	 * 휴지통 화면 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/circular3.do")
+	@RequestMapping(value = "/ezCircular/circular3.do")
 	public String circular3(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		
 		logger.debug("Circular3 started");
@@ -272,7 +273,7 @@ public class EzCircularController {
 	/**
 	 * 임시저장 화면 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/circular4.do")
+	@RequestMapping(value = "/ezCircular/circular4.do")
 	public String circular4(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		
 		logger.debug("Circular4 started");
@@ -287,7 +288,7 @@ public class EzCircularController {
 	/**
 	 * 확인완료 화면 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/circular5.do")
+	@RequestMapping(value = "/ezCircular/circular5.do")
 	public String circular5(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		
 		logger.debug("Circular5 started");
@@ -302,7 +303,7 @@ public class EzCircularController {
 	/**
 	 * 환경설정 화면 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/circularConfig.do")
+	@RequestMapping(value = "/ezCircular/circularConfig.do")
 	public String circularConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
 		
 		logger.debug("circularConfig started");
@@ -312,5 +313,31 @@ public class EzCircularController {
 		logger.debug("circularConfig ended");
 		
 		return "/ezCircular/circularConfig";
+	}
+	
+	@RequestMapping(value = "/ezCircular/circularGeneral.do")
+	public String circuralGeneral(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model) throws Exception {
+		
+		logger.debug("circuralGeneral started");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		String memberId = loginVO.getId();
+		
+		CircularConfigVO circularListConfig = ezCircularService.getCircularList_Config(memberId, loginVO.getTenantId());
+		
+		if (circularListConfig == null) {
+			circularListConfig = new CircularConfigVO();
+			circularListConfig.setIsMailReceive(0);
+			circularListConfig.setListCnt(30);
+			circularListConfig.setIsPreview(0);
+			circularListConfig.setPreviewListValue("50");
+			circularListConfig.setPreviewContentValue("50");
+		}
+		
+		model.addAttribute("circularListConfig", circularListConfig);
+		
+		logger.debug("circuralGeneral started");
+		
+		return "/ezCircular/circularGeneral";
 	}
 }
