@@ -173,6 +173,8 @@
    		if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
    			uploadFilePath = "/ezEmail/tfxUpload.do";
    			uploadPasteContentsPath = "/ezEmail/tfxSimpleUpload.do";
+   		} else if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofoffice.do") > -1) {
+   			uploadPasteContentsPath = "/ezEmail/tfxNoop.do";
    		}
     	
         xfe = new XFE({
@@ -189,6 +191,12 @@
         });
         
         xfe.render('xfe');
+        
+        if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofoffice.do") > -1) {
+        	xfe.showToolbarItemById("xfe_insertimage", false);
+        	xfe.showToolbarItemById("xfe_imageproperty", false);
+        }
+        
         window.onload = parent.Editor_Complete;
     </script>
 </body>

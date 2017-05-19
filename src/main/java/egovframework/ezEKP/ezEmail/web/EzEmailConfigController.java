@@ -848,6 +848,18 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 메일 부재중설정 TagFree에디터 심플업로드(drag&drop) 시 아무처리 안하는 Method
+	 */
+	@RequestMapping(value = "/ezEmail/tfxNoop.do")
+	public String tfxNoop(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("tfxNoop started");
+		
+		model.addAttribute("resultCode", "3");
+		
+		return "ezCommon/tfxSimpleUpload";
+	}
+	
+	/**
 	 * 메일 자동삭제 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailAutoDelete.do")

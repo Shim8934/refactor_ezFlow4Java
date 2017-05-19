@@ -14,6 +14,9 @@
 				} else if ("${resultCode}" == "2") {
 					alert("<spring:message code='main.t4000'/>");
 					return;
+				} else if ("${resultCode}" == "3") {
+					alert("<spring:message code='ezEmail.lhm29'/>");
+					return;
 				}
 				
 				var strImagePath = document.getElementById("divImagePath").innerHTML;
