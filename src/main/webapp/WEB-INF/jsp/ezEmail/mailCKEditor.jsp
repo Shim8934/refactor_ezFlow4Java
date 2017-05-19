@@ -118,9 +118,6 @@
 		        }
 		        return FieldsList;
 		    }            
-		    function BodySetAttribute(name, Value) {
-		        CKEDITOR.instances.editor1.document.$.body.setAttribute(name, Value, 0);
-		    }
 		    function EditorExistsElement(elementID) {
 		        try {
 		            var ElementObj = CKEDITOR.instances.editor1.document.$.getElementById(elementID);
