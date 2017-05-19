@@ -15943,6 +15943,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
 		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 
 		List<String> leftCounts = ezApprovalGDAO.getLeftDocCount(map);
 		
@@ -16460,6 +16461,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SPSUBQUERY", subQuery.trim());
 		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 		
 		if (orderOption1 != null && orderOption1.length() != 0) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,9).toLowerCase());
@@ -16531,6 +16533,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SPSUBQUERYLENGTH", searchQuery.trim().length());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 		
 		if (dueryData.getElementsByTagName("DOCNO").item(0) != null) {
 			map.put("v_SDOCNO", dueryData.getElementsByTagName("DOCNO").item(0).getTextContent());
