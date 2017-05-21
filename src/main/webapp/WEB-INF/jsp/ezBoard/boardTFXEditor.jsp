@@ -29,7 +29,7 @@
                 var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
                 var tempStr = "";
-                tempStr = ConvertMHTtoHTML(pURL);
+                tempStr = ConvertMHTtoHTML(url);
                 tempXML = loadXMLString(tempStr)
                 XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
                 XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
@@ -49,45 +49,49 @@
 		</script> 
 	</head>
 	<body style="margin: 0px; padding: 0px;" id="xfe">
-		<script type="text/javascript">
-    	var userLang = "${userInfo.lang}";
-    	var lang = "";
-    	
-    	switch (userLang) {
-	    	case "1": 
-	    		lang = "korean";
-	    		break;
-	    	case "2": 
-	    		lang = "english";
-	    		break;
-	    	case "3": 
-	    		lang = "japanese";
-	    		break;
-	    	case "4": 
-	    		//중국어 간체 (번체는 chinese_t)
-	    		lang = "chinese_s";
-	    		break;
-	    	default :
-	    		lang = "korean";
-	    		break;
-    	}
-    	
-    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
-    	
-        xfe = new XFE({
-        	lang : lang,
-            basePath : "/js/tfxEditor",
-            width : '100%',
-            height : (document.documentElement.clientHeight) + "px",
-            initFontFamilyMenu : initFontFamilyMenu,
-            initFontFamily : "<spring:message code='main.t246' />",
-            initFontSize : "13px",
-            skin : 'classic'
-        });
-        
-        xfe.render('xfe');
-        
-        window.onload = parent.DocumentComplete();
-    </script>
+	    <script type="text/javascript">
+	    	var userLang = "${userInfo.lang}";
+	    	var lang = "";
+	    	
+	    	switch (userLang) {
+		    	case "1": 
+		    		lang = "korean";
+		    		break;
+		    	case "2": 
+		    		lang = "english";
+		    		break;
+		    	case "3": 
+		    		lang = "japanese";
+		    		break;
+		    	case "4": 
+		    		//중국어 간체 (번체는 chinese_t)
+		    		lang = "chinese_s";
+		    		break;
+		    	default :
+		    		lang = "korean";
+		    		break;
+	    	}
+	    	
+	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
+	    	var uploadFilePath = "/ezCommon/tfxUpload.do";
+	    	var uploadPasteContentsPath = "/ezCommon/tfxSimpleUpload.do";
+	    	
+	        xfe = new XFE({
+	        	lang : lang,
+	            basePath : "/js/tfxEditor",
+	            width : "100%",
+	            height : (document.documentElement.clientHeight) + "px",
+	            initFontFamilyMenu : initFontFamilyMenu,
+	            initFontFamily : "<spring:message code='main.t246' />",
+	            initFontSize : "13px",
+	            skin : "classic",
+	            uploadFilePath : uploadFilePath,
+	            uploadPasteContentsPath : uploadPasteContentsPath
+	        });
+	        
+	        xfe.render('xfe');
+	        
+	        window.onload = parent.Editor_Complete;
+	    </script>
 	</body>
 </html>
