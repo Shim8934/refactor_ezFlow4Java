@@ -91,7 +91,7 @@
 	        
 	        xfe.render('xfe');
 	        
-	        window.onload = parent.Editor_Complete;
+	        window.onload = parent.DocumentComplete();
 	    </script>
 	</body>
 </html>
