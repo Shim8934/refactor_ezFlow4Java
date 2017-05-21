@@ -1650,7 +1650,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									part.saveFile(realPath + path + commonUtil.separator + fileName);
 									logger.debug(fileName + " is saved to " + realPath + path + " temporarily.");
 
-									attach += "tempUploadFile" + commonUtil.separator + fileName + ";";
+									attach += "tempUploadFile" + commonUtil.separator + fileName + "|";
 
 									sb.append("<NODE>");
 									sb.append("<PUPLOADSN><![CDATA[" + fileName + "]]></PUPLOADSN>");
