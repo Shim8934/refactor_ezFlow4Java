@@ -574,7 +574,7 @@ public class EzCommonController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * CKEditor SimpleUpload시 image파일용량 줄여주는 함수
+	 * image파일용량 줄여주는 함수
 	 */
 	@RequestMapping(value = "/ezCommon/convertSaveImage.do")
 	public void convertSaveImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
