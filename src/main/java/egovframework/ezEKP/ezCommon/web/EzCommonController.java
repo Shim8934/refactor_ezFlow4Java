@@ -587,6 +587,8 @@ public class EzCommonController extends EgovFileMngUtil{
 		String height = request.getParameter("height");
 //		String type = request.getParameter("type");
 		
+		logger.debug("pImgUrl=" + pImgUrl + ",width=" + width + ",height=" + height);
+		
 		String realFilePath = pImgUrl.replace(request.getScheme() + ":" + commonUtil.separator + commonUtil.separator + request.getServerName() + ":" + request.getServerPort(), realPath);
 		
 		File file = new File(realFilePath);
@@ -607,12 +609,14 @@ public class EzCommonController extends EgovFileMngUtil{
 			nHeight = Integer.parseInt(height);
 		}
 		
-		outputImage= new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_INT_RGB);
-		saveImage = outputImage.createGraphics();
-		saveImage.drawImage(inputImage, 0, 0, nWidth, nHeight, null);
-		saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		
-		ImageIO.write(outputImage, realFilePath.substring(realFilePath.lastIndexOf(".") + 1), file);
+		if (nWidth > 0 && nHeight > 0) {
+			outputImage= new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, nWidth, nHeight, null);
+			saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+			
+			ImageIO.write(outputImage, realFilePath.substring(realFilePath.lastIndexOf(".") + 1), file);
+		}
 		
 		//TODO 2016-07-05 이효진 type1 로 들어오는 경우 있을때 추가 
 		/*if (type.equals("1")) {
