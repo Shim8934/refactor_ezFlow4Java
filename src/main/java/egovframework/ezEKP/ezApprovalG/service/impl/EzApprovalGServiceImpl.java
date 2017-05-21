@@ -4958,7 +4958,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String createMhtFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang, String companyID,
 			String passWord, HttpServletRequest request,LoginVO userInfo) throws Exception{
-		logger.debug("createMhtFile started.");
+		logger.debug("createMhtFile started. formID = " + formID + " || userID = " + userID + " || signNum = " + signNum + " || docID = " + docID + " || aprState = " + aprState + " || aprType = " + aprType + " || result = " + result + " || orgUID = " + orgUID);
 		
 		String realPath = commonUtil.getRealPath(request);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -5094,6 +5094,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int refResult = getDocInfoRef(docID, orgUID, aprState, companyID, userInfo.getTenantId());
 		int habResult = getDocInfoHab(docID, orgUID, aprState, companyID, userInfo.getTenantId());
 		
+		logger.debug("pCnt = " + pCnt);
+		logger.debug("refResult = " + refResult);
+		logger.debug("habResult = " + habResult);
+		
 		String strSign = "";
 		String strJikwe = "";
 		String strSeumyungDate = "";
@@ -5105,6 +5109,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		NodeList docListNode = lineXml.getElementsByTagName("ROW");
 
 		if (docListNode.getLength() > 0) {
+			logger.debug("docListNode.getLength = " + docListNode.getLength());
+			
 			totalLineSN = docListNode.getLength();
 			
 			for (int k = totalLineSN - Integer.parseInt(signNum); k < totalLineSN; k++) {
@@ -5147,6 +5153,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		logger.debug("totalLineSN = " + totalLineSN);
 		logger.debug("lastAprLineSN = " + lastAprLineSN);
 		
 		int LSignNum = 0;
@@ -5169,6 +5176,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
+		
+		logger.debug("LSignNum = " + LSignNum);
+		logger.debug("lastSignNum = " + lastSignNum);
 		
 		if (result.equals("A")) {
 			docState = "003";
@@ -5612,6 +5622,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSql = updateSignInfo(resultXML, companyID, "SET", userInfo.getTenantId());
 			signSaveFlag = true;
 		}
+		
+		logger.debug("strSql = " + strSql);
 		
 		if (strSql.toUpperCase().equals("FALSE") || strSql.toUpperCase().equals("<RESULT>FALSE</RESULT>")) {
 			if (signSaveFlag) {
@@ -15943,6 +15955,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
 		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 
 		List<String> leftCounts = ezApprovalGDAO.getLeftDocCount(map);
 		
@@ -16460,6 +16473,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SPSUBQUERY", subQuery.trim());
 		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 		
 		if (orderOption1 != null && orderOption1.length() != 0) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,9).toLowerCase());
@@ -16531,6 +16545,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SPSUBQUERYLENGTH", searchQuery.trim().length());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
 		
 		if (dueryData.getElementsByTagName("DOCNO").item(0) != null) {
 			map.put("v_SDOCNO", dueryData.getElementsByTagName("DOCNO").item(0).getTextContent());
