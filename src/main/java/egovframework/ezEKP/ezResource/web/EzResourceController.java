@@ -1643,6 +1643,36 @@ public class EzResourceController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 자원관리 editor 호출 Method
+	 */
+	@RequestMapping(value="/ezResource/selectEditor.do")
+	public String mailSelectEditor(
+			@CookieValue("loginCookie") String loginCookie, 
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String returnPath = "";
+		
+		switch (useEditor) {
+			case "CK": 
+				returnPath = "ezResource/resCKEditor";
+				break;
+			case "TAGFREE":
+				returnPath = "ezResource/resTFXEditor";
+				break;
+			default :
+				returnPath = "ezResource/resCKEditor";
+				break;
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		return returnPath;
+	}
+	
+	/**
 	 * 자원관리 ckEditor 호출 Method
 	 */
 	@RequestMapping(value = "/ezResource/ckEditor.do")
