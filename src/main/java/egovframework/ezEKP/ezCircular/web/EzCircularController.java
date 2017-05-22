@@ -8,6 +8,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -28,6 +29,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -328,7 +330,7 @@ public class EzCircularController {
 		if (circularListConfig == null) {
 			circularListConfig = new CircularConfigVO();
 			circularListConfig.setIsMailReceive(0);
-			circularListConfig.setListCnt(30);
+			circularListConfig.setListCnt(10);
 			circularListConfig.setIsPreview(0);
 			circularListConfig.setPreviewListValue("50");
 			circularListConfig.setPreviewContentValue("50");
@@ -339,5 +341,26 @@ public class EzCircularController {
 		logger.debug("circuralGeneral started");
 		
 		return "/ezCircular/circularGeneral";
+	}
+	
+	@RequestMapping(value = "/ezCircular/circular_generallist_save.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void circular_generallist_save(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
+		
+		logger.debug("circular_generallist_save started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		circularConfigVO.setTenantId(userInfo.getTenantId());
+		circularConfigVO.setMemberId(userInfo.getId());
+
+		if (request.getParameter("isPreview").equals("0")) {
+			circularConfigVO.setPreviewListValue("");
+			circularConfigVO.setPreviewContentValue("");		 
+		}	
+
+		ezCircularService.setCircularList_Config(circularConfigVO);
+		
+		logger.debug("circular_generallist_save ended");
 	}
 }

@@ -29,80 +29,63 @@
 	 		
          	document.onselectstart = function () { return false; };
         	window.onload = function () {
-            		if (navigator.userAgent.indexOf('Firefox') != -1) {
-                		document.body.style.MozUserSelect = 'none';
-		                document.body.style.WebkitUserSelect = 'none';
-        		        document.body.style.khtmlUserSelect = 'none';
-		                document.body.style.oUserSelect = 'none';
-                		document.body.style.UserSelect = 'none';
-            		}
-        		}
-        	function PreviewOption(obj) {
-alert("### " + obj.value);        		
-            	if (obj.value == "OFF") {
-                	document.getElementById("PreviewHSizeDiv").style.display = "none";
-                	document.getElementById("PreviewWSizeDiv").style.display = "none";
-            	}
-            	else if (obj.value == "H") {
-                	document.getElementById("PreviewHSizeDiv").style.display = "";
-                	document.getElementById("PreviewWSizeDiv").style.display = "none";
-            	}
-            	else {
-                	document.getElementById("PreviewHSizeDiv").style.display = "none";
-                	document.getElementById("PreviewWSizeDiv").style.display = "";
+           		if (navigator.userAgent.indexOf('Firefox') != -1) {
+               		document.body.style.MozUserSelect = 'none';
+	                document.body.style.WebkitUserSelect = 'none';
+       		        document.body.style.khtmlUserSelect = 'none';
+	                document.body.style.oUserSelect = 'none';
+               		document.body.style.UserSelect = 'none';
+           		}           		
+       		}
+        	function PreviewOption(obj) {        		
+            	if (obj.value == "0") {
+                	document.getElementById("PreviewDiv").style.display = "none";                	
+            	} else {                	
+                	document.getElementById("PreviewDiv").style.display = "";
             	}
         	}
         	function HChange(obj) {
-            	if (obj == document.getElementById("HListUser")) {
-                	document.getElementById("HPreUser").value = 100 - parseInt(obj.value);
+            	if (obj == document.getElementById("previewListValue")) {
+                	document.getElementById("previewContentValue").value = 100 - parseInt(obj.value);
             	}
             	else {
-                	document.getElementById("HListUser").value = 100 - parseInt(obj.value);
+                	document.getElementById("previewListValue").value = 100 - parseInt(obj.value);
             	}
         	}
         	function WChange(obj) {
-            	if (obj == document.getElementById("WListUser")) {
-                	document.getElementById("WPreUser").value = 100 - parseInt(obj.value);
+            	if (obj == document.getElementById("previewContentValue")) {
+                	document.getElementById("previewListValue").value = 100 - parseInt(obj.value);
             	}
             	else {
-                	document.getElementById("WListUser").value = 100 - parseInt(obj.value);
+                	document.getElementById("previewContentValue").value = 100 - parseInt(obj.value);
             	}
         	}
         	function Cancel_Click() {
-        		document.getElementById("listcount").value = "${boardListConfig.listCount}";
-        		document.getElementById("PreviewMode").value = "${boardListConfig.preview}";
-        		if("${boardListConfig.preview}"=="OFF"){
-        			document.getElementById("PreviewHSizeDiv").style.display = "none";
-                  	document.getElementById("PreviewWSizeDiv").style.display = "none";
-        		}
-        	}
-        	function test(){
-        		  		
+        		document.getElementById("isMailReceive").value = 0;
+        		document.getElementById("listcount").value = 10;
+        		document.getElementById("PreviewMode").value = 0;
+      			document.getElementById("PreviewDiv").style.display = "none";        		
         	}
         	function Change_Click() {
+        		var isMailReceive = document.getElementById("isMailReceive").value;
         		var listCount = document.getElementById("listcount").value;
-     			var PreviewMode = document.getElementById("PreviewMode").value;
-     			var PreviewWList = document.getElementById("WListUser").value;
-     			var PreviewWContent = document.getElementById("WPreUser").value;
-     			var PreviewHList = document.getElementById("HListUser").value;
-     			var PreviewHContent = document.getElementById("HPreUser").value;
-     			
-     				
-     		
+     			var Preview = document.getElementById("PreviewMode").value;
+     			var previewListValue = document.getElementById("previewListValue").value;
+     			var previewContentValue = document.getElementById("previewContentValue").value;     			
+
      			$.ajax({
-     				url : '/ezBoard/board_generallist_save.do',
+     				url : '/ezCircular/circular_generallist_save.do',
      				method : 'POST',
      				dataType : 'text',
      				data : {
-	     				listCount : listCount ,
-    	 				preview : PreviewMode,
-     					previewWList : PreviewWList,
-     					previewWContent : PreviewWContent,
-     					previewHList : PreviewHList,
-     					previewHContent : PreviewHContent	
-     				} ,
+     					isMailReceive : isMailReceive,
+	     				listCnt : listCount ,
+    	 				isPreview : Preview,
+    	 				previewListValue : previewListValue,
+    	 				previewContentValue : previewContentValue
+     				},
 	     			success : function(data, textStatus, jqXHR) {
-	     				alert('<spring:message code="ezEmail.t42" />');
+	     				alert('<spring:message code="ezCircular.t27" />');
      				},
      				error : function(jqXHR, textStatus, errorThrown) {
                 	    alert('Error : ' + jqXHR.status + ", " + textStatus);
@@ -119,78 +102,55 @@ alert("### " + obj.value);
         	<table class="content" style="width: 623px;margin-top:5px">
         		<tr>
         			<th><spring:message code="ezCircular.t13" /></th>
-	        			<td>
-		        			<select id="mailreceive" style="width: 100px">
-		        				<option value='true' ${circularListConfig.listCnt == '10' ? 'selected' : ''}><spring:message code="ezCircular.t14" /></option>
-		        				<option value='false' ${circularListConfig.listCnt == '10' ? 'selected' : ''}><spring:message code="ezCircular.t15" /></option>
-		        			</select>
-	        			</td>
+        			<td>
+	        			<select id="isMailReceive" style="width: 100px">
+	        				<option value='0' ${circularListConfig.isMailReceive == '0' ? 'selected' : ''}><spring:message code="ezCircular.t14" /></option>
+	        				<option value='1' ${circularListConfig.isMailReceive == '1' ? 'selected' : ''}><spring:message code="ezCircular.t15" /></option>
+	        			</select>
+        			</td>
         		</tr>
             	<tr>
                 	<th><spring:message code="ezCircular.t18" /></th>
-                		<td>               
-                    		<select id="listcount" name="pListCount" style="WIDTH: 100px">
-                 				<option value='10' ${circularListConfig.listCnt == '10' ? 'selected' : ''}>10</option>
+               		<td>               
+                   		<select id="listcount" name="pListCount" style="WIDTH: 100px">
+                				<option value='10' ${circularListConfig.listCnt == '10' ? 'selected' : ''}>10</option>
 								<option value='20' ${circularListConfig.listCnt == '20' ? 'selected' : ''}>20</option>
-                       			<option value='30' ${circularListConfig.listCnt == '30' ? 'selected' : ''}>30</option>
-                       			<option value='40' ${circularListConfig.listCnt == '40' ? 'selected' : ''}>40</option>
-                       			<option value='50' ${circularListConfig.listCnt == '50' ? 'selected' : ''}>50</option>                        
-                    		</select>
-	                    	<spring:message code="ezBoard.t00019" />
+                      			<option value='30' ${circularListConfig.listCnt == '30' ? 'selected' : ''}>30</option>
+                      			<option value='40' ${circularListConfig.listCnt == '40' ? 'selected' : ''}>40</option>
+                      			<option value='50' ${circularListConfig.listCnt == '50' ? 'selected' : ''}>50</option>                        
+                   		</select>
+                    	<spring:message code="ezBoard.t00019" />
                     </td>
             	</tr>
             	<tr>
                 	<th><spring:message code="ezCircular.t19" /></th>
-                		<td>
-                    		<select id="PreviewMode" name="pPreview" style="WIDTH: 100px" onchange="PreviewOption(this);">
-                    			<option value='OFF' ${circularListConfig.isPreview == '0' ? 'selected' : ''}><spring:message code="ezCircular.t20" /></option>
-                    			<option value='H' ${circularListConfig.isPreview == '1' ? 'selected' : ''}><spring:message code="ezCircular.t21" /></option>
-                    			<option value='W' ${circularListConfig.isPreview == '2' ? 'selected' : ''}><spring:message code="ezCircular.t22" /></option>             					                     
-                    		</select>
-                    		               
-                     			<c:choose>
-                    				<c:when test= "${circularListConfig.isPreview eq '1'}">
-                      					<span id="PreviewHSizeDiv">                         	
-                    						<spring:message code="ezCircular.t23" /> : 
-                    						<select id="HListUser" name="pPreviewHList" style="width: 50px;" onchange="HChange(this);">
-              		 							<% for (int i = 39; i <= 64; i++) { %>
-	                        					<option value='<%=i %>' > <%=i %></option>
-                     							<% } %>                                                  
-              								</select>
-                        					<spring:message code="ezCircular.t24" /> : 
-              								<select id="HPreUser" name="pPreviewHContent" style="width: 50px;" onchange="HChange(this);">
-                  								<% for (int i = 36; i <= 61; i++) { %>
-                        						<option value='<%=i %>' > <%=i %></option>
-                     							<% } %>                               
-              								</select>
-                      					</span>
-                    				</c:when>
-                     			 </c:choose>
-                     			 <c:choose>
-                 				 	<c:when test= "${circularListConfig.isPreview eq '2'}">	 
-                      					<span id="PreviewWSizeDiv">                            
-                    						<spring:message code="ezCircular.t23" /> : 
-              								<select id="WListUser" name="pPreviewWList" style="width: 50px;" onchange="WChange(this);">
-                  								<% for (int i = 24; i <= 65; i++) { %>
-                        						<option value='<%=i %>' > <%=i %></option>
-                     							<% } %>
-              								</select>       	            
-              								<spring:message code="ezCircular.t24" /> :                    
-              								<select id="WPreUser"  name="pPreviewWContent" style="width: 50px;" onchange="WChange(this);">
-                  								<% for (int i = 35; i <= 76; i++) { %>
-                        						<option value='<%=i %>' > <%=i %></option>
-                     							<% } %>
-              								</select>
-                      					</span>
-                 				 	</c:when>
-                 				 </c:choose>
-                		</td>
+               		<td>
+                   		<select id="PreviewMode" name="pPreview" style="WIDTH: 100px" onchange="PreviewOption(this);">
+                   			<option value='0' ${circularListConfig.isPreview == '0' ? 'selected' : ''}><spring:message code="ezCircular.t20" /></option>
+                   			<option value='1' ${circularListConfig.isPreview == '1' ? 'selected' : ''}><spring:message code="ezCircular.t21" /></option>
+                   			<option value='2' ${circularListConfig.isPreview == '2' ? 'selected' : ''}><spring:message code="ezCircular.t22" /></option>             					                     
+                   		</select>
+                   		<span id="PreviewDiv" style="${circularListConfig.isPreview == '0' ? 'display: none;' : ''}">                   			
+							&nbsp;<spring:message code="ezCircular.t23" /> : 
+	     					<select id="previewListValue" name="pPreviewHList" style="width: 50px;" onchange="HChange(this);">	     						
+	     						<c:forEach var="item" begin="39" end="64">
+	           						<option value='${item}' ${item == circularListConfig.previewListValue ? 'selected' : '' }>${item}</option>
+	       						</c:forEach>                                                 
+							</select>							
+	         				&nbsp;<spring:message code="ezCircular.t24" /> :	         					 
+							<select id="previewContentValue" name="pPreviewHContent" style="width: 50px;" onchange="HChange(this);">
+								<c:forEach var="item" begin="36" end="61">
+		   							<option value='${item}' ${item == circularListConfig.previewContentValue ? 'selected' : '' }>${item}</option>
+								</c:forEach>
+							</select>		
+						</span>
+               		</td>
             	</tr>
         	</table>       
     		<br />
     		<div style="width:623px;text-align:center;">      
-        		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>
-        		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezBoard.t15" /></span></a>
+        		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezCircular.t25" /></span></a>
+        		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezCircular.t26" /></span></a>
     		</div>
 		</body>
 </html>

@@ -5,5 +5,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 public interface EzCircularService {
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
+
+	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	
 }

@@ -35,5 +35,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return ezCircularDAO.getCircularList_Config(map);
 	}
-	
+
+	@Override
+	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String memberId = circularConfigVO.getMemberId();
+		int tenantId = circularConfigVO.getTenantId();
+		
+		map.put("v_MEMBERID", memberId);
+		map.put("v_TENANTID", tenantId);
+		
+		CircularConfigVO circularListConfig = getCircularList_Config(memberId, tenantId);
+				
+		if (circularListConfig != null) {		
+			ezCircularDAO.setCircularList_Config_U(circularConfigVO);
+		} else {
+			ezCircularDAO.setCircularList_Config_I(circularConfigVO);
+		}
+	}	
 }

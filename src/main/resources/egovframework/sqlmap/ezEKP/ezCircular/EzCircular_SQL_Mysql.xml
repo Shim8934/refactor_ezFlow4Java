@@ -8,6 +8,7 @@
 	<select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 		<![CDATA[
 			SELECT
+				ISMAILRECEIVE,
 				LISTCNT,
 				ISPREVIEW,
 				PREVIEWLISTVALUE,
@@ -20,4 +21,44 @@
 				MEMBERID = #v_MEMBERID#
 		]]>
 	</select>
+	
+	<select id="EzCircularDAO.getCircularConfig" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				MEMBERID
+			FROM
+				TBL_CIRCULAR_OPTION
+			WHERE
+				TENANTID = #v_TENANTID#
+			AND
+				MEMBERID = #v_MEMBERID#
+		]]>
+	</select>
+	
+	<update id="EzCircularDAO.setCircularList_Config_U" parameterClass="CircularConfigVO">
+		<![CDATA[	
+			UPDATE TBL_CIRCULAR_OPTION
+			SET
+				ISMAILRECEIVE = #isMailReceive#,
+				LISTCNT = #listCnt#,
+				ISPREVIEW = #isPreview#,
+				PREVIEWLISTVALUE = #previewListValue#,
+				PREVIEWCONTENTVALUE = #previewContentValue#
+			WHERE
+				TENANTID = #tenantId#
+			AND
+				MEMBERID = #memberId#
+		]]>		
+	</update>
+	
+	<insert id="EzCircularDAO.setCircularList_Config_I" parameterClass="CircularConfigVO">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_OPTION (
+				CIRCULAROPTIONID,	MEMBERID,	ISMAILRECEIVE,	LISTCNT,	ISPREVIEW,	PREVIEWLISTVALUE,	PREVIEWCONTENTVALUE,	TENANTID	
+			)
+			VALUES (
+				#circularOptionId#, #memberId#, #isMailReceive#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantId#
+			)
+		]]>
+	</insert>
 </sqlMap>
