@@ -5,7 +5,7 @@
 	
 	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
 	
-    <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
+    <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO" remapResults="true">
 		<![CDATA[
 			SELECT
 				ISMAILRECEIVE,
@@ -34,8 +34,6 @@
 				MEMBERID = #v_MEMBERID#
 		]]>
 	</select>
-  
-  
 	
 	<update id="EzCircularDAO.setCircularList_Config_U" parameterClass="CircularConfigVO">
 		<![CDATA[	
@@ -65,24 +63,24 @@
 	</insert>
   
     <update id="EzCircularDAO.setCircularList_Config2_U" parameterClass="Map">
-      <isEqual property="v_PREVIEWMODE" compareValue="0">
+      <isEqual property="v_PREVIEWMODE" compareValue="OFF">
         <![CDATA[
           UPDATE
               TBL_CIRCULAR_OPTION
           SET 
-              ISPREVIEW = #v_PREVIEWMODE#
+              ISPREVIEW = 0
           WHERE  
               TENANTID = #v_TENANTID#
           AND
               MEMBERID = #v_USERID#
         ]]>
       </isEqual>
-      <isEqual property="v_PREVIEWMODE" compareValue="1">
+      <isEqual property="v_PREVIEWMODE" compareValue="W">
         <![CDATA[
           UPDATE
               TBL_CIRCULAR_OPTION
           SET 
-              ISPREVIEW = #v_PREVIEWMODE#,
+              ISPREVIEW = 2,
               PREVIEWLISTVALUE = #v_LIST#,
               PREVIEWCONTENTVALUE = #v_CONTENT#,
               LISTCNT = #v_LISTCNT#
@@ -92,12 +90,12 @@
               MEMBERID = #v_USERID#
         ]]>
       </isEqual>
-      <isEqual property="v_PREVIEWMODE" compareValue="2">
+      <isEqual property="v_PREVIEWMODE" compareValue="H">
         <![CDATA[
           UPDATE
               TBL_CIRCULAR_OPTION
           SET 
-              ISPREVIEW = #v_PREVIEWMODE#,
+              ISPREVIEW = 1,
               PREVIEWLISTVALUE = #v_LIST#,
               PREVIEWCONTENTVALUE = #v_CONTENT#,
               LISTCNT = #v_LISTCNT#
@@ -118,36 +116,36 @@
     </update>
     
     <insert id="EzCircularDAO.setCircularList_Config2_I" parameterClass="Map">
-      <isEqual property="v_PREVIEWMODE" compareValue="0">
+      <isEqual property="v_PREVIEWMODE" compareValue="OFF">
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
               ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
          VALUES 
-              ( #v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 50, #v_TENANTID#  )
+              ( #v_USERID#, #v_LISTCNT#, 0, 50, 50, #v_TENANTID#)
         ]]>
       </isEqual>
-      <isEqual property="v_PREVIEWMODE" compareValue="1">
+      <isEqual property="v_PREVIEWMODE" compareValue="W">
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
               ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
           VALUES 
-              ( #v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
+              ( #v_USERID#, #v_LISTCNT#, 2, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
         ]]>
       </isEqual>
-      <isEqual property="v_PREVIEWMODE" compareValue="2">
+      <isEqual property="v_PREVIEWMODE" compareValue="H">
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
               ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
           VALUES 
-              ( #v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
+              ( #v_USERID#, #v_LISTCNT#, 1, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
         ]]>
       </isEqual>
     </insert>
     
-    <update id="EzBoardDAO.setCircularConfig" parameterClass="Map">
+    <update id="EzCircularDAO.setCircularConfig" parameterClass="Map">
         <![CDATA[
             UPDATE
                 TBL_CIRCULAR_OPTION
@@ -161,7 +159,7 @@
         ]]>
       </update>
   
-    <insert id="EzBoardDAO.setCircularConfig2" parameterClass="Map">
+    <insert id="EzCircularDAO.setCircularConfig2" parameterClass="Map">
       <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 

@@ -403,19 +403,32 @@ public class EzCircularController {
 	@RequestMapping(value = "/ezCircular/setCircularConfig.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String setBoardConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("setBoardConfig started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = request.getParameter("pUserID");
 		String listCount = request.getParameter("pListCount");
 		String preView = request.getParameter("pPreView");
+		
+		logger.debug("userID : "+userID + ", listCount : " + listCount + ", preView : " + preView);
+		
 		int tempCount = 10;
 		
 		if (listCount != null) {
 			tempCount = Integer.parseInt(listCount);
 		}
 		
+		if (preView != null && preView.equals("OFF")) {
+			preView = "0";
+		} else if (preView != null && preView.equals("H")) {
+			preView = "1";
+		} else if (preView != null && preView.equals("W")) {
+			preView = "2";
+		}
 		String result = ezCircularService.setCircularConfig(userID, tempCount, preView, userInfo.getTenantId());
-		
+
+		logger.debug("setBoardConfig ended");
 		return result;
 	}
 }

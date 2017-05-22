@@ -77,14 +77,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERID", userID);
+		map.put("v_MEMBERID", userID);
 		map.put("v_LISTCOUNT", listCount);
 		map.put("v_PREVIEW", preView);
 		map.put("v_TENANTID", tenantID);
 		
 		try {
 			String tempString = ezCircularDAO.getCircularConfig(map);
-			
+System.out.println("tempString="+tempString);
 			if (tempString != null && !tempString.equals("")) {
 				ezCircularDAO.setCircularConfig(map);
 			} else {

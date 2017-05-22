@@ -865,13 +865,12 @@ function ListCount(pCount) {
     
 }
 
-function Set_BoardConfig()
-{
+function Set_BoardConfig() {
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : true,
-		url : "/ezBoard/setBoardConfig.do",
+		url : "/ezCircular/setCircularConfig.do",
 		data : { pUserID   : SSUserID, 
 				 pListCount: lCount, 
 				 pPreView  : pPreviewShow_HOW 
