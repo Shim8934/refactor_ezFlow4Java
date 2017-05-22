@@ -8,4 +8,7 @@ public interface EzCircularService {
 
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	
+	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
+	
+	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 }

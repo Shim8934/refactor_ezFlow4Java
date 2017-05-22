@@ -53,5 +53,48 @@ public class EzCircularServiceImpl implements EzCircularService {
 		} else {
 			ezCircularDAO.setCircularList_Config_I(circularConfigVO);
 		}
-	}	
+	}
+	
+	@Override
+	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_LISTCNT", listCount);
+		map.put("v_PREVIEWMODE", previewMode);
+		map.put("v_LIST", list);
+		map.put("v_CONTENT", content);
+		map.put("v_TENANTID", tenantID);
+		
+		CircularConfigVO circularListConfig = getCircularList_Config(userID, tenantID);
+		
+		if (circularListConfig != null) {
+			ezCircularDAO.setCircularList_Config2_U(map);
+		} else {
+			ezCircularDAO.setCircularList_Config2_I(map);
+		}
+	}
+	
+	@Override
+	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_LISTCOUNT", listCount);
+		map.put("v_PREVIEW", preView);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			String tempString = ezCircularDAO.getCircularConfig(map);
+			
+			if (tempString != null && !tempString.equals("")) {
+				ezCircularDAO.setCircularConfig(map);
+			} else {
+				ezCircularDAO.setCircularConfig2(map);
+			}
+			
+			return "OK";
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			return "NO";
+		}
+	}
 }

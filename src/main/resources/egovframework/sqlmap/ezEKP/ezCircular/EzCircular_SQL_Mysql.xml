@@ -5,7 +5,7 @@
 	
 	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
 	
-	<select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
+    <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 		<![CDATA[
 			SELECT
 				ISMAILRECEIVE,
@@ -34,6 +34,8 @@
 				MEMBERID = #v_MEMBERID#
 		]]>
 	</select>
+  
+  
 	
 	<update id="EzCircularDAO.setCircularList_Config_U" parameterClass="CircularConfigVO">
 		<![CDATA[	
@@ -61,4 +63,111 @@
 			)
 		]]>
 	</insert>
+  
+    <update id="EzCircularDAO.setCircularList_Config2_U" parameterClass="Map">
+      <isEqual property="v_PREVIEWMODE" compareValue="0">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_OPTION
+          SET 
+              ISPREVIEW = #v_PREVIEWMODE#
+          WHERE  
+              TENANTID = #v_TENANTID#
+          AND
+              MEMBERID = #v_USERID#
+        ]]>
+      </isEqual>
+      <isEqual property="v_PREVIEWMODE" compareValue="1">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_OPTION
+          SET 
+              ISPREVIEW = #v_PREVIEWMODE#,
+              PREVIEWLISTVALUE = #v_LIST#,
+              PREVIEWCONTENTVALUE = #v_CONTENT#,
+              LISTCNT = #v_LISTCNT#
+          WHERE
+              TENANTID = #v_TENANTID#
+          AND  
+              MEMBERID = #v_USERID#
+        ]]>
+      </isEqual>
+      <isEqual property="v_PREVIEWMODE" compareValue="2">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_OPTION
+          SET 
+              ISPREVIEW = #v_PREVIEWMODE#,
+              PREVIEWLISTVALUE = #v_LIST#,
+              PREVIEWCONTENTVALUE = #v_CONTENT#,
+              LISTCNT = #v_LISTCNT#
+          WHERE
+              TENANTID = #v_TENANTID#
+          AND  
+              MEMBERID = #v_USERID#
+        ]]>
+      </isEqual>
+      <isEmpty property="v_PREVIEWMODE">
+        <![CDATA[
+          SELECT
+            1
+          FROM
+            DUAL
+        ]]>
+      </isEmpty>
+    </update>
+    
+    <insert id="EzCircularDAO.setCircularList_Config2_I" parameterClass="Map">
+      <isEqual property="v_PREVIEWMODE" compareValue="0">
+        <![CDATA[
+          INSERT INTO
+              TBL_CIRCULAR_OPTION 
+              ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
+         VALUES 
+              ( #v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 50, #v_TENANTID#  )
+        ]]>
+      </isEqual>
+      <isEqual property="v_PREVIEWMODE" compareValue="1">
+        <![CDATA[
+          INSERT INTO
+              TBL_CIRCULAR_OPTION 
+              ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
+          VALUES 
+              ( #v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
+        ]]>
+      </isEqual>
+      <isEqual property="v_PREVIEWMODE" compareValue="2">
+        <![CDATA[
+          INSERT INTO
+              TBL_CIRCULAR_OPTION 
+              ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
+          VALUES 
+              ( #v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
+        ]]>
+      </isEqual>
+    </insert>
+    
+    <update id="EzBoardDAO.setCircularConfig" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_CIRCULAR_OPTION
+            SET 
+                LISTCNT = #v_LISTCOUNT#,
+                ISPREVIEW = #v_PREVIEW#
+            WHERE  
+                TENANTID = #v_TENANTID#
+            AND
+                MEMBERID = #v_USERID#
+        ]]>
+      </update>
+  
+    <insert id="EzBoardDAO.setCircularConfig2" parameterClass="Map">
+      <![CDATA[
+          INSERT INTO
+              TBL_CIRCULAR_OPTION 
+              ( MEMBERID,   LISTCNT,     ISPREVIEW,   TENANTID )
+          VALUES 
+              ( #v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
+    ]]>
+    </insert>
 </sqlMap>

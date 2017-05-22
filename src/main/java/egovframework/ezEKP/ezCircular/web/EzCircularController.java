@@ -233,12 +233,27 @@ public class EzCircularController {
 	}
 	
 	@RequestMapping(value = "/ezcircular/newCircular.do")
-	public String newCircular() {
-		
+	public String newCircular(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("newCircular started");
 		
-		logger.debug("newCircular ended");
+		userInfo = commonUtil.userInfo(loginCookie);
 		
+		int page = 1;
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        
+		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("useEditor", useEditor);
+		
+		logger.debug("newCircular ended");
 		return "/ezCircular/newCircular";
 	}
 	
@@ -362,5 +377,45 @@ public class EzCircularController {
 		ezCircularService.setCircularList_Config(circularConfigVO);
 		
 		logger.debug("circular_generallist_save ended");
+	}
+	
+	/**
+	 * 회람판 리스트설정셋팅 실행 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularGeneralListSave2.do")
+	public String boardGeneralListSave2(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("userID");
+		String listCount = request.getParameter("listCount");
+		String previewMode = request.getParameter("previewMode");
+		String list = request.getParameter("list");
+		String content = request.getParameter("content");
+		
+		ezCircularService.setCircularList_Config2(userID, listCount, previewMode, list, content, userInfo.getTenantId());
+		
+		return "json";
+	}
+	
+	/**
+	 * 회람판 게시물설정 표출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/setCircularConfig.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String setBoardConfig(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = request.getParameter("pUserID");
+		String listCount = request.getParameter("pListCount");
+		String preView = request.getParameter("pPreView");
+		int tempCount = 10;
+		
+		if (listCount != null) {
+			tempCount = Integer.parseInt(listCount);
+		}
+		
+		String result = ezCircularService.setCircularConfig(userID, tempCount, preView, userInfo.getTenantId());
+		
+		return result;
 	}
 }
