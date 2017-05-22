@@ -370,9 +370,9 @@ public class EzCircularController {
 		circularConfigVO.setMemberId(userInfo.getId());
 
 		if (request.getParameter("isPreview").equals("0")) {
-			circularConfigVO.setPreviewListValue("");
-			circularConfigVO.setPreviewContentValue("");		 
-		}	
+			circularConfigVO.setPreviewListValue("50");
+			circularConfigVO.setPreviewContentValue("50");
+		}
 
 		ezCircularService.setCircularList_Config(circularConfigVO);
 		
