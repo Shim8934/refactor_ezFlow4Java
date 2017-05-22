@@ -2,12 +2,14 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +20,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -554,9 +557,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 서명관리 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSignatureCK.do")
-	public String mailSignatureCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		logger.debug("mailSignatureCK started.");
+	@RequestMapping(value="/ezEmail/mailSignature.do")
+	public String mailSignature(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailSignature started.");
 		
 		String signState = "0";
 		String signature1 = "";
@@ -597,9 +600,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userId", userInfo.getId());
 		
-		logger.debug("mailSignatureCK ended.");
+		logger.debug("mailSignature ended.");
 		
-		return "ezEmail/mailSignatureCK";
+		return "ezEmail/mailSignature";
 	}
 
 	/**
@@ -743,6 +746,117 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		logger.debug("ckSimpleUpload ended");
 		return "{\"uploaded\": 1,\"fileName\": \""+fileName+"\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
+	}
+	
+	/**
+	 * 메일 서명관리 TagFree에디터 업로드 실행 Method
+	 */
+	@RequestMapping(value = "/ezEmail/tfxUpload.do")
+	public String tfxUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		MultipartFile multiFile = request.getFile("FILE_PATH");
+		
+		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String today = EgovDateUtil.getToday("");
+		String fileName = UUID.randomUUID() + "." + fileType;
+		
+		filePath = filePath + commonUtil.separator + today;
+		File file = new File(realPath + filePath);
+	    if (!file.exists()) {
+	    	file.mkdirs();
+	    }
+		
+		writeUploadedFile(multiFile, fileName, realPath + filePath);
+		
+		model.addAttribute("sContentType", request.getParameter("content_type"));
+		model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
+		
+		return "ezCommon/tfxUpload";
+	}
+	
+	/**
+	 * 메일 서명관리 TagFree에디터 심플업로드(drag&drop) 실행 Method
+	 */
+	@RequestMapping(value = "/ezEmail/tfxSimpleUpload.do")
+	public String tfxSimpleUpload(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("tfxSimpleUpload started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String fileData = request.getParameter("clip_contents");
+		String fileType = request.getParameter("file_extension");
+		String rootId = request.getParameter("xfe_root_id");
+		String resultCode = "0";
+		
+		if (fileData == null) { //이미지가 너무 큰 경우 fileData가 null로 들어옴(tomcat server.xml의 maxPostSize설정에 따라 이미지 최대 업로드 사이즈 조절 가능함.)
+			logger.debug("The file size is too big.");
+			resultCode = "1";
+			
+		} else if (fileData.startsWith("data:")) { //이미지 파일이 아닌경우 fileData앞에 data:이 붙음.
+			logger.debug("The file is not image.");
+			resultCode = "2";
+			
+		} else {
+			logger.debug("fileType=" + fileType + ", rootId=" + rootId);
+			
+			String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
+			String realPath = commonUtil.getRealPath(request);
+			String today = EgovDateUtil.getToday("");
+			String fileName = UUID.randomUUID() + "." + fileType;
+
+			filePath = filePath + commonUtil.separator + today;
+			File file = new File(realPath + filePath);
+
+			if (!file.exists()) {
+				file.mkdirs();
+			}
+			
+			FileOutputStream fileOuputStream = null;
+			
+			try {
+				Decoder decoder = Base64.getDecoder();
+				byte[] imageByte = decoder.decode(fileData);
+				fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName); 
+				fileOuputStream.write(imageByte);
+				fileOuputStream.flush();
+				
+				logger.debug("rootId=" + rootId + ", sUploadedPath=" + filePath + commonUtil.separator + fileName);
+				
+				model.addAttribute("sRootId", rootId);
+				model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				resultCode = "1";
+			} finally {
+				try {
+					fileOuputStream.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+		}
+		
+		model.addAttribute("resultCode", resultCode);
+		
+		logger.debug("tfxSimpleUpload ended. resultCode=" + resultCode);
+		return "ezCommon/tfxSimpleUpload";
+	}
+	
+	/**
+	 * 메일 부재중설정 TagFree에디터 심플업로드(drag&drop) 시 아무처리 안하는 Method
+	 */
+	@RequestMapping(value = "/ezEmail/tfxNoop.do")
+	public String tfxNoop(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("tfxNoop started");
+		
+		model.addAttribute("resultCode", "3");
+		
+		return "ezCommon/tfxSimpleUpload";
 	}
 	
 	/**
@@ -1259,9 +1373,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOfficeCK.do")
-	public String mailOutOfOfficeCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
-		logger.debug("mailOutOfOfficeCK started.");
+	@RequestMapping(value="/ezEmail/mailOutOfOffice.do")
+	public String mailOutOfOffice(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+		logger.debug("mailOutOfOffice started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1332,9 +1446,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("gExternal", gExternal);
 		model.addAttribute("userLang", userLang);
 		
-		logger.debug("mailOutOfOfficeCK ended.");
+		logger.debug("mailOutOfOffice ended.");
 		
-		return "ezEmail/mailOutOfOfficeCK";
+		return "ezEmail/mailOutOfOffice";
 	}
 
 	/**

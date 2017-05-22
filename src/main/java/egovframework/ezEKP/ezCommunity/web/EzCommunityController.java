@@ -1771,6 +1771,37 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 커뮤니티 editor 호출 Method
+	 */
+	@RequestMapping(value="/ezCommunity/selectEditor.do")
+	public String mailSelectEditor(
+			@CookieValue("loginCookie") String loginCookie, 
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String returnPath = "";
+		
+		switch (useEditor) {
+			case "CK": 
+				returnPath = "ezCommunity/CKEditor";
+				break;
+			case "TAGFREE":
+				returnPath = "ezCommunity/communityTFXEditor";
+				break;
+			default :
+				returnPath = "ezCommunity/CKEditor";
+				break;
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		return returnPath;
+	}
+	
+	/**
 	 * ckeditor 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/ckEditor.do")

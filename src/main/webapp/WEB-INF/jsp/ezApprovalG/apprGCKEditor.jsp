@@ -105,7 +105,7 @@
 	        CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        CKEDITOR.config.height = parseInt("${height}") - 120 + "px";
 	        CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
-            CKEDITOR.config.font_names = "<spring:message code='main.t0620' />" + CKEDITOR.instances.editor1.config.font_names;
+            CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
             CKEDITOR.config.language = "<spring:message code='main.t0619' />";
 	    </script>
 	</body>

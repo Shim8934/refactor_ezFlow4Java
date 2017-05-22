@@ -322,13 +322,7 @@
 	                    if (document.getElementById("body") != null) {
 	                        if (BODYTag.getAttribute("editor") == null) {
 	                            isEditor = true;
-	                            if (pEditor == "TAGFREE") 
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='../TagFree_TFX_Editor.aspx?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                            else if(pEditor == "DEXT")
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='../DEXT_Editor.aspx?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                            else 
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/ckEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                            
+	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/selectEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
 	                        }
 	                        else {
 	                            try {
