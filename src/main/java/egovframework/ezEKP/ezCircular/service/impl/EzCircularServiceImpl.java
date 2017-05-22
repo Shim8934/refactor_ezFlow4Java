@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCircularService")
@@ -84,7 +86,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		try {
 			String tempString = ezCircularDAO.getCircularConfig(map);
-System.out.println("tempString="+tempString);
+
 			if (tempString != null && !tempString.equals("")) {
 				ezCircularDAO.setCircularConfig(map);
 			} else {
@@ -97,4 +99,14 @@ System.out.println("tempString="+tempString);
 			return "NO";
 		}
 	}
+
+	@Override
+	public List<CircularListVO> getCircularList(String memberID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberId", memberID);
+		map.put("tenantId", tenantId);
+		return ezCircularDAO.getCircularList(map);
+	}
+	
+	
 }

@@ -1,8 +1,14 @@
 package egovframework.ezEKP.ezCircular.service;
 
+import java.util.List;
+import java.util.Map;
+
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 
 public interface EzCircularService {
+	
+	public List<CircularListVO> getCircularList(String memberID,int tenantId) throws Exception;
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 

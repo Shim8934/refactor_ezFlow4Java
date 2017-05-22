@@ -2,8 +2,8 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezCircular">
-	
 	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
+    <typeAlias alias="CircularListVO"                type="egovframework.ezEKP.ezCircular.vo.CircularListVO"/>
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO" remapResults="true">
 		<![CDATA[
@@ -168,4 +168,23 @@
               ( #v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
     ]]>
     </insert>
+    
+    <select id="EzCircularDAO.getCircularList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+                A.TENANTID = B.TENANTID
+            AND
+                A.MEMBERID = B.MEMBERID
+            AND
+                A.MEMBERID = #memberId#
+            AND
+                A.TENANTID = #tenantId#        
+    ]]>
+  </select>
 </sqlMap>

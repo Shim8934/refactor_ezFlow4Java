@@ -30,8 +30,11 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.let.user.login.vo.LoginVO;
@@ -247,11 +250,14 @@ public class EzCircularController {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("list", list);
 		
 		logger.debug("newCircular ended");
 		return "/ezCircular/newCircular";
@@ -431,4 +437,23 @@ public class EzCircularController {
 		logger.debug("setBoardConfig ended");
 		return result;
 	}
+	
+	/**
+	 * 회람판 신규회람판 리스트 표출 Method
+	 */
+    @RequestMapping(value = "/ezCircular/getCircularList.do", produces = "text/xml; charset=utf-8")
+    @ResponseBody
+    public String getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+    	logger.debug("getBoardList started");
+
+    	userInfo = commonUtil.userInfo(loginCookie);
+    	
+    	List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), userInfo.getTenantId());
+    	
+    	model.addAttribute("list", list);
+    	model.addAttribute("userInfo", userInfo);
+    	
+		logger.debug("getBoardList ended");
+        return "";
+    }
 }
