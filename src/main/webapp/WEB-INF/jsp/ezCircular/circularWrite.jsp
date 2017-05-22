@@ -7,8 +7,9 @@
 		<title>회람작성</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
-		<script type="text/javascript" src="<spring:message code="ezResource.e1"/>"></script>
+		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/schedule_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
@@ -76,11 +77,11 @@
 	            		m_Arguments = parent.schedule_add_ck_dialogArguments[0];
 		            }        
 	    	    } 
-	        	if (cmd == "mod") {
+	        	/* if (cmd == "mod") {
 	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
 	        	} else {
 	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
-	        	}
+	        	} */
 	            
 	        	if (cmd == "mod") {
 	            	document.getElementById("importance1").value = "${importance}";
@@ -90,13 +91,6 @@
 		            document.getElementById("Etimepicker").style.display = "none";
 	    	        onck = "0";
 	        	}
-
-	        	if (cmd == "add") {
-		            document.title = "<spring:message code="ezResource.t171"/>";
-		            document.getElementById("deletebtbn").style.display = "none";
-	    	    } else {
-	        	document.title = "<spring:message code="ezResource.t179"/>";
-		        }
 	            
 		        var resultXML;
 	    	    var xmlHttp = createXMLHttpRequest();
@@ -236,12 +230,7 @@
 		    }
 
 		    var schedule_add_select_cross_dialogArguments = new Array();
-	    	function Open_Select() {
-	        	schedule_add_select_cross_dialogArguments[0] = ItemArray;
-	        	schedule_add_select_cross_dialogArguments[1] = Open_Select_Complete;
-
-		        DivPopUpShow(550, 435, "/ezResource/scheduleAddSelect.do");
-		    }
+	    
 	    	function Open_Select_Complete(retVal) {
 	        	if (retVal == "close") {
 	        	} else if (typeof (retVal) != "undefined" && retVal.length == 2) {
@@ -325,7 +314,7 @@
       				<table class="content" style="width:100%;">
         				<tr>
           					<th>제목</th>
-          					<td colspan="3" style="width:100%"><div id="displayNM"> </div></td>
+          					<td colspan="3" style="width:100%"><input type="text" style="width:700px"></td>
         				</tr>
         				
 							
@@ -378,12 +367,15 @@
 	           					회람자
 	           				</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
-	           					<a class="imgbtn"><span  id="Span1" name="ScheRep" onClick="javascript:return Open_Select()">선택</span></a>
+	           					<a class="imgbtn"><span id="clickbtn" onclick="manage_attendant()">선택</span></a>
 	           				</td>
 						</tr>
 						<tr>
 	         				<th></th>
-	         				<td colspan="3" id ="itemList"></td>
+	         				<td colspan="3" id ="itemList">
+	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
+	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+	         				</td>
 	       				</tr>
       				</table>
       			</td>
