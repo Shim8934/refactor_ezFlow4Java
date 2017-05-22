@@ -584,7 +584,9 @@
 	
 	        var writeboardselect_modal_dialogArguments = new Array();
 	        function CircularWrite_onclick() {
-				alert("회람작성창");	       
+	        	url = "/ezCircular/circularWrite.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
+                OpenWin.focus();     
 	        }
 	        
 	        function Confirm_onclick() {
@@ -783,7 +785,7 @@
 	    </span>
 	
 	
-	    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+	   <%--  <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	          <div class="popupwrap1">
 	            <div class="popupwrap2">
 	        <table class="content">
@@ -829,6 +831,6 @@
 	          </div>
 		        <div class="shadow">
 	            </div>
-		</div>
+		</div> --%>
 	</body>
 </html>

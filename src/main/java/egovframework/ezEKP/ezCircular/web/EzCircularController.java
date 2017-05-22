@@ -8,10 +8,6 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,26 +15,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
-import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller
 public class EzCircularController {
@@ -56,6 +51,12 @@ public class EzCircularController {
 	
 	@Autowired
 	private EzCircularService ezCircularService;
+	
+	@Autowired
+	private EzResourceService ezResourceService;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
@@ -459,4 +460,269 @@ public class EzCircularController {
 		logger.debug("getBoardList ended");
         return "";
     }
+    
+	/**
+	 * 회람판 회람작성창 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCircular/circularWrite.do")
+	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String useIE11Browser = "";
+		String editor = config.getProperty("EDITOR");
+		String noneActiveX = "YES";
+		String resID = "";
+		String brdName = "";
+		String cmdStr = "";
+		String fromStr = "";
+		String dayView = "";
+		String orgNum = "";
+		String orgOwnerID = "";
+		String typeVal = "";
+		String startDateVal = "";
+		String endDateVal = "";
+		String deptNm = "";
+		String ownerNm = "";
+		String title = "";
+		String loc = "";
+		String importance = "";
+		String gresFlag = "0";
+		String reFlag = "";
+		String startDateTime = "";
+		String endDateTime = "";
+		String startDateTime2 = "";
+		String endDateTime2 = "";
+		String timeDisplay = "";
+		String content = "";
+		String ownerID = "";
+		String writerID = "";
+		String checkSDT = "";
+		String checkEDT = "";
+		String allDay = "";
+		String saveApproveFlag = "";
+		String startDateTimeRepeat = "";
+		String endDateTimeRepeat = "";
+		String entryList = "";
+		
+		int pNum = 0;
+		int num = 0;
+		
+		if (ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
+			useIE11Browser = "CK";
+		}
+		if (req.getParameter("ownerID") != null) {
+			resID = req.getParameter("ownerID");
+		}
+		if (req.getParameter("brdName") != null) {
+			brdName = req.getParameter("brdName");
+		}
+
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId());
+		
+		if (req.getParameter("cmd") != null) {
+			cmdStr = req.getParameter("cmd");
+		}
+		if (req.getParameter("from") != null) {
+			fromStr = req.getParameter("from");
+		}
+		if (req.getParameter("dayView") != null) {
+			dayView = req.getParameter("dayView");
+		}
+		if (cmdStr.equals("mod")) {
+			if (req.getParameter("num") != null) {
+				orgNum = req.getParameter("num").trim();
+			}
+
+			if (req.getParameter("ownerID") != null) {
+				orgOwnerID = req.getParameter("ownerID").trim();
+			}
+			if (req.getParameter("type") != null) {
+				typeVal = req.getParameter("type").trim();
+			}
+			if (req.getParameter("startDate") != null) {
+				startDateVal = req.getParameter("startDate").trim();
+			}
+			if (req.getParameter("endDate") != null) {
+				endDateVal = req.getParameter("endDate").trim();
+			}
+			ResGetScheduleVO getSchedule = new ResGetScheduleVO();
+			if (typeVal.equals("Master") || typeVal.equals("Readonly")) {
+				getSchedule = ezResourceService.getSchedule(Integer.parseInt(orgNum), orgOwnerID, userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+			
+			num = getSchedule.getNum();
+			pNum = getSchedule.getpNum();
+			ownerID = getSchedule.getOwnerID();
+			writerID = getSchedule.getWriterID();
+	
+			String propList = "displayName;description";
+			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
+			
+			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
+			
+			if (userInfo.getPrimary().equals("1")) {
+				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
+			} else {
+				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getPrimary()).item(0).getTextContent();
+				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
+			}
+			title = getSchedule.getTitle();
+			
+			if (title != null) {
+				 title = title.replace("'", "&#39;");
+                 title = title.replace("\"", "&quot;");
+			}
+			loc = getSchedule.getLocation();
+
+			if (loc != null) {
+				loc = title.replace("'", "&#39;");
+                loc = title.replace("\"", "&quot;");
+			}
+			timeDisplay = getSchedule.getTimeDisplay();
+			
+			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
+			endDateTime = commonUtil.getDateStringInUTC(getSchedule.getEndDate(), userInfo.getOffset(), false);
+			
+			reFlag = getSchedule.getReFlag();
+			gresFlag = getSchedule.getGresFlag();
+			content = getSchedule.getContent();
+			importance = getSchedule.getImportance();
+			
+			if (importance.equals("")) {
+				importance = "2";
+			}
+			
+			entryList = getSchedule.getEntryList();
+			allDay = getSchedule.getAllDay();
+			saveApproveFlag = getSchedule.getApproveFlag();
+			
+			ResGetScheduleRepetitionVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum), userInfo.getTenantId());
+			if (repDateTimes != null) {
+				startDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getStartDateTime(), userInfo.getOffset(), false);
+				endDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getEndDateTime(), userInfo.getOffset(), false);
+			}
+		} else {
+			importance = "2";
+			String selSd = "";
+			String selEd = "";
+			String cDate = "";
+			String cTime = "";
+			
+			if (req.getParameter("selsd") != null) {
+				selSd = req.getParameter("selsd");
+			}
+			if (req.getParameter("seled") != null) {
+				selEd = req.getParameter("seled");
+			}
+			if (selSd.equals("") || selEd.equals("")) {
+				cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
+				cTime = cDate.split(" ")[1].substring(0, 2);
+				
+				if (req.getParameter("startDate") != null) {
+					cDate = req.getParameter("startDate");
+				}
+				cDate = cDate.substring(0, 10);
+				startDateTime = cDate + " " + cTime + ":00:00";
+				
+				if (req.getParameter("endDate") != null) {
+					cDate = req.getParameter("endDate");
+				}
+				cDate = cDate.substring(0, 10);
+				endDateTime = cDate + " " + cTime + ":30:00";
+			} else {
+				if (selSd.length() == 10) {
+					cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
+					cTime = cDate.split(" ")[1].substring(0, 2);
+					cDate = cDate.substring(0, 10);
+					startDateTime = selSd + " " + cTime + ":00:00";
+					endDateTime = selEd + " " + cTime + ":30:00";
+
+				} else {
+					startDateTime = selSd;
+					endDateTime = selEd;
+				}
+			}
+			
+			if (req.getParameter("ownerID") != null) {
+				ownerID = req.getParameter("ownerID");
+			}
+		}
+		
+		startDateTime2 = startDateTime;
+		endDateTime2 = endDateTime;
+		
+		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+		
+		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useIE11Browser", useIE11Browser);
+		model.addAttribute("editor", editor);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("adminFg", adminFg);
+		model.addAttribute("brdName", brdName);
+		model.addAttribute("resID", resID);
+		model.addAttribute("num", num);
+		model.addAttribute("cmdStr", cmdStr.toLowerCase());
+		model.addAttribute("fromStr", fromStr);
+		model.addAttribute("dayView", dayView);
+		model.addAttribute("pNum", pNum);
+		model.addAttribute("gresFlag", gresFlag);
+		model.addAttribute("reFlag", reFlag);
+		model.addAttribute("content", content);
+		model.addAttribute("ownerID", ownerID);
+		model.addAttribute("ownerNm", ownerNm);
+		model.addAttribute("importance", importance);
+		model.addAttribute("loc", loc);
+		model.addAttribute("timeDisplay", timeDisplay);
+		model.addAttribute("writerID", writerID);
+		model.addAttribute("deptNm", deptNm);
+		model.addAttribute("title", title);
+		model.addAttribute("allDay", allDay);
+		model.addAttribute("entryList", entryList);
+		model.addAttribute("startDateTime", startDateTime);
+		model.addAttribute("endDateTime", endDateTime);
+		model.addAttribute("startDateTime2", startDateTime2);
+		model.addAttribute("endDateTime2", endDateTime2);
+		model.addAttribute("startDateVal", startDateVal);
+		model.addAttribute("endDateVal", endDateVal);
+		model.addAttribute("typeVal", typeVal);
+		model.addAttribute("saveApproveFlag", saveApproveFlag);
+		model.addAttribute("startDateTimeRepeat", startDateTimeRepeat);
+		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
+		model.addAttribute("checkSDT", checkSDT);
+		model.addAttribute("checkEDT", checkEDT);
+		
+		if (reFlag.equals("1")) {
+			model.addAttribute("strTmpReFlagVal", "2");
+			model.addAttribute("strDspMod1", "style='display:none'");
+			model.addAttribute("strDspMod2", "");
+		} else {
+			model.addAttribute("strTmpReFlagVal", "0");
+			model.addAttribute("strDspMod1", "");
+			model.addAttribute("strDspMod2", "style='display:none'");
+		}
+		
+		if (reFlag.equals("")) {
+			model.addAttribute("strIReFlagVal", "0");
+		} else {
+			model.addAttribute("strIReFlagVal", reFlag);
+		}
+		
+		return "/ezCircular/circularWrite";
+	}
+	
+	/**
+	 * 회람판 draganddrop 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/dragAndDrop.do")
+	public String dragAndDrop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo",userInfo);
+		
+		return "/ezCircular/circularDragAndDrop";
+	}
 }
