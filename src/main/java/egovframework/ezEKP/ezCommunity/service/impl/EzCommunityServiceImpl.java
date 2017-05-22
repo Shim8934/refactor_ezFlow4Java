@@ -5200,16 +5200,16 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int tenantID) throws Exception {
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, int tenantID) throws Exception {
 		logger.debug("categoryListGet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", type);
 		map.put("cat", mode);
 		map.put("v_pStart", startRow);
-		map.put("mariaStart", startRow - 1);
+		map.put("mariaStart", mariaStart);
 		map.put("v_pEnd", endRow);
-		map.put("mariaEnd", endRow - startRow);
+		map.put("mariaEnd", mariaEnd);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityClubVO> list = ezCommunityDAO.categoryListGet(map); 

@@ -1850,6 +1850,8 @@
 				AND
 					TBL_C_CATEGORY.c_cat = LOWER(#cat#)
 				AND
+					TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
+				AND
 					TBL_C_CLUB.tenant_id = #tenantID#
 				ORDER BY
 					TBL_C_CLUB.c_regdate
@@ -1889,6 +1891,8 @@
 						c_cate_b = #code#
 					AND
 						TBL_C_CATEGORY.c_cat = LOWER(#cat#)
+					AND
+						TBL_C_CLUB.C_ADMINCONFIRM = 'Y'
 					AND
 						TBL_C_CLUB.tenant_id = #tenantID#
 					ORDER BY
