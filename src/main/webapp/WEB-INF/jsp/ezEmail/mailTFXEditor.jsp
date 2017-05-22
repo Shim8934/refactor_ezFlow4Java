@@ -8,7 +8,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <title></title>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js//tfxEditor/js/xfe_main.js"></script>
+	    <script type="text/javascript" src="/js/tfxEditor/js/xfe_main.js"></script>
 	    <script type="text/javascript">
 	        function SetEditorContent(Data) {
 	            try {
@@ -182,6 +182,7 @@
 	        }
 	        
 	        window.onload = parent.Editor_Complete;
+	        
 	    </script>
 	</body>
 </html>
