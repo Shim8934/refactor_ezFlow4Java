@@ -11,10 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCircularService")
@@ -108,5 +110,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getCircularList(map);
 	}
 	
-	
+	@Override
+	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_MEMBERID", userInfo.getId());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		CircularConfigVO circularConfigVO = ezCircularDAO.getCircularList_Config(map);
+		
+		if (circularConfigVO != null) {
+			circularConfigVO = ezCircularDAO.getCircularList_Config(map);
+		} else {
+			circularConfigVO.setListCnt(20);
+			circularConfigVO.setIsPreview(0);
+			circularConfigVO.setPreviewContentValue("50");
+			circularConfigVO.setPreviewListValue("50");
+		}
+		
+		return circularConfigVO;
+	}
 }

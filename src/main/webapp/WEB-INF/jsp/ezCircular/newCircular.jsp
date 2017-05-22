@@ -205,12 +205,34 @@
 	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-	                pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
+	                
+	                
+	/*                 pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
 	
 	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
 	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
 	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT")));
+	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); */
+	                
+	
+	                pPreviewShow_HOW = "${config.isPreview}";
+
+	                switch (parseInt("${config.isPreview}")) {
+					case 0:
+						pPreviewShow_HOW = "OFF";
+						break;
+					case 1:
+						pPreviewShow_HOW = "H";
+						break;
+					case 2:
+						pPreviewShow_HOW = "W";
+						break;
+					}
+	                
+	                pMailListDiv = "${config.previewListValue}";
+	                pMailPreVDiv = "${config.previewContentValue}";
+	                pMailListDiv_H = "${config.previewListValue}";
+	                pMailPreVDiv_H = "${config.previewContentValue}";
 	
 	                if (listNode == null) return;
 	
@@ -219,7 +241,8 @@
 	                totalCount = lstCnt;
 	                var perCnt = getNodeText(perNode);
 	
-	                listcount.value = perCnt;
+	                //listcount.value = perCnt;
+	                listcount.value = "${config.listCnt}";
 	
 	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
 	                pTotalCnt = lstCnt;
@@ -631,69 +654,7 @@
 	    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
 	        <div style="width:100%; overflow:AUTO;" id="divList">
 	        	<table width="100%" class="mainlist" id="BoardList" border="0" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)">
-	        		<!-- <thead id="BoardList_THEAD">
-	        			<tr id="BoardList_TH">
-	        				<th width="1" class="h4_center" id="BoardList_TH_0" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;" bgcolor="#cccccc">
-	        					<input id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" type="checkbox">
-	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_1" style="width: 10px; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
-	        					중요
-	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_2" style="width: 10px; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
-	        					첨부
-	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_3" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
-	        					상태
-	        				</th>
-	        				<th width="30" class="h5_center" id="BoardList_TH_4" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;" writerindex="4">
-	        					제목
-	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_5" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
-	        					작성자
-	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_6" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
-	        					작성일
-	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_7" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
-	        					확인
-	        				</th>
-	        				<th width="20" class="h5_center" id="BoardList_TH_8" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
-	        					확인일
-	        				</th>
-	        				</tr>
-	        			</thead>
-	        			<tbody style="background-color: rgb(255, 255, 255);">
-	        				<tr id="BoardList_TR_0" style="cursor: pointer; background-color: rgb(255, 255, 255);" DATA1="{9716dd3d-09b9-6b24-4621-598be6cabfae}" DATA2="{ee093f1b-364c-4f65-84c6-30fba5bd3362}" selected="false" DATA3="kkk" DATA4="0" DATA5="0" DATA6="" DATA7="N" DATA8="1" DATA9="" DATA10="5" DATA11="0">
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						<input id="{ee093f1b-364c-4f65-84c6-30fba5bd3362},kkk;" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;" type="checkbox">
-	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						일반
-	        					</td>
-	        					<td style="margin: 0px; padding: 0px; width: 80%; text-align: left; overflow: hidden; font-weight: bold; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						첨부
-	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						진행중
-	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						제목
-	        					</td>
-	        					<td style="width: 120px; text-align: left; overflow: hidden; white-space: nowrap;">
-	        						지정석
-	        					</td>
-	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						2017-05-16 14:02
-	        					</td>
-	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						확인완료
-	        					</td>
-	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						2017-05-17 14:02
-	        					</td>
-	        				</tr>
-	        			</tbody> -->
-	        				<thead id="BoardList_THEAD">
+					<thead id="BoardList_THEAD">
 	        			<tr id="BoardList_TH">
 	        				<th width="1" class="h4_center" id="BoardList_TH_0" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;" bgcolor="#cccccc">
 	        					<input id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" type="checkbox">
@@ -732,13 +693,13 @@
 	        						<input id="{ee093f1b-364c-4f65-84c6-30fba5bd3362},kkk;" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;" type="checkbox">
 	        					</td>
 	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						${item.importance}
+	        						${item.importance == '0' ? '일반' : '중요'}
 	        					</td>
 	        					<td style="margin: 0px; padding: 0px; width: 80%; text-align: left; overflow: hidden; font-weight: bold; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						${item.hasFile}
+	        						${item.hasFile == '0' ? ' ' : "<img src='/images/newAttach.gif'>"}
 	        					</td>
 	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						${item.status}
+	        						${item.status == '0' ? '진행중' : '종료'}
 	        					</td>
 	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
 	        						${item.title}
@@ -750,7 +711,7 @@
 	        						${item.regDate}
 	        					</td>
 	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						${item.confirmStatus}
+	        						${item.confirmStatus == '0' ? '미확인' : '확인완료'}
 	        					</td>
 	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
 	        						${item.confirmDate}

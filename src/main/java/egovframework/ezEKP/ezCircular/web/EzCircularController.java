@@ -252,12 +252,15 @@ public class EzCircularController {
 		
 		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), userInfo.getTenantId());
 		
+		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", list);
+		model.addAttribute("config", config);
 		
 		logger.debug("newCircular ended");
 		return "/ezCircular/newCircular";
