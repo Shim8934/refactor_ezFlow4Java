@@ -71,7 +71,7 @@
         		var listCount = document.getElementById("listcount").value;
      			var Preview = document.getElementById("PreviewMode").value;
      			var previewListValue = document.getElementById("previewListValue").value;
-     			var previewContentValue = document.getElementById("previewContentValue").value;     			
+     			var previewContentValue = document.getElementById("previewContentValue").value;
 
      			$.ajax({
      				url : '/ezCircular/circular_generallist_save.do',
