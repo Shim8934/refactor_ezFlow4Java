@@ -29,24 +29,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (String) select("EzCircularDAO.getCircularConfig", map);
 	}
 
-	public void setCircularList_Config_U(CircularConfigVO circularConfigVO) {
-		update("EzCircularDAO.setCircularList_Config_U", circularConfigVO);
-	}
-
 	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) {
 		insert("EzCircularDAO.setCircularList_Config_I", circularConfigVO);
 	}
-	
-	public void setCircularList_Config2_U(Map<String, Object> map) throws Exception{
-		update("EzCircularDAO.setCircularList_Config2_U", map);
-	}
-	
+
 	public void setCircularList_Config2_I(Map<String, Object> map) throws Exception{
 		insert("EzCircularDAO.setCircularList_Config2_I", map);
-	}
-	
-	public void setCircularConfig(Map<String, Object> map) throws Exception{
-		update("EzCircularDAO.setCircularConfig", map);
 	}
 	
 	public void setCircularConfig2(Map<String, Object> map) throws Exception{
@@ -59,6 +47,34 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	
 	public void insertCircularUser(Map<String, Object> map) throws Exception{
 		insert("EzCircularDAO.insertCircularUser", map);
+	}
+	
+	public void setCircularList_Config_U(CircularConfigVO circularConfigVO) {
+		update("EzCircularDAO.setCircularList_Config_U", circularConfigVO);
+	}
+	
+	public void setCircularList_Config2_U(Map<String, Object> map) throws Exception{
+		update("EzCircularDAO.setCircularList_Config2_U", map);
+	}
+	
+	public void setCircularConfig(Map<String, Object> map) throws Exception{
+		update("EzCircularDAO.setCircularConfig", map);
+	}
+	
+	public void modifyCircular(Map<String, Object> map) throws Exception{
+		update("EzCircularDAO.modifyCircular", map);
+	}
+	
+	public void modifyCircularUser(Map<String, Object> map) throws Exception{
+		update("EzCircularDAO.modifyCircularUser", map);
+	}
+	
+	public void deleteCircular(Map<String, Object> map) throws Exception{
+		delete("EzCircularDAO.deleteCircular", map);
+	}
+	
+	public void deleteCircularUser(Map<String, Object> map) throws Exception{
+		delete("EzCircularDAO.deleteCircularUser", map);
 	}
 	
 	

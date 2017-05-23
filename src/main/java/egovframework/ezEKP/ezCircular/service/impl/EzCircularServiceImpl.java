@@ -170,4 +170,35 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getCircular(map);
 	}
 
+	@Override
+	public void modifyCircular(int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.modifyCircular(map);
+	}
+
+	@Override
+	public void modifyCircularUser(int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.modifyCircularUser(map);
+	}
+
+	@Override
+	public void deleteCircular(int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.deleteCircular(map);
+	}
+
+	@Override
+	public void deleteCircularUser(int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.deleteCircularUser(map);
+	}
 }
