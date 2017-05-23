@@ -222,4 +222,56 @@
             (#circularUserID# ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#)
     ]]>
   </insert>
+  
+  <update id="EzCircularDAO.modifyCircular" parameterClass="Map">
+    <![CDATA[
+        UPDATE
+            TBL_CIRCULAR
+        SET
+            TITLE = #title#,
+            IMPORTANCE = #importance#,
+            OPTION = #option#
+        WHERE 
+            CIRCULARID = #circularID#
+        AND
+            TENANTID = #tenantID#      
+    ]]>
+  </update>
+  
+  <update id="EzCircularDAO.modifyCircularUser" parameterClass="Map">
+    <![CDATA[
+        UPDATE
+            TBL_CIRCULAR_USER
+        SET
+            MEMBERID = #memberID#,
+            MEMBERNAME = #memberName#,
+            MEMBERNAME2 = #memberName2#,
+        WHERE 
+            CIRCULARID = #circularID#
+        AND
+            TENANTID = #tenantID# 
+    ]]>
+  </update>
+  
+  <delete id="EzCircularDAO.deleteCircular" parameterClass="Map">
+    <![CDATA[
+        DELETE FROM
+            TBL_CIRCULAR
+        WHERE
+            CIRCULARID = #circularID#
+        AND    
+            TENANTID = #tenantID#
+    ]]>
+  </delete>
+  
+  <delete id="EzCircularDAO.deleteCircularUser" parameterClass="Map">
+    <![CDATA[
+        DELETE FROM
+            TBL_CIRCULAR_USER
+        WHERE
+            CIRCULARID = #circularID#
+        AND    
+            TENANTID = #tenantID#
+    ]]>
+  </delete>
 </sqlMap>

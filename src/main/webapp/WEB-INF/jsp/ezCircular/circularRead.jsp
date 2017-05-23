@@ -178,7 +178,7 @@
 			
 		    //수정버튼 클릭시
 	        function btn_modify() {
-	            window.location.href = filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);
+	            window.location.href = "/ezCircular/circularModify.do?from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);
 	        }
 
 	        function window_onUnload() {
@@ -332,9 +332,10 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                        	<li id="btn_modify"><span onclick="btn_modify()"><spring:message code="ezResource.t54" /></span></li>
-	                        <li><span onclick="print_onClick2( false )"><spring:message code="ezResource.t186" /></span></li>
-                        	<li id="deletebtbn"><span onclick="delSchedule_onClick('${num}','${ownerID}')"><spring:message code="ezResource.t65" /></span></li>
+                        	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li>
+                        	<li id="deletebtbn"><span onclick="delSchedule_onClick('${num}','${ownerID}')">삭제</span></li>
+                        	<li><span>회람종료</span></li>
+	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
                 	<div id="close">
@@ -359,7 +360,7 @@
                     	<tr>
 	                        <th>중요도</th>
     	                    <!-- <td colspan="3"><span id="AllDayDisplay"></span></td> -->
-    	                    <td colspan="3">${result.importance}</td>
+    	                    <td colspan="3">${result.importance == '0' ? '일반' : '중요'}</td>
                     	</tr>
 		        		<tr>
 		            		<th>옵션</th>
@@ -388,7 +389,7 @@
 		        		<tr>
 		            		<th>상태</th>
 		            		<td colspan="3">
-		                		<div id="titleDIV">${result.status}</div>
+		                		<div id="titleDIV">${result.status == '0' ? '진행중' : '종료'}</div>
 		            		</td>
 		        		</tr>
 	        			<tr style="height:100%">
