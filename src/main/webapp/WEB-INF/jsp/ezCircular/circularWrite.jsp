@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
 		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/schedule_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -251,7 +252,7 @@
 	    	}
 
 	    	function btn_Save() {
-	        	var check = true;
+	        /* 	var check = true;
 	        	if (ItemArray[0].length == 0) {
 	            	alert(strLang252);
 	            	return;
@@ -268,7 +269,24 @@
 		                SaveSchedule_onClick("${cmdStr}", ItemArray[0][i]);
 		            }
 	    	    }
-	        	return check;
+	        	return check; */
+	    		$.ajax ({
+	 			   	url : '/ezCircular/saveCircular.do',
+	                type : 'POST',
+	                dataType : 'json',
+	                data : {	title : document.getElementById("title").value,
+	                			importance : document.getElementById("importance").value,
+	                			//option : document.getElementById("option"),
+	                			option : 0,
+	                			receiverList : document.getElementById("receiverlist").innerHTML,
+	                			receiverID : document.getElementById("receiverID").innerHTML
+	                },  
+	                cache: false,
+	                success: function(data) {	   
+	             	   console.log(data);
+	             	   //temp.text(data);
+	                }
+	 			});
 	    	}
 
 	    	function window_onUnload() {
@@ -314,7 +332,7 @@
       				<table class="content" style="width:100%;">
         				<tr>
           					<th>제목</th>
-          					<td colspan="3" style="width:100%"><input type="text" style="width:700px"></td>
+          					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
         				</tr>
         				
 							
@@ -332,7 +350,7 @@
 	        			<tr id="tr_STime" ${strDspMod1}>
 	          				<th> 중요도</th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
-	          					<select id="importance1" class="select">
+	          					<select id="importance" class="select">
 	          						<option value="1" <c:if test="${importance eq '0'}">selected</c:if>>일반</option>
    									<option value="2" <c:if test="${importance eq '1'}">selected</c:if>>중요</option>
    								</select>	
@@ -341,7 +359,7 @@
 				        <tr>
 	       					<th> 옵션</th>
 	       					<td style="width:160px" colspan="3">
-								<input type="checkbox" id="AllDay" <c:if test="${allDay eq '0'}">checked</c:if> onClick="display_time_Unshow()" />댓글기능 사용
+								<input type="checkbox" id="option" <c:if test="${allDay eq '0'}">checked</c:if> onClick="display_time_Unshow()" />댓글기능 사용
 								<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1'}">checked</c:if> onClick="display_time_Unshow()" />메일공지 사용   									
 	         				</td>
        						<th style="display: none"> <spring:message code="ezResource.t217"/></th>
@@ -375,6 +393,7 @@
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         				</td>
 	       				</tr>
       				</table>

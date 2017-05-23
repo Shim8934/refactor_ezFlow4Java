@@ -5,7 +5,7 @@
 	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
     <typeAlias alias="CircularListVO"                type="egovframework.ezEKP.ezCircular.vo.CircularListVO"/>
 	
-    <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO" remapResults="true">
+    <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 		<![CDATA[
 			SELECT
 				ISMAILRECEIVE,
@@ -120,27 +120,27 @@
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
-              ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
+              ( MEMBERID,  ISMAILRECEIVE, LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
          VALUES 
-              ( #v_USERID#, #v_LISTCNT#, 0, 50, 50, #v_TENANTID#)
+              ( #v_USERID#, 0 ,#v_LISTCNT#, 0, 50, 50, #v_TENANTID#)
         ]]>
       </isEqual>
       <isEqual property="v_PREVIEWMODE" compareValue="W">
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
-              ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
+              ( MEMBERID,   ISMAILRECEIVE, LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
           VALUES 
-              ( #v_USERID#, #v_LISTCNT#, 2, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
+              ( #v_USERID#, 0, #v_LISTCNT#, 2, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
         ]]>
       </isEqual>
       <isEqual property="v_PREVIEWMODE" compareValue="H">
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
-              ( MEMBERID,   LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
+              ( MEMBERID, ISMAILRECEIVE, LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
           VALUES 
-              ( #v_USERID#, #v_LISTCNT#, 1, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
+              ( #v_USERID#, 0, #v_LISTCNT#, 1, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
         ]]>
       </isEqual>
     </insert>
@@ -180,11 +180,29 @@
             AND
                 A.TENANTID = B.TENANTID
             AND
-                A.MEMBERID = B.MEMBERID
-            AND
-                A.MEMBERID = #memberId#
+                B.MEMBERID = #memberId#
             AND
                 A.TENANTID = #tenantId#        
     ]]>
   </select>
+  
+  <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
+    <![CDATA[
+        INSERT INTO 
+            TBL_CIRCULAR
+            (CIRCULARID, TITLE, IMPORTANCE, OPTION, CONTENT, HASFILE, STATUS, MEMBERID, MEMBERNAME, MEMBERNAME2, REGDATE, ENDDATE, TENANTID)
+        VALUES
+            (#circularID#, #title#, #importance#, #option#, #content#, #hasFile#, #status#, #memberID#, #memberName#, #memberName2#, #regDate#, #endDate#, #tenantID#)
+    ]]>
+  </insert>
+  
+  <insert id="EzCircularDAO.insertCircularUser" parameterClass="Map">
+    <![CDATA[
+        INSERT INTO 
+            TBL_CIRCULAR_USER
+            (CIRCULARUSERID, CIRCULARID, MEMBERID, MEMBERNAME, MEMBERNAME2, STATUS, CONFIRMDATE, UPDATESTATUS, TENANTID)
+        VALUES
+            (#circularUserID# ,#circularID#, #memberID#, #memberName#, #memberName2#, #status#, #confirmDate#, #updateStatus#, #tenantID#)
+    ]]>
+  </insert>
 </sqlMap>

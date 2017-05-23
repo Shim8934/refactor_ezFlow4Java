@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
@@ -118,15 +117,49 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		CircularConfigVO circularConfigVO = ezCircularDAO.getCircularList_Config(map);
 		
-		if (circularConfigVO != null) {
-			circularConfigVO = ezCircularDAO.getCircularList_Config(map);
-		} else {
-			circularConfigVO.setListCnt(20);
+		if (circularConfigVO == null) {
+			circularConfigVO = new CircularConfigVO();
+			circularConfigVO.setIsMailReceive(0);
+			circularConfigVO.setListCnt(10);
 			circularConfigVO.setIsPreview(0);
-			circularConfigVO.setPreviewContentValue("50");
 			circularConfigVO.setPreviewListValue("50");
+			circularConfigVO.setPreviewContentValue("50");
 		}
 		
 		return circularConfigVO;
 	}
+
+	@Override
+	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("title", title);
+		map.put("importance", importance);
+		map.put("option", option);
+		map.put("content", content);
+		map.put("hasFile", hasFile);
+		map.put("status", status);
+		map.put("memberID", memberID);
+		map.put("memberName", memberName);
+		map.put("memberName2", memberName2);
+		map.put("regDate", regDate);
+		map.put("endDate", endDate);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.insertCircular(map);
+	}
+
+	@Override
+	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularUserID", circularUserID);
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("memberName", memberName);
+		map.put("memberName2", memberName2);
+		map.put("confirmDate", confirmDate);
+		map.put("updateStatus", updateStatus);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.insertCircularUser(map);
+	}
+
 }
