@@ -20,6 +20,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public CircularConfigVO getCircularList_Config(Map<String, Object> map) throws Exception {
 		return (CircularConfigVO) select("EzCircularDAO.getCircularList_Config", map);
 	}
+	
+	public CircularListVO getCircular(Map<String, Object> map) throws Exception {
+		return (CircularListVO) select("EzCircularDAO.getCircular", map);
+	}
 
 	public String getCircularConfig(Map<String, Object> map) throws Exception {
 		return (String) select("EzCircularDAO.getCircularConfig", map);

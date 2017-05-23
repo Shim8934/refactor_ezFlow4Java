@@ -15,6 +15,8 @@ public interface EzCircularService {
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
+	public CircularListVO getCircular(String circularID, int tenantID) throws Exception;
+	
 	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;

@@ -470,19 +470,21 @@
 	                getBoardList();
 	            }
 	        }
-	
+			
+	        //상세보기 
 	        function ItemRead_onclick(obj) {
-	            var pheight = window.screen.availHeight;
-	            var pwidth = window.screen.availWidth;
-	            var pTop = (pheight - 720) / 2;
-	            var pLeft = (pwidth - 765) / 2;
-	
-	            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-	            }
-	            else {
-                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	            }
+	        	/* url = "/ezCircular/circularRead.do?cmd=mod&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
+                OpenWin.focus(); */
+                var circularId = document.getElementById("circularId").innerHTML;
+
+                if (CrossYN()) {
+		            var feature = GetOpenPosition(820, 700);
+	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=&ownerID=&type=&startDate=&endDate&brdName=&circularID="+circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	} else {
+	            	var feature = GetOpenPosition(790, 700);
+	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	}
 	        }
 		
 		    function event_HeaderCheckBoxClick(obj) {
@@ -588,10 +590,6 @@
 	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
                 OpenWin.focus();     
 	        }
-	        
-	        function Confirm_onclick() {
-				alert("확인완료창");	       
-	        }
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
@@ -694,28 +692,31 @@
 	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
 	        						<input id="{ee093f1b-364c-4f65-84c6-30fba5bd3362},kkk;" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;" type="checkbox">
 	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
+	        					<td id="circularId" style="text-align: left; overflow: hidden; display:none;">
+	        						${item.circularId }
+	        					</td>
+	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.importance == '0' ? '일반' : '중요'}
 	        					</td>
-	        					<td style="margin: 0px; padding: 0px; width: 80%; text-align: left; overflow: hidden; font-weight: bold; white-space: nowrap; -ms-text-overflow: ellipsis;">
+	        					<td style="margin: 0px; padding: 0px; width: 80%; text-align: left; overflow: hidden; font-weight: bold; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.hasFile == '0' ? ' ' : "<img src='/images/newAttach.gif'>"}
 	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
+	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.status == '0' ? '진행중' : '종료'}
 	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
+	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.title}
 	        					</td>
-	        					<td style="width: 120px; text-align: left; overflow: hidden; white-space: nowrap;">
+	        					<td style="width: 120px; text-align: left; overflow: hidden; white-space: nowrap;" onclick="ItemRead_onclick(this)">
 	        						${item.memberId}
 	        					</td>
-	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
+	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.regDate}
 	        					</td>
-	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
+	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.confirmStatus == '0' ? '미확인' : '확인완료'}
 	        					</td>
-	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
+	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.confirmDate}
 	        					</td>
 	        				</tr>

@@ -162,4 +162,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.insertCircularUser(map);
 	}
 
+	@Override
+	public CircularListVO getCircular(String circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularId", circularID);
+		map.put("tenantId", tenantID);
+		return ezCircularDAO.getCircular(map);
+	}
+
 }

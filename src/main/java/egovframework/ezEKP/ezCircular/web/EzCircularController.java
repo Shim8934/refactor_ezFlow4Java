@@ -253,6 +253,10 @@ public class EzCircularController {
 		
 		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), userInfo.getTenantId());
 		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
 		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
 		
 		model.addAttribute("userInfo", userInfo);
@@ -467,7 +471,7 @@ public class EzCircularController {
 	@RequestMapping(value = "/ezCircular/circularWrite.do")
 	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String useIE11Browser = "";
+		
 		String editor = config.getProperty("EDITOR");
 		String noneActiveX = "YES";
 		String resID = "";
@@ -506,9 +510,6 @@ public class EzCircularController {
 		int pNum = 0;
 		int num = 0;
 		
-		if (ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
-			useIE11Browser = "CK";
-		}
 		if (req.getParameter("ownerID") != null) {
 			resID = req.getParameter("ownerID");
 		}
@@ -658,7 +659,7 @@ public class EzCircularController {
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useIE11Browser", useIE11Browser);
+		
 		model.addAttribute("editor", editor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("adminFg", adminFg);
@@ -748,18 +749,44 @@ public class EzCircularController {
 		int receiverLength = receiverIDs.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
 		
+		String regDate = commonUtil.getTodayUTCTime("");
 		
-		
-		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), circularListVO.getRegDate(), circularListVO.getEndDate(),userInfo.getTenantId());
+		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId());
 		
 		for (int i=0; i<receiverLength; i++) {
 			ezCircularService.insertCircularUser(circularUserId, circularListVO.getCircularId(), receiverID[i], userInfo.getDisplayName1(), userInfo.getDisplayName2(), circularListVO.getStatus(), confirmDate, updateStatus, userInfo.getTenantId());
 		}
-		
-		
-		
-		
 
 		logger.debug("saveCircular ended");
+	}
+	
+	/**
+	 * 회람판 상세정보 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCircular/circularRead.do")
+	public String circularRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
+		logger.debug("circularRead Start");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String typeVal = "";
+		String writerID = "";
+		String allDay = "";
+		String entryList = "";
+		String circularID = "";
+		if (req.getParameter("circularID") != null && !req.getParameter("circularID").equals("")) {
+			circularID = req.getParameter("circularID");
+		}
+		 
+		//TODO 회람 상세정보 가져옴
+		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("writerID", writerID);
+		model.addAttribute("allDay", allDay);
+		model.addAttribute("typeVal", typeVal);
+		model.addAttribute("entryList", entryList);
+		model.addAttribute("result", result);
+		
+		return "/ezCircular/circularRead";
 	}
 }

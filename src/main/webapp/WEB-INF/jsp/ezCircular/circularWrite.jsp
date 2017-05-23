@@ -331,7 +331,7 @@
       				</div>
       				<table class="content" style="width:100%;">
         				<tr>
-          					<th>제목</th>
+          					<th style="width:200px;">제목</th>
           					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
         				</tr>
         				
@@ -351,8 +351,8 @@
 	          				<th> 중요도</th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<select id="importance" class="select">
-	          						<option value="1" <c:if test="${importance eq '0'}">selected</c:if>>일반</option>
-   									<option value="2" <c:if test="${importance eq '1'}">selected</c:if>>중요</option>
+	          						<option value="0" <c:if test="${importance eq '0'}">selected</c:if>>일반</option>
+   									<option value="1" <c:if test="${importance eq '1'}">selected</c:if>>중요</option>
    								</select>	
 	          				</td>
 	        			</tr>
@@ -389,7 +389,7 @@
 	           				</td>
 						</tr>
 						<tr>
-	         				<th></th>
+	         				<th>회람자목록</th>
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>

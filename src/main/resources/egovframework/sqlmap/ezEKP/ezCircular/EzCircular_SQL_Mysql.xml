@@ -186,6 +186,23 @@
     ]]>
   </select>
   
+  <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+                A.TENANTID = B.TENANTID
+            AND
+                A.CIRCULARID = #circularId#
+            AND
+                A.TENANTID = #tenantId#        
+    ]]>
+  </select>
+  
   <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
     <![CDATA[
         INSERT INTO 
