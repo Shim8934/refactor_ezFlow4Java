@@ -138,6 +138,7 @@
 		  	//회람
 			var type = "ING";
 			var pGongRamDocID = "";
+			var approvalType = "DRAFT";
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {
@@ -1228,7 +1229,7 @@
 		        parameter[9] = true;
 		        parameter[10] = pDocType;
 		        parameter[11] = gamsaCount;
-		        parameter[12] = "DRAFT";
+		        parameter[12] = approvalType;
 		        parameter[28] = onlydocinfiview;
 		        parameter[30] = cabinetID; // 기록물철
 		        parameter[31] = tempSecurity;

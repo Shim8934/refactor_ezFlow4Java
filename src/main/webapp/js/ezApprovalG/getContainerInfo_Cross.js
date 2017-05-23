@@ -670,6 +670,10 @@ function selFirstRow(Resultxml) {
         case "RECIPENT":
             Recipent_onclick();
             break;
+            
+        case "CIRCUL":
+        	Circulation_onclick();
+        	break;
     }
 }
 
@@ -692,6 +696,10 @@ function getDataInfo() {
         case "RECIPENT":
         	pUrl = "/ezApprovalG/getReceiptinfo.do";
             break;
+            
+        case "CIRCUL":
+        	pUrl = "/ezApprovalG/getCirculationinfo.do";
+        	break;
     }
     $.ajax({
 		type : "POST",
@@ -810,6 +818,10 @@ function lvtDoclist_SelChange() {
             case "RECIPENT":
                 Recipent_onclick();
                 break;
+                
+            case "CIRCUL":
+            	Circulation_onclick();
+            	break;
         }
     }
 }

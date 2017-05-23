@@ -685,6 +685,10 @@
 			    jobState = "OPINION";
 			    getDataInfo();
 			}
+			function Circulation_onclick() {
+			    jobState = "CIRCUL";
+			    getDataInfo();
+			}
 			function help_onclick() {
 			  	  CallHelp("<spring:message code='ezApprovalG.t904'/>");
 		    }
@@ -1278,6 +1282,9 @@
 	                <li id="tagsub2"><span onclick="MM_swapImagesub('2', event);Recipent_onclick()"><spring:message code='ezApprovalG.t950'/></span></li>
 	                <li id="tagsub3"><span onclick="MM_swapImagesub('3', event);Attach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 	                <li id="tagsub4"><span onclick="MM_swapImagesub('4', event);Opinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+	                <c:if test="${approvalFlag != 'G'}">
+					    <li id="tagsub5"><span onClick="MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
+				    </c:if>
 	            </ul>
 	        </div>
 	

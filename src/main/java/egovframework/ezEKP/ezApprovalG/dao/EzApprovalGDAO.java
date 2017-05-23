@@ -2640,4 +2640,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGAprLineVO> getCirculationInfo(Map<String, Object> map) throws Exception {
 		return (List<ApprGAprLineVO>) list("EzApprovalG.getCirculationInfo", map);
 	}
+
+	public String getCircularDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getCircularDocID", map);
+	}
 }

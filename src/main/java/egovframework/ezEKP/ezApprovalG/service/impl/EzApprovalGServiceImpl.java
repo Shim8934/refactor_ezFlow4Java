@@ -1032,7 +1032,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getCirculationinfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getCirculationinfo started");
 
 		String listString = "";
@@ -1066,6 +1065,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String docList = "";
+		//회람은 새로 생긴 DOCID여서 orgdocid로 회람문서 찾아내야함
+		docID = getCircularDocID(docID, companyID, tenantID);
 		
 		if (docID != null && !docID.equals("")) {
 			docList = getCirculationInfo(docID, mode, companyID, tenantID);
@@ -1128,6 +1129,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getCirculationinfo ended");
 		
 		return resultXML.toString();
+	}
+
+	private String getCircularDocID(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("getCircularDocID started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		String cDocID = ezApprovalGDAO.getCircularDocID(map);
+		
+		logger.debug("getCircularDocID ended");
+		
+		return cDocID;
 	}
 
 	private String getCirculationInfo(String docID, String mode, String companyID, int tenantID) throws Exception {
@@ -16942,7 +16958,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_temp3", 0);
 		map.put("v_temp4", 0);
 		
-		if (checkMode.equals("VIE")){
+		if (checkMode.equals("VIE")) {
 			v_temp  = ezApprovalGDAO.countVieTempDocID(map);
 			map.put("v_temp", v_temp);
 			
@@ -16963,6 +16979,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_temp3", v_temp3);
 				}				
 				if (v_temp3 > 0 ) {
+					map.put("v_temp3", v_temp3);
+					
 					List<ApprGAprLineVO> tempList = ezApprovalGDAO.countRecTempDocID3(map);
 					map.put("v_temp4", tempList.size());
 				}

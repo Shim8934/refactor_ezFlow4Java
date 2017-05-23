@@ -1195,12 +1195,14 @@ function getApprovInfo() {
                 break;
 
             case "GONGRAM":
+            	approvalType = "GONRAM";
                 pOrgDocID = getNodeText(docflagnode[0]);
                 GetChildNodes(document.getElementById("btnApprove"))[0].innerHTML = strLang10;
                 setMenuBar("btnJunKyul", false);
                 break;
 
             case "CHAMJO":
+            	approvalType = "CHAMJO";
                 pOrgDocID = getNodeText(docflagnode[0]);
                 GetChildNodes(document.getElementById("btnApprove"))[0].innerHTML = strLang10;
                 setMenuBar("btnJunKyul", false);
@@ -1213,6 +1215,7 @@ function getApprovInfo() {
                 break;
 
             case "HABYUI":
+            	approvalType = "HABYUI";
                 setMenuBar("btnEdit", false);
                 setMenuBar("btnModAprDept", false);
                 setMenuBar("btnFileAttach", false);
@@ -1220,10 +1223,12 @@ function getApprovInfo() {
                 break;
 
             case "SUSIN":
+            	approvalType = "SUSIN";
                 pOrgDocID = getNodeText(docflagnode[0]);
                 break;
 
             case "GAMSA":
+            	approvalType = "GAMSA";
                 setMenuBar("btnApprove", true);
                 setMenuBar("btnReject", false);
                 setMenuBar("btnStay", false);
@@ -1236,6 +1241,7 @@ function getApprovInfo() {
                 break;
 
             case "B_GAMSA":
+            	approvalType = "B_GAMSA";
                 setMenuBar("btnApprove", true);
                 setMenuBar("btnReject", false);
                 setMenuBar("btnStay", false);

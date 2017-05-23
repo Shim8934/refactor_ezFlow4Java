@@ -21961,4 +21961,21 @@
 				APRTYPE = '015'
 		]]>
 	</select>
+	
+	<select id="EzApprovalG.getCircularDocID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+			    DOCID
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				ORGDOCID = #docID#
+			AND
+				DOCSTATE = '015'
+		]]>
+	</select>
 </sqlMap>

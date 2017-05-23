@@ -4,7 +4,7 @@ var pageSize = "10";
 var CallPage = "Right";
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
-var arrySubTab = new Array(0, 6, 4, 4, 3); 
+var arrySubTab = new Array(0, 6, 4, 4, 3, 4); 
 var pTotalCnt = "";
 function getDocList() {
     pageSize = "10";
@@ -564,13 +564,15 @@ function getAprLine(tr) {
     else
         pDocID = GetAttribute(tr, "DATA1");
 
-
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
     	pMode = "END";
     } else if (pListTypeValue == "21") {
 //    	pFlag = "TMP";
 //      닷넷에서는 2가지 값만 보내서 controller 에서 노드(0),노드(1) 로 빼서 사용해서  mode로 통일
     	pMode = "TMP";
+    } else if (pListTypeValue == "10" || pListTypeValue == "99") {
+    	pDocID = GetAttribute(tr, "DATA2");
+    	pMode = "END";
     } else {
     	pMode = "APR";
     }
@@ -1283,7 +1285,7 @@ function getAprDocAproveInfo(tr) {
     	});
     }
     else if (pDocInfoValue == "5") {
-    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99")
+    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99" || pListTypeValue == "10")
     		pFlag = "END";
     	else
     		pFlag = "APR";
