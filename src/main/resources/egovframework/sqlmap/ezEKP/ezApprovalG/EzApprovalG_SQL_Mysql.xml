@@ -252,7 +252,6 @@
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="3">
-			
 			<![CDATA[
 			SELECT 
 				* 
@@ -295,8 +294,11 @@
 			            			WHERE 
 			            				APRMEMBERID = #v_USERID# 
 			            				 ]]>
-<!-- 			            			AND	     -->
-<!-- 										AprState != '001' -->
+			            		<isEqual property="MineViewYN" compareValue="YES">
+			            			AND	    
+										AprState != '001'
+			            		</isEqual>
+			            		    
 							<![CDATA[
 									AND
 			            				AprType <> '015'
@@ -7793,8 +7795,10 @@
 	   		WHERE 
 	   			APRMEMBERID = #v_USERID# 
 	   	]]>
-<!-- 			AND -->
-<!-- 				AprState != '001' -->
+		  <isEqual property="MineViewYN" compareValue="YES">
+			AND	    
+				AprState != '001'
+		  </isEqual>
 		<![CDATA[
            	AND
 	   			AprType <> '015'  
@@ -8857,8 +8861,10 @@
            	AND 
            		AprType <> '015'
           ]]>
-<!--            	AND -->
-<!-- 				AprState != '001' -->
+          <isEqual property="MineViewYN" compareValue="YES">
+			AND	    
+				AprState != '001'
+		  </isEqual>
            	AND
 				TENANT_ID = #v_TENANTID#
 			AND

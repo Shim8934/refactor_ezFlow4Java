@@ -323,7 +323,7 @@
 	  </tr>
 	</table>
 	<div class="nobox" style="width:718px; height:500px;margin-top:5px;">
-	<iframe id="tbContentElement1" class="viewbox" src="/ezEmail/mailCKEditor.do" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
+	<iframe id="tbContentElement1" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
 	</div>
 	<table style="width:720px;" class="box">
 	  <tr>
@@ -336,7 +336,7 @@
 	  </tr>
 	</table>
 	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
-	<iframe id="tbContentElement2" class="viewbox" src="/ezEmail/mailCKEditor.do" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
+	<iframe id="tbContentElement2" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
 	</div> 
 	<div style="width:700px;text-align:center;margin-top:10px">
 	    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezEmail.t48' /></span></a>

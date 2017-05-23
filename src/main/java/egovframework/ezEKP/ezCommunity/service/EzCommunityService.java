@@ -44,7 +44,7 @@ public interface EzCommunityService {
 	
 	public List<CommunityCCategoryVO> mainPageGet4(String cat, int tenantID) throws Exception;
 	
-	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int tenantID) throws Exception;
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, int tenantID) throws Exception;
 	
 	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode, int tenantID) throws Exception ;
 	

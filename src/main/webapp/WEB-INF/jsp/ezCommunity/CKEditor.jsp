@@ -109,7 +109,7 @@
 		<script type="text/javascript">CKEDITOR.replace( 'editor1', {fullPage : false} );</script>
 		<script type="text/javascript">
 			CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
-		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />" + CKEDITOR.instances.editor1.config.font_names;
+		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
 		</script>
 	</body>

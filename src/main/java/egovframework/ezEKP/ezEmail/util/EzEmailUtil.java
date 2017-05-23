@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -62,6 +63,7 @@ import org.springframework.stereotype.Component;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -86,6 +88,9 @@ public class EzEmailUtil {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
     @Autowired
     private Properties config;
@@ -465,7 +470,7 @@ public class EzEmailUtil {
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint) throws Exception {
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, Locale locale) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
@@ -743,7 +748,19 @@ public class EzEmailUtil {
 				}				
 //			}
 			
-			htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+			StringBuilder tempText2 = new StringBuilder();
+			String[] tempTexts = tempText.split("<br />");
+			
+			String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+			
+			for (int i=0; i<tempTexts.length; i++) {
+				if (!tempTexts[i].equals("")) {
+					tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
+				}
+			}
+			
+			htmlBody += tempText2.toString();
 			
 			htmlBody = changeURLsToAnchorTags(htmlBody);	
 			htmlBody = stripScriptTags(htmlBody);
@@ -760,7 +777,7 @@ public class EzEmailUtil {
 					logger.debug("disposition=" + p.getDisposition());
 				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
 				} else {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, locale);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -784,7 +801,7 @@ public class EzEmailUtil {
 			Part p = null;
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, locale);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -801,7 +818,7 @@ public class EzEmailUtil {
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, locale);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -819,7 +836,7 @@ public class EzEmailUtil {
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, locale);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";

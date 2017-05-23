@@ -467,7 +467,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -550,7 +550,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						subject = (subject != null) ? subject : "";
 		        		
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -736,7 +736,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -970,6 +970,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("buttonName2", buttonName2);
 		
 		return "ezEmail/mailConfirmDialog";
+	}
+	
+	/**
+	 * 메일 에디터 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSelectEditor.do")
+	public String mailSelectEditor(
+			@CookieValue("loginCookie") String loginCookie, 
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String returnPath = "";
+		
+		switch (useEditor) {
+			case "CK": 
+				returnPath = "ezEmail/mailCKEditor";
+				break;
+			case "TAGFREE":
+				returnPath = "ezEmail/mailTFXEditor";
+				break;
+			default :
+				returnPath = "ezEmail/mailCKEditor";
+				break;
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		return returnPath;
 	}
 	
 	/**

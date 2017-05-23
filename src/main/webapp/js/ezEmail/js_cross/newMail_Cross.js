@@ -2250,8 +2250,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         }
     } catch (e) { }
 
-
-    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:13px;font-family:Gulim'>" + tempDiv.innerHTML + "</div>";
+    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:13px;font-family:" + defaultFont + "'>" + tempDiv.innerHTML + "</div>";
     
     try {
         // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.
@@ -2591,9 +2590,9 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
     
     if (individualmailuser != "0") {
-        DivPopUpShow(410, 455, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 355, "/ezEmail/letterOption.do");
     } else {
-        DivPopUpShow(410, 375, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 280, "/ezEmail/letterOption.do");
     }
 }
 

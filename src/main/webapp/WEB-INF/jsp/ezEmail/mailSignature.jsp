@@ -14,7 +14,7 @@
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js/dhtml.js"></script>
 		<script type="text/javascript">
-		    var pUserID = "${userId}"; //TODO: userinfo.userID 로 수정해야함
+		    var pUserID = "${userId}";
 		    var pSigState = "0";
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -34,6 +34,7 @@
 		        tbContentElement.SetEditorContent(document.getElementById("_signature1").innerHTML);
 		    }
 		
+		    /* 2017-05-21 이효민 : 사용하지않는 함수
 		    function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
 		        var XmlHttp = createXMLHttpRequest();
 		        var xmlDom = createXmlDom();
@@ -71,7 +72,7 @@
 		                obj.innerHTML = OrgBody;
 		            }
 		        }
-		    }
+		    } */
 		    function SetSig() {
 		        try {
 		            switch (Tab1_SelectID) {
@@ -96,15 +97,15 @@
 		            sign3 = replaceAll(sign3, "</p>", "");
 		            
 		            if (sign1 != "") {
-		                Signature_ImagePathConvert(sign1, document.getElementById("_signature1"));
+// 		                Signature_ImagePathConvert(sign1, document.getElementById("_signature1"));
 		                sign1 = "<DIV>" + removeoniondiv(document.getElementById("_signature1")).innerHTML + "</DIV>";
 		            }
 		            if (sign2 != "") {
-		                Signature_ImagePathConvert(sign2, document.getElementById("_signature2"));
+// 		                Signature_ImagePathConvert(sign2, document.getElementById("_signature2"));
 		                sign2 = "<DIV>" + removeoniondiv(document.getElementById("_signature2")).innerHTML + "</DIV>";
 		            }
 		            if (sign3 != "") {
-		                Signature_ImagePathConvert(sign3, document.getElementById("_signature3"));
+// 		                Signature_ImagePathConvert(sign3, document.getElementById("_signature3"));
 		                sign3 = "<DIV>" + removeoniondiv(document.getElementById("_signature3")).innerHTML + "</DIV>"
 		            }
 		
@@ -277,7 +278,7 @@
 		<table id="signtable1" class="content" style="width:780px;height:510px"> 
 		  <TR> 
 		    <TD style="height:510px;">
-				<iframe id="tbContentElement" class="viewbox" src="/ezEmail/mailCKEditor.do" name="tbContentElement" style="padding:0; height:200px; width:100%; overflow:auto;border:none;height:100%"></iframe>
+				<iframe id="tbContentElement" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="tbContentElement" style="padding:0; height:200px; width:100%; overflow:auto;border:none;height:100%"></iframe>
 		    </TD> 
 		  </TR> 
 		</table>

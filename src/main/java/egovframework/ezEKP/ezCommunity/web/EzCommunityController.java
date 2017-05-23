@@ -1771,6 +1771,37 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 커뮤니티 editor 호출 Method
+	 */
+	@RequestMapping(value="/ezCommunity/selectEditor.do")
+	public String mailSelectEditor(
+			@CookieValue("loginCookie") String loginCookie, 
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String returnPath = "";
+		
+		switch (useEditor) {
+			case "CK": 
+				returnPath = "ezCommunity/CKEditor";
+				break;
+			case "TAGFREE":
+				returnPath = "ezCommunity/communityTFXEditor";
+				break;
+			default :
+				returnPath = "ezCommunity/CKEditor";
+				break;
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		return returnPath;
+	}
+	
+	/**
 	 * ckeditor 호출함수
 	 */
 	@RequestMapping(value = "/ezCommunity/ckEditor.do")
@@ -3915,6 +3946,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			for(CommunityCCategoryVO category : categoryList) {
 				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getTenantId());
 				if (vo != null) {
+					logger.debug("code = " + category.getC_Code() + " || cat = a");
+					logger.debug(vo.getC_Name() + " : " + vo.getCnt());
 					list.add(vo);
 				}
 			}
@@ -3924,12 +3957,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 			for(CommunityCCategoryVO category : categoryList) {
 				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getTenantId());
 				if (vo != null) {
+					logger.debug("code = " + category.getC_Code() + " || cat = b");
+					logger.debug(vo.getC_Name() + " : " + vo.getCnt());
 					list.add(vo);
 				}
 			}
 		}
 		
-		logger.debug("mainPageCategory ended.");
+		logger.debug("mainPageCategory ended. listSize = " + list.size());
 		
 		model.addAttribute("list", list);
 		
@@ -3941,21 +3976,29 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/categoryCopList.do")
 	public String categoryCopList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("categoryCopList started.");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = request.getParameter("mode");
 		String type = request.getParameter("type");
 		int page = Integer.parseInt(request.getParameter("page"));
 		
+		logger.debug("type = " + type + " || mode = " + mode + " || page = " + page);
+		
 		int startRow = (5 * (page - 1)) + 1;
 		int endRow = 5 * page;
+		int mariaStart = (5 * (page - 1));
+		int mariaEnd = 5;
 		
-		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, userInfo.getTenantId());
+		List<CommunityClubVO> clubList = ezCommunityService.categoryListGet(type, mode, startRow, endRow, mariaStart, mariaEnd, userInfo.getTenantId());
 		
 		for (CommunityClubVO club : clubList) {
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
 		model.addAttribute("list", clubList);
+		
+		logger.debug("categoryCopList ended.");
 		
 		return "json";
 	}
