@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCircular.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,11 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<CircularListVO>) list("EzCircularDAO.getCircularList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getCircularMapList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularMapList", map);
+	}
+	
 	public CircularConfigVO getCircularList_Config(Map<String, Object> map) throws Exception {
 		return (CircularConfigVO) select("EzCircularDAO.getCircularList_Config", map);
 	}
@@ -27,6 +33,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 
 	public String getCircularConfig(Map<String, Object> map) throws Exception {
 		return (String) select("EzCircularDAO.getCircularConfig", map);
+	}
+	
+	public int getCircularListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getCircularListCount", map);
 	}
 
 	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) {

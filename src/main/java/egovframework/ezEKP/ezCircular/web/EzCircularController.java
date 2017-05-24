@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCircular.web;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.Folder;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -22,6 +25,10 @@ import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
+import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
@@ -54,6 +61,9 @@ public class EzCircularController {
 	
 	@Autowired
 	private EzResourceService ezResourceService;
+	
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -239,25 +249,38 @@ public class EzCircularController {
 	@RequestMapping(value = "/ezcircular/newCircular.do")
 	public String newCircular(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("newCircular started");
-		
+		//TODO
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int page = 1;
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
         String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        int startRow = 1;
+        int endRow = 0;
         
 		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), userInfo.getTenantId());
+		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (page - 1)) + 1;
+        endRow = (personalCount * page);
+		
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+        logger.debug("startRow : "+startRow);
+        logger.debug("endRow : "+endRow);
+        
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		logger.debug("listSize : "+list.size());
 		
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
 		}
-		
-		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
@@ -266,6 +289,7 @@ public class EzCircularController {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", list);
 		model.addAttribute("config", config);
+		model.addAttribute("totalCount", totalCount);
 		
 		logger.debug("newCircular ended");
 		return "/ezCircular/newCircular";
@@ -451,18 +475,120 @@ public class EzCircularController {
 	 */
     @RequestMapping(value = "/ezCircular/getCircularList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
-    public String getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-    	logger.debug("getBoardList started");
+    public String getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
+    	logger.debug("getCircularList started");
 
     	userInfo = commonUtil.userInfo(loginCookie);
+    	//TODO
     	
-    	List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), userInfo.getTenantId());
+    	BoardVO boardVO = new BoardVO();
     	
-    	model.addAttribute("list", list);
-    	model.addAttribute("userInfo", userInfo);
+    	boardVO.setBoardType("C");
+    	boardVO.setLang(userInfo.getLang());
+    	boardVO.setTenantID(userInfo.getTenantId());
+    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
     	
-		logger.debug("getBoardList ended");
-        return "";
+    	int page = 1;
+        int startRow = 1;
+        int endRow = 0;
+        
+        String pageNum = "1";
+        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
+        	pageNum = req.getParameter("pageNum"); 
+        }
+    	
+    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
+        endRow = (personalCount * Integer.parseInt(pageNum));
+		
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+        logger.debug("startRow : "+startRow);
+        logger.debug("endRow : "+endRow);
+        
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		List<HashMap<String, Object>> list2 = ezCircularService.getCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
+		StringBuffer resultXML = new StringBuffer();
+        
+        resultXML.append("<DOCLIST>");
+        resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
+        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for (BoardListHeaderVO vo:headerList) {
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+       
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        
+        for (int j = 0; j < list.size(); j++) {
+        	resultXML.append("<ROW>");
+        	String fieldName = "";
+        	String fieldValue = "";
+            for (int i = 0; i < headerList.size(); i++) {
+            	resultXML.append("<CELL>");
+                fieldName = headerList.get(i).getColName().toUpperCase();
+                
+                fieldValue = commonUtil.cleanValue(String.valueOf(list2.get(j).get(fieldName)));
+
+                if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
+                	fieldValue = "";
+				}
+                
+                if (fieldName.equals("IMPORTANCE")) {
+                	fieldValue = fieldValue.equals("0") ? "일반" : "중요";
+                } else if (fieldName.equals("HASFILE")) {
+                	//태그안에넣어서 에러나서 추후에 수정
+                	//fieldValue = fieldValue.equals("0") ? " " : "<img src=\"/images/newAttach.gif\">";
+                	fieldValue = fieldValue.equals("0") ? " " : "O";
+                } else if (fieldName.equals("STATUS")) {
+                	fieldValue = fieldValue.equals("0") ? "진행중" : "종료";
+                }
+            	
+            	resultXML.append("<TITLE>" + list.get(j).getTitle() + "</TITLE>");
+				resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
+				resultXML.append("<CIRCULARID>" + list.get(j).getCircularId() + "</CIRCULARID>");
+				
+                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
+                
+                if (i == 0) {
+					resultXML.append("<TITLE>" + list.get(j).getTitle() + "</TITLE>");
+					resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
+                }
+                resultXML.append("</CELL>");
+            }
+            resultXML.append("</ROW>");
+        }
+        
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
+        
+        logger.debug("resultXML : "+resultXML);
+		logger.debug("getCircularList ended");
+        return resultXML.toString();
     }
     
 	/**
@@ -552,8 +678,49 @@ public class EzCircularController {
 	public String circularModify(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String circularID = "";
+		
+		if (req.getParameter("circularID") != null && !req.getParameter("circularID").equals("")) {
+			circularID = req.getParameter("circularID");
+		}
+		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("circularID", circularID);
 		
 		return "/ezCircular/circularModify";
+	}
+	
+	/**
+	 * 회람판 신규 회람판 수정 실행 Method
+	 */
+	@RequestMapping(value = "/ezCircular/saveModifyCircular.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void saveModifyCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+		logger.debug("saveModifyCircular started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int circularUserId = 0;
+		int updateStatus = 0;
+		String confirmDate = "";
+		String receiverIDs = request.getParameter("receiverID");
+		String receiverlist = request.getParameter("receiverlist");
+		
+		logger.debug("receiverIDs : "+receiverIDs);
+		logger.debug("receiverlist : "+receiverlist);
+		
+		int receiverLength = receiverIDs.split(",").length;
+		String[] receiverID = receiverIDs.split(",");
+		
+		logger.debug("");
+		
+		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId());
+		
+		for (int i=0; i<receiverLength; i++) {
+			ezCircularService.deleteCircularUser(circularListVO.getCircularId(), userInfo.getTenantId());
+			ezCircularService.insertCircularUser(circularUserId, circularListVO.getCircularId(), receiverID[i], userInfo.getDisplayName1(), userInfo.getDisplayName2(), circularListVO.getStatus(), confirmDate, updateStatus, userInfo.getTenantId());
+		}
+
+		logger.debug("saveModifyCircular ended");
 	}
 }

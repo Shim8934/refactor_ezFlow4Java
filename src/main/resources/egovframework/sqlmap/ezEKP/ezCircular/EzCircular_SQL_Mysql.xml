@@ -182,7 +182,45 @@
             AND
                 B.MEMBERID = #memberId#
             AND
-                A.TENANTID = #tenantId#        
+                A.TENANTID = #tenantId#     
+            LIMIT
+                #limit#, #rowCount#        
+    ]]>
+  </select>
+  
+  <select id="EzCircularDAO.getCircularMapList" resultClass="HashMap" >
+        <![CDATA[
+            SELECT
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+                A.TENANTID = B.TENANTID
+            AND
+                B.MEMBERID = #memberId#
+            AND
+                A.TENANTID = #tenantId#     
+            LIMIT
+                #limit#, #rowCount#        
+    ]]>
+  </select>
+  
+    <select id="EzCircularDAO.getCircularListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+            SELECT
+                COUNT(A.CIRCULARID) CNT
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+                A.TENANTID = B.TENANTID
+            AND
+                B.MEMBERID = #memberId#
+            AND
+                A.TENANTID = #tenantId#     
     ]]>
   </select>
   
@@ -235,21 +273,6 @@
             CIRCULARID = #circularID#
         AND
             TENANTID = #tenantID#      
-    ]]>
-  </update>
-  
-  <update id="EzCircularDAO.modifyCircularUser" parameterClass="Map">
-    <![CDATA[
-        UPDATE
-            TBL_CIRCULAR_USER
-        SET
-            MEMBERID = #memberID#,
-            MEMBERNAME = #memberName#,
-            MEMBERNAME2 = #memberName2#,
-        WHERE 
-            CIRCULARID = #circularID#
-        AND
-            TENANTID = #tenantID# 
     ]]>
   </update>
   

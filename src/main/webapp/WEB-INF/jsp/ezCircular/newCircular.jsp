@@ -53,7 +53,9 @@
 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
-	        var CurPage = "${page}";
+	        //var CurPage = "${page}";
+	        //var CurPage = "${totalCount}";
+	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
 	        var OrderCell = "";
 	        var OrderOption = "";
@@ -179,7 +181,8 @@
 		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
 		        else{
-		        	url = "/ezBoard/getBoardList.do";
+		        	//url = "/ezBoard/getBoardList.do";
+		        	url = "/ezCircular/getCircularList.do";
 		        }
 		        $.ajax({
 					type : "POST",
@@ -200,7 +203,6 @@
 	
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
-	            try {
 	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
 	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
@@ -237,13 +239,15 @@
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
-	                var pstCnt = getNodeText(pntNode);
+	                //var pstCnt = getNodeText(pntNode);
+	                var pstCnt = "${totalCount}";
 	                totalCount = lstCnt;
-	                var perCnt = getNodeText(perNode);
+	                //var perCnt = getNodeText(perNode);
+	                var perCnt = "${config.listCnt}";
 	
 	                //listcount.value = perCnt;
 	                listcount.value = "${config.listCnt}";
-	
+
 	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
 	                pTotalCnt = lstCnt;
 	
@@ -270,11 +274,11 @@
 	                DocList.SetTitleIdx(0);
 	                DocList.SetSelectFlag(false);
 	                DocList.DataSource(xmlDoc);
-	                //DocList.DataBind("lvBoardList");
+	                DocList.DataBind("lvBoardList");
 	                DocList = null;
 	
 	                var tempno = 0;
-	                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
+	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 	                    if (CrossYN()) {
 	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
 	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
@@ -285,7 +289,7 @@
 	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
 	                        }
 	                    }
-	                }
+	                } */
 	                tempno = tempno + "";
 	                
 	                if (tempno.length > 10) {
@@ -314,10 +318,7 @@
 	                endtime = new Date().getTime();
 	                strListInfo = "";
 	            }
-	            catch (e) {
-	                alert("getBoardList_after : " + e.description);
-	            }
-	        }
+	        
 	
 	        var BlockSize = 10;
 	        function td_Create1(strtext) {
@@ -476,7 +477,8 @@
 	        	/* url = "/ezCircular/circularRead.do?cmd=mod&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
 	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
                 OpenWin.focus(); */
-                var circularId = document.getElementById("circularId").innerHTML;
+                
+				var circularId = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
@@ -514,7 +516,8 @@
 		    }
 		
 		    function refresh_onclick() {
-		        window.location.href = "/ezBoard/boardItemListMyList.do";
+		        //window.location.href = "/ezBoard/boardItemListMyList.do";
+		    	window.location.href = "/ezcircular/newCircular.do";
 		    }
 		
 		    function MemberInfo_onclick(pUserID) {
@@ -653,55 +656,55 @@
 	
 	    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
 	        <div style="width:100%; overflow:AUTO;" id="divList">
-	        	<table width="100%" class="mainlist" id="BoardList" border="0" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)">
+	    <%--     	<table width="100%" class="mainlist" id="BoardList" border="0" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" rowondblclick="ItemRead_onclick(this)">
 					<thead id="BoardList_THEAD">
 	        			<tr id="BoardList_TH">
 	        				<th width="1" class="h4_center" id="BoardList_TH_0" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;" bgcolor="#cccccc">
 	        					<input id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" type="checkbox">
 	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_1" style="width: 10px; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
+	        				<th width="20" class="h5_center" id="BoardList_TH_1" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
 	        					중요
 	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_2" style="width: 10px; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
+	        				<th width="20" class="h5_center" id="BoardList_TH_2" style="text-align:center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
 	        					첨부
 	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_3" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
+	        				<th width="20" class="h5_center" id="BoardList_TH_3" style="text-align:center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
 	        					상태
 	        				</th>
-	        				<th width="30" class="h5_center" id="BoardList_TH_4" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;" writerindex="4">
+	        				<th width="400" class="h5_center" id="BoardList_TH_4" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;" writerindex="4">
 	        					제목
 	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_5" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
+	        				<th width="20" class="h5_center" id="BoardList_TH_5" style="overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
 	        					작성자
 	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_6" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
+	        				<th width="50" class="h5_center" id="BoardList_TH_6" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
 	        					작성일
 	        				</th>
-	        				<th width="10" class="h5_center" id="BoardList_TH_7" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
+	        				<th width="20" class="h5_center" id="BoardList_TH_7" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
 	        					확인
 	        				</th>
-	        				<th width="20" class="h5_center" id="BoardList_TH_8" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
+	        				<th width="50" class="h5_center" id="BoardList_TH_8" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; -ms-text-overflow: ellipsis;">
 	        					확인일
 	        				</th>
 	        				</tr>
 	        			</thead>
 	        			<tbody style="background-color: rgb(255, 255, 255);">
-	        			<c:forEach var="item" items="${list}">
+	        			<c:forEach var="item" items="${list}" varStatus="status">
 	        				<tr id="BoardList_TR_0" style="cursor: pointer; background-color: rgb(255, 255, 255);" DATA1="{9716dd3d-09b9-6b24-4621-598be6cabfae}" DATA2="{ee093f1b-364c-4f65-84c6-30fba5bd3362}" selected="false" DATA3="kkk" DATA4="0" DATA5="0" DATA6="" DATA7="N" DATA8="1" DATA9="" DATA10="5" DATA11="0">
 	        				
 	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">
-	        						<input id="{ee093f1b-364c-4f65-84c6-30fba5bd3362},kkk;" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;" type="checkbox">
+	        						<input id="{ee093f1b-364c-4f65-84c6-30fba5bd3362},kkk;" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;" type="checkbox" value="${item.circularId}">
 	        					</td>
-	        					<td id="circularId" style="text-align: left; overflow: hidden; display:none;">
-	        						${item.circularId }
+	        					<td id="circularId"  style="text-align: left; overflow: hidden; display:none;" onclick="ItemRead_onclick(this)">
+	        						${item.circularId}
 	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
+	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.importance == '0' ? '일반' : '중요'}
 	        					</td>
-	        					<td style="margin: 0px; padding: 0px; width: 80%; text-align: left; overflow: hidden; font-weight: bold; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
+	        					<td style="margin: 0px; padding: 0px; width: 80%; text-align: center; overflow: hidden; font-weight: bold; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.hasFile == '0' ? ' ' : "<img src='/images/newAttach.gif'>"}
 	        					</td>
-	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
+	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.status == '0' ? '진행중' : '종료'}
 	        					</td>
 	        					<td style="text-align: left; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
@@ -714,7 +717,7 @@
 	        						${item.regDate}
 	        					</td>
 	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
-	        						${item.confirmStatus == '0' ? '미확인' : '확인완료'}
+	        						${item.confirmStatus}
 	        					</td>
 	        					<td style="text-align: center; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;" onclick="ItemRead_onclick(this)">
 	        						${item.confirmDate}
@@ -722,7 +725,7 @@
 	        				</tr>
 	        			</tbody>
 	        			</c:forEach>
-	        		</table>
+	        		</table> --%>
 	             <div id="lvBoardList">
 	            </div> 
 	        </div>
