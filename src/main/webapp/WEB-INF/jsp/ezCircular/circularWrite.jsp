@@ -11,6 +11,8 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/schedule_write_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
@@ -37,7 +39,7 @@
 	    	var org_ownerID		= "${ownerID}";
 	    	var pnumVal			= "${pNum}";
 	    	var writerIDVal		= "${writerID}";
-	    	var cmd				= "${cmdStr}";
+	    	//var cmd				= "${cmdStr}";
 	    	var typeVal			= "${typeVal}";
 	    	var startDateVal	= "${startDateVal}";
 	    	var endDateVal		= "${endDateVal}";
@@ -61,6 +63,7 @@
 	    	var ItemArray = new Array();
 	    	var m_Arguments;
 	    	var msgRtn = "";
+	    	var AttachLimit = 5;
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -175,15 +178,15 @@
 		    }
 		    
 		    function DocumentComplete() {
-		        if (cmd == "mod") {
+		        /* if (cmd == "mod") {
 	    	        message.SetEditorContent(sigBody.innerHTML);
-	        	}
+	        	} */
 
-	        	if (cmd == "add") {
+	        	//if (cmd == "add") {
 		            if (msgRtn != "") {
 		                message.SetEditorContent(msgRtn);
 	    	        }
-		        }
+		        //}
 	    	}
 
 	    	function FieldsAvailable() {
@@ -304,6 +307,39 @@
 	            	}
 	        	}
 	    	}
+	    	
+	    	//파일업로드
+    	    function returnvalue(strXML) {
+	        var pAttachXml = loadXMLString(strXML);
+	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+	        var extFlag = false;        
+	        for (var i = 0; i < nodes.length; i++) {
+	            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+	                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
+	                    alert(strLang6);
+	                    return;
+	                }
+	                /* if (document.getElementById('mode').value == "PHOTO")
+	                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
+	            }
+	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+	                extFlag = true;
+	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+	                alert(strLang8 + AttachLimit + "MB" + strLang9);
+	                return;
+	            }
+	            else {
+	                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
+	            }
+	        }
+	        if (extFlag)
+	            alert(strLang54);
+	
+	        if (dadiframe.document.getElementById("lstAttachLink") == null)
+	            setTimeout(function () { AttachFileInfo(strXML); }, 500);
+	        else
+	            AttachFileInfo(strXML);
+	    }
 
 		</script>
 	</head>
@@ -424,7 +460,7 @@
   			</tr>
   			<tr>
   				<td>
-  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
+  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do"></iframe>
   				</td>
   			</tr>
   			<tr style="display: none">

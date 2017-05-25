@@ -1,17 +1,18 @@
 package egovframework.ezEKP.ezCircular.web;
 
-import java.lang.reflect.Field;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.mail.Folder;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,12 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.w3c.dom.Document;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
@@ -36,14 +38,12 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller
-public class EzCircularController {
+public class EzCircularController extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzCircularController.class);
 	
@@ -747,4 +747,84 @@ public class EzCircularController {
 		
 		logger.debug("confirmStatus ended");
 	}
+	
+	/**
+	 * 회람판작성 > 첨부파일 업로드
+	 */
+	@RequestMapping(value = "/ezCircular/uploadItemAttach.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String uploadItemAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
+		
+		logger.debug("============ uploadScheduleAttach started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
+		int cnt = multiFile.size();
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String[] pFileName = new String[cnt];
+        Long[] fileSize = new Long[cnt];        
+        String[] resultUpload = new String[cnt];
+        String[] sGUID = new String[cnt];
+        String[] pUploadSN = new String[cnt];
+        
+        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
+
+        for (int i = 0; i < cnt; i++) {
+            resultUpload[i] = "false";
+            sGUID[i] = UUID.randomUUID().toString();
+            pUploadSN[i] = "{" + sGUID[i] + "}";
+        }
+
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
+            for (int i = 0; i < cnt; i++) {
+                String _pFileName = multiFile.get(i).getOriginalFilename();
+                if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+                }
+                pFileName[i] = _pFileName;
+            }
+        }
+
+        for (int i = 0; i < cnt; i++) {
+            pFileName[i] = pFileName[i].replace("+", "%2b");
+            pFileName[i] = pFileName[i].replace(";", "%3b");
+        }
+        
+        String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
+
+        pDirPath = realPath + pDirPath;
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+        File file = new File(pDirPath + "uploadFile");
+
+        if (!file.exists()) {
+        	file.mkdir();        
+        }
+
+        StringBuffer strXML = new StringBuffer();
+        strXML.append("<ROOT><NODES>");
+        
+        for (int i = 0; i < cnt; i++) {        	
+        	fileSize[i] = multiFile.get(i).getSize();
+            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+            String newFileName = pUploadSN[i] + "." + extend;
+            
+            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
+				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[denied]]></DATA3>");
+            } else {
+				writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "uploadFile");
+				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
+            }
+        }
+        strXML.append("</NODES></ROOT>");
+        
+        return strXML.toString();
+    }
 }

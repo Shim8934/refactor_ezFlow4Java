@@ -1430,13 +1430,14 @@ function rtrim(parm_str) {
 }
 
 function setAttachFileInfo(strXML) {
+alert(strXML);
     if (strXML == "ERROR") {
         alert(strLang28);
         return;
     }
     var xml = loadXMLString(strXML);
 
-    try {
+    //try {
         var strAttach = "";
         strPreViewAttach = "";
         var listtable;
@@ -1492,8 +1493,8 @@ function setAttachFileInfo(strXML) {
         }
         if (extCheck)
             alert(strLang267);
-    }
-    catch (e) { alert("returnvalue :: " + e.description); }
+    //}
+    /*catch (e) { alert("returnvalue :: " + e.description); }*/
 }
 
 function GetEncodeTextNew(pUrl) {

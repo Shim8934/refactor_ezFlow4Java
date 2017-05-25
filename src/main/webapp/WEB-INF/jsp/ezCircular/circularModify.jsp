@@ -175,15 +175,15 @@
 		    }
 		    
 		    function DocumentComplete() {
-		        if (cmd == "mod") {
+		        //if (cmd == "mod") {
 	    	        message.SetEditorContent(sigBody.innerHTML);
-	        	}
+	        	//}
 
-	        	if (cmd == "add") {
+	        	/* if (cmd == "add") {
 		            if (msgRtn != "") {
 		                message.SetEditorContent(msgRtn);
 	    	        }
-		        }
+		        } */
 	    	}
 
 	    	function FieldsAvailable() {

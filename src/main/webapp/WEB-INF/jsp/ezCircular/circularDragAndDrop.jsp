@@ -126,9 +126,9 @@
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
-		        window.parent.returnvalue(xhr.responseText);
+		        window.parent.setAttachFileInfo(xhr.responseText);	
 		        
-		        var strRet = "";
+		        /* var strRet = "";
 		        var pBoardID = window.parent.pBoardID;
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        
@@ -140,7 +140,7 @@
 		                strRet += "tempUploadFile/" + filepath + "|";
 		            }
 		        }
-		        window.parent.attachxml = strRet;
+		        window.parent.attachxml = strRet; */
 		        isfileup = false;
 		        
 		        if (CrossYN()) {
@@ -241,7 +241,7 @@
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
 		        xhr.addEventListener("abort", uploadCanceled, false);
-		        xhr.open("POST", "/ezBoard/uploadItemAttach.do");
+		        xhr.open("POST", "/ezCircular/uploadItemAttach.do");
 		        xhr.send(fd);
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
