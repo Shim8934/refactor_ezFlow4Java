@@ -211,8 +211,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 			}
 		}
 		
+		logger.debug("receiverLength :"+receiverLength);
+		logger.debug("listSize : "+list.size());
+		
+		deleteCircularUser(circularID, tenantID);
 		for (int i=0; i<receiverLength; i++) {
-			deleteCircularUser(circularID, tenantID);
 			insertCircularUser(circularUserId, circularID, list.get(i).getMemberId(), list.get(i).getMemberName(), list.get(i).getMemberName2(), status, confirmDate, updateStatus, tenantID);
 		}
 	}

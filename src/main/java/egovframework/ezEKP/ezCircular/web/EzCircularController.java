@@ -688,7 +688,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("receiverIDs : "+receiverIDs);
 		logger.debug("receiverList : "+receiverList);
 		
-		int receiverLength = receiverIDs.split(",").length;
+		int receiverLength = receiverList.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
 		
 		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID,updateStatus,circularUserId,circularListVO.getMemberName(),circularListVO.getMemberName2(),circularListVO.getStatus(),confirmDate,circularListVO.getContent());
