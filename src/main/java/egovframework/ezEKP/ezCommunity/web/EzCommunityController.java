@@ -1802,24 +1802,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * ckeditor 호출함수
-	 */
-	@RequestMapping(value = "/ezCommunity/ckEditor.do")
-	public String ckEditor(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
-		String pMode = "";
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		if(request.getParameter("DraftFlag") != null){
-			pMode = request.getParameter("DraftFlag");
-		}
-
-		model.addAttribute("userInfo",userInfo);
-		model.addAttribute("pMode", pMode);
-		
-		return "ezCommunity/CKEditor";
-	}
-	
-	/**
 	 * 알림마당 삭제 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/bbsDelOk.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
@@ -1841,7 +1823,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityCBoardVO board = ezCommunityService.bbsDelOkGet(bName, itemNo, code, userInfo.getTenantId());
 		
-//		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			logger.debug("bbsDelOk ended.");
 			
