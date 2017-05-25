@@ -6,26 +6,25 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     	<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-	 		$(document).ready(function() {	 		
-		 	var HListUser = $('#HListUser option:selected').val();
-		 	$("#HListUser").val("<c:out value="${boardListConfig.previewHList}"/>").attr("selected", "selected");
+// 	 		$(document).ready(function() {	 		
+// 		 	var HListUser = $('#HListUser option:selected').val();
+// 		 	$("#HListUser").val("<c:out value="${boardListConfig.previewHList}"/>").attr("selected", "selected");
 		 
-		 	var WListUser = $('#WListUser option:selected').val();
-		 	$("#WListUser").val("<c:out value="${boardListConfig.previewWList}"/>").attr("selected", "selected");
+// 		 	var WListUser = $('#WListUser option:selected').val();
+// 		 	$("#WListUser").val("<c:out value="${boardListConfig.previewWList}"/>").attr("selected", "selected");
 		 
-		 	var HPreUser = $('#HPreUser option:selected').val();
-		 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
+// 		 	var HPreUser = $('#HPreUser option:selected').val();
+// 		 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
 		 
-		 	var WPreUser = $('#WPreUser option:selected').val();
-		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	    
-		 		});
+// 		 	var WPreUser = $('#WPreUser option:selected').val();
+// 		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	    
+// 		 		});
 	 		
          	document.onselectstart = function () { return false; };
         	window.onload = function () {

@@ -3,7 +3,18 @@
 
 <sqlMap namespace="ezCircular">
 	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
+<<<<<<< Updated upstream
     <typeAlias alias="CircularListVO"                type="egovframework.ezEKP.ezCircular.vo.CircularListVO"/>
+=======
+	<typeAlias alias="CircularDeptVO"			type="egovframework.ezEKP.ezCircular.vo.CircularDeptVO"/>
+	
+	<resultMap class="CircularDeptVO" id="circularDeptVO">
+		<result property="circularBMId"		column="CIRCULARBMID"		columnIndex="1"/>
+		<result property="title"			column="TITLE"				columnIndex="2"/>
+		<result property="regDate"			column="REGDATE"			columnIndex="3"/>
+		<result property="memberName"		column="MEMBERNAME"			columnIndex="4"/>
+	</resultMap>
+>>>>>>> Stashed changes
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 		<![CDATA[
@@ -61,6 +72,7 @@
 			)
 		]]>
 	</insert>
+<<<<<<< Updated upstream
   
     <update id="EzCircularDAO.setCircularList_Config2_U" parameterClass="Map">
       <isEqual property="v_PREVIEWMODE" compareValue="OFF">
@@ -369,4 +381,96 @@
             TENANTID = #tenantID#
     ]]>
   </delete>
+=======
+	
+	<insert id="EzCircularDAO.set_circularDeptSave" parameterClass="CircularDeptVO">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_BM (
+				TITLE,		MEMBERID,		REGDATE,		TENANTID
+			)
+			VALUES (
+				#title#, #memberId#, #regDate#, #tenantId#
+			)
+		]]>
+	</insert>
+	
+	<select id="EzCircularDAO.getCircularBMId" resultClass="int">
+		<![CDATA[
+			SELECT LAST_INSERT_ID()
+		]]>
+	</select>
+	
+	<insert id="EzCircularDAO.set_circularMemberList" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_BMUSER (
+				CIRCULARBMID,		MEMBERID,		MEMBERNAME,		MEMBERNAME2,		TENANTID
+			)
+			select 
+				#v_CIRCULARBMID#, 
+				cn, 
+				displayname, 
+				displayname2, 
+				tenant_id
+			from tbl_usermaster
+			where cn = #v_MEMBERID#
+			and tenant_id = #v_TENANTID#
+		]]>
+	</insert>
+	
+	<select id="EzCircularDAO.getcircularDeptList" parameterClass="CircularDeptVO" resultMap="circularDeptVO">
+		<![CDATA[
+			SELECT
+				A.CIRCULARBMID,
+				A.TITLE,
+				A.REGDATE,
+				concat ((select membername FROM tbl_circular_bmuser where circularBMId = A.CIRCULARBMID ORDER BY circularBMUserId limit 1),'/',
+				(select count(*) - 1 from tbl_circular_bmuser where circularBMId = A.CIRCULARBMID )) memberName
+			FROM
+				TBL_CIRCULAR_BM A
+			WHERE
+				A.MEMBERID = #memberId#
+			AND
+				A.TENANTID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.modify_circularDept" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT
+				GROUP_CONCAT(membername ORDER BY circularBMUserId separator ', ')
+			FROM
+				TBL_CIRCULAR_BMUSER
+			WHERE
+				CIRCULARBMID = #v_CIRCULARBMID#
+			AND
+				TENANTID = #v_TENANTID#
+		]]>
+	</select>
+	
+	<delete id="EzCircularDAO.circularDeptDel" parameterClass="CircularDeptVO">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_BM
+			WHERE
+				CIRCULARBMID = #circularBMId#
+			AND
+				TENANTID = #tenantId#
+		]]>
+	</delete>
+	
+	<update id="EzCircularDAO.update_circularDept" parameterClass="CircularDeptVO">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_BM
+			SET
+				TITLE = #title#
+			WHERE
+				CIRCULARBMID = #circularBMId#
+			AND
+				TENANTID = #tenantId#
+			AND
+				MEMBERID = #memberId#
+		]]>
+	</update>
+>>>>>>> Stashed changes
 </sqlMap>

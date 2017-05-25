@@ -39,7 +39,7 @@
                     document.getElementById("BoardEnv_ifrm").src = "/ezCircular/circularGeneral.do";
                     break;
                 case "BoardEnv_div2":
-                    document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardFavorite.do";
+                    document.getElementById("BoardEnv_ifrm").src = "/ezCircular/circularDeptConfig.do";
                     break;
             }
         }

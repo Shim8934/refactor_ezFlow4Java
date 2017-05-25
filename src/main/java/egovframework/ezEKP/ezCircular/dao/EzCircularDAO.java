@@ -1,13 +1,20 @@
 package egovframework.ezEKP.ezCircular.dao;
 
+<<<<<<< Updated upstream
 import java.util.HashMap;
+=======
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+<<<<<<< Updated upstream
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
+=======
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
+>>>>>>> Stashed changes
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCircularDAO")
@@ -34,6 +41,7 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public String getCircularConfig(Map<String, Object> map) throws Exception {
 		return (String) select("EzCircularDAO.getCircularConfig", map);
 	}
+<<<<<<< Updated upstream
 	
 	public int getCircularListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getCircularListCount", map);
@@ -49,12 +57,18 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	
 	public int getLastID() throws Exception {
 		return (int) select("EzCircularDAO.getLastID");
+=======
+
+	public void setCircularList_Config_U(CircularConfigVO circularConfigVO) throws Exception {
+		update("EzCircularDAO.setCircularList_Config_U", circularConfigVO);
+>>>>>>> Stashed changes
 	}
 
-	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) {
+	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) throws Exception {
 		insert("EzCircularDAO.setCircularList_Config_I", circularConfigVO);
 	}
 
+<<<<<<< Updated upstream
 	public void setCircularList_Config2_I(Map<String, Object> map) throws Exception{
 		insert("EzCircularDAO.setCircularList_Config2_I", map);
 	}
@@ -112,4 +126,35 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	}
 	
 	
+=======
+	public void set_circularDeptSave(CircularDeptVO circularDeptVO) throws Exception {
+		insert("EzCircularDAO.set_circularDeptSave", circularDeptVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO) throws Exception {
+		return (List<CircularDeptVO>) list("EzCircularDAO.getcircularDeptList", circularDeptVO);
+	}
+
+	public void circularDeptDel(CircularDeptVO circularDeptVO) throws Exception {
+		delete("EzCircularDAO.circularDeptDel", circularDeptVO);
+	}
+
+	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {
+		update("EzCircularDAO.update_circularDept", circularDeptVO);
+	}
+
+	public int getCircularBMId() throws Exception {
+		return (int) select("EzCircularDAO.getCircularBMId");
+	}
+
+	public void set_circularMemberList(Map<String, Object> map) {
+		insert("EzCircularDAO.set_circularMemberList", map);
+	}
+
+	public String modify_circularDept(Map<String, Object> map) {
+		return (String) select("EzCircularDAO.modify_circularDept", map);
+	}
+
+>>>>>>> Stashed changes
 }

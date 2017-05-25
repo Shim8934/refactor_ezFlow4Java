@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,13 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+<<<<<<< Updated upstream
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.let.user.login.vo.LoginVO;
+=======
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
+import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
+>>>>>>> Stashed changes
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCircularService")
@@ -41,13 +47,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
 		String memberId = circularConfigVO.getMemberId();
 		int tenantId = circularConfigVO.getTenantId();
-		
-		map.put("v_MEMBERID", memberId);
-		map.put("v_TENANTID", tenantId);
 		
 		CircularConfigVO circularListConfig = getCircularList_Config(memberId, tenantId);
 				
@@ -57,6 +58,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			ezCircularDAO.setCircularList_Config_I(circularConfigVO);
 		}
 	}
+<<<<<<< Updated upstream
 	
 	@Override
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception {
@@ -267,4 +269,62 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.updateStatusUser(map);
 	}
 	
+=======
+
+	@Override
+	public void set_circularDeptSave(CircularDeptVO circularDeptVO, String[] memberListStr) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+				
+		ezCircularDAO.set_circularDeptSave(circularDeptVO);
+		
+		int tenantId = circularDeptVO.getTenantId();
+		int circularBMId = ezCircularDAO.getCircularBMId(); // CircularBMId 값 가져옴
+		
+		for (int i=0; i<memberListStr.length; i++) {
+			String memberStr = memberListStr[i].trim();
+			
+			map.put("v_CIRCULARBMID", circularBMId);
+			map.put("v_MEMBERID", memberStr);
+			map.put("v_TENANTID", tenantId);			
+			
+			ezCircularDAO.set_circularMemberList(map);
+		}	
+	}
+
+	@Override
+	public String getcircularDeptList(CircularDeptVO circularDeptVO) throws Exception {
+		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(circularDeptVO);
+		
+		StringBuilder sb = new StringBuilder("<DATA>");
+		
+		for (int i=0; i<list.size(); i++) {
+			CircularDeptVO vo = list.get(i);
+			sb.append(commonUtil.getQueryResult(vo));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public void circularDeptDel(CircularDeptVO circularDeptVO) throws Exception {
+		ezCircularDAO.circularDeptDel(circularDeptVO);
+	}
+
+	@Override
+	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {
+		ezCircularDAO.update_circularDept(circularDeptVO);
+	}
+
+	@Override
+	public String circularDeptModify(int circularBMId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CIRCULARBMID", circularBMId);
+		map.put("v_TENANTID", tenantId);
+		
+		return ezCircularDAO.modify_circularDept(map);
+	}
+
+>>>>>>> Stashed changes
 }

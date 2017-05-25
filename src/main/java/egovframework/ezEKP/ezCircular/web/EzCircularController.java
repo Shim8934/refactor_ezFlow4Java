@@ -1,7 +1,12 @@
 package egovframework.ezEKP.ezCircular.web;
 
+<<<<<<< Updated upstream
 import java.io.File;
 import java.util.HashMap;
+=======
+import java.util.ArrayList;
+import java.util.Arrays;
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,18 +27,28 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+<<<<<<< Updated upstream
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+=======
+>>>>>>> Stashed changes
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
+<<<<<<< Updated upstream
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
+=======
+import egovframework.ezEKP.ezCircular.service.EzCircularService;
+import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularDeptUserVO;
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
+>>>>>>> Stashed changes
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -107,7 +122,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezCircular/circularLeft.do")
 	public String circularLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		
-		logger.debug("showMailLeft started.");
+		logger.debug("circularLeft started.");
 		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
@@ -239,10 +254,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		model.addAttribute("funCode", funCode);
 		
-		logger.debug("showMailLeft ended.");
-		
-		//return "ezEmail/mailLeft";
-		
+		logger.debug("circularLeft ended.");
+
 		return "/ezCircular/circularLeft";
 	}
 	
@@ -296,66 +309,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 작성분 호출 Method
-	 */
-	@RequestMapping(value = "/ezCircular/circular2.do")
-	public String circular2(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		
-		logger.debug("Circular2 started");
-		
-		
-		
-		logger.debug("Circular2 ended");
-		
-		return "/ezCircular/circular2";
-	}
-	
-	/**
-	 * 휴지통 화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezCircular/circular3.do")
-	public String circular3(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		
-		logger.debug("Circular3 started");
-		
-		
-		
-		logger.debug("Circular3 ended");
-		
-		return "/ezCircular/circular3";
-	}
-	
-	/**
-	 * 임시저장 화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezCircular/circular4.do")
-	public String circular4(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		
-		logger.debug("Circular4 started");
-		
-		
-		
-		logger.debug("Circular4 ended");
-		
-		return "/ezCircular/circular4";
-	}
-	
-	/**
-	 * 확인완료 화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezCircular/circular5.do")
-	public String circular5(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		
-		logger.debug("Circular5 started");
-		
-		
-		
-		logger.debug("Circular5 ended");
-		
-		return "/ezCircular/circular5";
-	}
-	
-	/**
 	 * 환경설정 화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularConfig.do")
@@ -370,6 +323,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		return "/ezCircular/circularConfig";
 	}
 	
+	/**
+	 * 회람판 환경설정 Method
+	 */
 	@RequestMapping(value = "/ezCircular/circularGeneral.do")
 	public String circuralGeneral(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model) throws Exception {
 		
@@ -396,6 +352,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		return "/ezCircular/circularGeneral";
 	}
 	
+	/**
+	 * 회람판 환경설정 저장 Method
+	 */
 	@RequestMapping(value = "/ezCircular/circular_generallist_save.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circular_generallist_save(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
@@ -417,6 +376,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circular_generallist_save ended");
 	}
 	
+<<<<<<< Updated upstream
 	/**
 	 * 회람판 리스트설정셋팅 실행 Method
 	 */
@@ -827,4 +787,135 @@ public class EzCircularController extends EgovFileMngUtil {
         
         return strXML.toString();
     }
+=======
+	@RequestMapping(value = "/ezCircular/circularDeptConfig.do")
+	public String circularDeptConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, Model model) throws Exception {
+		
+		logger.debug("circularDeptConfig started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		logger.debug("circularDeptConfig ended");
+		
+		return "/ezCircular/circularDeptConfig";
+	}
+	
+	/**
+	 * 회람처 등록 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularDeptadd.do")
+	public String circularDeptadd() {
+		
+		logger.debug("circularDeptadd started");
+		
+		logger.debug("circularDeptadd ended");
+		
+		return "/ezCircular/circularDeptadd";
+	}
+	
+	/**
+	 * 회람처 저장 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularDeptSave.do")
+	@ResponseBody
+	public void circularDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("circularDeptSave started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		Integer CircularBMId = circularDeptVO.getCircularBMId();
+		
+		circularDeptVO.setMemberId(userInfo.getId());
+		circularDeptVO.setRegDate(commonUtil.getTodayUTCTime(""));
+		circularDeptVO.setTenantId(userInfo.getTenantId());
+		
+		String[] memberListStr = request.getParameterValues("memberListStr[]");
+		
+		if (CircularBMId != 0) {
+			ezCircularService.update_circularDept(circularDeptVO);
+		} else {
+			ezCircularService.set_circularDeptSave(circularDeptVO, memberListStr);
+		}
+
+		logger.debug("circularDeptSave ended");
+	}
+	
+	/**
+	 * 회람처 조직도 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularSelectAttendant.do")
+	public String circularSelectAttendant(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, Model model) throws Exception {
+		
+		logger.debug("circularSelectAttendant started");
+		
+		
+		
+		logger.debug("circularSelectAttendant ended");
+	
+		return "/ezCircular/circularSelectAttendant";
+	}
+	
+	/**
+	 * 회람처 목록 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/getcircularDeptList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getcircularDeptList(@CookieValue("loginCookie") String loginCookie, CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
+		
+		logger.debug("circularGetList started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		circularDeptVO.setTenantId(userInfo.getTenantId());
+		circularDeptVO.setMemberId(userInfo.getId());
+		
+		String result = ezCircularService.getcircularDeptList(circularDeptVO);
+		
+		logger.debug("circularGetList ended");
+		
+		return result;
+	}
+	
+	/**
+	 * 회람처 목록 수정 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularDeptModify.do")
+	public String circularDeptModify(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularDeptVO circularDeptVO, Model model) throws Exception {
+		
+		logger.debug("circularDeptModify started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String title = request.getParameter("title");
+		int circularBMId = Integer.parseInt(request.getParameter("id"));
+		int tenantId = userInfo.getTenantId();
+		
+		String memberList = ezCircularService.circularDeptModify(circularBMId, tenantId);
+		
+		model.addAttribute("circularBMId", circularBMId);
+		model.addAttribute("title", title);
+		model.addAttribute("memberList", memberList);
+		
+		logger.debug("circularDeptModify ended");
+	
+		return "/ezCircular/circularDeptadd";
+	}
+	
+	/**
+	 * 회람처 삭제 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularDeptDel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void circularDeptDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularDeptVO circularDeptVO) throws Exception {
+		
+		logger.debug("circularDeptDel started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		ezCircularService.circularDeptDel(circularDeptVO);
+		
+		logger.debug("circularDeptDel ended");
+	}
+	
+>>>>>>> Stashed changes
 }
