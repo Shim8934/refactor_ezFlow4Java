@@ -11,6 +11,8 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/schedule_write_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
@@ -86,60 +88,8 @@
 	            
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${listUser}";
-	        	
-		        var resultXML;
-	    	    var xmlHttp = createXMLHttpRequest();
-	        	var xmlpara = createXmlDom();
-	        	var objNode;
 
-	        	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	        	createNodeAndInsertText(xmlpara, objNode, "NUM", org_num);
-	        	createNodeAndInsertText(xmlpara, objNode, "OWNERID", org_ownerID);
-	        	createNodeAndInsertText(xmlpara, objNode, "GROUPID", "");
-	        	createNodeAndInsertText(xmlpara, objNode, "companyID", org_companyID);
-
-	        	if (document.getElementById("iReFlag").value == "1") {
-	            	if (org_num != "" && org_ownerID != "") {
-	                	xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=get", false);
-	                	xmlHttp.send(xmlpara);
-
-	                	resultXML = xmlHttp.responseXML;
-
-	                	if (resultXML.xml != "") {
-	                    	g_data["recurrence"] = getXmlString(resultXML);
-	                	}
-	            	}
-
-	            	show_repetition_info();
-	        	}
-
-		        if (brdName != "" && resID  != "") {
-		            ItemArray[0] = Array("${resID}");
-	    	        ItemArray[1] = Array("${brdName}");
-
-	        	    document.getElementById('itemList').innerHTML = "";
-	            	document.getElementById('itemList').innerHTML = "${brdName}";
-	        	}
-		        
-	        	if (cmd == "add") {
-	            	var xmlHttp2 = createXMLHttpRequest();
-	            	var xmlDoc2 = createXmlDom();
-	
-		            createNodeInsert(xmlDoc2, objNode, "PARAMETER");
-	    	        createNodeAndInsertText(xmlDoc2, objNode, "RESID", "${resID}");
-
-	        	    xmlHttp2.open("POST", "/ezResource/scheduleGetForm.do", false);
-	            	xmlHttp2.send(xmlDoc2);
-
-	            	result = xmlHttp2.responseText;
-
-	            	if (result != "FALSE") {
-	                	msgRtn = result;
-	                	message.SetEditorContent(msgRtn);
-	            	}
-	        	}
-
-	        	if (m_Arguments != undefined) {
+	    /*     	if (m_Arguments != undefined) {
 	            	ItemArray[0] = m_Arguments[0];
 	            	ItemArray[1] = m_Arguments[1];
 
@@ -152,7 +102,7 @@
 	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i];
 		                }	
 		            }
-		        }
+		        } */
 		    }
 			
 		    window.onresize = function () {
@@ -244,37 +194,38 @@
 	        	}
 	        	DivPopUpHidden();
 	    	}
-	    	//회람저장 눌렀을 시
-        	var content = message.GetEditorContent();
-			var option = 0;
-			
-			//댓글기능 사용할때
-			$(':checkbox[id=optionRefly]:checked').each(function(){
-				option = 0;	
-			});
-			
-			//메일공지 사용할때
-			$(':checkbox[id=optionMail]:checked').each(function(){
-				option = 1;	
-			});
-			
-			//댓글기능, 메일공지 둘 다 사용할 때
-			if ($(':checkbox[name=chkList]:checked').length == 2) {
-				option = 2;
-			}
 	    	
 	    	function btn_Save() {
+		    	//회람저장 눌렀을 시
+	        	var content = message.GetEditorContent();
+				var option = 0;
+				
+				//댓글기능 사용할때
+				$(':checkbox[id=optionRefly]:checked').each(function(){
+					option = 0;	
+				});
+				
+				//메일공지 사용할때
+				$(':checkbox[id=optionMail]:checked').each(function(){
+					option = 1;	
+				});
+				
+				//댓글기능, 메일공지 둘 다 사용할 때
+				if ($(':checkbox[name=chkList]:checked').length == 2) {
+					option = 2;
+				}
+				
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
 	                type : 'POST',
 	                dataType : 'text',
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
-	                			//option : document.getElementById("option"),
 	                			option : option,
 	                			receiverList : document.getElementById("receiverlist").innerHTML,
 	                			receiverID : document.getElementById("receiverID").innerHTML,
-	                			circularId : "${circularID}"
+	                			circularId : "${circularID}",
+	                			content : content
 	                },  
 	                cache: false,
 	                success: function(data) {	   
@@ -376,16 +327,16 @@
 	       					<td style="width:160px" colspan="3">
 								<c:choose>
 		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="display_time_Unshow()" />메일공지 사용
+		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />댓글기능 사용
+		                				<input type="checkbox" id="optionMail" name="chkList" onClick="display_time_Unshow()" />메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="option" onClick="display_time_Unshow()" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                			<input type="checkbox" id="optionRefly" name="chkList" onClick="display_time_Unshow()" />댓글기능 사용
+		                				<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
-										<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />댓글기능 사용
+										<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>   									
 	         				</td>
@@ -408,7 +359,7 @@
 	           				</td>
 						</tr>
 						<tr>
-	         				<!-- <th>회람자목록</th> -->
+	         				<th>회람자목록</th>
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>

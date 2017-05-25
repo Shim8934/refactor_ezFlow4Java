@@ -147,24 +147,6 @@
 	    	}
 
 	    	function btn_Save() {
-	        /* 	var check = true;
-	        	if (ItemArray[0].length == 0) {
-	            	alert(strLang252);
-	            	return;
-	        	}
-	        	for (var i = 0 ; i < ItemArray[0].length ; i++) {
-	            	if (DupCheck(ItemArray[0][i]) == false) {
-	                	alert("[" + ItemArray[1][i] + "] " + strLang248);
-	                	check = false;
-	            	}
-	        	}
-
-	        	if (check == true) {
-	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
-		                SaveSchedule_onClick("${cmdStr}", ItemArray[0][i]);
-		            }
-	    	    }
-	        	return check; */
 	        	//회람저장 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;

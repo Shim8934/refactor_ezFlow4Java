@@ -692,12 +692,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("");
 		
-		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId());
-		
-		for (int i=0; i<receiverLength; i++) {
-			ezCircularService.deleteCircularUser(circularListVO.getCircularId(), userInfo.getTenantId());
-			ezCircularService.insertCircularUser(circularUserId, circularListVO.getCircularId(), receiverID[i], userInfo.getDisplayName1(), userInfo.getDisplayName2(), circularListVO.getStatus(), confirmDate, updateStatus, userInfo.getTenantId());
-		}
+		logger.debug("content : "+circularListVO.getContent());
+		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID,updateStatus,circularUserId,circularListVO.getMemberName(),circularListVO.getMemberName2(),circularListVO.getStatus(),confirmDate,circularListVO.getContent());
 
 		logger.debug("saveModifyCircular ended");
 	}

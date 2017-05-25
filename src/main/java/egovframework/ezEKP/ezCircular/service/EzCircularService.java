@@ -38,7 +38,7 @@ public interface EzCircularService {
 	
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception;
 	
-	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID) throws Exception;
+	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID,  int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate,  String content) throws Exception;
 	
 	public void updateStatus(int status, int circularID, int tenantID) throws Exception;
 	

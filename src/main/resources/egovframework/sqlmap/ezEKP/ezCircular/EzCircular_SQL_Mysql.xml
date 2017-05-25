@@ -320,7 +320,8 @@
         SET
             TITLE = #title#,
             IMPORTANCE = #importance#,
-            OPTION = #option#
+            OPTION = #option#,
+            CONTENT = #content#
         WHERE 
             CIRCULARID = #circularID#
         AND
