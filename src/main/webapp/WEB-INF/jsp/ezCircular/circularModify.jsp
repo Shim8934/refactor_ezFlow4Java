@@ -84,15 +84,9 @@
 	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
 	        	} */
 	            
-	        	if (cmd == "mod") {
-	            	document.getElementById("importance1").value = "${importance}";
-	        	}
-	        	if (document.getElementById("AllDay").checked) {
-		            document.getElementById("Stimepicker").style.display = "none";
-		            document.getElementById("Etimepicker").style.display = "none";
-	    	        onck = "0";
-	        	}
-	            
+	        	document.getElementById("title").value = "${result.title}";
+	        	document.getElementById("receiverlist").innerHTML = "${listUser}";
+	        	
 		        var resultXML;
 	    	    var xmlHttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();
@@ -250,42 +244,41 @@
 	        	}
 	        	DivPopUpHidden();
 	    	}
-
+	    	//회람저장 눌렀을 시
+        	var content = message.GetEditorContent();
+			var option = 0;
+			
+			//댓글기능 사용할때
+			$(':checkbox[id=optionRefly]:checked').each(function(){
+				option = 0;	
+			});
+			
+			//메일공지 사용할때
+			$(':checkbox[id=optionMail]:checked').each(function(){
+				option = 1;	
+			});
+			
+			//댓글기능, 메일공지 둘 다 사용할 때
+			if ($(':checkbox[name=chkList]:checked').length == 2) {
+				option = 2;
+			}
+	    	
 	    	function btn_Save() {
-	        /* 	var check = true;
-	        	if (ItemArray[0].length == 0) {
-	            	alert(strLang252);
-	            	return;
-	        	}
-	        	for (var i = 0 ; i < ItemArray[0].length ; i++) {
-	            	if (DupCheck(ItemArray[0][i]) == false) {
-	                	alert("[" + ItemArray[1][i] + "] " + strLang248);
-	                	check = false;
-	            	}
-	        	}
-
-	        	if (check == true) {
-	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
-		                SaveSchedule_onClick("${cmdStr}", ItemArray[0][i]);
-		            }
-	    	    }
-	        	return check; */
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
 	                type : 'POST',
-	                dataType : 'json',
+	                dataType : 'text',
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			//option : document.getElementById("option"),
-	                			option : 0,
+	                			option : option,
 	                			receiverList : document.getElementById("receiverlist").innerHTML,
 	                			receiverID : document.getElementById("receiverID").innerHTML,
 	                			circularId : "${circularID}"
 	                },  
 	                cache: false,
 	                success: function(data) {	   
-	             	   console.log(data);
-	             	   //temp.text(data);
+	             	  window.close();
 	                }
 	 			});
 	    	}
@@ -305,10 +298,43 @@
 	            	}
 	        	}
 	    	}
+	    	
+	    	//파일업로드
+    	    function returnvalue(strXML) {
+	        var pAttachXml = loadXMLString(strXML);
+	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+	        var extFlag = false;        
+	        for (var i = 0; i < nodes.length; i++) {
+	            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+	                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
+	                    alert(strLang6);
+	                    return;
+	                }
+	                /* if (document.getElementById('mode').value == "PHOTO")
+	                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
+	            }
+	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+	                extFlag = true;
+	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+	                alert(strLang8 + AttachLimit + "MB" + strLang9);
+	                return;
+	            }
+	            else {
+	                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
+	            }
+	        }
+	        if (extFlag)
+	            alert(strLang54);
+	
+	        if (dadiframe.document.getElementById("lstAttachLink") == null)
+	            setTimeout(function () { AttachFileInfo(strXML); }, 500);
+	        else
+	            AttachFileInfo(strXML);
+	    }
 
 		</script>
 	</head>
-	<xmp id="sigBody" style="display: none;">${content}</xmp>
+	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -335,33 +361,33 @@
           					<th style="width:200px;">제목</th>
           					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
         				</tr>
-        				
-							
-						<tr id="tr_Recur" <c:if test="${reFlag ne '1'}">style="display: none"</c:if>>
-    						<th> <spring:message code="ezResource.t197"/></th>
-    						<td colspan="3"><span id="AllDayDisplay"></span>
-      							<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
-	      							<option value="1" <c:if test="${timeDisplay eq '1'}">selected</c:if>><spring:message code="ezResource.t198"/></option>
-									<option value="2" <c:if test="${timeDisplay eq '2'}">selected</c:if>><spring:message code="ezResource.t199"/></option>
-									<option value="3" <c:if test="${timeDisplay eq '3'}">selected</c:if>><spring:message code="ezResource.t200"/></option>
-									<option value="4" <c:if test="${timeDisplay eq '4'}">selected</c:if>><spring:message code="ezResource.t201"/></option> 
-      							</select>
-      			  			</td>
-  						</tr>
+						
 	        			<tr id="tr_STime" ${strDspMod1}>
 	          				<th> 중요도</th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<select id="importance" class="select">
-	          						<option value="0" <c:if test="${importance eq '0'}">selected</c:if>>일반</option>
-   									<option value="1" <c:if test="${importance eq '1'}">selected</c:if>>중요</option>
+	          						<option value="0" <c:if test="${result.importance eq '0'}">selected</c:if>>일반</option>
+   									<option value="1" <c:if test="${result.importance eq '1'}">selected</c:if>>중요</option>
    								</select>	
 	          				</td>
 	        			</tr>
 				        <tr>
 	       					<th> 옵션</th>
 	       					<td style="width:160px" colspan="3">
-								<input type="checkbox" id="option" <c:if test="${allDay eq '0'}">checked</c:if> onClick="display_time_Unshow()" />댓글기능 사용
-								<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1'}">checked</c:if> onClick="display_time_Unshow()" />메일공지 사용   									
+								<c:choose>
+		                			<c:when test="${result.option eq '0'}">
+		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="display_time_Unshow()" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '1'}">
+		                			<input type="checkbox" id="option" onClick="display_time_Unshow()" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                			</c:when>
+		                			<c:otherwise>
+		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                			</c:otherwise>
+		                		</c:choose>   									
 	         				</td>
        						<th style="display: none"> <spring:message code="ezResource.t217"/></th>
 		           			<td style="display: none"><input type="checkbox" style="display: none" id="PublicFlag" checked /><spring:message code="ezResource.t217"/></td>
@@ -372,14 +398,6 @@
 		             			</select>          
 		         			</td>
 			     		</tr>
-	       				<tr style="display: none">
-	         				<th>회람처</th>
-	         				<td colspan="3"><input type="text" id="loc" name="loc" value="${loc}" style="width: 100%" /></td>
-	       				</tr>
-	       				<tr style="display: none">
-	         				<td><input type="checkbox" id="alertCheck" d  /><spring:message code="ezResource.t223"/></td>
-	         				<td colspan="5">&nbsp;</td>
-	       				</tr>
         
 						<tr id="Span1">
 	           				<th>
@@ -390,7 +408,7 @@
 	           				</td>
 						</tr>
 						<tr>
-	         				<th>회람자목록</th>
+	         				<!-- <th>회람자목록</th> -->
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
@@ -402,25 +420,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-					<c:choose>
-						<c:when test="${editor eq 'TAGFREE'}">
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
-						</c:when>
-						<c:when test="${editor eq 'DEXT'}">
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/dextEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
-						</c:when>
-						<c:otherwise>
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
-						</c:otherwise>
-					</c:choose>
-	      			
-	      			<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
-       				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
-       				<input type="hidden" id="gresFlag" value="${gresFlag}" />
-       				<input type="hidden" id="num" value="${num}" />
-       				<input type="hidden" id="pnum" value="${pNum}" />
-       				<input type="hidden" id="ownerID" value="${ownerID}" />
-       				<input type="hidden" id="writerID" value="${writerID}" />
+					<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>
@@ -428,25 +428,6 @@
   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
   				</td>
   			</tr>
-  			<tr style="display: none">
-			    <td style="height:10px" class="pad1">
-			    	<table class="file" id="attachTable">
-			        	<tr>
-							<th> <spring:message code="ezResource.t227"/></th>
-							<td class="pos1">
-								<div id="attachedFile" style="display: none; background-c	olor: white; width:350px; height: 60px; overflow: auto"> </div>
-                  				<div id="divBody" style="background-color: white; width:350px; height: 60px; overflow: auto;"> </div>
-                  			</td>
-							
-							<c:if test="${typeVal ne 'Readonly'}">
-								<td style="width:75px" class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="AttachAdd_onClick()"><spring:message code="ezResource.t228"/></span></a><br>
-									<a class="imgbtn"><span  onClick="AttachDel_onClick()"><spring:message code="ezResource.t229"/></span></a>
-								</td>
-							</c:if>
-  						</tr>
-					</table>
-				</td>
-			</tr>
 		</table>
 		<div id="baseColor" style="background-color: #fff9e5; border-bottom: gray 1px inset; border-left: gray 1px inset; border-right: gray 1px inset; border-top: gray 1px inset;
 		display: none; position: absolute">

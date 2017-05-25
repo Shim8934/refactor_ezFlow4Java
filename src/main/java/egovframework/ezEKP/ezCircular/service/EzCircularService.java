@@ -14,6 +14,8 @@ public interface EzCircularService {
 	
 	public List<HashMap<String, Object>> getCircularMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 	
+	public List<CircularListVO> getCircularUserList(int circularID, int tenantID) throws Exception;
+	
 	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception;
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;

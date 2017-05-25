@@ -86,82 +86,7 @@
 	        	} else {
 	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
 	        	} */
-	            
-	        	if (cmd == "mod") {
-	            	document.getElementById("importance1").value = "${importance}";
-	        	}
-	        	if (document.getElementById("AllDay").checked) {
-		            document.getElementById("Stimepicker").style.display = "none";
-		            document.getElementById("Etimepicker").style.display = "none";
-	    	        onck = "0";
-	        	}
-	            
-		        var resultXML;
-	    	    var xmlHttp = createXMLHttpRequest();
-	        	var xmlpara = createXmlDom();
-	        	var objNode;
-
-	        	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	        	createNodeAndInsertText(xmlpara, objNode, "NUM", org_num);
-	        	createNodeAndInsertText(xmlpara, objNode, "OWNERID", org_ownerID);
-	        	createNodeAndInsertText(xmlpara, objNode, "GROUPID", "");
-	        	createNodeAndInsertText(xmlpara, objNode, "companyID", org_companyID);
-
-	        	if (document.getElementById("iReFlag").value == "1") {
-	            	if (org_num != "" && org_ownerID != "") {
-	                	xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=get", false);
-	                	xmlHttp.send(xmlpara);
-
-	                	resultXML = xmlHttp.responseXML;
-
-	                	if (resultXML.xml != "") {
-	                    	g_data["recurrence"] = getXmlString(resultXML);
-	                	}
-	            	}
-
-	            	show_repetition_info();
-	        	}
-
-		        if (brdName != "" && resID  != "") {
-		            ItemArray[0] = Array("${resID}");
-	    	        ItemArray[1] = Array("${brdName}");
-
-	        	    document.getElementById('itemList').innerHTML = "";
-	            	document.getElementById('itemList').innerHTML = "${brdName}";
-	        	}
-		        
-	        	if (cmd == "add") {
-	            	var xmlHttp2 = createXMLHttpRequest();
-	            	var xmlDoc2 = createXmlDom();
-	
-		            createNodeInsert(xmlDoc2, objNode, "PARAMETER");
-	    	        createNodeAndInsertText(xmlDoc2, objNode, "RESID", "${resID}");
-
-	        	    xmlHttp2.open("POST", "/ezResource/scheduleGetForm.do", false);
-	            	xmlHttp2.send(xmlDoc2);
-
-	            	result = xmlHttp2.responseText;
-
-	            	if (result != "FALSE") {
-	                	msgRtn = result;
-	                	message.SetEditorContent(msgRtn);
-	            	}
-	        	}
-
-	        	if (m_Arguments != undefined) {
-	            	ItemArray[0] = m_Arguments[0];
-	            	ItemArray[1] = m_Arguments[1];
-
-		            document.getElementById('itemList').innerHTML = "";
-
-		            for (var i = 0 ; i < ItemArray[0].length; i++) {
-	                	if ((i + 1) < ItemArray[0].length) {
-	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i] + " ,  ";
-	                	} else {
-	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i];
-		                }	
-		            }
-		        }
+	   
 		    }
 			
 		    window.onresize = function () {
@@ -178,15 +103,9 @@
 		    }
 		    
 		    function DocumentComplete() {
-		        /* if (cmd == "mod") {
-	    	        message.SetEditorContent(sigBody.innerHTML);
-	        	} */
-
-	        	//if (cmd == "add") {
-		            if (msgRtn != "") {
-		                message.SetEditorContent(msgRtn);
-	    	        }
-		        //}
+	            if (msgRtn != "") {
+	                message.SetEditorContent(msgRtn);
+    	        }
 	    	}
 
 	    	function FieldsAvailable() {
@@ -198,33 +117,6 @@
 		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    	    }
 	    	}	
-
-	    	function display_time_Unshow() {
-		        allday_chk = document.getElementById("AllDay").value;
-
-		        if (allday_chk == "on") {
-
-	    	        if (onck == "1") {
-	        	        document.getElementById("Stimepicker").style.display = "none";
-	            	    document.getElementById("Etimepicker").style.display = "none";
-	                	onck = "0";
-	                	return;
-	            	}
-
-	            	if (onck == "0") {
-		                document.getElementById("Stimepicker").style.display = "";
-		                document.getElementById("Etimepicker").style.display = "";
-	    	            onck = "1";
-	        	        return;
-	            	}
-	        	}
-
-	        	if (allday_chk == "") {
-		            document.getElementById("Stimepicker").style.display = "";
-		            document.getElementById("Etimepicker").style.display = "";
-	    	        onck = "1";
-	        	}
-		    }
 
 		    function keyword_onkeydown() {
 	    	    if (event.keyCode == 13) {
@@ -274,16 +166,34 @@
 	    	    }
 	        	return check; */
 	        	//회람저장 눌렀을 시
+	        	var content = message.GetEditorContent();
+				var option = 0;
+				
+				//댓글기능 사용할때
+				$(':checkbox[id=optionRefly]:checked').each(function(){
+					option = 0;	
+				});
+				
+				//메일공지 사용할때
+				$(':checkbox[id=optionMail]:checked').each(function(){
+					option = 1;	
+				});
+				
+				//댓글기능, 메일공지 둘 다 사용할 때
+				if ($(':checkbox[name=chkList]:checked').length == 2) {
+					option = 2;
+				}
+	        	
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	                type : 'POST',
 	                dataType : 'text',
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
-	                			//option : document.getElementById("option"),
-	                			option : 0,
+	                			option : option,
 	                			receiverList : document.getElementById("receiverlist").innerHTML,
-	                			receiverID : document.getElementById("receiverID").innerHTML
+	                			receiverID : document.getElementById("receiverID").innerHTML,
+	                			content : content
 	                },  
 	                cache: false,
 	                success: function(data) {	   
@@ -370,20 +280,8 @@
           					<th style="width:200px;">제목</th>
           					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
         				</tr>
-        				
-							
-						<tr id="tr_Recur" <c:if test="${reFlag ne '1'}">style="display: none"</c:if>>
-    						<th> <spring:message code="ezResource.t197"/></th>
-    						<td colspan="3"><span id="AllDayDisplay"></span>
-      							<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
-	      							<option value="1" <c:if test="${timeDisplay eq '1'}">selected</c:if>><spring:message code="ezResource.t198"/></option>
-									<option value="2" <c:if test="${timeDisplay eq '2'}">selected</c:if>><spring:message code="ezResource.t199"/></option>
-									<option value="3" <c:if test="${timeDisplay eq '3'}">selected</c:if>><spring:message code="ezResource.t200"/></option>
-									<option value="4" <c:if test="${timeDisplay eq '4'}">selected</c:if>><spring:message code="ezResource.t201"/></option> 
-      							</select>
-      			  			</td>
-  						</tr>
-	        			<tr id="tr_STime" ${strDspMod1}>
+						
+	        			<tr id="tr_STime">
 	          				<th> 중요도</th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<select id="importance" class="select">
@@ -395,8 +293,8 @@
 				        <tr>
 	       					<th> 옵션</th>
 	       					<td style="width:160px" colspan="3">
-								<input type="checkbox" id="option" <c:if test="${allDay eq '0'}">checked</c:if> onClick="display_time_Unshow()" />댓글기능 사용
-								<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1'}">checked</c:if> onClick="display_time_Unshow()" />메일공지 사용   									
+								<input type="checkbox" id="optionRefly" name="chkList" onClick="display_time_Unshow()" />댓글기능 사용
+								<input type="checkbox" id="optionMail" name="chkList" onClick="display_time_Unshow()" />메일공지 사용   									
 	         				</td>
        						<th style="display: none"> <spring:message code="ezResource.t217"/></th>
 		           			<td style="display: none"><input type="checkbox" style="display: none" id="PublicFlag" checked /><spring:message code="ezResource.t217"/></td>
@@ -407,14 +305,6 @@
 		             			</select>          
 		         			</td>
 			     		</tr>
-	       				<tr style="display: none">
-	         				<th>회람처</th>
-	         				<td colspan="3"><input type="text" id="loc" name="loc" value="${loc}" style="width: 100%" /></td>
-	       				</tr>
-	       				<tr style="display: none">
-	         				<td><input type="checkbox" id="alertCheck" d  /><spring:message code="ezResource.t223"/></td>
-	         				<td colspan="5">&nbsp;</td>
-	       				</tr>
         
 						<tr id="Span1">
 	           				<th rowspan="2">
@@ -437,25 +327,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-					<c:choose>
-						<c:when test="${editor eq 'TAGFREE'}">
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
-						</c:when>
-						<c:when test="${editor eq 'DEXT'}">
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/dextEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
-						</c:when>
-						<c:otherwise>
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
-						</c:otherwise>
-					</c:choose>
-	      			
-	      			<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
-       				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
-       				<input type="hidden" id="gresFlag" value="${gresFlag}" />
-       				<input type="hidden" id="num" value="${num}" />
-       				<input type="hidden" id="pnum" value="${pNum}" />
-       				<input type="hidden" id="ownerID" value="${ownerID}" />
-       				<input type="hidden" id="writerID" value="${writerID}" />
+		  			<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>
@@ -463,25 +335,6 @@
   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do"></iframe>
   				</td>
   			</tr>
-  			<tr style="display: none">
-			    <td style="height:10px" class="pad1">
-			    	<table class="file" id="attachTable">
-			        	<tr>
-							<th> <spring:message code="ezResource.t227"/></th>
-							<td class="pos1">
-								<div id="attachedFile" style="display: none; background-c	olor: white; width:350px; height: 60px; overflow: auto"> </div>
-                  				<div id="divBody" style="background-color: white; width:350px; height: 60px; overflow: auto;"> </div>
-                  			</td>
-							
-							<c:if test="${typeVal ne 'Readonly'}">
-								<td style="width:75px" class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="AttachAdd_onClick()"><spring:message code="ezResource.t228"/></span></a><br>
-									<a class="imgbtn"><span  onClick="AttachDel_onClick()"><spring:message code="ezResource.t229"/></span></a>
-								</td>
-							</c:if>
-  						</tr>
-					</table>
-				</td>
-			</tr>
 		</table>
 		<div id="baseColor" style="background-color: #fff9e5; border-bottom: gray 1px inset; border-left: gray 1px inset; border-right: gray 1px inset; border-top: gray 1px inset;
 		display: none; position: absolute">

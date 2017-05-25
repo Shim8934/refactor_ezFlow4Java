@@ -47,35 +47,13 @@
 	        var resID = "${resID}";
 	        
 	        window.onload = function () {
-	            document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
-
+	            //document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
+	            document.getElementById('itemList').innerHTML = "${listUser}";
+	            
 	            if (brdName != "" && resID != "") {
 	                ItemArray[0] = Array(resID);
 	                ItemArray[1] = Array(brdName);
-	                document.getElementById('itemList').innerHTML = "${brdName}";
-	            }
-	            var xmlHttp = createXMLHttpRequest();
-	            var xmlpara = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "NUM", org_num);
-	            createNodeAndInsertText(xmlpara, objNode, "OWNERID", org_ownerID);
-	            createNodeAndInsertText(xmlpara, objNode, "GROUPID", "");
-	            createNodeAndInsertText(xmlpara, objNode, "companyID", org_companyID);
-	            
-	            if (reFlagVal == "1") {
-	                if (org_num != "" && org_ownerID != "") {
-	                    xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=get", false);
-	                    xmlHttp.send(xmlpara);
-	                    resultXML = xmlHttp.responseXML;
-
-	                    if (resultXML != "") {
-	                        g_data["recurrence"] = getXmlString(resultXML);
-	                    }
-	                }
-	                show_repetition_info2();
-	            } else {
-	                document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
+	                //document.getElementById('itemList').innerHTML = "${brdName}";
 	            }
 	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
@@ -97,84 +75,6 @@
 	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
 	        	document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
 	        }
-	        
-		    function show_repetition_info2() {
-		        var repeatinfo = "" + strLang122 + "";
-		        xmlinDoc = createXmlDom();
-		        xmlinDoc.async = false;
-		        xmlinDoc = loadXMLString(g_data["recurrence"]);
-		        szType = getNodeText(SelectNodes(xmlinDoc, "recurrence/frequency")[0]);
-	
-		        switch (szType) {
-		            case "4":
-		                repeatinfo += "" + strLang123 + "";
-		                break;
-		            case "5":
-		                repeatinfo += "" + strLang124 + "";
-		                break;
-		            case "6":
-		                repeatinfo += "" + strLang97 + "";
-		                break;
-		            case "7":
-		                repeatinfo += "" + strLang98 + "";
-		                break;
-		        }
-		        repeatinfo += ", " + strLang125 + "";
-	
-		        if (allDayFlag != "1") {
-		            var reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
-		            var reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);
-		            var reStartHour = reStartDate.split(" ")[1].split(":")[0];
-		            var reEndHour = reEndDate.split(" ")[1].split(":")[0];
-	
-		            var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
-		            var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
-	
-		            if (Number(reStartHour) < 12) {
-		                repeatinfo += "" + strLang246 + " ";
-	
-		                if (Number(reStartHour) == 0)
-		                    reStartHour = 12;
-		            }
-		            else {
-		                repeatinfo += "" + strLang247 + " ";
-	
-		                if (Number(reStartHour) > 12)
-		                    reStartHour = Number(reStartHour) - 12;
-		            }
-	
-		            repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
-	
-		            if (Number(reEndHour) < 12) {
-		                repeatinfo += "" + strLang246 + " ";
-	
-		                if (Number(reEndHour) == 0)
-		                    reEndHour = 12;
-		            }
-		            else {
-		                repeatinfo += "" + strLang247 + " ";
-	
-		                if (Number(reEndHour) > 12)
-		                    reEndHour = Number(reEndHour) - 12;
-		            }
-	
-		            repeatinfo += reEndHour + ":" + reEndMinute;
-		        }
-		        else
-		            repeatinfo += strLang126;
-				
-		        repeatinfo += ", " + strLang580 + getNodeText(xmlinDoc.getElementsByTagName("startDateTime")[0]).split(' ')[0] + " ~ ";
-	
-		        if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "0") {
-		            repeatinfo += strLang581;
-		        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "1") {
-		            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
-		        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "2") {
-		            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("endDateTime")[0]).split(' ')[0];
-		        }
-		        
-		        document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
-		    }
 			
 		    //수정버튼 클릭시
 	        function btn_modify() {
@@ -202,6 +102,7 @@
 	                }
 	            }
 	        }
+	        
 	        function print_onClick2(printTrueFalse) {
 	            g_printTrueFalse = printTrueFalse;
 	            
@@ -227,7 +128,7 @@
 	        function onbeforeprint2() {
 	            document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
 	            document.getElementById("printImportance").textContent = document.getElementById("importanceDIV").textContent;
-	            document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
+	            /* document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent; */
 	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent;
 	        }
 
@@ -321,7 +222,7 @@
 		</script>
 	</head>
 	
- 	<xmp id="sigBody" style="display: none;">${content}</xmp>
+ 	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow:hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
@@ -367,22 +268,21 @@
 		        		<tr>
 		            		<th>옵션</th>
 		            		<td colspan="3" style="width: 100%">
-		                		<%-- <div id="importanceDIV">
-		                			<c:choose>
-		                				<c:when test="${importance eq '1'}">
-		                					<spring:message code='ezResource.t214' />
-										</c:when>
-		                				<c:when test="${importance eq '2'}">
-		                					<spring:message code='ezResource.t215' />
-		                				</c:when>
-		                				<c:otherwise>
-		                					<spring:message code='ezResource.t216' />
-		                				</c:otherwise>
-		                			</c:choose>
-		                		</div> --%>
-		                		<input type="checkbox" id="option" <c:if test="${result.option eq '0'}">checked</c:if> onClick="display_time_Unshow()" />댓글기능 사용
-								<input type="checkbox" id="AllDay" <c:if test="${result.option eq '1'}">checked</c:if> onClick="display_time_Unshow()" />메일공지 사용
-		            		</td>
+		                		<c:choose>
+		                			<c:when test="${result.option eq '0'}">
+		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="display_time_Unshow()" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '1'}">
+		                			<input type="checkbox" id="option" onClick="display_time_Unshow()" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                			</c:when>
+		                			<c:otherwise>
+		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                			</c:otherwise>
+		                		</c:choose>
+							</td>
 		        		</tr>
 		        		<tr>
 		            		<th>회람자</th>

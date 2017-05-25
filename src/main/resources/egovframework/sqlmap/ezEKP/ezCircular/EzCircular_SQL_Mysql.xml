@@ -236,7 +236,7 @@
   <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE
+                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE, OPTION, CONTENT
             FROM
                 TBL_CIRCULAR
             WHERE
@@ -277,6 +277,19 @@
     <select id="EzCircularDAO.getLastID" resultClass="Integer" >
         <![CDATA[
             SELECT LAST_INSERT_ID()   
+        ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getCircularUserList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                MEMBERID
+            FROM
+                TBL_CIRCULAR_USER
+            WHERE
+                CIRCULARID = #circularID#
+            AND
+                TENANTID = #tenantID#     
         ]]>
     </select>
     
@@ -348,7 +361,6 @@
         UPDATE
             TBL_CIRCULAR_USER
         SET
-            STATUS = #status#,
             CONFIRMDATE = #confirmDate#
         WHERE 
             CIRCULARID = #circularID#

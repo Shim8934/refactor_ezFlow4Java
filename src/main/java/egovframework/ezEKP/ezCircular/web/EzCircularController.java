@@ -575,7 +575,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		int circularUserId = 0;
 		int updateStatus = 0;
-		String confirmDate = "";
+		
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverlist = request.getParameter("receiverlist");
 		
@@ -609,8 +609,23 @@ public class EzCircularController extends EgovFileMngUtil {
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
 		
+		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), userInfo.getTenantId());
+		
+		String listUser = "";
+		
+		for (int i=0; i<list.size(); i++) {
+			if (list.size() == 1) {
+				listUser = list.get(i).getMemberId();
+			} else if (i !=list.size()-1){
+				listUser += list.get(i).getMemberId() + ",";
+			} else {
+				listUser += list.get(i).getMemberId();
+			}
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);
+		model.addAttribute("listUser", listUser);
 		
 		return "/ezCircular/circularRead";
 	}
@@ -628,8 +643,27 @@ public class EzCircularController extends EgovFileMngUtil {
 			circularID = req.getParameter("circularID");
 		}
 		
+		//TODO 회람 상세정보 가져옴
+		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
+				
+		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), userInfo.getTenantId());
+		
+		String listUser = "";
+		
+		for (int i=0; i<list.size(); i++) {
+			if (list.size() == 1) {
+				listUser = list.get(i).getMemberId();
+			} else if (i !=list.size()-1){
+				listUser += list.get(i).getMemberId() + ",";
+			} else {
+				listUser += list.get(i).getMemberId();
+			}
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("circularID", circularID);
+		model.addAttribute("result", result);
+		model.addAttribute("listUser", listUser);
 		
 		return "/ezCircular/circularModify";
 	}
@@ -686,7 +720,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		int firstValue = ezCircularService.getConfirmStatusFirst(circularListVO.getCircularId(), userInfo.getTenantId());
 		
-		ezCircularService.updateStatus(firstValue, circularListVO.getCircularId(), userInfo.getTenantId());
+		//status업데이트되는부분 임시 주석
+		//ezCircularService.updateStatus(firstValue, circularListVO.getCircularId(), userInfo.getTenantId());
 		ezCircularService.updateStatusUser(firstValue, circularListVO.getCircularId(), confirmDate, userInfo.getTenantId());
 		
 		logger.debug("confirmStatus ended");
