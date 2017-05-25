@@ -140,7 +140,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId) throws Exception {
+	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("title", title);
@@ -160,7 +160,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		int lastID = ezCircularDAO.getLastID();
 		
 		for (int i=0; i<receiverLength; i++) {
-			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), memberName, memberName2, status, "", updateStatus, tenantID);
+			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName[i].trim(), status, "", updateStatus, tenantID);
 		}
 	}
 
@@ -197,10 +197,24 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		ezCircularDAO.modifyCircular(map);
 		
-		/*for (int i=0; i<receiverLength; i++) {
+		List<CircularListVO> list = getCircularUserList(circularID, tenantID);
+		
+		String listUser = "";
+		
+		for (int i=0; i<list.size(); i++) {
+			if (list.size() == 1) {
+				listUser = list.get(i).getMemberId();
+			} else if (i !=list.size()-1){
+				listUser += list.get(i).getMemberId() + ",";
+			} else {
+				listUser += list.get(i).getMemberId();
+			}
+		}
+		
+		for (int i=0; i<receiverLength; i++) {
 			deleteCircularUser(circularID, tenantID);
-			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), memberName, memberName2, status, confirmDate, updateStatus, tenantID);
-		}*/
+			insertCircularUser(circularUserId, circularID, list.get(i).getMemberId(), list.get(i).getMemberName(), list.get(i).getMemberName2(), status, confirmDate, updateStatus, tenantID);
+		}
 	}
 
 	@Override

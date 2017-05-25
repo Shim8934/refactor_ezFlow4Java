@@ -577,17 +577,18 @@ public class EzCircularController extends EgovFileMngUtil {
 		int updateStatus = 0;
 		
 		String receiverIDs = request.getParameter("receiverID");
-		String receiverlist = request.getParameter("receiverlist");
+		String receiverList = request.getParameter("receiverList");
 		
 		logger.debug("receiverIDs : "+receiverIDs);
-		logger.debug("receiverlist : "+receiverlist);
+		logger.debug("receiverList : "+receiverList);
 		
 		int receiverLength = receiverIDs.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
+		String[] receiverName = receiverList.split(",");
 		
 		String regDate = commonUtil.getTodayUTCTime("");
 		
-		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId);
+		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName);
 
 		logger.debug("saveCircular ended");
 	}
@@ -682,17 +683,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		int updateStatus = 0;
 		String confirmDate = "";
 		String receiverIDs = request.getParameter("receiverID");
-		String receiverlist = request.getParameter("receiverlist");
+		String receiverList = request.getParameter("receiverList");
 		
 		logger.debug("receiverIDs : "+receiverIDs);
-		logger.debug("receiverlist : "+receiverlist);
+		logger.debug("receiverList : "+receiverList);
 		
 		int receiverLength = receiverIDs.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
 		
-		logger.debug("");
-		
-		logger.debug("content : "+circularListVO.getContent());
 		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID,updateStatus,circularUserId,circularListVO.getMemberName(),circularListVO.getMemberName2(),circularListVO.getStatus(),confirmDate,circularListVO.getContent());
 
 		logger.debug("saveModifyCircular ended");

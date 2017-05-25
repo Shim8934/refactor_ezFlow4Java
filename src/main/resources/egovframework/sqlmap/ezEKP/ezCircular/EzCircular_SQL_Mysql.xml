@@ -283,7 +283,7 @@
     <select id="EzCircularDAO.getCircularUserList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                MEMBERID
+                MEMBERID, MEMBERNAME, MEMBERNAME2
             FROM
                 TBL_CIRCULAR_USER
             WHERE

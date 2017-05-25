@@ -214,7 +214,8 @@
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 2;
 				}
-				
+alert('${listUser}');
+alert(document.getElementById("receiverID").innerHTML);
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
 	                type : 'POST',
@@ -222,7 +223,8 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			receiverList : document.getElementById("receiverlist").innerHTML,
+	                			//receiverList : document.getElementById("receiverlist").innerHTML,
+	                			receiverList : '${listUser}',
 	                			receiverID : document.getElementById("receiverID").innerHTML,
 	                			circularId : "${circularID}",
 	                			content : content
