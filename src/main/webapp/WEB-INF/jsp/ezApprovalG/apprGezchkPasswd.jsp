@@ -24,10 +24,6 @@
 		            window.focus();
 		        };
 		    }
-		    window.onload = function () {
-		    	alert(300);
-			    document.getElementById("inpPassword").focus();
-		    }
 		    
 		    function btn_OpinionOK_onclick() {
 		        var rtnVal = "cancel";
