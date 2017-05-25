@@ -270,10 +270,11 @@
 		            }
 	    	    }
 	        	return check; */
+	        	//회람저장 눌렀을 시
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	                type : 'POST',
-	                dataType : 'json',
+	                dataType : 'text',
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			//option : document.getElementById("option"),
@@ -283,8 +284,7 @@
 	                },  
 	                cache: false,
 	                success: function(data) {	   
-	             	   console.log(data);
-	             	   //temp.text(data);
+	             	  window.close();
 	                }
 	 			});
 	    	}
@@ -381,7 +381,7 @@
 	       				</tr>
         
 						<tr id="Span1">
-	           				<th>
+	           				<th rowspan="2">
 	           					회람자
 	           				</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
@@ -389,7 +389,7 @@
 	           				</td>
 						</tr>
 						<tr>
-	         				<th>회람자목록</th>
+	         				<!-- <th>회람자목록</th> -->
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>

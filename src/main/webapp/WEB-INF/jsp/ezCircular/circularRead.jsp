@@ -178,7 +178,9 @@
 			
 		    //수정버튼 클릭시
 	        function btn_modify() {
-	            window.location.href = "/ezCircular/circularModify.do?from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);
+		    	var circularID = "${result.circularId}";
+
+	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID+"&num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);
 	        }
 
 	        function window_onUnload() {

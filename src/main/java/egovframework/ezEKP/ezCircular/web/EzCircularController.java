@@ -565,9 +565,13 @@ public class EzCircularController {
                 	fieldValue = fieldValue.equals("0") ? " " : "O";
                 } else if (fieldName.equals("STATUS")) {
                 	fieldValue = fieldValue.equals("0") ? "진행중" : "종료";
+                } else if (fieldName.equals("CONFIRMSTATUS")) {
+                	int firstValue = ezCircularService.getConfirmStatusFirst(list.get(j).getCircularId(), userInfo.getTenantId());
+                	int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularId(), userInfo.getTenantId());
+                	
+                	fieldValue = firstValue + "/" + secondValue;
                 }
             	
-            	resultXML.append("<TITLE>" + list.get(j).getTitle() + "</TITLE>");
 				resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
 				resultXML.append("<CIRCULARID>" + list.get(j).getCircularId() + "</CIRCULARID>");
 				
@@ -639,11 +643,7 @@ public class EzCircularController {
 		
 		String regDate = commonUtil.getTodayUTCTime("");
 		
-		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId());
-		
-		for (int i=0; i<receiverLength; i++) {
-			ezCircularService.insertCircularUser(circularUserId, circularListVO.getCircularId(), receiverID[i], userInfo.getDisplayName1(), userInfo.getDisplayName2(), circularListVO.getStatus(), confirmDate, updateStatus, userInfo.getTenantId());
-		}
+		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId);
 
 		logger.debug("saveCircular ended");
 	}
@@ -722,5 +722,29 @@ public class EzCircularController {
 		}
 
 		logger.debug("saveModifyCircular ended");
+	}
+	
+	/**
+	 * 회람판 신규 회람판 클릭했을때, 확인 수 증가 및 확인일 설정 실행 Method
+	 */
+	@RequestMapping(value = "/ezCircular/confirmStatus.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void confirmStatus(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+		logger.debug("confirmStatus started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String confirmDate = commonUtil.getTodayUTCTime("");
+		logger.debug("cirCularID : "+circularListVO.getCircularId());
+		logger.debug("getID : "+userInfo.getId());
+		
+		ezCircularService.confirmStatus(circularListVO.getCircularId(), userInfo.getId(), userInfo.getTenantId());
+		
+		int firstValue = ezCircularService.getConfirmStatusFirst(circularListVO.getCircularId(), userInfo.getTenantId());
+		
+		ezCircularService.updateStatus(firstValue, circularListVO.getCircularId(), userInfo.getTenantId());
+		ezCircularService.updateStatusUser(firstValue, circularListVO.getCircularId(), confirmDate, userInfo.getTenantId());
+		
+		logger.debug("confirmStatus ended");
 	}
 }

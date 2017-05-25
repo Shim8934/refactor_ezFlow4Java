@@ -142,7 +142,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID) throws Exception {
+	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("title", title);
@@ -158,6 +158,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("endDate", endDate);
 		map.put("tenantID", tenantID);
 		ezCircularDAO.insertCircular(map);
+		
+		int lastID = ezCircularDAO.getLastID();
+		
+		for (int i=0; i<receiverLength; i++) {
+			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), memberName, memberName2, status, "", updateStatus, tenantID);
+		}
 	}
 
 	@Override
@@ -216,6 +222,49 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantID);
 		return ezCircularDAO.getCircularListCount(map);
 	}
-	
+
+	@Override
+	public void confirmStatus(int circularID, String memberID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.confirmStatus(map);
+	}
+
+	@Override
+	public int getConfirmStatusFirst(int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		return ezCircularDAO.getConfirmStatusFirst(map);
+	}
+
+	@Override
+	public int getConfirmStatusSecond(int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		return ezCircularDAO.getConfirmStatusSecond(map);
+	}
+
+	@Override
+	public void updateStatus(int status, int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("status", status);
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		ezCircularDAO.updateStatus(map);
+	}
+
+	@Override
+	public void updateStatusUser(int status, int circularID, String confirmDate, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("status", status);
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		map.put("confirmDate", confirmDate);
+		ezCircularDAO.updateStatusUser(map);
+	}
 	
 }

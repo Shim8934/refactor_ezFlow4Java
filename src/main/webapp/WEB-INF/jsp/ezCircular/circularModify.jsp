@@ -271,7 +271,7 @@
 	    	    }
 	        	return check; */
 	    		$.ajax ({
-	 			   	url : '/ezCircular/saveCircular.do',
+	 			   	url : '/ezCircular/saveModifyCircular.do',
 	                type : 'POST',
 	                dataType : 'json',
 	                data : {	title : document.getElementById("title").value,
@@ -279,7 +279,8 @@
 	                			//option : document.getElementById("option"),
 	                			option : 0,
 	                			receiverList : document.getElementById("receiverlist").innerHTML,
-	                			receiverID : document.getElementById("receiverID").innerHTML
+	                			receiverID : document.getElementById("receiverID").innerHTML,
+	                			circularId : "${circularID}"
 	                },  
 	                cache: false,
 	                success: function(data) {	   
