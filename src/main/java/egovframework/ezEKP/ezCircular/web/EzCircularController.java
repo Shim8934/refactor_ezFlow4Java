@@ -1,12 +1,7 @@
 package egovframework.ezEKP.ezCircular.web;
 
-<<<<<<< Updated upstream
 import java.io.File;
 import java.util.HashMap;
-=======
-import java.util.ArrayList;
-import java.util.Arrays;
->>>>>>> Stashed changes
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,28 +22,18 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-<<<<<<< Updated upstream
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-=======
->>>>>>> Stashed changes
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-<<<<<<< Updated upstream
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
-=======
-import egovframework.ezEKP.ezCircular.service.EzCircularService;
-import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
-import egovframework.ezEKP.ezCircular.vo.CircularDeptUserVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
->>>>>>> Stashed changes
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -376,7 +361,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circular_generallist_save ended");
 	}
 	
-<<<<<<< Updated upstream
 	/**
 	 * 회람판 리스트설정셋팅 실행 Method
 	 */
@@ -787,7 +771,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         return strXML.toString();
     }
-=======
+
 	@RequestMapping(value = "/ezCircular/circularDeptConfig.do")
 	public String circularDeptConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, Model model) throws Exception {
 		
@@ -917,5 +901,4 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptDel ended");
 	}
 	
->>>>>>> Stashed changes
 }

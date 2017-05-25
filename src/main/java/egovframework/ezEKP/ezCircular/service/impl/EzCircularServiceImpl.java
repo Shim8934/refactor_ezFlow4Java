@@ -15,13 +15,10 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
-<<<<<<< Updated upstream
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.let.user.login.vo.LoginVO;
-=======
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
->>>>>>> Stashed changes
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCircularService")
@@ -58,7 +55,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 			ezCircularDAO.setCircularList_Config_I(circularConfigVO);
 		}
 	}
-<<<<<<< Updated upstream
 	
 	@Override
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception {
@@ -268,8 +264,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("confirmDate", confirmDate);
 		ezCircularDAO.updateStatusUser(map);
 	}
-	
-=======
 
 	@Override
 	public void set_circularDeptSave(CircularDeptVO circularDeptVO, String[] memberListStr) throws Exception {
@@ -326,5 +320,4 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.modify_circularDept(map);
 	}
 
->>>>>>> Stashed changes
 }

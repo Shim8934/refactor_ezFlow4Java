@@ -203,7 +203,7 @@
 		        	alert("<spring:message code='ezCircular.t44' />");
 		            return;
 		        }
-alert($("#checkbox:checked").length);
+
 				for (var i=0; i<$("#checkbox:checked").length; i++) {
 					
 				}

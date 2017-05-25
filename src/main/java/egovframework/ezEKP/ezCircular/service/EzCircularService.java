@@ -2,15 +2,11 @@ package egovframework.ezEKP.ezCircular.service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
-<<<<<<< Updated upstream
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.let.user.login.vo.LoginVO;
-=======
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
->>>>>>> Stashed changes
 
 public interface EzCircularService {
 	
@@ -33,7 +29,6 @@ public interface EzCircularService {
 	public int getConfirmStatusSecond(int circularID, int tenantID) throws Exception;
 	
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
-<<<<<<< Updated upstream
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
 	
@@ -52,7 +47,6 @@ public interface EzCircularService {
 	public void deleteCircular(int circularID,int tenantID) throws Exception;
 	
 	public void deleteCircularUser(int circularID,int tenantID) throws Exception;
-=======
 
 	public void set_circularDeptSave(CircularDeptVO circularDeptVO, String[] memberListStr) throws Exception;
 
@@ -63,6 +57,5 @@ public interface EzCircularService {
 	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception;
 
 	public String circularDeptModify(int circularBMId, int tenantId) throws Exception;
-
->>>>>>> Stashed changes
+	
 }
