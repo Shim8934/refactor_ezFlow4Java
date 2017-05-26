@@ -354,9 +354,50 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 작성한 회람판 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularMyCircular.do")
-	public String circularMyCircular() {
+	public String circularMyCircular(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		
 		logger.debug("circularMyCircular started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int page = 1;
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        int startRow = 1;
+        int endRow = 0;
+        
+		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (page - 1)) + 1;
+        endRow = (personalCount * page);
+		
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+        logger.debug("startRow : "+startRow);
+        logger.debug("endRow : "+endRow);
+        
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		logger.debug("listSize : "+list.size());
+		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("list", list);
+		model.addAttribute("config", config);
+		model.addAttribute("totalCount", totalCount);
 		
 		logger.debug("circularMyCircular ended");
 		

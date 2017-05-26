@@ -399,13 +399,13 @@ function _manage_attendant() {
 }
 
 function manage_attendant_after() {
-    var StartTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
-    var EndTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
+//    var StartTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
+//    var EndTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
 
     schedule_select_attendant_dialogArguments[0] = g_attendant;
     schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
-    GetOpenWindow("/ezCircular/circularSelectAttendant.do?title=" + encodeURI(strLang19) + "&StartTime=" + StartTime + "&EndTime=" + EndTime, "schedule_select_attendant", 970, 655);
+    GetOpenWindow("/ezCircular/circularSelectAttendant.do?title=" + encodeURI(strLang19), "schedule_select_attendant", 970, 655);
 }
 
 function manage_attendant_Complete(rtn) {
