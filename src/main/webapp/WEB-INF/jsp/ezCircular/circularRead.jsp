@@ -46,7 +46,7 @@
 	        var pNoneActiveX = "${pNoneActiveX}";
 	        var brdName = "${brdName}";
 	        var resID = "${resID}";
-	        var contentpath = "/doc/{b70a579c-1468-4b93-9ec8-3bd42ba738cc}";
+	        // var contentpath = "/doc/{b70a579c-1468-4b93-9ec8-3bd42ba738cc}";
 	        
 	        window.onload = function () {
 	        	
@@ -71,7 +71,7 @@
 	            }
 	            
 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	            document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
 	        }
 			
 	        window.onresize = function () {
@@ -304,10 +304,7 @@
 	        			</tr>
 	        			
 	        			<tr>
-	                		<!-- <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    		<div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></div>
-	                		</td> -->
-                		    <td height="20">
+                		    <!-- <td height="20"> -->
 			                    <table class="file">
 			                        <tr>
 			                            <th>
@@ -359,7 +356,7 @@
 			                            </td>
 			                        </tr>
 			                    </table>
-			                </td>
+			                <!-- </td> -->
 	            		</tr>
 	        			
 	        		</table>
