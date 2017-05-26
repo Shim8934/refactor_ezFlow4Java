@@ -52,7 +52,7 @@
 		        if (isuload || document.form.file1.value == "")
 		            return;
 		        var frm = document.getElementById('form');
-		        frm.action = "/ezEmail/ckUpload.do";
+		        frm.action = "/ezEditor/ckUploadMail.do";
 		        frm.submit();
 		        isuload = true;
 		        document.form.file1.value = "";

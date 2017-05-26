@@ -22,7 +22,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] }
 	];
 
-	config.uploadUrl = "/ezCommon/ckSimpleUpload.do";	
+	config.uploadUrl = "/ezEditor/ckSimpleUpload.do";	
 	config.extraPlugins = "_Insert_Image,pastefromexcel";
     config.line_height = "0.5;1;1.5;2;2.5;3;3.5;4;4.5;5";
     config.allowedContent = true;    

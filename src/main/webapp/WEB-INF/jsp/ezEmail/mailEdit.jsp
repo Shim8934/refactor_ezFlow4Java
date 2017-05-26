@@ -862,7 +862,7 @@
 				  <table width="100%" height="100%"> 
 			          <tr> 
 			            <td style="height:100%;">
-							<iframe id="message" frameborder="0" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
 			            </td> 
 			          </tr> 
 			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
