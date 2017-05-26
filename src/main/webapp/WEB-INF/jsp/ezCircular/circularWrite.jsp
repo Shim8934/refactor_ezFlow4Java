@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/schedule_write_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -313,7 +313,7 @@
 	           					회람자
 	           				</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
-	           					<a class="imgbtn"><span id="clickbtn" onclick="manage_attendant()">선택</span></a>
+	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
 	           				</td>
 						</tr>
 						<tr>
