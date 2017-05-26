@@ -1,7 +1,10 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -11,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2634,7 +2638,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	@Override
 	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
-		logger.debug("saveFormInfo started.");
+		logger.debug("saveFormInfoHWP started.");
 		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(formInfo);
@@ -2680,23 +2684,24 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			saveFileFolder = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form";
 			saveFileName = saveFileFolder + commonUtil.separator + formID + ".hwp";
 			
+			FileOutputStream stream = null;
+			
 			try {
 				File fileFolder = new File(saveFileFolder);
+				File file = new File(saveFileName);
 				
 				if (!fileFolder.exists()) {
 					fileFolder.mkdirs();
 				}
 				
-				File file = new File(saveFileName);
 				if (file.exists()) {
 					strBeforeMHT = FileUtils.readFileToString(file);
 				}
-
-				FileWriter fw = new FileWriter(file);
-				fw.append(formMhtInfo);
-				fw.close();
+				
+				stream = new FileOutputStream(file);
+				stream.write(Base64.decodeBase64(formMhtInfo));
+				stream.close();
 			} catch (Exception e) {
-				logger.debug(e.getMessage());
 				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
 			}
 		}
@@ -2957,7 +2962,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		if (!isUpdate) {
-			if (!formMhtInfo.equals(""))	 {
+			if (!formMhtInfo.equals("")) {
 				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp";
 				
 				File file = new File(saveFileName);
@@ -2968,14 +2973,31 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
 				}
 				
-				FileWriter fw = new FileWriter(file);
-				fw.append(formMhtInfo);
-				fw.close();
+				FileOutputStream stream = null;
+				
+				try {
+					stream = new FileOutputStream(file);
+					stream.write(Base64.decodeBase64(formMhtInfo));
+				} catch (FileNotFoundException fnfe) {
+					logger.debug("fnfe: {}", fnfe);
+				} catch (IOException ioe) {
+					logger.debug("ioe: {}", ioe);
+				} catch (Exception e) {
+					logger.debug("e: {}", e);
+				} finally {
+					if (stream != null) {
+						try {
+							stream.close();
+						} catch (Exception ignore) {
+							logger.debug("IGNORED: {}", ignore.getMessage());
+						}
+					}
+				}
 			}
 		}
 		
 		logger.debug("setFormDataInsert,Update ended.");
-		logger.debug("saveFormInfo ended.");
+		logger.debug("saveFormInfoHWP ended.");
 		
 		return result;
 	}

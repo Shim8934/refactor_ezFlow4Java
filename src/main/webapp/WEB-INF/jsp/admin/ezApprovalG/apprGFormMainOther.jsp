@@ -51,6 +51,7 @@
 		    var WorkData = "";
 		    var useEditor = "${useEditor}";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
+		    var realPath = "<c:out value = '${realPath}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -147,8 +148,7 @@
 		            if (formURL != "") {
 		                if (useEditor == "HWP") {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
-		                    
-		                    message.HWP_LoadFile(formURL);
+		                    message.HWP_LoadFile(realPath + formURL);
 		                    if (message.HWP_GetDocumentElement() != "") {
 		                        var ConnURL = message.HWP_GetDocumentElement().replace("<CONNINFO>", "").replace("</CONNINFO>", "");
 		
@@ -818,7 +818,7 @@
 				<span style="min-width: 45px;" id="formstr"><spring:message code='ezApprovalG.t825'/></span>
 			</h2>
 			
-			<table class="content" style="width:100%;">                
+			<table class="content" style="width:100%;">
 				<tr>                
 					<th style="width:100px; text-align:center">${primary}</th>
                     <td style="width:40%;">

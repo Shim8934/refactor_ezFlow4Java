@@ -445,6 +445,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		if (type != null && type.equals("HWP")) {
 			model.addAttribute("useEditor", "HWP");
+			model.addAttribute("realPath", commonUtil.getRealPath(request).replace("\\","/"));
 		} else {
 			model.addAttribute("useEditor", useEditor);
 		}
