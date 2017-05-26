@@ -27,7 +27,6 @@
 			var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 			var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
 			var linealt4 = "<spring:message code='ezApprovalG.t227'/>";
-        
 			var companyID = "${companyID}";
 		    var contID = "${contID}";
 		    var formID = "${formID}";

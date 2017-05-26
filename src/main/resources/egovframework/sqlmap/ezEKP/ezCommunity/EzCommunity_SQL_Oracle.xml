@@ -300,7 +300,7 @@
 						FROM
 							$v_BNAME$
 						WHERE
-							CASE #primary# WHEN '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
+							CASE WHEN #primary# '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 	            			tenant_id = #tenantID#
 					]]>
@@ -384,7 +384,7 @@
 				charfilename,
 				readnum,
 				writeday,
-				username$v_USERINFO_LANG$,
+				CASE WHEN #primary# = '1' THEN username ELSE username2 END,
 				id,
 				no
 			FROM
@@ -709,9 +709,9 @@
 				(SELECT 
 					A.itemid,
 					A.writerid,
-					A.writername$v_USERINFO_LANG$ AS writername,
-					A.writerdeptname$v_USERINFO_LANG$ AS writerdeptname,
-					A.writercompanyname$v_USERINFO_LANG$ AS writercompanyname,
+					CASE WHEN #primary# = '1' THEN A.writername ELSE A.writername2 END AS writername,
+					CASE WHEN #primary# = '1' THEN A.writerdeptname ELSE A.writerdeptname2 END AS writerdeptname,
+					CASE WHEN #primary# = '1' THEN A.writercompanyname ELSE A.writercompanyname2 END AS writercompanyname,
 					A.startdate,
 					A.writedate,
 					A.parentwritedate,
@@ -1163,14 +1163,14 @@
 					A.attachments,
 					A.importance,
 					B.boardid,
-					B.boardname$v_strLang$ AS boardname,
+					CASE WHEN #primary# = '1' THEN B.boardname ELSE B.boardname2 END AS boardname,
 					A.abstract
 				FROM
 					TBL_COMM_ITEM A
 				INNER JOIN
 					(SELECT
 						boardid,
-						boardname$v_strLang$,
+						CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END,
 						tenant_id
 					FROM
 						TBL_COMM_BOARDINFO
@@ -1210,7 +1210,7 @@
 		<![CDATA[
 			SELECT
 				replyid,
-				username$v_userInfo_lang$ AS username,
+				CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username,
 				userid,
 				content,
 				writedate+(#offset#/(60*24)) AS writedate
@@ -1311,7 +1311,7 @@
 					WHERE
 						RTRIM(c_clubno) = #v_code#
 					AND
-						username$v_userInfo_lang$ LIKE '%'|| #v_keyword# ||'%'
+						CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'|| #v_keyword# ||'%'
 					AND
 						tenant_id = #tenantID# 
 					ORDER BY
@@ -1342,7 +1342,7 @@
 		<![CDATA[
 			SELECT
 				id,
-				username$v_userInfo_lang$,
+				CASE WHEN #primary# = '1' THEN username ELSE username2 END,
 				c_no,
 				content
 			FROM
@@ -1395,7 +1395,7 @@
 					WHERE
 						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_code#
 					AND
-						TBL_C_MEMBERINFO.username$v_userInfo_lang$ LIKE '%'||#v_keyword#||'%'
+						CASE WHEN #primary# = '1' THEN TBL_C_MEMBERINFO.username ELSE TBL_C_MEMBERINFO.username2 END LIKE '%'||#v_keyword#||'%'
 					AND
 						TBL_C_CLUBUSER.permit <> 0
 					AND
@@ -1430,7 +1430,7 @@
 	<select id="EzCommunityDAO.commViewMemberGet3"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$ AS username,
+				CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username,
 				email
 			FROM
 				TBL_C_MEMBERINFO
@@ -1510,7 +1510,7 @@
 	<select id="EzCommunityDAO.aspCommInfoGet2"					parameterClass="Map"		resultClass="CommunityMemberInfoVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$ AS username
+				CASE WHEN #primary# = '1' username ELSE username2 END AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -1528,7 +1528,7 @@
 			SELECT
 				c_logo,
 				c_clubbanner,
-				c_clubname$v_USERINFO_LANG$
+				CASE WHEN #primary# = '1' c_clubname ELSE c_clubname2 END
 			FROM
 				TBL_C_CLUB 
 			WHERE
@@ -1545,7 +1545,7 @@
 		<isEqual property="v_POSITION" compareValue="ALL">
 			<![CDATA[
 				SELECT
-					boardname$v_LANG$ AS BOARDNAME,
+					CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END AS boardname,
 					boardid
 				FROM
 					TBL_COMM_BOARDINFO
@@ -1564,7 +1564,7 @@
 			<isEqual property="v_POSITION" compareValue="LEFT">
 				<![CDATA[
 					SELECT
-						boardname$v_LANG$ AS BOARDNAME,
+						CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END AS boardname,
 						boardid
 					FROM
 						TBL_COMM_BOARDINFO
@@ -1582,7 +1582,7 @@
 			<isNotEqual property="v_POSITION" compareValue="LEFT">
 				<![CDATA[
 					SELECT
-						boardname$v_LANG$ AS BOARDNAME,
+						CASE WHEN #primary# = '1' THEN boardname ELSE boardname2 END AS boardname,
 						boardid
 					FROM
 						TBL_COMM_BOARDINFO
@@ -1608,7 +1608,7 @@
 				A.userid,
 				A.outdate,
 				A.outreason,
-				B.username$v_USERINFO_LANG$ userName
+				CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 			FROM
 				TBL_C_OUTAPPLICATION A 
 			INNER JOIN
@@ -1633,7 +1633,7 @@
 				SELECT
 					A.c_id,
 					A.companyid,
-					B.username$v_USERINFO_LANG$ AS username
+					CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 				FROM
 					TBL_C_CLUBUSER A
 				INNER JOIN
@@ -1658,7 +1658,7 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						B.username$v_USERINFO_LANG$ AS username
+						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN
@@ -1672,7 +1672,7 @@
 					AND
 						permit <> 0
 					AND
-						B.username$v_USERINFO_LANG$  LIKE '%' || #v_SER# || '%'
+						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE '%' || #v_SER# || '%'
 					AND
 						A.tenant_id = #tenantID#
 				]]>
@@ -1682,7 +1682,7 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						B.username$v_USERINFO_LANG$ AS username
+						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN
@@ -3013,7 +3013,7 @@
       		FROM
       			TBL_COMM_TREECACHE 
 			WHERE
-				query = #v_pRootBoardID# ||','|| #v_pUserID# ||','|| #v_pDeptID# ||','|| #v_pCompanyID# ||','|| #v_pMode# ||','|| #v_pSubFlag# ||','|| #v_pSelectBy# ||','|| #v_pExcludeBoardID# ||','|| #v_pClubNo# ||','|| #v_strLang#
+				query = #v_pRootBoardID# ||','|| #v_pUserID# ||','|| #v_pDeptID# ||','|| #v_pCompanyID# ||','|| #v_pMode# ||','|| #v_pSubFlag# ||','|| #v_pSelectBy# ||','|| #v_pExcludeBoardID# ||','|| #v_pClubNo# ||','|| #primary#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -3545,7 +3545,7 @@
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
-						username$v_USERINFO_LANG$ LIKE '%' || #v_KEYWORD# || '%'
+						CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%' || #v_KEYWORD# || '%'
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="WRITER">
@@ -3621,7 +3621,7 @@
 	<select id="EzCommunityDAO.pollResGet4"						parameterClass="Map"		resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$
+				CASE WHEN #primary# = '1' THEN username ELSE username2 END
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -3665,7 +3665,7 @@
 					WHERE
 						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_CODE#
 					AND 
-						TBL_C_MEMBERINFO.username$v_USERINFO_LANG$ LIKE '%'|| #v_KEYWORD# ||'%'
+						CASE WHEN #primary# = '1' THEN TBL_C_MEMBERINFO.username ELSE TBL_C_MEMBERINFO.username2 END LIKE '%'|| #v_KEYWORD# ||'%'
 					AND
 						TBL_C_CLUBUSER.permit <> 0
 					AND
@@ -4352,11 +4352,11 @@
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
 					<![CDATA[
 						SELECT
-							NVL(COUNT(CASE #primary# WHEN '1' THEN username ELSE username2 END AS username), 0) 
+							NVL(COUNT(CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username), 0) 
 						FROM
 							$v_BNAME$ 
 						WHERE
-							CASE #primary# WHEN '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
+							CASE WHEN #primary# = '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 							tenant_id = #tenantID#
 					]]>
@@ -4516,7 +4516,7 @@
 			DELETE
 				TBL_COMM_TREECACHE
   			WHERE
-  				QUERY = #v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #v_strLang#
+  				QUERY = #v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #primary#
   			AND
   				tenant_id = #tenantID#
 		]]>
@@ -4529,7 +4529,7 @@
 				result,
 				tenant_id)
 			VALUES
-				(#v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #v_strLang#,
+				(#v_pRootBoardID# || ',' || #v_pUserID# || ',' || #v_pDeptID# || ',' || #v_pCompanyID# || ',' || #v_pMode# || ',' || #v_pSubFlag# || ',' || #v_pSelectBy# || ',' || #v_pExcludeBoardID# || ',' || #v_pClubNo# || ',' || #primary#,
 				#v_result#,
 				#tenantID#)
 		]]>

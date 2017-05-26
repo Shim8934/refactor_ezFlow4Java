@@ -18,7 +18,7 @@
 	        var xmlhttp4 = null;
 	        var xmlhttp5 = null;
 	        var str = "<c:out value = '${strXML}' />";
-	        var strlang = "<c:out value = '${strLang}' />";
+	        var primary = "<c:out value = '${primary}' />";
 	        var totalPage = "<c:out value = '${totalPage}' />";
 	        var temptotalPage = totalPage;
 	        var CurPage = "1";
@@ -278,7 +278,7 @@
                         dl.className = "tabpartMycommunityTitle";
                         var dt = document.createElement("DT");
 
-                        if (strlang == "" || strlang == "1") {
+                        if (primary == "1") {
                             dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
                         } else {
                             dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2");
@@ -353,7 +353,7 @@
                     td.setAttribute("code", copno);
                     td.onclick = function () { ItemRead_onclick(this); };
                     
-                    if (strlang == "" || strlang == "1") {
+                    if (primary == "1") {
                         td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
                         td2.className = "team";
                         td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME");
@@ -752,7 +752,7 @@
                     var dd = document.createElement("DD");
                     var strong = document.createElement("STRONG");
                     
-                    if (strlang == "" || strlang == "1") {
+                    if (primary == "1") {
                         strong.innerHTML = clubVO.c_ClubName;
                     } else {
                         strong.innerHTML = clubVO.c_ClubName2;
@@ -764,7 +764,7 @@
 
                     var dd3 = document.createElement("DD");
                     
-                    if (strlang == "" || strlang == "1") {
+                    if (primary == "1") {
                         dd3.innerHTML = strLang2 + " : " + clubVO.displayName + "(" + clubVO.description + ")";
                     } else {
                         dd3.innerHTML = strLang2 + " : " + clubVO.displayName2 + "(" + clubVO.description2 + ")";
@@ -858,7 +858,6 @@
                 var img = document.createElement("IMG");
                 img.style.width = "156px";
                 img.style.height = "28px";
-                //이효진 2017-03-06 분기타서 언어별 이미지따와야함
                 
                 if ('${userInfo.lang}' == '3') {
                 	img.src = "/images/jp/community/title_todayCommunity_jp.png";
@@ -928,7 +927,7 @@
 
                 var dt = document.createElement("DT");
                 
-                if(strlang == "" || strlang == "1") {
+                if(primary == "1") {
                     dt.innerHTML = result["clubVO"]["c_ClubName"];
                 } else {
                     dt.innerHTML = result["clubVO"]["c_ClubName2"];
@@ -948,7 +947,7 @@
                 span4.className = "line";
                 var span5 = document.createElement("SPAN");
                 
-                if (strlang == "" || strlang == "1") {
+                if (primary == "1") {
                     span5.innerHTML = strLang2 + " : " + result["clubVO"]["displayName"];
                 } else {
                     span5.innerHTML = strLang2 + " : " + result["clubVO"]["displayName2"];

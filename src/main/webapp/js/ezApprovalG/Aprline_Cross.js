@@ -36,6 +36,7 @@
         pAPRLINE.SetRowOnClick("OnSelChange_onclick");
         pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
         pAPRLINE.SetSelectFlag(false);
+        pAPRLINE.SetHeightFree(true);
 
         window.returnValue = pAprLineXml;
 

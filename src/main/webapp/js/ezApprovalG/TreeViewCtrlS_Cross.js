@@ -24,7 +24,7 @@ function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName) {
         treeView.DataBind("TreeView");
     }
     catch (ErrMsg) {
-//        alert(" TreeViewinitialize : " + ErrMsg.description);
+        alert(" TreeViewinitialize : " + ErrMsg.description);
     }
 }
 

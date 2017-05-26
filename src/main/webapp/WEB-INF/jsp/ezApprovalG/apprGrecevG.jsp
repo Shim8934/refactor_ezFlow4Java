@@ -191,7 +191,6 @@
 		                //document.getElementById("btnSetAprLine").style.display = "none";
 		                document.getElementById("btnSendDraft").style.display = "none";
 		                document.getElementById("btnRJunkyul").style.display = "none";
-		                document.getElementById("btnSendAround").style.display = "";
 		                document.getElementById("btntotaldocinfo").style.display = "none";
 		            }
 		        }
@@ -239,7 +238,6 @@
 		            pGubun = "12";
 		            document.getElementById("btnSendDraft").style.display = "none";
 		            document.getElementById("btnRJunkyul").style.display = "none";
-		            document.getElementById("btnSendAround").style.display = "";
 		            document.getElementById("btntotaldocinfo").style.display = "none";
 		        }
 		    }
@@ -405,19 +403,7 @@
 		        feature = feature + GetOpenPosition(690, 700);
 		        window.open("/myoffice/ezEmail/newmail_CK.aspx?cmd=docsend&docID=" + "${docID}" + "&docHref=" + pFormHref, '', feature);
 		    }
-		    function btnSendAround_onclick() {
-		        var para = new Array();
-		        para[0] = pDocID;
-		        var url = "AprGongRamLine_Cross.aspx";
-		        var feature = "dialogWidth:557px;dialogHeight:545px;scroll:no;resizable:yes;status:no;help:no";
-		        feature = feature + GetShowModalPosition(557, 545);
-		        var rtn = window.showModalDialog(url, para, feature);
-		        if (rtn == "OK") {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1424'/>";
-		            OpenAlertUI(pAlertContent);
-		        }
-		    }
-		
+		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    function btnCabinet_onclick() {
 		        var para = new Array();
@@ -1212,7 +1198,6 @@
 		        <li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 		        <li id="btnRJunkyul" ><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
 			    <li id=btnCabinet><span  onClick="return btnCabinet_onclick()" ><spring:message code='ezApprovalG.t1406'/></span></li>
-			    <span style ="display:none" ><li id=btnSendAround><span  onClick="return btnSendAround_onclick()" ><spring:message code='ezApprovalG.t1428'/></span></li></span>
 			    <li id=btnAssign><span  onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t1430'/></span></li>
 			    <li id=btnReAssign style="display:none"><span  onClick="return btnReAssign_onclick()" ><spring:message code='ezApprovalG.t1431'/></span></li>
 			    <li id=btnDistribute><span  onClick="return btnDistribute_onclick()" ><spring:message code='ezApprovalG.t1432'/></span></li>

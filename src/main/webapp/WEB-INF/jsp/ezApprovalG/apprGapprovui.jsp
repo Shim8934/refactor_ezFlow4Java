@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -134,6 +135,11 @@
 		    var pADMIN = "N";
 		    var hideCabinet = "${hideCabinet}";
 		    var docNumZeroCnt = "${docNumZeroCnt}";
+		  	//회람
+			var type = "ING";
+			var pGongRamDocID = "";
+			var approvalType = "DRAFT";
+			
 		    window.onload = function () {
 		        if (allFlag == "2") {
 		            selectedDocID = window.opener.selectedDocIDS;
@@ -241,7 +247,7 @@
 		            OrgAprUserName = NextDocUserName;
 		            OrgAprUserName2 = NextDocUserName2;
 		            OrgAprUserDeptID = NextDocDeptID;
-		            pEndDocHref = "/fileroot/" + "${userInfo.tenantId}" + "/files/upload_approvalG/" + pCompanyID + "/doc/"+CurrYear+"/" + (pDocID % 1000) + "/" + pDocID + ".mht";
+		            pEndDocHref = "/fileroot/" + "${userInfo.tenantId}" + "/files/upload_approvalG/" + pCompanyID + "/doc/" + CurrYear + "/" + (pDocID % 1000) + "/" + pDocID + ".mht";
 		            getApprovInfo();
 		            pUserID = pOrgAprUserID;
 		            getDocInfo();  
@@ -1072,8 +1078,8 @@
                         success: function (data) {
                         }
                     });
-		    		  }
-		    		});
+		    	}
+		    });
 	        var pheight = window.screen.availHeight;
 	        var conHeight = pheight * 0.8;
 	        var pwidth = window.screen.availWidth;
@@ -1223,7 +1229,7 @@
 		        parameter[9] = true;
 		        parameter[10] = pDocType;
 		        parameter[11] = gamsaCount;
-		        parameter[12] = "DRAFT";
+		        parameter[12] = approvalType;
 		        parameter[28] = onlydocinfiview;
 		        parameter[30] = cabinetID; // 기록물철
 		        parameter[31] = tempSecurity;
@@ -1264,7 +1270,7 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-// 		            try {
+		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 		                //결재선 저장
 		                if (approvalFlag == "S") {
@@ -1369,6 +1375,17 @@
 			                
 			                setPublicFlag();
 		                } else {
+		                	//회람
+		                	if (ret[22] == "noItem") {
+		                		//없으니깐 암것도 안해도되려나 싶은데 기존꺼를 뺏을수도 있으니까 무조건 삭제
+		                		delAprLineInfoCC();
+		                	} else if (ret[22] == "sameItem") {
+		                		//같으니깐 암것도 안해도 되려나
+		                	} else {
+		                		//회람 저장
+		                		SaveAprLineInfoCC(ret[22]);
+		                	}
+		                	
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
@@ -1382,10 +1399,10 @@
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;
-// 		            }
-// 		            catch (e) {
-// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-// 		            }
+		            }
+		            catch (e) {
+		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		            }
 		        }
 		    }
 		

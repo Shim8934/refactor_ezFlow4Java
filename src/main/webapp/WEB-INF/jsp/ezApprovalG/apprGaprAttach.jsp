@@ -201,7 +201,7 @@
 			var g_progresswin;
 			function btn_AttachAdd_onclick() 
 			{
-			    if(document.form.file1.value != "") {        
+			    if (document.form.file1.value != "") {        
 			        document.getElementById("btn_AttachDel").disabled = false;
 			        document.getElementById("attachsn").value = pAttachSN;            
 			        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
@@ -660,7 +660,7 @@
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition">       
 		        <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="margin-left:100px; display: none;">
-		        <a class="imgbtn"><span for="file" id="btn_AttachAdd" onClick="return attach_Add()"><spring:message code='ezApprovalG.t268'/></span></a>
+		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		        <a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
