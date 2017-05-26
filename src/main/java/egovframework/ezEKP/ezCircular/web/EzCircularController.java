@@ -1146,4 +1146,135 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDelete ended");
 	}
 	
+	/**
+	 * 회람판 신규회람판 검색리스트 표출 Method
+	 */
+    @RequestMapping(value = "/ezCircular/getSearchCircularList.do", produces = "text/xml; charset=utf-8")
+    @ResponseBody
+    public String getSearchCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
+    	logger.debug("getSearchCircularList started");
+
+    	userInfo = commonUtil.userInfo(loginCookie);
+    	//TODO
+    	
+    	BoardVO boardVO = new BoardVO();
+    	
+    	boardVO.setBoardType("C");
+    	boardVO.setLang(userInfo.getLang());
+    	boardVO.setTenantID(userInfo.getTenantId());
+    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+    	
+    	int page = 1;
+        int startRow = 1;
+        int endRow = 0;
+        
+        String pageNum = "1";
+        
+        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
+        	pageNum = req.getParameter("pageNum"); 
+        }
+        
+        String keyword = "";
+        if (req.getParameter("keyword") != null && !req.getParameter("keyword").equals("")) {
+        	keyword = req.getParameter("keyword"); 
+        }
+    	
+    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
+        endRow = (personalCount * Integer.parseInt(pageNum));
+		
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+        logger.debug("startRow : "+startRow);
+        logger.debug("endRow : "+endRow);
+        logger.debug("keyword : "+keyword);
+        
+		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword);
+		
+		List<HashMap<String, Object>> list2 = ezCircularService.getSearchCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(),keyword);
+		
+		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
+		StringBuffer resultXML = new StringBuffer();
+        
+        resultXML.append("<DOCLIST>");
+        resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
+        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for (BoardListHeaderVO vo:headerList) {
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+       
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        
+        for (int j = 0; j < list.size(); j++) {
+        	resultXML.append("<ROW>");
+        	String fieldName = "";
+        	String fieldValue = "";
+            for (int i = 0; i < headerList.size(); i++) {
+            	resultXML.append("<CELL>");
+                fieldName = headerList.get(i).getColName().toUpperCase();
+                
+                fieldValue = commonUtil.cleanValue(String.valueOf(list2.get(j).get(fieldName)));
+
+                if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
+                	fieldValue = "";
+				}
+                
+                if (fieldName.equals("IMPORTANCE")) {
+                	fieldValue = fieldValue.equals("0") ? "일반" : "중요";
+                } else if (fieldName.equals("HASFILE")) {
+                	//태그안에넣어서 에러나서 추후에 수정
+                	//fieldValue = fieldValue.equals("0") ? " " : "<img src=\"/images/newAttach.gif\">";
+                	fieldValue = fieldValue.equals("0") ? " " : "O";
+                } else if (fieldName.equals("STATUS")) {
+                	fieldValue = fieldValue.equals("0") ? "진행중" : "종료";
+                } else if (fieldName.equals("CONFIRMSTATUS")) {
+                	int firstValue = ezCircularService.getConfirmStatusFirst(list.get(j).getCircularId(), userInfo.getTenantId());
+                	int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularId(), userInfo.getTenantId());
+                	
+                	fieldValue = firstValue + "/" + secondValue;
+                }
+            	
+				resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
+				resultXML.append("<CIRCULARID>" + list.get(j).getCircularId() + "</CIRCULARID>");
+				
+                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
+                
+                if (i == 0) {
+					resultXML.append("<TITLE>" + list.get(j).getTitle() + "</TITLE>");
+					resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
+                }
+                resultXML.append("</CELL>");
+            }
+            resultXML.append("</ROW>");
+        }
+        
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
+        
+        logger.debug("resultXML : "+resultXML);
+		logger.debug("getSearchCircularList ended");
+        return resultXML.toString();
+    }
 }

@@ -197,6 +197,27 @@
     ]]>
   </select>
   
+  <select id="EzCircularDAO.getSearchCircularList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+                A.TENANTID = B.TENANTID
+            AND
+                B.MEMBERID = #memberId#
+            AND
+                A.TENANTID = #tenantId#
+            AND
+                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
+            LIMIT
+                #limit#, #rowCount#        
+    ]]>
+  </select>
+  
   <select id="EzCircularDAO.getCircularMapList" resultClass="HashMap" >
         <![CDATA[
             SELECT
@@ -211,6 +232,27 @@
                 B.MEMBERID = #memberId#
             AND
                 A.TENANTID = #tenantId#     
+            LIMIT
+                #limit#, #rowCount#        
+    ]]>
+  </select>
+  
+    <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
+        <![CDATA[
+            SELECT
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+                A.TENANTID = B.TENANTID
+            AND
+                B.MEMBERID = #memberId#
+            AND
+                A.TENANTID = #tenantId#
+            AND
+                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
             LIMIT
                 #limit#, #rowCount#        
     ]]>

@@ -176,9 +176,13 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
+
+	        	var keyword = document.getElementById("txt_keyword").value;
+alert(keyword);	        	
 		        starttime = new Date().getTime();
-		        if (SQLPARADATA != ""){
-		        	url = "/ezBoard/getSearchBoardList.do";
+		        if (keyword != ""){
+		        	//url = "/ezBoard/getSearchBoardList.do";
+		        	url = "/ezCircular/getSearchCircularList.do";
 		        }
 		        else{
 		        	//url = "/ezBoard/getBoardList.do";
@@ -187,13 +191,14 @@
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
-					async : true,
+					async : false,
 					url : url,
 					data : { boardType   : "M", 
 							 pageNum 	 : CurPage, 
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
-							 searchQuery : SQLPARADATA
+							 searchQuery : SQLPARADATA,
+							 keyword : keyword
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -592,7 +597,7 @@
 	                }
 	            }
 	            CurPage = "1";
-	            BoardSearchOptionHidden();
+	            //BoardSearchOptionHidden();
 	            getBoardList();
 	        }
 
@@ -618,7 +623,7 @@
 	<body class="mainbody" style="overflow:hidden;">
 	    <h1>신규 회람판<span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" value='제목/댓글 검색' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			  <input id="txt_keyword" style="width:150px;" value='' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>

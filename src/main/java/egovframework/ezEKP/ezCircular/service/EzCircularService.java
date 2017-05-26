@@ -14,7 +14,11 @@ public interface EzCircularService {
 	
 	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 	
+	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
+	
 	public List<HashMap<String, Object>> getCircularMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+	
+	public List<HashMap<String, Object>> getSearchCircularMapList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
 	
 	public List<CircularListVO> getCircularUserList(int circularID, int tenantID) throws Exception;
 	

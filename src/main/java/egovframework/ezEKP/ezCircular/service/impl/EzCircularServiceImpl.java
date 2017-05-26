@@ -121,6 +121,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
+	public List<HashMap<String, Object>> getSearchCircularMapList(String memberID, int startRow, int endRow, int tenantId,String keyword) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberId", memberID);
+		map.put("limit", startRow-1);
+		map.put("rowCount", endRow-(startRow-1));
+		map.put("tenantId", tenantId);
+		map.put("searchKeyword", keyword);
+		return ezCircularDAO.getSearchCircularMapList(map);
+	}
+	
+	@Override
 	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_MEMBERID", userInfo.getId());
@@ -423,6 +434,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
 		return ezCircularDAO.getAttachList(map);
+	}
+
+	@Override
+	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberId", memberID);
+		map.put("limit", startRow-1);
+		map.put("rowCount", endRow-(startRow-1));
+		map.put("tenantId", tenantId);
+		map.put("searchKeyword", keyword);
+		return ezCircularDAO.getSearchCircularList(map);
 	}
 	
 	
