@@ -828,10 +828,32 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 		}
 		
+		int hasAttach = 0;
+		 //첨부파일 리스트
+		hasAttach = result.getHasFile();
+		StringBuilder strAttach = new StringBuilder();
+        //if (hasAttach == 1) {            	
+        	//hasAttach = 1;            	
+        	
+        	List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
+        	
+        	strAttach.append("<ROOT><NODES>");
+        	
+            for (CircularAttachVO attach : attachList) {
+                strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize()) + "]]></DATA>");
+                strAttach.append("<DATA2><![CDATA[]]></DATA2>");
+                strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
+            }
+            strAttach.append("</NODES></ROOT>");            		
+        //} else {
+        //	hasAttach = 0;
+        //}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("circularID", circularID);
 		model.addAttribute("result", result);
 		model.addAttribute("listUser", listUser);
+		model.addAttribute("strAttach", strAttach.toString());
 		
 		return "/ezCircular/circularModify";
 	}

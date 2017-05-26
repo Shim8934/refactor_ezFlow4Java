@@ -88,7 +88,8 @@
 	            
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${listUser}";
-
+				
+	        	setAttachFileInfo("${strAttach}");
 	    /*     	if (m_Arguments != undefined) {
 	            	ItemArray[0] = m_Arguments[0];
 	            	ItemArray[1] = m_Arguments[1];
@@ -378,7 +379,7 @@ alert(document.getElementById("receiverID").innerHTML);
   			</tr>
   			<tr>
   				<td>
-  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
+  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezSchedule/scheduleDragAndDrop.do"></iframe>
   				</td>
   			</tr>
 		</table>
