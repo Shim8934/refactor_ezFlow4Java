@@ -85,6 +85,38 @@
 
 	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID+"&num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);
 	        }
+		    
+		    //삭제버튼 클릭시
+	        function btn_delete() {
+		    	var circularID = "${result.circularId}";
+				
+	            if (!confirm("회람을 삭제하시겠습니까?"))
+	                return;
+	            
+	            //window.location.href = "/ezCircular/circularDelete.do?circularID="+circularID;
+	            
+	            $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCircular/circularDelete.do",
+					data : { 
+						circularID : circularID
+					},
+					success: function() {
+						alert("회람을 삭제하였습니다.");
+						
+		                try { window.opener.RefreshView() } catch (e) { }
+		
+		                if (window.opener.reload != undefined)
+		                    window.opener.reload();
+		                window.close();
+					},
+					error: function(err) {
+						alert("<spring:message code='ezSchedule.t212' />");
+					}
+				});	
+	        }
 
 	        function window_onUnload() {
 	            if (window.dialogArguments == undefined) {
@@ -239,7 +271,7 @@
             	    <div id="menu">
                 	    <ul>
                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li>
-                        	<li id="deletebtbn"><span onclick="delSchedule_onClick('${num}','${ownerID}')">삭제</span></li>
+                        	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
                         	<li><span>회람종료</span></li>
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>

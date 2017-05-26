@@ -1124,4 +1124,26 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptDel ended");
 	}
 	
+	/**
+	 * 회람판 신규 회람판 삭제 실행 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularDelete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void circularDelete(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+		logger.debug("circularDelete started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String circularID = "";
+		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
+			circularID = request.getParameter("circularID");
+		}
+		
+		logger.debug("circularID : "+circularID);
+		
+		ezCircularService.deleteCircular(Integer.parseInt(circularID), userInfo.getTenantId());
+
+		logger.debug("circularDelete ended");
+	}
+	
 }
