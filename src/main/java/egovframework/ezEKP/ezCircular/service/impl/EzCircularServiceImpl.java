@@ -140,7 +140,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName) throws Exception {
+	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("title", title);
@@ -162,6 +162,26 @@ public class EzCircularServiceImpl implements EzCircularService {
 		for (int i=0; i<receiverLength; i++) {
 			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName[i].trim(), status, "", updateStatus, tenantID);
 		}
+		
+		int fileLength = fileList.split(",").length;
+		String[] fileLists = fileList.split(",");
+		
+		for (int j=0; j<fileLength; j++) {
+			String[] files = fileLists[j].split("/");
+			String filePath = files[0];
+			String fileName = files[1];
+			String fileSize = files[2];
+			
+			String mhtPath = commonUtil.separator + "doc";
+			String uploadFilePath = commonUtil.separator + "uploadFile";
+			
+			filePath = uploadFilePath + commonUtil.separator + filePath;
+			
+			
+			
+			 
+		}
+		
 	}
 
 	@Override

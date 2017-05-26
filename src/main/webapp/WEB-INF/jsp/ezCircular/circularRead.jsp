@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" >
 		 	var g_data = new Array();
 		 	//writerID trim
@@ -45,8 +46,24 @@
 	        var pNoneActiveX = "${pNoneActiveX}";
 	        var brdName = "${brdName}";
 	        var resID = "${resID}";
+	        var contentpath = "/doc/{b70a579c-1468-4b93-9ec8-3bd42ba738cc}";
 	        
 	        window.onload = function () {
+	        	
+	        	   $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { 
+							type   : "SCHEDULECONTENT", 
+							itemID 	 : contentpath
+						},
+						success: function(result){
+							document.getElementById('message').innerHTML = result;
+						}        			
+					});
+	        	
 	            //document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 	            document.getElementById('itemList').innerHTML = "${listUser}";
 	            
@@ -299,6 +316,13 @@
 	                 			<div id="divCross" style="overflow:auto;">efef</div>
 	            			</td>
 	        			</tr>
+	        			
+	        			<tr>
+	                		<td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
+	                    		<div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></div>
+	                		</td>
+	            		</tr>
+	        			
 	        		</table>
 	        	</td>
         	</tr>

@@ -313,6 +313,16 @@
     ]]>
   </insert>
   
+  <insert id="EzScheduleDAO.insertCircularAttach" parameterClass="map">
+    <![CDATA[
+        INSERT INTO TBL_CIRCULAR_FILE(
+            CIRCULARFILEID ,CIRCULARID, FILENAME, FILESIZE, FILEPATH, TENANTID
+        ) VALUES (
+            #circularFileID#, #circularID#, #fileName#, #fileSize#, #filePath#, #tenantID#
+        )
+      ]]>
+  </insert>
+  
   <update id="EzCircularDAO.modifyCircular" parameterClass="Map">
     <![CDATA[
         UPDATE
