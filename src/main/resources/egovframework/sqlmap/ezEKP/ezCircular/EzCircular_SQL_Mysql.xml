@@ -347,7 +347,8 @@
             TITLE = #title#,
             IMPORTANCE = #importance#,
             OPTION = #option#,
-            CONTENT = #content#
+            CONTENT = #content#,
+            HASFILE = #hasFile#
         WHERE 
             CIRCULARID = #circularID#
         AND
@@ -492,6 +493,17 @@
 				TENANTID = #tenantId#
 		]]>
 	</delete>
+  
+    <delete id="EzCircularDAO.deleteCircularAttach" parameterClass="map">
+        <![CDATA[
+            DELETE FROM
+                TBL_CIRCULAR_FILE
+            WHERE
+                CIRCULARID = #circularID#
+            AND 
+                TENANTID = #tenantID#
+      ]]>   
+  </delete>
 	
 	<update id="EzCircularDAO.update_circularDept" parameterClass="CircularDeptVO">
 		<![CDATA[

@@ -89,6 +89,7 @@
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${listUser}";
 				
+	        	//hasFie구분
 	        	setAttachFileInfo("${strAttach}");
 	    /*     	if (m_Arguments != undefined) {
 	            	ItemArray[0] = m_Arguments[0];
@@ -215,8 +216,20 @@
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 2;
 				}
-alert('${listUser}');
-alert(document.getElementById("receiverID").innerHTML);
+				
+				//파일 첨부된 목록 가져오기
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				
+				var fileList = "";
+				for (var i = 0; i < filelist.length - 1; i++) {	    
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "fileinfo");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+            		}
+				}
+
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
 	                type : 'POST',
@@ -228,7 +241,8 @@ alert(document.getElementById("receiverID").innerHTML);
 	                			receiverList : '${listUser}',
 	                			receiverID : document.getElementById("receiverID").innerHTML,
 	                			circularId : "${circularID}",
-	                			content : content
+	                			content : content,
+	                			fileList : fileList
 	                },  
 	                cache: false,
 	                success: function(data) {	   

@@ -127,6 +127,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		delete("EzCircularDAO.deleteCircularUser", map);
 	}
 	
+	public void deleteCircularAttach(Map<String, Object> map) throws Exception{
+		delete("EzCircularDAO.deleteCircularAttach", map);
+	}
+	
 	public void set_circularDeptSave(CircularDeptVO circularDeptVO) throws Exception {
 		insert("EzCircularDAO.set_circularDeptSave", circularDeptVO);
 	}

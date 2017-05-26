@@ -143,6 +143,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
+		//파일이 있으면 hasFile을 1로 설정
+		if (fileList != null && !!fileList.equals("")) {
+			hasFile = 1;
+		}
+		
 		map.put("circularID", circularID);
 		map.put("title", title);
 		map.put("importance", importance);
@@ -156,16 +162,18 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("regDate", regDate);
 		map.put("endDate", endDate);
 		map.put("tenantID", tenantID);
+		
 		ezCircularDAO.insertCircular(map);
 		
+		//가장 최근에 사용한 autoIncrement값 가져옴
 		int lastID = ezCircularDAO.getLastID();
-
-		//첨부파일 저장
-		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		for (int i=0; i<receiverLength; i++) {
 			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName[i].trim(), status, "", updateStatus, tenantID);
 		}
+		
+		//첨부파일 저장
+		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
 			int fileLength = fileList.split(",").length;
@@ -177,7 +185,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String fileName = files[1];
 				String fileSize = files[2];
 				
-				String mhtPath = commonUtil.separator + "doc";
 				String uploadFilePath = commonUtil.separator + "uploadFile";
 				
 				filePath = uploadFilePath + commonUtil.separator + filePath;
@@ -191,8 +198,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.insertCircularAttach(attachMap);
 			}
 		}
-		
-		
 	}
 
 	@Override
@@ -218,37 +223,64 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID, int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content) throws Exception {
+	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID, int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content, String fileList) throws Exception {
+		//파일이 있으면 hasFile을 1로 설정
+		int hasFile = 0;
+
+		if (fileList != null && !fileList.equals("")) {
+			hasFile = 1;
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title", title);
 		map.put("importance", importance);
 		map.put("option", option);
 		map.put("content", content);
 		map.put("circularID", circularID);
+		map.put("hasFile", hasFile);
 		map.put("tenantID", tenantID);
 		ezCircularDAO.modifyCircular(map);
 		
 		List<CircularListVO> list = getCircularUserList(circularID, tenantID);
 		
-		String listUser = "";
-		
-		for (int i=0; i<list.size(); i++) {
-			if (list.size() == 1) {
-				listUser = list.get(i).getMemberId();
-			} else if (i !=list.size()-1){
-				listUser += list.get(i).getMemberId() + ",";
-			} else {
-				listUser += list.get(i).getMemberId();
-			}
-		}
-		
 		logger.debug("receiverLength :"+receiverLength);
 		logger.debug("listSize : "+list.size());
 		
+		//회람자 삭제 후 등록
 		deleteCircularUser(circularID, tenantID);
 		for (int i=0; i<receiverLength; i++) {
 			insertCircularUser(circularUserId, circularID, list.get(i).getMemberId(), list.get(i).getMemberName(), list.get(i).getMemberName2(), status, confirmDate, updateStatus, tenantID);
 		}
+		
+		//첨부파일 삭제 후 등록
+		ezCircularDAO.deleteCircularAttach(map);
+		
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		
+		if (fileList != null && !fileList.equals("")) {
+			int fileLength = fileList.split(",").length;
+			String[] fileLists = fileList.split(",");
+			
+			for (int j=0; j<fileLength; j++) {
+				String[] files = fileLists[j].split("/");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+				
+				String uploadFilePath = commonUtil.separator + "uploadFile";
+				
+				filePath = uploadFilePath + commonUtil.separator + filePath;
+				
+				attachMap.put("circularID", circularID);
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", filePath);
+				attachMap.put("tenantID", tenantID);
+				
+				ezCircularDAO.insertCircularAttach(attachMap);
+			}
+		}
+		
 	}
 
 	@Override

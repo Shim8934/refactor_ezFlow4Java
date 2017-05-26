@@ -868,6 +868,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String fileList = "";
+		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
+			fileList = request.getParameter("fileList");
+		}
+
 		int circularUserId = 0;
 		int updateStatus = 0;
 		String confirmDate = "";
@@ -880,7 +885,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		int receiverLength = receiverList.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
 		
-		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID,updateStatus,circularUserId,circularListVO.getMemberName(),circularListVO.getMemberName2(),circularListVO.getStatus(),confirmDate,circularListVO.getContent());
+		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID,updateStatus,circularUserId,circularListVO.getMemberName(),circularListVO.getMemberName2(),circularListVO.getStatus(),confirmDate,circularListVO.getContent(), fileList);
 
 		logger.debug("saveModifyCircular ended");
 	}

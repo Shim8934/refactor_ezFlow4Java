@@ -169,22 +169,15 @@
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
-				
-				
-				
 				var fileList = "";
 				for (var i = 0; i < filelist.length - 1; i++) {	    
-				    //createNodeAndAppandNodeText(xmlDom, objRow, objRows, "ID", GetAttribute(filelist[i + 1], "attid"));
-				    //createNodeAndAppandNodeText(xmlDom, objRow, objRows, "ATTACH", GetAttribute(filelist[i + 1], "fileinfo"));
-
-					//obj.attach = GetAttribute(filelist[i + 1], "fileinfo");
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
 					} else {
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-alert("receiverID:"+document.getElementById("receiverID").innerHTML);
+
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	                type : 'POST',
