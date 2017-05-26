@@ -1163,14 +1163,14 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var tr = DocList.GetSelectedRows();
-	
+
 		        if (UserID.toLowerCase() != WriterID.toLowerCase()) {
 		            var InformationString = "<spring:message code='ezApproval.t579'/>";
 		            OpenAlertUI(InformationString, "OPEN");
 		            return;
 		        }
 	
-		        if (GetAttribute(tr[0], "DATA7") == strDocState4) {
+		        if (GetAttribute(tr[0], "DATA12") == strDocState4) {
 		            var InformationString = "<spring:message code='ezApproval.t580'/>";
 		            OpenAlertUI(InformationString, "OPEN");
 		            return;
@@ -1215,6 +1215,37 @@
 		        }
 		        var result = GetOpenWindow(openLocation, "", 1000, 950, "NO");
 		    }
+		    
+		    var aprgongramline_cross_dialogArguments = new Array();
+		    function sendCirCulation_onclick() {
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var tr = DocList.GetSelectedRows();
+	
+		        if (GetAttribute(tr[0], "DATA12") != strDocState1) {
+		            var InformationString = "<spring:message code='ezApprovalG.hyj26'/>";
+		            OpenAlertUI(InformationString, "OPEN");
+		            return;
+		        }
+		        
+		        var url = "/ezApprovalG/aprGongRamLine.do?type=END";
+		    	var para = new Array()
+		        para[0] = DocID;
+		        para[1] = pURL;
+				
+	            aprgongramline_cross_dialogArguments[0] = para;
+	            aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
+	
+	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1120, 740));
+	            try { OpenWin.focus(); } catch (e) { }
+		    }
+
+		    function sendCirCulation_onclick_Complete(rtn) {
+		        if (rtn == "OK") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.hyj27'/>";
+		            OpenAlertUI(pAlertContent);
+		        }
+		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1233,6 +1264,7 @@
 	        	<c:if test ="${approvalFlag == 'S'}">
 	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
 	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
+	            <li id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
 <!-- 	            시행문 변환 추후 개발 -->
 				<div style="display: none">
 		            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>

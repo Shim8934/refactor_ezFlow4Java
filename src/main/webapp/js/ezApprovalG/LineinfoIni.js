@@ -70,7 +70,7 @@ function GetReceptTempletListCC() {
     		url : "/ezApprovalG/getLineTemplist.do",
     		data : {
     				userID 	 : pUserID,
-    				formID   : pFormID
+    				formID   : "ZZZZZZZZ"
     				},
     		success: function(text){
     			event_GetReceptTempletListCC(text);
@@ -131,7 +131,7 @@ function GetReceptTempletInfoCC(p_AprLineTempletID) {
     		url : "/ezApprovalG/aprLineTempletListInfo.do",
     		data : {
     				userID 	 : pUserID,
-    				formID   : pFormID,
+    				formID   : "ZZZZZZZZ",
     				aprLineSN: p_AprLineTempletID
     				},
     		success: function(text){

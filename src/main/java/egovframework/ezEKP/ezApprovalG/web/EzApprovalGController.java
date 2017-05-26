@@ -1101,8 +1101,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 결재선저장 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprLineTempletName.do")
-	public String aprLineTempletName(Model model, HttpServletRequest request){
+	public String aprLineTempletName(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 		model.addAttribute("type", request.getParameter("type")== null? "" : request.getParameter("type"));
+		model.addAttribute("approvalFlag", approvalFlag);
+		
 		return "ezApprovalG/apprGaprLineTempletName";
 	}
 	
@@ -5738,6 +5743,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String type = "APR";
 		String serverName = userInfo.getServerName();
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (request.getParameter("type") != null) {
 			type = request.getParameter("type");
@@ -5746,6 +5752,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("type", type);
 		model.addAttribute("serverName", serverName);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		return "ezApprovalG/apprGaprGongRamLine";
 	}
