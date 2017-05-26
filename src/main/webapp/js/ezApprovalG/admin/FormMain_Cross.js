@@ -195,7 +195,7 @@ function SaveFormInfo() {
     var url = "";
     
     if(useEditor == "HWP") {
-    	url = "/admin/ezApprovalG/formSaveHwp.do";
+    	url = "/admin/ezApprovalG/formSaveHWP.do";
     } else {
     	url = "/admin/ezApprovalG/formSave.do";
     }

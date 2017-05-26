@@ -405,6 +405,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
+		String type = request.getParameter("type");
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		String companyID = request.getParameter("companyID");
 		
@@ -441,54 +442,19 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
-		model.addAttribute("useEditor", useEditor);
+		
+		if (type != null && type.equals("HWP")) {
+			model.addAttribute("useEditor", "HWP");
+			model.addAttribute("realPath", commonUtil.getRealPath(request).replace("\\","/"));
+		} else {
+			model.addAttribute("useEditor", useEditor);
+		}
+		
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("formMainOther ended.");
 		
 		return "admin/ezApprovalG/apprGFormMainOther";
-	}
-	
-	/**
-	 * 전자결재G관리 양식등록 양식등록,양식수정 화면 호출 함수 (한글기안)
-	 */
-	@RequestMapping(value="admin/ezApprovalG/formMainHWP.do")
-	public String formMainHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("formMainHWP started.");
-		
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("appprovalFlag", userInfo.getTenantId());
-		//관리자 권한 체크
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
-		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
-		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
-		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
-		String tCheck = request.getParameter("tCheck");
-		String contID = request.getParameter("contID");
-		String formID = request.getParameter("formID");
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
-		String companyID = request.getParameter("companyID");
-		
-		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
-		
-		model.addAttribute("formProcSpelling", formProcSpelling);
-		model.addAttribute("topID", userInfo.getCompanyID());
-		model.addAttribute("primary", primary);
-		model.addAttribute("secondary", secondary);
-		model.addAttribute("title", title);
-		model.addAttribute("isInsUp", tCheck);
-		model.addAttribute("contID", contID);
-		model.addAttribute("formID", formID);
-		model.addAttribute("docType", docType);
-		model.addAttribute("companyID", companyID);
-		model.addAttribute("pEditorType", "HWP");
-		
-		logger.debug("formMainHWP ended.");
-		
-		return "admin/ezApprovalG/apprGFormMainHWP";
 	}
 		
 	/**
@@ -587,6 +553,38 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("formSave ended. result = " + result);
 		
+		
+		return "<DATA>OK</DATA>";
+	}
+	
+	/**
+	 * 전자결재G관리 한글양식등록 양식등록,양식수정 양식작성기 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formSaveHWP.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String formSaveHWP (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("formSaveHWP started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String companyID = request.getParameter("companyID");
+		String contID = request.getParameter("formContID");
+		String formID = request.getParameter("formID");
+		String formInfo = request.getParameter("formInfo");
+		String formMHT = request.getParameter("formMHT");
+		String formConnInfo = request.getParameter("formConn");
+		String formWorkFlow = request.getParameter("formWorkFlow");
+		String formAutoRule = request.getParameter("formAutoRule");
+		String formAutoRuleLine = request.getParameter("formAutoRuleLine");
+		String formRecevGroup = request.getParameter("formRecevGroup");
+		
+		logger.debug("formAutoRule = " + formAutoRule);
+		logger.debug("formAutoRuleLine = " + formAutoRuleLine);
+		
+		String result = ezApprovalGAdminService.saveFormInfoHWP(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag);
+		
+//		logger.debug("formSaveHWP ended. result = " + result);
 		
 		return "<DATA>OK</DATA>";
 	}

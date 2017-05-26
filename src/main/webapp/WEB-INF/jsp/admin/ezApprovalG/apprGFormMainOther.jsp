@@ -50,6 +50,7 @@
 		    var WorkData = "";
 		    var useEditor = "${useEditor}";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
+		    var realPath = "<c:out value = '${realPath}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -146,8 +147,7 @@
 		            if (formURL != "") {
 		                if (useEditor == "HWP") {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
-		                    
-		                    message.HWP_LoadFile(formURL);
+		                    message.HWP_LoadFile(realPath + formURL);
 		                    if (message.HWP_GetDocumentElement() != "") {
 		                        var ConnURL = message.HWP_GetDocumentElement().replace("<CONNINFO>", "").replace("</CONNINFO>", "");
 		
@@ -642,7 +642,7 @@
 			            if (userRows.length <= 0) {
 			                OpenAlertUI(linealt1);
 			            }
-		    		}        			
+		    		}
 		    	});
 		    }
 		
@@ -817,7 +817,7 @@
 				<span style="min-width: 45px;" id="formstr"><spring:message code='ezApprovalG.t825'/></span>
 			</h2>
 			
-			<table class="content" style="width:100%;">                
+			<table class="content" style="width:100%;">
 				<tr>                
 					<th style="width:100px; text-align:center">${primary}</th>
                     <td style="width:40%;">
@@ -888,8 +888,8 @@
 					<tr>
                         <td style="height:770px; vertical-align:top">
                         	<c:choose>
-                        		<c:when test="${editorType == 'HWP'}">
-	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/hwpEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
+                        		<c:when test="${useEditor == 'HWP'}">
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
 	                                <iframe id="message" class="viewbox" src="/ezEditor/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
