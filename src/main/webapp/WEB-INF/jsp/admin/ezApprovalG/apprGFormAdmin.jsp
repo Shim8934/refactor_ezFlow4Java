@@ -313,13 +313,13 @@
 						} else {
 							//일반일때 ck
 							if (approvalFlag =='S') {
-								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO") {
+								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
 									url = "/admin/ezApprovalG/formMain.do";
 								}
 							} else {
-								if (pEditor == "DEXT" || pEditor == "NAMO") {
+								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
 									url = "/admin/ezApprovalG/formMain.do";
@@ -376,13 +376,13 @@
 		            }
 		            else {
 		            	if (approvalFlag =='S') {
-							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO") {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";
 							}
 						} else {
-							if (pEditor == "DEXT" || pEditor == "NAMO") {
+							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";
