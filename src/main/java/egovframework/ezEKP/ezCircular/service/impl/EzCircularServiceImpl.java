@@ -158,6 +158,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.insertCircular(map);
 		
 		int lastID = ezCircularDAO.getLastID();
+
+		//첨부파일 저장
+		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		for (int i=0; i<receiverLength; i++) {
 			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName[i].trim(), status, "", updateStatus, tenantID);
@@ -165,6 +168,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		int fileLength = fileList.split(",").length;
 		String[] fileLists = fileList.split(",");
+		circularID = ezCircularDAO.getLastID();
 		
 		for (int j=0; j<fileLength; j++) {
 			String[] files = fileLists[j].split("/");
@@ -177,9 +181,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 			
 			filePath = uploadFilePath + commonUtil.separator + filePath;
 			
+			attachMap.put("circularID", circularID);
+			attachMap.put("fileName", fileName);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", filePath);
+			attachMap.put("tenantID", tenantID);
 			
-			
-			 
+			ezCircularDAO.insertCircularAttach(attachMap);
 		}
 		
 	}

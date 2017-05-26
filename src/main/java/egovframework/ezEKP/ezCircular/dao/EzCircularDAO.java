@@ -79,6 +79,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		insert("EzCircularDAO.insertCircularUser", map);
 	}
 	
+	public void insertCircularAttach(Map<String, Object> map) throws Exception{
+		insert("EzScheduleDAO.insertCircularAttach", map);
+	}
+	
 	public void setCircularList_Config2_U(Map<String, Object> map) throws Exception{
 		update("EzCircularDAO.setCircularList_Config2_U", map);
 	}
