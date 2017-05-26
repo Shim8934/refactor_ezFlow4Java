@@ -307,8 +307,7 @@
 						var parameter = "?tCheck=fIns&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 						
 						if (type == "HWP") {
-							url = "/admin/ezApprovalG/formMainHWP.do";
-							
+							url = "/admin/ezApprovalG/formMainOther.do";
 							parameter = parameter + HWP;
 						} else {
 							//일반일때 ck
@@ -329,8 +328,6 @@
 						
 						var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 						Tree_setconfig();
-// 						InitFormCont();
-		                
 		            } else {
 		            	alert("<spring:message code = 'ezApprovalG.t722' />");
 		            }
@@ -369,7 +366,7 @@
 		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
 		                if (isIE)
-		                    url = "/admin/ezApproval/formMainOther.do";
+		                    url = "/admin/ezApprovalG/formMainOther.do";
 		                else
 		                    return;
 		                parameter = parameter + HWP;
@@ -389,7 +386,6 @@
 							}
 						}
 		            }
-		            
 		            
 	
 // 		            if (GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") >  0) {
@@ -639,7 +635,7 @@
 		        <li id="btnDelFcont"><span onclick="return btnDelFcont_onclick()"><spring:message code = 'ezApprovalG.t1628' /></span></li>
 		        <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li>
 		        <li id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
-<%--             	<li id="btnInsForm2"><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li> --%>
+            	<%-- <li id="btnInsForm2"><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li> --%>
 		        <li id="btnUpForm"><span onclick="return UpdateForm()"><spring:message code = 'ezApprovalG.t1668' /></span></li>
 		        <li id="btnDelForm"><span onclick="return DelForm()"><spring:message code = 'ezApprovalG.t1619' /></span></li>
 				<li id="btnModeForm"><span onclick="return MoveForm()"><spring:message code = 'ezApprovalG.t25000' /></span></li>

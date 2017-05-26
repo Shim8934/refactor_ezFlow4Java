@@ -643,7 +643,7 @@
 			            if (userRows.length <= 0) {
 			                OpenAlertUI(linealt1);
 			            }
-		    		}        			
+		    		}
 		    	});
 		    }
 		
@@ -889,8 +889,8 @@
 					<tr>
                         <td style="height:770px; vertical-align:top">
                         	<c:choose>
-                        		<c:when test="${editorType == 'HWP'}">
-	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/hwpEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
+                        		<c:when test="${useEditor == 'HWP'}">
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
