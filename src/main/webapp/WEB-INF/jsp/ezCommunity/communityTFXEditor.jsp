@@ -5,7 +5,7 @@
 	<head>
 		<title></title>
 		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js//tfxEditor/js/xfe_main.js"></script>
+		<script type="text/javascript" src="/js/tfxEditor/js/xfe_main.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script  type="text/javascript">
 			// 웹에디터에 내용 삽입(MHT 파일 url 받음)
@@ -25,7 +25,7 @@
 			}
 			
 			// 웹에디터에 내용 삽입(MHT 파일 url 받음)
-			function SetEditorContentURL2(url) {
+			function GetEditorContentURL(url) {
 				var tempXML = createXmlDom();
 			    var XmlBodyATT = createXmlDom();
 			    var XmlBodyDATA = createXmlDom();
@@ -93,7 +93,7 @@
 	        
 	        xfe.render('xfe');
 	        
-	        window.onload = parent.DocumentComplete;
+	        window.onload = parent.DocumentComplete();
 	    </script>
 	</body>
 </html>

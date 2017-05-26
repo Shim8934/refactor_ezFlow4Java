@@ -154,10 +154,7 @@
 		            alert(e.message);
 		        }
 		    }
-	        function Editor_Complete(){
-		        DocumentComplete();
-		    }
-		    function DocumentComplete() {
+		    function Editor_Complete() {
 		        try {
 		            tbContentElement1.SetEditorContent(document.getElementById("BujaeBody1").innerHTML);
 		        } catch (e) { }
@@ -323,7 +320,7 @@
 	  </tr>
 	</table>
 	<div class="nobox" style="width:718px; height:500px;margin-top:5px;">
-	<iframe id="tbContentElement1" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
+	<iframe id="tbContentElement1" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement1" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
 	</div>
 	<table style="width:720px;" class="box">
 	  <tr>
@@ -336,7 +333,7 @@
 	  </tr>
 	</table>
 	<div class="nobox" style="width:720px; height:500px;margin-top:5px;">
-	<iframe id="tbContentElement2" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
+	<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;border:1px solid gray;"></iframe>
 	</div> 
 	<div style="width:700px;text-align:center;margin-top:10px">
 	    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezEmail.t48' /></span></a>

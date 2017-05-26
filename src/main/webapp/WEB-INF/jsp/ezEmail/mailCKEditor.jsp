@@ -138,12 +138,78 @@
 		        } catch (e) {
 		        }
 		    }
+		    
+		    function setTextPlain(isTextPlain) {
+		    	
+		    	if (isTextPlain) { // case of text-plain
+		    		// make text plain data wrapped by P tag
+		    		var mhtBody = "";
+		            var div_ = document.createElement("DIV");
+		            div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + GetEditorContent() + "</HTML>";
+		            mhtBody = div_.textContent;
+		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
+		            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
+		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
+		            
+		            var texts = mhtBody.split("\n");
+		            var textData = "";
+		            var defaultFont = "<spring:message code='main.t246' />";
+		            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
+		            for (var i=0; i<texts.length; i++) {
+		            	if (texts[i] != "") {
+		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+		            	}
+		            }
+		        	
+		            // create new editor config and replace
+		        	var config = {};
+		        	config.toolbar = [['Print']];
+		        	config.resize_enabled = false;
+		        	config.removePlugins = 'elementspath';
+		        	config.forcePasteAsPlainText = true; // forse to set plain text on paste
+		        	
+		        	CKEDITOR.instances.editor1.destroy();
+		        	CKEDITOR.replace('editor1', config);
+		        	
+		        	// prevent image drop
+		        	CKEDITOR.on('instanceReady', function (ev) {
+					   ev.editor.document.on('drop', function (ev) {
+					      ev.data.preventDefault(true);
+					   });
+					});
+		        	
+		        	// set editor content
+		        	setTimeout( function(a) {
+		        		SetEditorContent(a);
+		        	}, 500, textData);
+		        	
+		    	} else { // case of text-html
+		    		var textData = GetEditorContent();
+		        	
+		    		// replace to the old config
+	        		CKEDITOR.instances.editor1.destroy();
+	        		CKEDITOR.replace('editor1', oldConfig);
+	        		
+	        		//TODO: 수정 - image drop 막은거 풀어야함...ㅠ
+	        		CKEDITOR.on('instanceReady', function (ev) {
+						ev.editor.document.off('drop');
+	        		});
+	        		
+	        		// set editor content
+	        		setTimeout( function(a) {
+		        		SetEditorContent(a);
+		        	}, 500, textData);
+		    	}
+		    }
 		</script> 
 	</head>
 
 	<body>
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">
+			//TODO: oldConfig 어디다가 둬야하지
+			var oldConfig;
+		
 			if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailoutofoffice.do") > -1) {
 				CKEDITOR.replace('editor1', { fullPage: false, removePlugins: '_Insert_Image' });
 				
@@ -164,6 +230,8 @@
 		    if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignature.do") > -1) {
 		    	CKEDITOR.config.imageUploadUrl = "/ezEmail/ckSimpleUpload.do";
 		    }
+		    
+		    oldConfig = CKEDITOR.config;
 		</script>
 	</body>
 </html>

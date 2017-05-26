@@ -34,7 +34,7 @@
 			}	
 		
 			// 웹에디터에 내용 삽입(MHT 파일 url 받음)
-			function SetEditorContentURL2(url) {
+			function GetEditorContentURL(url) {
 			    var tempXML = createXmlDom();
 			    var XmlBodyATT = createXmlDom();
 			    var XmlBodyDATA = createXmlDom();
@@ -101,7 +101,7 @@
 		    }
 		
 		    window.onload = function () {
-		        parent.DocumentComplete();
+		        parent.Editor_Complete();
 		    };
 		</script> 
 	</head>

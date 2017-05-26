@@ -38,14 +38,8 @@
 				} catch (e) {
 					
 				}
-				
-			    message.SetEditorContent("${personalNoticeVO.content}");
 			}
 			
-		    function GetEditorContent() {
-		        return CKEDITOR.instances.editor1.getData();
-		    }
-		    
 		    function OK_Click() {
 		        if (compid == "") {
 		            return;
@@ -120,6 +114,10 @@
 		        
 		        window.close();
 		    }
+		    
+		    function Editor_Complete() {
+			    message.SetEditorContent("${personalNoticeVO.content}");
+		    }
 		</script>
 	</head>
 	<body class="popup" >
@@ -148,7 +146,7 @@
 		       		<table width="100%" height="100%"> 
 		       			<tr> 
 		            		<td valign="top">
-		                		<iframe id="message" class="viewbox"  name="message" src="/admin/ezPersonal/addNoticeCKContent.do" frameborder="0" style="padding:0; height:340px; width:100%; overflow:auto;"></iframe>
+		                		<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:340px; width:100%; overflow:auto;"></iframe>
 		           			</td>
 		       			</tr> 
 		     		</table>
@@ -160,6 +158,11 @@
 			<%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
 		    <a class="imgbtn"><span onclick="btn_Close()"><spring:message code = 'ezPersonal.t13' /></span></a>
+		</div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

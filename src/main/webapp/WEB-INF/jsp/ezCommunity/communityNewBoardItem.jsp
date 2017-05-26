@@ -762,7 +762,7 @@
 	                }
 	            }
 							
-	            function DocumentComplete() {
+	            function Editor_Complete() {
 	            	if (flag == false) {
 		                flag = true;
 		                
@@ -774,7 +774,7 @@
 		                        var fullPath = strContentLocation;
 		                        
 		                        if (pMode == "reply") {
-		                            var htmlData = message.SetEditorContentURL2(fullPath);
+		                            var htmlData = message.GetEditorContentURL(fullPath);
 		                            htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
 		                            htmlData = ReplaceText(htmlData, "class=FIELD", "");
 		        		            
@@ -977,7 +977,7 @@
 			<tr>
 				<td style="height: 100%; vertical-align: top;" id="EdtorSize">
 					<iframe id="message" class="viewbox" name="message"
-						src="/ezCommunity/selectEditor.do"
+						src="/ezEditor/selectEditor.do"
 						style="padding: 0; height: 100%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
 				</td>
 			</tr>

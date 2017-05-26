@@ -6332,9 +6332,6 @@
 		</isNotEqual>
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO"> -->
-<!-- 		{CALL EZSP_GETSEARCHDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DEPTNAME#, #v_FORMID#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_PROCESSDATE1#, #v_PROCESSDATE2#, #iv_APRFLAG#, #v_DOCSTATE#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_LANGTYPE#, #v_APPROVUSER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id="EzApprovalG.getSearchDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		SELECT 
 			* 
@@ -8049,31 +8046,27 @@
 	   	]]> 
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.aprGetNewID" parameterClass="Map" resultClass="String"> -->
-<!-- 		{CALL APRGETNEWID(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<update id="EzApprovalG.aprGetNewID" parameterClass="Map">
-	<![CDATA[
-		UPDATE 
-			TBL_LastDocID
-      	SET 
-      		lastDocID = (
-      						SELECT 
-      						*
-      						FROM(
-		   					        SELECT 
-		   								(max(lastDocID) +1)
-		  							FROM 
-		  								TBL_LastDocID
-		  							WHERE	
-		  								TENANT_ID = #v_TENANTID#
-		  							AND
-		  								COMPANYID = #companyID#)A )
-		WHERE 
-			TENANT_ID = #v_TENANTID#
-		AND
-			COMPANYID = #companyID#
-     ]]>
+		<![CDATA[
+			UPDATE
+				TBL_LastDocID
+	      	SET 
+	      		lastDocID = (SELECT
+	      						*
+	      					FROM
+	      						(SELECT 
+	   								(max(lastDocID) +1)
+	  							FROM 
+	  								TBL_LastDocID
+	  							WHERE	
+	  								TENANT_ID = #v_TENANTID#
+	  							AND
+	  								COMPANYID = #companyID# ) A )
+			WHERE 
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+	     ]]>
 	</update>
 	
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">
@@ -8087,9 +8080,6 @@
 	    	COMPANYID = #companyID#
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getCabinetCode2Name" parameterClass="Map" resultClass="String"> -->
-<!-- 		{CALL EZSP_GETCABINETCODE2NAME(#v_CODETYPE#, #v_CODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id="EzApprovalG.getCabinetCode2Name" parameterClass="Map" resultClass="String">
 		<isEqual property="v_LANGTYPE" compareValue="1">
 			  SELECT 
@@ -8121,9 +8111,6 @@
 		</isNotEqual>
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String"> -->
-<!-- 		{CALL EZSP_GETDOCINFO_YEAR(#v_PDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
 		SELECT 
 			CASE  WHEN HREF = ' ' THEN 
@@ -8692,7 +8679,7 @@
 	    WHERE  
 	    	ORGDOCID = #v_ORGDOCID#
 	    AND 
-	    	DOCSTATE = '015'
+	    	DOCSTATE = #v_docState#
 	    AND
 	    	TENANT_ID = #v_TENANTID#
 	    AND
@@ -16761,15 +16748,6 @@
    			 (#v_ArrayString#, #v_ArrayString1#, #v_ArrayString2#, #v_CABCLASSNO# , #v_TENANTID#, #companyID#)
    </insert>
    
-   <!-- 기안문 제일 처음 작성시 DOCID 초기 설정 -->
-   <insert id="EzApprovalG.insertAprGetNewID" parameterClass="map">
-   	  INSERT INTO 
-   	  	  TBL_LastDocID
-   	  	  (LASTDOCID, TENANT_ID, COMPANYID)
-   	  VALUES
-   	  	  (0, #v_TENANTID#,  #companyID#)
-   </insert>
-   
    <delete id="EzApprovalG.deleteFormRecvTB" parameterClass="map">
       DELETE FROM 
       	 TBL_RECEIPTPOINTINFO 
@@ -18874,7 +18852,7 @@
    <insert id="EzApprovalG.insertGongRamAprDocInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_APRDOCINFO 
-   		(        DocID,       FormID, OrgDocID, DocType, DocState,        FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle,WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+   		(        DocID,       FormID, OrgDocID, DocType, DocState,        FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,   EndDate, WriterID, WriterName, WriterName2, WriterJobTitle,WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
    		(SELECT 
    			#v_GONGRAMDOCID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_FUNCTIONTYPE#, #v_HREF#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
          FROM 
@@ -18951,43 +18929,6 @@
 			AND 
     			COMPANYID = #companyID#)
    </insert>
-   
-   <update id="EzApprovalG.updateGongRamAprDocInfo" parameterClass="Map">
-		UPDATE 
-			TBL_APRDOCINFO 
-		SET 
-			StartDate = $v_DATE$ 
-		WHERE 
-			DocID = #v_GONGRAMDOCID#
-		AND 
-			StartDate IS NULL  
-		AND 
-			TENANT_ID = #v_TENANTID#
-		AND 
-    		COMPANYID = #companyID#
-   </update>
-   
-   <delete id="EzApprovalG.deleteGongRamAprLineInfo" parameterClass="Map">
-      DELETE FROM 
-      		TBL_APRLINEINFO 
-      WHERE 
-      		DocID = #v_GONGRAMDOCID# 
-      AND 
-      		TENANT_ID = #v_TENANTID#
-      AND 
-        	COMPANYID = #companyID#
-   </delete>
-   
-   <delete id="EzApprovalG.deleteGongRamExpAprLine" parameterClass="Map">
-        DELETE FROM 
-        		TBL_EXPAPRLINE 
-        WHERE 
-        	DocID = #v_GONGRAMDOCID# 
-      	AND 
-      		TENANT_ID = #v_TENANTID#
-      	AND 
-        	COMPANYID = #companyID#
-   </delete>
    
    <insert id="EzApprovalG.insertGongRamAprLineInfo" parameterClass="Map">
    		INSERT INTO 
@@ -20099,7 +20040,7 @@
    			TBL_APRDOCINFO 
    		(DocID, FormID, OrgDocID, DocType, DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
    		(SELECT 
-			#v_gongRamDocID#, FormID, #v_DOCID#, DocType, #v_DocType#, #v_DocState#, #v_FunctionType#, #v_Href#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+			#v_gongRamDocID#, FormID, #v_DOCID#, DocType, #v_DocState#, #v_FunctionType#, #v_Href#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
          FROM 
          	TBL_APRDOCINFO A 
          WHERE 
@@ -20231,7 +20172,7 @@
    			TBL_APRLINEINFO 
    		(DocID, 	       AprMemberSN,      AprType,     AprState,     AprMemberID,     AprMemberIsDeptYN,      AprMemberName,    AprMemberName2,     AprMemberJobTitle,   AprMemberJobTitle2,      AprMemberDeptID,     AprMemberDeptName,     AprMemberDeptName2,    AprMemberLDAPPath,   ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID) 
    		VALUES 
-   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, $v_RECEIVEDDATE$, $v_PROCESSDATE$, #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
+   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, $v_ReceivedDate$, $v_ProcessDate$, #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
    	</insert>
    	
    	<insert id="EzApprovalG.insertGongRamSaveExpAprLine" parameterClass="Map">
@@ -20239,7 +20180,7 @@
    			TBL_EXPAPRLINE 
    		(DocID, AprMemberSN, OrgUserID, ProxyUserID, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID, COMPANYID) 
    		VALUES 
-   		(#v_gongRamDocID#, #v_AprMemberSN# , #v_OrgUserID#, '', '', '', '', '', '', '','', #v_TENANTID#, #companyID#)
+   		(#v_gongRamDocID#, #v_AprMemberSN# , #v_AprMemberID#, '', '', '', '', '', '', '','', #v_TENANTID#, #companyID#)
    	</insert>
    	
    	<select id="EzApprovalG.signCheckCount" parameterClass="Map" resultClass="int">
@@ -21984,6 +21925,60 @@
 				APRTYPE = #aprType#
 			AND
 				APRSTATE IN (#staASJinHang#, #staASBoRyu#)
+		]]>
+	</select>
+	
+	<delete id="EzApprovalG.delCirculation" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_APRDOCINFO
+			WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_gongRamDocID#
+		]]>
+	</delete>
+	
+	<select id="EzApprovalG.getCirculationInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+		<![CDATA[
+			SELECT
+				APRMEMBERSN,
+			    APRMEMBERNAME,
+			    APRMEMBERNAME2,
+			    APRMEMBERJOBTITLE,
+			    APRMEMBERJOBTITLE2,
+			    APRMEMBERDEPTNAME,
+			    APRMEMBERDEPTNAME2,
+			    PROCESSDATE
+			FROM
+				TBL_APRLINEINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+			AND
+				APRTYPE = '015'
+		]]>
+	</select>
+	
+	<select id="EzApprovalG.getCircularDocID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+			    DOCID
+			FROM
+				TBL_APRDOCINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				ORGDOCID = #docID#
+			AND
+				DOCSTATE = '015'
 		]]>
 	</select>
 </sqlMap>

@@ -810,18 +810,18 @@
 				bEditorLoaded = true;
 			}
 			var isComplete = false;
-			function DocumentComplete() {
-			        //var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocPath);				
-			        //var htmlData = message.SetEditorContentURL2(fullPath);
-			        //2016-10-09 mht파일 저장경로 수정
-					
-			        //2017-03-06 null처리 추가
-			        if (pDocPath != null && pDocPath != "") {
-			        	var htmlData = message.SetEditorContentURL2(escape(pDocPath));
-			        	message.SetEditorContent(htmlData);
-			        }
-	 
-	            }
+			function Editor_Complete() {
+				//var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocPath);				
+				//var htmlData = message.GetEditorContentURL(fullPath);
+				//2016-10-09 mht파일 저장경로 수정
+				
+				//2017-03-06 null처리 추가
+				if (pDocPath != null && pDocPath != "") {
+					var htmlData = message.GetEditorContentURL(escape(pDocPath));
+					message.SetEditorContent(htmlData);
+				}
+				
+			}
 			
 			function newWindowClick() {
 			    if(document.getElementsByName("OpenMode").checked==true) {
@@ -985,7 +985,7 @@
 			<tr> 
 				<td>
 					<%--<SCRIPT language='JavaScript'>FormProc_ActiveX();</SCRIPT>--%>
-                    <iframe id="message" class="viewbox"  name="message" src="/admin/ezPortal/portletEditCKContent.do" frameborder="0" style="padding:0; height:450px; width:495px; overflow:auto;"></iframe>
+                    <iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:450px; width:495px; overflow:auto;"></iframe>
 				</td>
 			</tr> 
 		</table>
@@ -1207,6 +1207,10 @@
 				</table>
 				<div id="toggle_tbl3_3" class="btnposition" style="display:none">
     				<a class="imgbtn"><span onClick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
+				</div>
+				<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+				<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+					<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 				</div>
 	</body>
 </html>

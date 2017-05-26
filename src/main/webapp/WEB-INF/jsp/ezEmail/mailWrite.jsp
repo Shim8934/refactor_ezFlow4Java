@@ -107,7 +107,6 @@
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
-	    var oldConfig;
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -184,22 +183,41 @@
 			    document.getElementById("MsgTo").focus();
 			}
 			
-			oldConfig = message.CKEDITOR.instances.editor1.config;
+			//TODO
+// 			switch (pUse_Editor) {
+			
+// 				case "TAGFREE" :
+// 					if (m_rgParams4PostOption["bodyType"] == "1") {
+// 						message.xfe.hideToolbar(0, true);
+// 					}
+// 					break;
+					
+// 				default :
+// 					oldConfig = message.CKEDITOR.instances.editor1.config;
+				
+// 					if (m_rgParams4PostOption["bodyType"] == "1") {
+// 						document.getElementById("bodyType").options[1].selected = true;
+						
+// 						var config = {};
+			        	
+// 			        	config.toolbar = [['Print']];
+// 			        	config.resize_enabled = false;
+// 			        	config.removePlugins = 'elementspath';
+// 			        	config.forcePasteAsPlainText = true;
+			        	
+// 			        	message.CKEDITOR.instances.editor1.destroy();
+// 			        	message.CKEDITOR.replace('editor1', config);
+			        	
+// 			        	document.getElementById("SelMailSign").disabled = true;
+// 					}
+// 					break;
+					
+// 			}
 			
 			if (m_rgParams4PostOption["bodyType"] == "1") {
 				document.getElementById("bodyType").options[1].selected = true;
-				
-				var config = {};
-	        	
-	        	config.toolbar = [['Print']];
-	        	config.resize_enabled = false;
-	        	config.removePlugins = 'elementspath';
-	        	config.forcePasteAsPlainText = true;
-	        	
-	        	message.CKEDITOR.instances.editor1.destroy();
-	        	message.CKEDITOR.replace('editor1', config);
-	        	
 	        	document.getElementById("SelMailSign").disabled = true;
+        		message.setTextPlain(true);
 			}
 			
 			// 전달의 경우 쿼터 초과 시 팝업창띄움
@@ -802,63 +820,19 @@
 	    }
 		
 	    function changeTextOption(bodyType) {
-	        if (bodyType == "1") {
-	        	
+	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
-	        		
-		        	var mhtBody = "";
-		            var div_ = document.createElement("DIV");
-		            div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
-		            mhtBody = div_.textContent;
-		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
-		            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
-		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
-		            
-		            var texts = mhtBody.split("\n");
-		            
-		            var textData = "";
-		            
-		            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
-		            for (var i=0; i<texts.length; i++) {
-		            	if (texts[i] != "") {
-		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
-		            	}
-		            }
-		        	
-		        	var config = {};
-		        	
-		        	config.toolbar = [['Print']];
-		        	config.resize_enabled = false;
-		        	config.removePlugins = 'elementspath';
-		        	config.forcePasteAsPlainText = true;
-		        	
-		        	message.CKEDITOR.instances.editor1.destroy();
-		        	message.CKEDITOR.replace('editor1', config);
-		        	
 		        	document.getElementById("SelMailSign").disabled = true;
-		        	
-		        	setTimeout( function(a) {
-		        		message.SetEditorContent(a);
-		        	}, 500, textData);
+	        		message.setTextPlain(true);
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
-	        	
-	        } else {
-	        	m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
-	        	
-	        	var textData = message.GetEditorContent();
-	        	
-        		message.CKEDITOR.instances.editor1.destroy();
-        		message.CKEDITOR.replace('editor1', oldConfig);
-        		
+	    	} else {
+	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
-        		
-        		setTimeout( function(a) {
-	        		message.SetEditorContent(a);
-	        	}, 500, textData);
-	        }
+	    		message.setTextPlain(false);
+	    	}
 	    }
 	    
 	    function ChangeSenderName(obj) {
@@ -1080,16 +1054,7 @@
 	                <table style="width:99.8%;height:100%;">
 	                    <tr>
 	                        <td style="height:100%;">
-	                            <%-- if (Use_Editor == "TAGFREE") { %>
-	                                <iframe id="tbContentElement" class="viewbox" src="TagFree_TFX_Editor.aspx" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	                            <% } else if (Use_Editor == "DEXT") { %>
-	                                <iframe id="tbContentElement" class="viewbox" src="DEXT_Editor.aspx" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	                            <% } else { %>
-	                                <iframe id="tbContentElement" class="viewbox" src="/ezEmail/mailCKEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	                            <% } --%>
-	                            
-	                            <iframe id="tbContentElement" class="viewbox" src="/ezEmail/mailSelectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-	                            
+	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 	                        </td>
 	                    </tr>
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리

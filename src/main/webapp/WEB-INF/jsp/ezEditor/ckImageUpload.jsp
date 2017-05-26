@@ -64,7 +64,7 @@
 		        }		        
 		        
 		        var frm = document.getElementById('form');
-		        frm.action = "/ezCommon/ckUpload.do";
+		        frm.action = "/ezEditor/ckUpload.do";
 		        frm.submit();
 		        isuload = true;
 		        document.form.file1.value = "";

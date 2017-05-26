@@ -1022,7 +1022,7 @@
 		        if (pcheckForm.toUpperCase() == "TRUE") {
 		            var tempHtml = message.GetEditorContent();
 		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDFORM&DOCID=" + pBoardID;
-		            var htmlData = message.SetEditorContentURL2(fullPath);
+		            var htmlData = message.GetEditorContentURL(fullPath);
 		            message.SetEditorContent(htmlData + tempHtml);
 		        }
 		
@@ -1107,7 +1107,7 @@
     						fullPath = result;
     					}        			
     				});	
-		            var htmlData = message.SetEditorContentURL2(fullPath);
+		            var htmlData = message.GetEditorContentURL(fullPath);
 		            message.SetEditorContent(htmlData + tempHtml);
 		        }
 		
@@ -1303,7 +1303,7 @@
 		        }
 		        return strRet;
 		    }
-		    function DocumentComplete() {
+		    function Editor_Complete() {
 		        if (flag == false) {
 		            flag = true;
 		            if (pMode == "new" || pModeOld == "loadpc" || pMode == "boardAttach") {
@@ -1321,7 +1321,7 @@
 		    						fullPath = result;
 		    					}        			
 		    				});	
-		                    var htmlData = message.SetEditorContentURL2(fullPath);
+		                    var htmlData = message.GetEditorContentURL(fullPath);
 		                    message.SetEditorContent(htmlData);
 		                } else {
 		                    if (OpenWin == null){
@@ -1334,7 +1334,7 @@
 		                if (pUrl == "") {
 		                    var fullPath = strContentLocation;
 		                    if (pMode == "reply") {
-		                        var htmlData = message.SetEditorContentURL2(fullPath);
+		                        var htmlData = message.GetEditorContentURL(fullPath);
 		                        htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
 		                        htmlData = ReplaceText(htmlData, "class=FIELD", "");
 		                        htmlData = ReplaceText(htmlData, "&amp;", "&");
@@ -1532,7 +1532,7 @@
 		    					}        			
 		    				});	
 		                	
-		                    var htmlData = message.SetEditorContentURL2(fullPath);
+		                    var htmlData = message.GetEditorContentURL(fullPath);
 		                    message.SetEditorContent(htmlData);
 		                }
 		                else {
@@ -1593,7 +1593,7 @@
 	    						fullPath = result;
 	    					}        			
 	    				});	
-	                    var htmlData = message.SetEditorContentURL2(fullPath);
+	                    var htmlData = message.GetEditorContentURL(fullPath);
 	                    message.SetEditorContent(htmlData);
 	                }
 	                else {
@@ -2227,7 +2227,7 @@
 			                <table style="width: 100%; height: 100%">
 			                    <tr>
 			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/selectEditor.do" style="padding: 0px; width: 99.7%; height: 100%; overflow: auto; border-top-width: 0px;"></iframe>
+		                                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0px; width: 99.7%; height: 100%; overflow: auto; border-top-width: 0px;"></iframe>
 			                        </td>
 			                    </tr>
 			                </table>
@@ -2237,7 +2237,7 @@
 	        	<c:otherwise>
 			        <tr>
 			            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-			                <iframe id="message" class="viewbox" name="message" src="/ezBoard/selectEditor.do" style="padding: 0; height: 100%; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
+			                <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
 			            </td>
 			        </tr>
 	        	</c:otherwise>

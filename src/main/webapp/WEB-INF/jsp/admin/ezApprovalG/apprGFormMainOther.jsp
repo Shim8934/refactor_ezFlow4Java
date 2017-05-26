@@ -27,7 +27,6 @@
 			var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
 			var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
 			var linealt4 = "<spring:message code='ezApprovalG.t227'/>";
-        
 			var companyID = "${companyID}";
 		    var contID = "${contID}";
 		    var formID = "${formID}";
@@ -893,7 +892,7 @@
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/ezEditor/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>

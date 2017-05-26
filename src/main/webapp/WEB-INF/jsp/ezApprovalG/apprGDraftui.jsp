@@ -24,7 +24,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		
+		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -142,6 +142,9 @@
 		    var pSignImage_Size = "${signImageSize}";
 		    var docNumZeroCnt = "${docNumZeroCnt}";
 			var beforeUrl = "${beforeUrl}";
+			//회람
+			var type = "ING";
+			var pGongRamDocID = "";
 		    	
 		    window.onload = function ()
 		    {
@@ -1271,6 +1274,7 @@
 		                    DeleteDeptInfo();
 		                    setRecevInfo("");
 		                }
+		                
 		                if (ret[4] != undefined) {
 			                var g_SelCabXml = ret[4];
 			                var xmlCab = createXmlDom();
@@ -1295,8 +1299,18 @@
 			                }
 			                
 			                setPublicFlag();
-			                
 		                } else {
+		                	//회람
+		                	if (ret[22] == "noItem") {
+		                		delAprLineInfoCC();
+		                		//없으니깐 암것도 안해도되려나 싶은데 기존꺼를 뺏을수도 있으니까 무조건 삭제
+		                	} else if (ret[22] == "sameItem") {
+		                		//같으니깐 암것도 안해도 되려나
+		                	} else {
+		                		//회람 저장
+		                		SaveAprLineInfoCC(ret[22]);
+		                	}
+		                	
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
@@ -1419,7 +1433,6 @@
 	            }
 	            message.Editor_ReUseContent(reUseContent);
 	        }
-		
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">

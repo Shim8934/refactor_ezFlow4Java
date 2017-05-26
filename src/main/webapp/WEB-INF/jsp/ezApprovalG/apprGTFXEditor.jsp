@@ -6,25 +6,25 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <title></title>
 	    <script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js//tfxEditor/js/xfe_main.js"></script>
+		<script type="text/javascript" src="/js/tfxEditor/js/xfe_main.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 	    <script type="text/javascript">
-	    	//TODO: Set_CellLocked, Get_BodyUnlock
-	    
 	        function SetEditorContent(Data) {
 	            try {
 	            	xfe.setHtmlValue(Data);
+	            	//TODO: 불필요한거 같아서 우선 주석
 	                //Set_CellLocked();
 	            } catch (e) { }
 	        }
 	        function GetEditorContent() {
 	            try {
 	            	return xfe.getBodyValue();
+	            	//TODO: 불필요한거 같아서 우선 주석
 	                //return Get_BodyUnlock(xfe.getBodyValue());
 	            } catch (e) { return ""; }
 	        }
 	
-	        /* function Get_BodyUnlock(HtmlBody) {
+	        function Get_BodyUnlock(HtmlBody) {
 	            var Div_Body = document.createElement("DIV");
 	            Div_Body.innerHTML = HtmlBody;
 	            var TDRows = Div_Body.getElementsByTagName("*");
@@ -37,27 +37,29 @@
 	        }
 	
 	        function Set_CellLocked() {
-	            for (var i = 0; i < CKEDITOR.instances.editor1.document.$.getElementsByTagName("*").length; i++) {
-	            	if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].closest('.cke_editable, .cke_editable_themed, .cke_contents_ltr, .cke_show_borders') == null) {
-	            		if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].tagName == "TD") {
-		                    if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].getAttribute("free") == null) {
-		                        CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].setAttribute("contenteditable", "false")
+	        	var elements = message.xfe.getBody().getElementsByTagName("*");
+	            for (var i = 0; i < elements.length; i++) {
+	            	//TODO: closest()은 jquery함수라서 에러남. 추후수정
+	            	if (elements[i].closest('.cke_editable, .cke_editable_themed, .cke_contents_ltr, .cke_show_borders') == null) {
+	            		if (elements[i].tagName == "TD") {
+		                    if (elements[i].getAttribute("free") == null) {
+		                    	elements[i].setAttribute("contenteditable", "false");
 		                    }
-		                    else if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].getAttribute("free") != null) {
-		                        CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].setAttribute("contenteditable", "true")
+		                    else if (elements[i].getAttribute("free") != null) {
+		                    	elements[i].setAttribute("contenteditable", "true");
 		                    }
 		                }
-		                else if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].tagName == "TABLE") {
-		                    if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].getAttribute("free") == null) {
-		                        CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].setAttribute("contenteditable", "false")
+		                else if (elements[i].tagName == "TABLE") {
+		                    if (elements[i].getAttribute("free") == null) {
+		                    	elements[i].setAttribute("contenteditable", "false");
 		                    }
-		                    else if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].getAttribute("free") != null) {
-		                        CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].setAttribute("contenteditable", "true")
+		                    else if (elements[i].getAttribute("free") != null) {
+		                    	elements[i].setAttribute("contenteditable", "true");
 		                    }
 		                }
 	            	}
 	            }
-	        } */
+	        }
 	    </script>
 	</head>
 	<body style="margin: 0px; padding: 0px;" id="xfe">

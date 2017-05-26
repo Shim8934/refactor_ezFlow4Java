@@ -5,7 +5,7 @@
 	<head>
 		<title></title>
 		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js//tfxEditor/js/xfe_main.js"></script>
+		<script type="text/javascript" src="/js/tfxEditor/js/xfe_main.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script  type="text/javascript">
 			function SetEditorContent(strHtml){

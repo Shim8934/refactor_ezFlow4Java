@@ -3077,37 +3077,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 editor 호출 Method
-	 */
-	@RequestMapping(value="/ezBoard/selectEditor.do")
-	public String mailSelectEditor(
-			@CookieValue("loginCookie") String loginCookie, 
-			LoginVO userInfo, 
-			Model model) throws Exception{
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
-		String returnPath = "";
-		
-		switch (useEditor) {
-			case "CK": 
-				returnPath = "ezBoard/boardCKEditor";
-				break;
-			case "TAGFREE":
-				returnPath = "ezBoard/boardTFXEditor";
-				break;
-			default :
-				returnPath = "ezBoard/boardCKEditor";
-				break;
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		return returnPath;
-	}
-	
-	/**
 	 * 게시판 ckeditor 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/ckEditor.do")
