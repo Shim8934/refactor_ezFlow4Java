@@ -414,10 +414,13 @@ function manage_attendant_Complete(rtn) {
         document.getElementById("receiverlist").innerHTML = "";
 
         for (var i = 0; i < rtn["id"].length; i++) {
-            if (i == 0)
-                document.getElementById("receiverlist").innerHTML = rtn["name"][i];
-            else
-                document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
+            if (i == 0) {
+            	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
+            	document.getElementById("receiverID").innerHTML = rtn["id"][i];
+            } else {
+            	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
+            	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
+            }
 
             g_attendant["name"][i] = rtn["name"][i];
             g_attendant["id"][i] = rtn["id"][i];
