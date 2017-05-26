@@ -33,7 +33,7 @@
 		        
 		        if (CrossYN()) {
 		        	if (UserAgentState.indexOf("chrome") > 0) {
-		        		window.resizeTo(346, 270);
+		        		window.resizeTo(340, 260);
 		        	} else {
 		        		window.resizeTo(346, 270);
 		        	}
@@ -41,9 +41,9 @@
 		        	if (UserAgentState.indexOf("firefox") != -1) {
 		                window.resizeTo(349, 270);
 		            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
-		                window.resizeTo(346, 243);
+		                window.resizeTo(340, 260);
 		            } else {
-		            	window.resizeTo(346, 270);
+		            	window.resizeTo(340, 270);
 		            }
 		        }
 		        
@@ -51,7 +51,6 @@
 		            window.resizeTo(330, 251);
 		        }
 			}
-		
 		</script>
 	</head>
 	<body style="overflow:hidden;">

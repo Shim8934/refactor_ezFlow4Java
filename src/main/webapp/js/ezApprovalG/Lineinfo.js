@@ -58,7 +58,7 @@ function AprlineDel_onclick() {
 	    } else if (navigator.userAgent.indexOf('Firefox') > -1) {
 	        var Event_ID = "";
 	    } else {
-	        var Event_ID = event.target.id || event.srcElement.id;
+	        var Event_ID = window.event.srcElement.id;
 	    }
 
 	    var pAPRLINE = new ListView();

@@ -56,7 +56,7 @@
 		        if (MACSAFARIYN())
 		            window.resizeTo(330, 251);
 		    }
-		    window.resizeTo(330+ (window.outerWidth - window.innerWidth), 205+ (window.outerHeight - window.innerHeight));
+// 		    window.resizeTo(330+ (window.outerWidth - window.innerWidth), 205+ (window.outerHeight - window.innerHeight));
 		</script>
 	</head>
 	<body style="overflow:hidden;">

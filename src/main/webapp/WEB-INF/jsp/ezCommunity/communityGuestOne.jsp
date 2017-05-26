@@ -29,7 +29,7 @@
 			var totalPage = '<c:out value="${totalPage}" />';
 		    var totalCount = '<c:out value="${keywordCount}" />';
 		    var code = '<c:out value="${code}" />';
-		    var lang = '<c:out value="${lang}" />';
+		    var multiData = '<c:out value="${multiData}" />';
 			
 		    var xmlDoc = loadXMLString('${strXML}');
 
@@ -49,7 +49,7 @@
 		        		html += "<img src=\"/images/i_new.gif\" border=\"0\" hspace=\"5\" align=\"absmiddle\">";
 		        	}
 		        		
-					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "USERNAME"+lang);
+					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "USERNAME"+multiData);
 					html += "<spring:message code='ezCommunity.t587' />";
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += " " + "<spring:message code='ezCommunity.t588' /></th>";

@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
-import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -160,7 +159,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("checkSysop",checkSysop);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
-		model.addAttribute("lang",commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		logger.debug("communityLeftCommunity ended.");
@@ -250,11 +248,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		} else {
 			userInfoDisplayName = userInfo.getDisplayName1();
 		}
-
+		
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("userInfoDisplayName", userInfoDisplayName);
-//		model.addAttribute("flag", flag);		
 		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
@@ -335,7 +332,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pMode = 1;
 		}
 		
-		String result = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		String result = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, pClubID, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		model.addAttribute("result", result);
 		
@@ -442,9 +439,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		logger.debug("mode : " + mode);
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		String primary = userInfo.getPrimary();
 		
-		String retXML = ezCommunityService.getBoardTree("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, multiData, userInfo.getTenantId());
+		String retXML = ezCommunityService.getBoardTree("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, primary, userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
 			retXML = "<RESULT>ERROR</RESULT>";
@@ -472,7 +469,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("strLang", multiData);
+		model.addAttribute("primary", primary);
 		model.addAttribute("code", code);
 		model.addAttribute("copType", copType);
 		model.addAttribute("userLevel", userLevel);
@@ -574,7 +571,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pBoardName", boardName);
 		model.addAttribute("userLevel", userLevel);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		logger.debug("boarditemList ended.");
 		
@@ -1108,7 +1104,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
@@ -1174,7 +1169,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
-		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 		
 		model.addAttribute("oneLineReplyList", oneLineReplyList);
 		
@@ -1286,7 +1281,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int pStartRow =  (pPage - 1) * boardInfo.getSs_Board_MaxRows() + 1;
 		int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
 
-		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset());
 		int totalCount = ezCommunityService.getReservedItemListCount(userInfo.getId(), userInfo.getTenantId());
 		
 		if (totalCount > 0) {
@@ -1366,15 +1361,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String useIE11Browser = "";
 		String gubun = request.getParameter("gubun");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String strLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		String primary = userInfo.getPrimary();
 		
 		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
                 useIE11Browser = "CK";
 		}
 		
-		model.addAttribute("displayName", strLang.equals("2") ? userInfo.getDisplayName2() : userInfo.getDisplayName());
-		model.addAttribute("deptName", strLang.equals("2") ? userInfo.getDeptName2() : userInfo.getDeptName());
-		model.addAttribute("title", strLang.equals("2") ? userInfo.getTitle2() : userInfo.getTitle());
+		model.addAttribute("displayName", primary.equals("2") ? userInfo.getDisplayName2() : userInfo.getDisplayName());
+		model.addAttribute("deptName", primary.equals("2") ? userInfo.getDeptName2() : userInfo.getDeptName());
+		model.addAttribute("title", primary.equals("2") ? userInfo.getTitle2() : userInfo.getTitle());
 		model.addAttribute("phone", userInfo.getPhone());
 		model.addAttribute("gubun", gubun);
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
@@ -1593,10 +1588,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			readNo = cBoardGet1.getReadNum();
 			strWriteDate = cBoardGet1.getWriteDay().trim();
 			
-			if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("2")) {
-				strWriteName = cBoardGet1.getUserName2();
-			} else {
+			if (userInfo.getPrimary().equals("1")) {
 				strWriteName = cBoardGet1.getUserName();
+			} else {
+				strWriteName = cBoardGet1.getUserName2();
 			}
 			
 			strWriterID = cBoardGet1.getId().toLowerCase().trim();
@@ -1693,7 +1688,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		String primary = userInfo.getPrimary();
 		//TODO 2016-04-27 이효진 사용하는곳 없음
 		/*if (!code.equals("")){
 			String titleName = ezCommunityService.getBoardTitleName(bName, code);
@@ -1706,23 +1701,23 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (!no.equals("")) { //  수정(mode :  "edit")  또는 답변(mode :  "write")
 
 			fileName = ezCommunityService.bbsEditGet1(bName, no, userInfo.getTenantId());
-			cBoardVO = ezCommunityService.bbsEditNew(bName, no, multiData, userInfo.getTenantId());
+			cBoardVO = ezCommunityService.bbsEditNew(bName, no, primary, userInfo.getTenantId());
 			
 			 if (!no.equals("")) { // 수정(mode : "edit") 답변 (mode : "write")
-				 if (userInfo.getLang().equals("2")) {
+				 if (userInfo.getPrimary().equals("2")) {
 					 grsUserName = userInfo.getDisplayName2();
 				 } else {
 					 grsUserName = userInfo.getDisplayName1();
 				 }
 			 } else {
-				 if (multiData.equals("2")) {
+				 if (primary.equals("2")) {
 					 grsUserName = cBoardVO.getUserName2();
 				 } else {
 					 grsUserName = cBoardVO.getUserName();
 				 }
 			 }
 			 
-			 if (multiData.equals("2")) {
+			 if (primary.equals("2")) {
 				 writerFakeName = cBoardVO.getUserName2();
 			 } else {
 				 writerFakeName = cBoardVO.getUserName();
@@ -1802,24 +1797,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * ckeditor 호출함수
-	 */
-	@RequestMapping(value = "/ezCommunity/ckEditor.do")
-	public String ckEditor(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
-		String pMode = "";
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		if(request.getParameter("DraftFlag") != null){
-			pMode = request.getParameter("DraftFlag");
-		}
-
-		model.addAttribute("userInfo",userInfo);
-		model.addAttribute("pMode", pMode);
-		
-		return "ezCommunity/CKEditor";
-	}
-	
-	/**
 	 * 알림마당 삭제 실행함수
 	 */
 	@RequestMapping(value = "/ezCommunity/bbsDelOk.do", method = RequestMethod.POST, produces = "text/xml; charset=UTF-8")
@@ -1841,7 +1818,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityCBoardVO board = ezCommunityService.bbsDelOkGet(bName, itemNo, code, userInfo.getTenantId());
 		
-//		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			logger.debug("bbsDelOk ended.");
 			
@@ -1889,8 +1865,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-		int keywordCount = ezCommunityService.guestOneGet1(sRadio, keyword, code, multiData, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.guestOneGet1(sRadio, keyword, code, userInfo.getPrimary(), userInfo.getTenantId());
 		totalPage = keywordCount / comNoPerPage;
 
         if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -1906,13 +1881,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("nowBlock", nowBlock);
 		model.addAttribute("totalPage", totalPage);
-		
-		logger.debug("totalPage="+totalPage);
-		
 		model.addAttribute("keywordCount", keywordCount);
-		model.addAttribute("lang", multiData);
 		model.addAttribute("strXML" , strXML);
 		model.addAttribute("disable" , false);
+		model.addAttribute("multiData", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		logger.debug("guestOne ended.");
 		
@@ -1936,7 +1908,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		item.setUserName2(userInfo.getDisplayName2());
 		
 		if (mode.equals("edit")) {
-			item = ezCommunityService.guestEditGet(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), no, userInfo.getId(), userInfo.getTenantId());
+			item = ezCommunityService.guestEditGet(code, userInfo.getPrimary(), no, userInfo.getId(), userInfo.getTenantId());
 			
 			if (item != null) {
 				bIsMyContent = true;
@@ -2313,7 +2285,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		int keywordCount = ezCommunityService.commViewMemberGet2(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
 		
 		int comNoPerPage = 10;
         int totalPage = keywordCount / comNoPerPage;
@@ -2348,9 +2320,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String code = request.getParameter("code");
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), multiData, userInfo.getTenantId());
+		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
 		
@@ -2358,7 +2329,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			sysopName = egovMessageSource.getMessage("ezCommunity.t398", userInfo.getLocale());
 		}
 		
-		if(multiData.equals("2")) {
+		if(userInfo.getPrimary().equals("2")) {
 			club.setC_ClubName(club.getC_ClubName2());
 		}
 		
@@ -2457,7 +2428,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pMode = 1;
 		}
 
-		String retXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		String retXML = ezCommunityService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, code, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		logger.debug("xmlret = " + retXML);
 		
@@ -2501,7 +2472,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		if (club != null) {
-			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), club.getC_SysopID().trim(), userInfo.getTenantId());
+			CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
 			
 			if (userInfo.getLang().equals("2")) {
 				member.setUserName(member.getUserName2());
@@ -2567,7 +2538,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, userInfo.getPrimary(), userInfo.getTenantId());
 		String copType = ezCommunityService.commHomeGet4(code, userInfo.getTenantId());
 		
 		clubVO.setC_Type(copType);
@@ -2922,7 +2893,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pExcludeBoardID = request.getParameter("pExcludeBoardID");
 		}
 		
-		String strXML = ezCommunityService.getBoardTree(upperBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, pExcludeBoardID, code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		String strXML = ezCommunityService.getBoardTree(upperBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, pExcludeBoardID, code, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		logger.debug("adminGetSubBoards ended.");
 		
@@ -3074,7 +3045,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			boardInfo.setBoardName(boardInfo.getBoardName2());
 		}
 		
-		String strXML = ezCommunityService.getBoardTree(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 0, 1, 0, " ", code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		String strXML = ezCommunityService.getBoardTree(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), 0, 1, 0, " ", code, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		if (strXML.trim().equals("<NODES></NODES>")) {
 			model.addAttribute("hasSubBoard", 0);
@@ -3428,7 +3399,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), club.getC_SysopID().trim(), userInfo.getTenantId());
+		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
 		
@@ -3511,7 +3482,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("useIE11Brower", useIE11Browser);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("primary", userInfo.getPrimary());
 		
 		logger.debug("mainPage ended.");
 		
@@ -4021,7 +3992,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int endRow = 5 * page;
 		
 		if (option.equals("NAME")) {
-			if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
+			if (userInfo.getPrimary().equals("1")) {
 				search = "C_CLUBNAME";
 			} else {
 				search = "C_CLUBNAME2";
