@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCircular.web;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
@@ -31,6 +33,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
+import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
@@ -38,6 +41,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -769,6 +773,23 @@ public class EzCircularController extends EgovFileMngUtil {
 				listUser += list.get(i).getMemberId();
 			}
 		}
+		
+	    //첨부파일 정보  hasFile이 Y일때
+        //if (vo.getHasAttach().equals("Y")) {        
+        	
+        	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
+        	
+        	for (CircularAttachVO avo : aList) {        		
+        		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
+        		avo.setFileType(fileType);        		
+        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+        		
+        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
+        		avo.setFileTranSize(fileSize);
+        	}
+        	
+        	model.addAttribute("attachList", aList);
+        //}  
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);

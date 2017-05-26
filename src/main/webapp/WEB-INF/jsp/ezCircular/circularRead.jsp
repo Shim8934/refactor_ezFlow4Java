@@ -50,20 +50,6 @@
 	        
 	        window.onload = function () {
 	        	
-	        	   $.ajax({
-						type : "POST",
-						dataType : "text",
-						async : false,
-						url : "/ezCommon/mhtToHTMLContent.do",
-						data : { 
-							type   : "SCHEDULECONTENT", 
-							itemID 	 : contentpath
-						},
-						success: function(result){
-							document.getElementById('message').innerHTML = result;
-						}        			
-					});
-	        	
 	            //document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 	            document.getElementById('itemList').innerHTML = "${listUser}";
 	            
@@ -313,14 +299,67 @@
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;">
-	                 			<div id="divCross" style="overflow:auto;">efef</div>
+	                 			<div id="divCross" style="overflow:auto;"></div>
 	            			</td>
 	        			</tr>
 	        			
 	        			<tr>
-	                		<td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
+	                		<!-- <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
 	                    		<div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></div>
-	                		</td>
+	                		</td> -->
+                		    <td height="20">
+			                    <table class="file">
+			                        <tr>
+			                            <th>
+			                                <spring:message code='ezSchedule.t316' />
+			                            </th>
+			                            <td class="pos1">
+			                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">	                                
+			                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
+			                                    <c:forEach var="item" items="${attachList}" varStatus="status">
+			                                    	<div style="margin-top:3px;height:20px">
+			                                    		<c:set var="imagePath" value="/images/file.gif" />
+			                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+			                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
+			                                    			<c:set var="imagePath" value="/images/image.png" />
+			                                    		</c:if>
+			                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
+			                                    			<c:set var="imagePath" value="/images/doc.png" />
+			                                    		</c:if>
+			                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
+			                                    			<c:set var="imagePath" value="/images/xls.png" />
+			                                    		</c:if>
+			                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
+			                                    			<c:set var="imagePath" value="/images/ppt.png" />
+			                                    		</c:if>
+			                                    		<c:if test="${item.fileType == 'txt'}">
+			                                    			<c:set var="imagePath" value="/images/txt.png" />
+			                                    		</c:if>
+			                                    		<c:if test="${item.fileType == 'zip'}">
+			                                    			<c:set var="imagePath" value="/images/zip.png" />
+			                                    		</c:if>
+			                                    		<c:if test="${item.fileType == 'pdf'}">
+			                                    			<c:set var="imagePath" value="/images/pdf.png" />
+			                                    		</c:if>
+			                                    		<c:if test="${item.fileType == 'ecm'}">
+			                                    			<c:set var="imagePath" value="/images/ecm.png" />
+			                                    		</c:if>	                                    		
+			                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+			                                    	</div>
+			                                    </c:forEach>
+			                                </div>
+			                            </td>
+			                            <td class="pos2">	                                
+			                                <a href="#" class="imgbtn">
+			                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
+			                                </a><br/>	                                
+			                                <a href="#" class="imgbtn">
+			                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
+			                                </a>
+			                            </td>
+			                        </tr>
+			                    </table>
+			                </td>
 	            		</tr>
 	        			
 	        		</table>

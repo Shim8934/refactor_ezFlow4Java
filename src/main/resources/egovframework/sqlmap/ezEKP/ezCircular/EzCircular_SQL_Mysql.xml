@@ -2,11 +2,11 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezCircular">
-	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
-
-    <typeAlias alias="CircularListVO"           type="egovframework.ezEKP.ezCircular.vo.CircularListVO"/>
+	<typeAlias alias="CircularConfigVO"		type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
+    <typeAlias alias="CircularListVO"            type="egovframework.ezEKP.ezCircular.vo.CircularListVO"/>
 	<typeAlias alias="CircularDeptVO"			type="egovframework.ezEKP.ezCircular.vo.CircularDeptVO"/>
-	
+    <typeAlias alias="CircularAttachVO"        type="egovframework.ezEKP.ezCircular.vo.CircularAttachVO"/>
+  
 	<resultMap class="CircularDeptVO" id="circularDeptVO">
 		<result property="circularBMId"		column="CIRCULARBMID"		columnIndex="1"/>
 		<result property="title"			column="TITLE"				columnIndex="2"/>
@@ -292,6 +292,22 @@
                 TENANTID = #tenantID#     
         ]]>
     </select>
+    
+   <select id="EzCircularDAO.getAttachList" parameterClass="Map" resultClass="CircularAttachVO">
+        <![CDATA[                   
+            SELECT 
+                CIRCULARFILEID,
+                FILESIZE,
+                FILENAME,
+                FILEPATH
+            FROM 
+                TBL_CIRCULAR_FILE 
+            WHERE  
+                CIRCULARID = #circularID#
+            AND
+                TENANTID = #tenantID#            
+    ]]>     
+  </select>
     
   <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
     <![CDATA[

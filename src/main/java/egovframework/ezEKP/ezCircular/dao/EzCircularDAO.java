@@ -3,7 +3,10 @@ package egovframework.ezEKP.ezCircular.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
+
+import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
@@ -25,6 +28,11 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<CircularListVO> getCircularUserList(Map<String, Object> map) throws Exception {
 		return (List<CircularListVO>) list("EzCircularDAO.getCircularUserList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CircularAttachVO> getAttachList(Map<String, Object> map) throws Exception {
+		return (List<CircularAttachVO>) list("EzCircularDAO.getAttachList", map);
 	}
 	
 	public CircularConfigVO getCircularList_Config(Map<String, Object> map) throws Exception {

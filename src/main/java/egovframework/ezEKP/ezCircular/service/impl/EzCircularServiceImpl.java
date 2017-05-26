@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
+import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -166,29 +167,31 @@ public class EzCircularServiceImpl implements EzCircularService {
 			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName[i].trim(), status, "", updateStatus, tenantID);
 		}
 		
-		int fileLength = fileList.split(",").length;
-		String[] fileLists = fileList.split(",");
-		circularID = ezCircularDAO.getLastID();
-		
-		for (int j=0; j<fileLength; j++) {
-			String[] files = fileLists[j].split("/");
-			String filePath = files[0];
-			String fileName = files[1];
-			String fileSize = files[2];
+		if (fileList != null && !fileList.equals("")) {
+			int fileLength = fileList.split(",").length;
+			String[] fileLists = fileList.split(",");
 			
-			String mhtPath = commonUtil.separator + "doc";
-			String uploadFilePath = commonUtil.separator + "uploadFile";
-			
-			filePath = uploadFilePath + commonUtil.separator + filePath;
-			
-			attachMap.put("circularID", circularID);
-			attachMap.put("fileName", fileName);
-			attachMap.put("fileSize", fileSize);
-			attachMap.put("filePath", filePath);
-			attachMap.put("tenantID", tenantID);
-			
-			ezCircularDAO.insertCircularAttach(attachMap);
+			for (int j=0; j<fileLength; j++) {
+				String[] files = fileLists[j].split("/");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+				
+				String mhtPath = commonUtil.separator + "doc";
+				String uploadFilePath = commonUtil.separator + "uploadFile";
+				
+				filePath = uploadFilePath + commonUtil.separator + filePath;
+				
+				attachMap.put("circularID", lastID);
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", filePath);
+				attachMap.put("tenantID", tenantID);
+				
+				ezCircularDAO.insertCircularAttach(attachMap);
+			}
 		}
+		
 		
 	}
 
@@ -378,4 +381,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		return ezCircularDAO.getCircularUserList(map);
 	}
+
+	@Override
+	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		return ezCircularDAO.getAttachList(map);
+	}
+	
+	
 }
