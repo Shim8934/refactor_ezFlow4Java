@@ -36,7 +36,7 @@
 	    			return;
 	    		}
 	    		
-	    		if ($("#receiverlist").val().length < 1) {
+	    		if (g_attendant == null) {
 	    			alert("<spring:message code='ezCircular.t53'/>")
 	    			return;
 	    		}

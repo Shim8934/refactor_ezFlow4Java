@@ -244,6 +244,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		return "/ezCircular/circularLeft";
 	}
 	
+	/**
+	 * 신규회람판 호출 Method
+	 */
 	@RequestMapping(value = "/ezcircular/newCircular.do")
 	public String newCircular(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("newCircular started");
@@ -291,6 +294,99 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("newCircular ended");
 		return "/ezCircular/newCircular";
+	}
+	
+	/**
+	 * 확인완료 회람판 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularComplete.do")
+	public String circularComplete(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		
+		logger.debug("circularComplete started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int page = 1;
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        int startRow = 1;
+        int endRow = 0;
+        
+		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (page - 1)) + 1;
+        endRow = (personalCount * page);
+		
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+        logger.debug("startRow : "+startRow);
+        logger.debug("endRow : "+endRow);
+        
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		logger.debug("listSize : "+list.size());
+		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("list", list);
+		model.addAttribute("config", config);
+		model.addAttribute("totalCount", totalCount);
+		
+		logger.debug("circularComplete ended");
+		
+		return "/ezCircular/circularComplete";
+	}
+	
+	/**
+	 * 작성한 회람판 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularMyCircular.do")
+	public String circularMyCircular() {
+		
+		logger.debug("circularMyCircular started");
+		
+		logger.debug("circularMyCircular ended");
+		
+		return "/ezCircular/circularMyCircular";
+	}
+	
+	/**
+	 * 임시 회람판 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularTemp.do")
+	public String circularTemp() {
+		
+		logger.debug("circularTemp started");
+		
+		logger.debug("circularTemp ended");
+		
+		return "/ezCircular/circularTemp";
+	}
+	
+	/**
+	 * 휴지통 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularDelete.do")
+	public String circularDelete() {
+		
+		logger.debug("circularDelete started");
+		
+		logger.debug("circularDelete ended");
+		
+		return "/ezCircular/circularDelete";
 	}
 	
 	/**

@@ -25,7 +25,7 @@
 				})
 			})
 			
-			window.onload = function() {
+			window.onload = function() {	
 				get_circularDept();	
 			}
 			
@@ -121,12 +121,6 @@
 		    var _RowObject = null;
 		    
 		    function event_click(obj) {
-		    	if (document.getElementById("checkbox").checked == true) {
-		    		document.getElementById("checkbox").checked = false;
-		    	} else {
-		    		document.getElementById("checkbox").checked = true;
-		    	}
-		    	
 		    	if (_RowObject != null) {
 		            _RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
@@ -146,7 +140,7 @@
 		    }
 		    
 		    function event_statuschange(obj) {
-
+		    	
 		    }
 			
 			var schedule_admin_popup_sharedept_dialogArguments = new Array();
