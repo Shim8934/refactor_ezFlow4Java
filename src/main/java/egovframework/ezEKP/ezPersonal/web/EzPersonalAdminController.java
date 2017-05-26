@@ -234,21 +234,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 초기화면 공지사항 등록,수정 본문화면 CK에디터 호출 함수
-	 */
-	@RequestMapping(value = "/admin/ezPersonal/addNoticeCKContent.do")
-	public String addNoticeCKContent(@CookieValue("loginCookie") String loginCookie, Model model) {
-		logger.debug("addNoticeCKContent started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		model.addAttribute("userInfo", userInfo);
-
-		logger.debug("addNoticeCKContent ended");
-		return "admin/ezPersonal/personalAddNoticeCKContent";
-	}
-	
-	/**
 	 * 초기화면 공지사항 등록,수정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/saveNotice.do", produces = "text/xml; charset=utf-8")
@@ -791,21 +776,6 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		logger.debug("addPopupCK ended");
 		return "admin/ezPersonal/personalAddPopupCK";
-	}
-	
-	/**
-	 * 팝업공지 공지사항 수정 본문화면 CK에디터 호출 함수
-	 */
-	@RequestMapping(value = "/admin/ezPersonal/addPopupCKContent.do")
-	public String addPopupCKContent(@CookieValue("loginCookie") String loginCookie, Model model) {
-		logger.debug("addPopupCKContent started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		model.addAttribute("userInfo", userInfo);
-
-		logger.debug("addPopupCKContent ended");
-		return "admin/ezPersonal/personalAddPopupCKContent";
 	}
 	
 	/**

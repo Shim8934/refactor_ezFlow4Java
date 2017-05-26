@@ -3077,18 +3077,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 ckeditor 호출 Method
-	 */
-	@RequestMapping(value = "/ezBoard/ckEditor.do")
-	public String ckEditor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
-
-		model.addAttribute("userInfo",userInfo);
-		
-		return "ezBoard/boardCKEditor";
-	}
-	
-	/**
 	 * 게시판 draganddrop 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/dragAndDrop.do")

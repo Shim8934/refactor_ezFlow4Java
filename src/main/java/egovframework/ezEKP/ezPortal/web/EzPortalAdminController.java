@@ -1436,26 +1436,6 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 관리자 포탈 포틀릿관리 CKEditor 내용 화면 호출 함수
-	 */
-	@RequestMapping(value = "/admin/ezPortal/portletEditCKContent.do")
-	public String portletEditCKContent(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("portletEditCKContent started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
-		String pMode= "";
-		
-		if (req.getParameter("draftFlag") != null && !req.getParameter("draftFlag").equals("")) {
-			pMode = req.getParameter("draftFlag");
-		}
-		
-		model.addAttribute("pMode", pMode);
-
-		logger.debug("portletEditCKContent ended");
-		return "/admin/ezPortal/portalPortletCKContent";
-	}
-	
-	/**
 	 * 관리자 포탈 포틀릿관리 포틀릿 삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezPortal/deletePortlet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")

@@ -490,42 +490,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return "admin/ezApprovalG/apprGFormMainHWP";
 	}
-	
-	/**
-	 * 전자결재관리 양식등록 양식등록,양식수정 양식작성기 화면호출함수 (Other 일경우 CK, Dext, TagFree 등등)
-	 */
-	@RequestMapping(value = "/admin/ezApprovalG/selectEditor.do")
-	public String selectEditor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("selectEditor started.");
-		
-		String height = request.getParameter("height");
-		String type = request.getParameter("type");
-		
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
-		String returnPath = "";
-		
-		switch (useEditor) {
-			case "CK": 
-				returnPath = "admin/ezApprovalG/apprGCKEditor";
-				break;
-			case "TAGFREE":
-				returnPath = "admin/ezApprovalG/apprGTFXEditor";
-				break;
-			default :
-				returnPath = "admin/ezApprovalG/apprGCKEditor";
-				break;
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("height", height);
-		model.addAttribute("type", type);
-		
-		logger.debug("selectEditor ended.");
-		
-		return returnPath;
-	}
 		
 	/**
 	 * 전자결재G관리 양식등록 양식등록,양식수정 양식작성기 화면 호출함수 (한글기안)
