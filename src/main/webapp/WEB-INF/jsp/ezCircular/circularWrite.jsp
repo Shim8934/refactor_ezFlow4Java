@@ -184,7 +184,7 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-
+alert("receiverID:"+document.getElementById("receiverID").innerHTML);
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	                type : 'POST',
