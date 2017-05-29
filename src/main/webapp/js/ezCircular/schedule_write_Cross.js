@@ -480,16 +480,14 @@ function check_name(type) {
     		},
     		success: function(xml){
     			xmlDOM = loadXMLString(xml);
-                adCount = xmlDOM.getElementsByTagName("ROW").length;    			
+                adCount = xmlDOM.getElementsByTagName("ROW").length;
     		}    		
     	});
 
         if (adCount == 0) {
-alert("0");
             alert("'" + names[i] + "'" + strLang21);
             continue;
         } else if (adCount == 1) {
-alert("1");
             if (g_attendant == null)
                 g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
@@ -519,7 +517,6 @@ alert("1");
             else
                 document.getElementById("receiverlist").innerHTML += ", " + g_attendant["name"][length];
         } else {
-alert("2");
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDOM;
             rgParams["name"] = "";

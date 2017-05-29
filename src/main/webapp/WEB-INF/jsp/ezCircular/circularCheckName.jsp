@@ -49,7 +49,7 @@
 							<td id="TD_1" style="width:15%">${list.company}</td>
 							<td id="TD_2" style="width:17%">${list.description}</td>
 							<td id="TD_3" style="width:12%">${list.title}</td>
-							<td id="TD_4" style="width:13%">${list.memberId}</td>
+							<td id="TD_4" style="width:13%">${list.memberName}</td>
 							<td id="TD_5" style="width:38%">${list.mail}</td>
 						</tr>
 					</c:forEach>

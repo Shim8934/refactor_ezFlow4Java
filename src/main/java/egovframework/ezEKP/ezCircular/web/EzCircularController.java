@@ -1200,13 +1200,15 @@ System.out.println(memberList.size());
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		ezCircularService.circularDeptDel(circularDeptVO);
+		int tenantId = userInfo.getTenantId();
+		String[] deleteList = request.getParameter("deleteList").split(",");
+		
+		ezCircularService.circularDeptDel(deleteList, tenantId);
 		
 		logger.debug("circularDeptDel ended");
 	}
 	
 	/**
-<<<<<<< Updated upstream
 	 * 회람판 신규 회람판 삭제 실행 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDelete.do", method = RequestMethod.POST)
@@ -1359,6 +1361,7 @@ System.out.println(memberList.size());
 		logger.debug("getSearchCircularList ended");
         return resultXML.toString();
     }
+    
     /*
 	 * 회람처 설정 이름 확인 Method
 	 */
@@ -1373,12 +1376,6 @@ System.out.println(memberList.size());
 		int tenantId = userInfo.getTenantId();
 	
 		List<CircularMemberVO> list = ezCircularService.getMemberName(circularBMId, tenantId);
-		
-		System.out.println(list.size() + " / " + list.toString());
-//		String company = userInfo.getCompanyID();
-//		String description = userInfo.getDeptName();
-//		String title = userInfo.getTitle();
-//		String DisplayName
 		
 		model.addAttribute("list", list);
 		

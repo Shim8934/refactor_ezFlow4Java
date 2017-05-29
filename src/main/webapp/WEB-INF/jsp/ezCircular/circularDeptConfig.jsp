@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			
+		
 			$(document).ready(function() {
 				$("#checkboxAll").click(function() {
 					if ($("#checkboxAll").prop("checked")) {
@@ -25,7 +26,10 @@
 				})
 			})
 			
-			window.onload = function() {	
+			window.onload = function() {
+// 				$(":checkbox[name=checkbox]:checked").each(function(){
+// 					deleteList.push($(this).val());
+// 				});
 				get_circularDept();	
 			}
 			
@@ -55,7 +59,8 @@
 	                            _html += "<tr id='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
 	                            + "'title = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent
 	                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-	                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox' type='checkbox' onclick='event_statuschange(this);'></td>";
+	                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox" + i + "' name='myCheckbox' value='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
+	                            	  + "'type='checkbox' onclick='event_statuschange(this);'></td>";
 	                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent + "</td>";
 	                            _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>";
 	                            
@@ -77,7 +82,8 @@
 	                               	_html += "<tr id='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
 		                            + "'title = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent
 		                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-		                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox' type='checkbox' onclick='event_statuschange(this);'></td>";
+		                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox" + i + "' name='myCheckbox' value='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
+	                            	      + "'type='checkbox' onclick='event_statuschange(this);'></td>";
 		                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].text + "</td>";
 	                                _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].text + "</td>";
 	                        
@@ -210,24 +216,25 @@
 			var circularBMIdList = new Array();
 			
 			function delete_circularDept() {
+				var deleteList = [];
+				
 				if (_RowObject == null) {
 		        	alert("<spring:message code='ezCircular.t44' />");
 		            return;
 		        }
-
-				for (var i=0; i<$("#checkbox:checked").length; i++) {
-					
-				}
+				
+				$(":checkbox[name=myCheckbox]:checked").each(function(){
+					deleteList.push($(this).val());
+				});
+				
+				var url = "/ezCircular/circularDeptDel.do?deleteList=" + deleteList.join();
 				
 				if (confirm("<spring:message code='ezCircular.t46' />")) {
 					$.ajax({
 			    		type : "POST",
 			    		dataType : "text",
 			    		async : false,
-			    		url : "/ezCircular/circularDeptDel.do",
-			    		data : {
-			    			circularBMId  : _RowObject.id
-			    		},
+			    		url : url,
 			    		success: function() {
 			    			alert("<spring:message code='ezCircular.t45' />");
 							window.location.reload(false);

@@ -534,29 +534,14 @@
 		]]>
 	</select>
 	
-<!-- 	<select id="EzCircularDAO.modify_circularDept" parameterClass="map" resultMap="circularMemberVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			SELECT -->
-<!-- 				MEMBERID, MEMBERNAME -->
-<!-- 			FROM -->
-<!-- 				TBL_CIRCULAR_BMUSER -->
-<!-- 			WHERE -->
-<!-- 				CIRCULARBMID = #v_CIRCULARBMID# -->
-<!-- 			AND -->
-<!-- 				TENANTID = #v_TENANTID# -->
-<!-- 			ORDER BY -->
-<!-- 				CIRCULARBMUSERID -->
-<!-- 		]]> -->
-<!-- 	</select> -->
-	
-	<delete id="EzCircularDAO.circularDeptDel" parameterClass="CircularDeptVO">
+	<delete id="EzCircularDAO.circularDeptDel" parameterClass="map">
 		<![CDATA[
 			DELETE FROM
 				TBL_CIRCULAR_BM
 			WHERE
-				CIRCULARBMID = #circularBMId#
+				CIRCULARBMID = #v_CIRCULARBMID#
 			AND
-				TENANTID = #tenantId#
+				TENANTID = #v_TENANTID#
 		]]>
 	</delete>
   
@@ -589,7 +574,7 @@
 	<select id="EzCircularDAO.getMemberName" parameterClass="map" resultMap="circularMemberVO">
 		<![CDATA[
 			SELECT
-				MEMBERID,	COMPANY,	DESCRIPTION,	TITLE,		MEMBERNAME,		MAIL
+				A.MEMBERID,		B.COMPANY,		B.DESCRIPTION,		B.TITLE,		A.MEMBERNAME,		B.MAIL
 			FROM
 				TBL_CIRCULAR_BMUSER A
 			JOIN

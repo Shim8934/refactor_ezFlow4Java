@@ -402,8 +402,18 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularDeptDel(CircularDeptVO circularDeptVO) throws Exception {
-		ezCircularDAO.circularDeptDel(circularDeptVO);
+	public void circularDeptDel(String[] delList, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (int i=0; i<delList.length; i++) {
+			String circularBMId = delList[i];
+			
+			map.put("v_CIRCULARBMID", circularBMId);
+			map.put("v_TENANTID", tenantId);
+			
+			ezCircularDAO.circularDeptDel(map);
+		}
+		
 	}
 
 	@Override

@@ -151,8 +151,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<CircularDeptVO>) list("EzCircularDAO.getcircularDeptList", circularDeptVO);
 	}
 
-	public void circularDeptDel(CircularDeptVO circularDeptVO) throws Exception {
-		delete("EzCircularDAO.circularDeptDel", circularDeptVO);
+	public void circularDeptDel(Map<String, Object> map) throws Exception {
+		delete("EzCircularDAO.circularDeptDel", map);
 	}
 
 	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {

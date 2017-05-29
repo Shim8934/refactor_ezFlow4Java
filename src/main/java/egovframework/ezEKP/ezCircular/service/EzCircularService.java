@@ -63,7 +63,7 @@ public interface EzCircularService {
 
 	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
 
-	public void circularDeptDel(CircularDeptVO circularDeptVO) throws Exception;
+	public void circularDeptDel(String[] deleteList, int tenantId) throws Exception;
 
 	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception;
 
