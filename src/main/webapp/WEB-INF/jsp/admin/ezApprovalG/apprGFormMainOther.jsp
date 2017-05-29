@@ -206,7 +206,6 @@
 		        			tbFormName2.value = result.vo.formName2;
 		        			tbDescript.value = result.vo.formDescription;
 		        			selFormKind.value = result.vo.formDocType;
-// 		        			formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);
 		        			formURL = encodeURI(result.vo.formFileLocation);
 			                
 			                if (approvalFlag == 'S') {
@@ -277,7 +276,7 @@
 		            treeView.SetRequestData("RequestData");
 		            treeView.SetNodeClick("TreeViewNodeClick");
 		            treeView.DataSource(xmlpara);
-		            treeView.DataBind("divUserContTree");
+		            treeView.DataBind("TreeView");
 		
 		            treeView.SetID("LineUserTree");
 		            treeView.SetUseAgency(true);
@@ -955,7 +954,7 @@
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
                         <h2><spring:message code='ezApprovalG.t232'/></h2>
-                        <div id="divUserContTree" style="height: 355px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="TreeView" style="height: 355px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                         <br />
                         <div class="div_scroll" style="border:none;">
                             <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>
