@@ -237,7 +237,7 @@
 		        </tr>
 		        <tr>
 		            <td  style="padding-bottom:10px;text-align:center;">
-		                <div style="OVERFLOW:auto;width:540px;HEIGHT:280px;">
+		                <div style="OVERFLOW:auto;width:580px;HEIGHT:280px;">
 		                    <table class="mainlist" >
 		                        <tr >
 		                            <th style="padding:0;text-align:center;width:20px;"><input type="checkbox" id="mainChk" onclick="checkAll(this.id)" /></th>
