@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/schedule_write_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -106,6 +106,8 @@
 		                }	
 		            }
 		        } */
+		        
+	        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		    }
 			
 		    window.onresize = function () {
@@ -142,33 +144,6 @@
 		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    	    }
 	    	}	
-
-	    	function display_time_Unshow() {
-		        allday_chk = document.getElementById("AllDay").value;
-
-		        if (allday_chk == "on") {
-
-	    	        if (onck == "1") {
-	        	        document.getElementById("Stimepicker").style.display = "none";
-	            	    document.getElementById("Etimepicker").style.display = "none";
-	                	onck = "0";
-	                	return;
-	            	}
-
-	            	if (onck == "0") {
-		                document.getElementById("Stimepicker").style.display = "";
-		                document.getElementById("Etimepicker").style.display = "";
-	    	            onck = "1";
-	        	        return;
-	            	}
-	        	}
-
-	        	if (allday_chk == "") {
-		            document.getElementById("Stimepicker").style.display = "";
-		            document.getElementById("Etimepicker").style.display = "";
-	    	        onck = "1";
-	        	}
-		    }
 
 		    function keyword_onkeydown() {
 	    	    if (event.keyCode == 13) {
@@ -248,6 +223,7 @@
 	                cache: false,
 	                success: function(data) {
 	                  alert("회람을 수정하였습니다.");	
+	                  window.opener.window_reload();
 	             	  window.close();
 	                }
 	 			});
@@ -346,16 +322,16 @@
 	       					<td style="width:160px" colspan="3">
 								<c:choose>
 		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" onClick="display_time_Unshow()" />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="optionRefly" name="chkList" checked/>&nbsp;댓글기능 사용&nbsp;&nbsp;
+		                				<input type="checkbox" id="optionMail" name="chkList" />&nbsp;메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="optionRefly" name="chkList" onClick="display_time_Unshow()" />&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;메일공지 사용
+		                			<input type="checkbox" id="optionRefly" name="chkList" " />&nbsp;댓글기능 사용&nbsp;&nbsp;
+		                				<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;댓글기능 사용&nbsp;&nbsp;
-										<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="optionRefly" name="chkList" checked />&nbsp;댓글기능 사용&nbsp;&nbsp;
+										<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>   									
 	         				</td>
@@ -370,15 +346,15 @@
 			     		</tr>
         
 						<tr id="Span1">
-	           				<th>
+	           				<th rowspan="2">
 	           					회람자
 	           				</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
-	           					<a class="imgbtn"><span id="clickbtn" onclick="manage_attendant()">선택</span></a>
+	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
 	           				</td>
 						</tr>
 						<tr>
-	         				<th>회람자목록</th>
+	         				<!-- <th>회람자목록</th> -->
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px"></div>

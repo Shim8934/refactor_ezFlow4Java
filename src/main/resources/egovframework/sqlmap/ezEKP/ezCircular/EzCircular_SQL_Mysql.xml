@@ -586,4 +586,22 @@
 				TENANTID = #v_TENANTID#
 		]]>
 	</select>
+    
+    <select id="EzCircularDAO.checkUpdateStatus" resultClass="Integer" >
+        <![CDATA[
+              SELECT
+                  COUNT(CIRCULARID)
+              FROM
+                  TBL_CIRCULAR_USER
+              WHERE
+                  UPDATESTATUS = 1
+              AND
+                  CIRCULARID = #circularID#
+              AND
+                  MEMBERID = #memberID#
+              AND
+                  TENANTID = 0      
+    ]]>
+  </select>
+    
 </sqlMap>

@@ -39,6 +39,8 @@ public interface EzCircularService {
 	
 	public int getConfirmStatusSecond(int circularID, int tenantID) throws Exception;
 	
+	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception;
+	
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;

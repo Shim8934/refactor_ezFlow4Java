@@ -738,6 +738,10 @@ public class EzCircularController extends EgovFileMngUtil {
                 	int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularId(), userInfo.getTenantId());
                 	
                 	fieldValue = firstValue + "/" + secondValue;
+                } else if (fieldName.equals("REGDATE")) {
+                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false); 
+                } else if (fieldName.equals("CONFIRMDATE")) {
+                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
                 }
             	
 				resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
@@ -988,9 +992,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		int firstValue = ezCircularService.getConfirmStatusFirst(circularListVO.getCircularId(), userInfo.getTenantId());
 		
-		//status업데이트되는부분 임시 주석
+		////status업데이트되는부분 임시 주석
 		//ezCircularService.updateStatus(firstValue, circularListVO.getCircularId(), userInfo.getTenantId());
-		ezCircularService.updateStatusUser(firstValue, circularListVO.getCircularId(), confirmDate, userInfo.getTenantId());
+		if (ezCircularService.checkUpdateStatus(circularListVO.getCircularId(), userInfo.getId(), userInfo.getTenantId()) != 1) {
+			ezCircularService.updateStatusUser(firstValue, circularListVO.getCircularId(), confirmDate, userInfo.getTenantId());
+		}
 		
 		logger.debug("confirmStatus ended");
 	}

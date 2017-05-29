@@ -73,6 +73,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public int getLastID() throws Exception {
 		return (int) select("EzCircularDAO.getLastID");
 	}
+	
+	public int checkUpdateStatus(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.checkUpdateStatus", map);
+	}
 
 	public void setCircularList_Config_U(CircularConfigVO circularConfigVO) throws Exception {
 		update("EzCircularDAO.setCircularList_Config_U", circularConfigVO);

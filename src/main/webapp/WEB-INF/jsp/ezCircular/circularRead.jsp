@@ -83,7 +83,7 @@
 		    //수정버튼 클릭시
 	        function btn_modify() {
 		    	var circularID = "${result.circularId}";
-
+				
 	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID+"&num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);
 	        }
 		    
@@ -111,6 +111,7 @@
 		
 		                if (window.opener.reload != undefined)
 		                    window.opener.reload();
+		                window.opener.window_reload();
 		                window.close();
 					},
 					error: function(err) {
@@ -284,6 +285,11 @@
 			    } else
 			        suffix = 0;
 			}
+			
+			function closing() {
+				window.opener.location.reload();
+	          	window.close();
+			}
 		</script>
 	</head>
 	
@@ -308,7 +314,7 @@
                 	</div>
                 	<div id="close">
 	                    <ul>
-    	                    <li><span onclick="window.close();"><spring:message code='ezResource.t150' /></span></li>
+    	                    <li><span onclick="closing();"><spring:message code='ezResource.t150' /></span></li>
         	            </ul>
             	    </div>
             	    
@@ -373,7 +379,7 @@
 			                                <spring:message code='ezSchedule.t316' />
 			                            </th>
 			                            <td class="pos1">
-			                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">	                                
+			                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px;" align="left">	                                
 			                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
 			                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 			                                    	<div style="margin-top:3px;height:20px">

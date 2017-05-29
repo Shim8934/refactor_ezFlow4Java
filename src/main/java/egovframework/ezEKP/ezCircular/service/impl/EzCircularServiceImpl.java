@@ -459,6 +459,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getSearchCircularList(map);
 	}
 	
+	@Override
+	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		return ezCircularDAO.checkUpdateStatus(map);
+	}
+	
 	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
