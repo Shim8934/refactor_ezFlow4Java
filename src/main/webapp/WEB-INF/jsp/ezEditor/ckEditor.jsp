@@ -14,16 +14,42 @@
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
 			    ExecuteCommand("maximize");
 			    
-			    if (type == "MAILOUTOFOFFICE" || textPlainMode) {
+			    parent.Editor_Complete();
+			    
+			    if (type == "MAILOUTOFOFFICE") {
+			    	// prevent image drop
+					ev.editor.document.on('drop', function (ev) {
+					   ev.data.preventDefault(true);
+					});
+					
+			    } else if (type == "TEXTPLAIN") {
 			    	// prevent image drop
 					ev.editor.document.on('drop', function (ev) {
 					   ev.data.preventDefault(true);
 					});
 			    	
-			    } else {
-			    	parent.Editor_Complete();
+					SetEditorContent(textData);
+					
+			    } else if (type == "TEXTHTML") {
+			    	SetEditorContent(textData);
 			    }
 			    
+			    if (typeof(parent.initTextPlain) != "undefined" && parent.initTextPlain) {
+			    	parent.initTextPlain = false;
+			    	type = "TEXTPLAIN";
+		    		textData = GetEditorContent();
+		    		
+			    	oldConfig = CKEDITOR.instances.editor1.config;
+		    		
+		    		var config = {};
+		        	config.toolbar = [['Print']];
+		        	config.resize_enabled = false;
+		        	config.removePlugins = 'elementspath';
+		        	config.forcePasteAsPlainText = true; // forse to set plain text on paste
+		        	
+		        	CKEDITOR.instances.editor1.destroy();
+		        	CKEDITOR.replace('editor1', config);
+			    }
 		    });
 		    
 		    // Setdata 후 실행 함수.
@@ -209,13 +235,13 @@
 	        }
 	        
 	        var oldConfig;
-	        var textPlainMode = false;
+	        var textData;
 	        
-			function setTextPlain(isTextPlain) {
+			function changeTextMode(isTextPlain) {
 		    	if (isTextPlain) { // case of text-plain
 		    		oldConfig = CKEDITOR.instances.editor1.config;
-		    		textPlainMode = true;
-		    	
+		    		type = "TEXTPLAIN";
+		    		
 		    		// make text plain data wrapped by P tag
 		    		var mhtBody = "";
 		            var div_ = document.createElement("DIV");
@@ -226,7 +252,7 @@
 		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
 		            
 		            var texts = mhtBody.split("\n");
-		            var textData = "";
+		            textData = "";
 		            var defaultFont = "<spring:message code='main.t246' />";
 		            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
 		            for (var i=0; i<texts.length; i++) {
@@ -245,23 +271,14 @@
 		        	CKEDITOR.instances.editor1.destroy();
 		        	CKEDITOR.replace('editor1', config);
 		        	
-		        	// set editor content
-		        	setTimeout( function(a) {
-		        		SetEditorContent(a);
-		        	}, 500, textData);
-		        	
 		    	} else { // case of text-html
-		    		textPlainMode = false;
-		    		var textData = GetEditorContent();
+		    		type = "TEXTHTML";
+		    		textData = GetEditorContent();
 		        	
 		    		// replace to the old config
 	        		CKEDITOR.instances.editor1.destroy();
 	        		CKEDITOR.replace('editor1', oldConfig);
-
-	        		// set editor content
-	        		setTimeout( function(a) {
-		        		SetEditorContent(a);
-		        	}, 500, textData);
+	        		
 		    	}
 		    }
 		</script> 
