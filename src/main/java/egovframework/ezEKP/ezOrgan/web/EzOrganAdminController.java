@@ -335,6 +335,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     					result = "OK";
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
 				    } catch (Exception e) {
+				    	e.printStackTrace();
+				    	
 				        ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 				        ezEmailUserAdminService.addGroup(mailAddr);
 				        

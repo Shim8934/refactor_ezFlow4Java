@@ -31,7 +31,7 @@
 	        	document.getElementById("divCross").style.height = window.innerHeight - 75 + "px";
 	        }
 	    	
-	    	function DocumentComplete() {
+	    	function Editor_Complete() {
 	        	var isComplete = false;
 	        	if (!isComplete) {
 	            	document.getElementById("subtitle").innerText = "[" + pbrdName + "]" + document.getElementById("subtitle").innerText;
@@ -195,7 +195,7 @@
 		</script>
 		
  		<div id="divCross" style="margin-top:10px;vertical-align:top;">
-			<iframe id="message" class="viewbox"  name="message" src="/ezResource/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
+			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
        </div>
 	</body>
 </html>

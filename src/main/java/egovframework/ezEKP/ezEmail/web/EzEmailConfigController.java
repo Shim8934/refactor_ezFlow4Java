@@ -1,15 +1,11 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,11 +15,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.UUID;
-import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -52,8 +45,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -663,202 +654,6 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		return rtnValue;
 	}
 
-
-	/**
-	 * 메일 서명관리 ck에디터 이미지 업로드 호출 Method
-	 */
-	@RequestMapping(value = "/ezEmail/ckImageUpload.do")
-	public String ckImageUpload() {
-		return "ezEmail/ckImageUpload";
-	}
-
-	/**
-	 * 메일 서명관리 ck에디터 업로드 실행 Method
-	 */
-	@RequestMapping(value = "/ezEmail/ckUpload.do")
-	public String ckUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		logger.debug("ckUpload started.");
-		
-		MultipartFile multiFile = request.getFile("file1");
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		int width = 0;
-		int height = 0;
-
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-
-		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
-
-		if (imageFile.exists()) {			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
-			width = bi.getWidth();
-			height = bi.getHeight();
-		}
-		
-		String imgPath = (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/");
-		
-		model.addAttribute("imgPath", imgPath);
-		
-		logger.debug("imgPath=" + imgPath);
-		logger.debug("ckUpload ended.");
-		
-		return "ezEmail/ckUpload";
-	}
-	
-	/**
-	 * 메일 서명관리 ck에디터 심플업로드 실행 Method
-	 */
-	@RequestMapping(value = "/ezEmail/ckSimpleUpload.do", produces = "application/json; charset=utf-8")
-	@ResponseBody
-	public String ckSimpleUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		logger.debug("ckSimpleUpload started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		MultipartFile multiFile = request.getFile("upload");
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		
-		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-		
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		
-		logger.debug("ckSimpleUpload ended");
-		return "{\"uploaded\": 1,\"fileName\": \""+fileName+"\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
-	}
-	
-	/**
-	 * 메일 서명관리 TagFree에디터 업로드 실행 Method
-	 */
-	@RequestMapping(value = "/ezEmail/tfxUpload.do")
-	public String tfxUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		MultipartFile multiFile = request.getFile("FILE_PATH");
-		
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-	    if (!file.exists()) {
-	    	file.mkdirs();
-	    }
-		
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		
-		model.addAttribute("sContentType", request.getParameter("content_type"));
-		model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
-		
-		return "ezCommon/tfxUpload";
-	}
-	
-	/**
-	 * 메일 서명관리 TagFree에디터 심플업로드(drag&drop) 실행 Method
-	 */
-	@RequestMapping(value = "/ezEmail/tfxSimpleUpload.do")
-	public String tfxSimpleUpload(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		logger.debug("tfxSimpleUpload started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String fileData = request.getParameter("clip_contents");
-		String fileType = request.getParameter("file_extension");
-		String rootId = request.getParameter("xfe_root_id");
-		String resultCode = "0";
-		
-		if (fileData == null) { //이미지가 너무 큰 경우 fileData가 null로 들어옴(tomcat server.xml의 maxPostSize설정에 따라 이미지 최대 업로드 사이즈 조절 가능함.)
-			logger.debug("The file size is too big.");
-			resultCode = "1";
-			
-		} else if (fileData.startsWith("data:")) { //이미지 파일이 아닌경우 fileData앞에 data:이 붙음.
-			logger.debug("The file is not image.");
-			resultCode = "2";
-			
-		} else {
-			logger.debug("fileType=" + fileType + ", rootId=" + rootId);
-			
-			String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-			String realPath = commonUtil.getRealPath(request);
-			String today = EgovDateUtil.getToday("");
-			String fileName = UUID.randomUUID() + "." + fileType;
-
-			filePath = filePath + commonUtil.separator + today;
-			File file = new File(realPath + filePath);
-
-			if (!file.exists()) {
-				file.mkdirs();
-			}
-			
-			FileOutputStream fileOuputStream = null;
-			
-			try {
-				Decoder decoder = Base64.getDecoder();
-				byte[] imageByte = decoder.decode(fileData);
-				fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName); 
-				fileOuputStream.write(imageByte);
-				fileOuputStream.flush();
-				
-				logger.debug("rootId=" + rootId + ", sUploadedPath=" + filePath + commonUtil.separator + fileName);
-				
-				model.addAttribute("sRootId", rootId);
-				model.addAttribute("sUploadedPath", filePath + commonUtil.separator + fileName);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-				resultCode = "1";
-			} finally {
-				try {
-					fileOuputStream.close();
-				} catch (Exception e2) {
-				}
-			}
-			
-		}
-		
-		model.addAttribute("resultCode", resultCode);
-		
-		logger.debug("tfxSimpleUpload ended. resultCode=" + resultCode);
-		return "ezCommon/tfxSimpleUpload";
-	}
-	
-	/**
-	 * 메일 부재중설정 TagFree에디터 심플업로드(drag&drop) 시 아무처리 안하는 Method
-	 */
-	@RequestMapping(value = "/ezEmail/tfxNoop.do")
-	public String tfxNoop(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, Model model) throws Exception{
-		logger.debug("tfxNoop started");
-		
-		model.addAttribute("resultCode", "3");
-		
-		return "ezCommon/tfxSimpleUpload";
-	}
-	
 	/**
 	 * 메일 자동삭제 화면 호출 함수
 	 */

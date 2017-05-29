@@ -487,16 +487,6 @@ public class EzApprovalGarchiveController {
 	}
 	
 	/** 기록물등록대장  등록정보 인쇄 상세화면*/
-	@RequestMapping(value = "/ezApprovalG/printMetaInfoContent.do", produces = "text/xml;charset=utf-8")
-	public String printMetaInfoContent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		model.addAttribute("userInfo", userInfo);
-		
-		return "/ezApprovalG/apprGprintMetaInfoContent";
-	}
-	
-	/** 기록물등록대장  등록정보 인쇄 상세화면*/
 	@RequestMapping(value = "/ezApprovalG/printFormRecInfo.do", produces = "text/xml;charset=utf-8")
 	public String printFormRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);

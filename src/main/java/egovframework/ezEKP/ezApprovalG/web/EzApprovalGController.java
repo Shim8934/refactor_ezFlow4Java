@@ -874,54 +874,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자결재G editor 호출 Method
-	 */
-	@RequestMapping(value="/ezApprovalG/selectEditor.do")
-	public String mailSelectEditor(
-			@CookieValue("loginCookie") String loginCookie, 
-			HttpServletRequest request,
-			LoginVO userInfo, 
-			Model model) throws Exception{
-		String height = request.getParameter("height");
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
-		String returnPath = "";
-		
-		switch (useEditor) {
-			case "CK": 
-				returnPath = "ezApprovalG/apprGCKEditor";
-				break;
-			case "TAGFREE":
-				returnPath = "ezApprovalG/apprGTFXEditor";
-				break;
-			default :
-				returnPath = "ezApprovalG/apprGCKEditor";
-				break;
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("height", height);
-		
-		return returnPath;
-	}
-	
-	/**
-	 * 전자결재G ckeditor 호출 Method
-	 */
-	@RequestMapping(value = "/ezApprovalG/ckEditor.do")
-	public String ckEditor(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
-		String height = request.getParameter("height");
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		model.addAttribute("height", height);
-		model.addAttribute("userInfo", userInfo);
-		
-		return "ezApprovalG/apprGCKEditor";
-	}
-	
-	/**
 	 * 전자결재G code 표출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/getCodeData.do", produces = "text/xml;charset=utf-8")

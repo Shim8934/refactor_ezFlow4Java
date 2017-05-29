@@ -35,10 +35,9 @@
 	           
 	            if (startdate == "" && enddate == "") {
 	                var nowDate = new Date();
-	                document.getElementById("Sdatepicker").value = DateFormat(nowDate)
-	    	        document.getElementById("Edatepicker").value = DateFormat(nowDate)
+	                document.getElementById("Sdatepicker").value = DateFormat(nowDate);
+	    	        document.getElementById("Edatepicker").value = DateFormat(nowDate);
 	            }
-	            message.SetEditorContent("${personalPopupVO.content}");
 	            
 	            if (startdate != "") {
 	            }
@@ -145,11 +144,6 @@
 			    }
 			    var date = String(yy) + "-" + String(mm) + "-" + String(dd);
 			    return date;
-			}
-			
-			function GetEditorContent()
-			{
-			    return CKEDITOR.instances.editor1.getData();
 			}
 			
 			function OK_Click() {
@@ -273,6 +267,10 @@
 			    
 			    return length;
 			}
+			
+			function Editor_Complete() {
+				message.SetEditorContent("${personalPopupVO.content}");
+			}
 		</script>
 	</head>
 	<body class = "popup">
@@ -338,7 +336,7 @@
   					<tr> 
     					<th><spring:message code = 'ezPersonal.t155' /></th> 
    						<td style="padding:0px; height:320px">
-    						<iframe id="message" class="viewbox"  name="message" src="/admin/ezPersonal/addPopupCKContent.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none;"></iframe>
+    						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none;"></iframe>
     					</td> 
   					</tr>
   				</td>
@@ -348,6 +346,11 @@
 		    <%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
 		    <a class="imgbtn"><span onclick="window.close()"><spring:message code = 'ezPersonal.t13' /></span></a>
+		</div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>
