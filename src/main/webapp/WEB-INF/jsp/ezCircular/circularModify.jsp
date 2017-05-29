@@ -346,16 +346,16 @@
 	       					<td style="width:160px" colspan="3">
 								<c:choose>
 		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />댓글기능 사용
-		                				<input type="checkbox" id="optionMail" name="chkList" onClick="display_time_Unshow()" />메일공지 사용
+		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;댓글기능 사용&nbsp;&nbsp;
+		                				<input type="checkbox" id="optionMail" name="chkList" onClick="display_time_Unshow()" />&nbsp;메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="optionRefly" name="chkList" onClick="display_time_Unshow()" />댓글기능 사용
-		                				<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />메일공지 사용
+		                			<input type="checkbox" id="optionRefly" name="chkList" onClick="display_time_Unshow()" />&nbsp;댓글기능 사용&nbsp;&nbsp;
+		                				<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />댓글기능 사용
-										<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />메일공지 사용
+		                				<input type="checkbox" id="optionRefly" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;댓글기능 사용&nbsp;&nbsp;
+										<input type="checkbox" id="optionMail" name="chkList" checked onClick="display_time_Unshow()" />&nbsp;메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>   									
 	         				</td>
