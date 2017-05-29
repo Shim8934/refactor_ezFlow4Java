@@ -401,12 +401,12 @@ function _manage_attendant() {
 function manage_attendant_after() {
 	//var StartTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
     //var EndTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
-	
+alert(g_attendant);	
     schedule_select_attendant_dialogArguments[0] = g_attendant;
     schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
     //GetOpenWindow("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI(strLang19) + "&StartTime=" + StartTime + "&EndTime=" + EndTime, "schedule_select_attendant", 970, 655);
-    GetOpenWindow("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI(strLang19) + "&StartTime=&EndTime=", "schedule_select_attendant", 970, 655);
+    GetOpenWindow("/ezCircular/circularSelectAttendant.do?title=" + encodeURI(strLang19), "schedule_select_attendant", 970, 655);
 }
 
 function manage_attendant_Complete(rtn) {
@@ -485,9 +485,11 @@ function check_name(type) {
     	});
 
         if (adCount == 0) {
+alert("0");
             alert("'" + names[i] + "'" + strLang21);
             continue;
         } else if (adCount == 1) {
+alert("1");
             if (g_attendant == null)
                 g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
@@ -517,6 +519,7 @@ function check_name(type) {
             else
                 document.getElementById("receiverlist").innerHTML += ", " + g_attendant["name"][length];
         } else {
+alert("2");
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDOM;
             rgParams["name"] = "";
