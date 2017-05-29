@@ -61,7 +61,7 @@ public interface EzCircularService {
 
 	public void set_circularDeptSave(CircularDeptVO circularDeptVO, String[] memberListStr) throws Exception;
 
-	public String getcircularDeptList(CircularDeptVO circularDeptVO) throws Exception;
+	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
 
 	public void circularDeptDel(CircularDeptVO circularDeptVO) throws Exception;
 

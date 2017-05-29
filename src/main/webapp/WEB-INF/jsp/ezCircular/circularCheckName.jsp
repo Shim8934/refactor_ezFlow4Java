@@ -12,11 +12,7 @@
         <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
 		<title><spring:message code='ezCircular.t67'/></title>
 		<script>
-		    window.onload = function () {
-		        
-		    }
-	
-		    function cancel_onClick() {
+		    /* function cancel_onClick() {
 		        if (ReturnFunction != null) {
 		            var returnvalue = new Array();
 		            returnvalue["recipientTDData"] = "dontprocess";
@@ -29,13 +25,12 @@
 		            dialogArguments["recipientTDData"] = "dontprocess";
 		            window.close();
 		        }
-		    }
+		    } */
 		</script>
 	</head>	
 	<body class="popup"> 
-		<object style="display:none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" VIEWASTEXT> </object> 
 		<h1><spring:message code='ezCircular.t67' /></h1>
-		<div class="listview" style="height:190px; overflow:auto;">
+		<div class="listview" style="height:220px; overflow:auto;">
 			<table id="List" class="mainlist" style="width:100%">
 				<thead id="List_THEAD">
 					<tr>
@@ -61,9 +56,9 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="btnposition">
-		    <a class="imgbtn" name="button2" onClick="change_onClick()" ><span><spring:message code='ezCircular.t65' /></span></a>
-		    <a class="imgbtn" name="button3" onClick="cancel_onClick()" ><span><spring:message code='ezCircular.t66' /></span></a>
-		</div>
+<!-- 		<div class="btnposition"> -->
+<%-- 		    <a class="imgbtn" name="button2" onClick="change_onClick()" ><span><spring:message code='ezCircular.t65' /></span></a> --%>
+<%-- 		    <a class="imgbtn" name="button3" onClick="window.close()" ><span><spring:message code='ezCircular.t66' /></span></a> --%>
+<!-- 		</div> -->
 	</body>
 </html>

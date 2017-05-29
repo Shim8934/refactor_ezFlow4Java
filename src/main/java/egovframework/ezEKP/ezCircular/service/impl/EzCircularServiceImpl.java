@@ -386,12 +386,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public String getcircularDeptList(CircularDeptVO circularDeptVO) throws Exception {
+	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
 		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(circularDeptVO);
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
 		for (int i=0; i<list.size(); i++) {
+			list.get(i).setRegDate(commonUtil.getDateStringInUTC(list.get(i).getRegDate(), userInfo.getOffset(), false));
 			CircularDeptVO vo = list.get(i);
 			sb.append(commonUtil.getQueryResult(vo));
 		}

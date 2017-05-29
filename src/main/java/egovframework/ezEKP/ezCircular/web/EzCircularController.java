@@ -804,8 +804,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("fileList : "+fileList);
 		
-		
-		
 		int circularUserId = 0;
 		int updateStatus = 0;
 		
@@ -1115,7 +1113,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		Integer CircularBMId = circularDeptVO.getCircularBMId();
 		
 		circularDeptVO.setMemberId(userInfo.getId());
-		circularDeptVO.setRegDate(commonUtil.getTodayUTCTime(""));
+		circularDeptVO.setRegDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		circularDeptVO.setTenantId(userInfo.getTenantId());
 		
 		String[] memberListStr = request.getParameterValues("memberListStr[]");
@@ -1158,7 +1156,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		circularDeptVO.setTenantId(userInfo.getTenantId());
 		circularDeptVO.setMemberId(userInfo.getId());
 		
-		String result = ezCircularService.getcircularDeptList(circularDeptVO);
+		String result = ezCircularService.getcircularDeptList(circularDeptVO, userInfo);
 		
 		logger.debug("circularGetList ended");
 		
