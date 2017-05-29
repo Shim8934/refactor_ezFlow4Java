@@ -88,6 +88,7 @@
 	            
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${listUser}";
+	        	document.getElementById("receiverID").innerHTML = "${listUser}";
 				
 	        	//hasFie구분
 	        	setAttachFileInfo("${strAttach}");
@@ -229,7 +230,8 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-
+alert("receiverID : "+document.getElementById("receiverID").innerHTML);
+alert("receiverlist : "+document.getElementById("receiverlist").innerHTML);
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
 	                type : 'POST',
@@ -379,7 +381,7 @@
 	         				<th>회람자목록</th>
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
-	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
+	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px"></div>
 	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         				</td>
 	       				</tr>
@@ -463,7 +465,7 @@
 		</script>
     	<script type="text/javascript">
 	       	//document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
-	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 380 + "PX";
+	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
     	</script>
 	</body>
 </html>

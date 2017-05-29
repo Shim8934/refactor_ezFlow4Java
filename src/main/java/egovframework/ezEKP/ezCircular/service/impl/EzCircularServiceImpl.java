@@ -234,7 +234,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID, int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content, String fileList) throws Exception {
+	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID, int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content, String fileList, String[] receiverName) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
@@ -260,7 +260,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		//회람자 삭제 후 등록
 		deleteCircularUser(circularID, tenantID);
 		for (int i=0; i<receiverLength; i++) {
-			insertCircularUser(circularUserId, circularID, list.get(i).getMemberId(), list.get(i).getMemberName(), list.get(i).getMemberName2(), status, confirmDate, updateStatus, tenantID);
+			insertCircularUser(circularUserId, circularID, receiverID[i].trim(), receiverName[i].trim(), receiverName[i].trim(), status, confirmDate, updateStatus, tenantID);
 		}
 		
 		//첨부파일 삭제 후 등록

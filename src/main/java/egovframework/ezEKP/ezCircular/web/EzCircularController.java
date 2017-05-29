@@ -775,8 +775,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		
 	    //첨부파일 정보  hasFile이 Y일때
-        //if (vo.getHasAttach().equals("Y")) {        
-        	
+        if (result.getHasFile() == 1) {        
         	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
         	
         	for (CircularAttachVO avo : aList) {        		
@@ -787,9 +786,8 @@ public class EzCircularController extends EgovFileMngUtil {
         		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
         		avo.setFileTranSize(fileSize);
         	}
-        	
         	model.addAttribute("attachList", aList);
-        //}  
+        }  
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);
@@ -884,8 +882,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		int receiverLength = receiverList.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
+		String[] receiverName = receiverList.split(",");
 		
-		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID,updateStatus,circularUserId,circularListVO.getMemberName(),circularListVO.getMemberName2(),circularListVO.getStatus(),confirmDate,circularListVO.getContent(), fileList);
+		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID,updateStatus,circularUserId,circularListVO.getMemberName(),circularListVO.getMemberName2(),circularListVO.getStatus(),confirmDate,circularListVO.getContent(), fileList, receiverName);
 
 		logger.debug("saveModifyCircular ended");
 	}
