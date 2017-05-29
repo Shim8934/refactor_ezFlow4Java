@@ -3583,4 +3583,49 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return list;
 	}
+
+	@Override
+	public String formConnSave(String formID, String formText, String path, String companyID) throws Exception {
+		logger.debug("formConnSave started.");
+		logger.debug("formID = " + formID + " || formText = " + formText + " || path = " + path + " || companyID = " + companyID);
+		
+		String saveFileFolder = path + commonUtil.separator + companyID + commonUtil.separator + "form";
+		String saveFileName = saveFileFolder + commonUtil.separator + formID + ".xml"; 
+		
+		String result = "";
+		
+		FileWriter fileWriter = null;
+		
+		try {
+			File fileFolder = new File(saveFileFolder);
+			File file = new File(saveFileName);
+			
+			if (!fileFolder.exists()) {
+				fileFolder.mkdirs();
+			}
+			
+			fileWriter = new FileWriter(file);
+			fileWriter.append(formText);
+		} catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		} finally {
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+					result = formText;
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+					result = "ERROR";
+				}
+			}
+		}
+		
+		logger.debug("formConnSave ended. result = " + result);
+		
+		return result;
+	}
 }
