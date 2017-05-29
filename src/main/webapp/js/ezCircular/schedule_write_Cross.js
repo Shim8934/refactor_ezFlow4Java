@@ -394,14 +394,14 @@ function checkFontInfo(str)
 }
 var g_attendant = null;
 var schedule_select_attendant_dialogArguments = new Array();
-function manage_attendant() {
+function _manage_attendant() {
     check_name("attendant");
 }
 
 function manage_attendant_after() {
 	//var StartTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
     //var EndTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
-
+	
     schedule_select_attendant_dialogArguments[0] = g_attendant;
     schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
@@ -410,7 +410,6 @@ function manage_attendant_after() {
 }
 
 function manage_attendant_Complete(rtn) {
-alert("!!");
     if (typeof (rtn) != "undefined") {
         g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
         document.getElementById("receiverlist").innerHTML = "";

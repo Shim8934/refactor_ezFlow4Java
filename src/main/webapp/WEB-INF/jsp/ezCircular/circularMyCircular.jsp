@@ -615,7 +615,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;">
-	    <h1><spring:message code='ezCircular.t54'/><span id="mailBoxInfo"></span>
+	    <h1><spring:message code='ezCircular.t59'/><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 			  <input id="txt_keyword" style="width:150px;" value='제목/댓글 검색' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
@@ -624,6 +624,8 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
+	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t57'/></span></li>
+	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t58'/></span></li>
 	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>

@@ -56,15 +56,16 @@
 	                            + "'title = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent
 	                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
 	                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox' type='checkbox' onclick='event_statuschange(this);'></td>";
-	                            _html += "<td style='width:28%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent + "</td>";
-	                            _html += "<td style='width:25%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>";
+	                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent + "</td>";
+	                            _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>";
 	                            
                             if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] != "0") {
-	                            _html += "<td style='width:45%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0]
+	                            _html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0]
 	                            + "&nbsp<spring:message code='ezCircular.t50' />&nbsp" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] + "<spring:message code='ezCircular.t51' />" + "</td>";
                             } else {
-                            	_html += "<td style='width:45%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
-                            }                            
+                            	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
+                            }   
+                            	_html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[보기]" + "</td>";
 	                            _html += "</tr>";
 	                            _html += "</html>";
 	                            document.getElementById("contentlist").innerHTML = _html;
@@ -77,15 +78,16 @@
 		                            + "'title = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent
 		                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
 		                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox' type='checkbox' onclick='event_statuschange(this);'></td>";
-		                            _html += "<td style='width:28%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].text + "</td>";
-	                                _html += "<td style='width:25%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].text + "</td>";
+		                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].text + "</td>";
+	                                _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].text + "</td>";
 	                        
                                 if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] != "0") {
-	                                _html += "<td style='width:45%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].text.split("/")[0]
+	                                _html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].text.split("/")[0]
     	                            + "&nbsp<spring:message code='ezCircular.t50' />&nbsp" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] + "<spring:message code='ezCircular.t51' />" + "</td>";
                                 } else {
-                                	_html += "<td style='width:45%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
-                                } 
+                                	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
+                                }
+                                	_html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[보기]" + "</td>";
 	                                _html += "</tr>";
 	                                _html += "</html>";
 	                                document.getElementById("contentlist").innerHTML = _html;
@@ -106,6 +108,7 @@
 		            obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
 		            obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
 		            obj.childNodes.item(3).style.backgroundColor = "#EDEDED";
+		            obj.childNodes.item(4).style.backgroundColor = "#EDEDED";
 		        }
 		    }
 			
@@ -115,6 +118,7 @@
 		            obj.childNodes.item(1).style.backgroundColor = "#FFFFFF";
 		            obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
 		            obj.childNodes.item(3).style.backgroundColor = "#FFFFFF";
+		            obj.childNodes.item(4).style.backgroundColor = "#FFFFFF";
 		        }
 		    }
 		    
@@ -126,13 +130,15 @@
 		            _RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
 		            _RowObject.childNodes.item(3).style.backgroundColor = "#ffffff";
-		        }
+		            _RowObject.childNodes.item(4).style.backgroundColor = "#ffffff";
+		    	}
 
 		        _RowObject = obj;
 		        obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 244)";
 		        obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 244)";
 		        obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 244)";
 		        obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 244)";
+		        obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 244)";
 		    }
 
 		    function event_dbclick() {
@@ -141,6 +147,17 @@
 		    
 		    function event_statuschange(obj) {
 		    	
+		    }
+		    
+		    function memberList() {
+		    	var circularBMId = _RowObject.id;
+		    	
+		    	var pheight = window.screen.availHeight;
+		        var pwidth = window.screen.availWidth;
+		        var pTop = (pheight - 280) / 2;
+		        var pLeft = (pwidth - 450) / 2;
+		    	
+		    	window.open("/ezCircular/circularCheckName.do?id=" + circularBMId, "", "height = 300px, width = 650px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status=no, toolbar=no, menubar=no, location=no, resizable=no");
 		    }
 			
 			var schedule_admin_popup_sharedept_dialogArguments = new Array();
@@ -213,14 +230,13 @@
 			    		},
 			    		success: function() {
 			    			alert("<spring:message code='ezCircular.t45' />");
+							window.location.reload(false);
 			    		},
 			    		error: function(err) {
 			    			alert(strLang1);
 			    		}
 			        });					
 				}
-				
-				window.location.reload(false);
 			}
 		</script>
 	</head>
@@ -241,9 +257,10 @@
 		                    <table class="mainlist" style="width: 100%;">
 		                        <tr>
 		                        	<th style="width: 7%; "><input id="checkboxAll" type="checkbox"></th>
-		                            <th style="width: 28%; "><span><spring:message code='ezCircular.t32' /></span></th>
-		                            <th style="width: 25%; "><span><spring:message code='ezCircular.t33' /></span></th>
-		                            <th style="width: 45%; "><span><spring:message code='ezCircular.t34' /></span></th>
+		                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
+		                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
+		                            <th style="width: 12%; "><span><spring:message code='ezCircular.t34' /></span></th>
+		                        	<th style="width: 14%; "></th>
 		                        </tr>
 		                    </table>
 		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">

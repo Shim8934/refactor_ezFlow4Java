@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
+import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzCircularDAO")
@@ -166,8 +167,14 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		insert("EzCircularDAO.set_circularMemberList", map);
 	}
 
-	public String modify_circularDept(Map<String, Object> map) {
-		return (String) select("EzCircularDAO.modify_circularDept", map);
+	@SuppressWarnings("unchecked")
+	public List<CircularMemberVO> modify_circularDept(Map<String, Object> map) {
+		return (List<CircularMemberVO>) list("EzCircularDAO.modify_circularDept", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CircularMemberVO> getMemberName(Map<String, Object> map) {
+		return (List<CircularMemberVO>) list("EzCircularDAO.getMemberName", map);
 	}
 
 }

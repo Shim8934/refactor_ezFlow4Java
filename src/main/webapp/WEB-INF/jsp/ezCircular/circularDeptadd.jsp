@@ -22,9 +22,8 @@
 	    	var userid = "";
     		var circularBMId = "${circularBMId}";
     		
-	    	window.onload = function() {		
+	    	window.onload = function() {
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));
-	    		
 	    		try {
 	                ReturnFunction = opener.schedule_admin_popup_sharedept_dialogArguments[1];
 	            } catch (e) {}
@@ -63,10 +62,10 @@
 	    			url : url,
 	    			data : {
 	    				title : title,
-	    				"memberListStr" : memberListStr
+	    				memberListStr : memberListStr
 	    			},
 	    			success : function() {
-						alert("<spring:message code='ezSchedule.t30' />");
+						alert("<spring:message code='ezCircular.t63' />");
 	        			
 		                if (ReturnFunction != null) {
 		                    ReturnFunction("OK");
@@ -76,7 +75,7 @@
 		                window.close();
 	    			},
 	    			error : function(err) {
-	    				alert("<spring:message code='ezSchedule.t31' />");
+	    				alert("<spring:message code='ezCircular.t64' />");
 	    			}
 	    			
 	    		})
@@ -91,7 +90,7 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t37' /></th>
 	            <td>
-	                <input id="title" type="text" style="margin-bottom:2px; width:100%;" value="<c:out value='${title }'/>"/>
+	                <input id="title" type="text" style="margin-bottom:2px; width:100%;"/>
 	            </td>
 	        </tr>
 	        <tr>
@@ -104,7 +103,8 @@
 	        <tr>
 	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t38' /></br><spring:message code='ezCircular.t42' /></th>
 	        	<td>
-		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px"><c:out value='${memberList }'/></div>
+		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px"/></div>
+		        	<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	        	</td>
 	        </tr>
 	    </table>

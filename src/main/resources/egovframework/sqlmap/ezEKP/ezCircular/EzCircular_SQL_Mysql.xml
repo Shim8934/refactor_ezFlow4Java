@@ -13,6 +13,28 @@
 		<result property="regDate"			column="REGDATE"			columnIndex="3"/>
 		<result property="memberName"		column="MEMBERNAME"			columnIndex="4"/>
 	</resultMap>
+
+	<typeAlias alias="CircularConfigVO"			type="egovframework.ezEKP.ezCircular.vo.CircularConfigVO"/>
+    <typeAlias alias="CircularListVO"           type="egovframework.ezEKP.ezCircular.vo.CircularListVO"/>
+	<typeAlias alias="CircularDeptVO"			type="egovframework.ezEKP.ezCircular.vo.CircularDeptVO"/>
+	<typeAlias alias="CircularMemberVO"			type="egovframework.ezEKP.ezCircular.vo.CircularMemberVO"/>
+	
+	<resultMap class="CircularDeptVO" 			id="circularDeptVO">
+		<result property="circularBMId"			column="CIRCULARBMID"		columnIndex="1"/>
+		<result property="title"				column="TITLE"				columnIndex="2"/>
+		<result property="regDate"				column="REGDATE"			columnIndex="3"/>
+		<result property="memberName"			column="MEMBERNAME"			columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap class="CircularMemberVO" 		id="circularMemberVO">
+		<result property="memberId"				column="MEMBERID"			columnIndex="1"/>
+		<result property="company"				column="COMPANY"			columnIndex="2"/>
+		<result property="description"			column="DESCRIPTION"		columnIndex="3"/>
+		<result property="title"				column="TITLE"				columnIndex="4"/>
+		<result property="memberName"			column="MEMBERNAME"			columnIndex="5"/>
+		<result property="mail"					column="MAIL"				columnIndex="6"/>
+
+	</resultMap>
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 		<![CDATA[
@@ -512,18 +534,20 @@
 		]]>
 	</select>
 	
-	<select id="EzCircularDAO.modify_circularDept" parameterClass="map" resultClass="String">
-		<![CDATA[
-			SELECT
-				GROUP_CONCAT(membername ORDER BY circularBMUserId separator ', ')
-			FROM
-				TBL_CIRCULAR_BMUSER
-			WHERE
-				CIRCULARBMID = #v_CIRCULARBMID#
-			AND
-				TENANTID = #v_TENANTID#
-		]]>
-	</select>
+<!-- 	<select id="EzCircularDAO.modify_circularDept" parameterClass="map" resultMap="circularMemberVO"> -->
+<!-- 		<![CDATA[ -->
+<!-- 			SELECT -->
+<!-- 				MEMBERID, MEMBERNAME -->
+<!-- 			FROM -->
+<!-- 				TBL_CIRCULAR_BMUSER -->
+<!-- 			WHERE -->
+<!-- 				CIRCULARBMID = #v_CIRCULARBMID# -->
+<!-- 			AND -->
+<!-- 				TENANTID = #v_TENANTID# -->
+<!-- 			ORDER BY -->
+<!-- 				CIRCULARBMUSERID -->
+<!-- 		]]> -->
+<!-- 	</select> -->
 	
 	<delete id="EzCircularDAO.circularDeptDel" parameterClass="CircularDeptVO">
 		<![CDATA[
@@ -561,4 +585,20 @@
 				MEMBERID = #memberId#
 		]]>
 	</update>
+	
+	<select id="EzCircularDAO.getMemberName" parameterClass="map" resultMap="circularMemberVO">
+		<![CDATA[
+			SELECT
+				MEMBERID,	COMPANY,	DESCRIPTION,	TITLE,		MEMBERNAME,		MAIL
+			FROM
+				TBL_CIRCULAR_BMUSER A
+			JOIN
+				TBL_USERMASTER B
+			ON A.MEMBERID = B.CN
+			WHERE
+				CIRCULARBMID = #v_CIRCULARBMID#
+			AND
+				TENANTID = #v_TENANTID#
+		]]>
+	</select>
 </sqlMap>

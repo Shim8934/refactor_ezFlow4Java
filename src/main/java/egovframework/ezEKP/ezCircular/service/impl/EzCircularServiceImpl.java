@@ -411,13 +411,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public String circularDeptModify(int circularBMId, int tenantId) throws Exception {
+	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_CIRCULARBMID", circularBMId);
 		map.put("v_TENANTID", tenantId);
 		
-		return ezCircularDAO.modify_circularDept(map);
+//		return ezCircularDAO.modify_circularDept(map);
+		return ezCircularDAO.getMemberName(map);
 	}
 
 	@Override
@@ -447,5 +448,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getSearchCircularList(map);
 	}
 	
-	
+	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_CIRCULARBMID", circularBMId);
+		map.put("v_TENANTID", tenantId);
+		
+		return ezCircularDAO.getMemberName(map);
+	}
 }

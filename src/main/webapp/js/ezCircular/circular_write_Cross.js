@@ -412,7 +412,7 @@ function manage_attendant_Complete(rtn) {
     if (typeof (rtn) != "undefined") {
         g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
         document.getElementById("receiverlist").innerHTML = "";
-
+        
         for (var i = 0; i < rtn["id"].length; i++) {
             if (i == 0) {
             	document.getElementById("receiverlist").innerHTML = rtn["name"][i];

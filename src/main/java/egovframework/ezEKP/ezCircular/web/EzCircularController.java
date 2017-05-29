@@ -35,8 +35,9 @@ import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
-import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListVO;
+import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -412,9 +413,50 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 임시 회람판 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularTemp.do")
-	public String circularTemp() {
+	public String circularTemp(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		
 		logger.debug("circularTemp started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int page = 1;
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        int startRow = 1;
+        int endRow = 0;
+        
+		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (page - 1)) + 1;
+        endRow = (personalCount * page);
+		
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+        logger.debug("startRow : "+startRow);
+        logger.debug("endRow : "+endRow);
+        
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		logger.debug("listSize : "+list.size());
+		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("list", list);
+		model.addAttribute("config", config);
+		model.addAttribute("totalCount", totalCount);
 		
 		logger.debug("circularTemp ended");
 		
@@ -425,9 +467,50 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 휴지통 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDelete.do")
-	public String circularDelete() {
+	public String circularDelete(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		
 		logger.debug("circularDelete started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int page = 1;
+		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        int startRow = 1;
+        int endRow = 0;
+        
+		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (page - 1)) + 1;
+        endRow = (personalCount * page);
+		
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+        logger.debug("startRow : "+startRow);
+        logger.debug("endRow : "+endRow);
+        
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		logger.debug("listSize : "+list.size());
+		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("list", list);
+		model.addAttribute("config", config);
+		model.addAttribute("totalCount", totalCount);
 		
 		logger.debug("circularDelete ended");
 		
@@ -1096,15 +1179,16 @@ public class EzCircularController extends EgovFileMngUtil {
 		int circularBMId = Integer.parseInt(request.getParameter("id"));
 		int tenantId = userInfo.getTenantId();
 		
-		String memberList = ezCircularService.circularDeptModify(circularBMId, tenantId);
-		
+		List<CircularMemberVO> memberList = ezCircularService.circularDeptModify(circularBMId, tenantId);
+System.out.println(memberList.size());
 		model.addAttribute("circularBMId", circularBMId);
 		model.addAttribute("title", title);
 		model.addAttribute("memberList", memberList);
+		model.addAttribute("memberLength", memberList.size());
 		
 		logger.debug("circularDeptModify ended");
 	
-		return "/ezCircular/circularDeptadd";
+		return "/ezCircular/circularDeptModify";
 	}
 	
 	/**
@@ -1124,6 +1208,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
+<<<<<<< Updated upstream
 	 * 회람판 신규 회람판 삭제 실행 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDelete.do", method = RequestMethod.POST)
@@ -1276,4 +1361,31 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("getSearchCircularList ended");
         return resultXML.toString();
     }
+    /*
+	 * 회람처 설정 이름 확인 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularCheckName.do")
+	public String circularCheckName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		
+		logger.debug("circularCheckName started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int circularBMId = Integer.parseInt(request.getParameter("id"));
+		int tenantId = userInfo.getTenantId();
+	
+		List<CircularMemberVO> list = ezCircularService.getMemberName(circularBMId, tenantId);
+		
+		System.out.println(list.size() + " / " + list.toString());
+//		String company = userInfo.getCompanyID();
+//		String description = userInfo.getDeptName();
+//		String title = userInfo.getTitle();
+//		String DisplayName
+		
+		model.addAttribute("list", list);
+		
+		logger.debug("circularCheckName ended");
+		
+		return "/ezCircular/circularCheckName";
+	}
 }

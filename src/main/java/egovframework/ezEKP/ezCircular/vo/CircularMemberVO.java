@@ -13,6 +13,46 @@ public class CircularMemberVO {
 	
 	private String memberName2;
 	
+	private String company;
+	
+	private String description;
+	
+	private String title;
+	
+	private String mail;
+	
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
 	/** 테넌트 Id */
 	private int tenantId;
 

@@ -84,7 +84,7 @@
 	                } catch (e) {
 	                    RetValue = window.dialogArguments;
 	                }
-	            }	
+	            }
 	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';

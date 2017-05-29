@@ -7,6 +7,7 @@ import java.util.Map;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
+import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 
@@ -66,6 +67,8 @@ public interface EzCircularService {
 
 	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception;
 
-	public String circularDeptModify(int circularBMId, int tenantId) throws Exception;
+	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception;
+
+	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception;
 	
 }
