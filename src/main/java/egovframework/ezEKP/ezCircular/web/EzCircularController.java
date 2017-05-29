@@ -643,11 +643,11 @@ public class EzCircularController extends EgovFileMngUtil {
 				}
                 
                 if (fieldName.equals("IMPORTANCE")) {
-                	fieldValue = fieldValue.equals("0") ? "일반" : "중요";
+                	fieldValue = fieldValue.equals("0") ? "0" : "1";
                 } else if (fieldName.equals("HASFILE")) {
                 	//태그안에넣어서 에러나서 추후에 수정
                 	//fieldValue = fieldValue.equals("0") ? " " : "<img src=\"/images/newAttach.gif\">";
-                	fieldValue = fieldValue.equals("0") ? " " : "O";
+                	fieldValue = fieldValue.equals("0") ? "0" : "1";
                 } else if (fieldName.equals("STATUS")) {
                 	fieldValue = fieldValue.equals("0") ? "진행중" : "종료";
                 } else if (fieldName.equals("CONFIRMSTATUS")) {
@@ -1224,7 +1224,7 @@ public class EzCircularController extends EgovFileMngUtil {
        
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
-        
+
         for (int j = 0; j < list.size(); j++) {
         	resultXML.append("<ROW>");
         	String fieldName = "";
@@ -1244,7 +1244,7 @@ public class EzCircularController extends EgovFileMngUtil {
                 } else if (fieldName.equals("HASFILE")) {
                 	//태그안에넣어서 에러나서 추후에 수정
                 	//fieldValue = fieldValue.equals("0") ? " " : "<img src=\"/images/newAttach.gif\">";
-                	fieldValue = fieldValue.equals("0") ? " " : "O";
+                	fieldValue = fieldValue.equals("0") ? "0" : "1";
                 } else if (fieldName.equals("STATUS")) {
                 	fieldValue = fieldValue.equals("0") ? "진행중" : "종료";
                 } else if (fieldName.equals("CONFIRMSTATUS")) {
@@ -1271,7 +1271,7 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</ROWS>");
         resultXML.append("</LISTVIEWDATA>");
         resultXML.append("</DOCLIST>");
-        
+
         logger.debug("resultXML : "+resultXML);
 		logger.debug("getSearchCircularList ended");
         return resultXML.toString();

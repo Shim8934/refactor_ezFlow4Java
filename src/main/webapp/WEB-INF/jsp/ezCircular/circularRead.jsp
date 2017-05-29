@@ -254,7 +254,36 @@
 	            if (pSelUserID != "") {
 	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
-	        }  
+	        }
+	        
+	        function attach_SelectAll() {
+			    var checks = document.getElementById('attachedfileDIV').getElementsByTagName("input");
+			    for (var i = 0; i < checks.length; i++)
+			        checks.item(i).checked = true;
+			}
+        
+			function attach_Download() {
+			    checks = document.getElementById('attachedfileDIV').getElementsByTagName("input");
+			    downloadAll(checks)
+			}
+
+			var suffix = 0;
+			function downloadAll(checks) {
+			    if (checks.item(suffix)) {
+			        if (checks.item(suffix).checked) {
+			            if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
+			                location.href = GetAttribute(checks.item(suffix++), "filepath");
+			            } else {		            	
+			                location.href = "/ezSchedule/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
+			            }
+			            setTimeout(function () { downloadAll(checks) }, 1000);
+			        } else {
+			            suffix++;
+			            downloadAll(checks);
+			        }
+			    } else
+			        suffix = 0;
+			}
 		</script>
 	</head>
 	

@@ -230,8 +230,7 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-alert("receiverID : "+document.getElementById("receiverID").innerHTML);
-alert("receiverlist : "+document.getElementById("receiverlist").innerHTML);
+
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
 	                type : 'POST',
@@ -247,7 +246,8 @@ alert("receiverlist : "+document.getElementById("receiverlist").innerHTML);
 	                			fileList : fileList
 	                },  
 	                cache: false,
-	                success: function(data) {	   
+	                success: function(data) {
+	                  alert("회람을 수정하였습니다.");	
 	             	  window.close();
 	                }
 	 			});

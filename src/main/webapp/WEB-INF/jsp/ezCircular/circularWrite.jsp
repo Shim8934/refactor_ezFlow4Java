@@ -192,6 +192,7 @@
 	                },  
 	                cache: false,
 	                success: function(data) {	   
+	                  alert("회람을 저장하였습니다. \n작성한 회람판에서 확인하실 수 있습니다.");	
 	             	  window.close();
 	                }
 	 			});
@@ -288,8 +289,8 @@
 				        <tr>
 	       					<th> 옵션</th>
 	       					<td style="width:160px" colspan="3">
-								<input type="checkbox" id="optionRefly" name="chkList" onClick="display_time_Unshow()" />댓글기능 사용
-								<input type="checkbox" id="optionMail" name="chkList" onClick="display_time_Unshow()" />메일공지 사용   									
+								<input type="checkbox" id="optionRefly" name="chkList" onClick="display_time_Unshow()" />&nbsp;댓글기능 사용&nbsp;&nbsp;
+								<input type="checkbox" id="optionMail" name="chkList" onClick="display_time_Unshow()" />&nbsp;메일공지 사용   									
 	         				</td>
        						<th style="display: none"> <spring:message code="ezResource.t217"/></th>
 		           			<td style="display: none"><input type="checkbox" style="display: none" id="PublicFlag" checked /><spring:message code="ezResource.t217"/></td>

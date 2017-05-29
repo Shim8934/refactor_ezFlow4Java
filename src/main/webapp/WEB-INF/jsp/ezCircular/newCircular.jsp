@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<style>
@@ -178,7 +178,7 @@
 	        function getBoardList() {
 
 	        	var keyword = document.getElementById("txt_keyword").value;
-alert(keyword);	        	
+	        	
 		        starttime = new Date().getTime();
 		        if (keyword != ""){
 		        	//url = "/ezBoard/getSearchBoardList.do";
@@ -300,6 +300,8 @@ alert(keyword);
 	                if (tempno.length > 10) {
 	                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
 	                }
+	                
+	                //document.getElementById("BoardList_TH_2").style.textalign = 'center';
 	
 	                if ("${useOcs}" == "YES" && lstCnt > 0) {
 	                    check_presence();
