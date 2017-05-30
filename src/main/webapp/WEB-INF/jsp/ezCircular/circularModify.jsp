@@ -16,53 +16,9 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-	    	var reFlag;
-	    	var importanceVal;
-	    	var g_fromStr		= "${fromStr}";
-	    	var s_userID		= "${userInfo.id}";
-	    	var ss_companyID	= "${userInfo.companyID}";
-	    	var ss_deptNM		= "";
-	    	var ss_ownerNM		= "";
-	    	var lang = "${userInfo.primary}";
-	    	
-	    	if(lang == '2') {
-	        	ss_deptNM		= "${userInfo.deptName2}"; 
-	        	ss_ownerNM		= "${userInfo.displayName2}";
-	    	} else  {
-	        	ss_deptNM		= "${userInfo.deptName1}"; 
-	        	ss_ownerNM		= "${userInfo.displayName1}";
-	    	}
-	    	
-	    	var org_deptNM      = "${deptNm}";
-	    	var org_ownerNM     = "${ownerNm}";
-	    	var org_num			= "${num}";
-	    	var org_ownerID		= "${ownerID}";
-	    	var pnumVal			= "${pNum}";
-	    	var writerIDVal		= "${writerID}";
-	    	var cmd				= "${cmdStr}";
-	    	var typeVal			= "${typeVal}";
-	    	var startDateVal	= "${startDateVal}";
-	    	var endDateVal		= "${endDateVal}";
-	    	var gFlagVal		= "${gresFlag}";
 	    	var uploadPath		= "${scheduleFilePath}";
-	    	var org_companyID	= ss_companyID;
-	    	var pAdminFg		= "${adminFg}";
-	    	var nowDate         = "${nowDate}";
-	    	var ApproveFlag     = "${approveFlag}";
-	    	var SavedApproveFlag= "${saveApproveFlag}";
-	    	var reFlagVal		= "${reFlag}";
-	        var server_name = "${serverName}";
-		    var allday_chk, onck = "1";	
-	    	var sDT				="${startDateTime}";
-	    	var eDT				="${endDateTime}";
-	    	var flag = false;
-	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
-	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
-	    	var brdName = "${brdName}";
-	    	var resID = "${resID}";
-	    	var ItemArray = new Array();
-	    	var m_Arguments;
 	    	var msgRtn = "";
+	    	var AttachLimit = 5;
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -71,41 +27,12 @@
 	    	}
 
 		    window.onload = function () {
-		        try {
-	    	        m_Arguments = opener.schedule_add_ck_dialogArguments[0];
-		       } catch (e) {
-	            	try {
-	            		m_Arguments = window.dialogArguments;
-	            	} catch (e) {
-	            		m_Arguments = parent.schedule_add_ck_dialogArguments[0];
-		            }        
-	    	    } 
-	        	/* if (cmd == "mod") {
-	        		document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";	
-	        	} else {
-	        	document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + s_userID + "')>" + ss_ownerNM + "</a> (" + ss_deptNM + ")";
-	        	} */
-	            
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${listUser}";
 	        	document.getElementById("receiverID").innerHTML = "${listUser}";
 				
 	        	//hasFie구분
 	        	setAttachFileInfo("${strAttach}");
-	    /*     	if (m_Arguments != undefined) {
-	            	ItemArray[0] = m_Arguments[0];
-	            	ItemArray[1] = m_Arguments[1];
-
-		            document.getElementById('itemList').innerHTML = "";
-
-		            for (var i = 0 ; i < ItemArray[0].length; i++) {
-	                	if ((i + 1) < ItemArray[0].length) {
-	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i] + " ,  ";
-	                	} else {
-	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i];
-		                }	
-		            }
-		        } */
 		        
 	        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		    }
@@ -115,35 +42,14 @@
 	    	}
 		    
 		    window.onunload = function () {
-		        try {
-		            m_Arguments = opener.schedule_add_ck_dialogArguments[0];
-		            opener.close();
-		        }
-		        catch (e) {
-		        }
 		    }
 		    
 		    function DocumentComplete() {
-		        //if (cmd == "mod") {
-	    	        message.SetEditorContent(sigBody.innerHTML);
-	        	//}
-
-	        	/* if (cmd == "add") {
-		            if (msgRtn != "") {
-		                message.SetEditorContent(msgRtn);
-	    	        }
-		        } */
+				message.SetEditorContent(sigBody.innerHTML);
 	    	}
 
 	    	function FieldsAvailable() {
 	    	}
-
-	    	function MemberInfo_onClick(pSelUserID) {
-	        	if (pSelUserID != "") {
-		            var feature = GetOpenPosition(420, 438);
-		            window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	    	    }
-	    	}	
 
 		    function keyword_onkeydown() {
 	    	    if (event.keyCode == 13) {
@@ -151,27 +57,6 @@
 	    	    }
 		        return true;
 		    }
-
-		    var schedule_add_select_cross_dialogArguments = new Array();
-	    
-	    	function Open_Select_Complete(retVal) {
-	        	if (retVal == "close") {
-	        	} else if (typeof (retVal) != "undefined" && retVal.length == 2) {
-	            	ItemArray[0] = retVal[0];
-	            	ItemArray[1] = retVal[1];
-
-	            	document.getElementById('itemList').innerHTML = "";
-	            	
-	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
-		                if ((i + 1) < ItemArray[0].length) {
-		                	document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i] + " ,  ";	
-		                } else {
-	                		document.getElementById('itemList').innerHTML = document.getElementById('itemList').innerHTML + ItemArray[1][i];
-	                	}
-		            }
-	        	}
-	        	DivPopUpHidden();
-	    	}
 	    	
 	    	function btn_Save() {
 		    	//회람저장 눌렀을 시
@@ -213,7 +98,6 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			//receiverList : document.getElementById("receiverlist").innerHTML,
 	                			receiverList : '${listUser}',
 	                			receiverID : document.getElementById("receiverID").innerHTML,
 	                			circularId : "${circularID}",
@@ -230,19 +114,6 @@
 	    	}
 
 	    	function window_onUnload() {
-	        	if (m_Arguments == undefined) {
-		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
-		                window.opener.btnRefresh_onclick();
-	    	        } else if (window.opener != null && g_fromStr == "schedule2" && trim(s_userID) != "") {
-	                	window.opener.parent.main.document.location.reload();
-	            	} else if (window.opener != null && g_fromStr == "frame" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin2.document.location.reload();
-	            	} else if (window.opener != null && g_fromStr == "frame2" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin.document.location.reload();
-	            	} else if (window.opener != null && g_fromStr == "todaySchedule" && trim(s_userID) != "") {
-	                	window.opener.location.reload();
-	            	}
-	        	}
 	    	}
 	    	
 	    	//파일업로드
@@ -277,7 +148,6 @@
 	        else
 	            AttachFileInfo(strXML);
 	    }
-
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
@@ -308,7 +178,7 @@
           					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
         				</tr>
 						
-	        			<tr id="tr_STime" ${strDspMod1}>
+	        			<tr>
 	          				<th> 중요도</th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<select id="importance" class="select">
@@ -335,17 +205,8 @@
 		                			</c:otherwise>
 		                		</c:choose>   									
 	         				</td>
-       						<th style="display: none"> <spring:message code="ezResource.t217"/></th>
-		           			<td style="display: none"><input type="checkbox" style="display: none" id="PublicFlag" checked /><spring:message code="ezResource.t217"/></td>
-		           			<th style="display: none"> <spring:message code="ezResource.t218"/></th>
-		           			<td style="display: none">
-		           				<select id="characterID" name="select" class="select">
-		               				<option value="0" selected>회람자</option>
-		             			</select>          
-		         			</td>
 			     		</tr>
-        
-						<tr id="Span1">
+						<tr>
 	           				<th rowspan="2">
 	           					회람자
 	           				</th>
@@ -354,7 +215,6 @@
 	           				</td>
 						</tr>
 						<tr>
-	         				<!-- <th>회람자목록</th> -->
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px"></div>

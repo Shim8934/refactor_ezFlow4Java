@@ -42,7 +42,6 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
-import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -259,9 +258,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int page = 1;
-		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
-        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        
         int startRow = 1;
         int endRow = 0;
         
@@ -284,15 +281,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("listSize : "+list.size());
 		
-		for (CircularListVO result : list) {
-			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
-		}
-		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
-		model.addAttribute("useOcs", useOcs);
-		model.addAttribute("useRunTime", useRunTime);
-		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", list);
 		model.addAttribute("config", config);
 		model.addAttribute("totalCount", totalCount);
@@ -680,11 +670,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		List<HashMap<String, Object>> list2 = ezCircularService.getCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
 		
-		
-		for (CircularListVO result : list) {
-			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
-		}
-		
 		StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
@@ -728,8 +713,6 @@ public class EzCircularController extends EgovFileMngUtil {
                 if (fieldName.equals("IMPORTANCE")) {
                 	fieldValue = fieldValue.equals("0") ? "0" : "1";
                 } else if (fieldName.equals("HASFILE")) {
-                	//태그안에넣어서 에러나서 추후에 수정
-                	//fieldValue = fieldValue.equals("0") ? " " : "<img src=\"/images/newAttach.gif\">";
                 	fieldValue = fieldValue.equals("0") ? "0" : "1";
                 } else if (fieldName.equals("STATUS")) {
                 	fieldValue = fieldValue.equals("0") ? "진행중" : "종료";
@@ -1333,6 +1316,10 @@ System.out.println(memberList.size());
                 	int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularId(), userInfo.getTenantId());
                 	
                 	fieldValue = firstValue + "/" + secondValue;
+                } else if (fieldName.equals("REGDATE")) {
+                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false); 
+                } else if (fieldName.equals("CONFIRMDATE")) {
+                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
                 }
             	
 				resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
