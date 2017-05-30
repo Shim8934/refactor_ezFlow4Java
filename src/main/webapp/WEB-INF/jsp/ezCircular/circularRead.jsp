@@ -15,49 +15,8 @@
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" >
-		 	var g_data = new Array();
-		 	//writerID trim
-	        var writerIDVal = '${writerID}';
-	        var org_ownerNM = "${ownerNm}";
-	        var org_deptNM = "${deptNm}";
-	        var org_num = '${num}';
-	        var org_ownerID = "${ownerID}";
-	        var ss_companyID = '${userInfo.companyID}';
-	        var org_companyID = ss_companyID;
-	        var pAdminFg = "${adminFg}";
-	        var s_userID = '${userInfo.id}';
-	        var org_brdName = "${brdName}";
-	        var iReFlag = "${reFlagVal}";
-	        var pUse_Editor = "${useEditor}";
-	        var typeVal = '${typeVal}';
-	        var startDateVal = '${startDateVal}';
-	        var endDateVal = '${endDateVal}';
-	        var sDT = "${startDateTime}";
-	        var eDT = "${endDateTime}";
-	        var ApproveFlag = "${approveFlag}";
-	        var SavedApproveFlag = "${saveApproveFlag}";
-	        var reFlagVal = '${reFlag}';
-	        var server_name = "${serverName}";
-	        var pnumVal = '${pNum}';
-	        var gFlagVal = '${gresFlag}';
-	        var g_fromStr = '${fromStr}';
-	        var allDayFlag = "${allDay}";
-	        var ItemArray = new Array();
-	        var pNoneActiveX = "${pNoneActiveX}";
-	        var brdName = "${brdName}";
-	        var resID = "${resID}";
-	        // var contentpath = "/doc/{b70a579c-1468-4b93-9ec8-3bd42ba738cc}";
-	        
 	        window.onload = function () {
-	        	
-	            //document.getElementById("displayNM").innerHTML = "<a href=# onClick=MemberInfo_onClick('" + writerIDVal + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
 	            document.getElementById('itemList').innerHTML = "${listUser}";
-	            
-	            if (brdName != "" && resID != "") {
-	                ItemArray[0] = Array(resID);
-	                ItemArray[1] = Array(brdName);
-	                //document.getElementById('itemList').innerHTML = "${brdName}";
-	            }
 	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
@@ -84,7 +43,7 @@
 	        function btn_modify() {
 		    	var circularID = "${result.circularId}";
 				
-	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID+"&num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&brdName=" + encodeURIComponent(org_brdName);
+	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID;
 	        }
 		    
 		    //삭제버튼 클릭시
@@ -93,8 +52,6 @@
 				
 	            if (!confirm("회람을 삭제하시겠습니까?"))
 	                return;
-	            
-	            //window.location.href = "/ezCircular/circularDelete.do?circularID="+circularID;
 	            
 	            $.ajax({
 					type : "POST",
@@ -121,25 +78,9 @@
 	        }
 
 	        function window_onUnload() {
-	            if (window.dialogArguments == undefined) {
-	                if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
-	                    window.opener.btnRefresh_onclick();
-	                }
-	                else if (window.opener != null && g_fromStr == "schedule2" && trim(s_userID) != "") {
-	                    window.opener.parent.main.document.location.reload();
-	                }
-	                else if (window.opener != null && g_fromStr == "frame" && trim(s_userID) != "") {
-	                    window.opener.document.all.iframeWin2.document.location.reload();
-	                }
-	                else if (window.opener != null && g_fromStr == "frame2" && trim(s_userID) != "") {
-	                    window.opener.document.all.iframeWin.document.location.reload();
-	                }
-	                else if (window.opener != null && g_fromStr == "todaySchedule" && trim(s_userID) != "") {
-	                    window.opener.location.reload();
-	                }
-	            }
 	        }
 	        
+	        //인쇄버튼 클릭시
 	        function print_onClick2(printTrueFalse) {
 	            g_printTrueFalse = printTrueFalse;
 	            
@@ -163,98 +104,11 @@
 	        }
 
 	        function onbeforeprint2() {
-	            document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
+	        	//프린트 관련
+	            /* document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
 	            document.getElementById("printImportance").textContent = document.getElementById("importanceDIV").textContent;
-	            /* document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent; */
-	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent;
-	        }
-
-	        function SetApproval_onClick2(pCmd, pFlag) {
-	            var msg = ""
-	            if (pFlag == "1") {
-	                msg = "" + strLang176 + "";
-	            } else {
-	                msg = "" + strLang177 + "";
-	            }
-
-	            var result = confirm(msg);
-	            if (result) {
-	                if (bDupCheck == true && pFlag == "1") {
-	                    var STime = "";
-	                    var ETime = "";
-
-	                    var AllDayCheck;
-	                    if (allDayFlag == "1") {
-	                        STime = startDateVal + " 00:00:01";
-	                        ETime = endDateVal + " 23:59:59";
-	                        AllDayCheck = true;
-	                    } else {
-	                        AllDayCheck = false;
-	                    }
-
-	                    var bUsingResource = isUsingResource(ownerID.value, "${checkSDT}", "${checkEDT}", ss_companyID, num.value, pCmd, AllDayCheck);
-	                    if (bUsingResource) {
-	                        alert("" + strLang141 + "");
-	                        return;
-	                    }
-	                }
-	                
-	                var xmlHTTP = createXMLHttpRequest();
-	                var xmlDOM = createXmlDom();
-	                var objNode;
-
-	                createNodeInsert(xmlDOM, objNode, "DATA");
-	                createNodeAndInsertText(xmlDOM, objNode, "COMPANYID", ss_companyID);
-	                createNodeAndInsertText(xmlDOM, objNode, "RESID", document.getElementById("ownerID").value);
-	                createNodeAndInsertText(xmlDOM, objNode, "NUM", document.getElementById("num").value);
-	                createNodeAndInsertText(xmlDOM, objNode, "APPROVE", pFlag);
-
-	                xmlHTTP.open("POST", "/ezResource/updateApprovalFlag.do", false);
-	                xmlHTTP.send(xmlDOM);
-
-	                var rtnValue = xmlHTTP.responseText;
-
-
-	                xmlHTTP = null;
-
-	                if (rtnValue == "True") {
-	                    xmlHTTP = createXMLHttpRequest();
-	                    xmlHTTP.open("POST", "/ezResource/sendmailToUser.do", false);
-	                    xmlHTTP.send(xmlDOM);
-	                    var ResponseXML = xmlHTTP.responseXML;
-	                    xmlHTTP = createXMLHttpRequest();
-	                    xmlHTTP.open("POST", "/ezEmail/remote/mailSendNoti.do", false);
-	                    xmlHTTP.send(ResponseXML);
-	                    xmlHTTP = null;
-	                    alert("" + strLang33 + "");
-	                } else {
-	                    alert("" + strLang178 + "");
-	                }
-
-	                xmlDOM = null;
-	                
-	                if (window.opener != null) {
-	                    window.opener.btnRefresh_onclick();
-	                }
-	                window.close();
-	            }
-	        }
-
-	        function MemberInfo_onClick(pSelUserID) {
-	            var c_Width = 420;
-	            var c_Height = 438;
-
-	            //스크린의 크기
-	            var s_Width = screen.availWidth;
-	            var s_Height = screen.availHeight;
-
-	            //열 창의 포지션
-	            var px = (s_Width - c_Width) / 2;
-	            var py = (s_Height - c_Height) / 2;
-
-	            if (pSelUserID != "") {
-	                window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "left=" + px + ",top=" + py + ",height=" + c_Height + "px,width=" + c_Width + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	            }
+	            document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
+	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent; */
 	        }
 	        
 	        function attach_SelectAll() {
@@ -327,13 +181,11 @@
 	                    <tr>
     	                    <th style="width: 70px;">제목</th>
         	                <td colspan="3" style="width: 100%">
-            	                <!-- <div id="displayNM"></div> -->
             	                ${result.title}
                 	        </td>
                     	</tr>
                     	<tr>
 	                        <th>중요도</th>
-    	                    <!-- <td colspan="3"><span id="AllDayDisplay"></span></td> -->
     	                    <td colspan="3">${result.importance == '0' ? '일반' : '중요'}</td>
                     	</tr>
 		        		<tr>
@@ -372,73 +224,64 @@
 	        			</tr>
 	        			
 	        			<tr>
-                		    <!-- <td height="20"> -->
-			                    <table class="file">
-			                        <tr>
-			                            <th>
-			                                <spring:message code='ezSchedule.t316' />
-			                            </th>
-			                            <td class="pos1">
-			                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px;" align="left">	                                
-			                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
-			                                    <c:forEach var="item" items="${attachList}" varStatus="status">
-			                                    	<div style="margin-top:3px;height:20px">
-			                                    		<c:set var="imagePath" value="/images/file.gif" />
-			                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
-			                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
-			                                    			<c:set var="imagePath" value="/images/image.png" />
-			                                    		</c:if>
-			                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
-			                                    			<c:set var="imagePath" value="/images/doc.png" />
-			                                    		</c:if>
-			                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
-			                                    			<c:set var="imagePath" value="/images/xls.png" />
-			                                    		</c:if>
-			                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
-			                                    			<c:set var="imagePath" value="/images/ppt.png" />
-			                                    		</c:if>
-			                                    		<c:if test="${item.fileType == 'txt'}">
-			                                    			<c:set var="imagePath" value="/images/txt.png" />
-			                                    		</c:if>
-			                                    		<c:if test="${item.fileType == 'zip'}">
-			                                    			<c:set var="imagePath" value="/images/zip.png" />
-			                                    		</c:if>
-			                                    		<c:if test="${item.fileType == 'pdf'}">
-			                                    			<c:set var="imagePath" value="/images/pdf.png" />
-			                                    		</c:if>
-			                                    		<c:if test="${item.fileType == 'ecm'}">
-			                                    			<c:set var="imagePath" value="/images/ecm.png" />
-			                                    		</c:if>	                                    		
-			                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
-			                                    	</div>
-			                                    </c:forEach>
-			                                </div>
-			                            </td>
-			                            <td class="pos2">	                                
-			                                <a href="#" class="imgbtn">
-			                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
-			                                </a><br/>	                                
-			                                <a href="#" class="imgbtn">
-			                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
-			                                </a>
-			                            </td>
-			                        </tr>
-			                    </table>
-			                <!-- </td> -->
+		                    <table class="file">
+		                        <tr>
+		                            <th>
+		                                <spring:message code='ezSchedule.t316' />
+		                            </th>
+		                            <td class="pos1">
+		                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px;" align="left">	                                
+		                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
+		                                    <c:forEach var="item" items="${attachList}" varStatus="status">
+		                                    	<div style="margin-top:3px;height:20px">
+		                                    		<c:set var="imagePath" value="/images/file.gif" />
+		                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+		                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
+		                                    			<c:set var="imagePath" value="/images/image.png" />
+		                                    		</c:if>
+		                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
+		                                    			<c:set var="imagePath" value="/images/doc.png" />
+		                                    		</c:if>
+		                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
+		                                    			<c:set var="imagePath" value="/images/xls.png" />
+		                                    		</c:if>
+		                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
+		                                    			<c:set var="imagePath" value="/images/ppt.png" />
+		                                    		</c:if>
+		                                    		<c:if test="${item.fileType == 'txt'}">
+		                                    			<c:set var="imagePath" value="/images/txt.png" />
+		                                    		</c:if>
+		                                    		<c:if test="${item.fileType == 'zip'}">
+		                                    			<c:set var="imagePath" value="/images/zip.png" />
+		                                    		</c:if>
+		                                    		<c:if test="${item.fileType == 'pdf'}">
+		                                    			<c:set var="imagePath" value="/images/pdf.png" />
+		                                    		</c:if>
+		                                    		<c:if test="${item.fileType == 'ecm'}">
+		                                    			<c:set var="imagePath" value="/images/ecm.png" />
+		                                    		</c:if>	                                    		
+		                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+		                                    	</div>
+		                                    </c:forEach>
+		                                </div>
+		                            </td>
+		                            <td class="pos2">	                                
+		                                <a href="#" class="imgbtn">
+		                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
+		                                </a><br/>	                                
+		                                <a href="#" class="imgbtn">
+		                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
+		                                </a>
+		                            </td>
+		                        </tr>
+		                    </table>
+			                
 	            		</tr>
 	        			
 	        		</table>
 	        	</td>
         	</tr>
 		</table>
-		
-		<input type="hidden" id="iReFlag" value="${reFlagVal}" />
-		<input type="hidden" id="tmpReFlag" value="${tmpReFlag}" />
-		<input type="hidden" id="gresFlag" value="${gresFlag}" />
-		<input type="hidden" id="num" value="${num}" />
-		<input type="hidden" id="pnum" value="${pNum}" />
-		<input type="hidden" id="ownerID" value="${ownerID}" />
-		<input type="hidden" id="writerID" value="${writerID}" />
 
 		<table id="printScreen" style="display: none;">
 			<tr style="text-align:center">

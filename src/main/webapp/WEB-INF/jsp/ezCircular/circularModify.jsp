@@ -19,6 +19,8 @@
 	    	var uploadPath		= "${scheduleFilePath}";
 	    	var msgRtn = "";
 	    	var AttachLimit = 5;
+	    	var listSize = "${listSize}";
+	    	var userID = "${userID}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -27,14 +29,22 @@
 	    	}
 
 		    window.onload = function () {
+alert("${userName}");
+alert("${userID}");
 	        	document.getElementById("title").value = "${result.title}";
-	        	document.getElementById("receiverlist").innerHTML = "${listUser}";
-	        	document.getElementById("receiverID").innerHTML = "${listUser}";
+	        	document.getElementById("receiverlist").innerHTML = "${userName}";
+	        	document.getElementById("receiverID").innerHTML = "${userID}";
 				
 	        	//hasFie구분
 	        	setAttachFileInfo("${strAttach}");
 		        
 	        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+	        	
+	        	var list = userID.split(",");
+	        	for (var i = 0; i < listSize; i++) {
+	        		g_attendant["name"][i] = list[i];
+	            	g_attendant["id"][i] = list[i];
+	        	}
 		    }
 			
 		    window.onresize = function () {
@@ -98,7 +108,8 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			receiverList : '${listUser}',
+	                			receiverList : '${userName}',
+	                			receiverList2 : '${userName2}',
 	                			receiverID : document.getElementById("receiverID").innerHTML,
 	                			circularId : "${circularID}",
 	                			content : content,

@@ -49,9 +49,6 @@
 		}
 		</style>
 	    <script type="text/javascript">
- 	        var ShowAdjacent = "";
-	        var SSUserID = "${userInfo.id}";  
-	        var pBoardType = "";
 	        //var CurPage = "${page}";
 	        //var CurPage = "${totalCount}";
 	        var CurPage = "1";
@@ -140,7 +137,7 @@
 						dataType : "json",
 						async : false,
 						url : "/ezCircular/circularGeneralListSave2.do",
-						data : { userID 	 : SSUserID, 
+						data : { userID 	 : "${userInfo.id}", 
 								 listCount 	 : listCount, 
 								 previewMode : pPreviewShow_HOW,
 								 list 		 : divStyle,

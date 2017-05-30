@@ -96,9 +96,9 @@
 	            if (pGubun == "") {
 // 	                document.getElementById("btnAddUser").style.display = "";
 	                if (CrossYN())
-	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t163' />";
+	                    document.getElementById("ToTitleStr").textContent = "회람자";
 	                else
-	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezSchedule.t163' />";
+	                    document.getElementById("ToTitleStr").innerText = "회람자";
 	            }
 	
 	            ListTypeChangeIcon();
@@ -128,7 +128,7 @@
 	            	treeView.DataBind("TreeView");
 	            	
 	                if (type == "group") {
-	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezSchedule.t00001' />";
+	                    document.getElementById("ToTitleStr").textContent = "회람자";
 // 	                    document.getElementById("btnAddUser").style.display = "none";	
 	                }
 	            }
@@ -145,7 +145,7 @@
 	            var stridlength = 0;
 	            if (RetValue != undefined && RetValue["id"] != undefined)
 	                stridlength = RetValue["id"].length;
-	            
+
 	            for (var i = 0; i < stridlength; i++) {
 	                var pparsingXML = "";
 	                var pparsingXML2 = "";
@@ -157,7 +157,7 @@
 	                var strName2;
 	                var strDeptName1;
 	                var strDeptName2;
-	
+
 	                strName = RetValue["name"][i];
 	                strId = RetValue["id"][i];
 	                strName1 = RetValue["name1"][i];
@@ -166,13 +166,13 @@
 	                strDeptName2 = RetValue["deptname2"][i];
 	
 	                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName1 + "]]></DATA2>";
+	                pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
 	                pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
 	                pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptName2 + "]]></DATA5>";
 	                pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName1 + "]]></VALUE></CELL></ROW>";
-	
+	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                
 	                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                var Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1037,10 +1037,10 @@
 		            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
-		            rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
-		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
-		            rtn["jikwe"][i] = GetAttribute(totalRows[i], "DATA7");
-		            rtn["phone"][i] = GetAttribute(totalRows[i], "DATA8");
+		            //rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
+		            //rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
+		            //rtn["jikwe"][i] = GetAttribute(totalRows[i], "DATA7");
+		            //rtn["phone"][i] = GetAttribute(totalRows[i], "DATA8");
 		        }
 		        
 		        if (!CrossYN()) {
@@ -1301,7 +1301,7 @@
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
-	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t152' /></span>
+	                                <span style="min-width: 45px;" id="ToTitleStr">회람자</span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
 	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>

@@ -90,6 +90,7 @@
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
 	                			receiverList : document.getElementById("receiverlist").innerHTML,
+	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
 	                			receiverID : document.getElementById("receiverID").innerHTML,
 	                			content : content,
 	                			fileList : fileList
@@ -197,6 +198,7 @@
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px"></div>
 	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+	         					<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         				</td>
 	       				</tr>
       				</table>
