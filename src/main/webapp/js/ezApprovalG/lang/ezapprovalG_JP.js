@@ -1401,3 +1401,5 @@ var strLangS822 = "이미 회람이 발송된 사용자입니다. "
 var strLangS824 = "회람자가 중복되었습니다.";
 var strLangS825 = "회람자를 지정하시기 바랍니다.";
 var strLangS826 = "회람을 발송하지 못하였습니다.";
+var strLangpjj27 = "편집하려는 즐겨찾기를 공람자 리스트에 적용 해야 편집 할 수 있습니다.";
+var strLangHYJ28 = "회람자 리스트가 존재하지 않습니다.";
