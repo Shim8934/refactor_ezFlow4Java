@@ -42,7 +42,7 @@
             <mvc:mapping path="/cmm/main/*.do"/>
             <mvc:mapping path="/user/login/*.do"/>
             <mvc:mapping path="/admin/**"/>
-            <mvc:mapping path="/ez*/**"/>
+            <mvc:mapping path="/ezEKP/**"/>
             <mvc:exclude-mapping path="/user/login/actionLogin.do"/>
             <mvc:exclude-mapping path="/user/login/login.do"/>
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
@@ -51,6 +51,13 @@
             <mvc:exclude-mapping path="/admin/ezApprovalG/componentListTransfer.do"/>
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>            
 		    <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
+        </mvc:interceptor>    
+        <mvc:interceptor>            
+            <mvc:mapping path="/mobile/user/login/*.do"/>            
+            <mvc:mapping path="/ezMobile/**"/>
+            <mvc:exclude-mapping path="/mobile/user/login/actionLogin.do"/>
+            <mvc:exclude-mapping path="/mobile/user/login/login.do"/>                        
+		    <bean class="egovframework.com.cmm.interceptor.AuthenticMobileInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
 
