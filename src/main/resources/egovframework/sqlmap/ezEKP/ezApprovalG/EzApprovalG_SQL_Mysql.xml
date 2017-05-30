@@ -786,7 +786,43 @@
 			    SELECT * 		
 	   				FROM (
 						SELECT 
-							A.*  
+							A.aprMemberDeptID,
+							A.aprMemberDeptName,
+							A.aprMemberDeptName2,
+							A.aprMemberID,
+							A.aprMemberJobTitle,
+							A.aprMemberJobTitle2,
+							A.aprMemberName,
+  							A.aprMemberName2,
+  							A.aprMemberSN,
+  							A.aprState,
+  							A.aprType,
+  							A.companyID,
+  							A.docID,
+  							A.docNo,
+  							A.docState,
+  							A.docTitle,
+  							A.docType,
+  							A.formID,
+  							A.formName,
+  							A.formName2,
+  							A.functionType,
+  							A.hasAttachYn,
+  							A.hasOpinionYn,
+  							A.href,
+  							A.isPublic,
+  							A.orgDocID,
+  							A.receivedDate,
+  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+  							A.urgentApproval,
+  							A.writerDeptID,
+  							A.writerDeptName,
+  							A.writerDeptName2,
+  							A.writerID,
+  							A.writerJobTitle,
+  							A.writerJobTitle2,
+  							A.writerName,
+  							A.writerName2
 						FROM 
 							VAPRDOINGDOCLIST A  
 						WHERE 
@@ -799,6 +835,10 @@
 						AND 
 							APRTYPE <> '015' 
 		    ]]>
+		    <isEqual property="MineViewYN" compareValue="YES">
+			            			AND	    
+										AprState != '001'
+			 </isEqual>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 	    			AND 
 	    				#v_PSUBQUERY#
@@ -812,7 +852,7 @@
 		    		]]>
 	  		</isGreaterThan>
 		    			LIMIT #v_PQUERYSIZEMAIN#
-				
+							
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="2">
@@ -820,7 +860,42 @@
 		    SELECT * 		
 	   				FROM (
 						 SELECT 
-						 	A.*  
+						 	A.aprMemberDeptID,
+							A.aprMemberDeptName,
+							A.aprMemberDeptName2,
+							A.aprMemberID,
+							A.aprMemberJobTitle,
+							A.aprMemberJobTitle2,
+							A.aprMemberName,
+  							A.aprMemberName2,
+  							A.aprMemberSN,
+  							A.aprState,
+  							A.aprType,
+  							A.companyID,
+  							A.docID,
+  							A.docNo,
+  							A.docState,
+  							A.docTitle,
+  							A.docType,
+  							A.formID,
+  							A.formName,
+  							A.formName2,
+  							A.functionType,
+  							A.hasAttachYn,
+  							A.hasOpinionYn,
+  							A.href,
+  							A.isPublic,
+  							A.orgDocID,
+  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+  							A.urgentApproval,
+  							A.writerDeptID,
+  							A.writerDeptName,
+  							A.writerDeptName2,
+  							A.writerID,
+  							A.writerJobTitle,
+  							A.writerJobTitle2,
+  							A.writerName,
+  							A.writerName2 
 						 FROM 
 							VAPRWILLDOCLIST A  
 						 WHERE 
@@ -871,7 +946,7 @@
                       				 A.DOCNO,
                       				 A.HASATTACHYN, 
                       				 A.HASOPINIONYN,
-                      				 A.STARTDATE,
+                      				DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as A.startDate,
                       				 A.ENDDATE,
                       				 A.WRITERID,
                       				 A.WRITERNAME,
@@ -918,7 +993,43 @@
 			   SELECT * 		
 	   				FROM (
 						SELECT 
-							A.*  
+							A.aprMemberDeptID,
+							A.aprMemberDeptName,
+							A.aprMemberDeptName2,
+							A.aprMemberID,
+							A.aprMemberJobTitle,
+							A.aprMemberJobTitle2,
+							A.aprMemberName,
+  							A.aprMemberName2,
+  							A.aprMemberSN,
+  							A.aprState,
+  							A.aprType,
+  							A.companyID,
+  							A.docID,
+  							A.docNo,
+  							A.docState,
+  							A.docTitle,
+  							A.docType,
+  							A.formID,
+  							A.formName,
+  							A.formName2,
+  							A.functionType,
+  							A.hasAttachYn,
+  							A.hasOpinionYn,
+  							A.href,
+  							A.isPublic,
+  							A.orgDocID,
+  							A.receivedDate,
+  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+  							A.urgentApproval,
+  							A.writerDeptID,
+  							A.writerDeptName,
+  							A.writerDeptName2,
+  							A.writerID,
+  							A.writerJobTitle,
+  							A.writerJobTitle2,
+  							A.writerName,
+  							A.writerName2   
 						FROM 
 							VAPRDOINGDOCLIST A  
 						WHERE 
@@ -956,7 +1067,43 @@
 						 SELECT * 		
 	   						FROM (
 								SELECT 
-									A.*  
+									A.aprMemberDeptID,
+							A.aprMemberDeptName,
+							A.aprMemberDeptName2,
+							A.aprMemberID,
+							A.aprMemberJobTitle,
+							A.aprMemberJobTitle2,
+							A.aprMemberName,
+  							A.aprMemberName2,
+  							A.aprMemberSN,
+  							A.aprState,
+  							A.aprType,
+  							A.companyID,
+  							A.docID,
+  							A.docNo,
+  							A.docState,
+  							A.docTitle,
+  							A.docType,
+  							A.formID,
+  							A.formName,
+  							A.formName2,
+  							A.functionType,
+  							A.hasAttachYn,
+  							A.hasOpinionYn,
+  							A.href,
+  							A.isPublic,
+  							A.orgDocID,
+  							A.receivedDate,
+  							DATE_ADD(DATE_FORMAT(A.startDate ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as startDate,
+  							A.urgentApproval,
+  							A.writerDeptID,
+  							A.writerDeptName,
+  							A.writerDeptName2,
+  							A.writerID,
+  							A.writerJobTitle,
+  							A.writerJobTitle2,
+  							A.writerName,
+  							A.writerName2   
 								FROM 
 									VAPRDOINGDOCLIST A  
 								WHERE 

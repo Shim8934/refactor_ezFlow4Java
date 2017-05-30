@@ -245,7 +245,7 @@ var tempmode;
 function btn_AprDeptTempletSaveCC_onclick(mode) {
     try {
         tempmode = mode;
-        if (isExistDept(true)) {
+        if (isExistCCDept(true)) {
             return;
         }
 
@@ -259,9 +259,9 @@ function btn_AprDeptTempletSaveCC_onclick(mode) {
 
         if (ListViewLen.length == 0 || GetAttribute(ListViewLen[0], "id") == "pAPRLINE_TR_noItems") {
         	if (approvalFlag == "G") {
-                alert("<spring:message code='ezApprovalG.pjj27'/>");
+        		OpenAlertUI(strLangpjj27);
         	} else {
-                alert("<spring:message code='ezApprovalG.hyj28'/>");
+        		OpenAlertUI(strLangHYJ28);
         	}
         	
             return;
@@ -338,7 +338,7 @@ function btn_AprDeptTempletSaveCC_onclick_Complete(ret) {
         alert("AprGongRamLine_Cross_btn_AprDeptTempletSaveCC_onclick_Complete::" + e.description);
     }
 }
-function isExistDept(ExtFlag) {
+function isExistCCDept(ExtFlag) {
     try {
         var listview = new ListView();
         listview.LoadFromID("pAPRLINE");
