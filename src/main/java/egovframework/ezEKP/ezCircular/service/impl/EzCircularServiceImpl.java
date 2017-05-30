@@ -327,6 +327,18 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularID", circularID);
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
+		
+		String confirmDate = commonUtil.getTodayUTCTime("");
+		
+		int firstValue = getConfirmStatusFirst(circularID, tenantID);
+		//status업데이트되는부분 임시 주석
+		//ezCircularService.updateStatus(firstValue, circularListVO.getCircularId(), userInfo.getTenantId());
+		int checkUpdateStatus = checkUpdateStatus(circularID, memberID, tenantID);
+		logger.debug("checkUpdateStatus : "+checkUpdateStatus);
+		if (checkUpdateStatus != 1) {
+			updateStatusUser(firstValue, circularID, confirmDate, tenantID);
+		}
+		
 		ezCircularDAO.confirmStatus(map);
 	}
 

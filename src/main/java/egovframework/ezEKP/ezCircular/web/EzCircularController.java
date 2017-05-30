@@ -984,19 +984,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String confirmDate = commonUtil.getTodayUTCTime("");
 		logger.debug("cirCularID : "+circularListVO.getCircularId());
-		logger.debug("getID : "+userInfo.getId());
 		
 		ezCircularService.confirmStatus(circularListVO.getCircularId(), userInfo.getId(), userInfo.getTenantId());
-		
-		int firstValue = ezCircularService.getConfirmStatusFirst(circularListVO.getCircularId(), userInfo.getTenantId());
-		
-		////status업데이트되는부분 임시 주석
-		//ezCircularService.updateStatus(firstValue, circularListVO.getCircularId(), userInfo.getTenantId());
-		if (ezCircularService.checkUpdateStatus(circularListVO.getCircularId(), userInfo.getId(), userInfo.getTenantId()) != 1) {
-			ezCircularService.updateStatusUser(firstValue, circularListVO.getCircularId(), confirmDate, userInfo.getTenantId());
-		}
 		
 		logger.debug("confirmStatus ended");
 	}

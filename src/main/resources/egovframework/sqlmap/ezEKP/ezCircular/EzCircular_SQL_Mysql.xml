@@ -600,7 +600,7 @@
               AND
                   MEMBERID = #memberID#
               AND
-                  TENANTID = 0      
+                  TENANTID = #tenantID#      
     ]]>
   </select>
     
