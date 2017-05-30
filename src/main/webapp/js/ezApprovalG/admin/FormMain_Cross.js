@@ -111,19 +111,53 @@ function Tab1_NewTabIni(pTabNodeID) {
     }
 }
 
-function OpenInformationUI(pInformationContent) {
+var ezapropinion_cross_dialogArguments = new Array();
+function OpenInformationUI(pInformationContent, CompleteFunction) {
     var parameter = pInformationContent;
-    var url = "/admin/ezApproval/ezAprOpinion.do";
-    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-    var RtnVal = window.showModalDialog(url, parameter, feature);
+    var url = "/ezApprovalG/ezAprOpinion.do";
+
+    if (CrossYN()) {
+        ezapropinion_cross_dialogArguments[0] = parameter;
+        if (CompleteFunction != undefined)
+            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+        else
+            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+        DivPopUpShow(330, 205, url);
+    }
+    else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
     return RtnVal;
 }
 
-function OpenAlertUI(pAlertContent) {
+function OpenInformationUI_Complete() {
+    DivPopUpHidden();
+}
+
+var ezapralert_cross_dialogArguments = new Array();
+function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
-    var url = "/admin/ezApproval/ezAprAlert.do";
-    var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-    var RtnVal = window.showModalDialog(url, parameter, feature);
+    var url = "/ezApprovalG/ezAprAlert.do";
+
+    if (CrossYN()) {
+        ezapralert_cross_dialogArguments[0] = parameter;
+        if (CompleteFunction != undefined)
+            ezapralert_cross_dialogArguments[1] = CompleteFunction;
+        else
+            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+        DivPopUpShow(330, 205, url);
+    }
+    else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+}
+
+function OpenAlertUI_Complete() {
+    DivPopUpHidden();
 }
 
 var xmlhttp = createXMLHttpRequest();

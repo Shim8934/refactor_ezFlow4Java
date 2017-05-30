@@ -149,23 +149,19 @@
 		                    document.getElementById("btn_OpinionSave").style.display = "";
 		                    message.HWP_LoadFile(realPath + formURL);
 		                    if (message.HWP_GetDocumentElement() != "") {
-		                        var ConnURL = message.HWP_GetDocumentElement().replace("<CONNINFO>", "").replace("</CONNINFO>", "");
-		
-		                        var g_XmlDoc = createXmlDom();
-		                        g_XmlDoc.async = false;
-		                        g_XmlDoc.load(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ConnURL));
-		
-		                        if (g_XmlDoc.xml == "") {
+		                        var connXML= message.HWP_GetDocumentElement().replace("<CONNINFO>", "").replace("</CONNINFO>", "");
+		                        
+		                        if (connXML == "") {
 		                            return;
 		                        }
-		
-		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
+		                        
+		                        /* for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
 		                            if (i == 0) {
 		                                setNodeText(txt_OpinionContent, g_XmlDoc.documentElement.childNodes(i).xml);
 		                            } else {
 		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + g_XmlDoc.documentElement.childNodes(i).xml);
 		                            }
-		                        }
+		                        } */
 		                    }
 		                } else {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
@@ -210,7 +206,6 @@
 		        			tbFormName2.value = result.vo.formName2;
 		        			tbDescript.value = result.vo.formDescription;
 		        			selFormKind.value = result.vo.formDocType;
-// 		        			formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);
 		        			formURL = encodeURI(result.vo.formFileLocation);
 			                
 			                if (approvalFlag == 'S') {
@@ -274,14 +269,14 @@
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		            xmlHTTP.send(xmlpara);
 		            xmlpara = loadXMLString(xmlHTTP.responseText);
-		
+		            
 		            var treeView = new TreeView();
 		            treeView.SetID("UserContTree");
 		            treeView.SetUseAgency(true);
 		            treeView.SetRequestData("RequestData");
 		            treeView.SetNodeClick("TreeViewNodeClick");
 		            treeView.DataSource(xmlpara);
-		            treeView.DataBind("divUserContTree");
+		            treeView.DataBind("TreeView");
 		
 		            treeView.SetID("LineUserTree");
 		            treeView.SetUseAgency(true);
@@ -289,8 +284,9 @@
 		            treeView.SetNodeClick("TreeView2NodeClick");
 		            treeView.DataSource(xmlpara);
 		            treeView.DataBind("divLineUserTree");
+		        } catch (e) {
+		        	alert(e.description);
 		        }
-		        catch (e) { alert(e.description); }
 		    }
 		
 		    function Tree_setconfig() {
@@ -757,7 +753,7 @@
 		            createNodeAndInsertText(xmlpara, objNode, "pXml", "<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n<CONNINFO>\n" + txt_OpinionContent.value + "\n</CONNINFO>");
 		            createNodeAndInsertText(xmlpara, objNode, "pCompanyID", companyID);
 		
-		            xmlhttp.open("POST", "aspx/FormConnSave.aspx", false);
+		            xmlhttp.open("POST", "ezApproval/formConnSave.do", false);
 		            xmlhttp.send(xmlpara);
 		
 		            if (xmlhttp.responseText != "ERROR") {
@@ -779,7 +775,7 @@
 		            createNodeAndInsertText(xmlpara, objNode, "pXml", "<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n<CONNINFO>\n" + txt_OpinionContent.value + "\n</CONNINFO>");
 		            createNodeAndInsertText(xmlpara, objNode, "pCompanyID", companyID);
 		
-		            xmlhttp.open("POST", "aspx/FormConnSave.aspx", false);
+		            xmlhttp.open("POST", "ezApproval/formConnSave.do", false);
 		            xmlhttp.send(xmlpara);
 		
 		            if (xmlhttp.responseText != "ERROR") {
@@ -892,7 +888,7 @@
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/ezEditor/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>
@@ -916,8 +912,12 @@
                         &lt;/xml&gt;
                     </td>
                     <th>
-                        <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>                              
-                        <a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br>
+                        <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>
+                        
+                        <c:if test="${useEditor == 'HWP' }">
+                        	<a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br>
+                        </c:if>
+                        
                     </th>
                 </tr>
             </table>
@@ -954,7 +954,7 @@
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
                         <h2><spring:message code='ezApprovalG.t232'/></h2>
-                        <div id="divUserContTree" style="height: 355px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="TreeView" style="height: 355px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                         <br />
                         <div class="div_scroll" style="border:none;">
                             <div id="UserList" style="height: 405px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;border-top:none"></div>

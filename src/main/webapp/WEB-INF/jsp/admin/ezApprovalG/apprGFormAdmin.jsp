@@ -53,18 +53,9 @@
 		    };
 			
 		    $(document).ready(function(){
-		    	
-		    	//CK에디터일때 양식추가 수정 버튼
-// 		    	if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua))) {
-// 		    		$('#btnInsForm1').hide();
-// 		    		$('#btnInsForm2').hide();
-// 			    	$('#btnUpForm').hide();
-// 			    	$('#btnFormListView').hide();
-// 		    	}
-
-		    	companyID = document.getElementById("ListCompany").value;
-			    Tree_setconfig();
-			    InitFormCont();
+				companyID = document.getElementById("ListCompany").value;
+				Tree_setconfig();
+				InitFormCont();
 		    });
 		    
 		    function refreshFormList() {
@@ -365,10 +356,11 @@
 		            var HWP = "&type=HWP";
 		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
 		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
-		                if (isIE)
-		                    url = "/admin/ezApprovalG/formMainOther.do";
-		                else
-		                    return;
+		                if (isIE) {
+							url = "/admin/ezApprovalG/formMainOther.do";
+		                } else {
+							return;
+		                }
 		                parameter = parameter + HWP;
 		            }
 		            else {
@@ -386,13 +378,6 @@
 							}
 						}
 		            }
-		            
-	
-// 		            if (GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") >  0) {
-// 		                url = "/admin/ezApprovalG/formMainHWP.do?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
-// 		            } else {
-// 		                url = "/admin/ezApprovalG/formMain.do?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
-// 		            }
 		            
 		            GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 		           // window.showModalDialog(url, window, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");

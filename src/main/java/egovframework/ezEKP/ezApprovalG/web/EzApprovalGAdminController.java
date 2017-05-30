@@ -3018,5 +3018,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
-
+	
+	/**
+	 * 전자결재G 관리자 HWP양식작성기 연동정보 저장 실행함수
+	 * 전자결재 관리자 HWP양식작성기 연동정보 저장 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formConnSave.do")
+	public String formConnSave() {
+		
+		return "json";
+	}
 }

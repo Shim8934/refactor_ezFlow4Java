@@ -58,7 +58,7 @@ public class EzEditorController extends EgovFileMngUtil{
 	 * editor 호출 Method
 	 */
 	@RequestMapping(value="/ezEditor/selectEditor.do")
-	public String mailSelectEditor(
+	public String selectEditor(
 			@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request,
 			LoginVO userInfo, 
@@ -87,6 +87,49 @@ public class EzEditorController extends EgovFileMngUtil{
 				break;
 			default :
 				returnPath = "ezEditor/ckEditor";
+				break;
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("type", type);
+		model.addAttribute("height", height);
+		
+		return returnPath;
+	}
+	
+	/**
+	 * editor 호출 Method
+	 */
+	@RequestMapping(value="/admin/ezEditor/selectEditor.do")
+	public String adminSelectEditor(
+			@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request,
+			LoginVO userInfo, 
+			Model model) throws Exception{
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String type = request.getParameter("type");
+		String height = request.getParameter("height");
+		String id = request.getParameter("id");
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String returnPath = "";
+		
+		switch (useEditor) {
+			/* 2017-05-23 이효민 : DEXT, NAMO 추후 개발
+			case "DEXT":
+				model.addAttribute("id", id);
+				returnPath = "admin/ezEditor/dextEditor";
+	            break;
+			case "NAMO":
+				returnPath = "admin/ezEditor/namoEditor";
+                break; */
+			case "TAGFREE":
+				returnPath = "admin/ezEditor/tfxEditor";
+				break;
+			default :
+				returnPath = "admin/ezEditor/ckEditor";
 				break;
 		}
 		

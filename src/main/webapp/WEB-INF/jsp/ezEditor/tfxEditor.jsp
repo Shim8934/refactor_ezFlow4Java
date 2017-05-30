@@ -126,7 +126,10 @@
 	            }
 	        }
 			
-			function setTextPlain(isTextPlain) {
+			function setTextPlain() {
+			}
+			
+			function changeTextMode(isTextPlain) {
 				var defaultFont = "<spring:message code='main.t246' />";
 		    	
 		    	if (isTextPlain) {

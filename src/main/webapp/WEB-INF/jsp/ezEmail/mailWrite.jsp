@@ -107,6 +107,7 @@
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
+	    var initTextPlain = false;
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -183,41 +184,11 @@
 			    document.getElementById("MsgTo").focus();
 			}
 			
-			//TODO
-// 			switch (pUse_Editor) {
-			
-// 				case "TAGFREE" :
-// 					if (m_rgParams4PostOption["bodyType"] == "1") {
-// 						message.xfe.hideToolbar(0, true);
-// 					}
-// 					break;
-					
-// 				default :
-// 					oldConfig = message.CKEDITOR.instances.editor1.config;
-				
-// 					if (m_rgParams4PostOption["bodyType"] == "1") {
-// 						document.getElementById("bodyType").options[1].selected = true;
-						
-// 						var config = {};
-			        	
-// 			        	config.toolbar = [['Print']];
-// 			        	config.resize_enabled = false;
-// 			        	config.removePlugins = 'elementspath';
-// 			        	config.forcePasteAsPlainText = true;
-			        	
-// 			        	message.CKEDITOR.instances.editor1.destroy();
-// 			        	message.CKEDITOR.replace('editor1', config);
-			        	
-// 			        	document.getElementById("SelMailSign").disabled = true;
-// 					}
-// 					break;
-					
-// 			}
-			
 			if (m_rgParams4PostOption["bodyType"] == "1") {
 				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
-        		message.setTextPlain(true);
+        		
+	        	initTextPlain = true;
 			}
 			
 			// 전달의 경우 쿼터 초과 시 팝업창띄움
@@ -824,14 +795,14 @@
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 		        	document.getElementById("SelMailSign").disabled = true;
-	        		message.setTextPlain(true);
+	        		message.changeTextMode(true);
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
 	    	} else {
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
-	    		message.setTextPlain(false);
+	    		message.changeTextMode(false);
 	    	}
 	    }
 	    
