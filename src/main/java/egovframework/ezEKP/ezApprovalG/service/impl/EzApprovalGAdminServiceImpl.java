@@ -3583,4 +3583,53 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return list;
 	}
+
+	@Override
+	public String formConnSave(String formID, String formText, String path, String companyID) throws Exception {
+		logger.debug("formConnSave started.");
+		logger.debug("formID = " + formID + " || formText = " + formText + " || path = " + path + " || companyID = " + companyID);
+		
+		String saveFileFolder = path + commonUtil.separator + companyID + commonUtil.separator + "form";
+		String saveFileName = saveFileFolder + commonUtil.separator + formID + ".xml"; 
+		
+		String result = "";
+		
+		FileWriter fileWriter = null;
+		
+		try {
+			File fileFolder = new File(saveFileFolder);
+			File file = new File(saveFileName);
+			
+			if (!fileFolder.exists()) {
+				fileFolder.mkdirs();
+			}
+			
+			fileWriter = new FileWriter(file);
+			fileWriter.append(formText);
+		} catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		} finally {
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+					result = formText;
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+					result = "ERROR";
+				}
+			}
+		}
+		
+		if (result != null && result.indexOf("<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n") != -1) {
+			result = result.replaceAll("\\<\\?xml version=\"1.0\" encoding=\"euc-kr\"\\?\\>", "").replaceAll("\\<CONNROOT\\>", "").replaceAll("\\</CONNROOT\\>", "").replaceAll("\\n", "").replaceAll("\\t", "");
+		}
+		
+		logger.debug("formConnSave ended. result = " + result);
+		
+		return result;
+	}
 }

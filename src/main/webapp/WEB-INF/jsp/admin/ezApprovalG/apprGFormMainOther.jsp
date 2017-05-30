@@ -148,20 +148,23 @@
 		                if (useEditor == "HWP") {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
 		                    message.HWP_LoadFile(realPath + formURL);
+		                    
 		                    if (message.HWP_GetDocumentElement() != "") {
-		                        var connXML= message.HWP_GetDocumentElement().replace("<CONNINFO>", "").replace("</CONNINFO>", "");
+		                        var connXML= message.HWP_GetDocumentElement().replace("<CONNROOT>", "").replace("</CONNROOT>", "").replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
 		                        
 		                        if (connXML == "") {
 		                            return;
 		                        }
 		                        
-		                        /* for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
+		                        g_XmlDoc = loadXMLString(connXML);
+		                        
+		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
 		                            if (i == 0) {
 		                                setNodeText(txt_OpinionContent, g_XmlDoc.documentElement.childNodes(i).xml);
 		                            } else {
 		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + g_XmlDoc.documentElement.childNodes(i).xml);
 		                            }
-		                        } */
+		                        }
 		                    }
 		                } else {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
@@ -738,51 +741,31 @@
 		        txt_OpinionContent2.value = txt_OpinionContent2.value + SampleXML;
 		    }
 		    
-		    //미사용
 		    function btn_FormConnSave_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t1455'/>";
-		        var rtnVal = OpenInformationUI(pInformationContent, FormConnSave_Complete);
-		
-		        if (rtnVal) {
-		            var xmlhttp = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		            var objNode;
-		
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pURL", message.HWP_GetDocumentElement());
-		            createNodeAndInsertText(xmlpara, objNode, "pXml", "<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n<CONNINFO>\n" + txt_OpinionContent.value + "\n</CONNINFO>");
-		            createNodeAndInsertText(xmlpara, objNode, "pCompanyID", companyID);
-		
-		            xmlhttp.open("POST", "ezApproval/formConnSave.do", false);
-		            xmlhttp.send(xmlpara);
-		
-		            if (xmlhttp.responseText != "ERROR") {
-		                message.HWP_SetDocumentElement(xmlhttp.responseText.substring(8, xmlhttp.responseText.indexOf("</RESULT>")));
-		                alert(strLang410);
-		            }
-		        }
+		        OpenInformationUI(pInformationContent, FormConnSave_Complete);
 		    }
 		    
-			//미사용
 		    function FormConnSave_Complete(Ans) {
 		        if (Ans) {
-		            var xmlhttp = createXMLHttpRequest();
-		            var xmlpara = createXmlDom();
-		            var objNode;
-		
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pURL", message.HWP_GetDocumentElement());
-		            createNodeAndInsertText(xmlpara, objNode, "pXml", "<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n<CONNINFO>\n" + txt_OpinionContent.value + "\n</CONNINFO>");
-		            createNodeAndInsertText(xmlpara, objNode, "pCompanyID", companyID);
-		
-		            xmlhttp.open("POST", "ezApproval/formConnSave.do", false);
-		            xmlhttp.send(xmlpara);
-		
-		            if (xmlhttp.responseText != "ERROR") {
-		                message.HWP_SetDocumentElement(xmlhttp.responseText.substring(8, xmlhttp.responseText.indexOf("</RESULT>")));
-		                alert(strLang410);
-		            }
+		        	$.ajax({
+			        	type : "POST",
+			        	dataType : "json",
+			        	url : "/admin/ezApprovalG/formConnSave.do",
+			        	async : false,
+			        	data : {
+			        		formID : formID,
+			        		formText : "<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n<CONNROOT>\n" + txt_OpinionContent.value + "\n</CONNROOT>",
+			        		companyID : companyID	
+			        	},
+			        	success : function(result) {
+			        		message.HWP_SetDocumentElement(result.result);
+			                alert(strLang814);
+			        	}
+			        });
 		        }
+		        
+		        OpenInformationUI_Complete();
 		    }
 		</script>
 	</head>
