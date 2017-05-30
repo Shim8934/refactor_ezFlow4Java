@@ -150,11 +150,13 @@
 		                    message.HWP_LoadFile(realPath + formURL);
 		                    
 		                    if (message.HWP_GetDocumentElement() != "") {
-		                        var connXML= message.HWP_GetDocumentElement().replace("<CONNINFO>", "").replace("</CONNINFO>", "");
+		                        var connXML= message.HWP_GetDocumentElement().replace("<CONNROOT>", "").replace("</CONNROOT>", "").replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
 		                        
 		                        if (connXML == "") {
 		                            return;
 		                        }
+		                        
+		                        g_XmlDoc = loadXMLString(connXML);
 		                        
 		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
 		                            if (i == 0) {
@@ -753,7 +755,7 @@
 			        	async : false,
 			        	data : {
 			        		formID : formID,
-			        		formText : "<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n<CONNINFO>\n" + txt_OpinionContent.value + "\n</CONNINFO>",
+			        		formText : "<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n<CONNROOT>\n" + txt_OpinionContent.value + "\n</CONNROOT>",
 			        		companyID : companyID	
 			        	},
 			        	success : function(result) {

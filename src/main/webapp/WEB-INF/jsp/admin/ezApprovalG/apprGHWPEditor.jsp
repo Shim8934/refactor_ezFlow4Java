@@ -37,11 +37,11 @@
 		    }
 	
 		    function HWP_GetDocumentElement() {
-		        return GetDocumentElement(HwpCtrl, "CONNROOT");
+		        return GetDocumentElement(HwpCtrl, "connroot");
 		    }
 	
 		    function HWP_SetDocumentElement(ConnValue) {
-		        SetDocumentElement(HwpCtrl, "CONNROOT", ConnValue);
+		        SetDocumentElement(HwpCtrl, "connroot", ConnValue);
 		    }
 	
 		    function SetAttribute(Value) {

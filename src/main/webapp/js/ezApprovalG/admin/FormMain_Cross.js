@@ -123,8 +123,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction) {
         else
             ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         DivPopUpShow(330, 205, url);
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);

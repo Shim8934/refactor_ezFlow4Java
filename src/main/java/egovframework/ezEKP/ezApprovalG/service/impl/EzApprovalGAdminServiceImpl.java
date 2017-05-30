@@ -3624,6 +3624,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 		}
 		
+		if (result != null && result.indexOf("<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n") != -1) {
+			result = result.replaceAll("\\<\\?xml version=\"1.0\" encoding=\"euc-kr\"\\?\\>", "").replaceAll("\\<CONNROOT\\>", "").replaceAll("\\</CONNROOT\\>", "").replaceAll("\\n", "").replaceAll("\\t", "");
+		}
+		
 		logger.debug("formConnSave ended. result = " + result);
 		
 		return result;

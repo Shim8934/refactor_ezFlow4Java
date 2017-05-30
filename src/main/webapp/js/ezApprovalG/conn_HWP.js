@@ -5,9 +5,9 @@ function GetDocumentElement(HwpCtrl, CharName)
 	
 	if( !isNaN(fChar) )
 		CharName = "r" + CharName;
-	alert(HwpCtrl.GetDocumentInfo());
+
 	var DocumentInfo = createXmlDom();
-	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo());
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
 	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
@@ -35,30 +35,30 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 		CharName = "r" + CharName;
 	
 	var DocumentInfo = createXmlDom();
-	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo());
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
-	    }
+//	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
+//	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
+//	    }
 	    
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
 		    setNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0) , value);
+		    
+//alert(getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0)));
 			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
-			
+//alert(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 			return true;
 		} else {
 			var objNode;
 			
-			createNodeAndInsertText(DocumentKeywordInfo, objNode, CharName, value);
-			
+			createNodeAndAppandNode(DocumentKeywordInfo, DocumentInfo.getElementsByTagName("KEYWORD").item(0), objNode, CharName, value);
+//alert(11);			
 			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
-			alert(getXmlString(DocumentKeywordInfo));
-			alert(HwpCtrl.GetDocumentInfo());
-
+//alert(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 			return true;
 		}
 	} else {
