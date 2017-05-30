@@ -606,6 +606,12 @@ function selFirstRow(Resultxml) {
                 document.getElementById("tresend").style.display = "";
             }
 
+            if (DocState != strDocState1) {
+	        	document.getElementById("tsendCir").style.display = "none";
+	        } else {
+	        	document.getElementById("tsendCir").style.display = "";
+	        }
+            
             if (DocState == strDocState31) {
                 document.getElementById("tenforce").style.display = "none";
             }

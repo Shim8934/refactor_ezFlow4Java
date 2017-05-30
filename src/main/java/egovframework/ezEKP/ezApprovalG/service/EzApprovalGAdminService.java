@@ -160,4 +160,6 @@ public interface EzApprovalGAdminService {
 	public List<ApprGFormConnInfoVO> getFormConnInfo() throws Exception;
 
 	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMHT, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception;
+
+	public String formConnSave(String formID, String formText, String path, String companyID) throws Exception;
 }

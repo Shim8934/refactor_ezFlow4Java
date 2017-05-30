@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezApprovalG.web;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3024,7 +3027,25 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재 관리자 HWP양식작성기 연동정보 저장 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formConnSave.do")
-	public String formConnSave() {
+	public String formConnSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formConnSave started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String formID = request.getParameter("formID");
+		String formText = request.getParameter("formText");
+		String companyID = request.getParameter("companyID");
+		
+		if (formID == null || formID.trim().equals("")) {
+			formID = "CONN" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss");
+		}
+		
+		String result = ezApprovalGAdminService.formConnSave(formID, formText, path, companyID);
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("formConnSave ended.");
 		
 		return "json";
 	}

@@ -17508,7 +17508,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSUBQUERYLENGHT", pSubQuery.trim().length());
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
-		
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		List<ApprGDocListVO> docList = ezApprovalGDAO.getAprPortletDocList(map);
 		
 		int dLength = docList.size();
