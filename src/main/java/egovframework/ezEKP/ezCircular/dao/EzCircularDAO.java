@@ -46,6 +46,21 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<CircularAttachVO>) list("EzCircularDAO.getAttachList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO) throws Exception {
+		return (List<CircularDeptVO>) list("EzCircularDAO.getcircularDeptList", circularDeptVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CircularMemberVO> modify_circularDept(Map<String, Object> map) {
+		return (List<CircularMemberVO>) list("EzCircularDAO.modify_circularDept", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CircularMemberVO> getMemberName(Map<String, Object> map) {
+		return (List<CircularMemberVO>) list("EzCircularDAO.getMemberName", map);
+	}
+	
 	public CircularConfigVO getCircularList_Config(Map<String, Object> map) throws Exception {
 		return (CircularConfigVO) select("EzCircularDAO.getCircularList_Config", map);
 	}
@@ -77,9 +92,9 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public int checkUpdateStatus(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.checkUpdateStatus", map);
 	}
-
-	public void setCircularList_Config_U(CircularConfigVO circularConfigVO) throws Exception {
-		update("EzCircularDAO.setCircularList_Config_U", circularConfigVO);
+	
+	public int getCircularBMId() throws Exception {
+		return (int) select("EzCircularDAO.getCircularBMId");
 	}
 
 	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) throws Exception {
@@ -104,6 +119,18 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	
 	public void insertCircularAttach(Map<String, Object> map) throws Exception{
 		insert("EzScheduleDAO.insertCircularAttach", map);
+	}
+	
+	public void set_circularDeptSave(CircularDeptVO circularDeptVO) throws Exception {
+		insert("EzCircularDAO.set_circularDeptSave", circularDeptVO);
+	}
+	
+	public void set_circularMemberList(Map<String, Object> map) {
+		insert("EzCircularDAO.set_circularMemberList", map);
+	}
+	
+	public void setCircularList_Config_U(CircularConfigVO circularConfigVO) throws Exception {
+		update("EzCircularDAO.setCircularList_Config_U", circularConfigVO);
 	}
 	
 	public void setCircularList_Config2_U(Map<String, Object> map) throws Exception{
@@ -134,6 +161,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.updateStatusUser", map);
 	}
 	
+	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {
+		update("EzCircularDAO.update_circularDept", circularDeptVO);
+	}
+	
 	public void deleteCircular(Map<String, Object> map) throws Exception{
 		delete("EzCircularDAO.deleteCircular", map);
 	}
@@ -145,40 +176,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void deleteCircularAttach(Map<String, Object> map) throws Exception{
 		delete("EzCircularDAO.deleteCircularAttach", map);
 	}
-	
-	public void set_circularDeptSave(CircularDeptVO circularDeptVO) throws Exception {
-		insert("EzCircularDAO.set_circularDeptSave", circularDeptVO);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO) throws Exception {
-		return (List<CircularDeptVO>) list("EzCircularDAO.getcircularDeptList", circularDeptVO);
-	}
 
 	public void circularDeptDel(Map<String, Object> map) throws Exception {
 		delete("EzCircularDAO.circularDeptDel", map);
 	}
-
-	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {
-		update("EzCircularDAO.update_circularDept", circularDeptVO);
-	}
-
-	public int getCircularBMId() throws Exception {
-		return (int) select("EzCircularDAO.getCircularBMId");
-	}
-
-	public void set_circularMemberList(Map<String, Object> map) {
-		insert("EzCircularDAO.set_circularMemberList", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CircularMemberVO> modify_circularDept(Map<String, Object> map) {
-		return (List<CircularMemberVO>) list("EzCircularDAO.modify_circularDept", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CircularMemberVO> getMemberName(Map<String, Object> map) {
-		return (List<CircularMemberVO>) list("EzCircularDAO.getMemberName", map);
-	}
-
 }

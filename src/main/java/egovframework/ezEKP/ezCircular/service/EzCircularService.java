@@ -25,6 +25,10 @@ public interface EzCircularService {
 	
 	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception;
 	
+	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception;
+
+	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception;
+	
 	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception;
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
@@ -32,6 +36,8 @@ public interface EzCircularService {
 	public CircularListVO getCircular(String circularID, int tenantID) throws Exception;
 	
 	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
+	
+	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
 	
 	public int getCircularListCount(String memberID, int tenantID) throws Exception;
 	
@@ -63,14 +69,10 @@ public interface EzCircularService {
 
 	public void set_circularDeptSave(CircularDeptVO circularDeptVO, String[] memberListStr) throws Exception;
 
-	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
-
 	public void circularDeptDel(String[] deleteList, int tenantId) throws Exception;
 
 	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception;
 
-	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception;
 
-	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception;
 	
 }
