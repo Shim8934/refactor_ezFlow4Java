@@ -17594,7 +17594,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSUBQUERY", pSubQuery);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
-		
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
+
 		int rtnValue = ezApprovalGDAO.getAprPortletDocCount(map);
 		
 		return rtnValue;

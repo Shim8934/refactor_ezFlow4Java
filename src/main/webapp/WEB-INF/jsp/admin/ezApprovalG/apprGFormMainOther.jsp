@@ -146,11 +146,11 @@
 		            flag = true;
 		            if (formURL != "") {
 		                if (useEditor == "HWP") {
-		                    document.getElementById("btn_OpinionSave").style.display = "";
+// 		                    document.getElementById("btn_OpinionSave").style.display = "";
 		                    message.HWP_LoadFile(realPath + formURL);
 		                    
 		                    if (message.HWP_GetDocumentElement() != "") {
-		                        var connXML= message.HWP_GetDocumentElement().replace("<CONNROOT>", "").replace("</CONNROOT>", "").replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
+		                        var connXML= message.HWP_GetDocumentElement().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">");
 		                        
 		                        if (connXML == "") {
 		                            return;
@@ -160,9 +160,9 @@
 		                        
 		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
 		                            if (i == 0) {
-		                                setNodeText(txt_OpinionContent, g_XmlDoc.documentElement.childNodes(i).xml);
+		                                setNodeText(txt_OpinionContent, getXmlString(g_XmlDoc.documentElement.childNodes[i]));
 		                            } else {
-		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + g_XmlDoc.documentElement.childNodes(i).xml);
+		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + getXmlString(g_XmlDoc.documentElement.childNodes[i]));
 		                            }
 		                        }
 		                    }
@@ -180,7 +180,7 @@
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
 		                    document.getElementById("rootTD").style.display = "";
 		                } else {
-		                    document.getElementById("btn_OpinionSave").style.display = "";
+// 		                    document.getElementById("btn_OpinionSave").style.display = "";
 		                }
 		            }
 		        }
@@ -897,9 +897,9 @@
                     <th>
                         <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>
                         
-                        <c:if test="${useEditor == 'HWP' }">
-                        	<a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br>
-                        </c:if>
+<%--                         <c:if test="${useEditor == 'HWP' }"> --%>
+<%--                         	<a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br> --%>
+<%--                         </c:if> --%>
                         
                     </th>
                 </tr>

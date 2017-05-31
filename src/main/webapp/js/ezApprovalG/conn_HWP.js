@@ -10,15 +10,16 @@ function GetDocumentElement(HwpCtrl, CharName)
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
+	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
+	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
 	    }
 	    
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo = loadXMLString(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-		    return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			alert(getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0)));
+		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
 		} else {
 			return "";
 		}
@@ -38,9 +39,9 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
 	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
-//	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "") {
-//	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
-//	    }
+	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
+	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
+	    }
 	    
 		var DocumentKeywordInfo = createXmlDom();
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
@@ -48,17 +49,15 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
 		    setNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0) , value);
 		    
-//alert(getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0)));
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
-//alert(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
+			
 			return true;
 		} else {
 			var objNode;
 			
-			createNodeAndAppandNode(DocumentKeywordInfo, DocumentInfo.getElementsByTagName("KEYWORD").item(0), objNode, CharName, value);
-//alert(11);			
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo));
-//alert(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+			createNodeAndAppandNodeText(DocumentKeywordInfo, DocumentKeywordInfo.getElementsByTagName("KEYWORD").item(0), objNode, CharName, value);
+			
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
 			return true;
 		}
 	} else {
