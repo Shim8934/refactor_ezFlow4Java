@@ -4,11 +4,17 @@
 <html>
 	<head>
 	    <title></title>
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css" />
 	    <script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	     <style>
-          P { margin-top: 0px;margin-bottom: 0px; } 
+		<style>
+			P { margin-top: 0px;margin-bottom: 0px; } 
+			.viewbox {
+				border:1px solid #b6b6b6;
+				padding:5px;
+				height:100%;
+				background-color:#fff;
+				border-collapse:collapse
+			}
    	 	</style>
 	    <script language="javascript" type="text/javascript">
 	    
