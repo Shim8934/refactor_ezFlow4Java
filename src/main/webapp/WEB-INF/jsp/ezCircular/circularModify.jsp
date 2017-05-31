@@ -29,8 +29,6 @@
 	    	}
 
 		    window.onload = function () {
-alert("${userName}");
-alert("${userID}");
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${userName}";
 	        	document.getElementById("receiverID").innerHTML = "${userID}";
