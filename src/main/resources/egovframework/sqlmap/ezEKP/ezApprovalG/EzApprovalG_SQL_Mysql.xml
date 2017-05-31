@@ -836,8 +836,8 @@
 							APRTYPE <> '015' 
 		    ]]>
 		    <isEqual property="MineViewYN" compareValue="YES">
-			            			AND	    
-										AprState != '001'
+            			AND	    
+							AprState != '001'
 			 </isEqual>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 	    			AND 
@@ -970,6 +970,10 @@
                       	AND
                       		APRMEMBERID = #v_PUSERID# 
 		    ]]>
+		    <isEqual property="MineViewYN" compareValue="YES">
+            			AND	    
+							AprState != '001'
+			 </isEqual>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
@@ -1041,6 +1045,10 @@
 						AND 
 							functiontype = '004' 
 			]]>
+			<isEqual property="MineViewYN" compareValue="YES">
+            			AND	    
+							AprState != '001'
+			 </isEqual>
 			<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
@@ -10901,6 +10909,10 @@
 				AND 
 					APRTYPE <> '015' 
 			]]>
+			<isEqual property="MineViewYN" compareValue="YES">
+            			AND	    
+							AprState != '001'
+			 </isEqual>
 			<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
@@ -10927,6 +10939,10 @@
 				AND 
 					APRTYPE <> '007'
 			]]>
+			<isEqual property="MineViewYN" compareValue="YES">
+            			AND	    
+							AprState != '001'
+			 </isEqual>
 			<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
@@ -10947,6 +10963,10 @@
 				AND
 					APRMEMBERID = #v_PUSERID#
 			]]>
+			<isEqual property="MineViewYN" compareValue="YES">
+            			AND	    
+							AprState != '001'
+			 </isEqual>
 			<isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
 	    			AND #v_PSUBQUERY#
