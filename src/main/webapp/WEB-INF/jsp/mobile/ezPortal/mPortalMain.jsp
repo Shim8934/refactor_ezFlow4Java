@@ -31,8 +31,8 @@
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/first.jpg');" data-iconpos="right">
 						    <h2>메일&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
 						        <ul data-role="listview" data-inset="true" >
-						            <li><a href="/mobile/ezPortal/sampleList.do?type=mailReceive"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;받은편지함 <span class="ui-li-count">12</span></a></li>
-						            <li><a href="/mobile/ezPortal/sampleList.do?type=mailSend"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함 <span class="ui-li-count">0</span></a></li>
+						            <li><a href="/mobile/sample/sampleList.do?type=mailReceive"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;받은편지함 <span class="ui-li-count">12</span></a></li>
+						            <li><a href="/mobile/sample/sampleList.do?type=mailSend"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함 <span class="ui-li-count">0</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;임시보관함 <span class="ui-li-count">4</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;지운편지함<span class="ui-li-count">328</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개인편지함 <span class="ui-li-count">62</span></a></li>
@@ -104,12 +104,10 @@
 				</form>
      		</div>
      		<!-- body end -->
-     		
-     		<!-- footer import -->     		
-     		<footer data-role="footer" data-position="fixed">
-     			<h1><span style="font-size:10px">partner for your future</span>&nbsp;&nbsp;EZEKP 2017</h1>				
-			</footer>
-     		<!-- footer import -->     		
+     		     		     		
+     		<!-- footer import -->
+     		<c:import url="/WEB-INF/jsp/mobile/ezPortal/mPortalFooter.jsp" />
+     		<!-- footer import -->     		     		
      	</section>	
 	</body>	
 </html>

@@ -18,6 +18,15 @@ $(document).on('pageshow', '#main', function(){
 	});
 });
 
+$(document).on('pageshow', '#sampleList', function(){
+    $("#editBtn").click(function() {	
+    	if ($("#editDisplay").css("display") == "none") {    		
+    		$("#editDisplay").slideDown(250);
+    	} else {
+    		$("#editDisplay").slideUp(250);
+    	} 
+    });
+});
 
 function actionLogin() {
 	var frm = document.loginForm;
@@ -137,7 +146,7 @@ function goHome() {
 }
 
 function goMail() {
-	$.mobile.changePage("/mobile/ezPortal/sampleList.do?type=mailReceive", {
+	$.mobile.changePage("/mobile/sample/sampleList.do?type=mailReceive", {
 		type: "post",
 		transition: "pop",
 		changeHash: true
@@ -145,7 +154,7 @@ function goMail() {
 }
 
 function goSendMail() {
-	$.mobile.changePage("/mobile/ezPortal/sampleList.do?type=mailSend", {
+	$.mobile.changePage("/mobile/sample/sampleList.do?type=mailSend", {
 		type: "post",
 		transition: "pop",
 		changeHash: true

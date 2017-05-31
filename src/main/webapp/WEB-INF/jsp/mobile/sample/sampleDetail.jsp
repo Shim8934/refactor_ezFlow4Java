@@ -20,7 +20,7 @@
 	<body class="loginbody">
 		<section id="sampleDetail" data-role="page">
 			<!-- header import -->
-     		<c:import url="/WEB-INF/jsp/mobile/ezPortal/mPortalTop.jsp" />
+     		<c:import url="/WEB-INF/jsp/mobile/sample/sampleTop.jsp" />
      		<!-- header import -->
      		
      		<!-- body start -->
@@ -54,11 +54,11 @@
      		<!-- body end -->
 
      		<!-- footer import -->
-     		<c:import url="/WEB-INF/jsp/mobile/ezPortal/mPortalFooter.jsp" />
+     		<c:import url="/WEB-INF/jsp/mobile/sample/sampleFooter.jsp" />
      		<!-- footer import -->
      		
      		<!-- layer Popup import -->
-     		<c:import url="/WEB-INF/jsp/mobile/ezPortal/samplePopup.jsp" />
+     		<c:import url="/WEB-INF/jsp/mobile/sample/samplePopup.jsp" />
      		<!-- layer Popup import -->
      	</section>
 	</body>	

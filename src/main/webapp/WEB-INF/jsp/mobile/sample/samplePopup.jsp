@@ -8,24 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />    	
 	</head>
-	<body>
-		<!-- 왼쪽메뉴 panel -->
-	    <div id="menu-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
-	    	<div style="font-size:16px"><b>메뉴선택</b></div>		    	
-	        <ul data-role="listview" style="margin-top:10px">
-	        	<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
-                <li data-icon="carat-r"><a href="javascript:goMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;받은편지함</a></li>
-                <li data-icon="carat-r"><a href="javascript:goSendMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;임시보관함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;지운편지함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개인편지함</a></li>
-	        </ul>
-	        <div style="margin-top:45px">
-	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
-	        </div>
-	    </div>
-	    <!-- 왼쪽메뉴 panel -->
-	    
+	<body>	    
 		<!-- layer popup -->	   
 	    <div id="popupAlert" class="ui-content" style="min-width: 255px; max-width: 285px; height:70px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="pop">
 		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>

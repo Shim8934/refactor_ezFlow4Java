@@ -128,52 +128,6 @@ public class MPortalController extends EgovFileMngUtil {
 		logger.debug("portalMain End");
 		
 		return "/mobile/ezPortal/mPortalMain";
-	}
-	
-	/**
-	 * 모바일 샘플 리스트 함수
-	 */
-	@RequestMapping(value = "/mobile/ezPortal/sampleList.do")
-	public String sampleList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("sampleList Start");
-System.out.println(req.getParameter("type"));		
-		
-		String type = req.getParameter("type");
-		String title = "";
-		
-		if (type.equals("mailReceive")) {
-			title = "받은편지함"; //spring message 적용필요
-		} else if (type.equals("mailSend")) {
-			title = "보낸편지함"; //spring message 적용필요
-		}
-		model.addAttribute("title", title);
-		model.addAttribute("type", type);
-		
-		logger.debug("sampleList End");
-		
-		return "/mobile/ezPortal/sampleList";
-	}
-	
-	/**
-	 * 모바일 샘플 상세화면 함수
-	 */
-	@RequestMapping(value = "/mobile/ezPortal/sampleDetail.do")
-	public String sampleDetail(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("sampleDetail Start");
-System.out.println(req.getParameter("type"));		
-		
-		String type = req.getParameter("type");
-		String title = "";
-		
-		if (type.equals("mailRead")) {
-			title = "편지읽기"; //spring message 적용필요
-		}
-		model.addAttribute("title", title);
-		
-		logger.debug("sampleDetail End");
-		
-		return "/mobile/ezPortal/sampleDetail";
-	}
-	
+	}	
 	
 }
