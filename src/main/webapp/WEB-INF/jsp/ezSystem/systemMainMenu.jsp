@@ -25,7 +25,8 @@
 				{ name : "IS_READ_DELETE", value : document.getElementById("IS_READ_DELETE").value.trim() },
 				{ name : "PrimaryLang", value : document.getElementById("PrimaryLang").value.trim() },
 				{ name : "USE_FileExtension", value : document.getElementById("USE_FileExtension").value.trim() },
-				{ name : "LicenseKey", value : document.getElementById("LicenseKey").value.trim() }
+				{ name : "LicenseKey", value : document.getElementById("LicenseKey").value.trim() },
+				{ name : "Use_FromAddress", value : document.getElementById("Use_FromAddress").value.trim() }
 			  ];
 		
 		if (!paramArray[0].value.match(/^\d+$/)) {
@@ -85,6 +86,7 @@
             <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select></td></tr>
             <tr><th><spring:message code="ezSystem.x0009"/></th><td><input id="USE_FileExtension" type="text" value="${configMap.USE_FileExtension}"> (<spring:message code="ezSystem.x0012"/>, <spring:message code="ezSystem.x0013"/>: jpg,doc,xls)</td></tr>
             <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="60" maxlength="60" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
+            <tr><th><spring:message code="ezSystem.x0020"/></th><td><select id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
         </tbody>
     </table> 
     <div class="btnposition">

@@ -8,6 +8,14 @@
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<c:if test="${useFromAddress == 'YES'}">
+		<style>
+			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
+			.selectbox:before { /* 화살표 대체 */ content: ""; position: absolute; top: 50%; right: 15px; width: 0; height: 0; margin-top: -1px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; } 
+			.selectbox label { position: absolute; top: 1px; /* 위치정렬 */ left: 5px; /* 위치정렬 */ color: #999; z-index: -1; /* IE8에서 label이 위치한 곳이 클릭되지 않는 것 해결 */ } 
+			.selectbox select { width: 100%; height: auto; /* 높이 초기화 */ line-height: normal; /* line-height 초기화 */ font-family: inherit; /* 폰트 상속 */ border: 0; opacity: 0; /* 숨기기 */ filter:alpha(opacity=0); /* IE8 숨기기 */ -webkit-appearance: none; /* 네이티브 외형 감추기 */ -moz-appearance: none; appearance: none; }
+		</style>
+		</c:if>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -45,7 +53,6 @@
 	    var m_addrBook = null;
 	    var g_bSended = false;
 	    var objMHT;
-	    var g_SendFrom = "${sendFrom}";
 	    var g_charset = "utf-8";
 	    var g_encoding = "BASE64";
 	    var g_font = "<spring:message code='ezEmail.t409' />";
@@ -108,6 +115,7 @@
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
 	    var initTextPlain = false;
+	    var isCrossBrowser = "${isCrossBrowser}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -129,7 +137,6 @@
 	        if (typeof (document.getElementById("xmpSubject").outerText) != "undefined" && document.getElementById("xmpSubject").outerText != "")
 	            document.getElementById("eSubject").value = document.getElementById("xmpSubject").outerText;
 	
-	        eFrom.value = xmpFrom.innerHTML;
 	        importantSelect.selectedIndex = g_eImportance;
 	        m_rgParams4PostOption["important"] = g_eImportance;
 	        m_rgParams4PostOption["postType"] = g_ePostType;
@@ -191,10 +198,19 @@
 	        	initTextPlain = true;
 			}
 			
-			// 전달의 경우 쿼터 초과 시 팝업창띄움
 			<c:if test="${overQuota == true}">
+				// 전달의 경우 쿼터 초과 시 팝업창띄움
 				alert(strLang241);
             </c:if>
+            
+            <c:if test="${useFromAddress == 'YES'}">
+	            var selectTarget = $('.selectbox select'); 
+	            selectTarget.change(function(){ 
+	            	var select_name = $(this).children('option:selected').text(); 
+	            	$(this).siblings('label').text(select_name); 
+	            });
+            </c:if>
+
 		}
 	    
 		var isAutoSave = false;
@@ -205,23 +221,12 @@
 		        Save_onClick("tempsave");
 		    }
 		}
-	    window.onresize = function () {       
-	        if (document.getElementById("BccViewer").getAttribute("status") == "off") {
-	            <c:if test="${isCrossBrowser == true}">
-	            	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
-	            </c:if>
-                <c:if test="${isCrossBrowser != true}">
-                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
-                </c:if>	            
-	        }
-	        else {
-	            <c:if test="${isCrossBrowser == true}">
-	            	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
-	            </c:if>
-                <c:if test="${isCrossBrowser != true}">
-                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
-                </c:if>	            
-	        }
+	    window.onresize = function () {
+        	if (isCrossBrowser == 'true') {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 240 + "PX";
+        	} else {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
+        	}
 	    }
 	    function KeEventControl(obj) {
 	        useragt = navigator.userAgent.toUpperCase();
@@ -772,22 +777,12 @@
 	            document.getElementById("MsgBCC_TR").style.display = "none";
 	            obj.setAttribute("status", "off");
 	        }
-            if (document.getElementById("BccViewer").getAttribute("status") == "off") {
-                <c:if test="${isCrossBrowser == true}">
-                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
-                </c:if>
-                <c:if test="${isCrossBrowser != true}">
-                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
-                </c:if>             
-            }
-            else {
-                <c:if test="${isCrossBrowser == true}">
-                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
-                </c:if>
-                <c:if test="${isCrossBrowser != true}">
-                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
-                </c:if>             
-            }	        
+	        
+        	if (isCrossBrowser == 'true') {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 240 + "PX";
+        	} else {
+        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
+        	}
 	    }
 		
 	    function changeTextOption(bodyType) {
@@ -834,7 +829,11 @@
 	    function DownloadAttach(DownloadUrl) {
 	        AttachDownFrame.location.href = DownloadUrl;
 	    }
-	
+		
+	    function fromAddressChange(val) {
+	    	g_myemail = val;
+	    }
+	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -921,8 +920,20 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="height:20px;">
-	                <table class="popuplist" style="width:100%">
+	            <td>
+	                <table id="infoTable" class="popuplist" style="width:100%">
+	                	<c:if test="${useFromAddress == 'YES'}">
+		                	<tr id="MsgFrom_TR">
+		                		<th style="text-align: center;">
+		                        	<span style="width: 50px;"><spring:message code='ezEmail.lhm30' /></span>
+		                        </th>
+		                        <td colspan="3">
+		                        	<div class="selectbox">
+		                        		${fromAddressHtml}
+		                        	</div>
+		                        </td>
+		                	</tr>
+	                	</c:if>
 	                    <tr id="MsgTo_TR">
 	                        <th rowspan="2" style="width:1%">
 	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
@@ -1010,7 +1021,6 @@
 	                <xmp id="xmpTo" style="display: none">${to}</xmp>
 	                <xmp id="xmpCc" style="display: none">${cc}</xmp>
 	                <xmp id="xmpBcc" style="display: none">${bcc}</xmp>
-	                <xmp id="xmpFrom" style="display: none">${from}</xmp>
 	                <xmp id="xmpSubject" style="display: none">${subject}</xmp>
 	                <xmp id="test" style="display: none"></xmp>
 	                <xmp id="xmpMailSign1" style="display: none">${mailSign1}</xmp>
@@ -1099,7 +1109,6 @@
 	    </div>
 	    <iframe id="frmPrint" name="printname" src="/blank.htm" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
 	    <iframe id="printtest" src="/blank.htm" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
-	    <input id="eFrom" type="hidden" name="eFrom">
 	    <input type="hidden" name="eImportant" style="display: none;">
 	    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailInterUploadXCK.do?timestamp=${stateName}" target="ifrm" style="display:none;" >
@@ -1119,16 +1128,13 @@
 	    <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
-        <c:if test="${isCrossBrowser == true}">       
 	    <script type="text/javascript">
-	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+	    	if (isCrossBrowser == 'true') {
+	    		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 240 + "PX";
+	    	} else {
+	    		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
+	    	}
 	    </script>
-        </c:if>
-        <c:if test="${isCrossBrowser != true}">       
-        <script type="text/javascript">
-            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
-        </script>
-        </c:if>                  
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">
 	   ${attach}

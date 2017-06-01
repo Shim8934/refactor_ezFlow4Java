@@ -50,4 +50,5 @@ public interface EzEmailService {
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 	public int getMaxMessageSize(int tenantId) throws Exception;
+	public List<String> getFromAddress(String userId, int tenantId) throws Exception;
 }

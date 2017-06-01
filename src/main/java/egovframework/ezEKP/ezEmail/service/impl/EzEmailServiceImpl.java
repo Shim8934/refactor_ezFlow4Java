@@ -1287,4 +1287,49 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return size;
 	}
 	
+	@Override
+	public List<String> getFromAddress(String userId, int tenantId) throws Exception {
+		logger.debug("getFromAddress started. userId=" + userId);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+				
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getFromAddress";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		List<String> fromAddressList = new ArrayList<String>();	
+		
+		fromAddressList.add(userAccount);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						fromAddressList.add((String)resultArray.get(i));
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getFromAddress ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return fromAddressList;		
+	}
+	
 }

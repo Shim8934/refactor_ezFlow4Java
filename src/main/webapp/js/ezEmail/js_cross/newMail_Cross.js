@@ -856,7 +856,7 @@ function Save_onClick_Complete(ReturnValue) {
 //            }
 
             createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", mhtBody.replace(regex, " "));
-            createNodeAndInsertText(xmlDoc, rootNode, "FROM", MakeFromAddress(document.getElementById("eFrom").value));
+            createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_myemail + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYREADTIME", m_rgParams4PostOption["replyReadTime"]);
