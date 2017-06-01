@@ -386,6 +386,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
 		
+		logger.debug("listType = " + listType + " || userID = " + userID + " || deptID = " + deptID);
+		
  		String userLang = userInfo.getLang();
 		Document domSub = null;
 		
@@ -705,6 +707,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/draftui.do")
 	public String draftui(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("draftui started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();        
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", tenantID);
@@ -838,6 +842,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("beforeUrl", beforeUrl);
+		
+		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
 	}
@@ -2439,13 +2445,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/removeTMPDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String removeTMPDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("removeTMPDocInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
+		
+		logger.debug("docID = " + docID);
+		
 		String userID = docID.split("@")[0];
 		String sn = docID.split("@")[1];
 		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		
 		String result = ezApprovalGService.deleteTmpDocInfo(userID, sn, path, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("removeTMPDocInfo ended.");
 		
 		return result;
 	}
@@ -2528,7 +2542,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doDraft.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doDraft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("doDraft started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		logger.debug("xmlPara = " + xmlPara);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
@@ -2549,6 +2567,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = ezApprovalGService.doProcess(aprState, xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getElementsByTagName("PUSERNAME2").item(0).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo); 
+		
+		logger.debug("doDraft ended. result = " + result);
 		
 		return result;
 	}
