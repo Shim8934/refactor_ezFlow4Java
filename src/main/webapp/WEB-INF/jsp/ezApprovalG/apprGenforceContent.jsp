@@ -5,7 +5,15 @@
 	<head>
 	    <title></title>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css" />
+	    <style>
+	    	.viewbox {
+				border:1px solid #b6b6b6;
+				padding:5px;
+				height:100%;
+				background-color:#fff;
+				border-collapse:collapse
+			}
+	    </style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	        document.onselectstart = function () {
