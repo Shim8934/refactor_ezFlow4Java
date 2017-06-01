@@ -14,20 +14,21 @@
 			<h1>${title}</h1>			
 			<a class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#menu-panel">menu</a>							
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>			
-			<ul data-role="listview" data-inset="false" data-theme="a">
+			<ul style="background-color: white;color:black">
 				<c:if test="${type != 'mailRead' }">
-					<li data-position="fixed" style="height:25px">							
-						<div style="margin-left:5px;float:left;font-size:15px;padding-top:2px">
-							<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>${type == 'mailReceive' ? '받은편지함 : 17' : '보낸편지함 : 25'}</strong>
+					<li style="height:40px;border-bottom:1px solid #f2f2f2">							
+						<div style="margin-left:20px;float:left;padding-top:10px">							
+							<i class="fa fa-envelope" style="font-size:13px;"></i>&nbsp;<strong style="font-size:13px;">안읽은편지(17)</strong> 
+							<i class="fa fa-folder-o" style="font-size:13px;margin-left:7px"></i>&nbsp;<strong style="font-size:13px;">하위편지함(3)</strong>						
 						</div>
-						<div style="float:right;padding-top:1px">
-							<c:if test="${type == 'mailReceive'}">
-								<i id="editBtn" class="fa fa-pencil-square-o" style="font-size:24px;cursor: pointer;"></i>
+						<div style="margin-right:6px;float:right;padding-top:8px">
+							<c:if test="${type == 'mailReceive'}">								
+								<i class="fa fa-pencil-square-o" style="font-size:24px;cursor: pointer;" onclick="javascript:showDisplay();"></i>
 							</c:if>									
 						</div>
 					</li>
-					<li style="display:none" id="editDisplay">
-						<div style="margin-left:5px;">
+					<li style="height:40px;border-bottom:1px solid #f2f2f2;display:none" id="editDisplay">
+						<div style="padding-left:20px;padding-top:8px">
 							<i class="fa fa-check-square-o" style="font-size:24px;cursor: pointer;" onclick="javascript:checkAll();"></i>							
 							<i class="fa fa-trash" style="font-size:24px;cursor: pointer;margin-left:20px"></i>
 							<i class="fa fa-arrows" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:moveMail();"></i>

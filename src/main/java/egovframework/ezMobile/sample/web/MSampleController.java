@@ -66,9 +66,9 @@ System.out.println(req.getParameter("type"));
 		String title = "";
 		
 		if (type.equals("mailReceive")) {
-			title = "메일"; //spring message 적용필요
+			title = "받은편지함"; //spring message 적용필요
 		} else if (type.equals("mailSend")) {
-			title = "메일"; //spring message 적용필요
+			title = "보낸편지함"; //spring message 적용필요
 		}
 		model.addAttribute("title", title);
 		model.addAttribute("type", type);

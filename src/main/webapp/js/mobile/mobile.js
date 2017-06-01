@@ -18,15 +18,13 @@ $(document).on('pageshow', '#main', function(){
 	});
 });
 
-$(document).on('pageshow', '#sampleList', function(){
-    $("#editBtn").click(function() {	
-    	if ($("#editDisplay").css("display") == "none") {    		
-    		$("#editDisplay").slideDown(250);
-    	} else {
-    		$("#editDisplay").slideUp(250);
-    	} 
-    });
-});
+function showDisplay() {
+	if ($("#editDisplay").css("display") == "none") {
+   		$("#editDisplay").slideDown(250);
+   	} else {	
+   		$("#editDisplay").slideUp(250);
+	} 
+}
 
 function actionLogin() {
 	var frm = document.loginForm;
