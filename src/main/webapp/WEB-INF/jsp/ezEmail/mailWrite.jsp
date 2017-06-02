@@ -36,6 +36,7 @@
 	    var g_servername = "${serverName}";
 	    var g_myname = "${userInfo.displayName}";
 	    var g_myemail = "${userInfo.mail}";
+	    var g_from = "${userInfo.mail}";
 	    var g_szUserID = "${userInfo.mailNickName}";
 	    var g_companyID = "${userInfo.physicalDeliveryOfficeName}";
 	    var g_senderinfo = "${userInfo.company}" + ", " + "${userInfo.description}" + ", " + "${userInfo.title}";
@@ -831,7 +832,7 @@
 	    }
 		
 	    function fromAddressChange(val) {
-	    	g_myemail = val;
+	    	g_from = val;
 	    }
 	    
 	    </script>
