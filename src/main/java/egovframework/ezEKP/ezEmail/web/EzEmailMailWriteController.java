@@ -862,25 +862,29 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (useFromAddress.equals("YES")) {
 			List<String> fromAddressList = ezEmailService.getFromAddress(loginInfo.getId(), loginInfo.getTenantId());
 			
-			StringBuilder sb = new StringBuilder();
-			sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
-			
-			if (!fromAddressList.contains(from)) {
-				from = loginInfo.getEmail();
-			}
-			
-			for (String address : fromAddressList) {
-				if (from.equals(address)) {
-					sb.append("<option value='" + address + "' selected>" + address + "</option>");
-				} else {
-					sb.append("<option value='" + address + "'>" + address + "</option>");
+			if (fromAddressList.size() < 2) {
+				useFromAddress = "NO";
+			} else {
+				StringBuilder sb = new StringBuilder();
+				sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
+				
+				if (!fromAddressList.contains(from)) {
+					from = loginInfo.getEmail();
 				}
+				
+				for (String address : fromAddressList) {
+					if (from.equals(address)) {
+						sb.append("<option value='" + address + "' selected>" + address + "</option>");
+					} else {
+						sb.append("<option value='" + address + "'>" + address + "</option>");
+					}
+				}
+				
+				sb.append("</select>");
+				sb.append("<label for='ex_select'>" + from + "</label>");
+				
+				fromAddressHtml = sb.toString();
 			}
-			
-			sb.append("</select>");
-			sb.append("<label for='ex_select'>" + from + "</label>");
-			
-			fromAddressHtml = sb.toString();
 		}
         
         String browser = ClientUtil.getClientInfo(request, "browser");
