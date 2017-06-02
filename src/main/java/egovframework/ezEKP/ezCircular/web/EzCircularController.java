@@ -1109,7 +1109,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptSave started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-		Integer CircularBMId = circularDeptVO.getCircularBMId();
+		int circularBMId = circularDeptVO.getCircularBMId();
 		
 		circularDeptVO.setMemberId(userInfo.getId());
 		circularDeptVO.setRegDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
@@ -1117,8 +1117,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String[] memberListStr = request.getParameterValues("memberListStr[]");
 		
-		if (CircularBMId != 0) {
-			ezCircularService.update_circularDept(circularDeptVO);
+		if (circularBMId != 0) {
+			ezCircularService.update_circularDept(circularDeptVO, memberListStr, circularBMId);
 		} else {
 			ezCircularService.set_circularDeptSave(circularDeptVO, memberListStr);
 		}
@@ -1176,12 +1176,34 @@ public class EzCircularController extends EgovFileMngUtil {
 		int circularBMId = Integer.parseInt(request.getParameter("id"));
 		int tenantId = userInfo.getTenantId();
 		
-		List<CircularMemberVO> memberList = ezCircularService.circularDeptModify(circularBMId, tenantId);
-System.out.println(memberList.size());
+		List<CircularListVO> list = ezCircularService.getCircularDeptUserList(circularBMId, tenantId);
+		
+		String userID = "";
+		String userName = "";
+		String userName2 = "";
+
+		for (int i=0; i<list.size(); i++) {
+			if (list.size() == 1) {
+				userID = list.get(i).getMemberId();
+				userName = list.get(i).getMemberName();
+				userName2 = list.get(i).getMemberName2();
+			} else if (i != list.size()-1) {
+				userID += list.get(i).getMemberId() + ", ";
+				userName += list.get(i).getMemberName() + ", ";
+				userName2 += list.get(i).getMemberName2() + ", ";
+			} else {
+				userID += list.get(i).getMemberId();
+				userName += list.get(i).getMemberName();
+				userName2 += list.get(i).getMemberName2();
+			} 
+		}
+		
 		model.addAttribute("circularBMId", circularBMId);
 		model.addAttribute("title", title);
-		model.addAttribute("memberList", memberList);
-		model.addAttribute("memberLength", memberList.size());
+		model.addAttribute("userID", userID);
+		model.addAttribute("userName", userName);
+		model.addAttribute("userName2", userName2);
+		model.addAttribute("listSize", list.size());
 		
 		logger.debug("circularDeptModify ended");
 	

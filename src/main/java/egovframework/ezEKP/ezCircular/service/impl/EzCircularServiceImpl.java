@@ -214,6 +214,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("circularUserID", circularUserID);
 		map.put("circularID", circularID);
 		map.put("memberID", memberID);
@@ -222,14 +223,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("confirmDate", confirmDate);
 		map.put("updateStatus", updateStatus);
 		map.put("tenantID", tenantID);
+		
 		ezCircularDAO.insertCircularUser(map);
 	}
 
 	@Override
 	public CircularListVO getCircular(String circularID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("circularId", circularID);
 		map.put("tenantId", tenantID);
+		
 		return ezCircularDAO.getCircular(map);
 	}
 
@@ -388,13 +392,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		for (int i=0; i<memberListStr.length; i++) {
 			String memberStr = memberListStr[i].trim();
-			
+System.out.println("##");
 			map.put("v_CIRCULARBMID", circularBMId);
 			map.put("v_MEMBERID", memberStr);
 			map.put("v_TENANTID", tenantId);			
 			
 			ezCircularDAO.set_circularMemberList(map);
-		}	
+		}
 	}
 
 	@Override
@@ -429,8 +433,25 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {
+	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, int circularBMId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		ezCircularDAO.update_circularDept(circularDeptVO);
+		
+		int tenantId = circularDeptVO.getTenantId();
+		
+		map.put("v_CIRCULARBMID", circularBMId);
+		map.put("v_TENANTID", tenantId);
+		
+		ezCircularDAO.delete_circularMemberList(map);
+		
+		for (int i=0; i<memberListStr.length; i++) {
+			String memberStr = memberListStr[i].trim();
+			
+			map.put("v_MEMBERID", memberStr);
+			
+			ezCircularDAO.set_circularMemberList(map);
+		}
 	}
 
 	@Override
@@ -440,43 +461,60 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("v_CIRCULARBMID", circularBMId);
 		map.put("v_TENANTID", tenantId);
 		
-//		return ezCircularDAO.modify_circularDept(map);
 		return ezCircularDAO.getMemberName(map);
 	}
 
 	@Override
 	public List<CircularListVO> getCircularUserList(int circularID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
+		
 		return ezCircularDAO.getCircularUserList(map);
+	}
+	
+	@Override
+	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("circularBMId", circularBMId);
+		map.put("tenantID", tenantID);
+		
+		return ezCircularDAO.getCircularDeptUserList(map);
 	}
 
 	@Override
 	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
+		
 		return ezCircularDAO.getAttachList(map);
 	}
 
 	@Override
 	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("memberId", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantId", tenantId);
 		map.put("searchKeyword", keyword);
+		
 		return ezCircularDAO.getSearchCircularList(map);
 	}
 	
 	@Override
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("circularID", circularID);
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
+		
 		return ezCircularDAO.checkUpdateStatus(map);
 	}
 	
