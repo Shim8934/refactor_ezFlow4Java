@@ -1288,8 +1288,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<String> getFromAddress(String userId, int tenantId) throws Exception {
-		logger.debug("getFromAddress started. userId=" + userId);
+	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception {
+		logger.debug("getAliasAddress started. userId=" + userId);
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String userAccount = userId + "@" + domainName;
@@ -1297,16 +1297,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getFromAddress";
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getAliasAddress";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
 		logger.debug("response=" + response);
 
 		String resultCode = "Error";
 		int reasonCode = -100; 
-		List<String> fromAddressList = new ArrayList<String>();	
-		
-		fromAddressList.add(userAccount);
+		List<String[]> aliasAddressList = new ArrayList<String[]>();	
 		
 		if (response != null) {
 			JSONParser jsonParser = new JSONParser();
@@ -1321,15 +1319,16 @@ public class EzEmailServiceImpl implements EzEmailService {
 					JSONArray resultArray = (JSONArray)responseObj.get("result");
 					
 					for (int i=0; i<resultArray.size(); i++) {
-						fromAddressList.add((String)resultArray.get(i));
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						aliasAddressList.add(new String[] {(String)obj.get("address"), (String)obj.get("type")});
 					}
 				}
 			}
 		}						
 		
-		logger.debug("getFromAddress ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug("getAliasAddress ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
-		return fromAddressList;		
+		return aliasAddressList;		
 	}
 	
 }

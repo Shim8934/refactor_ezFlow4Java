@@ -608,6 +608,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String lang = userInfo.getLang();		
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
@@ -2007,36 +2011,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));
 		
-		List<String> mailList = new ArrayList<String>();
-		
 		OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getPrimary(), tenantID);
-		String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
-		String userAccount = userId + "@" + domainName;
-		if (userAccount.equals(userVO.getMail())) {
-			mailList.add("SMTP:" + userAccount);
-		} else {
-			mailList.add("smtp:" + userAccount);
-		}
 		
-		List<String> aliasMailList = ezEmailService.getIndividualAlias(userAccount);
-		for (String mail : aliasMailList) {
-			if (mail.equals(userVO.getMail())) {
-				mailList.add("SMTP:" + mail);
+		List<String[]> aliasAddressList = ezEmailService.getAliasAddress(userId, tenantID);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;'>");
+		
+		for (String[] aliasAddress : aliasAddressList) {
+			if (aliasAddress[0].equals(userVO.getMail())) {
+				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + "</option>");
 			} else {
-				mailList.add("smtp:" + mail);
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
 			}
 		}
 		
-		for (String mail : mailList) {
-			logger.debug("mail=" + mail);
-		}
-		
-		//TODO: delete
-		//model.addAttribute("noneActiveX", noneActiveX);
+		sb.append("</select>");
+		String listEmailHtml = sb.toString();
 		
 		model.addAttribute("userId", userId);
-		model.addAttribute("mailList", mailList);
-		model.addAttribute("originalMail", userAccount);
+		model.addAttribute("listEmailHtml", listEmailHtml);
 		
 		logger.debug("configEmail ended.");
 		
@@ -2067,17 +2061,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String primaryMail = xmldom.getElementsByTagName("PRIMARYMAIL").item(0).getTextContent();
 			
 			int tenantID = userInfo.getTenantId();
-			String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
-			String originalMail = userId + "@" + domainName;
 			
 			List<String> mailList = new ArrayList<String>();
 			NodeList mailNodeList = xmldom.getElementsByTagName("MAIL");
 			for (int i=0; i<mailNodeList.getLength(); i++) {
 				String mail = mailNodeList.item(i).getTextContent();
-				
-				if (!mail.substring(5).equals(originalMail)) {
-					mailList.add(mail.substring(5));
-				}
+				mailList.add(mail.substring(5));
 			}
 			
 			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);

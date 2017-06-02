@@ -467,20 +467,28 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
 		String fromAddressHtml = "";
 		if (useFromAddress.equals("YES")) {
-			List<String> fromAddressList = ezEmailService.getFromAddress(loginInfo.getId(), loginInfo.getTenantId());
+			List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
 			
-			if (!fromAddressList.contains(from)) {
+			boolean isValidFrom = false;
+			
+			for (String[] address : fromAddressList) {
+				if (from.equals(address[0])) {
+					isValidFrom = true;
+				}
+			}
+			
+			if (!isValidFrom) {
 				from = loginInfo.getEmail();
 			}
 			
-			for (String address : fromAddressList) {
-				if (from.equals(address)) {
-					sb.append("<option value='" + address + "' selected>" + address + "</option>");
+			for (String[] address : fromAddressList) {
+				if (from.equals(address[0])) {
+					sb.append("<option value='" + address[0] + "' selected>" + address[0] + "</option>");
 				} else {
-					sb.append("<option value='" + address + "'>" + address + "</option>");
+					sb.append("<option value='" + address[0] + "'>" + address[0] + "</option>");
 				}
 			}
 			
