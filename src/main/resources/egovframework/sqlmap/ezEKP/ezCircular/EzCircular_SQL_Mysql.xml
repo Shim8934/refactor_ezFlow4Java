@@ -219,6 +219,19 @@
         ]]>
     </select>
     
+    <select id="EzCircularDAO.getCircularDeptUserList" resultClass="CircularListVO" >
+        <![CDATA[
+            SELECT
+                MEMBERID, MEMBERNAME, MEMBERNAME2
+            FROM
+                TBL_CIRCULAR_BMUSER
+            WHERE
+                CIRCULARBMID = #circularBMId#
+            AND
+                TENANTID = #tenantID#     
+        ]]>
+    </select>
+    
     <select id="EzCircularDAO.getAttachList" parameterClass="Map" resultClass="CircularAttachVO">
         <![CDATA[                   
             SELECT 
@@ -389,7 +402,7 @@
           and tenant_id = #v_TENANTID#
         ]]>
     </insert>
-  
+     
     <insert id="EzCircularDAO.setCircularConfig2" parameterClass="Map">
         <![CDATA[
           INSERT INTO
@@ -597,6 +610,17 @@
                 CIRCULARID = #circularID#
             AND 
                 TENANTID = #tenantID#
-      ]]>   
-  </delete>
+      	]]>   
+  	</delete>
+  
+	<delete id="EzCircularDAO.delete_circularMemberList" parameterClass="Map">
+	  	<![CDATA[
+	        DELETE FROM
+		       	TBL_CIRCULAR_BMUSER 
+	        WHERE
+	         	CIRCULARBMID = #v_CIRCULARBMID#
+	        AND 
+	            TENANTID = #v_TENANTID#
+	    ]]>
+	  </delete>
 </sqlMap>

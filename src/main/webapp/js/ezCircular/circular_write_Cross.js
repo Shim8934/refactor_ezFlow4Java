@@ -406,7 +406,6 @@ function manage_attendant_after() {
 }
 
 function manage_attendant_Complete(rtn) {
-
     if (typeof (rtn) != "undefined") {
         g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
         document.getElementById("receiverlist").innerHTML = "";
@@ -415,11 +414,11 @@ function manage_attendant_Complete(rtn) {
             if (i == 0) {
             	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
             	document.getElementById("receiverID").innerHTML = rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML = rtn["name2"][i];
+//            	document.getElementById("receiverlist2").innerHTML = rtn["name2"][i];
             } else {
             	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
             	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name2"][i];
+//            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name2"][i];
             }
 
             g_attendant["name"][i] = rtn["name"][i];

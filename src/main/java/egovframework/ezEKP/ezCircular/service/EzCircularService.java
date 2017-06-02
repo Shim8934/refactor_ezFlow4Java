@@ -23,6 +23,8 @@ public interface EzCircularService {
 	
 	public List<CircularListVO> getCircularUserList(int circularID, int tenantID) throws Exception;
 	
+	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
+	
 	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception;
 	
 	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception;
@@ -71,8 +73,6 @@ public interface EzCircularService {
 
 	public void circularDeptDel(String[] deleteList, int tenantId) throws Exception;
 
-	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception;
-
-
+	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, int circularBMId) throws Exception;
 	
 }
