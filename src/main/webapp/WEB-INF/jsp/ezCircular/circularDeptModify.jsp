@@ -38,10 +38,12 @@
 	        	
 	        	var list = userID.split(",");
 	        	var nameList = userName.split(",");
+	        	var nameList2 = userName2.split(",");
 
 	        	for (var i = 0; i < listSize; i++) {
-	        		g_attendant["name"][i] = nameList[i].trim();
 	            	g_attendant["id"][i] = list[i].trim();
+	        		g_attendant["name"][i] = nameList[i].trim();
+	        		g_attendant["name2"][i] = nameList2[i].trim();
 	        	}
 	        	
 	    		try {
@@ -83,8 +85,6 @@
 	    			data : {
 	    				title : title,
 	    				memberListStr : memberListStr
-// 						receiverList : '${userName}',
-// 						receiverList2 : '${userName2}',
 	    			},
 	    			success : function() {
 						alert("<spring:message code='ezCircular.t63' />");
@@ -126,6 +126,7 @@
 	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t38' /></br><spring:message code='ezCircular.t42' /></th>
 	        	<td>
 		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px"/></div>
+		        	<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 100px; display:none;"/></div>
 		        	<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	        	</td>
 	        </tr>

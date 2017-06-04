@@ -197,8 +197,8 @@
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px"></div>
-	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         				</td>
 	       				</tr>
       				</table>
@@ -280,7 +280,6 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
     	<script type="text/javascript">
-	       	//document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
     	</script>
 	</body>

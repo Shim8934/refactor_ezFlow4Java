@@ -414,11 +414,11 @@ function manage_attendant_Complete(rtn) {
             if (i == 0) {
             	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
             	document.getElementById("receiverID").innerHTML = rtn["id"][i];
-//            	document.getElementById("receiverlist2").innerHTML = rtn["name2"][i];
+            	document.getElementById("receiverlist2").innerHTML = rtn["name2"][i];
             } else {
             	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
             	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
-//            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name2"][i];
+            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name2"][i];
             }
 
             g_attendant["name"][i] = rtn["name"][i];

@@ -606,7 +606,16 @@
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
-	        } 
+	        }
+	        
+	        function confirm_onclick() {
+	        	if () {
+	        		
+	        	}
+	        	
+	        	alert("##" + "{list}")
+	        }
+	        
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;">

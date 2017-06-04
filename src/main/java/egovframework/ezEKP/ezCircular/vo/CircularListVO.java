@@ -46,6 +46,9 @@ public class CircularListVO {
 	/** 확인일 */
 	private String confirmDate;
 	
+	/** 변경상태 */
+	private int updateStatus;
+
 	/** 테넌트 ID */
 	private int tenantId;
 
@@ -175,5 +178,13 @@ public class CircularListVO {
 
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+	
+	public int getUpdateStatus() {
+		return updateStatus;
+	}
+
+	public void setUpdateStatus(int updateStatus) {
+		this.updateStatus = updateStatus;
 	}
 }
