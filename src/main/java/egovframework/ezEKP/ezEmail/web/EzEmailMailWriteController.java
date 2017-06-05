@@ -873,6 +873,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				for (String[] address : fromAddressList) {
 					if (from.equals(address[0])) {
 						isValidFrom = true;
+						break;
 					}
 				}
 				
