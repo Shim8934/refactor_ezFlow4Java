@@ -29,7 +29,7 @@
 					<div>
 						<div data-role="collapsibleset" data-theme="a" data-inset="false">
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/first.jpg');" data-iconpos="right">
-						    <h2>메일&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
+						    	<h2>메일&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
 						        <ul data-role="listview" data-inset="true" >
 						            <li><a href="/mobile/sample/sampleList.do?type=mailReceive"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;받은편지함 <span class="ui-li-count">12</span></a></li>
 						            <li><a href="/mobile/sample/sampleList.do?type=mailSend"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함 <span class="ui-li-count">0</span></a></li>
@@ -39,7 +39,7 @@
 						        </ul>
 						    </div>
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/second.jpg')" data-iconpos="right">
-						    <h2>전자결재&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
+						    	<h2>전자결재&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
 						        <ul data-role="listview" data-inset="true">
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서 <span class="ui-li-count">12</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재진행문서 <span class="ui-li-count">0</span></a></li>
@@ -48,18 +48,8 @@
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;부재자설정</a></li>
 						        </ul>
 						    </div>
-						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/third.jpg')" data-iconpos="right">
-						    <h2>게시판&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
-						        <ul data-role="listview" data-inset="true">
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;마이게시판 <span class="ui-li-count">12</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공지사항 <span class="ui-li-count">0</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;업무생활가이드 <span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;유지보수현황 <span class="ui-li-count">328</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;포토게시판<span class="ui-li-count">62</span></a></li>
-						        </ul>
-						    </div>
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/forth.jpg')" data-iconpos="right">
-						    <h2>일정관리</h2>
+						    	<h2>일정관리</h2>
 						        <ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">
 						        	<li><a href="index.html"><i class="fa fa-calendar" style="font-size:15px"></i>&nbsp;&nbsp;일정보기</a></li>
 						            <li data-role="list-divider">2017년 5월 30일 <span class="ui-li-count">2</span></li>
@@ -79,8 +69,70 @@
 						            </li>						          					            
 						        </ul>
 						    </div>
+						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/third.jpg')" data-iconpos="right">
+						   		<h2>게시판&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
+						   		<div data-role="collapsibleset" data-theme="a" data-inset="true">	
+							   		<div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
+								   		<h2>공지사항</h2>
+								        <ul data-role="listview" data-inset="true">
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공지사항 <span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;노사협의회 회의록 <span class="ui-li-count">0</span></a></li>								            
+								        </ul>	
+								    </div>
+								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
+								   		<h2>업무생활가이드</h2>
+								        <ul data-role="listview" data-inset="true">
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;규정 및 지침 <span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;비상연락망및내선번호 <span class="ui-li-count">0</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;배포서식 <span class="ui-li-count">4</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;회사제품매뉴얼및자료 <span class="ui-li-count">328</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공용장비 드라이버<span class="ui-li-count">62</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;전사교육 교악<span class="ui-li-count">62</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;세미나관련<span class="ui-li-count">62</span></a></li>
+								        </ul>	
+								    </div>
+								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
+								   		<h2>유지보수현황</h2>
+								        <ul data-role="listview" data-inset="true">
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;유지보수현황 <span class="ui-li-count">12</span></a></li>								            
+								        </ul>	
+								    </div>
+								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
+								   		<h2>::패치모듈::</h2>
+								        <ul data-role="listview" data-inset="true">
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;표준모듈 <span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;폼프로세서2016<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;폼프로세서2015<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;ezRendition<span class="ui-li-count">12</span></a></li>								            
+								        </ul>	
+								    </div>
+								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
+								   		<h2>개선 및 버그게시판</h2>
+								        <ul data-role="listview" data-inset="true">
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;속도개선 <span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;포탈<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;메일<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;PIMS<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판/설문<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;전자결재<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;Cop<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;자원관리<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;지식관리/문서관리<span class="ui-li-count">12</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;기타<span class="ui-li-count">12</span></a></li>								            
+								        </ul>	
+								    </div>
+								</div>
+								 
+						        <!-- <ul data-role="listview" data-inset="true">
+						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;마이게시판 <span class="ui-li-count">12</span></a></li>
+						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공지사항 <span class="ui-li-count">0</span></a></li>
+						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;업무생활가이드 <span class="ui-li-count">4</span></a></li>
+						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;유지보수현황 <span class="ui-li-count">328</span></a></li>
+						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;포토게시판<span class="ui-li-count">62</span></a></li>
+						        </ul> -->		
+						    </div>						    
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/fifth.jpg')" data-iconpos="right">
-						    <h2>자원관리</h2>
+						    	<h2>자원관리</h2>
 						        <ul data-role="listview" data-inset="true">
 						            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;회의실<span class="ui-li-count">4</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝터<span class="ui-li-count">4</span></a></li>
@@ -90,7 +142,7 @@
 						        </ul>
 						    </div>
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/fifth.jpg')" data-iconpos="right">
-						    <h2>직원조회</h2>
+						    	<h2>직원조회</h2>
 						        <ul data-role="listview" data-inset="true">
 						            <li><a href="index.html">회의실<span class="ui-li-count">4</span></a></li>
 						            <li><a href="index.html">빔프로젝터<span class="ui-li-count">4</span></a></li>
