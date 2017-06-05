@@ -1,20 +1,13 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
-import java.awt.Graphics;
-import java.awt.GraphicsEnvironment;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
@@ -23,12 +16,9 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -68,7 +58,6 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import gui.ava.html.image.generator.HtmlImageGenerator;
 
 /** 
  * @Description [Controller] 사용자 - 전자결재G
