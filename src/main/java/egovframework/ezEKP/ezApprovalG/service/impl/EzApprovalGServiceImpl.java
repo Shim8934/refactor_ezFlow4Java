@@ -19970,8 +19970,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantId);
 		
+		logger.debug("doCancelForce = v_DOCID =" + docID + " v_USERID =" + userID + " campanyID =" + companyID  + " v_TENANTID =" + tenantId );
+
 		String rtnVal = "OK";
 			int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
+			
+			logger.debug("doCancelForce = aprMemberSn =" + aprMemberSn);
+
 			if(aprMemberSn > 0) {
 				if(aprMemberSn == 1) {
 					ezApprovalGDAO.updateDoCallBack(map);
@@ -19981,6 +19986,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				map.put("v_APRMEMBERSN", aprMemberSn + 1);
 				ezApprovalGDAO.updateDoCallBack3(map);
+			} else {
+				rtnVal = "FALSE";
 			}
 		return rtnVal;
 	}
