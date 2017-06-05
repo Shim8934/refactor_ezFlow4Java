@@ -46,8 +46,11 @@ h1{font-size:12px;}
 	width:16px;
  	left:0.85em;
 }    	
-.ui-collapsible-heading-toggle {
+.animateMe .ui-collapsible-heading-toggle {
 	line-height : 2.35;
+}
+.animateMe1 .ui-collapsible-heading-toggle {
+	line-height : 1.35;
 }
 html head + body .ui-btn-a.ui-btn{
 	background-color:transparent;
