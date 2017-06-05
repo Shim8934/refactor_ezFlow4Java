@@ -221,6 +221,8 @@ public interface EzPortalService {
 	
 	public int searchMyPortalPageCount (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
 	
+	public boolean checkViewRightBln (String pUID, String pAccessIDList, int tenantID) throws Exception;
+	
 	public void deleteCacheValue (String uID, String accessListID, int tenantID) throws Exception;
 	
 	public void getUserInfo3 (String parentUID, String userFlag, String userID, String gubunFlag, String newPageID, String userName, String accessID, String accessName, int viewRight, int editRight, int depth, String companyID, int tenantID) throws Exception;
