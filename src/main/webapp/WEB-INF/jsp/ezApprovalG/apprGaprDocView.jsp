@@ -432,6 +432,9 @@
 	            else if (RtnVal == "ERR03") {
 	                var pAlertContent = strLang897;
 	                OpenAlertUI(pAlertContent);
+	            } else {
+	            	var pAlertContent = strLang898;
+	                OpenAlertUI(pAlertContent);
 	            }
 	            
 	        }

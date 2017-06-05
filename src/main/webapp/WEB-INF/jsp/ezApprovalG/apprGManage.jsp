@@ -884,7 +884,10 @@
 		        else if (RtnVal == "ERR03") {
 		            var pAlertContent = strLang897;
 		            OpenAlertUI(pAlertContent, "", "OPEN");
-		        }
+		        }else {
+	            	var pAlertContent = strLang898;
+	                OpenAlertUI(pAlertContent);
+	            }
 		    }
 		    function Recipent_onclick() {
 		        var DocList = new ListView();
