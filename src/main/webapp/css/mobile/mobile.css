@@ -45,12 +45,6 @@ h1{font-size:12px;}
 .ui-checkbox input, .ui-radio input {
 	width:16px;
  	left:0.85em;
-}    	
-.animateMe .ui-collapsible-heading-toggle {
-	line-height : 2.35;
-}
-.animateMe1 .ui-collapsible-heading-toggle {
-	line-height : 1.35;
 }
 html head + body .ui-btn-a.ui-btn{
 	background-color:transparent;
@@ -64,8 +58,19 @@ html head + body .ui-btn.ui-btn-a:hover{
 .ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit, html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit {
 	color:white;
 	background-color:black;
+}    	
+.animateMe .ui-collapsible-heading-toggle {
+	line-height : 2.35;
 }
-
+.animateMe1 .ui-collapsible-heading-toggle {
+	line-height : 1.35;
+}
+li a .ui-checkbox {
+	margin-left:-10px;
+}
+li a .ui-checkbox label.ui-btn {
+	border:0px;
+}
 .writeButton {	
 	position: fixed;
 	z-index:10;		

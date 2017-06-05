@@ -27,7 +27,104 @@
 			<div class="content" data-role="content">				
 				<ul data-role="listview" data-inset="false" data-theme="a">
 					<c:if test="${type == 'mailReceive'}">											
-					    <li>				    					    	
+					    <!-- <li>
+					    	<fieldset data-role="controlgroup" data-type="horizontal">
+					    		<input type="checkbox" name="checkbox" id="checkbox-0" class="custom" style="width:12px">					
+					        	<label for="checkbox-0">&nbsp;</label>
+					        	<a href="/mobile/sample/sampleDetail.do?type=mailRead">
+	    							<h2 style="font-size:12px">장진혁</h2>
+	    							<p class="ui-li-aside">06:24</p>
+					    			<p>안녕하세요. 오픈솔루션팀 장진혁 차장입니다.</p>	    										    						    						    						        	
+						    	</a>				          					
+					        </fieldset>
+				    							    	
+						    <a href="/mobile/sample/sampleDetail.do?type=mailRead">
+    							<h2 style="font-size:12px">장진혁</h2>
+    							<p class="ui-li-aside">06:24</p>
+				    			<p>안녕하세요. 오픈솔루션팀 장진혁 차장입니다.</p>	    										    						    						    						        	
+					    	</a>						    
+					    </li> -->
+					    <li>
+					    	<a href="/mobile/sample/sampleDetail.do?type=mailRead">
+					    		<input class="checkList" type="checkbox" name="checkbox" id="checkbox-0" />
+								<label for="checkbox-0">
+									<span style="float:left;font-size:12px">장진혁</span>
+									<span style="float:right;font-size:12px">06:24</span>
+								</label>
+					    		<p>안녕하세요. 오픈솔루션팀 장진혁 차장입니다..</p>
+					    	</a>
+					    </li>
+					    <li>
+					    	<a href="index.html">
+					    		<input type="checkbox" name="checkbox" id="checkbox-1" />
+								<label for="checkbox-1">
+									<span style="float:left;font-size:12px">정지혜</span>
+									<span style="float:right;font-size:12px">12:24</span>
+								</label>
+					    		<p>전자정부 표준프레임워크 호환성 관련 메일입니다.</p>
+					    	</a>
+					    </li>
+					    <li>
+					    	<a href="index.html">
+					    		<input type="checkbox" name="checkbox" id="checkbox-2" />
+								<label for="checkbox-2">
+									<span style="float:left;font-size:12px">이종립/클라우드센터</span>
+									<span style="float:right;font-size:12px">09:30</span>
+								</label>
+					    		<p>클라우드센터에서 메일보냅니다.</p>					    			    		
+					    	</a>
+					    </li>
+					    <li>
+					    	<a href="index.html">
+					    		<input type="checkbox" name="checkbox" id="checkbox-3" />
+								<label for="checkbox-3">
+									<span style="float:left;font-size:12px">이종립/클라우드센터</span>
+									<span style="float:right;font-size:12px">08:40</span>
+								</label>
+					    		<p>클라우드센터에서 메일보냅니다.</p>	    		
+					    	</a>
+					    </li>
+					    <li>
+					    	<a href="/mobile/sample/sampleDetail.do?type=mailRead">						     		   
+								<input type="checkbox" name="checkbox" id="checkbox-4" />
+								<label for="checkbox-4">
+									<span style="float:left;font-size:12px">장진혁</span>
+									<span style="float:right;font-size:12px">06-05</span>
+								</label>
+					    		<p>안녕하세요. 오픈솔루션팀 장진혁 차장입니다.</p>	    						 						    						        	
+					    	</a>
+					    </li>
+					    <li>
+					    	<a href="index.html">
+					    		<input type="checkbox" name="checkbox" id="checkbox-5" />
+								<label for="checkbox-5">
+									<span style="float:left;font-size:12px">정지혜</span>
+									<span style="float:right;font-size:12px">06-05</span>
+								</label>
+					    		<p>전자정부 표준프레임워크 호환성 관련 메일입니다.</p>
+					    	</a>
+					    </li>
+					    <li>
+					    	<a href="index.html">
+					    		<input type="checkbox" name="checkbox" id="checkbox-6" />
+								<label for="checkbox-6">
+									<span style="float:left;font-size:12px">이종립/클라우드센터</span>
+									<span style="float:right;font-size:12px">06-05</span>
+								</label>
+					    		<p>클라우드센터에서 메일보냅니다.</p>					    			    		
+					    	</a>
+					    </li>
+					    <li>
+					    	<a href="index.html">
+					    		<input type="checkbox" name="checkbox" id="checkbox-7" />
+								<label for="checkbox-7">
+									<span style="float:left;font-size:12px">이종립/클라우드센터</span>
+									<span style="float:right;font-size:12px">06-05</span>
+								</label>
+					    		<p>클라우드센터에서 메일보냅니다.</p>	    		
+					    	</a>
+					    </li>				    
+					    <!-- <li>				    					    	
 					    	<a href="/mobile/sample/sampleDetail.do?type=mailRead">
 					    		<input name="checkbox" id="checkbox-0" type="checkbox">
 	    						<label for="checkbox-0">
@@ -106,7 +203,7 @@
 						    		<p>테스트 메일입니다.</p>
 						    	</label>					    		
 					    	</a>
-					    </li>
+					    </li> -->					    
 					    <li style="background-color: transparent;text-align:center">
 							P A G I N G
 						</li>
