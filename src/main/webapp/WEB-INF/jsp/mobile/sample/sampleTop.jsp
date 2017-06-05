@@ -18,8 +18,7 @@
 				<c:if test="${type != 'mailRead' }">
 					<li style="height:40px;border-bottom:1px solid #f2f2f2">							
 						<div style="margin-left:20px;float:left;padding-top:10px">							
-							<i class="fa fa-envelope" style="font-size:13px;"></i>&nbsp;<strong style="font-size:13px;">안읽은편지(17)</strong> 
-							<i class="fa fa-folder-o" style="font-size:13px;margin-left:7px"></i>&nbsp;<strong style="font-size:13px;">하위편지함(3)</strong>						
+							<i class="fa fa-envelope" style="font-size:13px;"></i>&nbsp;<strong style="font-size:13px;">안읽은편지(17)</strong>												
 						</div>
 						<div style="margin-right:6px;float:right;padding-top:8px">
 							<c:if test="${type == 'mailReceive'}">								

@@ -5,6 +5,16 @@
 	fnInit();
 });
 
+$(document).on('pageshow', '#sampleList', function(){				
+	$('.writeButton').css('top', $(window).height() - 100 );
+	$('.writeButton').css('left', $(window).width() - 60 );
+	
+	$(window).on('resize', function(){				
+		$('.writeButton').css('top', $(window).height() - 100 );
+		$('.writeButton').css('left', $(window).width() - 60 );
+	});
+});
+
 $(document).on('pageshow', '#main', function(){
 	$(".ui-collapsible-heading-toggle").not(".animateMe1 .ui-collapsible-heading-toggle").on("click", function (e) {
 	    var current = $(this).closest(".ui-collapsible");
