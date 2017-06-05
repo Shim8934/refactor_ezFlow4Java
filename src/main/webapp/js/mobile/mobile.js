@@ -6,14 +6,25 @@
 });
 
 $(document).on('pageshow', '#main', function(){
-	$(".animateMe .ui-collapsible-heading-toggle").on("click", function (e) { 
-	    var current = $(this).closest(".ui-collapsible");             
-	    if (current.hasClass("ui-collapsible-collapsed")) {
-	        //collapse all others and then expand this one
-	        $(".ui-collapsible").not(".ui-collapsible-collapsed").find(".ui-collapsible-heading-toggle").click();
-	        $(".ui-collapsible-content", current).slideDown(250);
+	$(".ui-collapsible-heading-toggle").not(".animateMe1 .ui-collapsible-heading-toggle").on("click", function (e) {
+	    var current = $(this).closest(".ui-collapsible");
+	    
+	    if (current.hasClass("ui-collapsible-collapsed")) {			
+	    	$(".animateMe:not('.ui-collapsible-collapsed') > .ui-collapsible-heading > .ui-collapsible-heading-toggle").click();
+	        $(".ui-collapsible-content", current).not(".animateMe1 .ui-collapsible-content").slideDown(250);   
 	    } else {
-	        $(".ui-collapsible-content", current).slideUp(250);
+	        $(".ui-collapsible-content", current).not(".animateMe1 .ui-collapsible-content").slideUp(250);	        
+	    }
+	});
+	
+	$(".animateMe1 .ui-collapsible-heading-toggle").on("click", function (e) {		
+	    var current = $(this).closest(".ui-collapsible");
+	    
+	    if (current.hasClass("ui-collapsible-collapsed")) {
+			$(".animateMe1:not('.ui-collapsible-collapsed') .ui-collapsible-heading-toggle").click();
+	        $(".ui-collapsible-content", current).slideDown(250);   
+	    } else {
+	        $(".ui-collapsible-content", current).slideUp(250);	        
 	    }
 	});
 });
