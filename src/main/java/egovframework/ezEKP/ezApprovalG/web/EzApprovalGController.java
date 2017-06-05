@@ -1134,11 +1134,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/createNewDoc.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String createNewDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("createNewDoc started.");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String formID = request.getParameter("formID");
 		String result = ezApprovalGService.createNewDoc(formID, userInfo.getCompanyID(),userInfo.getTenantId());
-		
+		logger.debug("createNewDoc end.");
+
 		return result;
 	}
 	
