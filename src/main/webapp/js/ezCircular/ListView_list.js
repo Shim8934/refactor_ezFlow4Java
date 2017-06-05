@@ -794,7 +794,7 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
-                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + ";";
+                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[1]) + ";";
 					_TDCheckBox_Sub.setAttribute("style", "width: 13px; height: 13px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle");
 					
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");

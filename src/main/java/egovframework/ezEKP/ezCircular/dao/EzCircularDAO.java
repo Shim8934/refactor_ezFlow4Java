@@ -66,6 +66,16 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<CircularMemberVO>) list("EzCircularDAO.getMemberName", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CircularListVO> getCircularCompleteList(Map<String, Object> map) {
+		return (List<CircularListVO>) list("EzCircularDAO.getCircularCompleteList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getCircularCompleteMapList(Map<String, Object> map) {
+		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularCompleteMapList", map);
+	}
+	
 	public CircularConfigVO getCircularList_Config(Map<String, Object> map) throws Exception {
 		return (CircularConfigVO) select("EzCircularDAO.getCircularList_Config", map);
 	}
@@ -100,6 +110,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	
 	public int getCircularBMId() throws Exception {
 		return (int) select("EzCircularDAO.getCircularBMId");
+	}
+
+	public int getCircularCompleteListCount(Map<String, Object> map) {
+		return (int) select("EzCircularDAO.getCircularCompleteListCount", map);
 	}
 
 	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) throws Exception {

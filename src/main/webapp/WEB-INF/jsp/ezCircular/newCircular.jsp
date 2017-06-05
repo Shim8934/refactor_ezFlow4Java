@@ -274,7 +274,9 @@
 	                DocList.DataSource(xmlDoc);
 	                DocList.DataBind("lvBoardList");
 	                DocList = null;
-	
+					
+	                strListInfo = "";
+	                
 	                var tempno = 0;
 	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 	                    if (CrossYN()) {
@@ -318,6 +320,16 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
+	        
+	        function chk_onselect(obj) {
+		        if (obj.checked) {
+		            strListInfo += obj.id;
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		        }
+		        
+		        listEventCheckbox = true;
+		    }
 	
 	        function makePageSelPage() {
 	            var strtext;
@@ -473,7 +485,7 @@
 	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
                 OpenWin.focus(); */
                 
-				var circularId = obj.getAttribute("CIRCULARID");
+				circularId = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
@@ -608,12 +620,34 @@
 	            document.getElementById('txt_keyword').value = "";
 	        }
 	        
-	        function confirm_onclick() {
-	        	if () {
-	        		
-	        	}
-	        	
-	        	alert("##" + "{list}")
+	        function Confirm_onclick() {   	
+	        	if(confirm("<spring:message code='ezCircular.t68'/>")) {
+		        	var arrList = new Array();
+			        var strItemList = "";
+			        var i = 0;
+			        
+			        arrList = strListInfo.split(";");
+			        
+			        for (i = 0; i < arrList.length - 1; i++) {
+			            strItemList += arrList[i].split(",")[1] + ";";
+			        }
+			        
+			        arrList = null;
+			        
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularConfirmStatus.do",
+						data : { circularIDList : strItemList
+								},
+						success: function(){
+							alert("<spring:message code='ezCircular.t69'/>")
+						}        			
+					});
+
+		            location.href = location.href;
+	        	}	        	
 	        }
 	        
 	    </script>
@@ -675,8 +709,7 @@
 	
 	    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
 	        <div style="width:100%; overflow:AUTO;" id="divList">
-	             <div id="lvBoardList">
-	            </div> 
+	             <div id="lvBoardList"></div> 
 	        </div>
 	        <div id="tblPageRayer" style="text-align:center"></div>
 	    </span>

@@ -98,20 +98,22 @@
 	
 	        };
 	        document.onselectstart = function () { return false; };
-	         window.onload = function () {
+	        
+         	window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
 	                document.body.style.khtmlUserSelect = 'none';
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
-	            }
-	            
-	            var height = parseInt(document.documentElement.clientHeight - 180);
-	            document.getElementById("divList").style.height = height + "px";
-	            window_onunload_Event = true;
-	            getBoardList();
-	        }; 
+            }
+            
+            var height = parseInt(document.documentElement.clientHeight - 180);
+            document.getElementById("divList").style.height = height + "px";
+            window_onunload_Event = true;
+            getBoardList();
+	        };
+	        
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
@@ -531,7 +533,7 @@
 		    }
 		
 		    function refresh_onclick() {
-		    	window.location.href = "/ezcircular/newCircular.do";
+// 		    	window.location.href = "/ezcircular/newCircular.do";
 		    }
 		
 		    function MemberInfo_onclick(pUserID) {
