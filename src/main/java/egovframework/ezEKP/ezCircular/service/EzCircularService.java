@@ -13,15 +13,17 @@ import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 
 public interface EzCircularService {
 	
-	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
-	
-	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
-	
 	public List<HashMap<String, Object>> getCircularMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchCircularMapList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
 	
 	public List<HashMap<String, Object>> getCircularCompleteMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+
+	public List<HashMap<String, Object>> getCircularTempMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+
+	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+	
+	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
 
 	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 	
@@ -29,6 +31,8 @@ public interface EzCircularService {
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	
+	public List<CircularListVO> getCircularTempList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+
 	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception;
 	
 	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception;
@@ -54,6 +58,8 @@ public interface EzCircularService {
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception;
 	
 	public int getCircularCompleteListCount(String memberID, int tenantID) throws Exception;
+	
+	public int getCircularTempListCount(String memberID, int tenantId) throws Exception;
 	
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	

@@ -163,8 +163,8 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                        	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li>
-                        	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
+<!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
+<!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
                         	<li><span>회람종료</span></li>
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
@@ -196,16 +196,16 @@
 		            		<td colspan="3" style="width: 100%">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
 		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>

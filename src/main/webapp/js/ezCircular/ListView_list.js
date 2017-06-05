@@ -552,10 +552,22 @@ function ListView() {
                     objTd.style.textAlign = "CENTER";
                 }*/
                 if (strColName == "HASFILE") {
+                    var _HeaderSpanimg = document.createElement("IMG");
+                    _HeaderSpanimg.setAttribute("src", "/images/newAttach.gif");
+                    _HeaderSpanimg.border = "0";
                     objTd.style.textAlign = "CENTER";
+                    
+                    _HeaderSpanimg.setAttribute("align", "absmiddle");
+                    objTd.appendChild(_HeaderSpanimg);
                 }
                 if (strColName == "IMPORTANCE") {
-                    objTd.style.textAlign = "CENTER";
+                	var _HeaderSpanimg = document.createElement("IMG");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/view-importance.gif");
+                    _HeaderSpanimg.border = "0";
+                   	objTd.style.textAlign = "CENTER";
+                    
+                    _HeaderSpanimg.setAttribute("align", "absmiddle");
+                    objTd.appendChild(_HeaderSpanimg);
                 }
                 if (strColName == "STATUS") {
                     objTd.style.textAlign = "CENTER";
