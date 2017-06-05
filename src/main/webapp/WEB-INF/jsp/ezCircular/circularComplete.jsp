@@ -175,14 +175,14 @@
 	        }
 	
 	        var xmlhttp = createXMLHttpRequest();
-	        function getBoardList() {
+	        function getBoardList() {	        	
 		        starttime = new Date().getTime();
 		        if (SQLPARADATA != ""){
 		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
 		        else{
 		        	//url = "/ezBoard/getBoardList.do";
-		        	url = "/ezCircular/getCircularList.do";
+		        	url = "/ezCircular/getCircularCompleteList.do";
 		        }
 		        $.ajax({
 					type : "POST",

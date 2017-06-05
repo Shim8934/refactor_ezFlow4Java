@@ -16,11 +16,13 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-	    	var uploadPath		= "${scheduleFilePath}";
+	    	var uploadPath = "${scheduleFilePath}";
 	    	var msgRtn = "";
 	    	var AttachLimit = 5;
 	    	var listSize = "${listSize}";
 	    	var userID = "${userID}";
+	    	var userName = "${userName}";
+	    	var userName2 = "${userName2}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -39,9 +41,13 @@
 	        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 	        	
 	        	var list = userID.split(",");
+	        	var nameList = userName.split(",");
+	        	var nameList2 = userName2.split(",");
+	        	
 	        	for (var i = 0; i < listSize; i++) {
-	        		g_attendant["name"][i] = list[i];
-	            	g_attendant["id"][i] = list[i];
+	            	g_attendant["id"][i] = list[i].trim();
+	        		g_attendant["name"][i] = nameList[i].trim();
+	        		g_attendant["name2"][i] = nameList2[i].trim();
 	        	}
 		    }
 			
@@ -89,8 +95,9 @@
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
-				
+// 				var memberListStr = new Array();
 				var fileList = "";
+				
 				for (var i = 0; i < filelist.length - 1; i++) {	    
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -98,6 +105,10 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
+	    		
+// 	    		for (var i=0; i<g_attendant["id"].length; i++) {
+// 	    			memberListStr[i] = g_attendant["id"][i];
+// 	    		}	
 
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
@@ -106,8 +117,8 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			receiverList : '${userName}',
-	                			receiverList2 : '${userName2}',
+	                			receiverList : document.getElementById("receiverlist").innerHTML,
+	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
 	                			receiverID : document.getElementById("receiverID").innerHTML,
 	                			circularId : "${circularID}",
 	                			content : content,
@@ -227,6 +238,7 @@
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px"></div>
+	         					<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         				</td>
 	       				</tr>

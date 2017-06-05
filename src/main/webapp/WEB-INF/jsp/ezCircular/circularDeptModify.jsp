@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/schedule_write_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 	    <!-- data picker-->		
@@ -21,18 +21,31 @@
 	    <script type="text/javascript">
 	    	var userid = "";
     		var circularBMId = "${circularBMId}";
-    		var memberLength = "${memberLength}";
-    		var list = new Array();
+    		var title = "${title}";
+    		var userID = "${userID}";
+   			var userName = "${userName}"
+			var userName2 = "${userName2}"
+			var listSize = "${listSize}";
     		
-	    	window.onload = function() {		
+	    	window.onload = function() {				
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));
-// 				alert(memberLength);
-// 	    		for (var i=1; i<=memberLength; i++) {
-// 	    			alert("${memberList.get(i).getMemberName()}");
-// 	    			alert("${memberList.get(i).getMemberId()}");
-// 	    		}
-				schedule_select_attendant_dialogArguments[0] = "${memberList}";
 	    		
+	    		document.getElementById("title").value = "${title}";
+	        	document.getElementById("receiverlist").innerHTML = "${userName}";
+	        	document.getElementById("receiverID").innerHTML = "${userID}";
+	        	
+				g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+	        	
+	        	var list = userID.split(",");
+	        	var nameList = userName.split(",");
+	        	var nameList2 = userName2.split(",");
+
+	        	for (var i = 0; i < listSize; i++) {
+	            	g_attendant["id"][i] = list[i].trim();
+	        		g_attendant["name"][i] = nameList[i].trim();
+	        		g_attendant["name2"][i] = nameList2[i].trim();
+	        	}
+	        	
 	    		try {
 	                ReturnFunction = opener.schedule_admin_popup_sharedept_dialogArguments[1];
 	            } catch (e) {}
@@ -44,7 +57,7 @@
 	    			return;
 	    		}
 	    		
-	    		if (g_attendant == null) {
+	    		if ($("#receiverlist").text().length < 1) {
 	    			alert("<spring:message code='ezCircular.t53'/>")
 	    			return;
 	    		}
@@ -99,7 +112,7 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t37' /></th>
 	            <td>
-	                <input id="title" type="text" style="margin-bottom:2px; width:100%;" value="<c:out value='${title }'/>"/>
+	                <input id="title" type="text" style="margin-bottom:2px; width:100%;" />
 	            </td>
 	        </tr>
 	        <tr>
@@ -112,10 +125,8 @@
 	        <tr>
 	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t38' /></br><spring:message code='ezCircular.t42' /></th>
 	        	<td>
-		        	<c:forEach var="list" items="${memberList }">
-				    	${list.memberName}
-				    </c:forEach>
 		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px"/></div>
+		        	<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 100px; display:none;"/></div>
 		        	<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	        	</td>
 	        </tr>

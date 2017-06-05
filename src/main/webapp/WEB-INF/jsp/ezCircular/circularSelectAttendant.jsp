@@ -76,7 +76,7 @@
 	        window.onload = function () {
 	            try {
 	                RetValue = parent.schedule_select_attendant_dialogArguments[0];
-	                ReturnFunction = parent.schedule_select_attendant_dialogArguments[1];
+	                ReturnFunction = parent.schedule_select_attendant_dialogArguments[1];                
 	            } catch (e) {
 	                try {
 	                    RetValue = opener.schedule_select_attendant_dialogArguments[0];
@@ -1313,7 +1313,6 @@
 	    	</tr> 
 	 	</table>	    
 		<div class="btnposition">
-<%-- 	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="display:none" ><span><spring:message code='ezSchedule.t123' /></span></a> --%>
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezSchedule.t5' /></span></a>
 		</div>
