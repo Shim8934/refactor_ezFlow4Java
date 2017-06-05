@@ -65,3 +65,14 @@ html head + body .ui-btn.ui-btn-a:hover{
 	color:white;
 	background-color:black;
 }
+
+.writeButton {	
+	position: fixed;
+	z-index:10;		
+	width:100%;
+	height:50px;
+	cursor:pointer;
+	background-image: url('/images/mobile/writeButton.png');
+	background-repeat: no-repeat;
+	background-size: 50px;
+}

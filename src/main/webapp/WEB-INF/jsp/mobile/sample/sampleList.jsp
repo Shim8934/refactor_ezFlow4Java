@@ -179,7 +179,8 @@
 							P A G I N G
 						</li>
 					</c:if>
-				</ul>				
+				</ul>
+				<div class="writeButton" onclick="alert('write!')"></div>				
      		</div>     		
      		<!-- body end -->
 
