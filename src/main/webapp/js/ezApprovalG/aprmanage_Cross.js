@@ -2210,6 +2210,9 @@ function doCancel(pDocID, tempListType) {
     else if (RtnVal == "ERR03") {
         var pAlertContent = strLang897;
         OpenAlertUI(pAlertContent, "", "OPEN");
+    } else {
+    	var pAlertContent = strLang898;
+        OpenAlertUI(pAlertContent);
     }
 }
 

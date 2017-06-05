@@ -1134,11 +1134,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/createNewDoc.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String createNewDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("createNewDoc started.");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String formID = request.getParameter("formID");
 		String result = ezApprovalGService.createNewDoc(formID, userInfo.getCompanyID(),userInfo.getTenantId());
-		
+		logger.debug("createNewDoc end.");
+
 		return result;
 	}
 	
@@ -1611,11 +1613,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/opinionSave.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String opinionSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
+		logger.debug("opinionSave Start");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document docXML = commonUtil.convertStringToDocument(xmlDom);
 		String result = ezApprovalGService.updateOpinionInfo(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-		
+		logger.debug("opinionSave End");
 		return result;
 	}
 
@@ -1833,9 +1836,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		        }
 			File file = new File(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
 			
-			if (file.exists()) {
-				FileUtils.copyFile(file, new File(upd + fileName));
-			}  
+			if (file.isFile()) {
+				if (file.exists()) {
+					FileUtils.copyFile(file, new File(upd + fileName));
+				}  
+			}
 			
 			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
 		}

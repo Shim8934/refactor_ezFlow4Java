@@ -3115,13 +3115,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String createNewDoc(String formID, String companyID, int tenantID) throws Exception {
 		String tmpDocID = getNewID(companyID,tenantID);
 		String returnVal = "";
-
+		
+		logger.debug("createNewDoc tmpDocID = " + tmpDocID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", tmpDocID.trim());
 		map.put("v_FORMID", formID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		logger.debug("createNewDoc param = v_DOCID = " + tmpDocID.trim() + " v_FORMID = " + formID + " companyID = " + companyID + " v_TENANTID =" + tenantID );
+
 		ezApprovalGDAO.createNewDoc(map);
 		ezApprovalGDAO.createNewDoc2(map);
 		returnVal = tmpDocID.trim();
@@ -19970,8 +19974,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantId);
 		
+		logger.debug("doCancelForce = v_DOCID =" + docID + " v_USERID =" + userID + " campanyID =" + companyID  + " v_TENANTID =" + tenantId );
+
 		String rtnVal = "OK";
 			int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
+			
+			logger.debug("doCancelForce = aprMemberSn =" + aprMemberSn);
+
 			if(aprMemberSn > 0) {
 				if(aprMemberSn == 1) {
 					ezApprovalGDAO.updateDoCallBack(map);
@@ -19981,6 +19990,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				map.put("v_APRMEMBERSN", aprMemberSn + 1);
 				ezApprovalGDAO.updateDoCallBack3(map);
+			} else {
+				rtnVal = "FALSE";
 			}
 		return rtnVal;
 	}

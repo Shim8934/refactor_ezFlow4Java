@@ -14384,6 +14384,12 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.selectDoCallBack" parameterClass="Map" resultClass="int">
 	<![CDATA[
+			SELECT 
+				CASE WHEN 
+					COUNT(A.APRMEMBERSN) = 0 THEN 0
+				ELSE APRMEMBERSN
+				END  APRMEMBERSN
+		FROM (
    			SELECT 
    				APRMEMBERSN 
    			FROM 
@@ -14402,6 +14408,7 @@
    				APRMEMBERSN DESC 
    			LIMIT
    				1
+   			)A 
      ]]>
 	</select>
 	
@@ -16593,6 +16600,7 @@
    							SELECT 
    								CASE WHEN DocState='017' THEN 'Y' 
            							 WHEN FunctionType = ' ' OR FunctionType IS NULL THEN 'Y' 
+           							 WHEN COUNT(DOCSTATE) = 0 THEN 'N'
            							 ELSE 'N' END AS FLAG
           					FROM (
       								SELECT 
