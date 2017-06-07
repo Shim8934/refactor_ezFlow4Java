@@ -172,7 +172,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						tempSb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
 						tempSb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
 						
-						if (aliasAddressList.containsKey(email)) { //individualAlias인 경우
+						if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
 							email = aliasAddressList.get(email);
 						}
 						
@@ -396,12 +396,13 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					domain = address.substring(index + 1);
 				}
 				
+				
 				for (int i=0; i<innerDomainArr.length; i++) {
-					if (domain.equals(domainName)) {
+					if (domain.equals(innerDomainArr[i])) {
 						innerAddresses.add(address);
+						break;
 					}
 				}
-				
 			}
 			
 			//alias address(부서 address, 개인 alias address 등)가 있으면 real address로 바꾼다.
