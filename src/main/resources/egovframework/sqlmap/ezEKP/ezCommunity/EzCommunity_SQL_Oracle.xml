@@ -1510,7 +1510,7 @@
 	<select id="EzCommunityDAO.aspCommInfoGet2"					parameterClass="Map"		resultClass="CommunityMemberInfoVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				CASE WHEN #primary# = '1' username ELSE username2 END AS username
+				CASE WHEN #primary# = '1' THEN username ELSE username2 END AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -1528,7 +1528,7 @@
 			SELECT
 				c_logo,
 				c_clubbanner,
-				CASE WHEN #primary# = '1' c_clubname ELSE c_clubname2 END
+				CASE WHEN #primary# = '1' THEN c_clubname ELSE c_clubname2 END
 			FROM
 				TBL_C_CLUB 
 			WHERE
