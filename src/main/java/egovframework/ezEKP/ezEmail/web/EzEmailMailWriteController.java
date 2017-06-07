@@ -859,43 +859,48 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         
         String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
 		String fromAddressHtml = "";
-		if (useFromAddress.equals("YES")) {
-			List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
-			
-			if (fromAddressList.size() < 2) {
-				useFromAddress = "NO";
-			} else {
-				StringBuilder sb = new StringBuilder();
-				sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
+		
+		if (useFromAddress != null) {
+			if (useFromAddress.equals("YES")) {
+				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 				
-				boolean isValidFrom = false;
-				
-				for (String[] address : fromAddressList) {
-					if (from.equals(address[0])) {
-						isValidFrom = true;
-						break;
+				if (fromAddressList.size() < 2) {
+					useFromAddress = "NO";
+				} else {
+					StringBuilder sb = new StringBuilder();
+					sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
+					
+					boolean isValidFrom = false;
+					
+					for (String[] address : fromAddressList) {
+						if (from.equals(address[0])) {
+							isValidFrom = true;
+							break;
+						}
 					}
-				}
-				
-				if (!isValidFrom) {
-					from = loginInfo.getEmail();
-				}
-				
-				for (String[] address : fromAddressList) {
-					if (from.equals(address[0])) {
-						sb.append("<option value='" + address[0] + "' selected>" + address[0] + "</option>");
-					} else {
-						sb.append("<option value='" + address[0] + "'>" + address[0] + "</option>");
+					
+					if (!isValidFrom) {
+						from = loginInfo.getEmail();
 					}
+					
+					for (String[] address : fromAddressList) {
+						if (from.equals(address[0])) {
+							sb.append("<option value='" + address[0] + "' selected>" + address[0] + "</option>");
+						} else {
+							sb.append("<option value='" + address[0] + "'>" + address[0] + "</option>");
+						}
+					}
+					
+					sb.append("</select>");
+					sb.append("<label for='ex_select'>" + from + "</label>");
+					
+					fromAddressHtml = sb.toString();
 				}
-				
-				sb.append("</select>");
-				sb.append("<label for='ex_select'>" + from + "</label>");
-				
-				fromAddressHtml = sb.toString();
 			}
+		} else {
+			useFromAddress = "NO";
 		}
-        
+		
         String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
         
