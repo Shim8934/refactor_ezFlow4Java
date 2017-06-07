@@ -126,45 +126,11 @@
 	            }
 	        }
 			
-			function setTextPlain() {
-			}
-			
-			function changeTextMode(isTextPlain) {
-				var defaultFont = "<spring:message code='main.t246' />";
-		    	
-		    	if (isTextPlain) {
-		        	var texts = GetEditorTextContent().split("\r\n").join("\n").split("\n");
-		            
-		            var p_ = document.createElement("p");
-		            var defaultFontAndSize = "font-size:13px;font-family:" + defaultFont;
-		            p_.setAttribute('style', defaultFontAndSize); 
-		            
-		            var textData = "";
-		            
-		            for (var i=0; i<texts.length; i++) {
-		            	if (texts[i] != "") {
-		            		p_.innerText = texts[i];
-		            		textData += p_.outerHTML;
-		            	}
-		            }
-		        	
-		            //xfe.xfeStackObject.xfeToolbarLine[0].children.length;
-		            
-		            xfe.hideToolbar(true);
-		            xfe.hideTab(true);
-		            
-		            //복붙 시 p태그로 감싼 텍스트만 오도록
-// 		        	config.forcePasteAsPlainText = true;
-		        	
-		        	SetEditorContent(textData);
-		    	} else {
-		        	var textData = GetEditorContent();
-		        	
-		        	xfe.hideToolbar(false);
-		            xfe.hideTab(false);
-	        		
-		        	SetEditorContent(textData);
-		    	}
+			window.onresize = function () {
+	            try {
+	                xfe.setWidth("100%");
+	                xfe.setHeight(document.documentElement.clientHeight + "px");
+	            } catch (e) { }
 	        }
 		</script> 
 	</head>
@@ -224,7 +190,7 @@
 	        	xfe.showToolbarItem(0, 14, false);
 	        }
 	        
-	        window.onload = parent.Editor_Complete();
+	        window.onload = parent.Editor_Complete;
 	    </script>
 	</body>
 </html>

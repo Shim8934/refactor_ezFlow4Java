@@ -105,7 +105,6 @@
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 		    var defaultFont = "<spring:message code='main.t246' />";
-		    var initTextPlain = false;
 		    var isCrossBrowser = "${isCrossBrowser}";
 		    
 			function window_onload()
@@ -188,10 +187,10 @@
 		        Simple_Choice();
 		        
 		        if (m_rgParams4PostOption["bodyType"] == "1") {
+					document.getElementById("message").style.display = "none";
+					document.getElementById("plainTextArea").style.display = "";
 					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
-	        		
-		        	initTextPlain = true;
 				}
 		        
 		        <c:if test="${useFromAddress == 'YES'}">
@@ -310,7 +309,7 @@
 			{
 			    var tempDiv = document.createElement("DIV");
 			    try{
-			        tempDiv.innerHTML = message.GetHtmlValue();;
+			        tempDiv.innerHTML = message.GetHtmlValue();
 			        if(tempDiv.document.getElementById('MailSign')==null)
 			            tempDiv.innerHTML =  tempDiv.innerHTML + "<DIV id='MailSign'></div>";
 		
@@ -667,16 +666,33 @@
 		    function changeTextOption(bodyType) {
 		    	if (bodyType == "1") {
 		        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
+		        		message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
+	                    document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+			        	
+		        		document.getElementById("message").style.display = "none";
+						document.getElementById("plainTextArea").style.display = "";
 		        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 			        	document.getElementById("SelMailSign").disabled = true;
-		        		message.changeTextMode(true);
+		        		
 		        	} else {
 		        		document.getElementById("bodyType").options[0].selected = true;
 		        	}
 		    	} else {
+		    		var texts = document.getElementById("plainTextArea").value.split("\n");
+		            textData = "";
+		            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
+		            for (var i=0; i<texts.length; i++) {
+		            	if (texts[i] != "") {
+		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+		            	}
+		            }
+		            
+		    		message.SetEditorContent(textData);
+		    		
+		    		document.getElementById("message").style.display = "";
+					document.getElementById("plainTextArea").style.display = "none";
 		    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 	        		document.getElementById("SelMailSign").disabled = false;
-		    		message.changeTextMode(false);
 		    	}
 		    }
 		    
@@ -823,7 +839,8 @@
 			          <tr> 
 			            <td style="height:100%;">
 							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-			            </td> 
+			            	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; border-top-width:0; display:none;"></textarea>
+	                  	</td> 
 			          </tr> 
 			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 
 			            <tr> 

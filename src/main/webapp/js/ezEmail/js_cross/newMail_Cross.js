@@ -836,26 +836,10 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
             createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
             createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
-
-            var mhtBody = "";
-            /* dhlee: mhtBody는 TEXTBODY로서 항상 Plain Text를 전송하도록 한다.
-            if (m_rgParams4PostOption["bodyType"] != 1) {
-                mhtBody = message.GetEditorContent();
-                mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
-                // dhlee: this line seems to be not needed.
-//                mhtBody = ConvertHTMLtoMHT(mhtBody);
-            }
-            else {
-            */
-                var div_ = document.createElement("DIV");
-                div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
-                mhtBody = div_.textContent;
-                mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
-                mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
-                mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
-//            }
-
-            createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", mhtBody.replace(regex, " "));
+            if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
+            else
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n").replace(regex, " "));
             createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
@@ -3142,6 +3126,7 @@ DECMD_SETFONTSIZE = 5045;
 OLECMDEXECOPT_DODEFAULT = 0;
 
 var g_originalHTML = "";
+var g_originalPlainText = "";
 function pzFormProc_DocumentComplete() {
     if (g_isFormat) return;
 

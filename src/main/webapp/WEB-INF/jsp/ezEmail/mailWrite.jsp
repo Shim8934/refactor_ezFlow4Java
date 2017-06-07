@@ -115,7 +115,6 @@
 	    var uploadCommonPath = "${uploadCommonPath}";
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
-	    var initTextPlain = false;
 	    var isCrossBrowser = "${isCrossBrowser}";
 	    
 	    window.onload = function () {
@@ -193,10 +192,10 @@
 			}
 			
 			if (m_rgParams4PostOption["bodyType"] == "1") {
+				document.getElementById("tbContentElement").style.display = "none";
+				document.getElementById("plainTextArea").style.display = "";
 				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
-        		
-	        	initTextPlain = true;
 			}
 			
 			<c:if test="${overQuota == true}">
@@ -270,7 +269,10 @@
 	    var mail_message_cross_dialogArguments = new Array();
 	    function window_close() {
 	        var g_filelist = "";
-	        if ((g_bDirty || g_originalHTML != message.GetEditorContent() || g_filelist != "") && g_saveHttp == null) {
+	        if ((g_bDirty 
+	        		|| (m_rgParams4PostOption["bodyType"] == "0" && (g_originalHTML != message.GetEditorContent())) 
+	        		|| (m_rgParams4PostOption["bodyType"] == "1" && (g_originalPlainText != document.getElementById("plainTextArea").value))
+	        		|| g_filelist != "") && g_saveHttp == null) {
 	            if (!CrossYN()) {
 	                EzHTTPTrans.style.display = "none";
 	            }    
@@ -753,6 +755,11 @@
 	            pOrgAttachListXml = pAttachListXml;
 	        }
 	        Rebody();
+	        
+	        document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+	        
+	        g_originalHTML = message.GetEditorContent();
+	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	    }
 	
 	    function btn_AttachSelect_onclick() {
@@ -789,16 +796,33 @@
 	    function changeTextOption(bodyType) {
 	    	if (bodyType == "1") {
 	        	if (confirm("<spring:message code='ezEmail.lhm28' />") == true) {
+	        		message.SetEditorContent(message.GetEditorContent().replace(/<hr /gi, "<p>----------------------------------------------------------------------------------------------------</p><hr "));
+                    document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
+		        	
+	        		document.getElementById("tbContentElement").style.display = "none";
+					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 		        	document.getElementById("SelMailSign").disabled = true;
-	        		message.changeTextMode(true);
+	        		
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
 	    	} else {
+	    		var texts = document.getElementById("plainTextArea").value.split("\n");
+	            textData = "";
+	            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
+	            for (var i=0; i<texts.length; i++) {
+	            	if (texts[i] != "") {
+	            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
+	            	}
+	            }
+	            
+	    		message.SetEditorContent(textData);
+	    		
+	    		document.getElementById("tbContentElement").style.display = "";
+				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
-	    		message.changeTextMode(false);
 	    	}
 	    }
 	    
@@ -1033,10 +1057,11 @@
 	        </tr>
 	        <tr>
 	            <td style="height:380px;" id="EdtorSize">
-	                <table style="width:99.8%;height:100%;">
+	                <table style="width:100%;height:100%;">
 	                    <tr>
 	                        <td style="height:100%;">
-	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
+	                        	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; border-top-width:0; display:none;"></textarea>
 	                        </td>
 	                    </tr>
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리

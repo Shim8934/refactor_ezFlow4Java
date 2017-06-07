@@ -21,34 +21,6 @@
 					ev.editor.document.on('drop', function (ev) {
 					   ev.data.preventDefault(true);
 					});
-					
-			    } else if (type == "TEXTPLAIN") {
-			    	// prevent image drop
-					ev.editor.document.on('drop', function (ev) {
-					   ev.data.preventDefault(true);
-					});
-			    	
-					SetEditorContent(textData);
-					
-			    } else if (type == "TEXTHTML") {
-			    	SetEditorContent(textData);
-			    }
-			    
-			    if (typeof(parent.initTextPlain) != "undefined" && parent.initTextPlain) {
-			    	parent.initTextPlain = false;
-			    	type = "TEXTPLAIN";
-		    		textData = GetEditorContent();
-		    		
-			    	oldConfig = CKEDITOR.instances.editor1.config;
-		    		
-		    		var config = {};
-		        	config.toolbar = [['Print']];
-		        	config.resize_enabled = false;
-		        	config.removePlugins = 'elementspath';
-		        	config.forcePasteAsPlainText = true; // forse to set plain text on paste
-		        	
-		        	CKEDITOR.instances.editor1.destroy();
-		        	CKEDITOR.replace('editor1', config);
 			    }
 		    });
 		    
@@ -83,6 +55,12 @@
 					}
 	            } catch (e) { return ""; }
 			}
+			
+			function SetEditorTextContent(Data) {
+	            try {
+	                return CKEDITOR.instances.editor1.editable().$.innerText = Data;
+	            } catch (e) { return ""; }
+	        }
 			
 			function GetEditorTextContent() {
 	            try {
@@ -234,53 +212,6 @@
 	            }
 	        }
 	        
-	        var oldConfig;
-	        var textData;
-	        
-			function changeTextMode(isTextPlain) {
-		    	if (isTextPlain) { // case of text-plain
-		    		oldConfig = CKEDITOR.instances.editor1.config;
-		    		type = "TEXTPLAIN";
-		    		
-		    		// make text plain data wrapped by P tag
-		    		var mhtBody = "";
-		            var div_ = document.createElement("DIV");
-		            div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + GetEditorContent() + "</HTML>";
-		            mhtBody = div_.textContent;
-		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
-		            mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
-		            mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
-		            
-		            var texts = mhtBody.split("\n");
-		            textData = "";
-		            var defaultFont = "<spring:message code='main.t246' />";
-		            var defaultFontAndSize = "style='font-size:13px;font-family:" + defaultFont + "'";
-		            for (var i=0; i<texts.length; i++) {
-		            	if (texts[i] != "") {
-		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
-		            	}
-		            }
-		        	
-		            // create new editor config and replace
-		        	var config = {};
-		        	config.toolbar = [['Print']];
-		        	config.resize_enabled = false;
-		        	config.removePlugins = 'elementspath';
-		        	config.forcePasteAsPlainText = true; // forse to set plain text on paste
-		        	
-		        	CKEDITOR.instances.editor1.destroy();
-		        	CKEDITOR.replace('editor1', config);
-		        	
-		    	} else { // case of text-html
-		    		type = "TEXTHTML";
-		    		textData = GetEditorContent();
-		        	
-		    		// replace to the old config
-	        		CKEDITOR.instances.editor1.destroy();
-	        		CKEDITOR.replace('editor1', oldConfig);
-	        		
-		    	}
-		    }
 		</script> 
 	</head>
 	<body style="margin: 0px; padding: 0px;">
