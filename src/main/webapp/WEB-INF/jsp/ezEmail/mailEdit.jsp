@@ -546,17 +546,25 @@
 		    var DragDropAttachObjetLoading = false;
 		    
 		    function DragObjectComplet() {
-		        var pAttachListXml = document.getElementById("AttachXmlList").innerHTML;
-		        DragDropAttachObjetLoading = true;
-		        var AttachRows = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW")
-		        if (AttachRows.length > 0)
-		            AppendFileAttachInfo(pAttachListXml);
+		    	DragDropAttachObjetLoading = true;
+			    if (pAttachListXml != "") {
+			        var AttachRows = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW")
+
+			        if (AttachRows.length > 0) {
+			            AppendFileAttachInfo(pAttachListXml);
+			            dadiframe.fileupload2(pAttachListXml);
+			        }
+			    }
 		    }
+		    
 		    function DownloadAttach(DownloadUrl) {
 		        AttachDownFrame.location.href = DownloadUrl;
 		    }
 		    function Editor_Complete(){
 		        DocumentComplete();
+		        
+		        var g_originalHTML = message.GetEditorContent();
+			    document.getElementById("plainTextArea").value = message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n");
 		    }
 		    function DocumentComplete() {
 		        if(initFlag == false)
