@@ -257,6 +257,30 @@
 		        }
 		    }
 		    
+// 		    function btnMail_onclick() {
+// 				    $.ajax({
+//                         type:"POST",
+//                         dataType:"text",
+//                         async: false,
+//                         data : {
+//                         	imgUrl : pDocHref,
+//                         	docID: pDocID
+//                         },
+//                         url: "/ezApprovalG/createMailImg.do",
+//                         success: function (data) {
+//                         	var pheight = window.screen.availHeight;
+//         			        var conHeight = pheight * 0.8;
+//         			        var pwidth = window.screen.availWidth;
+//         			        var pTop = (pheight - conHeight) / 2;
+//         			        var pLeft = (pwidth - 890) / 2;
+//         			        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref);
+// //        						var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(pDocHref) + "&cmd=docsend&docID=" + pDocID + "&imageCnt=&target=APPROVALG";
+//         			        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+//         			        newwin.focus();
+//                         }
+//                     });
+// 		    }
+		
 		    function btnMail_onclick() {
 		    	var imgUrl="";
 		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
@@ -284,7 +308,7 @@
 			        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			        newwin.focus();
 		    }
-		
+		 
 		    var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;

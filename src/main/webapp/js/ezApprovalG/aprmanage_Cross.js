@@ -1244,16 +1244,16 @@ function getAprDocAproveInfo(tr) {
     	});
     }
     else if (pDocInfoValue == "3") {
-        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         	pFlag = "END";
-        else if (pListTypeValue == "21")
+        } else if (pListTypeValue == "21") {
         	pFlag = "TMP";
-        else if (pListTypeValue == "10" || pListTypeValue == "99") {
+        } else if (pListTypeValue == "10" || pListTypeValue == "99") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pFlag = "END";
+    	} else {
+    		pFlag = "APR";
     	}
-        else
-        	pFlag = "APR";
 
         $.ajax({
     		type : "POST",
@@ -1270,16 +1270,16 @@ function getAprDocAproveInfo(tr) {
     	});
     }
     else if (pDocInfoValue == "2") {
-        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         	pFlag = "END";
-        else if (pListTypeValue == "21")
+        } else if (pListTypeValue == "21") {
         	pFlag = "TMP";
-    	else if (pListTypeValue == "10" || pListTypeValue == "99") {
+        } else if (pListTypeValue == "10" || pListTypeValue == "99") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pFlag = "END";
+    	} else {
+    		pFlag = "APR";
     	}
-        else
-        	pFlag = "APR";
 
         $.ajax({
     		type : "POST",

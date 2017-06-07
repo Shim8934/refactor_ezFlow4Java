@@ -3152,16 +3152,15 @@ function pzFormProc_DocumentComplete() {
     }
 
     message.SetEditorContent("<div id=msgbody><div>" + messageBody.getAttribute("mbody") + "</div></div>")
-    g_originalHTML = message.GetHtmlValue();
+    g_originalHTML = message.GetEditorContent();
 
     if (eSubject.value != "") {
-        message.SetEditorFocus();
     }
     else
         MsgTo.focus();
 
     var tempDiv = document.createElement("DIV");
-    tempDiv.innerHTML = message.GetHtmlValue();
+    tempDiv.innerHTML = message.GetEditorContent();
     var DivRows = tempDiv.getElementsByTagName("DIV");
     for (var i = 0; i < DivRows.length; i++) {
         if (DivRows.item(i).id == "MailSign" && DivRows.item(i).childNodes.length > 0) {
