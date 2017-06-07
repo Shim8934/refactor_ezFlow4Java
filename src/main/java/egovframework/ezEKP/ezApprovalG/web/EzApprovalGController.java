@@ -511,7 +511,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         int tenantID = userInfo.getTenantId();        
-        logger.debug("tenantID=" + tenantID);       
+        logger.debug("docID = " + docID + " mode =" + mode + " tenantID=" + tenantID);       
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("c=1") == -1) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
@@ -5803,6 +5803,66 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/createMailImg.do" )
 	@ResponseBody
 	public String createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		//자바에서 결재문서 캡쳐 하는 것 대기 상태, phantomjs
+//		userInfo = commonUtil.userInfo(loginCookie);
+//		String docID = request.getParameter("docID");
+//		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
+//
+//		String filePath = "";
+//        String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator; 
+//        String realPath = commonUtil.getRealPath(request);
+//        String strURL = request.getParameter("imgUrl");
+//        String domain = request.getServerName() +":" +request.getServerPort();
+//        
+//        filePath = realPath + uploadModule;
+//        
+//        File file = new File(filePath);
+//        if (!file.exists()) {
+//        	file.mkdirs();
+//        } 
+//        
+//        String m_strMHT = "";
+//        
+//        try {
+//        	m_strMHT = ezCommonService.loadMHTFile(realPath + strURL);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			m_strMHT= "";
+//		}
+//        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, userInfo.getLocale(), domain);
+//        
+//        try{
+//                         
+//            // BufferedWriter 와 FileWriter를 조합하여 사용 (속도 향상)
+//            BufferedWriter fw = new BufferedWriter(new FileWriter(strPath + commonUtil.separator+docID+".html", false));
+//            String content = new String(strHTML.toString().getBytes(), "UTF-8");
+//
+//            // 파일안에 문자열 쓰기
+//            fw.write(content);
+//            fw.flush();
+//            
+//            // 객체 닫기
+//            fw.close();
+//
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//	
+//		DesiredCapabilities caps = new DesiredCapabilities();
+//		
+//		caps.setJavascriptEnabled(true);
+//		caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "E:\\phantomjs-2.1.1-windows\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe");
+//		
+//		WebDriver driver = new PhantomJSDriver(caps);
+//		driver.get("file:///" + strPath + commonUtil.separator+ docID+".html");
+//		driver.manage().window().maximize();
+//		driver.manage().timeouts().implicitlyWait(20L, TimeUnit.SECONDS);
+//					
+//		File srcFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE); // temp 폴더에 파일이 생성됨 
+//		
+//		FileUtils.copyFile(srcFile, new File(strPath+commonUtil.separator+docID+".png")); // temp폴더에 생성된 이미지파일을 사용자가 지정한 폴더로 복사함. 
+//		driver.quit();
+	     
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
@@ -5840,7 +5900,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 			    }
 		}
-	     
 	     return "true";
 	}
 	
