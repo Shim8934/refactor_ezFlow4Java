@@ -127,11 +127,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public List<HashMap<String, Object>> getSearchCircularMapList(String memberID, int startRow, int endRow, int tenantId,String keyword) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("memberId", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantId", tenantId);
 		map.put("searchKeyword", keyword);
+		
 		return ezCircularDAO.getSearchCircularMapList(map);
 	}
 	
@@ -307,14 +309,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void deleteCircular(int circularID, int tenantID) throws Exception {
+	public void circularDeleteItem(String[] circularIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("circularID", circularID);
-		map.put("tenantID", tenantID);
 		
-		ezCircularDAO.deleteCircular(map);
-		ezCircularDAO.deleteCircularUser(map);
-		ezCircularDAO.deleteCircularAttach(map);
+		for (int i=0; i<circularIDList.length; i++) {
+			map.put("circularIDList", circularIDList[i]);
+			map.put("tenantID", tenantID);
+			
+			ezCircularDAO.deleteCircular(map);
+			ezCircularDAO.deleteCircularUser(map);
+			ezCircularDAO.deleteCircularAttach(map);			
+		}
 	}
 
 	@Override

@@ -174,11 +174,9 @@
 	        	
 		        starttime = new Date().getTime();
 		        if (keyword != ""){
-		       
 		        	url = "/ezCircular/getSearchCircularList.do";
 		        }
 		        else{
-		        	//url = "/ezBoard/getBoardList.do";
 		        	url = "/ezCircular/getCircularList.do";
 		        }
 		        $.ajax({
@@ -489,10 +487,10 @@
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=&ownerID=&type=&startDate=&endDate&brdName=&circularID="+circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
@@ -620,20 +618,25 @@
 	            document.getElementById('txt_keyword').value = "";
 	        }
 	        
-	        function Confirm_onclick() {   	
-	        	if(confirm("<spring:message code='ezCircular.t68'/>")) {
-		        	var arrList = new Array();
-			        var strItemList = "";
-			        var i = 0;
-			        
-			        arrList = strListInfo.split(";");
-			        
-			        for (i = 0; i < arrList.length - 1; i++) {
-			            strItemList += arrList[i].split(",")[1] + ";";
-			        }
-			        
-			        arrList = null;
-			        
+	        function Confirm_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+	        	
+	        	var arrList = new Array();
+		        var strItemList = "";
+		        var i = 0;
+		        
+		        arrList = strListInfo.split(";");
+		        
+		        for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[1] + ";";
+		        }
+		        
+		        arrList = null;
+		        
+	        	if (confirm("<spring:message code='ezCircular.t68'/>")) {
 					$.ajax({
 						type : "POST",
 						dataType : "text",

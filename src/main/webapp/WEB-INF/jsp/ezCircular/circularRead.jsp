@@ -165,7 +165,7 @@
                 	    <ul>
 <!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
 <!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
-                        	<li><span>회람종료</span></li>
+<!--                         	<li><span>회람종료</span></li> -->
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -217,7 +217,17 @@
 		        		<tr>
 		            		<th>상태</th>
 		            		<td colspan="3">
-		                		<div id="titleDIV">${result.status == '0' ? '진행중' : '종료'}</div>
+		            			<c:choose>
+			            			<c:when test="${result.option eq '0'}">
+			            				<div id="status">진행중</div>
+			            			</c:when>
+			            			<c:when test="${result.option eq '1'}">
+			            				<div id="status">종료</div>
+			            			</c:when>
+			            			<c:otherwise>
+			            				<div id="status">임시</div>
+			            			</c:otherwise>
+		                		</c:choose>
 		            		</td>
 		        		</tr>
 	        			<tr style="height:100%">

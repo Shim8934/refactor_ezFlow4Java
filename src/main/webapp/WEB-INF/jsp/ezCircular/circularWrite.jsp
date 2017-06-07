@@ -54,7 +54,7 @@
 	        	var content = message.GetEditorContent();
 				var option = 0;
 				
-				if ($("#title").val().length < 1) {
+				if ($("#title").val() == "") {
 					alert("<spring:message code='ezCircular.t52'/>");
 					return;
 				}
@@ -235,7 +235,7 @@
         				</tr>
 						
 	        			<tr>
-	          				<th> 중요도</th>
+	          				<th>중요도</th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<select id="importance" class="select">
 	          						<option value="0" >일반</option>
@@ -244,7 +244,7 @@
 	          				</td>
 	        			</tr>
 				        <tr>
-	       					<th> 옵션</th>
+	       					<th>옵션</th>
 	       					<td style="width:160px" colspan="3">
 								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;댓글기능 사용&nbsp;&nbsp;
 								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;메일공지 사용   									

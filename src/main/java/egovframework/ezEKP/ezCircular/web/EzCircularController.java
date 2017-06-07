@@ -431,7 +431,7 @@ public class EzCircularController extends EgovFileMngUtil {
         endRow = (personalCount * page);
 		
         int totalCount = ezCircularService.getCircularTempListCount(userInfo.getId(), userInfo.getTenantId());
-System.out.println(totalCount);        
+
         logger.debug("startRow : "+startRow);
         logger.debug("endRow : "+endRow);
         
@@ -667,9 +667,6 @@ System.out.println(totalCount);
 		
         int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
         
-        logger.debug("startRow : "+startRow);
-        logger.debug("endRow : "+endRow);
-        
 		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
 		
 		List<HashMap<String, Object>> list2 = ezCircularService.getCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
@@ -721,7 +718,7 @@ System.out.println(totalCount);
     			} else if (fieldName.equals("STATUS")) {
     				if (fieldValue.equals("0")) {
     					fieldValue = "진행중";
-    				} else if (fieldValue.equals("0")) {
+    				} else if (fieldValue.equals("1")) {
     					fieldValue = "종료";
     				} else {
     					fieldValue = "임시";
@@ -849,7 +846,7 @@ System.out.println(totalCount);
     			} else if (fieldName.equals("STATUS")) {
     				if (fieldValue.equals("0")) {
     					fieldValue = "진행중";
-    				} else if (fieldValue.equals("0")) {
+    				} else if (fieldValue.equals("1")) {
     					fieldValue = "종료";
     				} else {
     					fieldValue = "임시";
@@ -977,7 +974,7 @@ System.out.println(totalCount);
     			} else if (fieldName.equals("STATUS")) {
     				if (fieldValue.equals("0")) {
     					fieldValue = "진행중";
-    				} else if (fieldValue.equals("0")) {
+    				} else if (fieldValue.equals("1")) {
     					fieldValue = "종료";
     				} else {
     					fieldValue = "임시";
@@ -1134,7 +1131,7 @@ System.out.println(totalCount);
 		if (req.getParameter("circularID") != null && !req.getParameter("circularID").equals("")) {
 			circularID = req.getParameter("circularID");
 		}
-		 
+	 
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
 		
@@ -1146,7 +1143,7 @@ System.out.println(totalCount);
 			if (list.size() == 1) {
 				listUser = list.get(i).getMemberName();
 			} else if (i !=list.size()-1){
-				listUser += list.get(i).getMemberName() + ",";
+				listUser += list.get(i).getMemberName() + ", ";
 			} else {
 				listUser += list.get(i).getMemberName();
 			}
@@ -1551,25 +1548,20 @@ System.out.println(totalCount);
 	}
 	
 	/**
-	 * 회람판 신규 회람판 삭제 실행 Method
+	 * 회람판 삭제 실행 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDelete.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezCircular/circularDeleteItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circularDelete(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
-		logger.debug("circularDelete started");
+		logger.debug("circularDeleteItem started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String circularID = "";
-		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
-			circularID = request.getParameter("circularID");
-		}
+		String[] circularIDList = request.getParameter("circularIDList").split(";");
 		
-		logger.debug("circularID : "+circularID);
-		
-		ezCircularService.deleteCircular(Integer.parseInt(circularID), userInfo.getTenantId());
+		ezCircularService.circularDeleteItem(circularIDList, userInfo.getTenantId());
 
-		logger.debug("circularDelete ended");
+		logger.debug("circularDeleteItem ended");
 	}
 	
 	/**
@@ -1612,10 +1604,6 @@ System.out.println(totalCount);
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
-        
-        logger.debug("startRow : "+startRow);
-        logger.debug("endRow : "+endRow);
-        logger.debug("keyword : "+keyword);
         
 		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword);
 		
@@ -1673,8 +1661,14 @@ System.out.println(totalCount);
                 	//fieldValue = fieldValue.equals("0") ? " " : "<img src=\"/images/newAttach.gif\">";
                 	fieldValue = fieldValue.equals("0") ? "0" : "1";
                 } else if (fieldName.equals("STATUS")) {
-                	fieldValue = fieldValue.equals("0") ? "진행중" : "종료";
-                } else if (fieldName.equals("CONFIRMSTATUS")) {
+    				if (fieldValue.equals("0")) {
+    					fieldValue = "진행중";
+    				} else if (fieldValue.equals("1")) {
+    					fieldValue = "종료";
+    				} else {
+    					fieldValue = "임시";
+    				}
+    			} else if (fieldName.equals("CONFIRMSTATUS")) {
                 	int firstValue = ezCircularService.getConfirmStatusFirst(list.get(j).getCircularId(), userInfo.getTenantId());
                 	int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularId(), userInfo.getTenantId());
                 	

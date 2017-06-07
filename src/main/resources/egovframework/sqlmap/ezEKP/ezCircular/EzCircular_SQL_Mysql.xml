@@ -65,11 +65,15 @@
             AND
                 A.TENANTID = B.TENANTID
             AND
+            	A.STATUS = '0'
+            AND
             	B.UPDATESTATUS = '0'
             AND
                 B.MEMBERID = #memberId#
             AND
                 A.TENANTID = #tenantId#
+            ORDER BY
+            	A.REGDATE DESC
             LIMIT
                 #limit#, #rowCount#        
         ]]>
@@ -86,7 +90,7 @@
             AND
                 A.TENANTID = B.TENANTID
             AND
-            	B.UPDATESTATUS = '0'
+            	A.STATUS = '0'
             AND
                 B.MEMBERID = #memberId#
             AND
@@ -109,7 +113,9 @@
             AND
                 A.TENANTID = B.TENANTID
             AND
-            	B.UPDATESTATUS = '0'
+            	A.STATUS = '0'
+            AND
+            	B.UPDATESTATUS = '0'	
             AND
                 B.MEMBERID = #memberId#
             AND
@@ -155,7 +161,9 @@
             AND
                 A.TENANTID = B.TENANTID
             AND
-            	B.UPDATESTATUS = '0'
+            	A.STATUS = '0'
+            AND
+            	B.UPDATESTATUS = '0'	
             AND
                 B.MEMBERID = #memberId#
             AND
@@ -324,6 +332,8 @@
                 B.MEMBERID = #memberId#
             AND
                 A.TENANTID = #tenantId#
+            ORDER BY
+            	A.REGDATE DESC
             LIMIT
                 #limit#, #rowCount#        
         ]]>
@@ -406,6 +416,8 @@
                 A.MEMBERID = #memberId#
             AND
                 A.TENANTID = #tenantId#
+            ORDER BY
+            	A.REGDATE DESC
             LIMIT
                 #limit#, #rowCount#        
         ]]>
@@ -704,7 +716,7 @@
             DELETE FROM
                 TBL_CIRCULAR
             WHERE
-                CIRCULARID = #circularID#
+                CIRCULARID = #circularIDList#
             AND    
                 TENANTID = #tenantID#
         ]]>
@@ -715,7 +727,7 @@
             DELETE FROM
                 TBL_CIRCULAR_USER
             WHERE
-                CIRCULARID = #circularID#
+                CIRCULARID = #circularIDList#
             AND    
                 TENANTID = #tenantID#
         ]]>
@@ -737,7 +749,7 @@
             DELETE FROM
                 TBL_CIRCULAR_FILE
             WHERE
-                CIRCULARID = #circularID#
+                CIRCULARID = #circularIDList#
             AND 
                 TENANTID = #tenantID#
       	]]>   
