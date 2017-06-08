@@ -109,6 +109,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/apprGMain.do")
 	public String apprGMain(HttpServletRequest request, Model model, HttpServletResponse response){
+		logger.debug("apprGMain Started");
+		
 		int listType = 1;
 		
 		if (request.getParameter("listType") != null) {
@@ -116,6 +118,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("listType", listType);
+		
+		logger.debug("apprGMain ended");
 		
 		return "ezApprovalG/apprGMain";
 	}
@@ -873,8 +877,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getApprovalPWD.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String getApprovalPWD(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("getApprovalPWD started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String result = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		logger.debug("getApprovalPWD ended.");
 		
 		return result;
 	}
@@ -884,6 +892,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/draftContent.do")
 	public String draftContent(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("draftContent started.");
+		
 		String mode = "";
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -895,6 +905,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("mode", mode);
 		model.addAttribute("editor", editor);
 		
+		logger.debug("draftContent ended.");
+		
 		return "ezApprovalG/apprGDraftContent";
 	}
 	
@@ -904,6 +916,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getCodeData.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCodeData(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getCodeData started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String code1 = request.getParameter("code1");
@@ -919,6 +933,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = ezApprovalGService.getOptionInfo(code1, code2, userInfo, flag);
 		
+		logger.debug("getCodeData ended.");
+		
 		return "<RESULT>" + result + "</RESULT>";
 	}
 	
@@ -927,6 +943,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezApprovalInfo.do")
 	public String ezApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("ezApprovalInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
@@ -981,6 +999,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("chamjoAfterYN", chamjoAfterYN);
 		
+		logger.debug("ezApprovalInfo ended.");
+		
 		return "ezApprovalG/apprGezApprovalInfo";
 	}
 	
@@ -1013,12 +1033,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getLineTemplist.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getLineTemplist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
+		logger.debug("getLineTemplist started.");
+
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		String tempList = ezApprovalGService.getTempList(userID, formID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		String headerXML = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t379", locale) + "</NAME><WIDTH>100%</WIDTH></HEADER></HEADERS><ROWS>" + tempList + "</ROWS></LISTVIEWDATA>";
+		
+		logger.debug("getLineTemplist ended.");
 		
 		return headerXML;
 	}
@@ -1045,12 +1069,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/aprLineSave.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String aprLineSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("aprLineSave started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String strXML = request.getParameter("ret");
 		logger.debug("ret = " + strXML);
 		
 		String result = ezApprovalGService.updateLineInfo(strXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
+		
+		logger.debug("aprLineSave ended.");
 		
 		return result;
 	}
@@ -1079,11 +1107,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprLineTempletName.do")
 	public String aprLineTempletName(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("aprLineTempletName started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		model.addAttribute("type", request.getParameter("type")== null? "" : request.getParameter("type"));
 		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("aprLineTempletName ended.");
 		
 		return "ezApprovalG/apprGaprLineTempletName";
 	}
@@ -1094,10 +1126,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/aprLineTempletList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String aprLineTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("aprLineTempletList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		String result = ezApprovalGService.getLineTempletInfo(formID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("aprLineTempletList ended.");
 		
 		return result;
 	}
@@ -1108,12 +1144,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/aprLineTempletListInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String aprLineTempletListInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("aprLineTempletListInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		String aprSN = request.getParameter("aprLineSN");
 		String result = ezApprovalGService.getLineTempletDetailInfo(formID, userID, aprSN, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("aprLineTempletListInfo ended.");
 		
 		return result;
 	}
@@ -1124,10 +1164,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getFormDetail.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFormDetail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
+		logger.debug("getFormDetail started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		String resultXML = ezApprovalGService.getFormInfoDetail(formID, companyID, userInfo.getTenantId());
+		
+		logger.debug("getFormDetail ended.");
 		
 		return resultXML;
 	}
@@ -1138,12 +1182,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getFormRecv.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String getFormRecv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getFormRecv started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String formID = request.getParameter("formID");
 		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
+		logger.debug("getFormRecv ended.");
+		
 		return result;
 	}
 	
@@ -1170,9 +1218,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getFullDate.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String getFullDate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("getFullDate started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String fullDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() ,false);
 		fullDate = fullDate.substring(0, 16).replace("-", "."); 
+		
+		logger.debug("getFullDate ended.");
 		
 		return fullDate;
 	}
@@ -1184,9 +1236,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getDate.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String getDate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("getDate started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String fullDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() ,false);
 		fullDate = fullDate.substring(0, 10).replace("-", ".");
+		
+		logger.debug("getDate ended.");
 		
 		return fullDate;
 	}
@@ -1221,8 +1277,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		Document xmlDom = commonUtil.convertStringToDocument(aprLineXml);
 		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-		
-		logger.debug("createAprLineTemplet ended. result = " + result);
+		logger.debug("createAprLineTemplet result = " + result); 
+		logger.debug("createAprLineTemplet ended." );
 		
 		return result;
 	}
@@ -1233,12 +1289,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/delAprLineTempletList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String delAprLineTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("delAprLineTempletList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		String aprLineSN = request.getParameter("aprLineSN");
 		String result = ezApprovalGService.deleteLineTempletDetailInfo(formID, userID, aprLineSN, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("delAprLineTempletList ended.");
 		
 		return result;
 	}
@@ -1249,12 +1309,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/addToAprLine.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String addToAprLine(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("addToAprLine started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		String aprSN = request.getParameter("aprSN");
 		String result = ezApprovalGService.addToAprLine(userID, formID, aprSN, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("addToAprLine ended.");
 		
 		return result;
 	}
@@ -1265,16 +1329,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/aprDeptRequest.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String aprDeptRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("aprDeptRequest started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String mode = "ING";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 		if (request.getParameter("mode") != null) {
 			mode = request.getParameter("mode");
 		}
 		
 		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", userInfo.getCompanyID(), userInfo.getLang(),userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("aprDeptRequest ended.");
 		
 		return result;
 	}
@@ -1284,9 +1353,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprDeptTempletName.do")
 	public String aprDeptTempletName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("aprDeptTempletName started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("aprDeptTempletName ended.");
+		
 		return "ezApprovalG/apprGaprDeptTempletName";
 	}
 	
@@ -1296,12 +1370,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getAprDeptTempletList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAprDeptTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getAprDeptTempletList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		
 		String result = ezApprovalGService.getReceiptTempletInfo(formID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getAprDeptTempletList ended.");
 		
 		return result;
 	}
@@ -1312,12 +1390,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getReceptTemplist.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getReceptTemplist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
+		logger.debug("getReceptTemplist started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		String tempList = ezApprovalGService.getTempList3(userID, formID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		String headerXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t379", locale) + "</NAME><WIDTH>100%</WIDTH></HEADER></HEADERS><ROWS>" + tempList + "</ROWS></LISTVIEWDATA>";
+		
+		logger.debug("getReceptTemplist ended.");
 		
 		return headerXml;
 	}
@@ -1328,6 +1410,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getAprDeptTempletListInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAprDeptTempletListInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getAprDeptTempletListInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
@@ -1336,6 +1420,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String result = ezApprovalGService.getReceiptTempletDetailInfo(formID, userID, aprSN, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("getAprDeptTempletListInfo ended.");
 		
 		return result;
 	}
@@ -1346,10 +1432,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getReceptGroupList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getReceptGroupList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale) throws Exception{
+		logger.debug("getReceptGroupList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String tempList = ezApprovalGService.getTempList(userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		String headerXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t1568", locale) + "</NAME><WIDTH>100%</WIDTH></HEADER></HEADERS><ROWS>" + tempList + "</ROWS></LISTVIEWDATA>";
+		
+		logger.debug("getReceptGroupList ended.");
 		
 		return headerXml;
 	}
@@ -1360,12 +1450,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getReceptGroupADDTo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getReceptGroupADDTo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getReceptGroupADDTo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String xmlList = ezApprovalGService.getListXML(groupID, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("getReceptGroupADDTo ended.");
 		
 		return xmlList;
 	}
@@ -1376,11 +1470,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getReceptGroupDetailList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getReceptGroupDetailList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, HttpServletRequest request) throws Exception{
+		logger.debug("getReceptGroupDetailList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
 		String tempList = ezApprovalGService.getTempList2(groupID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		String headerXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t950", locale) + "</NAME><WIDTH>100%</WIDTH></HEADER></HEADERS><ROWS>" + tempList + "</ROWS></LISTVIEWDATA>";
+		
+		logger.debug("getReceptGroupDetailList ended.");
 		
 		return headerXml;
 	}
@@ -1391,6 +1489,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/addToAprDept.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String addToAprDept(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("addToAprDept started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
@@ -1399,6 +1499,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String result = ezApprovalGService.addToAprDept(userID, formID, aprDeptSN, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("addToAprDept ended.");
 		
 		return result;
 	}
@@ -1409,12 +1511,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/delAprDeptTempletList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String delAprDeptTempletList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("delAprDeptTempletList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String formID = request.getParameter("formID");
 		String aprDeptSN = request.getParameter("aprSN");
 		String result = ezApprovalGService.deleteReceiptTempletDetailInfo(formID, userID, aprDeptSN, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("delAprDeptTempletList ended.");
 		
 		return result;
 	}
@@ -1425,12 +1531,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/createAprDeptTemplet.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String createAprDeptTemplet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
+		logger.debug("createAprDeptTemplet started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlDom);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String result = ezApprovalGService.updateReceiptTempletDetailInfo(doc, userInfo.getCompanyID(), userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("createAprDeptTemplet ended.");
 		
 		return result;
 	}
@@ -1441,12 +1551,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getTaskCategory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getTaskCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getTaskCategory started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String deptCode = request.getParameter("deptCode");
 		String companyID = request.getParameter("companyID");
 		String type = request.getParameter("strType");
 		String result = ezApprovalGService.getTaskCategory(deptCode, companyID, type, userInfo.getTenantId());
+		
+		logger.debug("getTaskCategory ended.");
 		
 		return result;
 	}
@@ -1457,6 +1571,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getTaskMiddleCategory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getTaskMiddleCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getTaskMiddleCategory started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String deptCode = request.getParameter("deptCode");
@@ -1464,6 +1580,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String cateCode = request.getParameter("cateCode");
 		String result = ezApprovalGService.getTaskMiddleCategory(deptCode, companyID, cateCode, userInfo.getTenantId());
 
+		logger.debug("getTaskMiddleCategory ended.");
+		
 		return result;
 	}
 	
@@ -1578,6 +1696,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprOpinion.do")
 	public String aprOpinion(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("aprOpinion started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String susinAdmin = "";
@@ -1593,6 +1713,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		
+		logger.debug("aprOpinion ended.");
+		
 		return "ezApprovalG/apprGaprOpinion";
 	}
 	
@@ -1602,10 +1724,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/opinionRequest.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String opinionRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("opinionRequest started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getOpinionInfo(docID, "CAPR", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("opinionRequest ended.");
 		
 		return result;
 	}
@@ -1616,12 +1742,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/opinionDel.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String opinionDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("opinionDel started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.deleteOpinionInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("result = " + result);
+		
+		logger.debug("opinionDel ended.");
 		
 		return result;
 	}
@@ -1646,6 +1776,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprAttach.do")
 	public String aprAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("aprAttach Started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String formID = request.getParameter("formID");
@@ -1681,6 +1813,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
+		logger.debug("aprAttach ended");
+		
 		return "ezApprovalG/apprGaprAttach";
 	}
 	
@@ -1689,6 +1823,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/upload.do")
 	public String upload(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, MultipartHttpServletRequest request, Model model) throws Exception{
+		logger.debug("upload started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		MultipartFile multilFile = request.getFile("file1");
@@ -1750,6 +1886,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("fileSize", fileSize);
 		
+		logger.debug("upload ended");
+		
 		return "ezApprovalG/apprGupload";
 	}
 	
@@ -1767,10 +1905,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/attachRequest.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String attachRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("attachRequest started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getAttachFileInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-
+		
+		logger.debug("attachRequest ended");
 		
 		return result;
 	}
@@ -1781,6 +1922,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/deleteServerFile.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String deleteServerFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("deleteServerFile started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -1803,6 +1946,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			rtnVal = "FALSE";
 		}
 		
+		logger.debug("deleteServerFile ended");
+		
 		return rtnVal;
 	}
 	
@@ -1812,6 +1957,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/updateAttachHistory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String updateAttachHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("updateAttachHistory started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -1829,6 +1976,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.updateHistoryForAttach(docID, attachSN, tempUserID, tempUserName, tempUserName2, tempUserJobTitle, tempUserJobTitle2, 
 																  tempUserDeptID, tempUserDeptName, tempUserDeptName2, modifyFlag, dirPath, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		logger.debug("updateAttachHistory ended");
+		
 		return result;
 	}
 	
@@ -1838,6 +1987,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/aprAttachSave.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String aprAttachSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("aprAttachSave started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -1866,6 +2017,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
+		logger.debug("aprAttachSave ended");
+		
 		return result;
 	}
 	
@@ -1875,10 +2028,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/attachRemove.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String attachRemove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("attachRemove started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.deleteAttachFileInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("attachRemove ended");
 		
 		return result;
 	}
@@ -1946,11 +2103,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			fileName = filePath.substring(filePath.lastIndexOf("/") + 1); 
 		}
 		
-		logger.debug("downloadAttach ended. result = " + result);
 		
 		if (!result.equals("NOTPERMISSION")) {
 			downFile(request, response, realPath + filePath, fileName);
 		}
+		
+		logger.debug("downloadAttach ended. result = " + result);
 	}
 	
 	/**
@@ -1958,6 +2116,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/downloadAttachDbClick.do")
 	public void downloadAttachDbClick(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadAttachDbClick started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -1969,6 +2129,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String href = ezApprovalGService.getDocHref(docID, docStatus, type, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		downFile(request, response, realPath + href, fileName);
+		
+		logger.debug("downloadAttachDbClick ended.");
 	}
 	
 	/**
@@ -1976,12 +2138,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprCabinetAttach.do")
 	public String aprCabinetAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("aprCabinetAttach started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String draftflag = request.getParameter("draftFlag");
 		
 		model.addAttribute("draftFlag", draftflag);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("aprCabinetAttach ended.");
 		
 		return "ezApprovalG/apprGaprCabinetAttach";
 	}
@@ -1992,12 +2158,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getLVHeaderInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getLVHeaderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getLVHeaderInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String listFlag = request.getParameter("listFlag");
 		String listType = request.getParameter("listType");
 		String companyID = request.getParameter("companyID");
 		String result = ezApprovalGService.getListInfoXml(listFlag, listType, companyID, userInfo.getLang(), userInfo);
+		
+		logger.debug("getLVHeaderInfo ended.");
 		
 		return result;
 	}
@@ -2007,9 +2177,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/showProgress.do")
 	public String showProgress(HttpServletRequest request, Model model){
+		logger.debug("showProgress started.");
+		
 		String fileInfo = request.getParameter("fileInfo");
 		
 		model.addAttribute("fileInfo", fileInfo);
+		
+		logger.debug("showProgress ended.");
 		
 		return "ezApprovalG/apprGshowProgress";
 	}
@@ -2027,10 +2201,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getRecordList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecordList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, @RequestBody String xmlDom) throws Exception{
+		logger.debug("getRecordList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlDom);
 		String result = ezApprovalGService.getRecordList(doc, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getRecordList ended.");
 		
 		return result;
 	}
@@ -2040,9 +2218,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/searchRec.do")
 	public String searchRec(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("searchRec started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("searchRec ended.");
 		
 		return "ezApprovalG/apprGsearchRec";
 	}
@@ -2053,10 +2235,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getCodeList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCodeList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getCodeList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String companyID = request.getParameter("companyID");
 		String result = ezApprovalGService.getCodeInfo(companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("getCodeList ended.");
 		
 		return result;
 	}
@@ -2075,12 +2261,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getAttachInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAttachInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getAttachInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String result = ezApprovalGService.getAttachDocInfo(docID, "ING", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("getAttachInfo ended.");
 		
 		return result;
 	}
@@ -2091,11 +2281,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/iSCabCharger.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String iSCabCharger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
+		logger.debug("iSCabCharger started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String cabClassNo = request.getParameter("cabClassNo");
 		String userID = request.getParameter("userID");
 		String result = ezApprovalGService.isCabCharger(companyID, cabClassNo.trim(), userID, userInfo.getTenantId());
+		
+		logger.debug("iSCabCharger ended.");
 		
 		return result;
 	}
@@ -2106,12 +2300,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/updateDocAttach.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String updateDocattach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlDom) throws Exception{
+		logger.debug("updateDocAttach started.");
+
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document doc = commonUtil.convertStringToDocument(xmlDom);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		String result = ezApprovalGService.updateAttachDocInfo(doc, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("updateDocAttach ended.");
 		
 		return result;
 	}
@@ -2122,10 +2320,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/delAttachDoc.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String delAttachDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("delAttachDoc started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.deleteAttachDocInfo(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("delAttachDoc ended.");
 		
 		return result;
 	}
@@ -2135,6 +2337,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/contDocView.do")
 	public String contDocView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("contDocView started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -2228,6 +2432,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("formUrl", formUrl);
 		model.addAttribute("formDocType", formDocType);
 		
+		logger.debug("contDocView ended.");
+		
 		return "ezApprovalG/apprGcontDocView";
 	}
 	
@@ -2241,10 +2447,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/receiverChk.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String receiverChk(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("receiverChk started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String deptID = request.getParameter("deptID");
 		String rtnVal = ezApprovalGService.receiverChk(deptID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("receiverChk ended.");
 		
 		return rtnVal;
 	}
@@ -2255,6 +2465,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/checkAprPerson.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String checkAprPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("checkAprPerson started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String msg = request.getParameter("msg");
@@ -2274,6 +2486,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(k).setTextContent(xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(k).getTextContent().replace(arry[1], name));
 		}
 		
+		logger.debug("checkAprPerson ended.");
+		
 		return commonUtil.convertDocumentToString(xmlDoc);
 	}
 	
@@ -2283,11 +2497,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getMyTaskCode.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getMyTaskCode(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getMyTaskCode started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
 		String deptID = request.getParameter("deptID");
 		String result = ezApprovalGService.getMyTaskCode(userID, deptID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("getMyTaskCode ended.");
 		
 		return result;
 	}
@@ -2297,8 +2515,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/insSepAttach.do")
 	public String insSepAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("insSepAttach started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("insSepAttach ended.");
 		
 		return "ezApprovalG/apprGinsSepAttach";
 	}
@@ -2332,12 +2554,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getCabinetInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getCabinetInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String cabinetID = request.getParameter("cabinetID");
 		String companyID = request.getParameter("companyID");
 		String strType = request.getParameter("strType");
 		String result = ezApprovalGService.getCabinetInfo(cabinetID, companyID, strType, userInfo.getTenantId());
+		
+		logger.debug("getCabinetInfo ended.");
 		
 		return result;
 	}
@@ -2347,8 +2573,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/regSepAttach.do", method = RequestMethod.GET)
 	public String regSepAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("regSepAttach started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("regSepAttach ended.");
 		
 		return "ezApprovalG/apprGregSepAttach";
 	}
@@ -2383,11 +2613,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezprtQuestion.do")
 	public String ezprtQuestion(HttpServletRequest request, Model model) throws Exception{
+		logger.debug("ezprtQuestion started");
+		
 		String opinion = request.getParameter("opinion");
 		String attach = request.getParameter("attach");
 		
 		model.addAttribute("attach", attach);
 		model.addAttribute("opinion", opinion);
+		
+		logger.debug("ezprtQuestion ended");
 		
 		return "ezApprovalG/apprGezprtQuestion";
 	}
@@ -2397,9 +2631,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezAprHistory.do")
 	public String ezAprHistory(HttpServletRequest request, Model model) throws Exception{
-		String docID = request.getParameter("docID");
+		logger.debug("ezAprHistory started");
 		
+		String docID = request.getParameter("docID");
 		model.addAttribute("docID", docID);
+		
+		logger.debug("ezAprHistory ended");
 		
 		return "ezApprovalG/apprGezAprHistory";
 	}
@@ -2410,10 +2647,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getDocHistory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDocHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getDocHistory started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getHistoryForDoc(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getDocHistory ended");
 		
 		return result;
 	}
@@ -2424,10 +2665,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getLineHistory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getLineHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getLineHistory started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getHistoryForLine(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getLineHistory ended");
 		
 		return result;
 	}
@@ -2438,11 +2683,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getAttachHistory.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAttachHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getAttachHistory started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String result = ezApprovalGService.getHistoryForAttach(docID, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("getAttachHistory ended");
 		
 		return result;
 	}
@@ -2453,12 +2702,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getLineHistoryDetail.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getLineHistoryDetail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getLineHistoryDetail started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String modifySN = request.getParameter("changeSN");
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());		
 		String result = ezApprovalGService.getHistoryForLineDetail(docID, modifySN, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("getLineHistoryDetail ended");
 		
 		return result;
 	}
@@ -2494,6 +2747,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/saveTmpFile.do", produces = "text/xml;charset=utf8")
 	@ResponseBody
 	public String saveTmpFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("saveTmpFile started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -2557,6 +2812,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		    }
 		}
 	    
+		logger.debug("saveTmpFile ended");
+		
 		return ret;
 	}
 	
@@ -2666,6 +2923,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getSignRequest.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSignRequest(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
+		logger.debug("getSignRequest started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
@@ -2683,11 +2942,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			resultXML.append("</ROWS></LISTVIEWDATA>");
 			
+			logger.debug("getSignRequest ended.");
+			
 			return resultXML.toString();
 		} else {
 			StringBuilder resultXML = new StringBuilder("<LISTVIEWDATA><HEADERS><HEADER><NAME>" + messageSource.getMessage("ezApprovalG.t433", locale) + "</NAME><WIDTH>140</WIDTH></HEADER></HEADERS><ROWS>");
 			
 			resultXML.append("</ROWS></LISTVIEWDATA>");
+			
+			logger.debug("getSignRequest ended.");
 			
 			return resultXML.toString();
 		}
@@ -2698,12 +2961,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprSign.do")
 	public String aprSign(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("aprSign started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
+		
+		logger.debug("aprSign ended.");
 		
 		return "ezApprovalG/apprGaprSign";
 	}
@@ -2759,6 +3026,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/saveFile.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("saveFile started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -2814,6 +3083,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 	    
+		logger.debug("saveFile ended");
+		
 		return ret;
 	}
 	
@@ -2881,6 +3152,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/chkPasswd.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String chkPasswd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("chkPasswd started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String result = "";
@@ -2929,6 +3202,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
+		logger.debug("chkPasswd ended");
+		
 		if (result.equals("1")) {
 			return "TRUE";
 		} else {
@@ -2941,6 +3216,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvui.do")
 	public String approvui(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("approvui started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
         int tenantID = userInfo.getTenantId();        
@@ -3053,6 +3330,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		
+		logger.debug("approvui ended");
+		
 		return "ezApprovalG/apprGapprovui";
 	}
 	
@@ -3061,10 +3340,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvUIcontent.do")
 	public String approvUIcontent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("approvUIcontent started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		model.addAttribute("editor", editor);
+		
+		logger.debug("approvUIcontent ended");
 		
 		return "ezApprovalG/apprGapprovUIcontent";
 	}
@@ -3075,11 +3358,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getApproveDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getApproveDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getApproveDocInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getApproveDocInfo(userInfo, docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 
+		logger.debug("getApproveDocInfo ended");
+		
 		return result;
 	}
 	
@@ -3089,10 +3376,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getDocInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getDocInfo(docID, "APR", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getDocInfo ended");
 		
 		return result;
 	}
@@ -3103,10 +3394,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getLastOpinonCotent.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getLastOpinonCotent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getLastOpinonCotent started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getLastOpinionContent(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("getLastOpinonCotent ended");
 		
 		return "<PARA><Row><![CDATA[" + result + "]]></Row></PARA>";
 	}
@@ -3117,10 +3412,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getSignInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getSignInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale) throws Exception{
+		logger.debug("getSignInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getSignInfo(docID, userInfo.getOffset(), userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getSignInfo ended");
 		
 		return result;
 	}
@@ -3152,6 +3451,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/rollbackCabinetSN.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String rollbackCabinetSN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("rollbackCabinetSN started");
+
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String deptID = request.getParameter("deptID");
@@ -3159,6 +3460,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.rollbackCabinetNum(deptID, "", sn, userInfo.getCompanyID(), docID, userInfo.getLang(), userInfo.getTenantId());
 		
+		logger.debug("rollbackCabinetSN ended");
+
 		return result;
 	}
 	
@@ -3181,10 +3484,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/setSignInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setSignInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("setSignInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.updateSignInfo(xmlDom, userInfo.getCompanyID(), "SET", userInfo.getTenantId());
+		
+		logger.debug("setSignInfo ended.");
 		
 		return result;
 	}
@@ -3195,6 +3502,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doApprov.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("doApprov started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -3203,6 +3512,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.doProcess("003", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, xmlDom.getDocumentElement().getChildNodes().item(26).getTextContent(), userInfo.getCompanyID(), userInfo.getLang(),userInfo);
+		
+		logger.debug("doApprov ended.");
 		
 		return result;
 	}
@@ -3213,6 +3524,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doBansongApprov.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doBansongApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("doBansongApprov started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -3221,6 +3534,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.doProcess("004", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
+		
+		logger.debug("doBansongApprov ended.");
 		
 		return result;
 	}
@@ -3231,6 +3546,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doBoryuApprov.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doBoryuApprov(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("doBoryuApprov started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -3239,6 +3556,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.doProcess("005", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent(), xmlDom, "", userInfo.getCompanyID(), userInfo.getLang(), userInfo);
+		
+		logger.debug("doBoryuApprov ended.");
 		
 		return result;
 	}
@@ -3256,12 +3575,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doCanCelYN.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doCanCelYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("doCanCelYN started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String tempUserID = request.getParameter("userID");
  		String result = ezApprovalGService.getCallBackYN(docID, tempUserID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+ 		logger.debug("doCanCelYN ended.");
+ 		
  		return result;
 	}
 	
@@ -3271,11 +3594,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doForceCancelYN.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doForceCancelYN(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("doForceCancelYN started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String tempUserID = request.getParameter("userID");
 		String result = ezApprovalGService.getCallBackYNForceLine(docID, tempUserID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("doForceCancelYN ended.");
 		
 		return result;
 	}
@@ -3286,10 +3613,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ConDocViewContent.do")
 	public String ConDocViewContent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("ConDocViewContent started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		model.addAttribute("editor", editor);
+		
+		logger.debug("ConDocViewContent ended.");
 		
 		return "ezApprovalG/apprGConDocViewContent";
 	}
@@ -3299,11 +3630,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/totalSaveFileInfo.do")
 	public String totalSaveFileInfo(HttpServletRequest request, Model model) throws Exception{
+		logger.debug("totalSaveFileInfo started.");
+		
 		String docID = request.getParameter("docID");
 		String type = request.getParameter("type");
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("type", type);
+		
+		logger.debug("totalSaveFileInfo ended.");
 		
 		return "ezApprovalG/apprGtotalSaveFileInfo";
 	}
@@ -3314,11 +3649,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getTotalDoc.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getTotalDoc started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String result = ezApprovalGService.getTotalDownload(docID, mode, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getTotalDoc ended.");
 		
 		return result;
 	}
@@ -3329,6 +3668,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/saveTotalDoc.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String saveTotalDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("saveTotalDoc started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
@@ -3431,6 +3772,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 		    }
 		}
+		
+		logger.debug("saveTotalDoc ended.");
+		
 		return zipFilePath;
 	}
 	
@@ -3440,6 +3784,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getReceivedDocList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getReceivedDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getReceivedDocList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
@@ -3534,6 +3880,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = ezApprovalGService.getReceiveDocList(userID, deptID, receiveDocMode, pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userLang, searchQuery, xmlDomSub, userInfo.getTenantId(), userInfo.getOffset());
 		
+		logger.debug("getReceivedDocList ended.");
+		
 		return result;
 	}
 	
@@ -3543,10 +3891,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/gongRamDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String gongRamDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("gongRamDocInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.gongRamDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("gongRamDocInfo ended.");
 		
 		return "<RESULT>" + result + "</RESULT>";
 	}
@@ -3556,6 +3908,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/recevGSusin.do")
 	public String recevGSusin(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("recevGSusin started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -3634,6 +3988,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
 		
+		logger.debug("recevGSusin ended.");
+		
 		return "ezApprovalG/apprGrecevGSusin";
 	}
 	
@@ -3651,10 +4007,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getReceiveDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getReceiveDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getReceiveDocInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getReceivedDocInfo(userInfo, docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getReceiveDocInfo ended.");
 		
 		return result;
 	}
@@ -3665,12 +4025,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getDocData.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDocData(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getDocData started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String flag = request.getParameter("mode");
 		String data = request.getParameter("sel");
 		String result = ezApprovalGService.getDocInfo(docID, flag, data, userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getDocData ended.");
 		
 		return result;
 	}
@@ -3680,12 +4044,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/selectCabinet.do")
 	public String selectCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("selectCabinet started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String initFlag = request.getParameter("initFlag");
 		
 		model.addAttribute("initFlag", initFlag);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("selectCabinet ended.");
 		
 		return "ezApprovalG/apprGselectCabinet";
 	}
@@ -3714,6 +4082,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezReceiveAssignUI.do")
 	public String ezReceiveAssignUI(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("ezReceiveAssignUI started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String susinAdmin = "";
@@ -3729,6 +4099,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", serverName);
 		
+		logger.debug("ezReceiveAssignUI ended.");
+		
 		return "ezApprovalG/apprGezReceiveAssignUI";
 	}
 	
@@ -3738,6 +4110,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/setJijung.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setJijung(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("setJijung started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -3753,12 +4127,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String receivedDeptName2 = request.getParameter("receivedDeptName2");
 		
 		String result = ezApprovalGService.setJijung(docID, receiveSN, processorID, processorName, processorJobTitle, receivedDeptID, receivedDeptName, docState, processorName2, processorJobTitle2, receivedDeptName2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("setJijung ended.");
+		
 		return result;
 	}
 	
 	//잘못만들었지만 쓰일수도있어서 냅둠
 	@RequestMapping(value = "/ezApprovalG/recevG.do")
 	public String recevG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("recevG started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -3841,6 +4220,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		
+		logger.debug("recevG ended.");
+		
 		return "ezApprovalG/apprGrecevG";
 	}
 	
@@ -3849,6 +4230,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprLine.do")
 	public String aprLine(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("aprLine started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
@@ -3874,6 +4257,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userInfo", userInfo);
 		
+		logger.debug("aprLine ended.");
+		
 		return "ezApprovalG/apprGaprLine";
 	}
 	
@@ -3883,12 +4268,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/setSusinUpdateDocID.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setSusinUpdateDocID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("setSusinUpdateDocID started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String orgDocID = request.getParameter("orgDocID");
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
 		String result = ezApprovalGService.updateSusinDocInfo(orgDocID, docID, deptID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("setSusinUpdateDocID ended.");
 		
 		return result;
 	}
@@ -3898,6 +4287,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezReceiveDistributeUI.do")
 	public String ezReceiveDistributeUI(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("ezReceiveDistributeUI started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		//2015-06-26 표준모듈:수정(자기부서 배부 가능여부)
@@ -3932,6 +4323,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("USE_SELFDISTRIBUTE", USE_SELFDISTRIBUTE);
 		model.addAttribute("mode", mode);
 		
+		logger.debug("ezReceiveDistributeUI ended.");
 		
 		return "ezApprovalG/apprGezReceiveDistributeUI";
 	}
@@ -3941,6 +4333,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprDocView.do")
 	public String aprDocView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("aprDocView started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -4045,6 +4439,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("callBackType", callBackType);
 		model.addAttribute("approvalFlag", approvalFlag);
 
+		logger.debug("aprDocView ended.");
+		
 		return "ezApprovalG/apprGaprDocView";
 	}
 	
@@ -4053,6 +4449,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprDocViewContent.do")
 	public String aprDocViewContent() throws Exception{
+		logger.debug("aprDocViewContent started.");
+		logger.debug("aprDocViewContent ended.");
 		return "ezApprovalG/apprGaprDocViewContent";
 	}
 	
@@ -4061,6 +4459,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezAprAllAlert.do")
 	public String ezAprAllAlert() throws Exception{
+		logger.debug("ezAprAllAlert started.");
+		logger.debug("ezAprAllAlert ended.");
 		return "ezApprovalG/apprGezAprAllAlert";
 	}
 	
@@ -4070,12 +4470,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getNextDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getNextDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getNextDocInfo started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
 		String userDeptID = request.getParameter("userDeptID");
 		String result = ezApprovalGService.getNextDocInfo(docID, userID, userDeptID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getNextDocInfo ended.");
 		
 		return result;
 	}
@@ -4104,6 +4508,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/setSearchInfo.do")
 	public String setSearchInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setSearchInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String type = request.getParameter("type");
@@ -4125,6 +4531,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("monthEndDay", monthEndDay);
 		model.addAttribute("initDate", initDate);
 		
+		logger.debug("setSearchInfo ended");
+		
 		return "ezApprovalG/apprGsetSearchInfo";
 	}
 
@@ -4133,12 +4541,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/secondApprovalInfo.do")
 	public String secondApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("secondApprovalInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		List<ApprGSecondApprVO> strResult = ezApprovalGService.getSecondApprovalInfo(userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		model.addAttribute("strResult", strResult);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("secondApprovalInfo ended");
 		
 		return "ezApprovalG/apprGsecondApprovalInfo";
 	}
@@ -4148,9 +4560,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/createCabinet.do")
 	public String createCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("createCabinet started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("createCabinet ended");
 		
 		return "ezApprovalG/apprGcreateCabinet";
 	}
@@ -4160,8 +4575,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/insSpecialList.do")
 	public String insSpecialList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,Model model) throws Exception{
+		logger.debug("insSpecialList started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("insSpecialList ended");
+		
 		return "ezApprovalG/apprGinsSpecialList";
 	}
 
@@ -4171,6 +4591,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/registerCabinet.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String registerCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("registerCabinet started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		logger.debug("xmlPara = " + xmlPara);
@@ -4178,6 +4600,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.registerCabinet(xmlDom, userInfo.getLang(), userInfo.getTenantId());
 		
+		logger.debug("registerCabinet ended");
 		return result;
 	}
 
@@ -4186,9 +4609,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/addVolume.do")
 	public String addVolume(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("addVolume started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("addVolume ended");
 		
 		return "ezApprovalG/apprGaddVolume";
 	}
@@ -4199,11 +4625,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getNewVolNo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getNewVolNo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getNewVolNo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String cabClassNO = request.getParameter("cabClassNO");
 		String companyID = request.getParameter("companyID");
 		String result = ezApprovalGService.getNewVolumeNo(cabClassNO, companyID, userInfo.getTenantId());
+		
+		logger.debug("getNewVolNo ended");
 		
 		return result;
 	}
@@ -4214,12 +4644,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/addNewVolume.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String addNewVolume(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("addNewVolume started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String cabClassNO = request.getParameter("cabClassNO");
 		String companyID = request.getParameter("companyID");
 		String newVolNO = request.getParameter("newVolNO");
 		String result = ezApprovalGService.addNewVolume(cabClassNO, newVolNO, companyID, userInfo.getTenantId());
+		
+		logger.debug("addNewVolume ended");
 		
 		return result;
 	}
@@ -4229,9 +4663,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/searchCabinet.do")
 	public String searchCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("searchCabinet started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("searchCabinet ended");
 		
 		return "ezApprovalG/apprGsearchCabinet";
 	}
@@ -4242,6 +4679,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getCabinetSearch.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
+		logger.debug("getCabinetSearch started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String processDeptCode = request.getParameter("processDeptCode");
@@ -4251,6 +4690,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String langType = request.getParameter("langType");
 		
 		String result = ezApprovalGService.getFindSimpleCabinetList(processDeptCode, productionYear, searchKeyword, flag, companyID, langType, userInfo.getTenantId());
+		
+		logger.debug("getCabinetSearch ended");
 		
 		return result;
 	}
@@ -4284,12 +4725,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/setBebu.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setBebu(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception{
+		logger.debug("setBebu started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String realPath = commonUtil.getRealPath(request);
 		String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String result = ezApprovalGService.setBebu(xmlDom, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo);
+		
+		logger.debug("setBebu ended");
 		
 		return result;
 	}
@@ -4300,6 +4745,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/setHeSongDocInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String setHeSongDocInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("setHeSongDocInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -4344,6 +4791,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = ezApprovalGService.doSusinHesong(docID, receiveSN, deptID, docState, userID, userName, userName2, dirPath, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
+		logger.debug("setHeSongDocInfo ended");
+		
 		return result;
 	}
 	
@@ -4352,6 +4801,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */	
 	@RequestMapping(value = "/ezApprovalG/doApprovAllselect.do")
 	public String doApprovAllselect(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("doApprovAllselect started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		StringBuilder sbStr = new StringBuilder();
@@ -4500,6 +4951,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("sbStr", sbStr.toString());
 		model.addAttribute("approvalPWD", approvalPWD);
 		
+		logger.debug("doApprovAllselect ended");
+		
 		return "ezApprovalG/apprGdoApprovAllselect";
 	}
 	
@@ -4509,11 +4962,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/doCancel.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String doCancel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("doCancel started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
 		String result = ezApprovalGService.doCallBack(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("doCancel ended");
 		
 		return result;
 	}
@@ -4524,11 +4981,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getFormConnFlag.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFormConnFlag(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getFormConnFlag started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String docID = request.getParameter("docID");
 		String companyID = request.getParameter("companyID");
 		String result = ezApprovalGService.getFormConnFlag(docID, companyID, userInfo.getTenantId());
+		
+		logger.debug("getFormConnFlag ended");
 		
 		return result;
 	}
@@ -4539,10 +5000,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getAprDocFormID.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAprDocFormID(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("getAprDocFormID started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getDocInfo(docID, "APR", "FormID", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getAprDocFormID ended");
 		
 		return result;
 	}
@@ -4552,6 +5016,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezLineInfo.do")
 	public String ezLineInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("ezLineInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
@@ -4564,11 +5030,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("childDocInfo", childDocInfo);
 		
+		logger.debug("ezLineInfo ended");
+		
 		return "ezApprovalG/apprGezLineInfo";
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/getContainerInfo.do")
 	public String getContainerInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("getContainerInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String realPath = commonUtil.getRealPath(request);
@@ -4622,12 +5092,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("approvalPWD", approvalPWD);
 		
+		logger.debug("getContainerInfo ended");
+		
 		return "ezApprovalG/apprGgetContainerInfo";
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/getFormSearchDocListS.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFormSearchDocListS(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getFormSearchDocListS started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
@@ -4706,12 +5180,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
          result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
                 papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
+         logger.debug("getFormSearchDocListS ended");
+         
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/getFormSearchDocList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFormSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getFormSearchDocList started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -4756,23 +5234,31 @@ public class EzApprovalGController extends EgovFileMngUtil{
         		draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY, myApprToYEAR, myApprToMONTH,
         		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
         
+        logger.debug("getFormSearchDocList ended");
+        
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/ezReceiptHistoryInfo.do")
 	public String ezReceiptHistoryInfo(HttpServletRequest request, Model model) throws Exception{
+		logger.debug("ezReceiptHistoryInfo started");
+		
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("deptID", deptID);
 		//TODO: aspx 파일이 Cross 버젼으로 닷넷소스에는 걸려져있는데 파일이 존재안함 그래서 일단 일반으로 넣었으나 엑티브엑스 사용해서 수정해야됨
+		logger.debug("ezReceiptHistoryInfo ended");
+		
 		return "ezApprovalG/apprGezReceiptHistoryInfo";
 		
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/ezDocInfoGView.do")
 	public String ezDocInfoGView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("ezDocInfoGView started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String summary = "";
@@ -4839,33 +5325,45 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("securityDate", securityDate);
 		model.addAttribute("securityNode", securityNode);
 		
+		logger.debug("ezDocInfoGView ended");
+		
 		return "ezApprovalG/apprGezDocInfoGView";
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/getEndOpinionInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getEndOpinionInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getEndOpinionInfo started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getOpinionInfo(docID, "CEND", "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		
+		logger.debug("getEndOpinionInfo ended");
 		
 		return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/aprEndOpinion.do")
 	public String aprEndOpinion() throws Exception{
+		logger.debug("aprEndOpinion started");  
+		logger.debug("aprEndOpinion ended");  
 		return "ezApprovalG/apprGaprEndOpinion";
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/updateSignCheck.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String updateSignCheck(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("updateSignCheck started");  
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String signCheck = request.getParameter("signCheck");
         String result = ezApprovalGService.updateSignCheck(docID, signCheck, userInfo.getCompanyID(), userInfo.getTenantId());
+        
+        logger.debug("updateSignCheck ended");  
         
 		return result;
 	}
@@ -4922,6 +5420,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/excelExportOut.do")
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
+		logger.debug("excelExportOut started"); 
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		StringBuilder resultExcel = new StringBuilder(); 
@@ -5016,6 +5516,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		resultExcel.append("</table>");
 		
 		response.getWriter().write(resultExcel.toString());
+		
+		logger.debug("excelExportOut ended"); 
 	}
 	
 	/**
@@ -5024,6 +5526,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getGamSaSearchDocList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getGamSaSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getGamSaSearchDocList started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -5067,6 +5571,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
         String result = ezApprovalGService.getGamSaSearchDocList(containerID, userID, deptID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY,
         		draftToYEAR, draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY,
         		myApprToYEAR, myApprToMONTH, myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo);
+       
+        logger.debug("getGamSaSearchDocList ended");
         
 		return result;
 	}
@@ -5076,9 +5582,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/taskManage.do")
 	public String taskManage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("taskManage started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("taskManage ended");
 		
 		return "ezApprovalG/apprGtaskManage";
 	}
@@ -5088,9 +5597,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/cabTransfer.do")
 	public String cabTransfer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("cabTransfer started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("cabTransfer ended");
 		
 		return "ezApprovalG/apprGcabTransfer";
 	}
@@ -5100,6 +5612,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/selectTask.do")
 	public String selectTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("selectTask started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String initFlag = "";
@@ -5124,6 +5638,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("initFlag", initFlag);
 		model.addAttribute("multiSelect", multiSelect);
 		
+		logger.debug("selectTask ended");
+		
 		return "ezApprovalG/apprGselectTask";
 	}
 
@@ -5132,9 +5648,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/selectDept.do")
 	public String selectDept(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("selectDept started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("selectDept ended");
 		
 		return "ezApprovalG/apprGselectDept";
 	}
@@ -5145,10 +5664,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getUncompleteDocCount.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getUncompleteDocCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getUncompleteDocCount started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String cabinetID = request.getParameter("cabinetID");
 		String result = ezApprovalGService.getUncompleteDocCount(userInfo.getDeptID(), userInfo.getCompanyID(), cabinetID, userInfo.getTenantId());
+		
+		logger.debug("getUncompleteDocCount ended");
 		
 		return result;
 	}
@@ -5159,11 +5682,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/transferCab.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String transferCab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-
-		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		logger.debug("transferCab started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.transferCabinet(xmlDom, userInfo.getTenantId());
+		
+		logger.debug("transferCab ended");
 		
 		return result;
 	}
@@ -5173,6 +5698,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/adminPage.do")
 	public String adminPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Locale locale, Model model) throws Exception{
+		logger.debug("adminPage started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String initFlag = request.getParameter("initFlag");
@@ -5213,6 +5740,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("initFlag", initFlag);
 		model.addAttribute("userInfo", userInfo);
 		
+		logger.debug("adminPage ended");
+		
 		return "ezApprovalG/apprGadminPage";
 	}
 	
@@ -5221,9 +5750,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/selectCabinetInTask.do")
 	public String selectCabinetInTask(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) {
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("gongRamUpdate started");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("gongRamUpdate ended");
 		
 		return "ezApprovalG/apprGselectCabinetInTask";
 	}
@@ -5234,12 +5766,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/gongRamUpdate.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String gongRamUpdate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("gongRamUpdate started");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
 		String userID = request.getParameter("userID");
 		String result = ezApprovalGService.gongRamUpdate(docID, userID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-				
+		
+		logger.debug("gongRamUpdate ended");	
+		
 		return result;
 	}
 	
@@ -5249,6 +5785,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/delayCabEndY.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String delayCabEndY(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
+		logger.debug("delayCabEndY started");
+		
 	    userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		String companyID = request.getParameter("companyID");
@@ -5257,6 +5795,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String cabClassList = request.getParameter("cabClassList");
 		
 		String result = ezApprovalGService.delayCabEndY(deptCode, flag, cabClassList, companyID, userInfo.getTenantId());
+		
+		logger.debug("delayCabEndY ended");
 		
 		return result;
 	}
