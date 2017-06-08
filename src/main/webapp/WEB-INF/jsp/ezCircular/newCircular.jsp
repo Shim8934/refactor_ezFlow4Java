@@ -478,19 +478,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-	            
-	        	/* url = "/ezCircular/circularRead.do?cmd=mod&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
-                OpenWin.focus(); */
-                
 				circularId = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
@@ -609,8 +604,8 @@
 	        var writeboardselect_modal_dialogArguments = new Array();
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1"+feature);
+	        	url = "/ezCircular/circularWrite.do";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
                 OpenWin.focus();     
 	        }
 	

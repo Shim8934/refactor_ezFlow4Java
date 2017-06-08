@@ -648,4 +648,38 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return ezCircularDAO.getCircularTempMapList(map);
 	}
+
+	@Override
+	public int getMyCircularListCount(String memberID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberId", memberID);
+		map.put("tenantId", tenantID);
+		
+		return ezCircularDAO.getMyCircularListCount(map);
+	}
+
+	@Override
+	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberId", memberID);
+		map.put("limit", startRow-1);
+		map.put("rowCount", endRow-(startRow-1));
+		map.put("tenantId", tenantID);
+		
+		return ezCircularDAO.getMyCircularList(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberId", memberID);
+		map.put("limit", startRow-1);
+		map.put("rowCount", endRow-(startRow-1));
+		map.put("tenantId", tenantID);
+		
+		return ezCircularDAO.getMyCircularMapList(map);
+	}
 }

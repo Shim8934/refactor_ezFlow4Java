@@ -175,14 +175,13 @@
 	        }
 	
 	        var xmlhttp = createXMLHttpRequest();
-	        function getBoardList() {
+	/*         function getBoardList() {
 		        starttime = new Date().getTime();
 		        if (SQLPARADATA != ""){
 		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
 		        else{
-		        	//url = "/ezBoard/getBoardList.do";
-		        	url = "/ezCircular/getCircularList.do";
+		        	url = "/ezCircular/getMyCircularList.do";
 		        }
 		        $.ajax({
 					type : "POST",
@@ -199,7 +198,7 @@
 						getBoardList_after(loadXMLString(xml));
 					}     			
 				});
-	        }
+	        } */
 	
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
@@ -208,15 +207,6 @@
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 	                
-	                
-	/*                 pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
-	
-	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
-	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
-	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); */
-	                
-	
 	                pPreviewShow_HOW = "${config.isPreview}";
 
 	                switch (parseInt("${config.isPreview}")) {
@@ -474,34 +464,28 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-	            
-	        	/* url = "/ezCircular/circularRead.do?cmd=mod&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
-                OpenWin.focus(); */
-                
 				var circularId = obj.getAttribute("CIRCULARID");
 
-                if (CrossYN()) {
+				if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=&ownerID=&type=&startDate=&endDate&brdName=&circularID="+circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
-                $.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCircular/confirmStatus.do",
-					data : { circularId 	: circularId 
-							},
-					success: function(xml){
+//                 $.ajax({
+// 					type : "POST",
+// 					dataType : "text",
+// 					async : false,
+// 					url : "/ezCircular/confirmStatus.do",
+// 					data : { circularId 	: circularId 
+// 							},
+// 					success: function(xml){
 						
-					}     			
-				});
-                
+// 					}     			
+// 				});
 	        }
 		
 		    function event_HeaderCheckBoxClick(obj) {
@@ -604,8 +588,8 @@
 	        var writeboardselect_modal_dialogArguments = new Array();
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1"+feature);
+	        	url = "/ezCircular/circularWrite.do";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
                 OpenWin.focus();     
 	        }
 	

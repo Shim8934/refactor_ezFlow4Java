@@ -89,4 +89,10 @@ public interface EzCircularService {
 
 	public void circularConfirmStatus(String[] circularIDList, String memberID, int tenantID) throws Exception;
 
+	public int getMyCircularListCount(String memberID, int tenantId) throws Exception;
+
+	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
+
+	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
+
 }

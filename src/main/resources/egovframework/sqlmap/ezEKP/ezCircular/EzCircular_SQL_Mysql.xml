@@ -446,6 +446,71 @@
         ]]>
     </select>
     
+<!--     <select id="EzCircularDAO.getMyCircularListCount" parameterClass="Map" resultClass="Integer" > -->
+<!--         <![CDATA[ -->
+<!--             SELECT -->
+<!--                 COUNT(A.CIRCULARID) CNT -->
+<!--             FROM -->
+<!--                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B -->
+<!--             WHERE -->
+<!--                 A.CIRCULARID = B.CIRCULARID -->
+<!--             AND -->
+<!--                 A.TENANTID = B.TENANTID -->
+<!--             AND -->
+<!--             	A.STATUS IN ('0', '1') -->
+<!--             AND -->
+<!--                 B.MEMBERID = #memberId# -->
+<!--             AND -->
+<!--                 A.TENANTID = #tenantId#      -->
+<!--         ]]> -->
+<!--     </select> -->
+    
+<!--     <select id="EzCircularDAO.getMyCircularList" resultClass="CircularListVO" > -->
+<!--         <![CDATA[ -->
+<!--             SELECT -->
+<!--                 A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE, B.UPDATESTATUS -->
+<!--             FROM -->
+<!--                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B -->
+<!--             WHERE -->
+<!--                 A.CIRCULARID = B.CIRCULARID -->
+<!--             AND -->
+<!--                 A.TENANTID = B.TENANTID -->
+<!--             AND -->
+<!--                 B.MEMBERID = #memberId# -->
+<!--             AND -->
+<!--                 A.TENANTID = #tenantId# -->
+<!--             AND -->
+<!--             	A.STATUS IN ('0', '1') -->
+<!--             ORDER BY -->
+<!--             	A.REGDATE DESC -->
+<!--             LIMIT -->
+<!--                 #limit#, #rowCount#         -->
+<!--         ]]> -->
+<!--     </select> -->
+    
+<!--     <select id="EzCircularDAO.getMyCircularMapList" resultClass="HashMap" > -->
+<!--         <![CDATA[ -->
+<!--             SELECT -->
+<!--                 A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE -->
+<!--             FROM -->
+<!--                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B -->
+<!--             WHERE -->
+<!--                 A.CIRCULARID = B.CIRCULARID -->
+<!--             AND -->
+<!--                 A.TENANTID = B.TENANTID -->
+<!--             AND -->
+<!--                 B.MEMBERID = #memberId# -->
+<!--             AND -->
+<!--                 A.TENANTID = #tenantId# -->
+<!--             AND -->
+<!--             	A.STATUS IN ('0', '1') -->
+<!--             ORDER BY -->
+<!--             	A.REGDATE DESC -->
+<!--             LIMIT -->
+<!--                 #limit#, #rowCount# -->
+<!--         ]]> -->
+<!--     </select> -->
+    
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO 
