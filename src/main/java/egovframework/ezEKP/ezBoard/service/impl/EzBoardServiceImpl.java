@@ -208,6 +208,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
 		map.put("v_PSTRLANG", ezBoardVO.getLang());
 		map.put("v_TENANTID", ezBoardVO.getTenantID());

@@ -13,18 +13,26 @@ import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 
 public interface EzCircularService {
 	
-	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
-	
-	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
-	
 	public List<HashMap<String, Object>> getCircularMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 	
 	public List<HashMap<String, Object>> getSearchCircularMapList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
+	
+	public List<HashMap<String, Object>> getCircularCompleteMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+
+	public List<HashMap<String, Object>> getCircularTempMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+
+	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+	
+	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
+
+	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 	
 	public List<CircularListVO> getCircularUserList(int circularID, int tenantID) throws Exception;
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	
+	public List<CircularListVO> getCircularTempList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+
 	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception;
 	
 	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception;
@@ -49,6 +57,10 @@ public interface EzCircularService {
 	
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception;
 	
+	public int getCircularCompleteListCount(String memberID, int tenantID) throws Exception;
+	
+	public int getCircularTempListCount(String memberID, int tenantId) throws Exception;
+	
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
@@ -65,7 +77,7 @@ public interface EzCircularService {
 	
 	public void confirmStatus(int circularID, String memberID, int tenantID) throws Exception;
 	
-	public void deleteCircular(int circularID,int tenantID) throws Exception;
+	public void circularDeleteItem(String[] circularIDList,int tenantID) throws Exception;
 	
 	public void deleteCircularUser(int circularID,int tenantID) throws Exception;
 
@@ -74,5 +86,13 @@ public interface EzCircularService {
 	public void circularDeptDel(String[] deleteList, int tenantId) throws Exception;
 
 	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, int circularBMId) throws Exception;
-	
+
+	public void circularConfirmStatus(String[] circularIDList, String memberID, int tenantID) throws Exception;
+
+	public int getMyCircularListCount(String memberID, int tenantId) throws Exception;
+
+	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
+
+	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
+
 }

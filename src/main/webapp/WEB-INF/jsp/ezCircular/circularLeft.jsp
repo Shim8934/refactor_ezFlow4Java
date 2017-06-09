@@ -216,12 +216,14 @@
 	            feature = feature + GetShowModalPosition(480, 265);
 	            window.showModalDialog("/myoffice/ezEmail/htm/mail_exportall.aspx", param, feature);
 	        }
-	        var mail_foldermanage_Cross_dialogArguments = new Array();
+	        
+	        /* var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
 	            var OpenWin = window.open("/ezEmail/mailFolderManage.do", "mail_foldermanage_Cross", GetOpenWindowfeature(500, 500));
 	            try { OpenWin.focus(); } catch (e) { }
-	        }
+	        } */
+	        
 	        function folder_manager_after(RtnVal) {
 	            if (RtnVal) {
 	                var href = PostTreeView.getvalue(1, "href");
@@ -445,6 +447,11 @@
 	        	}
 	        }
 	        
+	        function folder_Manage() {
+	        	var OpenWin = window.open("/ezCircular/circularFolderManage.do", "", GetOpenWindowfeature(500, 500));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+	        
 	        /* 2017-05-17 정수현 구현 */
 	        function newCircular() {                
 	        	window.parent.frames["right"].location.href = "/ezcircular/newCircular.do";
@@ -484,7 +491,7 @@
 				<li id="circularDoc"><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	        
 	            <div class="tree" style="height: 200px; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="PostTreeView"></div>
 	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
-	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
+	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="folder_Manage()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
 	        </ul>	        
 	        <h3><span onclick="circularConfig()" style="width:100%;display:inline-block;"><spring:message code="ezCircular.t10" /></span></h3>
 	    </div>

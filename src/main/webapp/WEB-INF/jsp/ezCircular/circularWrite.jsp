@@ -6,10 +6,9 @@
 	<head>
 		<title>회람작성</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
@@ -54,6 +53,16 @@
 	        	//회람저장 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
+				
+				if ($("#title").val() == "") {
+					alert("<spring:message code='ezCircular.t52'/>");
+					return;
+				}
+				
+				if ($("#receiverlist").text() == "") {
+	    			alert("<spring:message code='ezCircular.t53'/>")
+	    			return;
+	    		}
 				
 				//댓글기능 사용할때
 				$(':checkbox[id=optionRefly]:checked').each(function(){
@@ -102,6 +111,62 @@
 	             	  window.close();
 	                }
 	 			});
+	    	}
+	    	
+	    	function btn_TempSave() {
+	    		if (confirm("<spring:message code='ezCircular.t72'/>")) {
+		    		//회람저장 눌렀을 시
+		        	var content = message.GetEditorContent();
+					var option = 0;
+					
+					//댓글기능 사용할때
+					$(':checkbox[id=optionRefly]:checked').each(function(){
+						option = 0;	
+					});
+					
+					//메일공지 사용할때
+					$(':checkbox[id=optionMail]:checked').each(function(){
+						option = 1;	
+					});
+					
+					//댓글기능, 메일공지 둘 다 사용할 때
+					if ($(':checkbox[name=chkList]:checked').length == 2) {
+						option = 2;
+					}
+					
+					//파일 첨부된 목록 가져오기
+					var listtable = dadiframe.document.getElementById("filelist");
+					var filelist = GetChildNodes(listtable);
+					var fileList = "";
+					for (var i = 0; i < filelist.length - 1; i++) {	    
+						if (i == 0) {
+							fileList = GetAttribute(filelist[i + 1], "fileinfo");
+						} else {
+							fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+	            		}
+					}
+					
+		    		$.ajax ({
+		 			   	url : '/ezCircular/circularSaveTemp.do',
+		                type : 'POST',
+		                dataType : 'text',
+		                data : {	title : document.getElementById("title").value,
+		                			importance : document.getElementById("importance").value,
+		                			option : option,
+		                			receiverList : document.getElementById("receiverlist").innerHTML,
+		                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
+		                			receiverID : document.getElementById("receiverID").innerHTML,
+		                			content : content,
+		                			fileList : fileList
+		                },  
+		                cache: false,
+		                success: function(data) {	   
+		                  alert("<spring:message code='ezCircular.t73'/>");
+		                  window.opener.window_reload();
+		             	  window.close();
+		                }
+		 			});
+	    		}
 	    	}
 
 	    	function window_onUnload() {
@@ -153,8 +218,8 @@
       				<div id="menu">      
         				<ul>
 							<div id="menuTable1" >
-	          					<li><span onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
-	          					<li><span onClick="btn_Save()"> 임시보관</span></li>
+	          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
+	          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
 	          				</div>          
         				</ul>
       				</div>
@@ -170,7 +235,7 @@
         				</tr>
 						
 	        			<tr>
-	          				<th> 중요도</th>
+	          				<th>중요도</th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<select id="importance" class="select">
 	          						<option value="0" >일반</option>
@@ -179,7 +244,7 @@
 	          				</td>
 	        			</tr>
 				        <tr>
-	       					<th> 옵션</th>
+	       					<th>옵션</th>
 	       					<td style="width:160px" colspan="3">
 								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;댓글기능 사용&nbsp;&nbsp;
 								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;메일공지 사용   									

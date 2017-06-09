@@ -6,13 +6,13 @@
 	<head>
 		<title>BoardItemList</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<style>
@@ -98,20 +98,22 @@
 	
 	        };
 	        document.onselectstart = function () { return false; };
-	         window.onload = function () {
+	        
+         	window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
 	                document.body.style.khtmlUserSelect = 'none';
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
-	            }
-	            
-	            var height = parseInt(document.documentElement.clientHeight - 180);
-	            document.getElementById("divList").style.height = height + "px";
-	            window_onunload_Event = true;
-	            getBoardList();
-	        }; 
+            }
+            
+            var height = parseInt(document.documentElement.clientHeight - 180);
+            document.getElementById("divList").style.height = height + "px";
+            window_onunload_Event = true;
+            getBoardList();
+	        };
+	        
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
@@ -474,19 +476,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-	            
-	        	/* url = "/ezCircular/circularRead.do?cmd=mod&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
-                OpenWin.focus(); */
-                
 				var circularId = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=&ownerID=&type=&startDate=&endDate&brdName=&circularID="+circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
@@ -531,7 +528,7 @@
 		    }
 		
 		    function refresh_onclick() {
-		    	window.location.href = "/ezcircular/newCircular.do";
+// 		    	window.location.href = "/ezcircular/newCircular.do";
 		    }
 		
 		    function MemberInfo_onclick(pUserID) {
@@ -604,7 +601,7 @@
 	        var writeboardselect_modal_dialogArguments = new Array();
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
+	        	url = "/ezCircular/circularWrite.do";
 	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1"+feature);
                 OpenWin.focus();     
 	        }

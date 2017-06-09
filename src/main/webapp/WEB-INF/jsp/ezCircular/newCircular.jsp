@@ -6,7 +6,7 @@
 	<head>
 		<title>BoardItemList</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -174,11 +174,9 @@
 	        	
 		        starttime = new Date().getTime();
 		        if (keyword != ""){
-		       
 		        	url = "/ezCircular/getSearchCircularList.do";
 		        }
 		        else{
-		        	//url = "/ezBoard/getBoardList.do";
 		        	url = "/ezCircular/getCircularList.do";
 		        }
 		        $.ajax({
@@ -274,7 +272,9 @@
 	                DocList.DataSource(xmlDoc);
 	                DocList.DataBind("lvBoardList");
 	                DocList = null;
-	
+					
+	                strListInfo = "";
+	                
 	                var tempno = 0;
 	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 	                    if (CrossYN()) {
@@ -318,6 +318,16 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
+	        
+	        function chk_onselect(obj) {
+		        if (obj.checked) {
+		            strListInfo += obj.id;
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		        }
+		        
+		        listEventCheckbox = true;
+		    }
 	
 	        function makePageSelPage() {
 	            var strtext;
@@ -468,19 +478,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-	            
-	        	/* url = "/ezCircular/circularRead.do?cmd=mod&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
-                OpenWin.focus(); */
-                
-				var circularId = obj.getAttribute("CIRCULARID");
+				circularId = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=&ownerID=&type=&startDate=&endDate&brdName=&circularID="+circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
@@ -599,8 +604,8 @@
 	        var writeboardselect_modal_dialogArguments = new Array();
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1"+feature);
+	        	url = "/ezCircular/circularWrite.do";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
                 OpenWin.focus();     
 	        }
 	
@@ -608,12 +613,39 @@
 	            document.getElementById('txt_keyword').value = "";
 	        }
 	        
-	        function confirm_onclick() {
-	        	if () {
-	        		
+	        function Confirm_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
 	        	}
 	        	
-	        	alert("##" + "{list}")
+	        	var arrList = new Array();
+		        var strItemList = "";
+		        var i = 0;
+		        
+		        arrList = strListInfo.split(";");
+		        
+		        for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[1] + ";";
+		        }
+		        
+		        arrList = null;
+		        
+	        	if (confirm("<spring:message code='ezCircular.t68'/>")) {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularConfirmStatus.do",
+						data : { circularIDList : strItemList
+								},
+						success: function(){
+							alert("<spring:message code='ezCircular.t69'/>")
+						}        			
+					});
+
+		            location.href = location.href;
+	        	}	        	
 	        }
 	        
 	    </script>
@@ -675,8 +707,7 @@
 	
 	    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
 	        <div style="width:100%; overflow:AUTO;" id="divList">
-	             <div id="lvBoardList">
-	            </div> 
+	             <div id="lvBoardList"></div> 
 	        </div>
 	        <div id="tblPageRayer" style="text-align:center"></div>
 	    </span>

@@ -6,13 +6,13 @@
 	<head>
 		<title>BoardItemList</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<style>
@@ -181,8 +181,7 @@
 		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
 		        else{
-		        	//url = "/ezBoard/getBoardList.do";
-		        	url = "/ezCircular/getCircularList.do";
+		        	url = "/ezCircular/getCircularTempList.do";
 		        }
 		        $.ajax({
 					type : "POST",
@@ -207,28 +206,19 @@
 	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-	                
-	                
-	/*                 pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
-	
-	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
-	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
-	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); */
-	                
-	
+
 	                pPreviewShow_HOW = "${config.isPreview}";
 
 	                switch (parseInt("${config.isPreview}")) {
-					case 0:
-						pPreviewShow_HOW = "OFF";
-						break;
-					case 1:
-						pPreviewShow_HOW = "H";
-						break;
-					case 2:
-						pPreviewShow_HOW = "W";
-						break;
+						case 0:
+							pPreviewShow_HOW = "OFF";
+							break;
+						case 1:
+							pPreviewShow_HOW = "H";
+							break;
+						case 2:
+							pPreviewShow_HOW = "W";
+							break;
 					}
 	                
 	                pMailListDiv = "${config.previewListValue}";
@@ -239,13 +229,10 @@
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
-	                //var pstCnt = getNodeText(pntNode);
 	                var pstCnt = "${totalCount}";
 	                totalCount = lstCnt;
-	                //var perCnt = getNodeText(perNode);
 	                var perCnt = "${config.listCnt}";
-	
-	                //listcount.value = perCnt;
+
 	                listcount.value = "${config.listCnt}";
 
 	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
@@ -278,18 +265,7 @@
 	                DocList = null;
 	
 	                var tempno = 0;
-	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-	                    if (CrossYN()) {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                    else {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                } */
+	                
 	                tempno = tempno + "";
 	                
 	                if (tempno.length > 10) {
@@ -318,8 +294,7 @@
 	                endtime = new Date().getTime();
 	                strListInfo = "";
 	            }
-	        
-	
+
 	        var BlockSize = 10;
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -329,7 +304,6 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            /* document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]"; */
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
@@ -408,11 +382,13 @@
 	            makePageSelPage();
 	            movePage(CurPage);
 	        }
+	        
 	        function selbeforeBlock() {
 	            var pageNum = parseInt(CurPage);
 	            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
 	            goToPageByNum(pageNum);
 	        }
+	        
 	        function selbeforeBlock_one() {
 	            var pageNum = parseInt(CurPage);
 	            if (parseInt(pageNum - 1) > 0)
@@ -420,11 +396,13 @@
 	            else
 	                return;
 	        }
+	        
 	        function selafterBlock() {
 	            var pageNum = parseInt(CurPage);
 	            pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
 	            goToPageByNum(pageNum);
 	        }
+	        
 	        function selafterBlock_one() {
 	            var pageNum = parseInt(CurPage);
 	            if (parseInt(pageNum + 1) <= totalPage)
@@ -474,33 +452,28 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-	            
-	        	/* url = "/ezCircular/circularRead.do?cmd=mod&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=1");
-                OpenWin.focus(); */
-                
 				var circularId = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=&ownerID=&type=&startDate=&endDate&brdName=&circularID="+circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
-                $.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCircular/confirmStatus.do",
-					data : { circularId 	: circularId 
-							},
-					success: function(xml){
+//                 $.ajax({
+// 					type : "POST",
+// 					dataType : "text",
+// 					async : false,
+// 					url : "/ezCircular/confirmStatus.do",
+// 					data : { circularId 	: circularId 
+// 							},
+// 					success: function(xml){
 						
-					}     			
-				});
+// 					}     			
+// 				});
                 
 	        }
 		
@@ -531,7 +504,7 @@
 		    }
 		
 		    function refresh_onclick() {
-		    	window.location.href = "/ezcircular/newCircular.do";
+		    	window.location.href = "/ezCircular/circularTemp.do";
 		    }
 		
 		    function MemberInfo_onclick(pUserID) {
@@ -604,14 +577,52 @@
 	        var writeboardselect_modal_dialogArguments = new Array();
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=&brdName=";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1"+feature);
+	        	url = "/ezCircular/circularWrite.do";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
                 OpenWin.focus();     
 	        }
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
-	        } 
+	        }
+	        
+	        function Delete_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+	        	
+	        	if(confirm("<spring:message code='ezCircular.t74'/>")) {
+		        	var arrList = new Array();
+			        var circularIDList = "";
+			        var i = 0;
+			        
+			        arrList = strListInfo.split(";");
+			        
+			        for (i = 0; i < arrList.length - 1; i++) {
+			        	circularIDList += arrList[i].split(",")[1] + ";";
+			        }
+			        
+			        arrList = null;
+			        
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularDeleteItem.do",
+						data : { circularIDList : circularIDList
+								},
+						success: function() {
+							alert("<spring:message code='ezCircular.t77'/>");
+						},
+						error: function() {
+							alert("삭제실패");
+						}
+					});
+
+		            location.href = location.href;
+	        	}	
+	        }
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;">
@@ -624,7 +635,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t58'/></span></li>
+	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t58'/></span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>

@@ -39,6 +39,8 @@
 	        	document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
 	        }
 			
+	        window.onunload = window_onUnload;
+	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
 		    	var circularID = "${result.circularId}";
@@ -78,6 +80,7 @@
 	        }
 
 	        function window_onUnload() {
+	        	window.opener.window_reload();
 	        }
 	        
 	        //인쇄버튼 클릭시
@@ -160,9 +163,9 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                        	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li>
-                        	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
-                        	<li><span>회람종료</span></li>
+<!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
+<!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
+<!--                         	<li><span>회람종료</span></li> -->
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -193,16 +196,16 @@
 		            		<td colspan="3" style="width: 100%">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="display_time_Unshow()" />메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="option" onClick="display_time_Unshow()" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" checked onClick="display_time_Unshow()" />댓글기능 사용
-										<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" />메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>
@@ -214,7 +217,17 @@
 		        		<tr>
 		            		<th>상태</th>
 		            		<td colspan="3">
-		                		<div id="titleDIV">${result.status == '0' ? '진행중' : '종료'}</div>
+		            			<c:choose>
+			            			<c:when test="${result.option eq '0'}">
+			            				<div id="status">진행중</div>
+			            			</c:when>
+			            			<c:when test="${result.option eq '1'}">
+			            				<div id="status">종료</div>
+			            			</c:when>
+			            			<c:otherwise>
+			            				<div id="status">임시</div>
+			            			</c:otherwise>
+		                		</c:choose>
 		            		</td>
 		        		</tr>
 	        			<tr style="height:100%">

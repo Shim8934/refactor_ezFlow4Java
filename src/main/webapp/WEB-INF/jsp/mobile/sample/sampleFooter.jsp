@@ -9,7 +9,7 @@
 		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />    	
 	</head>
 	<body>
-		<footer data-role="footer" data-position="fixed" data-theme="a">			
+		<footer data-role="footer" data-position="fixed" data-theme="a">				
 			<div class="ui-navbar" role="navigation" data-role="navbar">
 				<ul class="ui-grid-a">
 					<li class="ui-block-a"><a class="ui-btn" href="javascript:goHome();"><i class="fa fa-home" style="font-size:24px"></i></a></li>

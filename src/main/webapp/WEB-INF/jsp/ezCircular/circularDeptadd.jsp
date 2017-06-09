@@ -30,12 +30,12 @@
 	    	}	
 	    
 	    	function save_info() {
-	    		if ($("#title").val().length < 1) {
-	    			alert("<spring:message code='ezCircular.t52'/>")
-	    			return;
-	    		}
-	    		
-	    		if (g_attendant == null) {
+	    		if ($("#title").val() == "") {
+					alert("<spring:message code='ezCircular.t52'/>");
+					return;
+				}
+				
+				if ($("#receiverlist").text() == "") {
 	    			alert("<spring:message code='ezCircular.t53'/>")
 	    			return;
 	    		}
