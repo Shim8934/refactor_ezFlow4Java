@@ -320,7 +320,7 @@
 						var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 						Tree_setconfig();
 		            } else {
-		            	alert("<spring:message code = 'ezApprovalG.t722' />");
+		            	alert("<spring:message code = 'ezApproval.t722' />");
 		            }
 		        }
 		    }

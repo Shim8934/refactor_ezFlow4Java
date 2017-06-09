@@ -150,7 +150,7 @@ function getExtInfo()
 				SignText = SignText + strLang171;
 				if (OpinionText == "")
 				{
-					OpinionText = "<P>[" + strLang172 + "</P>";
+					OpinionText = "<P>[" + strLang171 + "]</P>";
 				}
 				OpinionText = OpinionText + "<P>" + strLang26 + "&nbsp;&nbsp;&nbsp;";
 				OpinionText = OpinionText + SignPosition + "&nbsp;&nbsp;&nbsp;";  
