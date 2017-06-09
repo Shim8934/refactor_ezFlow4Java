@@ -6,6 +6,7 @@ import java.util.Map;
 
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -95,4 +96,7 @@ public interface EzCircularService {
 
 	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
 
+	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
+
+	public void circularClose(String[] circularIDList, int tenantId) throws Exception;
 }

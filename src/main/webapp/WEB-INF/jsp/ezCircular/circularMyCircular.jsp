@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<style>
@@ -175,7 +175,7 @@
 	        }
 	
 	        var xmlhttp = createXMLHttpRequest();
-	/*         function getBoardList() {
+	        function getBoardList() {
 		        starttime = new Date().getTime();
 		        if (SQLPARADATA != ""){
 		        	url = "/ezBoard/getSearchBoardList.do";
@@ -198,7 +198,7 @@
 						getBoardList_after(loadXMLString(xml));
 					}     			
 				});
-	        } */
+	        }
 	
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
@@ -314,6 +314,16 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
+	        
+	        function chk_onselect(obj) {
+		        if (obj.checked) {
+		            strListInfo += obj.id;
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		        }
+		        
+		        listEventCheckbox = true;
+		    }
 	
 	        function makePageSelPage() {
 	            var strtext;
@@ -514,9 +524,9 @@
 		        return (orgStr.replace(re, replaceStr));
 		    }
 		
-		    function refresh_onclick() {
-		    	window.location.href = "/ezcircular/newCircular.do";
-		    }
+// 		    function refresh_onclick() {
+// 		    	window.location.href = "/ezcircular/newCircular.do";
+// 		    }
 		
 		    function MemberInfo_onclick(pUserID) {
 		        if (gubun == "2") return;
@@ -549,7 +559,6 @@
 		
 	        function search(type) {
 	            if (type == "basic") {
-	
 	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
 	                    alert("<spring:message code='ezBoard.t192'/>");
 	                    return;
@@ -584,13 +593,85 @@
 	                search("quick");
 	            }
 	        }
-	
-	        var writeboardselect_modal_dialogArguments = new Array();
+
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
 	        	url = "/ezCircular/circularWrite.do";
 	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
                 OpenWin.focus();     
+	        }
+	        
+	        function CircularClose_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+	        	
+	        	var arrList = new Array();
+		        var strItemList = "";
+		        var i = 0;
+		        
+		        arrList = strListInfo.split(";");
+		        
+		        for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[1] + ";";
+		        }
+		        
+		        arrList = null;
+	        	
+	        	if (confirm("회람을 종료하시겠습니까?")) {
+		        	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularClose.do",
+						data : { circularIDList : strItemList
+								},
+						success: function(xml){
+							alert("회람이 종료되었습니다.");
+						}
+		        	});	
+	        	
+		        	location.href = location.href;
+	        	}
+	        }
+	        
+	        function CircularDelete_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+	        	
+	        	if(confirm("<spring:message code='ezCircular.t74'/>")) {
+		        	var arrList = new Array();
+			        var circularIDList = "";
+			        var i = 0;
+			        
+			        arrList = strListInfo.split(";");
+			        
+			        for (i = 0; i < arrList.length - 1; i++) {
+			        	circularIDList += arrList[i].split(",")[1] + ";";
+			        }
+			        
+			        arrList = null;
+			        
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularDeleteItem.do",
+						data : { circularIDList : circularIDList
+								},
+						success: function() {
+							alert("<spring:message code='ezCircular.t77'/>");
+						},
+						error: function() {
+							alert("삭제실패");
+						}
+					});
+
+		            location.href = location.href;
+	        	}
 	        }
 	
 	        function keyword_Clear() {
@@ -608,8 +689,8 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t57'/></span></li>
-	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t58'/></span></li>
+	            <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
+	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t58'/></span></li>
 	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>

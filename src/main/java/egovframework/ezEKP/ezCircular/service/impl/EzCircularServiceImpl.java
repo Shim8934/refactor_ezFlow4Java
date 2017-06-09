@@ -16,6 +16,7 @@ import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
@@ -681,5 +682,27 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantID);
 		
 		return ezCircularDAO.getMyCircularMapList(map);
+	}
+
+	@Override
+	public List<CircularFolderVO> getTopFolder(String memberId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberId", memberId);
+		map.put("tenantId", tenantId);
+		
+		return ezCircularDAO.getTopFolder(map);
+	}
+
+	@Override
+	public void circularClose(String[] circularIDList, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		for (int i=0; i<circularIDList.length; i++) {
+			map.put("circularID", circularIDList[i]);
+			map.put("tenantID", tenantID);
+
+			ezCircularDAO.circularClose(map);
+		}
 	}
 }

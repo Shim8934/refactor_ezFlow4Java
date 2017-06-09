@@ -5,13 +5,12 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,15 +30,16 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
+import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
+import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.let.user.login.service.LoginService;
@@ -117,139 +117,166 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("circularLeft started.");
 		
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String password  = userInfo.get(1);
+//		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+//		String password  = userInfo.get(1);
+//		
+//		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+//		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+//		String userEmail = loginInfo.getId() + "@" + domainName;
+//		logger.debug("userEmail=" + userEmail);
+//		
+//		LoginVO user = commonUtil.userInfo(loginCookie);
+//		
+//		StringBuilder rootFolderXML = new StringBuilder();
+//		StringBuilder rootAddressXML = new StringBuilder();
+//		
+//		IMAPAccess ia = null;
+//		try {
+//			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+//					userEmail, password, egovMessageSource, locale);
+//			List<Folder> rootMailFolderList = ia.getTopLevelFolders();
+//			
+//			for (int i=0,j=0; i<rootMailFolderList.size(); i++) {
+//				Folder folder = rootMailFolderList.get(i);
+//				
+//				String folderName = folder.getName();
+//				int folderUnreadMessageCount = folder.getUnreadMessageCount();
+//				
+//				rootFolderXML.append("<node imgidx='1'");
+//				
+//				if (folderUnreadMessageCount > 0) {
+//					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
+//						rootFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale) + "(" + folderUnreadMessageCount + ")'");
+//					} else {
+//						rootFolderXML.append(" caption='" + folderName + "(" + folderUnreadMessageCount + ")'");
+//					}
+//				} else {
+//					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
+//						rootFolderXML.append(" caption='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
+//					} else {
+//						rootFolderXML.append(" caption='" + folderName+"'");
+//					}
+//				}
+//				
+//				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
+//					rootFolderXML.append(" foldername='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
+//				} else {
+//					rootFolderXML.append(" foldername='" + folderName+"'");
+//				}
+//
+//				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
+//					rootFolderXML.append(" orgBoxName='0'");
+//					rootFolderXML.append(" fullcaption='_INBOX'"); //수정
+//				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))) {
+//					rootFolderXML.append(" orgBoxName='1'");
+//					rootFolderXML.append(" fullcaption='_SENT'"); //수정
+//				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))) {
+//					rootFolderXML.append(" orgBoxName='2'");
+//					rootFolderXML.append(" fullcaption='_DRAFT'"); //수정
+//				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))) {
+//					rootFolderXML.append(" orgBoxName='3'");
+//					rootFolderXML.append(" fullcaption='_DELETE'"); //수정
+//				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))) {
+//					rootFolderXML.append(" orgBoxName='4'");
+//					rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
+//				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))) {
+//					rootFolderXML.append(" orgBoxName='5'");
+//					rootFolderXML.append(" fullcaption='_JUNK'"); //수정
+//				} else {
+//					rootFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
+//					rootFolderXML.append(" fullcaption='_NONE'"); //수정
+//				}
+//
+//				rootFolderXML.append(" href='" + folder.getFullName() + "'"); //수정
+//				
+//				if (folder.list().length > 0) {
+//					rootFolderXML.append(" hassub='1'");
+//				}
+//				if (folderUnreadMessageCount > 0) {
+//					rootFolderXML.append(" style='font-weight:bold'");
+//				}
+//				
+//				rootFolderXML.append("></node>");
+//				
+//			}
+//		} catch (Exception e) {
+//			logger.error("Error get unread message count: " + e.getMessage());
+//			e.printStackTrace();
+//		} finally {
+//			if (ia != null) {
+//				ia.close();
+//			}
+//		}
+//		
+//		Map<String, String> map = ezAddressService.getTopFolderSubCount(loginInfo.getTenantId(), loginInfo.getId(), loginInfo.getDeptID(), loginInfo.getCompanyID());
+//		
+//		String pHasSub = "";
+//		String dHasSub = "";
+//		String cHasSub = "";
+//		
+//		if (map != null) {
+//			if (map.get("P") != null && !map.get("P").equals("0")) {
+//				pHasSub = "1";
+//			}
+//			if (map.get("D") != null && !map.get("D").equals("0")) {
+//				dHasSub = "1";
+//			}
+//			if (map.get("C") != null && !map.get("C").equals("0")) {
+//				cHasSub = "1";
+//			}
+//		}
+//		
+//		rootAddressXML.append("<tree>");
+//		rootAddressXML.append("<nodes>");
+//        String xmlFormat = "<node imgidx=\"%s\" caption=\"%s\" ownerid=\"%s\" type=\"%s\" folderid=\"%s\" changekey=\"%s\" hassub=\"%s\"></node>";
+//        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000038", locale), user.getId(), "P", "0", "", pHasSub));
+//        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000039", locale), user.getDeptID(), "D", "0", "", dHasSub));
+//        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000040", locale), user.getCompanyID(), "C", "0", "", cHasSub));
+//        rootAddressXML.append("</nodes>");
+//        rootAddressXML.append("</tree>");
+//        
+//		String mailServerAddress = config.getProperty("config.MailServerAddress");
+//		
+//		String funCode = "1";
+//		if (request.getParameter("funCode") != null) {
+//			funCode = request.getParameter("funCode");
+//		}
+//		
+//		model.addAttribute("mailServerAddress", mailServerAddress);
+//		model.addAttribute("rootFolderXML", rootFolderXML.toString());
+//		model.addAttribute("rootAddressXML", rootAddressXML.toString());
+//		model.addAttribute("funCode", funCode);
 		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
-		String userEmail = loginInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
 		
-		LoginVO user = commonUtil.userInfo(loginCookie);
-		
-		StringBuilder rootFolderXML = new StringBuilder();
-		StringBuilder rootAddressXML = new StringBuilder();
-		
-		IMAPAccess ia = null;
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-			List<Folder> rootMailFolderList = ia.getTopLevelFolders();
-			
-			for (int i=0,j=0; i<rootMailFolderList.size(); i++) {
-				Folder folder = rootMailFolderList.get(i);
-				
-				String folderName = folder.getName();
-				int folderUnreadMessageCount = folder.getUnreadMessageCount();
-				
-				rootFolderXML.append("<node imgidx='1'");
-				
-				if (folderUnreadMessageCount > 0) {
-					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-						rootFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale) + "(" + folderUnreadMessageCount + ")'");
-					} else {
-						rootFolderXML.append(" caption='" + folderName + "(" + folderUnreadMessageCount + ")'");
-					}
-				} else {
-					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-						rootFolderXML.append(" caption='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
-					} else {
-						rootFolderXML.append(" caption='" + folderName+"'");
-					}
-				}
-				
-				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-					rootFolderXML.append(" foldername='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
-				} else {
-					rootFolderXML.append(" foldername='" + folderName+"'");
-				}
-
-				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-					rootFolderXML.append(" orgBoxName='0'");
-					rootFolderXML.append(" fullcaption='_INBOX'"); //수정
-				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))) {
-					rootFolderXML.append(" orgBoxName='1'");
-					rootFolderXML.append(" fullcaption='_SENT'"); //수정
-				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))) {
-					rootFolderXML.append(" orgBoxName='2'");
-					rootFolderXML.append(" fullcaption='_DRAFT'"); //수정
-				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))) {
-					rootFolderXML.append(" orgBoxName='3'");
-					rootFolderXML.append(" fullcaption='_DELETE'"); //수정
-				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))) {
-					rootFolderXML.append(" orgBoxName='4'");
-					rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
-				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))) {
-					rootFolderXML.append(" orgBoxName='5'");
-					rootFolderXML.append(" fullcaption='_JUNK'"); //수정
-				} else {
-					rootFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
-					rootFolderXML.append(" fullcaption='_NONE'"); //수정
-				}
-
-				rootFolderXML.append(" href='" + folder.getFullName() + "'"); //수정
-				
-				if (folder.list().length > 0) {
-					rootFolderXML.append(" hassub='1'");
-				}
-				if (folderUnreadMessageCount > 0) {
-					rootFolderXML.append(" style='font-weight:bold'");
-				}
-				
-				rootFolderXML.append("></node>");
-				
-			}
-		} catch (Exception e) {
-			logger.error("Error get unread message count: " + e.getMessage());
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
-		
-		Map<String, String> map = ezAddressService.getTopFolderSubCount(loginInfo.getTenantId(), loginInfo.getId(), loginInfo.getDeptID(), loginInfo.getCompanyID());
-		
-		String pHasSub = "";
-		String dHasSub = "";
-		String cHasSub = "";
-		
-		if (map != null) {
-			if (map.get("P") != null && !map.get("P").equals("0")) {
-				pHasSub = "1";
-			}
-			if (map.get("D") != null && !map.get("D").equals("0")) {
-				dHasSub = "1";
-			}
-			if (map.get("C") != null && !map.get("C").equals("0")) {
-				cHasSub = "1";
-			}
-		}
-		
-		rootAddressXML.append("<tree>");
-		rootAddressXML.append("<nodes>");
-        String xmlFormat = "<node imgidx=\"%s\" caption=\"%s\" ownerid=\"%s\" type=\"%s\" folderid=\"%s\" changekey=\"%s\" hassub=\"%s\"></node>";
-        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000038", locale), user.getId(), "P", "0", "", pHasSub));
-        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000039", locale), user.getDeptID(), "D", "0", "", dHasSub));
-        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000040", locale), user.getCompanyID(), "C", "0", "", cHasSub));
-        rootAddressXML.append("</nodes>");
-        rootAddressXML.append("</tree>");
-        
-		String mailServerAddress = config.getProperty("config.MailServerAddress");
-		
-		String funCode = "1";
-		if (request.getParameter("funCode") != null) {
-			funCode = request.getParameter("funCode");
-		}
-		
-		model.addAttribute("mailServerAddress", mailServerAddress);
-		model.addAttribute("rootFolderXML", rootFolderXML.toString());
-		model.addAttribute("rootAddressXML", rootAddressXML.toString());
-		model.addAttribute("funCode", funCode);
 		
 		logger.debug("circularLeft ended.");
 
 		return "/ezCircular/circularLeft";
+	}
+	
+	/**
+	 * 회람문서함 상위폴더 호출 함수
+	 */
+	@RequestMapping(value = "/ezCircular/getTopFolder.do")
+	@ResponseBody
+	public String getTopFolder(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("getTopFolder started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String parentBoardID = request.getParameter("boardType");
+		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId());
+
+		for (int i=0; i<list.size(); i++) {
+			System.out.println("#" + list.get(i).getCircularFolderName());
+			System.out.println("#" + list.get(i).getMemberId());
+		}
+		
+		model.addAttribute("topBoardList", list);
+		
+		logger.debug("getTopFolder ended");
+		
+		return "json";
 	}
 	
 	/**
@@ -376,9 +403,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (page - 1)) + 1;
         endRow = (personalCount * page);
 		
-        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
 		
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
@@ -1553,8 +1580,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		circularDeptVO.setRegDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		circularDeptVO.setTenantId(userInfo.getTenantId());
 		
-		String[] memberListStr = request.getParameterValues("memberListStr");
-		
+		String[] memberListStr = request.getParameterValues("memberListStr[]");
+
 		if (circularBMId != 0) {
 			ezCircularService.update_circularDept(circularDeptVO, memberListStr, circularBMId);
 		} else {
@@ -1872,5 +1899,23 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularInputName ended");
 		
 		return "/ezCircular/circularInputName";
+	}
+	
+	/**
+	 * 회람판 환경설정 저장 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularClose.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void circularClose(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
+		
+		logger.debug("circularClose started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String[] circularIDList = request.getParameter("circularIDList").split(";");
+		
+		ezCircularService.circularClose(circularIDList, userInfo.getTenantId());
+		
+		logger.debug("circularClose ended");
 	}
 }
