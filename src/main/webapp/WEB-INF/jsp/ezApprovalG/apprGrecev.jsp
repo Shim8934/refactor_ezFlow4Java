@@ -748,27 +748,6 @@
 				}
 			}
 			
-			//회송
-			function btnReturn_onclick() 
-			{
-				var parameter = new Array();
-			    parameter[0]	= pDocID;
-			    parameter[1]  = "HeSong";
-			    parameter[2]  = KuyjeType;
-				parameter[3]  = ""; 
-			
-				var url			= "/myoffice/ezApprovalG/ezAPROPINION/AprOpinion_Cross.aspx";
-				var feature = "status:no;dialogWidth:530px;dialogHeight:520px;help:no;edge:sunken;scroll:no";
-				
-				feature =  feature + GetShowModalPosition(530, 520);
-				var ret = window.showModalDialog(url,parameter,feature);
-				if(ret != "cancel")
-				{
-					setButtonReceiveTrue();
-					setHeSongDocInfo();
-				}
-			}
-			
 			function btnMail_onclick()
 			{
 			}

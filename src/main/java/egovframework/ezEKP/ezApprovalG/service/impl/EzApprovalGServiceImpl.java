@@ -2523,6 +2523,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset, String reDraftFlag) throws Exception {
+		logger.debug("getAprLineInfo started.");
+		logger.debug("docID = " + docID + " || userID = " + userID + " || formID = " + formID + " || reDraftFlag = " + reDraftFlag + " || lang = " + lang + " || offset = " + offset);
+		
 		StringBuilder resultXML = new StringBuilder();
 		String listString = getListHeader("013", companyID, lang, tenantID);
 		
@@ -2610,6 +2613,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("</ROWS>");
 		resultXML.append("</LISTVIEWDATA>");
+		
+		logger.debug("getAprLineInfo ended.");
 		
 		return resultXML.toString();
 	}
@@ -8594,20 +8599,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_DOCID", docID);
-		map.put("v_USERID", userID);
-		map.put("v_INGFLAG", ingFlag.trim().toUpperCase());
-		map.put("companyID", companyID);
-		map.put("v_TENANTID", tenantID);
-		
-		int result = ezApprovalGDAO.getOpinionCount(map);
-		
-		return String.valueOf(result);
-	}
-
-	@Override
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
 			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception{
 		boolean addFlag = true;
@@ -10805,6 +10796,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getMaxTMPDocSN(String userID, String companyID, String lang, int tenantID) throws Exception{
+		logger.debug("getMapTMPDocSN started.");
+		logger.debug("userID = " + userID + " || lang = " + lang + " || companyID = " + companyID + " || tenantID = " + tenantID);
+		
 		int maxCnt = 1;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -10813,6 +10807,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 
 		maxCnt = ezApprovalGDAO.getMaxTmpDocSN(map);
+		
+		logger.debug("getMapTMPDocSN ended. maxCnt = " + maxCnt);
 		
 		return String.valueOf(maxCnt);
 	}
@@ -16934,6 +16930,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String getAprLineInfoDB(String docID, String flag, String userID, String formID, String companyID, int tenantID) throws Exception {
 		logger.debug("getAprLineInfoDB started.");
+		logger.debug("docID = " + docID + " || flag = " + flag + " || userID = " + userID + " || formID = " + formID + " || companyID = " + companyID + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
