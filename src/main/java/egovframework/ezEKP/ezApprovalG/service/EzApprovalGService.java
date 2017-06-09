@@ -183,8 +183,6 @@ public interface EzApprovalGService {
 	public String chkAprLines(Document doc, String lang, LoginVO userInfo) throws Exception;
 	
 	public String chkDeptLines(Document doc, String companyID, String lang, LoginVO userInfo) throws Exception;
-
-	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
 			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception;

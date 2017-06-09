@@ -2998,29 +2998,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 전자결재G 의견개수 표출 Method
-	 */
-	@RequestMapping(value = "/ezApprovalG/getOpinionCount.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String getOpinionCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
-		logger.debug("getOpinionCount started");
-		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		String docID = request.getParameter("docID");
-		String userID = request.getParameter("userID");
-		String ingFlag = request.getParameter("chkFlag");
-		String result = ezApprovalGService.getOpinionCount(docID, userID, ingFlag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-		
-		result = "<RESULT>" + result + "</RESULT>";
-		
-		logger.debug("getOpinionCount result=" + result);
-		logger.debug("getOpinionCount ended");
-		
-		return result;
-	}
-	
-	/**
 	 * 전자결재G 파일저장 표출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/saveFile.do", produces = "text/xml;charset=utf-8")

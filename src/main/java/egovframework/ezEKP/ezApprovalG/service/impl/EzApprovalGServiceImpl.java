@@ -8599,20 +8599,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_DOCID", docID);
-		map.put("v_USERID", userID);
-		map.put("v_INGFLAG", ingFlag.trim().toUpperCase());
-		map.put("companyID", companyID);
-		map.put("v_TENANTID", tenantID);
-		
-		int result = ezApprovalGDAO.getOpinionCount(map);
-		
-		return String.valueOf(result);
-	}
-
-	@Override
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
 			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception{
 		boolean addFlag = true;

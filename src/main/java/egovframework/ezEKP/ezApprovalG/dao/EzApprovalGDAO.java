@@ -1026,10 +1026,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.getMaxTmpDocSN", map);
 	}
 	
-	public int getOpinionCount(Map<String, Object> map) throws Exception{
-		return (int)select("EzApprovalG.getOpinionCount", map);
-	}
-	
 	public int getReceiveDocListCount(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.getReceiveDocListCount", map);
 	}
