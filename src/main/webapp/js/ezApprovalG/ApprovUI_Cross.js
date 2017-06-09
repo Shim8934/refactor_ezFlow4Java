@@ -332,7 +332,7 @@ function AprrovMappingSign(ret) {
                         if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                             strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                         else {
-                        	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                         	signHeight = 28;
                         }
 
@@ -416,7 +416,7 @@ function AprrovMappingSign(ret) {
                         if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                             strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                         else {
-                        	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                         }
 
                         strimg = strimg + " width=" + signWidth;
@@ -534,7 +534,7 @@ function AprrovMappingSign(ret) {
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else
-                        strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -547,7 +547,7 @@ function AprrovMappingSign(ret) {
 
                     var contents = "";
                     if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-                        contents = strLang17;
+                        contents = strLang8;
 
                     SignName[signCnt] = signID;
                     SignType[signCnt] = "IMAGE";
@@ -628,7 +628,7 @@ function AprrovMappingSign(ret) {
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else {
-                    	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                    	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                     }
 
                     strimg = strimg + " width=" + signWidth;
