@@ -92,9 +92,7 @@ function AprrovMappingSign(ret) {
 
     var OpinionText = "";
     var PositionText = "";
-    if (getOpinionCount()) {
-        PositionText = "(" + strLang5 + "";
-    }
+    
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
         OpinionText = getSignDate() + "<br/>";
     }
@@ -3096,36 +3094,6 @@ function UpdateLineHistory() {
     }
 }
 
-function getOpinionCount() {
-    try {
-    	var result = "";
-        
-        $.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/getOpinionCount.do",
-    		data : {
-    			docID : pDocID,
-    			userID : arr_userinfo[1],
-    			chkFlag : "ING"
-    		},
-    		success: function(text){
-    			result = text;
-    		}        			
-    	});
-    	
-        var tempValue = parseInt(result);
-        if (tempValue > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    } catch (e) {
-        return false;
-    }
-}
 function setRecevInfo(ret) {
     var i;
     var strMailAdd = "";
