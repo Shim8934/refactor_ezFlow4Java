@@ -2345,69 +2345,6 @@ function SaveDraftDocInfo()
         }
     }
 
-    //기안자를 디폴트로 결재선에 등록한다.
-    function setFirstDrafter()
-    {
-        var pxml 
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        pxml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang106 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-        pxml = pxml + "<HEADER><NAME>" + strLang107 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-        pxml = pxml + "<HEADER><NAME>" + strLang108 + "</NAME><WIDTH>150</WIDTH></HEADER>";
-        pxml = pxml + "<HEADER><NAME>" + strLang38 + "</NAME><WIDTH>150</WIDTH></HEADER>";
-        pxml = pxml + "<HEADER><NAME>" + strLang109 + "</NAME><WIDTH>100</WIDTH></HEADER>";
-        pxml = pxml + "<HEADER><NAME>" + strLang110 + "</NAME><WIDTH>120</WIDTH></HEADER>";
-        pxml = pxml + "<HEADER><NAME>" + strLang111 + "</NAME><WIDTH>120</WIDTH></HEADER></HEADERS>";
-        pxml = pxml + "<ROWS><ROW><COLUMN>1</COLUMN>";
-        pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[2] + "]]></COLUMN>";
-        pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[3] + "]]></COLUMN>";
-        pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[5] + "]]></COLUMN>";
-	 
-        pxml = pxml + "<COLUMN>" + strLangAprType2 + "</COLUMN>";
-        pxml = pxml + "<COLUMN>" + strLangAprState2 + "</COLUMN>";
-        pxml = pxml + "<DATA name='ProcessDate'></DATA>";
-        pxml = pxml + "<DATA name='ReceivedDate'></DATA>";
-        pxml = pxml + "<DATA name='DocID'>" + pDocID + "</DATA>";
-        pxml = pxml + "<DATA name='AprMemberID'>" + arr_userinfo[1] + "</DATA>";
-        pxml = pxml + "<DATA name='AprmemberIsDeptYN'>N</DATA>";
-        pxml = pxml + "<DATA name='AprMemberDeptID'>" + arr_userinfo[4] + "</DATA>";
-        pxml = pxml + "<DATA name='ReasonDoNotApprov'>" + "" + "</DATA>";
-        pxml = pxml + "<DATA name='isProposerYN'>N</DATA>";
-        pxml = pxml + "<DATA name='isBriefUserYN'>N</DATA>";
-        //추가부분
-        pxml = pxml + "<DATA name='isCompanyID'>N</DATA>";
-        pxml = pxml + "<DATA name='AprType'>" + strAprType2 + "</DATA>";
-        pxml = pxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>";
-	
-        // 수정(2007.06.18) : multidata 기능추가 
-        pxml = pxml + "<DATA name='PMemberName'><![CDATA[" + arr_userinfo[11] + "]]></DATA>";		//primary usernm
-        pxml = pxml + "<DATA name='SMemberName'><![CDATA[" + arr_userinfo[12] + "]]></DATA>";		//secondary usernm
-        pxml = pxml + "<DATA name='PMemberDeptName'><![CDATA[" + arr_userinfo[15] + "]]></DATA>";	//primary deptname
-        pxml = pxml + "<DATA name='SMemberDeptName'><![CDATA[" + arr_userinfo[16] + "]]></DATA>";	//secondary deptname
-        pxml = pxml + "<DATA name='PMemberJobTitle'><![CDATA[" + arr_userinfo[13] + "]]></DATA>";	//primary title
-        pxml = pxml + "<DATA name='SMemberJobTitle'><![CDATA[" + arr_userinfo[14] + "]]></DATA>";	//secondary title
-	
-        pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>";
-        $.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/aprLineSave.do",
-    		data : {
-    				ret    : pxml
-    				},
-    		success : function(result){
-    			if (result == "TRUE") {
-    				LastSignSN = 1;
-                } else {
-                	var pAlertContent = strLang352;
-                    OpenAlertUI(pAlertContent);
-                }
-    		}
-    	});
-    }
-
     //문서번호 포멧 설정
     function setDocNumFormat(pPrefix)
     {
