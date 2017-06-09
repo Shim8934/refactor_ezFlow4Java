@@ -2303,54 +2303,6 @@ function SaveDraftDocInfo()
         }
     }
 
-
-    function setHeSongDocInfo()
-    {
-        try{
-        	var result = "";
-            var docState = "";
-            
-        	if (pAprState == strAprState15) {
-        		docState = "REACK";
-        	} else {
-        		docState = "RECEIVE";
-        	}
-        	
-            $.ajax({
-        		type : "POST",
-        		dataType : "text",
-        		async : false,
-        		url : "/ezApprovalG/setHeSongDocInfo.do",
-        		data : {
-        			docID : pDocID,
-        			receiveSN : pSusinSN,
-        			deptID  : arr_userinfo[4],
-        			docState : docState,
-        			userID : pUserID,
-        			userName : arr_userinfo[11],
-        			userName2 : arr_userinfo[12]
-        		},
-        		success: function(text){
-        			result = text;
-        		}, error: function() {
-        			var pAlertContent = strLang350;
-                    OpenAlertUI(pAlertContent);
-                    return false;
-        		}       			
-        	});
-            
-            if(result == "TRUE")
-            {
-            	  var pAlertContent = strLang35;
-                  OpenAlertUI(pAlertContent);
-                  return true;
-            }
-        }catch(e){
-            alert("setHeSongDocInfo :: " + e.description);
-            return true;
-        }
-    }
-
     var ezchkpasswd_cross_dialogArguments = new Array();
     function chk_Passwd()
     {
