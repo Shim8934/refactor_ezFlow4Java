@@ -486,18 +486,18 @@
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
-                //클릭했을때 그아이디에 해당하는 
-                $.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCircular/confirmStatus.do",
-					data : { circularId 	: circularId 
-							},
-					success: function(xml){
+//                 //클릭했을때 그아이디에 해당하는 
+//                 $.ajax({
+// 					type : "POST",
+// 					dataType : "text",
+// 					async : false,
+// 					url : "/ezCircular/confirmStatus.do",
+// 					data : { circularId 	: circularId 
+// 							},
+// 					success: function(xml){
 						
-					}     			
-				});
+// 					}     			
+// 				});
                 
 	        }
 		

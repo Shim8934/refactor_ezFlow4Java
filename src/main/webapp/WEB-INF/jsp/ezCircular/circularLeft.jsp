@@ -8,6 +8,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <script type="text/javascript" src="/js/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>	    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
@@ -452,6 +453,23 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        
+	        function TopBoard_onclick(obj, ID) {
+	            AccessLevel = "1";
+	            var rootBoardID = ID;
+	            SelectedBoardID = ID;
+	            SelectedBoardGroupID = ID;
+	            SelectedBoardParentBoardID = 'top';
+	            var num = obj.split("TreeCtrl");
+	            document.getElementById(obj + "obj").innerHTML = "";
+	            SetTreeConfig();
+	            var treeView = new TreeView();
+	            treeView.SetID("TreeView" + obj);
+	            treeView.SetRequestData("TreeCtrl_onNodeExpanded");
+	            treeView.SetNodeClick("TreeCtrl_onNodeClick");            
+	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
+	            treeView.DataBind(obj + "obj");
+	        }
+	        
 	        /* 2017-05-17 정수현 구현 */
 	        function newCircular() {                
 	        	window.parent.frames["right"].location.href = "/ezcircular/newCircular.do";
@@ -490,6 +508,41 @@
 				<li><span style="width:100%;display:inline-block;" id="circularDelete" onClick="circularDelete()"><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><span style="margin-left:1px"><spring:message code="ezCircular.t6" /></span></span></li>
 				<li id="circularDoc"><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	        
 	            <div class="tree" style="height: 200px; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="PostTreeView"></div>
+	            	<!--<script>		
+				    	var strHTML = "", data = "";
+						var cnt = 0;	        		
+						
+						$.ajax({
+							type : "POST",
+							dataType : "json",
+							async : false,
+							url : "/ezCircular/getTopFolder.do",	        			
+							data : { boardType : "top"},
+							success: function(result){
+								$.each(result, function(idx, item){	        					
+									$.each(item, function(idx, i){
+										strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + idx + "' value='" + i.boardId;
+				                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
+				                        strHTML += i.boardName + "</div></h2>";
+				                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px; max-height: 200px;'>";
+				                        strHTML += "</div></ul>";
+									});
+									cnt = item.length;
+									data = item[0].boardId;
+								});
+								$("#TopBoard").html(strHTML);
+				
+				                if (cnt > 0){         	
+									TopBoard_onclick("TreeCtrl0", data);
+				                }
+							},
+							error: function() {
+								alert("에러발생");	
+							}
+						});
+						
+						initToggleList(document.getElementById("left"), "h2", "ul", "li");
+					</script> -->
 	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
 	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="folder_Manage()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
 	        </ul>	        
