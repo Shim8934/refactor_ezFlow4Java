@@ -41,7 +41,7 @@
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/second.jpg')" data-iconpos="right">
 						    	<h2>전자결재&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
 						        <ul data-role="listview" data-inset="true">
-						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서 <span class="ui-li-count">12</span></a></li>
+						            <li><a href="/mobile/ezApprovalG/doApproveList.do"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서 <span class="ui-li-count">12</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재진행문서 <span class="ui-li-count">0</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재한문서 <span class="ui-li-count">4</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;기안한문서 <span class="ui-li-count">328</span></a></li>

@@ -16578,6 +16578,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception{
 		logger.debug("getIsUse started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE1", code1);
 		map.put("v_CODE2", code2);
