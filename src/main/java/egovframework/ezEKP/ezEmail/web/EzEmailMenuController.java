@@ -35,6 +35,7 @@ import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -70,6 +71,9 @@ public class EzEmailMenuController {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	/**
 	 * 메일 왼쪽화면 호출 함수
@@ -207,6 +211,15 @@ public class EzEmailMenuController {
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		model.addAttribute("funCode", funCode);
+		
+		String useBizmekaSpambox = config.getProperty("config.UseBizmekaSpambox");
+		
+		if (useBizmekaSpambox.equals("YES")) {
+			String credentialForBizmekaSpambox = ezEmailUtil.getCredentialForBizmekaSpambox(userEmail);
+			
+			model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+			model.addAttribute("credentialForBizmekaSpambox", credentialForBizmekaSpambox);
+		}
 		
 		logger.debug("showMailLeft ended.");
 		

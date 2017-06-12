@@ -30,6 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
@@ -51,6 +54,7 @@ import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONObject;
@@ -1856,6 +1860,39 @@ public class EzEmailUtil {
                 throw new Exception("deleteUserQuota failed");
             }                    
         }                 
+    }    
+    
+    /**
+     * 비즈메카 스팸편지함과 연동하기 위한 Credential을 반환하는 메소드
+     * @param emailAddress 스팸편지함 사용자의 이메일 주소
+     * @return
+     * @throws Exception
+     */
+    public String getCredentialForBizmekaSpambox(String emailAddress) throws Exception {
+    	String credential = null;
+    	
+    	if (emailAddress != null && !emailAddress.equals("")) {
+	    	byte[] keyBytes = "bizmGW02".getBytes("UTF-8");
+	    	byte[] ivBytes = "mekaGW02".getBytes("UTF-8");
+	    	byte[] input = emailAddress.getBytes("UTF-8");
+	    	
+	    	SecretKeySpec key = new SecretKeySpec(keyBytes, "DES");
+	    	IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+	    	Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+	    	
+	    	cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+	    	byte[] encrypted= new byte[cipher.getOutputSize(input.length)];
+	    	int enc_len = cipher.update(input, 0, input.length, encrypted, 0);
+	    	enc_len += cipher.doFinal(encrypted, enc_len);  
+	    	
+	    	credential = toHexString(encrypted);
+    	}
+    	
+    	return credential;
+    }
+    
+    private String toHexString(byte[] array) {
+        return DatatypeConverter.printHexBinary(array);
     }    
     
 	/**
