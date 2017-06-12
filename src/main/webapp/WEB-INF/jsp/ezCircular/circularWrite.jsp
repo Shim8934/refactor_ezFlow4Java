@@ -164,6 +164,9 @@
 		                  alert("<spring:message code='ezCircular.t73'/>");
 		                  window.opener.window_reload();
 		             	  window.close();
+		                },
+		                error: function() {
+		                	alert("에러발생");	
 		                }
 		 			});
 	    		}

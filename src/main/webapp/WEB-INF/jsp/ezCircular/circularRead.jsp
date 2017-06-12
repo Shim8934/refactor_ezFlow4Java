@@ -218,10 +218,10 @@
 		            		<th>상태</th>
 		            		<td colspan="3">
 		            			<c:choose>
-			            			<c:when test="${result.option eq '0'}">
+			            			<c:when test="${result.status eq '0'}">
 			            				<div id="status">진행중</div>
 			            			</c:when>
-			            			<c:when test="${result.option eq '1'}">
+			            			<c:when test="${result.status eq '1'}">
 			            				<div id="status">종료</div>
 			            			</c:when>
 			            			<c:otherwise>
@@ -236,62 +236,59 @@
 	            			</td>
 	        			</tr>
 	        			
-	        			<tr>
-		                    <table class="file">
-		                        <tr>
-		                            <th>
-		                                <spring:message code='ezSchedule.t316' />
-		                            </th>
-		                            <td class="pos1">
-		                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px;" align="left">	                                
-		                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
-		                                    <c:forEach var="item" items="${attachList}" varStatus="status">
-		                                    	<div style="margin-top:3px;height:20px">
-		                                    		<c:set var="imagePath" value="/images/file.gif" />
-		                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
-		                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
-		                                    			<c:set var="imagePath" value="/images/image.png" />
-		                                    		</c:if>
-		                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
-		                                    			<c:set var="imagePath" value="/images/doc.png" />
-		                                    		</c:if>
-		                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
-		                                    			<c:set var="imagePath" value="/images/xls.png" />
-		                                    		</c:if>
-		                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
-		                                    			<c:set var="imagePath" value="/images/ppt.png" />
-		                                    		</c:if>
-		                                    		<c:if test="${item.fileType == 'txt'}">
-		                                    			<c:set var="imagePath" value="/images/txt.png" />
-		                                    		</c:if>
-		                                    		<c:if test="${item.fileType == 'zip'}">
-		                                    			<c:set var="imagePath" value="/images/zip.png" />
-		                                    		</c:if>
-		                                    		<c:if test="${item.fileType == 'pdf'}">
-		                                    			<c:set var="imagePath" value="/images/pdf.png" />
-		                                    		</c:if>
-		                                    		<c:if test="${item.fileType == 'ecm'}">
-		                                    			<c:set var="imagePath" value="/images/ecm.png" />
-		                                    		</c:if>	                                    		
-		                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
-		                                    	</div>
-		                                    </c:forEach>
-		                                </div>
-		                            </td>
-		                            <td class="pos2">	                                
-		                                <a href="#" class="imgbtn">
-		                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
-		                                </a><br/>	                                
-		                                <a href="#" class="imgbtn">
-		                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
-		                                </a>
-		                            </td>
-		                        </tr>
-		                    </table>
-			                
-	            		</tr>
-	        			
 	        		</table>
+	        		<br/>
+                    <table class="file">
+                        <tr>
+                            <th>
+                                <spring:message code='ezSchedule.t316' />
+                            </th>
+                            <td class="pos1">
+                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">	                                
+                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
+                                    <c:forEach var="item" items="${attachList}" varStatus="status">
+                                    	<div style="margin-top:3px;height:20px">
+                                    		<c:set var="imagePath" value="/images/file.gif" />
+                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
+                                    			<c:set var="imagePath" value="/images/image.png" />
+                                    		</c:if>
+                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
+                                    			<c:set var="imagePath" value="/images/doc.png" />
+                                    		</c:if>
+                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
+                                    			<c:set var="imagePath" value="/images/xls.png" />
+                                    		</c:if>
+                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
+                                    			<c:set var="imagePath" value="/images/ppt.png" />
+                                    		</c:if>
+                                    		<c:if test="${item.fileType == 'txt'}">
+                                    			<c:set var="imagePath" value="/images/txt.png" />
+                                    		</c:if>
+                                    		<c:if test="${item.fileType == 'zip'}">
+                                    			<c:set var="imagePath" value="/images/zip.png" />
+                                    		</c:if>
+                                    		<c:if test="${item.fileType == 'pdf'}">
+                                    			<c:set var="imagePath" value="/images/pdf.png" />
+                                    		</c:if>
+                                    		<c:if test="${item.fileType == 'ecm'}">
+                                    			<c:set var="imagePath" value="/images/ecm.png" />
+                                    		</c:if>	                                    		
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+                                    	</div>
+                                    </c:forEach>
+                                </div>
+                            </td>
+                            <td class="pos2">	                                
+                                <a href="#" class="imgbtn">
+                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
+                                </a><br/>	                                
+                                <a href="#" class="imgbtn">
+                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>			                
 	        	</td>
         	</tr>
 		</table>

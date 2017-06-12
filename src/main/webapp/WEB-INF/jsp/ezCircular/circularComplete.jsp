@@ -183,7 +183,6 @@
 		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
 		        else{
-		        	//url = "/ezBoard/getBoardList.do";
 		        	url = "/ezCircular/getCircularCompleteList.do";
 		        }
 		        $.ajax({
@@ -210,15 +209,6 @@
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 	                
-	                
-	/*                 pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
-	
-	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
-	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
-	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); */
-	                
-	
 	                pPreviewShow_HOW = "${config.isPreview}";
 
 	                switch (parseInt("${config.isPreview}")) {
@@ -241,13 +231,10 @@
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
-	                //var pstCnt = getNodeText(pntNode);
 	                var pstCnt = "${totalCount}";
 	                totalCount = lstCnt;
-	                //var perCnt = getNodeText(perNode);
 	                var perCnt = "${config.listCnt}";
-	
-	                //listcount.value = perCnt;
+
 	                listcount.value = "${config.listCnt}";
 
 	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
@@ -280,18 +267,7 @@
 	                DocList = null;
 	
 	                var tempno = 0;
-	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-	                    if (CrossYN()) {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                    else {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                } */
+	                
 	                tempno = tempno + "";
 	                
 	                if (tempno.length > 10) {
@@ -331,7 +307,7 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            /* document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]"; */
+	            
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
@@ -538,9 +514,9 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		
-		    function window_reload() {
-		        window.location.href = window.location.href;
-		    }
+// 		    function window_reload() {
+// 		        window.location.href = window.location.href;
+// 		    }
 		
 		    function checkBox_checkAll(obj) {
 		        var SelList = new ListView();
