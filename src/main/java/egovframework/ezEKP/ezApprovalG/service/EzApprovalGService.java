@@ -444,4 +444,5 @@ public interface EzApprovalGService {
 
 	public String getDocInfoS(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
 
+	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception;
 }

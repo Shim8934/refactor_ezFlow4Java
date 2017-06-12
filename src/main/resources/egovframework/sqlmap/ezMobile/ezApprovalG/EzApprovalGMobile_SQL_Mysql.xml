@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApprovalGMobile">
+	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
+	
+	<select id="MApprovalG.getDoApproveList" parameterClass="userInfo" resultClass="MApprGDocInfoVO">
+		<![CDATA[
+			SELECT 
+				DOCID,
+				DOCTITLE,
+				STARTDATE,
+				WRITERNAME,
+				WRITERDEPTNAME
+			FROM 
+				VAPRDOINGDOCLIST 
+   			WHERE
+   				TENANT_ID = #tenantId#
+   			AND
+   				COMPANYID = #companyID#
+   			AND 
+   				APRMEMBERID IN ($id$) 
+   			AND 
+   				APRTYPE <> '015' 
+		]]>
+	</select>
+</sqlMap>

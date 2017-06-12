@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -26,65 +27,18 @@
      		<!-- body start -->
 			<div class="content" data-role="content">				
 				<ul data-role="listview" data-inset="false" data-theme="a">
+					<c:forEach var="apprGList" items="${apprGList}" varStatus="status">
+					    <li>
+					    	<a href="index.html">					    		
+						    	<h2 style="font-size:12px">${apprGList.writerName}</h2>
+						    	<p class="ui-li-aside">${apprGList.startDate}</p>
+						    	<p>${apprGList.docTitle}</p>						    	
+					    	</a>
+					    </li>
+					</c:forEach>
 				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">정지혜</h2>
-					    	<p class="ui-li-aside">06:24</p>
-					    	<p>전자정부 표준프레임워크 호환성 관련 메일입니다.</p>						    	
-				    	</a>
-				    </li>
-				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">이종립/클라우드센터</h2>
-					    	<p class="ui-li-aside">06:24</p>			    		
-					    	<p>클라우드센터에서 메일보냅니다.</p>						    						    		
-				    	</a>
-				    </li>
-				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">테스트</h2>
-					    	<p class="ui-li-aside">06:24</p>					    		
-					    	<p>테스트 메일입니다.</p>						    						    		
-				    	</a>
-				    </li>
-				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">테스트</h2>
-					    	<p class="ui-li-aside">06:24</p>					    		
-					    	<p>테스트 메일입니다.</p>						    						    		
-				    	</a>
-				    </li>
-				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">테스트</h2>
-					    	<p class="ui-li-aside">06:24</p>					    		
-					    	<p>테스트 메일입니다.</p>						    						    		
-				    	</a>
-				    </li>
-				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">테스트</h2>
-					    	<p class="ui-li-aside">06:24</p>					    		
-					    	<p>테스트 메일입니다.</p>						    						    		
-				    	</a>
-				    </li>
-				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">테스트</h2>
-					    	<p class="ui-li-aside">06:24</p>					    		
-					    	<p>테스트 메일입니다.</p>						    						    		
-				    	</a>
-				    </li>
-				    <li>
-				    	<a href="index.html">					    		
-					    	<h2 style="font-size:12px">테스트</h2>
-					    	<p class="ui-li-aside">06:24</p>					    		
-					    	<p>테스트 메일입니다.</p>						    						    		
-				    	</a>
-				    </li>				   
-				    <li style="background-color: transparent;text-align:center">
-						P A G I N G
-					</li>
+				    	PAGINATION
+				    </li>	   
 				</ul>				
      		</div>     		
      		<!-- body end -->
