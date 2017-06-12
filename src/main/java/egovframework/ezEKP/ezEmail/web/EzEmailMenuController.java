@@ -212,7 +212,7 @@ public class EzEmailMenuController {
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		model.addAttribute("funCode", funCode);
 		
-		String useBizmekaSpambox = config.getProperty("config.UseBizmekaSpambox");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
 		if (useBizmekaSpambox.equals("YES")) {
 			String credentialForBizmekaSpambox = ezEmailUtil.getCredentialForBizmekaSpambox(userEmail);

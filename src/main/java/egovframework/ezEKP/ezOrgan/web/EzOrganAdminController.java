@@ -330,7 +330,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				logger.debug("updateGroupDel rc=" + rc);
 				
 				if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식그룹을 찾지 못해도 성공으로 봄.)
+					String bizmekaResult = "ERROR";
+					
 				    try {
+						String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+						
+						if (useBizmekaSpambox.equals("YES")) {
+							String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+							String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+							String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+							
+							bizmekaResult = ezEmailUtil.bizmekaDeleteDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn);		
+							
+							logger.debug("bizmekaResult=" + bizmekaResult);
+							
+							if (!bizmekaResult.equals("OK")) {
+								throw new Exception("bizmekaDeleteDept failed");
+							}						
+						}
+				    	
     					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
     					result = "OK";
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
@@ -468,11 +486,30 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 					
-					if (rc == 0) { // updateGroupAdd 성공
-						vo.setMail(mailAddr);
+					if (rc == 0) { // updateGroupAdd 성공						
+						String bizmekaResult = "ERROR";
 						
 						// insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제.
 						try {
+							String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+							
+							if (useBizmekaSpambox.equals("YES")) {
+								String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+								String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+								String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+								
+								bizmekaResult = ezEmailUtil.bizmekaAddDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
+														cn, vo.getDisplayName(), vo.getParentCn());		
+								
+								logger.debug("bizmekaResult=" + bizmekaResult);
+								
+								if (!bizmekaResult.equals("OK")) {
+									throw new Exception("bizmekaAddDept failed");
+								}						
+							}
+							
+							vo.setMail(mailAddr);
+							
 							ezOrganAdminService.insertDBData_dept(vo);
 							result = "OK";	
 						} catch (Exception e) {
@@ -906,8 +943,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						throw new Exception("retiring the user '" + mailAddr + "' failed.");
 					}
 				} 
-												
+							
+				String bizmekaResult = "ERROR";
+				
 				try {
+					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+					
+					if (useBizmekaSpambox.equals("YES")) {
+						String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+						String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+						String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+						
+						bizmekaResult = ezEmailUtil.bizmekaDeleteUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn[i]);		
+						
+						logger.debug("bizmekaResult=" + bizmekaResult);
+						
+						if (!bizmekaResult.equals("OK")) {
+							throw new Exception("bizmekaDeleteUser failed");
+						}						
+					}
+					
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 				} catch (Exception e) {
@@ -1077,15 +1132,34 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					logger.debug("updateGroupAdd rc=" + rc);
 					
-					if (rc == 0) { // updateGroup 성공
-						vo.setMail(mailAddr);				
-						String userPrincipalName = cn + "@" + domain;
-						vo.setUpnName(userPrincipalName);
-						String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
-						vo.setPassword(pass);
+					if (rc == 0) { // updateGroup 성공												
+						String bizmekaResult = "ERROR";
 						
 						// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 						try {
+							String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+							
+							if (useBizmekaSpambox.equals("YES")) {
+								String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+								String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+								String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+								
+								bizmekaResult = ezEmailUtil.bizmekaAddUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn, "", 
+													vo.getDisplayName(), vo.getParentCn());		
+								
+								logger.debug("bizmekaResult=" + bizmekaResult);
+								
+								if (!bizmekaResult.equals("OK")) {
+									throw new Exception("bizmekaAddUser failed");
+								}
+							}
+							
+							vo.setMail(mailAddr);				
+							String userPrincipalName = cn + "@" + domain;
+							vo.setUpnName(userPrincipalName);
+							String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
+							vo.setPassword(pass);
+							
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo);
 							result = "OK";

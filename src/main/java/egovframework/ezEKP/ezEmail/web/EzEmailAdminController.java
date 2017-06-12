@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -235,12 +236,40 @@ public class EzEmailAdminController {
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
 		NodeList memberIdList = doc.getElementsByTagName("MEMBERID");
 		
-		String domain = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+		int tenantID = auth.getTenantId();
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		
 		int reasonCode = -100;
 		String result = "ERROR";
-		try {
-			if (cn == null || cn.equals("")) {
+		String bizmekaResult = "ERROR";		
+		
+		try {			
+			String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+			
+			// 새 공용배포그룹 등록하는 경우
+			if (cn == null || cn.equals("")) {								
+				if (useBizmekaSpambox.equals("YES")) {
+					String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+					String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+					String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+
+					List<String> memberList = new ArrayList<String>();
+					
+					for (int i = 0; i < memberIdList.getLength(); i++) {
+						memberList.add(memberIdList.item(i).getTextContent());
+					}
+					
+					bizmekaResult = ezEmailUtil.bizmekaAddDistributionList(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
+													id, name, memberList);		
+					
+					logger.debug("bizmekaResult=" + bizmekaResult);
+					
+					if (!bizmekaResult.equals("OK")) {
+						throw new Exception("bizmekaAddDistributionList failed");
+					}
+				}
+				
 				String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8")
 								   + "&name=" + URLEncoder.encode(name, "UTF-8")
 								   + "&id=" + URLEncoder.encode(id, "UTF-8")
@@ -266,8 +295,29 @@ public class EzEmailAdminController {
 						reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
 					}
 				}
-
+			// 기존 공용배포그룹을 수정하는 경우
 			} else {
+				if (useBizmekaSpambox.equals("YES")) {
+					String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+					String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+					String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+					
+					List<String> memberList = new ArrayList<String>();
+					
+					for (int i = 0; i < memberIdList.getLength(); i++) {
+						memberList.add(memberIdList.item(i).getTextContent());
+					}
+					
+					bizmekaResult = ezEmailUtil.bizmekaEditDistributionList(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
+													id, name, memberList);		
+					
+					logger.debug("bizmekaResult=" + bizmekaResult);
+					
+					if (!bizmekaResult.equals("OK")) {
+						throw new Exception("bizmekaEditDistributionList failed");
+					}
+				}
+				
 				String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8")
 				+ "&cn=" + URLEncoder.encode(cn, "UTF-8")
 				+ "&name=" + URLEncoder.encode(name, "UTF-8")
@@ -295,7 +345,6 @@ public class EzEmailAdminController {
 					}
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -427,11 +476,30 @@ public class EzEmailAdminController {
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		
-		String domain = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+		int tenantID = auth.getTenantId();
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		
 		String result = "ERROR";
+		String bizmekaResult = "ERROR";
 		
 		try {
+			String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+			
+			if (useBizmekaSpambox.equals("YES")) {
+				String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+				String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+				String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+				
+				bizmekaResult = ezEmailUtil.bizmekaDeleteDistributionList(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn);		
+				
+				logger.debug("bizmekaResult=" + bizmekaResult);
+				
+				if (!bizmekaResult.equals("OK")) {
+					throw new Exception("bizmekaDeleteDistributionList failed");
+				}
+			}
+			
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
 							   + "&domain=" + URLEncoder.encode(domain, "UTF-8");
 			

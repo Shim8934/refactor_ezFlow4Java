@@ -63,6 +63,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
@@ -71,6 +73,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 /** 
@@ -99,6 +102,9 @@ public class EzEmailUtil {
     @Autowired
     private Properties config;
 	
+	@Autowired
+	private CommonUtil commonUtil;
+    
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
@@ -1889,6 +1895,272 @@ public class EzEmailUtil {
     	}
     	
     	return credential;
+    }
+    
+    public String bizmekaAddUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
+    		String userPw, String userName, String deptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=ADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_USER";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+    	sb.append("<USERPW>" + commonUtil.cleanValue(userPw) + "</USERPW>");
+    	sb.append("<USERNAME>" + commonUtil.cleanValue(userName) + "</USERNAME>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=DEL" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_USER";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaAddDept(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String deptId, 
+    		String deptName, String parentDeptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=ADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DEPT";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("<PARENTDEPTID>" + commonUtil.cleanValue(parentDeptId) + "</PARENTDEPTID>");    	
+    	sb.append("<DEPTNAME>" + commonUtil.cleanValue(deptName) + "</DEPTNAME>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteDept(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String deptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=DEL" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DEPT";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaAddDistributionList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String distId, 
+    		String distName, List<String> memberList) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=ADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DIST";
+    	
+    	StringBuilder sbMembers = new StringBuilder();    
+    	int memberCount = memberList.size();
+    	
+    	for (int i = 0; i < memberCount; i++) {
+    		sbMembers.append(memberList.get(i));
+    		
+    		if (i != memberCount - 1) {
+    			sbMembers.append("|");
+    		}
+    	}
+
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DISTID>" + commonUtil.cleanValue(distId) + "</DISTID>");
+    	sb.append("<DISTNAME>" + commonUtil.cleanValue(distName) + "</DISTNAME>");    	
+    	sb.append("<MEMBERS>" + commonUtil.cleanValue(sbMembers.toString()) + "</MEMBERS>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaEditDistributionList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String distId, 
+    		String distName, List<String> memberList) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=EDIT" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DIST";
+    	
+    	StringBuilder sbMembers = new StringBuilder();    
+    	int memberCount = memberList.size();
+    	
+    	for (int i = 0; i < memberCount; i++) {
+    		sbMembers.append(memberList.get(i));
+    		
+    		if (i != memberCount - 1) {
+    			sbMembers.append("|");
+    		}
+    	}
+
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DISTID>" + commonUtil.cleanValue(distId) + "</DISTID>");
+    	sb.append("<DISTNAME>" + commonUtil.cleanValue(distName) + "</DISTNAME>");    	
+    	sb.append("<MEMBERS>" + commonUtil.cleanValue(sbMembers.toString()) + "</MEMBERS>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteDistributionList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String distId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=DEL" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DIST";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DISTID>" + commonUtil.cleanValue(distId) + "</DISTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
     }
     
     private String toHexString(byte[] array) {
