@@ -18,13 +18,14 @@ import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class MEzBoardController {
-	private static final Logger logger = LoggerFactory.getLogger(MEzBoardController.class);
+public class MBoardController {
+	private static final Logger logger = LoggerFactory.getLogger(MBoardController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -40,6 +41,9 @@ public class MEzBoardController {
 	
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
+	
+	@Resource(name = "MBoardService")
+	private MBoardService mBoardService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
