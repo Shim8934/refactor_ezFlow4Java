@@ -2216,24 +2216,24 @@ function chkLastKyuljea(AprLineRow) {
     return rtnVal;
 }
 
-function chkHabyuiGamsa(AprLineRow) {
-    var i, rtnVal;
-    var aprtype, H, G;
-    H = 0;
-    G = 0;
-    rtnVal = true;
-
-    for (i = 0; i < AprLineRow.length - 1; i++) {
-        aprtype = GetAttribute(AprLineRow[i], "DATA11");
-        if (aprtype == strAprType11 || aprtype == strAprType12)
-            H = H + 1;
-        if (aprtype == "" + strLang288 + "" || aprtype == "" + strLang289 + "")
-            G = G + 1;
-    }
-    if (H > 0 && G > 0)
-        rtnVal = false;
-    return rtnVal;
-}
+//function chkHabyuiGamsa(AprLineRow) {
+//    var i, rtnVal;
+//    var aprtype, H, G;
+//    H = 0;
+//    G = 0;
+//    rtnVal = true;
+//
+//    for (i = 0; i < AprLineRow.length - 1; i++) {
+//        aprtype = GetAttribute(AprLineRow[i], "DATA11");
+//        if (aprtype == strAprType11 || aprtype == strAprType12)
+//            H = H + 1;
+//        if (aprtype == "" + strLang288 + "" || aprtype == "" + strLang289 + "")
+//            G = G + 1;
+//    }
+//    if (H > 0 && G > 0)
+//        rtnVal = false;
+//    return rtnVal;
+//}
 
 function chkLastKyuljeaJOP(AprLineRow) {
     var i, rtnVal;
