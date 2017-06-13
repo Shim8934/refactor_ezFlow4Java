@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezBoard.web;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -35,6 +38,9 @@ public class MBoardController {
 	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
+	
+	@Resource(name = "EzBoardController")
+	private EzBoardController ezBoardController;
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
@@ -102,21 +108,20 @@ public class MBoardController {
 	
 	/**
 	 * 모바일 게시판 해당게시판글목록화면
-	 * 타입에따라
-	 * 게시판종류별로 (일반, 그룹, 익명, 포토, 썸네일, Q&A)
 	 */
-	@RequestMapping(value = "/mobile/ezBoard/getBoardItemList.do")
-	public String boardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, BoardPropertyVO boardPropertyVO, Model model) throws Exception {
-		logger.debug("getBoardList started.");
+	@RequestMapping(value = "/mobile/ezBoard/boardItemList.do")
+	public String boardList(@CookieValue("loginCookie") String loginCookie, MBoardInfoVO mBoardInfoVO, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("boardList started. boardID = " + mBoardInfoVO.getBoardID());
 		
-//		String boardID = request.getParameter("boardID");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-//		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+//		BoardPropertyVO boardInfo = ezBoardController.getBoardInfo(boardVO.getBoardID(), userInfo);
+		mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
-		model.addAttribute("type", "boardItemList");
-		model.addAttribute("title", egovMessageSource.getMessage("ezBoard.t116", userInfo.getLocale()));
+		model.addAttribute("mBoardInfo", mBoardInfoVO);
+		model.addAttribute("title", mBoardInfoVO.getBoardName());
 		
-		logger.debug("getBoardList ended.");
+		logger.debug("boardList ended.");
 		
 		return "/mobile/ezBoard/mBoardItemList";
 	}
@@ -135,7 +140,36 @@ public class MBoardController {
 	}
 	
 	/**
+	 * 모바일 게시판 해당게시판글목록조회
+	 */
+	@RequestMapping(value = "/mobile/ezBoard/getBoardItemList.do")
+	public String getBoardItemList(@CookieValue("loginCookie") String loginCookie, MBoardInfoVO mBoardInfoVO, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getBoardItemList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
+		logger.debug("boardID = " + mBoardInfoVO.getBoardID() + " || userID = " + userInfo.getId());
+		
+		//리스트 헤더
+		List<MBoardListHeaderVO> headerList = mBoardService.getListHeader(mBoardInfoVO, userInfo.getLang(), tenantID);
+		//카운트
+		//리스트
+		
+		mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), primary, tenantID);
+		
+		model.addAttribute("mBoardInfo", mBoardInfoVO);
+		model.addAttribute("title", mBoardInfoVO.getBoardName());
+		
+		logger.debug("getBoardItemList ended.");
+		
+		return "json";
+	}
+	
+	/**
 	 * 모바일 게시판 글 상세화면조회
+	 * 게시판종류별로 (일반, 그룹, 익명, 포토, 썸네일, Q&A)
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getBoardItem.do")
 	public String getBoardItem() throws Exception {
@@ -148,9 +182,11 @@ public class MBoardController {
 	
 	/**
 	 * 모바일 게시판 글 쓰기/수정화면조회
-	 * 타입에따라
+	 * itemID 보고
 	 * 1.쓰기
 	 * 2.수정
+	 * 게시판종류보고 
+	 * 포토 (multi 찾아봐야함)
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/editBoardItem.do")
 	public String editBoardItem() throws Exception {
