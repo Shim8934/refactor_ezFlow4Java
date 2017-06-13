@@ -717,6 +717,19 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		ezCircularDAO.circularFolderAdd(map);
 	}
+	
+	@Override
+	public void circularFolderModify(String folderId, String folderName, String memberId, String regDate, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderId", folderId);
+		map.put("folderName", folderName);
+		map.put("memberId", memberId);
+		map.put("regDate", regDate);
+		map.put("tenantId", tenantId);
+		
+		ezCircularDAO.circularFolderModify(map);
+	}
 
 	@Override
 	public void circularDeleteFolder(String deleteFolderId, String memberId, int tenantId) throws Exception {

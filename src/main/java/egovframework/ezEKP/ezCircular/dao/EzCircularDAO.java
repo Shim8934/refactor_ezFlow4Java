@@ -225,6 +225,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.circularClose", map);
 	}
 	
+	public void circularFolderModify(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.circularFolderModify", map);
+	}
+	
 	public void delete_circularMemberList(Map<String, Object> map) {
 		delete("EzCircularDAO.delete_circularMemberList", map);
 	}

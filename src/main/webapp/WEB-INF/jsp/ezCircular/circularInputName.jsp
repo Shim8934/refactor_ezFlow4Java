@@ -15,6 +15,8 @@
 	    <script type="text/ecmascript">
 	        var ReturnFunction;
 	        var CancelFunction;
+	        var InputValue;
+            var FolderId;
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -24,11 +26,10 @@
 	        };
 	        
 	        function window_onload() {
-	            var InputValue;
-	            
                 ReturnFunction = parent.inputNameDlg_cross_dialogArguments[0];
                 CancelFunction = parent.inputNameDlg_cross_dialogArguments[1];
                 InputValue = parent.inputNameDlg_cross_dialogArguments[2];
+                FolderId = parent.inputNameDlg_cross_dialogArguments[3];
                 
 	            if (InputValue != "") {
 	                txt_FolderName.value = InputValue;
@@ -46,11 +47,17 @@
 	        function btn_ok_onclick() {
 	            var folderName = txt_FolderName.value;
 	            
+	            if (FolderId == "") {
+	            	url = "/ezCircular/circularFolderAdd.do"; 
+	            } else {
+	            	url = "/ezCircular/circularFolderModify.do?FolderId=" + FolderId;
+	            }
+	            
 				$.ajax({
 					method : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezCircular/circularFolderAdd.do",
+					url : url,
 					data : {
 						folderName : folderName
 					},

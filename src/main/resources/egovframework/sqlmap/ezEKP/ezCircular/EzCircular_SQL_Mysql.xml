@@ -806,82 +806,98 @@
     
     <update id="EzCircularDAO.circularClose" parameterClass="Map">
         <![CDATA[
-            UPDATE
-                TBL_CIRCULAR
-            SET
-                STATUS = '1'
-            WHERE 
-                CIRCULARID = #circularID#
-            AND
-                TENANTID = #tenantID#      
+          UPDATE
+              TBL_CIRCULAR
+          SET
+              STATUS = '1'
+          WHERE 
+              CIRCULARID = #circularID#
+          AND
+              TENANTID = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.circularFolderModify" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_FOLDER
+          SET
+              CIRCULARFOLDERNAME = #folderName#,
+			  REGDATE = #regDate#
+          WHERE 
+              CIRCULARFOLDERID = #folderId#
+          AND
+          	MEMBERID = #memberId#    
+          AND
+              TENANTID = #tenantId#      
         ]]>
     </update>
   
     <delete id="EzCircularDAO.deleteCircular" parameterClass="Map">
         <![CDATA[
-            DELETE FROM
-                TBL_CIRCULAR
-            WHERE
-                CIRCULARID = #circularIDList#
-            AND    
-                TENANTID = #tenantID#
+          DELETE FROM
+              TBL_CIRCULAR
+          WHERE
+              CIRCULARID = #circularIDList#
+          AND    
+              TENANTID = #tenantID#
         ]]>
     </delete>
   
     <delete id="EzCircularDAO.deleteCircularUser" parameterClass="Map">
         <![CDATA[
-            DELETE FROM
-                TBL_CIRCULAR_USER
-            WHERE
-                CIRCULARID = #circularIDList#
-            AND    
-                TENANTID = #tenantID#
+          DELETE FROM
+              TBL_CIRCULAR_USER
+          WHERE
+              CIRCULARID = #circularIDList#
+          AND    
+              TENANTID = #tenantID#
         ]]>
     </delete>
 	
 	<delete id="EzCircularDAO.circularDeptDel" parameterClass="map">
 		<![CDATA[
-			DELETE FROM
-				TBL_CIRCULAR_BM
-			WHERE
-				CIRCULARBMID = #v_CIRCULARBMID#
-			AND
-				TENANTID = #v_TENANTID#
+		  DELETE FROM
+			  TBL_CIRCULAR_BM
+		  WHERE
+			  CIRCULARBMID = #v_CIRCULARBMID#
+		  AND
+			  TENANTID = #v_TENANTID#
 		]]>
 	</delete>
   
     <delete id="EzCircularDAO.deleteCircularAttach" parameterClass="map">
         <![CDATA[
-            DELETE FROM
-                TBL_CIRCULAR_FILE
-            WHERE
-                CIRCULARID = #circularIDList#
-            AND 
-                TENANTID = #tenantID#
+          DELETE FROM
+              TBL_CIRCULAR_FILE
+          WHERE
+              CIRCULARID = #circularIDList#
+          AND 
+              TENANTID = #tenantID#
       	]]>   
   	</delete>
   
 	<delete id="EzCircularDAO.delete_circularMemberList" parameterClass="Map">
 	  	<![CDATA[
-	        DELETE FROM
-		       	TBL_CIRCULAR_BMUSER 
-	        WHERE
-	         	CIRCULARBMID = #v_CIRCULARBMID#
-	        AND 
-	            TENANTID = #v_TENANTID#
+		  DELETE FROM
+			  TBL_CIRCULAR_BMUSER 
+		  WHERE
+		 	  CIRCULARBMID = #v_CIRCULARBMID#
+		  AND 
+		      TENANTID = #v_TENANTID#
 	    ]]>
 	</delete>
 	
 	<delete id="EzCircularDAO.circularDeleteFolder" parameterClass="map">
 		<![CDATA[
-			DELETE FROM
-				TBL_CIRCULAR_FOLDER
-			WHERE
-				CIRCULARFOLDERID = #deleteFolderId#
-			AND
-				MEMBERID = #memberId#	
-			AND
-				TENANTID = #tenantId#
+		  DELETE FROM
+			  TBL_CIRCULAR_FOLDER
+		  WHERE
+			  CIRCULARFOLDERID = #deleteFolderId#
+		  AND
+			  MEMBERID = #memberId#	
+		  AND
+			  TENANTID = #tenantId#
 		]]>
 	</delete>
 </sqlMap>

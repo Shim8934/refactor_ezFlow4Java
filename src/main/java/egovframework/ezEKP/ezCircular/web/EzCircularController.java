@@ -1838,6 +1838,28 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 회람처 저장 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularFolderModify.do")
+	@ResponseBody
+	public void circularFolderModify(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("circularFolderModify started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String memberId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String folderName = request.getParameter("folderName");
+		String folderId = request.getParameter("FolderId");
+		String regDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		ezCircularService.circularFolderModify(folderId, folderName, memberId, regDate, tenantId);
+		
+		logger.debug("circularFolderModify ended");
+	}
+	
+	/**
 	 * 회람문서함 관리 폴더 삭제 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDeleteFolder.do", method = RequestMethod.POST)
