@@ -87,6 +87,21 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularTempMapList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<CircularListVO> getMyCircularList(Map<String, Object> map) throws Exception {
+		return (List<CircularListVO>) list("EzCircularDAO.getMyCircularList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getMyCircularMapList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzCircularDAO.getMyCircularMapList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CircularFolderVO> getTopFolder(Map<String, Object> map) throws Exception {
+		return (List<CircularFolderVO>) list("EzCircularDAO.getTopFolder", map);
+	}
+	
 	public CircularConfigVO getCircularList_Config(Map<String, Object> map) throws Exception {
 		return (CircularConfigVO) select("EzCircularDAO.getCircularList_Config", map);
 	}
@@ -130,6 +145,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public int getCircularTempListCount(Map<String, Object> map) {
 		return (int) select("EzCircularDAO.getCircularTempListCount", map);
 	}
+	
+	public int getMyCircularListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getMyCircularListCount", map);
+	}
 
 	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) throws Exception {
 		insert("EzCircularDAO.setCircularList_Config_I", circularConfigVO);
@@ -152,7 +171,7 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	}
 	
 	public void insertCircularAttach(Map<String, Object> map) throws Exception{
-		insert("EzScheduleDAO.insertCircularAttach", map);
+		insert("EzCircularDAO.insertCircularAttach", map);
 	}
 	
 	public void set_circularDeptSave(CircularDeptVO circularDeptVO) throws Exception {
@@ -162,7 +181,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void set_circularMemberList(Map<String, Object> map) {
 		insert("EzCircularDAO.set_circularMemberList", map);
 	}
-	
+
+	public void circularFolderAdd(Map<String, Object> map) throws Exception {
+		insert("EzCircularDAO.circularFolderAdd", map);
+	}
 	public void setCircularList_Config_U(CircularConfigVO circularConfigVO) throws Exception {
 		update("EzCircularDAO.setCircularList_Config_U", circularConfigVO);
 	}
@@ -199,6 +221,14 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.update_circularDept", circularDeptVO);
 	}
 
+	public void circularClose(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.circularClose", map);
+	}
+	
+	public void circularFolderModify(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.circularFolderModify", map);
+	}
+	
 	public void delete_circularMemberList(Map<String, Object> map) {
 		delete("EzCircularDAO.delete_circularMemberList", map);
 	}
@@ -219,27 +249,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		delete("EzCircularDAO.circularDeptDel", map);
 	}
 
-	public int getMyCircularListCount(Map<String, Object> map) throws Exception {
-		return (int) select("EzCircularDAO.getMyCircularListCount", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CircularListVO> getMyCircularList(Map<String, Object> map) throws Exception {
-		return (List<CircularListVO>) list("EzCircularDAO.getMyCircularList", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getMyCircularMapList(Map<String, Object> map) throws Exception {
-		return (List<HashMap<String, Object>>) list("EzCircularDAO.getMyCircularMapList", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CircularFolderVO> getTopFolder(Map<String, Object> map) throws Exception {
-		return (List<CircularFolderVO>) list("EzCircularDAO.getTopFolder", map);
-	}
-
-	public void circularClose(Map<String, Object> map) {
-		update("EzCircularDAO.circularClose", map);
+	public void circularDeleteFolder(Map<String, Object> map) throws Exception {
+		delete("EzCircularDAO.circularDeleteFolder", map);
 	}
 
 }

@@ -72,7 +72,7 @@
 		        return true;
 		    }
 	    	
-	    	function btn_Save() {
+	    	function btn_Modify() {
 		    	//회람저장 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
@@ -95,7 +95,6 @@
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
-// 				var memberListStr = new Array();
 				var fileList = "";
 				
 				for (var i = 0; i < filelist.length - 1; i++) {	    
@@ -105,10 +104,6 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-	    		
-// 	    		for (var i=0; i<g_attendant["id"].length; i++) {
-// 	    			memberListStr[i] = g_attendant["id"][i];
-// 	    		}	
 
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
@@ -182,8 +177,8 @@
       				<div id="menu">      
         				<ul>
 							<div id="menuTable1" >
-	          					<li><span onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
-	          					<li><span onClick="btn_Save()"> 임시보관</span></li>
+	          					<li><span onClick="btn_Save()"> 회람판 등록</span></li>
+	          					<li><span onClick="btn_Modify()"> 수정</span></li>
 	          				</div>          
         				</ul>
       				</div>
