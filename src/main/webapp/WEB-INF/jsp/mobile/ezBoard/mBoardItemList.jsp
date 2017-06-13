@@ -16,7 +16,13 @@
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>			
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		
+		<script type="text/javascript">
+			$(document).ready(function () {
+				getBoardItemList();
+			})
+		</script>			
 	</head>
 	<body class="loginbody">
 		<div id="boardList" data-role="page">
