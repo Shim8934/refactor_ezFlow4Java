@@ -274,9 +274,9 @@
 	                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
 	                }
 	
-	                if ("${useOcs}" == "YES" && lstCnt > 0) {
-	                    check_presence();
-	                }
+// 	                if ("${useOcs}" == "YES" && lstCnt > 0) {
+// 	                    check_presence();
+// 	                }
 	
 	                if (!firstFlag) {
 	                    PreviewRayerChange(pPreviewShow_HOW);

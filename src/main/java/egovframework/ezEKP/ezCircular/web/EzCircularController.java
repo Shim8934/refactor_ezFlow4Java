@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.mail.Folder;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -146,28 +147,32 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람문서함 상위폴더 호출 함수
+	 * 회람문서함 폴더 호출 함수
 	 */
-	@RequestMapping(value = "/ezCircular/getCircularFolderList.do")
+	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getCircularFolderList(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
 		logger.debug("getCircularFolderList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String parentBoardID = request.getParameter("boardType");
 		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId());
 
+		StringBuilder subFolderXML = new StringBuilder();
+		
 		for (int i=0; i<list.size(); i++) {
-			System.out.println("#" + list.get(i).getCircularFolderName());
-			System.out.println("#" + list.get(i).getMemberId());
+			subFolderXML.append("<node imgidx='1'");
+			subFolderXML.append(" caption='" + list.get(i).getCircularFolderName() + "'");
+			subFolderXML.append(" foldername='" + list.get(i).getCircularFolderName() + "'");
+			subFolderXML.append(" fullcaption='_NONE'");
+			subFolderXML.append(" href='" + list.get(i).getCircularFolderId() + "'");
+			subFolderXML.append("></node>");			
 		}
+
+		logger.debug("getFolderList ended.");
 		
-		model.addAttribute("topBoardList", list);
-		
-		logger.debug("getCircularFolderList ended");
-		
-		return "json";
+		return subFolderXML.toString();
 	}
 	
 	/**
@@ -1809,5 +1814,46 @@ public class EzCircularController extends EgovFileMngUtil {
 		ezCircularService.circularClose(circularIDList, userInfo.getTenantId());
 		
 		logger.debug("circularClose ended");
+	}
+	
+	/**
+	 * 회람처 저장 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularFolderAdd.do")
+	@ResponseBody
+	public void circularFolderAdd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("circularFolderAdd started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String memberId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String folderName = request.getParameter("folderName");
+		String regDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		ezCircularService.circularFolderAdd(folderName, memberId, regDate, tenantId);
+		
+		logger.debug("circularFolderAdd ended");
+	}
+	
+	/**
+	 * 회람문서함 관리 폴더 삭제 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularDeleteFolder.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void circularDeleteFolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
+		
+		logger.debug("circularDeleteFolder started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String deleteFolderId = request.getParameter("deleteFolder");
+		String memberId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		
+		ezCircularService.circularDeleteFolder(deleteFolderId, memberId, tenantId);
+		
+		logger.debug("circularDeleteFolder ended");
 	}
 }

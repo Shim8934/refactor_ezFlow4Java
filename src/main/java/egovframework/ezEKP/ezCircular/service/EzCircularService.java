@@ -100,4 +100,8 @@ public interface EzCircularService {
 
 	public void circularClose(String[] circularIDList, int tenantId) throws Exception;
 
+	public void circularFolderAdd(String folderName, String memberId, String regDate, int tenantId) throws Exception;
+
+	public void circularDeleteFolder(String deleteFolderId, String memberId, int tenantId) throws Exception;
+
 }

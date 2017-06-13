@@ -549,7 +549,7 @@
         ]]>
     </insert>
   
-    <insert id="EzScheduleDAO.insertCircularAttach" parameterClass="map">
+    <insert id="EzCircularDAO.insertCircularAttach" parameterClass="map">
         <![CDATA[
             INSERT INTO 
                 TBL_CIRCULAR_FILE
@@ -636,6 +636,16 @@
           VALUES 
               ( #v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
     ]]>
+    </insert>
+    
+    <insert id="EzCircularDAO.circularFolderAdd" parameterClass="map">
+        <![CDATA[
+            INSERT INTO 
+                TBL_CIRCULAR_FOLDER
+                ( CIRCULARFOLDERNAME, MEMBERID, REGDATE, TENANTID ) 
+            VALUES 
+                ( #folderName#, #memberId#, #regDate#, #tenantId# )
+        ]]>
     </insert>
   
     <update id="EzCircularDAO.modifyCircular" parameterClass="Map">
@@ -860,5 +870,18 @@
 	        AND 
 	            TENANTID = #v_TENANTID#
 	    ]]>
-	  </delete>
+	</delete>
+	
+	<delete id="EzCircularDAO.circularDeleteFolder" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_FOLDER
+			WHERE
+				CIRCULARFOLDERID = #deleteFolderId#
+			AND
+				MEMBERID = #memberId#	
+			AND
+				TENANTID = #tenantId#
+		]]>
+	</delete>
 </sqlMap>

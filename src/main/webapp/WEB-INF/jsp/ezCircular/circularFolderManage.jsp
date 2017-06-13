@@ -6,15 +6,15 @@
 	<head>
 		<title>회람문서함 관리</title>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-        
 		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/email_tree.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 			var lang = "${userinfo.lang}";
@@ -23,16 +23,19 @@
 			var EventCheck = false;
 			var CurrentHeight = 0;
 			var CurrenWidth = 0;
+			
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
 		        else
 		            return true;
 		    };
+		    
 		    window.onunload = function () {
 		        if(ReturnFunction != null)
 			        ReturnFunction(EventCheck);
 			}
+		    
 			var ReturnFunction;
 			window.onload = function () {
 			    CurrentHeight = document.body.clientHeight;
@@ -42,7 +45,7 @@
 			    } catch (e) { }
                 PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
 //                 PostTreeView.attachEvent('requestdata', requestdata);
-                PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });
+//                 PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });
                 var xmlHTTP = createXMLHttpRequest();
                 xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
                 xmlHTTP.send();
@@ -56,97 +59,99 @@
                 PostTreeView.config(treeconfig);
                 PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
                 PostTreeView.update();
-                if (PostTreeView.selectedIndex() == -1) {
-                    PostTreeView.select(5);
-                }
             }
-            function requestdata(event) {
-                if (!event) event = window.event;
-                var nodeIdx = event.nodeIdx;
-                if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-                    nodeIdx = arguments[0].nodeIdx;
-                }
-                var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false)
-                PostTreeView.putchildxml(nodeIdx, childxml);
-            }
+//             function requestdata(event) {
+//                 if (!event) event = window.event;
+//                 var nodeIdx = event.nodeIdx;
+//                 if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
+//                     nodeIdx = arguments[0].nodeIdx;
+//                 }
+//                 var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false)
+//                 PostTreeView.putchildxml(nodeIdx, childxml);
+//             }
             
             var inputNameDlg_cross_dialogArguments = new Array();
             function add_onclick() {
-			    if (PostTreeView.selectedIndex() == -1) {
-			        alert("<spring:message code='ezEmail.t158' />");
-			        return;
-			    }
+// 			    if (PostTreeView.selectedIndex() == -1) {
+// 			        alert("<spring:message code='ezEmail.t158' />");
+// 			        return;
+// 			    }
 			    
-			    inputNameDlg_cross_dialogArguments[0] = "";
-			    inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
-			    inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+			    inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
+			    inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
+			    inputNameDlg_cross_dialogArguments[2] = "";
+			    
 			    DivPopUpShow(330, 150, "/ezCircular/circularInputName.do");
 			}
-		    function add_onclick_Complete(szName) {
-		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || szName.trim() == "") {
-		            return;
-		        }
-		        else if (checkBadFolderName(szName)) {
-		            return;
-		        }
+// 		    function add_onclick_Complete(szName) {
+// 		        DivPopUpHidden();
+// 		        location.reload();
+// 		        if (typeof (szName) == "undefined" || szName.trim() == "") {
+// 		            return;
+// 		        }
+// 		        else if (checkBadFolderName(szName)) {
+// 		            return;
+// 		        }
 		        
-		        var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        var result = mail_make_folder("NEW", szURL, "", szName);
-		        if (result != "OK") {
-		            if (result == "ALREADY_EXISTS") {
-		                alert("<spring:message code='ezEmail.t456' />");
-		            } else {
-		                alert("<spring:message code='ezEmail.t457' />");
-		            }
-		            return;
-		        }
+// 		        var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+// 		        var result = mail_make_folder("NEW", szURL, "", szName);
+// 		        if (result != "OK") {
+// 		            if (result == "ALREADY_EXISTS") {
+// 		                alert("<spring:message code='ezEmail.t456' />");
+// 		            } else {
+// 		                alert("<spring:message code='ezEmail.t457' />");
+// 		            }
+// 		            return;
+// 		        }
 		        
-		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
-                PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
+// 		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
+//                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
                 
-		        EventCheck = true;
-		    }
+// 		        EventCheck = true;
+// 		    }
 		    
 		    function modify_onclick() {
 		        if (PostTreeView.selectedIndex() == -1) {
 		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
-		        else if (checkTopLevelFolder(PostTreeView.selectedIndex())) {
-		            alert("<spring:message code='ezEmail.t458' />");
-		            return;
-		        }
-		        inputNameDlg_cross_dialogArguments[0] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption");
-		        inputNameDlg_cross_dialogArguments[1] = modify_onclick_Complete;
-		        inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
-		        DivPopUpShow(330, 150,"/ezEmail/inputNameDlg.do");
-		    }
-		    function modify_onclick_Complete(szName) {
-		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || szName.trim() == "" || szName == PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption")) {
-		            return;
-		        }
-		        if (checkBadFolderName(szName)) {
-		            return;
-		        }
-
-		        var result = mail_make_folder("MODIFY", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "", szName);
 		        
-		        if (result != "OK") {
-		        	if (result == "ALREADY_EXISTS") {
-		        		alert("<spring:message code='ezEmail.lhm05' />");
-		        	} else {
-		        		alert("<spring:message code='ezEmail.t459' />");
-		        	}
-		        	return;
-		        }
+		        inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
+		        inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
+		        inputNameDlg_cross_dialogArguments[2] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
 		        
-		        LoadAddressTree(PostTreeView.selectedIndex());
-		        EventCheck = true;
+		        DivPopUpShow(330, 150, "/ezCircular/circularInputName.do");
 		    }
 		    
-		    var mail_movecopy_cross_dialogArguments = new Array();
+		    function onclick_Complete(szName) {
+		    	DivPopUpHidden();
+		        location.reload();
+		    }
+// 		    function modify_onclick_Complete(szName) {
+// 		        DivPopUpHidden();
+// 		        if (typeof (szName) == "undefined" || szName.trim() == "" || szName == PostTreeView.getvalue(PostTreeView.selectedIndex(), "caption")) {
+// 		            return;
+// 		        }
+// 		        if (checkBadFolderName(szName)) {
+// 		            return;
+// 		        }
+
+// 		        var result = mail_make_folder("MODIFY", PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), "", szName);
+		        
+// 		        if (result != "OK") {
+// 		        	if (result == "ALREADY_EXISTS") {
+// 		        		alert("<spring:message code='ezEmail.lhm05' />");
+// 		        	} else {
+// 		        		alert("<spring:message code='ezEmail.t459' />");
+// 		        	}
+// 		        	return;
+// 		        }
+		        
+// 		        LoadAddressTree(PostTreeView.selectedIndex());
+// 		        EventCheck = true;
+// 		    }
+		    
+// 		    var mail_movecopy_cross_dialogArguments = new Array();
 // 		    function move_onclick() {
 // 		        if (PostTreeView.selectedIndex() == -1) {
 // 		            alert("<spring:message code='ezEmail.t158' />");
@@ -216,82 +221,40 @@
 		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
-		        else if (checkTopLevelFolder(PostTreeView.selectedIndex())) {
-		        	alert("<spring:message code='ezEmail.t460' />");
-		            return;
-		        }
 		    	
-		        var trashBoxURL = "${pDeleteBoxID}";
-		        var deleteURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        
-		        //편지함 영구삭제
-		        if (deleteURL.indexOf(trashBoxURL) == 0) {
-		            if (confirm("<spring:message code='ezEmail.t461' />")) {
-		            	var result = mail_make_folder("DEL", deleteURL, "", "");
-		            	
-		                if (result != "OK") {
-		                    alert("<spring:message code='ezEmail.t462' />");
-		                    return;
-		                }
-		                
-		                PostTreeView.deletenode(PostTreeView.selectedIndex());
-		                EventCheck = true;
-		            }
-		        }
-		        //편지함 지운편지함으로 이동
-		        else {
-		            if (confirm("<spring:message code='ezEmail.t463' />")) {
-		                var result = mail_make_folder("MOVE", deleteURL, trashBoxURL, "");
-		                
-		                if (result != "OK") {
-			            	if (result == "ALREADY_EXISTS") {
-			            		alert("<spring:message code='ezEmail.lhm04' />");
-			            	} else {
-			            		alert("<spring:message code='ezEmail.t464' />");
-			            	}
-			                return;
-			            }
-		                
-			            LoadAddressTree(PostTreeView.findindex("href", trashBoxURL));
-		                EventCheck = true;
-		            }
-		        }
-		    }
-		    
-		    function delete_mail_onclick() {
-		        if (PostTreeView.selectedIndex() == -1) {
-		            alert("<spring:message code='ezEmail.t158' />");
-		            return;
-		        }
-		        
-		        var trashBoxURL = "${pDeleteBoxID}";
-		        var deleteURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        
-		      	//지운편지함의 메일 영구삭제
-		        if (deleteURL == trashBoxURL) {
-		            if (confirm("<spring:message code='ezEmail.t470' />")) {
-		                delete_mail(deleteURL, true, "");
-		            }
-		        }
-		      	//편지함의 메일 지운편지함으로 이동
-		        else {
-		            if (confirm("<spring:message code='ezEmail.t475' />")) {
-		                delete_mail(deleteURL, false, trashBoxURL);
-		            }
-		        }
+		        var deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+
+				if (confirm("삭제하시겠습니까?")) {
+					$.ajax({
+						method : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularDeleteFolder.do",
+						data : {
+							deleteFolder : deleteFolder 
+						},
+						success : function() {
+							alert("삭제하였습니다.");
+							location.reload();
+						},
+						error : function() {
+							alert("에러발생");
+						}
+					})
+				}
 		    }
 
-			function checkBadFolderName(szName) 
-			{
-				var szBadChars = /[\<\>\~\#\%\&\*\+\|\\\.\/]/g;
-				var szChangedName = szName.replace(szBadChars, "");
-				if(szChangedName != szName)
-				{
-					alert("<spring:message code='ezEmail.t479' />< ~ # % & * + | \\ . / >)<spring:message code='ezEmail.t480' />");
-					return true;
-				}
-				return false;
-			}
+// 			function checkBadFolderName(szName) 
+// 			{
+// 				var szBadChars = /[\<\>\~\#\%\&\*\+\|\\\.\/]/g;
+// 				var szChangedName = szName.replace(szBadChars, "");
+// 				if(szChangedName != szName)
+// 				{
+// 					alert("<spring:message code='ezEmail.t479' />< ~ # % & * + | \\ . / >)<spring:message code='ezEmail.t480' />");
+// 					return true;
+// 				}
+// 				return false;
+// 			}
 			
 			//TODO: copy일때 비동기로 처리하도록 함수 따로 만들어야함.
 // 		    function mail_make_folder(szCMD, szURL, destURL, szName) {
@@ -373,33 +336,33 @@
 		        }
 		    }
 		    
-			function LoadAddressTree(idx) {
-		        PostTreeView.config(treeconfig);
-		        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
-		        PostTreeView.update();
-		        PostTreeView.toggle(idx);
-		    }
+// 			function LoadAddressTree(idx) {
+// 		        PostTreeView.config(treeconfig);
+// 		        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+// 		        PostTreeView.update();
+// 		        PostTreeView.toggle(idx);
+// 		    }
 			
 			// 2016-12-28 이효민 추가
-			function checkTopLevelFolder(nodeIdx) {
-				var folderUrl = PostTreeView.getvalue(nodeIdx, "href");
-				if (folderUrl.indexOf(".") > -1) {
-					return false;
-				} else {
-					return true;
-				}
-			}
+// 			function checkTopLevelFolder(nodeIdx) {
+// 				var folderUrl = PostTreeView.getvalue(nodeIdx, "href");
+// 				if (folderUrl.indexOf(".") > -1) {
+// 					return false;
+// 				} else {
+// 					return true;
+// 				}
+// 			}
 			
-			function HiddenMailProgress() {
-			    document.getElementById("mailPanel").style.display = "none";
-			    document.getElementById("MailProgress").style.display = "none";
-			}
-			function ShowMailProgress() {
-			    //document.getElementById("mailPanel").style.display = "";
-			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
-			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
-			    document.getElementById("MailProgress").style.display = "";
-			}
+// 			function HiddenMailProgress() {
+// 			    document.getElementById("mailPanel").style.display = "none";
+// 			    document.getElementById("MailProgress").style.display = "none";
+// 			}
+// 			function ShowMailProgress() {
+// 			    //document.getElementById("mailPanel").style.display = "";
+// 			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
+// 			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+// 			    document.getElementById("MailProgress").style.display = "";
+// 			}
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
