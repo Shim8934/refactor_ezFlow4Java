@@ -1121,9 +1121,8 @@
            ('SA03','012','부서병렬합의','Parallel agreement(dept.)','個人並列合意','并行的协议(部门)','1','부서병렬협조',#companyID#, #tenantID# ),
            ('SA03','013','사전감사','Pre-audit','監査','审查','0','감사',#companyID#, #tenantID# ),
            ('SA03','014','수신','Receipt','受信','收件','0','제일제당수신',#companyID#, #tenantID# ),
-           ('SA03','015','공람','Display','回覧','传阅','0','후결',#companyID#, #tenantID# ),
+           ('SA03','015','회람','Circular reference','回覧','传阅','0','회람',#companyID#, #tenantID# ),
            ('SA03','016','대결','Deputy','代決','待决','0','대결',#companyID#, #tenantID# ),
-           ('SA03','017','회람','Circular reference','回覧','传阅','0','공람',#companyID#, #tenantID# ),
            ('SA03','018','기안','Draft','起案','起草','0','기안',#companyID#, #tenantID# ),
            ('SA03','019','검토','Examination','検討','评论','0','검토',#companyID#, #tenantID# ),
 			('SA05', '0  ', '사인종류', '사인종류', '사인종류', '사인종류', '1', '사인종류', #companyID#, #tenantID#),
@@ -2950,6 +2949,24 @@
      
      <delete id="EzOrganAdminDAO.deleteCompany_D5" parameterClass="Map">
         DELETE FROM
+            TBL_TASKCODE
+        WHERE  
+            TENANT_ID = #v_TENANT_ID#
+        AND 
+            COMPANYID = #v_CN#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D6" parameterClass="Map">
+        DELETE FROM
+            TBL_TASKSUBCATEGORY
+        WHERE  
+            TENANT_ID = #v_TENANT_ID#
+        AND 
+            COMPANYID = #v_CN#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D7" parameterClass="Map">
+        DELETE FROM
             TBL_TASKMIDDLECATEGORY
         WHERE  
             TENANT_ID = #v_TENANT_ID#
@@ -2957,7 +2974,7 @@
             COMPANYID = #v_CN#
      </delete>
      
-      <delete id="EzOrganAdminDAO.deleteCompany_D6" parameterClass="Map">
+      <delete id="EzOrganAdminDAO.deleteCompany_D8" parameterClass="Map">
         DELETE FROM
             TBL_LASTDOCID
         WHERE  
@@ -2966,7 +2983,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-     <delete id="EzOrganAdminDAO.deleteCompany_D7" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D9" parameterClass="Map">
         DELETE FROM
             TBL_FORMCONTAINER
         WHERE  
@@ -2975,7 +2992,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-     <delete id="EzOrganAdminDAO.deleteCompany_D8" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D10" parameterClass="Map">
         DELETE FROM
             TBL_CONTAINERTYPE
         WHERE  
@@ -2984,7 +3001,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-       <delete id="EzOrganAdminDAO.deleteCompany_D9" parameterClass="Map">
+       <delete id="EzOrganAdminDAO.deleteCompany_D11" parameterClass="Map">
         DELETE FROM
             TBL_CONTAINERTODOCSTATE
         WHERE  
@@ -2993,7 +3010,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-      <delete id="EzOrganAdminDAO.deleteCompany_D10" parameterClass="Map">
+      <delete id="EzOrganAdminDAO.deleteCompany_D12" parameterClass="Map">
         DELETE FROM
             TBL_TASKCATEGORY
         WHERE  
@@ -3002,7 +3019,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-      <delete id="EzOrganAdminDAO.deleteCompany_D11" parameterClass="Map">
+      <delete id="EzOrganAdminDAO.deleteCompany_D13" parameterClass="Map">
         DELETE FROM
             TBL_FORMPROPERTY
         WHERE  
@@ -3011,7 +3028,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-      <delete id="EzOrganAdminDAO.deleteCompany_D12" parameterClass="Map">
+      <delete id="EzOrganAdminDAO.deleteCompany_D14" parameterClass="Map">
         DELETE FROM
             TBL_CODELIST
         WHERE  
@@ -3020,7 +3037,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-     <delete id="EzOrganAdminDAO.deleteCompany_D13" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D15" parameterClass="Map">
         DELETE FROM
             TBL_LISTOPTION
         WHERE  
@@ -3029,7 +3046,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-     <delete id="EzOrganAdminDAO.deleteCompany_D14" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D16" parameterClass="Map">
         DELETE FROM
             TBL_LISTINFO
         WHERE  
@@ -3038,7 +3055,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-     <delete id="EzOrganAdminDAO.deleteCompany_D15" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D17" parameterClass="Map">
         DELETE FROM
             TBL_CABINETCODELIST
         WHERE  
@@ -3047,7 +3064,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-      <delete id="EzOrganAdminDAO.deleteCompany_D16" parameterClass="Map">
+      <delete id="EzOrganAdminDAO.deleteCompany_D18" parameterClass="Map">
         DELETE FROM
             TBL_RS_BRD    
         WHERE  
@@ -3056,7 +3073,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-     <delete id="EzOrganAdminDAO.deleteCompany_D17" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D19" parameterClass="Map">
         DELETE FROM
             TBL_PORTAL_ACL    
         WHERE  

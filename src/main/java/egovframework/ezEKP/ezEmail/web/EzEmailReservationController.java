@@ -21,6 +21,7 @@ import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
@@ -186,6 +187,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String subject = "";
 		String body = "";
+		String from = "";
 		String to = "";
 		String cc = "";
 		String bcc = "";
@@ -302,8 +304,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
         String displayNamePrintable = userInfo.getDisplayName();
 		String serverName = loginInfo.getServerName();
-		String from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
-		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName + ",from=" + from);
+		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
@@ -313,12 +314,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
 		
-		String sendFrom = "";
-		if (request.getParameter("sendfrom") != null) { 
-			sendFrom = request.getParameter("sendfrom");
-		}
 		String senderInfo = userInfo.getCompany() + ", " + userInfo.getDescription() + ", " + userInfo.getTitle();
-		logger.debug("sendFrom=" + sendFrom + ",senderInfo=" + senderInfo);
+		logger.debug("senderInfo=" + senderInfo);
 		
 		//메일 색상 관련 설정
 		String inMailColor = "808080";
@@ -353,7 +350,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
   		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
   				+ ",postType=" + postType);
   		
-  		//TODO: 개별발신
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
 		
 		//set cmdOwn
@@ -370,7 +366,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     	String draftsFolderName = egovMessageSource.getMessage("ezEmail.t99000027", locale);
     	
 		if (message != null) {
-			// in case of editing a message in Drafts folder.
+			if (message.getFrom() != null && message.getFrom()[0] != null) {
+    			from = ((InternetAddress)message.getFrom()[0]).getAddress();
+    		}
+			
 			// retrieve the TO addresses from the message.
 			Address[] addresses = message.getRecipients(Message.RecipientType.TO);
 			String[] rawHeaders = message.getHeader("To");
@@ -395,7 +394,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			
 			// analyze the message and retrieve the attached file list.
 			List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-			List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, draftsFolderName, uid, -1, attachedFileList, false);					
+			List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, draftsFolderName, uid, -1, attachedFileList, false, locale);					
 			body = EgovStringUtil.getSpclStrCnvr2(bodyInfoList.get(0));
 			
 			if (attachedFileList.size() > 0) {
@@ -442,11 +441,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			
         	//set bodyType
         	if (message.getHeader("Content-Type") != null) {
-        		String tempBodyType = message.getHeader("Content-Type")[0];
-        		if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
+        		String tempBodyType = ezEmailUtil.getTextPart(message).get(1);
+        		
+        		if(tempBodyType.equals("text/plain")) {
         			bodyType = "1";
-        		}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
-        			bodyType = "0";
         		}
     		}
         	
@@ -466,10 +464,49 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 			}
 		}
 		
+		String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
+		String fromAddressHtml = "";
+		
+		if (useFromAddress != null) {
+			if (useFromAddress.equals("YES")) {
+				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
+				
+				boolean isValidFrom = false;
+				
+				for (String[] address : fromAddressList) {
+					if (from.equals(address[0])) {
+						isValidFrom = true;
+						break;
+					}
+				}
+				
+				if (!isValidFrom) {
+					from = loginInfo.getEmail();
+				}
+				
+				for (String[] address : fromAddressList) {
+					if (from.equals(address[0])) {
+						sb.append("<option value='" + address[0] + "' selected>" + address[0] + "</option>");
+					} else {
+						sb.append("<option value='" + address[0] + "'>" + address[0] + "</option>");
+					}
+				}
+				
+				sb.append("</select>");
+				sb.append("<label for='ex_select'>" + from + "</label>");
+				
+				fromAddressHtml = sb.toString();
+			}
+		} else {
+			useFromAddress = "NO";
+		}
+		
         String browser = ClientUtil.getClientInfo(request, "browser");
         boolean isCrossBrowser = browser.equals("IE9") ? false : true;
         
-		model.addAttribute("from", from);
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);
@@ -497,7 +534,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("pAttachWarning", pAttachWarning);
 		model.addAttribute("pBigAttachDownloadDay", pBigAttachDownloadDay);
 		model.addAttribute("displayNamePrintable", displayNamePrintable);
-		model.addAttribute("sendFrom", sendFrom);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);
 		model.addAttribute("cmd", cmd);
 		model.addAttribute("cmdOwn", cmdOwn);
@@ -523,6 +559,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("showDisplay", showDisplay);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("useFromAddress", useFromAddress);
+		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		
         logger.debug("mailEdit ended.");
         

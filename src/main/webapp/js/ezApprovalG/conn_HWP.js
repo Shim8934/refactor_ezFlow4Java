@@ -5,28 +5,25 @@ function GetDocumentElement(HwpCtrl, CharName)
 	
 	if( !isNaN(fChar) )
 		CharName = "r" + CharName;
-	
+
 	var DocumentInfo = createXmlDom();
-	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
 	
-	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0)
-	{
-	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "")
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
+	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
+	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
+	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
+	    }
+	    
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
-		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0)
-		{
-		    return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
-		}
-		else
-		{
+		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
+			alert(getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0)));
+		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+		} else {
 			return "";
 		}
-	}
-	else
-	{
+	} else {
 		return "";
 	}
 }
@@ -39,33 +36,31 @@ function SetDocumentElement(HwpCtrl, CharName, value)
 		CharName = "r" + CharName;
 	
 	var DocumentInfo = createXmlDom();
-	DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());	
-	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0)
-	{
-	    if (getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)) == "")
-	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONN></CONN>");
+	DocumentInfo = loadXMLString(HwpCtrl.GetDocumentInfo().replace(/&amp;/gi, "&").replace(/&lt;/gi, "<").replace(/&gt;/gi, ">"));
+	
+	if (DocumentInfo.getElementsByTagName("KEYWORD").length > 0) {
+	    if (DocumentInfo.getElementsByTagName("KEYWORD").item(0).childNodes.length == 0) {
+	        setNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0), "<CONNROOT></CONNROOT>");
+	    }
+	    
 		var DocumentKeywordInfo = createXmlDom();
-		DocumentKeywordInfo.loadXML(getNodeText(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
+		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD").item(0)));
 		
-		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0)
-		{
+		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
 		    setNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0) , value);
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", DocumentKeywordInfo.xml);
-			return true;
-		}
-		else
-		{
-			var objNode;
-			objNode = DocumentKeywordInfo.createNode(1,CharName,"");		
-			setNodeText(objNode , value);
-			DocumentKeywordInfo.documentElement.appendChild(objNode);
+		    
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
 			
-			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", DocumentKeywordInfo.xml);
+			return true;
+		} else {
+			var objNode;
+			
+			createNodeAndAppandNodeText(DocumentKeywordInfo, DocumentKeywordInfo.getElementsByTagName("KEYWORD").item(0), objNode, CharName, value);
+			
+			HwpCtrl.SetDocumentInfo("NULL", "NULL", "NULL", getXmlString(DocumentKeywordInfo.getElementsByTagName("CONNROOT").item(0)));
 			return true;
 		}
-	}
-	else
-	{
+	} else {
 		return true;
 	}
 }
@@ -208,7 +203,7 @@ function callUIASP(pconnString, pqueryString, pkeyNodes) {
     var feature = pconnString
     parameter = window.showModalDialog(url, parameter, feature);
 
-    xmlpara.loadXML(parameter)
+    xmlpara = loadXMLString(parameter)
     return xmlpara;
 }
 function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
@@ -222,7 +217,7 @@ function callUIASP_EX(pconnString, pqueryString, pkeyNodes) {
     var feature = pconnString
     parameter = window.showModalDialog(url, xmlsend, feature);
 
-    xmlpara.loadXML(parameter)
+    xmlpara = loadXMLString(parameter)
     return xmlpara;
 }
 function getKeyValue(fieldID, num) {
@@ -333,7 +328,7 @@ function checkValidation(xmlPath) {
 function chkAprLine(objNodes) {
     var xmldom = createXmlDom();
     xmldom.async = false;
-    xmldom.loadXML(TempsaveAprlineinfo);
+    xmldom = loadXMLString(TempsaveAprlineinfo);
 
     var objLines = xmldom.selectNodes("LISTVIEWDATA/ROWS/ROW");
     var objCheck = objNodes.selectNodes("APRLINES/APRLINE");
@@ -435,7 +430,7 @@ function makeKeyValue(pkeyNodes, flag) {
         }
         else {
             if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
-                xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"))
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"))
 
                 tblid = GetAttribute(pkeyNodes(i),"tableid")
 
@@ -513,7 +508,7 @@ function setData(pobjXml, currTD) {
                     tblRowIdx = 0;
             }
             if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
-                xmlTbl.loadXML(GetDocumentElement(HwpCtrl, "tblinfo"));
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"));
                 tblinfoNodes = xmlTbl.documentElement.childNodes
 
                 fieldName = GetAttribute(row(0),"name")

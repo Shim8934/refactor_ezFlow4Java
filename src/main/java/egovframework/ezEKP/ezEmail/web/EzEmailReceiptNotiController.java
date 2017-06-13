@@ -149,14 +149,14 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				//get all recipients from email message(메일)
 				Address[] addresses = message.getAllRecipients();
 				
-				//get individualAliasList from recipients
+				//get aliasAddressList from recipients
 				List<String> addressList = new ArrayList<String>();
 				for (Address address : addresses) {
 					if (((InternetAddress)address).getAddress() != null) {
 						addressList.add(((InternetAddress)address).getAddress());
 					}
 				}
-				Map<String, String> individualAliasList = ezEmailService.getIndividualAliasMap(addressList, loginInfo.getTenantId());
+				Map<String, String> aliasAddressList = ezEmailService.getAliasAddressMap(addressList, loginInfo.getTenantId());
 				
 				List<String> tempMailList = new ArrayList<String>();
 				
@@ -172,8 +172,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 						tempSb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
 						tempSb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
 						
-						if (individualAliasList.containsKey(email)) { //individualAlias인 경우
-							email = individualAliasList.get(email);
+						if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
+							email = aliasAddressList.get(email);
 						}
 						
 						String readDate = "UNREAD";
@@ -345,12 +345,11 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 			
-			List<String> userMailAliasList = ezEmailService.getIndividualAlias(userAccount);
-			userMailAliasList.add(userAccount);
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
 			
 			boolean isUserFrom = false;
-			for (String userMail : userMailAliasList) {
-				if (userMail.equals(from)) {
+			for (String[] address : aliasAddressList) {
+				if (address[0].equals(from)) {
 					isUserFrom = true;
 					break;
 				}
@@ -385,11 +384,11 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				arrAddress = pEachCancel.split("\\|!\\|");
 			}
 			
-			//alias address(부서 address, 개인 alias address 등)가 있으면 real address로 바꾼다.
-			arrAddress = getMember(arrAddress);
-			
 			//get innerAddresses(내부사용자)
+			String innerDomainStr = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
+			String[] innerDomainArr = innerDomainStr.split(";");
 			List<String> innerAddresses = new ArrayList<String>();
+			
 			for (String address : arrAddress) {
 				int index = address.indexOf("@");
 				String domain = "";
@@ -397,10 +396,17 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					domain = address.substring(index + 1);
 				}
 				
-				if (domain.equals(domainName)) {
-					innerAddresses.add(address);
+				
+				for (int i=0; i<innerDomainArr.length; i++) {
+					if (domain.equals(innerDomainArr[i])) {
+						innerAddresses.add(address);
+						break;
+					}
 				}
 			}
+			
+			//alias address(부서 address, 개인 alias address 등)가 있으면 real address로 바꾼다.
+			innerAddresses = getMember(innerAddresses);
 			
 			//내부사용자 없을 경우 리턴
 			if (innerAddresses.size() == 0) {
@@ -426,16 +432,17 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		return "OK";
 	}
 	
-	public String[] getMember(String[] addresses) {
-		String[] rValue = null;
+	public List<String> getMember(List<String> addressList) {
+		List<String> resultList = new ArrayList<String>();
+		
 		try {
-			String inputParams = "";
+			String inputParams = null;
 			
-			for (int i=0; i<addresses.length; i++) {
-				if (i == 0) {
-					inputParams = "address=" + URLEncoder.encode(addresses[i], "UTF-8");
+			for (String address : addressList) {
+				if (inputParams == null) {
+					inputParams = "address=" + URLEncoder.encode(address, "UTF-8");
 				} else {
-					inputParams += "&address=" + URLEncoder.encode(addresses[i], "UTF-8");
+					inputParams += "&address=" + URLEncoder.encode(address, "UTF-8");
 				}
 			}
 			
@@ -448,18 +455,21 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 	        
 	        if (object.get("resultCode").equals("OK")) {
 	        	JSONArray array = (JSONArray)object.get("result");
-	        	rValue = new String[array.size()];
-	        	for (int i=0; i<array.size(); i++) {
-	        		rValue[i] = array.get(i).toString();
-	        	}
+	        	
+	        	if (array != null) { 
+	        		int len = array.size();
+	        		for (int i=0; i<len; i++){ 
+	        			resultList.add((String)array.get(i));
+	        		} 
+	        	} 
+	        	
 	        }
-	        
         
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return rValue;
+		return resultList;
 	}
 	
 }

@@ -14,7 +14,7 @@
 			var pBoardId = "<c:out value='${boardID}'/>";
 	        var pcheckForm = "<c:out value='${checkForm}'/>";
 	        
-	        function DocumentComplete() {	        	
+	        function Editor_Complete() {	        	
                 if (pcheckForm.toUpperCase() == "TRUE") {
                 	var fullPath = "";
                 	$.ajax({
@@ -26,7 +26,7 @@
     					success: function(result){    						
     						fullPath = result;
 
-    						var htmlData = message.SetEditorContentURL2(fullPath);              
+    						var htmlData = message.GetEditorContentURL(fullPath);              
     	                    message.SetEditorContent(htmlData);
     					}        			
     				});
@@ -57,7 +57,7 @@
 		<table class="content" style="width:790px;height:600px;margin-top:10px;">
 			<tr>
 				<td style="height:600px">                   
-				    <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; border:0px;"></iframe>
+				    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto; border:0px;"></iframe>
 				</td>
 			</tr>
         <tr style="display:none">

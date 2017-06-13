@@ -232,7 +232,7 @@
 		    });
 		    
 		    var g_originalHTML = null;
-		    function DocumentComplete() {
+		    function Editor_Complete() {
 		        if ((scheduletype == "1" || scheduletype == "6") && $.trim("${content}") != "") {
 		            if (g_originalHTML == null) {
 		                message.SetEditorContent("${content}")
@@ -577,17 +577,7 @@
 	                </tr>
 	                <tr>
 	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
-	                    	<c:choose>
-	                            <c:when test="${EDITOR == 'TAGFREE'}">
-		                            <iframe id="message" class="viewbox" name="message" src="TagFree_TFX_Editor.aspx" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
-		                        </c:when>
-	                            <c:when test="${EDITOR == 'DEXT'}">
-		                            <iframe id="message" class="viewbox" name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
-		                        </c:when>
-		                        <c:otherwise>
-		                            <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
-		                        </c:otherwise>
-	                        </c:choose>
+		                    <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;border-top:0px"></iframe>
 	                    </td>
 	                </tr>
 	                <tr>

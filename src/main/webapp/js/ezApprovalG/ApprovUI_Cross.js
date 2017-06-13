@@ -92,9 +92,7 @@ function AprrovMappingSign(ret) {
 
     var OpinionText = "";
     var PositionText = "";
-    if (getOpinionCount()) {
-        PositionText = "(" + strLang5 + "";
-    }
+    
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
         OpinionText = getSignDate() + "<br/>";
     }
@@ -334,7 +332,7 @@ function AprrovMappingSign(ret) {
                         if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                             strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                         else {
-                        	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                         	signHeight = 28;
                         }
 
@@ -418,7 +416,7 @@ function AprrovMappingSign(ret) {
                         if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                             strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                         else {
-                        	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                         }
 
                         strimg = strimg + " width=" + signWidth;
@@ -536,7 +534,7 @@ function AprrovMappingSign(ret) {
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else
-                        strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                        strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -549,7 +547,7 @@ function AprrovMappingSign(ret) {
 
                     var contents = "";
                     if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
-                        contents = strLang17;
+                        contents = strLang8;
 
                     SignName[signCnt] = signID;
                     SignType[signCnt] = "IMAGE";
@@ -630,7 +628,7 @@ function AprrovMappingSign(ret) {
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else {
-                    	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                    	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                     }
 
                     strimg = strimg + " width=" + signWidth;
@@ -1195,12 +1193,14 @@ function getApprovInfo() {
                 break;
 
             case "GONGRAM":
+            	approvalType = "GONRAM";
                 pOrgDocID = getNodeText(docflagnode[0]);
                 GetChildNodes(document.getElementById("btnApprove"))[0].innerHTML = strLang10;
                 setMenuBar("btnJunKyul", false);
                 break;
 
             case "CHAMJO":
+            	approvalType = "CHAMJO";
                 pOrgDocID = getNodeText(docflagnode[0]);
                 GetChildNodes(document.getElementById("btnApprove"))[0].innerHTML = strLang10;
                 setMenuBar("btnJunKyul", false);
@@ -1213,6 +1213,7 @@ function getApprovInfo() {
                 break;
 
             case "HABYUI":
+            	approvalType = "HABYUI";
                 setMenuBar("btnEdit", false);
                 setMenuBar("btnModAprDept", false);
                 setMenuBar("btnFileAttach", false);
@@ -1220,10 +1221,12 @@ function getApprovInfo() {
                 break;
 
             case "SUSIN":
+            	approvalType = "SUSIN";
                 pOrgDocID = getNodeText(docflagnode[0]);
                 break;
 
             case "GAMSA":
+            	approvalType = "GAMSA";
                 setMenuBar("btnApprove", true);
                 setMenuBar("btnReject", false);
                 setMenuBar("btnStay", false);
@@ -1236,6 +1239,7 @@ function getApprovInfo() {
                 break;
 
             case "B_GAMSA":
+            	approvalType = "B_GAMSA";
                 setMenuBar("btnApprove", true);
                 setMenuBar("btnReject", false);
                 setMenuBar("btnStay", false);
@@ -3090,36 +3094,6 @@ function UpdateLineHistory() {
     }
 }
 
-function getOpinionCount() {
-    try {
-    	var result = "";
-        
-        $.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/getOpinionCount.do",
-    		data : {
-    			docID : pDocID,
-    			userID : arr_userinfo[1],
-    			chkFlag : "ING"
-    		},
-    		success: function(text){
-    			result = text;
-    		}        			
-    	});
-    	
-        var tempValue = parseInt(result);
-        if (tempValue > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    } catch (e) {
-        return false;
-    }
-}
 function setRecevInfo(ret) {
     var i;
     var strMailAdd = "";

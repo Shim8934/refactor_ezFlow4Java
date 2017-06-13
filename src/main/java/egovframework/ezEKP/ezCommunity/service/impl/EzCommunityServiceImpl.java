@@ -1010,7 +1010,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			int strResponseCnt = ezCommunityDAO.pollMainGet4(map);
 			
 			logger.debug("pollMainGet4 ended.");
-			
+
 			sb.append("<tr>");
 			sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
@@ -1161,7 +1161,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String mode = request.getParameter("mode");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		String subject = request.getParameter("pollSubject");
+		String subject = request.getParameter("pollSubject").replaceAll("\r\n", "<br>");
 		/*String selRes = request.getParameter("selRes");
 		String sel = request.getParameter("sel");*/
 		String selType = request.getParameter("selType");
@@ -1173,7 +1173,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";
-		
+
 		logger.debug("startDate : " + startDate);
 		logger.debug("endDate : " + endDate);
 		
@@ -1547,7 +1547,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		StringBuilder strHTML = new StringBuilder();
-		String name = pollResGet4(commonUtil.getMultiData(userInfo.getLang(), tenantID), managerVO.getPollRegUser(), tenantID);
+		String name = pollResGet4(userInfo.getPrimary(), managerVO.getPollRegUser(), tenantID);
 		
 		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr>");
 		
@@ -1654,8 +1654,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
 		
 		StringBuilder sb = new StringBuilder();
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, multiData, keyword, sRadio, userInfo.getTenantId());
+		String primary = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getTenantId());
 		
 		int iOutputCount = 1;
 		
@@ -1668,7 +1668,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				break;
 			}
 			
-			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), multiData, userInfo.getTenantId());
+			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
 			
 			sb.append("<tr>");
 			sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
@@ -1814,7 +1814,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminHomeBoard1(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
-		List<CommunityBoardInfoVO> boardInfoList = getBoardList(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "ALL", userInfo.getTenantId());
+		List<CommunityBoardInfoVO> boardInfoList = getBoardList(code, userInfo.getPrimary(), "ALL", userInfo.getTenantId());
 		
 		for (CommunityBoardInfoVO boardInfo : boardInfoList) {
 			listData.append("<ROW><CELL><VALUE>");
@@ -1831,7 +1831,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminHomeBoard2(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
-		List<CommunityBoardInfoVO> boardInfoList2 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "LEFT", userInfo.getTenantId());
+		List<CommunityBoardInfoVO> boardInfoList2 = getBoardList(code, userInfo.getPrimary(), "LEFT", userInfo.getTenantId());
 		
 		for (CommunityBoardInfoVO boardInfo : boardInfoList2) {
 			listData.append("<ROW><CELL><VALUE>");
@@ -1848,7 +1848,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminHomeBoard3(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
-		List<CommunityBoardInfoVO> boardInfoList3 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "RIGHT", userInfo.getTenantId());
+		List<CommunityBoardInfoVO> boardInfoList3 = getBoardList(code, userInfo.getPrimary(), "RIGHT", userInfo.getTenantId());
 		
 		for (CommunityBoardInfoVO boardInfo : boardInfoList3) {
 			listData.append("<ROW><CELL><VALUE>");
@@ -1865,7 +1865,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminOuterList(LoginVO userInfo, String code) throws Exception {
 		logger.debug("adminOuterList started.");
 		
-		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
@@ -1899,7 +1899,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminMemberList(LoginVO userInfo, String code, String flag, String ser, String strSysopID, String mode) throws Exception {
 		logger.debug("adminMemberList started.");
 		
-		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), ser, userInfo.getTenantId());
+		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), userInfo.getPrimary(), ser, userInfo.getTenantId());
 		
 		int iCount = 1;
 		StringBuilder sb = new StringBuilder();
@@ -2149,14 +2149,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang, int tenantID) throws Exception {
+	public CommunityCBoardVO bbsEditNew(String bName, String no, String primary, int tenantID) throws Exception {
 		logger.debug("bbsEditNew started.");
-		logger.debug("bName : " + bName + ", no : " + no + ", lang : " + lang + ", tenantID : " + tenantID);
+		logger.debug("bName : " + bName + ", no : " + no + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
 		map.put("v_NO", no);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		CommunityCBoardVO vo = ezCommunityDAO.bbsEditNew(map);
@@ -2355,7 +2355,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, int tenantID) throws Exception {
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String primary, int tenantID) throws Exception {
 		logger.debug("getBoardTree started.");
 		
 		int count = 0;
@@ -2364,7 +2364,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		List<CommunityBoardTreeVO> boardTreeList = null;
 		List<CommunityBoardTreeVO> brdBoardTreeList = new ArrayList<CommunityBoardTreeVO>();
 		
-		String retValue = getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, tenantID);
+		String retValue = getBoardTreeGet1(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, primary, tenantID);
 		
         if (retValue != null && retValue.length() > 30) {
     		return retValue;
@@ -2402,7 +2402,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	
         	result.append("<NODE>");
         	
-        	if (strLang.equals("")) {
+        	if (primary.equals("1")) {
         		result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
         	} else {
         		result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
@@ -2411,7 +2411,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             result.append("<STYLE></STYLE>");
             result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardID() + "</DATA1>");
             
-            if (strLang.equals("")) {
+            if (primary.equals("1")) {
             	result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
             } else {
             	result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
@@ -2444,7 +2444,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	result.append("</TREEVIEWDATA>");
         }
         
-        getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, strLang, result.toString().replace("'", "''"), tenantID);
+        getBoardTreeSet(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, pSubFlag, pSelectBy, pExcludeBoardID, pClubNo, primary, result.toString().replace("'", "''"), tenantID);
 
         logger.debug("getBoardTree ended.");
         
@@ -3044,14 +3044,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang, int tenantID, String offset) throws Exception {
+	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String primary, int tenantID, String offset) throws Exception {
 		logger.debug("getReservedItemListXML started.");
 		
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pEndRow", pEndRow);
-		map.put("v_strLang", commonUtil.getMultiData(lang, tenantID));
+		map.put("primary", primary);
 		map.put("v_pUserID", id);
 		map.put("v_pSortBy", pSortBy);
 		map.put("tenantID", tenantID);
@@ -3113,11 +3113,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
 		logger.debug("readOneLineReply started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_userInfo_lang", lang);
+		map.put("primary", primary);
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pItemID", pItemID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -3263,7 +3263,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		int iOutputCount = 1;
 		int iList = 0;
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 //		String pURL = "";
 		
 		for (CommunityCBoardVO cBoard : cBoardList) {
@@ -3319,7 +3318,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
 			
-			if (multiData.equals("")) {
+			if (userInfo.getPrimary().equals("1")) {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
 			} else {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
@@ -3529,7 +3528,6 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	public String bbsDelOk(LoginVO userInfo, HttpServletRequest request, CommunityCBoardVO board, String itemNo, String goToPage, String bName, int adminCheck, int tenantID) throws Exception {
 		String folder = "", strFile = "";
 		
-//		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
 			String fileName = board.getFileName();
 			
@@ -3573,7 +3571,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	public String guestOne(LoginVO userInfo, String sRadio, String keyword, String code, int comNoPerPage, int curPage) throws Exception {
 		logger.debug("guestOne started.");
 		
-		List<CommunityCClubGuestVO> list = guestOneGet2(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		List<CommunityCClubGuestVO> list = guestOneGet2(sRadio, keyword, code, userInfo.getPrimary(), userInfo.getTenantId());
         
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -3581,7 +3579,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         
         for (CommunityCClubGuestVO item : list) {
         	i++;
-        	
+
         	if (i > comNoPerPage * curPage) {
         		break;
         	}
@@ -3618,15 +3616,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 
 	@Override
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception {
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		switch (mode) {
 			case "write" :
-				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
+				guestEditOkInsert(code, userInfo, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
 				
 				break;
 			case "delete" :
 				for (String no : cNo){
-					item = guestEditGet(code, multiData, no, userInfo.getId(), userInfo.getTenantId());
+					item = guestEditGet(code, userInfo.getPrimary(), no, userInfo.getId(), userInfo.getTenantId());
 					
 					if (item != null) {
 						bIsMyContent = true;
@@ -3637,7 +3634,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				break;
 			case "edit" :
 				for (String no : cNo){
-					item = guestEditGet(code, multiData, no, userInfo.getId(), userInfo.getTenantId());
+					item = guestEditGet(code, userInfo.getPrimary(), no, userInfo.getId(), userInfo.getTenantId());
 					
 					if (item != null) {
 						bIsMyContent = true;
@@ -3833,14 +3830,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public int guestOneGet1(String sRadio, String keyword, String code, String lang, int tenantID) throws Exception {
+	public int guestOneGet1(String sRadio, String keyword, String code, String primary, int tenantID) throws Exception {
 		logger.debug("guestOneGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_CODE", code);
 		map.put("v_S_RADIO", sRadio);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.guestOneGet1(map);
@@ -3851,12 +3848,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id, int tenantID) throws Exception {
+	public CommunityCClubGuestVO guestEditGet(String code, String primary, String no, String id, int tenantID) throws Exception {
 		logger.debug("guestEditGet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_code", code);
-		map.put("v_userInfo_lang", lang);
+		map.put("primary", primary);
 		map.put("v_no", no);
 		map.put("v_userInfo_userID", id);
 		map.put("tenantID", tenantID);
@@ -3961,21 +3958,15 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public int commViewMemberGet2(String code, String lang, String keyword, String sRadio, int tenantID) throws Exception {
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("commViewMemberGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
-		
-		logger.debug("commViewMemberGet2");
-		logger.debug("v_CODE="+map.get("v_CODE"));
-		logger.debug("v_USERINFO_LANG="+map.get("v_USERINFO_LANG"));
-		logger.debug("v_KEYWORD="+map.get("v_KEYWORD"));
-		logger.debug("v_S_RADIO="+map.get("v_S_RADIO"));
 		
 		int result = ezCommunityDAO.commViewMemberGet2(map);
 		
@@ -4000,13 +3991,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 	
 	@Override
-	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang, int tenantID) throws Exception {
+	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String primary, int tenantID) throws Exception {
 		logger.debug("commOutGet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_C_SYSOPID", cSysopID);
 		map.put("v_COMPANYID", companyID);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		CommunityMemberInfoVO vo = ezCommunityDAO.commOutGet(map);
@@ -4167,12 +4158,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public CommunityMemberInfoVO aspCommInfoGet2(String lang, String sysopID, int tenantID) throws Exception {
+	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, int tenantID) throws Exception {
 		logger.debug("aspCommInfoGet2 started.");
-		logger.debug("lang : " + lang + ", sysopID : " + sysopID + ", tenantID : " + tenantID);
+		logger.debug("primary : " + primary + ", sysopID : " + sysopID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_RECORD_C_SYSOPID", sysopID);
 		map.put("tenantID", tenantID);
 		
@@ -4244,12 +4235,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public CommunityClubVO  adminLogoGet(String code, String lang, int tenantID) throws Exception {
+	public CommunityClubVO  adminLogoGet(String code, String primary, int tenantID) throws Exception {
 		logger.debug("adminLogoGet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		CommunityClubVO vo = ezCommunityDAO.adminLogoGet(map);
@@ -5200,16 +5191,16 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int tenantID) throws Exception {
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, int tenantID) throws Exception {
 		logger.debug("categoryListGet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", type);
 		map.put("cat", mode);
 		map.put("v_pStart", startRow);
-		map.put("mariaStart", startRow - 1);
+		map.put("mariaStart", mariaStart);
 		map.put("v_pEnd", endRow);
-		map.put("mariaEnd", endRow - startRow);
+		map.put("mariaEnd", mariaEnd);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityClubVO> list = ezCommunityDAO.categoryListGet(map); 
@@ -5482,15 +5473,15 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return result;
 	}
 
-	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String lang, int tenantID) throws Exception {
+	public List<CommunityCClubGuestVO> guestOneGet2(String sRadio, String keyword, String code, String primary, int tenantID) throws Exception {
 		logger.debug("guestOneGet2 started.");
-		logger.debug("sRadio : " + sRadio + ", keyword : " + keyword + ", code : " + code + ", lang : " + lang + ", tenantID : " + tenantID);
+		logger.debug("sRadio : " + sRadio + ", keyword : " + keyword + ", code : " + code + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_s_radio", sRadio);
 		map.put("v_keyword", keyword);
 		map.put("v_code", code);
-		map.put("v_userInfo_lang", lang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCClubGuestVO> list = ezCommunityDAO.guestOneGet2(map);
@@ -5553,13 +5544,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("pollResOkSet ended.");
 	}
 	
-	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String lang, int tenantID) throws Exception {
+	public CommunityMemberInfoVO commViewMemberGet3(String id, String companyID, String primary, int tenantID) throws Exception {
 		logger.debug("commViewMemberGet3 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", id);
 		map.put("v_COMPANYID", companyID);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		CommunityMemberInfoVO vo = ezCommunityDAO.commViewMemberGet3(map);
@@ -5627,12 +5618,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String lang, String keyword, String sRadio, int tenantID) throws Exception {
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("commViewMemberGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_code", code);
-		map.put("v_userInfo_lang", lang);
+		map.put("primary", primary);
 		map.put("v_keyword", keyword);
 		map.put("v_s_radio", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
@@ -5644,13 +5635,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}	
 	
-	public List<CommunityBoardInfoVO> getBoardList(String code, String lang, String position, int tenantID) throws Exception {
+	public List<CommunityBoardInfoVO> getBoardList(String code, String primary, String position, int tenantID) throws Exception {
 		logger.debug("getBoardList started.");
-		logger.debug("code : " + code + ", lang : " + lang + ", position : " + position + ", tenantID : " + tenantID);
+		logger.debug("code : " + code + ", primary : " + primary + ", position : " + position + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_POSITION", position);
 		map.put("tenantID", tenantID);
 		
@@ -5661,12 +5652,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String lang, int tenantID) throws Exception {
+	public List<CommunityCOutApplicationVO> adminOuterListGet2(String code, String primary, int tenantID) throws Exception {
 		logger.debug("adminOuterListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCOutApplicationVO> list = ezCommunityDAO.adminOuterListGet2(map);
@@ -5676,13 +5667,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return list;
 	}
 	
-	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String lang, String ser, int tenantID) throws Exception {
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, int tenantID) throws Exception {
 		logger.debug("adminMemberListGet3 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_FLAG", flag);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_SER", ser);
 		map.put("tenantID", tenantID);
 		
@@ -5954,10 +5945,10 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return sb.toString();
 	}
 	
-	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, int tenantID) throws Exception {
+	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String primary, int tenantID) throws Exception {
 		logger.debug("getBoardTreeGet1 started.");
 		logger.debug("pRootBoardID : " + pRootBoardID + ", pUserID : " + pUserID + ", pDeptID : " + pDeptID + ", pCompanyID : " + pCompanyID + ", pMode : " + pMode + ", pSubFlag : " + pSubFlag);
-		logger.debug("pSelectBy : " + pSelectBy + ", pExcludeBoardID : " + pExcludeBoardID + ", pClubNo : " + pClubNo + ", strLang : " + strLang + ", tenantID : " + tenantID);
+		logger.debug("pSelectBy : " + pSelectBy + ", pExcludeBoardID : " + pExcludeBoardID + ", pClubNo : " + pClubNo + ", primary : " + primary + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pRootBoardID", pRootBoardID);
@@ -5969,7 +5960,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_pSelectBy", pSelectBy);
 		map.put("v_pExcludeBoardID", pExcludeBoardID);
 		map.put("v_pClubNo", pClubNo);
-		map.put("v_strLang", strLang);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		String result = ezCommunityDAO.getBoardTreeGet1(map);
@@ -6078,14 +6069,13 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		String id = userInfo.getId();
 		String offset = userInfo.getOffset();
-		String lang = userInfo.getLang();
 		int tenantID = userInfo.getTenantId();
 		
 		int count = 0;
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang, userInfo.getTenantId()));
+		map.put("primary", userInfo.getPrimary());
 		map.put("v_PUSERID", id);
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_PSORTBY", pSortBy);
@@ -6151,11 +6141,11 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		return result;
 	}
 	
-	public String pollResGet4(String lang, String pollRegUser, int tenantID) throws Exception {
+	public String pollResGet4(String primary, String pollRegUser, int tenantID) throws Exception {
 		logger.debug("pollResGet4 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_POLLREGUSER", pollRegUser);
 		map.put("tenantID", tenantID);
 		
@@ -6385,7 +6375,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		}
 	}
 	
-	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, String result, int tenantID) throws Exception {
+	public void getBoardTreeSet(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String primary, String result, int tenantID) throws Exception {
 		logger.debug("getBoardTreeSet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6398,7 +6388,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_pSelectBy", pSelectBy);
 		map.put("v_pExcludeBoardID", pExcludeBoardID);
 		map.put("v_pClubNo", pClubNo);
-		map.put("v_strLang", strLang);
+		map.put("primary", primary);
 		map.put("v_result", result);
 		map.put("tenantID", tenantID);
 		

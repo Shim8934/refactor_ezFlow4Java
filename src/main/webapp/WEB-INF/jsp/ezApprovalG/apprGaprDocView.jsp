@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html style="height:97%;">
 	<head>
@@ -18,8 +19,6 @@
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		
-		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var	DocID = '${docID}';
 		    var	DocHref = '${docHref}';
@@ -281,6 +280,30 @@
 		        window.close();
 		    }
 		
+// 		    function btnMail_onclick() {
+// 		    		  $.ajax({
+// 	                        type:"POST",
+// 	                        dataType:"text",
+// 	                        async: false,
+// 	                        data : {
+// 	                        	imgUrl : DocHref,
+// 	                        	docID: DocID
+// 	                        },
+// 	                        url: "/ezApprovalG/createMailImg.do",
+// 	                        success: function (data) {
+// 	                		    var pheight = window.screen.availHeight;
+// 	                	        var conHeight = pheight * 0.8;
+// 	                	        var pwidth = window.screen.availWidth;
+// 	                	        var pTop = (pheight - conHeight) / 2;
+// 	                	        var pLeft = (pwidth - 890) / 2;
+// 	                		        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref);
+// //	                 	        var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
+// 	                	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+// 	                	        newwin.focus();
+// 	                        }
+// 	                    });
+// 		    }
+
 		    function btnMail_onclick() {
 		    	var imgUrl="";
 		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
@@ -335,7 +358,13 @@
 		        var tempValue = getNodeText(dataNodes[0]);
 		
 		        if (tempValue == "TRUE") {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1441'/>";
+		        	var pAlertContent = "";
+		        	
+		        	if (approvalFlag == "G") {
+			            pAlertContent = "<spring:message code='ezApprovalG.t1441'/>";
+		        	} else {
+		        		pAlertContent = "<spring:message code='ezApprovalG.hyj23'/>";
+		        	}
 		            OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 		        }
 		    }
@@ -427,6 +456,9 @@
 	            else if (RtnVal == "ERR03") {
 	                var pAlertContent = strLang897;
 	                OpenAlertUI(pAlertContent);
+	            } else {
+	            	var pAlertContent = strLang898;
+	                OpenAlertUI(pAlertContent);
 	            }
 	            
 	        }
@@ -502,7 +534,12 @@
 		  <tr>
 		    <td style="height:20px" ><div id="menu">
 		        <ul>
-		          <li id="btnGongRam" style="display:none"><span onclick ="return btnGongRam_onclick()" ><spring:message code='ezApprovalG.t1720'/></span></li>
+		          <c:if test="${approvalFlag == 'G'}">
+			          <li id="btnGongRam" style="display:none"><span onclick ="return btnGongRam_onclick()" ><spring:message code='ezApprovalG.t1720'/></span></li>
+				  </c:if>
+				  <c:if test="${approvalFlag != 'G'}">
+			          <li id="btnGongRam" style="display:none"><span onclick ="return btnGongRam_onclick()" ><spring:message code='ezApprovalG.hyj22'/></span></li>
+				  </c:if>
 		          <li id="btnMail"><span onClick="return btnMail_onclick()" ><spring:message code='ezApprovalG.t1513'/></span></li>
 		          <li id="btnOpinion"><span onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnPrint" ><span  onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>

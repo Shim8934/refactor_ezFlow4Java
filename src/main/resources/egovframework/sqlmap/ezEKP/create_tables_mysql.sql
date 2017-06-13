@@ -721,7 +721,7 @@ CREATE TABLE `jmocha_stat_mail_company_flow_day` (
   `SORGID` varchar(200) NOT NULL,
   `RORGID` varchar(200) NOT NULL,
   `CNT` int(11) DEFAULT '0',
-  `MAILSIZE` int(11) DEFAULT '0',
+  `MAILSIZE` bigint(20) DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`DT_DD`,`SORGID`,`RORGID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -739,7 +739,7 @@ CREATE TABLE `jmocha_stat_mail_company_flow_month` (
   `SORGID` varchar(200) NOT NULL,
   `RORGID` varchar(200) NOT NULL,
   `CNT` int(11) DEFAULT '0',
-  `MAILSIZE` int(11) DEFAULT '0',
+  `MAILSIZE` bigint(20) DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`DT_MM`,`SORGID`,`RORGID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -757,13 +757,13 @@ CREATE TABLE `jmocha_stat_mail_dept_day` (
   `DEPTID` varchar(200) NOT NULL,
   `ORGID` varchar(200) DEFAULT NULL,
   `RECEIVEINCNT` int(11) DEFAULT '0',
-  `RECEIVEINSIZE` int(11) DEFAULT '0',
+  `RECEIVEINSIZE` bigint(20) DEFAULT '0',
   `RECEIVEOUTCNT` int(11) DEFAULT '0',
-  `RECEIVEOUTSIZE` int(11) DEFAULT '0',
+  `RECEIVEOUTSIZE` bigint(20) DEFAULT '0',
   `SENDINCNT` int(11) DEFAULT '0',
-  `SENDINSIZE` int(11) DEFAULT '0',
+  `SENDINSIZE` bigint(20) DEFAULT '0',
   `SENDOUTCNT` int(11) DEFAULT '0',
-  `SENDOUTSIZE` int(11) DEFAULT '0',
+  `SENDOUTSIZE` bigint(20) DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`DT_DD`,`DEPTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -781,13 +781,13 @@ CREATE TABLE `jmocha_stat_mail_dept_month` (
   `DEPTID` varchar(200) NOT NULL,
   `ORGID` varchar(200) DEFAULT NULL,
   `RECEIVEINCNT` int(11) DEFAULT '0',
-  `RECEIVEINSIZE` int(11) DEFAULT '0',
+  `RECEIVEINSIZE` bigint(20) DEFAULT '0',
   `RECEIVEOUTCNT` int(11) DEFAULT '0',
-  `RECEIVEOUTSIZE` int(11) DEFAULT '0',
+  `RECEIVEOUTSIZE` bigint(20) DEFAULT '0',
   `SENDINCNT` int(11) DEFAULT '0',
-  `SENDINSIZE` int(11) DEFAULT '0',
+  `SENDINSIZE` bigint(20) DEFAULT '0',
   `SENDOUTCNT` int(11) DEFAULT '0',
-  `SENDOUTSIZE` int(11) DEFAULT '0',
+  `SENDOUTSIZE` bigint(20) DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`DT_MM`,`DEPTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -827,13 +827,13 @@ CREATE TABLE `jmocha_stat_mail_user_day` (
   `DEPTID` varchar(200) NOT NULL,
   `ORGID` varchar(200) DEFAULT NULL,
   `RECEIVEINCNT` int(11) DEFAULT '0',
-  `RECEIVEINSIZE` int(11) DEFAULT '0',
+  `RECEIVEINSIZE` bigint(20) DEFAULT '0',
   `RECEIVEOUTCNT` int(11) DEFAULT '0',
-  `RECEIVEOUTSIZE` int(11) DEFAULT '0',
+  `RECEIVEOUTSIZE` bigint(20) DEFAULT '0',
   `SENDINCNT` int(11) DEFAULT '0',
-  `SENDINSIZE` int(11) DEFAULT '0',
+  `SENDINSIZE` bigint(20) DEFAULT '0',
   `SENDOUTCNT` int(11) DEFAULT '0',
-  `SENDOUTSIZE` int(11) DEFAULT '0',
+  `SENDOUTSIZE` bigint(20) DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`DT_DD`,`USERID`,`DEPTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -852,13 +852,13 @@ CREATE TABLE `jmocha_stat_mail_user_month` (
   `DEPTID` varchar(200) NOT NULL,
   `ORGID` varchar(200) DEFAULT NULL,
   `RECEIVEINCNT` int(11) DEFAULT '0',
-  `RECEIVEINSIZE` int(11) DEFAULT '0',
+  `RECEIVEINSIZE` bigint(20) DEFAULT '0',
   `RECEIVEOUTCNT` int(11) DEFAULT '0',
-  `RECEIVEOUTSIZE` int(11) DEFAULT '0',
+  `RECEIVEOUTSIZE` bigint(20) DEFAULT '0',
   `SENDINCNT` int(11) DEFAULT '0',
-  `SENDINSIZE` int(11) DEFAULT '0',
+  `SENDINSIZE` bigint(20) DEFAULT '0',
   `SENDOUTCNT` int(11) DEFAULT '0',
-  `SENDOUTSIZE` int(11) DEFAULT '0',
+  `SENDOUTSIZE` bigint(20) DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`DT_MM`,`USERID`,`DEPTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2725,6 +2725,172 @@ CREATE TABLE `tbl_cabroleinfo` (
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`CABINETCLASSNO`,`USER_ID`(255)),
   CONSTRAINT `FK_TBL_CABROLEINFO` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `CABINETCLASSNO`) REFERENCES `tbl_cabinetclass` (`TENANT_ID`, `COMPANYID`, `CABINETCLASSNO`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular`
+--
+
+DROP TABLE IF EXISTS `tbl_circular`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular` (
+  `circularId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) DEFAULT NULL,
+  `importance` mediumint(5) DEFAULT NULL,
+  `option` mediumint(5) DEFAULT NULL,
+  `content` longtext,
+  `hasFile` mediumint(5) DEFAULT NULL,
+  `status` mediumint(5) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `memberName` varchar(100) DEFAULT NULL,
+  `memberName2` varchar(100) DEFAULT NULL,
+  `regDate` varchar(40) DEFAULT NULL,
+  `endDate` varchar(40) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularId`),
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_bm`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_bm`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_bm` (
+  `circularBMId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `title` varchar(500) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `regDate` varchar(40) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularBMId`),
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_bmuser`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_bmuser`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_bmuser` (
+  `circularBMUserId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularBMId` bigint(10) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  `memberName` varchar(100) DEFAULT NULL,
+  `memberName2` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`circularBMUserId`),
+  KEY `tenantId_memberId_circularBMId_index` (`tenantId`,`memberId`,`circularBMId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_comment`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_comment` (
+  `circularCommentId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularUserId` bigint(10) DEFAULT NULL,
+  `circularComment` varchar(500) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `memberName` varchar(100) DEFAULT NULL,
+  `memberName2` varchar(100) DEFAULT NULL,
+  `regDate` varchar(40) DEFAULT NULL,
+  `status` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularCommentId`),
+  KEY `tenantId_memberId_circularUserId_index` (`tenantId`,`memberId`,`circularUserId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_commentstate`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_commentstate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_commentstate` (
+  `circularCommentStateId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularCommentId` bigint(10) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `status` mediumint(5) DEFAULT NULL,
+  `confirmDate` varchar(40) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularCommentStateId`),
+  KEY `tenantId_cn_circularCommentId_index` (`tenantId`,`memberId`,`circularCommentId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_file`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_file` (
+  `circularFileId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularId` bigint(10) DEFAULT NULL,
+  `fileName` varchar(200) DEFAULT NULL,
+  `fileSize` bigint(10) DEFAULT NULL,
+  `filePath` varchar(500) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularFileId`),
+  KEY `tenantId_circularId_index` (`tenantId`,`circularId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_option`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_option`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_option` (
+  `circularOptionId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `memberId` varchar(100) DEFAULT NULL,
+  `isMailReceive` mediumint(5) DEFAULT NULL,
+  `listCnt` mediumint(5) DEFAULT NULL,
+  `isPreview` mediumint(5) DEFAULT NULL,
+  `previewListValue` varchar(10) DEFAULT NULL,
+  `previewContentValue` varchar(10) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularOptionId`),
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_user`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_user` (
+  `circularUserId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularId` bigint(10) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `memberName` varchar(100) DEFAULT NULL,
+  `memberName2` varchar(100) DEFAULT NULL,
+  `status` mediumint(5) DEFAULT NULL,
+  `confirmDate` varchar(40) DEFAULT NULL,
+  `updateStatus` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularUserId`),
+  KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

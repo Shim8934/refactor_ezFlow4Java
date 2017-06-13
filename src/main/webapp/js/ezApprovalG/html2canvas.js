@@ -2403,6 +2403,11 @@ function calculateBorders(borders, nodeBounds, borderPoints, radius) {
             var bw = nodeBounds.width;
             var bh = nodeBounds.height - (borders[2].width);
 
+            console.log("bx : " + bx);
+            console.log("by : " + by);
+            console.log("bw : " + bw);
+            console.log("bh : " + bh);
+            
             switch(borderSide) {
             case 0:
                 // top border

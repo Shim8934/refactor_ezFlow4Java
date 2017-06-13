@@ -191,8 +191,10 @@ function InitListView() {
         pAPRLINE.SetMulSelectable(false);
         pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
         pAPRLINE.SetSelectFlag(false);
+        pAPRLINE.SetHeightFree(true);
         pAPRLINE.DataSource(loadXMLString(result));
         pAPRLINE.DataBind("APRLINE");
+        
     }
     catch (e) {
         alert("InitListView :: " + e.description);
@@ -290,7 +292,14 @@ function APRLINEATTENDERDELFunction() {
         var pSelectedRow = listview.GetSelectedRows();
         if (pSelectedRow.length != 0 && pSelectedRow != null && listview.GetSelectedIndexes().split(',')[0] != -1) {
             if (pSelectedRow[0].cells[5].innerText != strLang72) {
-                var pAlertContent = strLang822 + "<br> " + strLang823;
+            	var pAlertContent = "";
+            	
+            	if (approvalFlag == "G") {
+            		pAlertContent = strLang822 + "<br> " + strLang823;
+            	} else {
+            		pAlertContent = strLangS822 + "<br> " + strLang823;
+            	}
+            	
                 OpenAlertUI(pAlertContent);
                 return;
             }
@@ -365,7 +374,14 @@ function APRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
                 DuplicateFlag = true;
         }
         if (DuplicateFlag) {
-            var pAlertContent = strLang824;
+        	var pAlertContent = "";
+        	
+        	if (approvalFlag == "G") {
+        		pAlertContent = strLang824;
+        	} else {
+        		pAlertContent = strLangS824;
+        	}
+        	
             OpenAlertUI(pAlertContent);
             return;
         }
@@ -458,7 +474,12 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + strLang752 + "</VALUE>";
+                
+                if (approvalFlag == "G") {
+                	pparsingXML = pparsingXML + "<VALUE>" + strLang752 + "</VALUE>";
+                } else {
+                	pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+                }
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
@@ -514,7 +535,14 @@ function APRLINEATTENDSAVEFunction() {
         var pTotalRowsLen = pTotalRows.length;
 
         if (pTotalRowsLen == "0") {
-            var pAlertContent = strLang825;
+        	var pAlertContent = "";
+        	
+        	if (approvalFlag == "G") {
+        		pAlertContent = strLang825;
+        	} else {
+        		pAlertContent = strLangS825;
+        	}
+            
             OpenAlertUI(pAlertContent);
             return;
         } else {
@@ -543,12 +571,18 @@ function SaveAprLineInfo() {
                       window.close();
                   }
           	 } else {
-          		var pAlertContent = strLang826;
+          		var pAlertContent = "";
+          		
+          		if (approvalFlag == "G") {
+            		pAlertContent = strLang826;
+            	} else {
+            		pAlertContent = strLangS826;
+            	}
+          		
                 OpenAlertUI(pAlertContent);
                 return;
           	 }
           } 
-
     } catch (e) {
         alert("SaveAprLineInfo :: " + e.description);
     }
@@ -607,7 +641,6 @@ function APRLINEXMLParsing() {
     }
 }
 function UpdateLineHistory(_DOCID) {
-
     if (_DOCID == "") {
         return;
     }

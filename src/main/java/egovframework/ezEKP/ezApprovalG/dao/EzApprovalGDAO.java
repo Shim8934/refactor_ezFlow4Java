@@ -1026,10 +1026,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int)select("EzApprovalG.getMaxTmpDocSN", map);
 	}
 	
-	public int getOpinionCount(Map<String, Object> map) throws Exception{
-		return (int)select("EzApprovalG.getOpinionCount", map);
-	}
-	
 	public int getReceiveDocListCount(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.getReceiveDocListCount", map);
 	}
@@ -1445,10 +1441,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void insertCabinetHistory_CAB(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertCabinetHistory_CAB", map);
-	}
-	
-	public void insertAprGetNewID(Map<String, Object> map) throws Exception{
-		insert("EzApprovalG.insertAprGetNewID", map);
 	}
 	
 	public void setMyTaskCode(Map<String, Object> map) throws Exception{
@@ -2634,5 +2626,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public String getHapyuiCount(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getHapyuiCount", map);
+	}
+
+	public void delCirculation(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.delCirculation", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> getCirculationInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.getCirculationInfo", map);
+	}
+
+	public String getCircularDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getCircularDocID", map);
 	}
 }

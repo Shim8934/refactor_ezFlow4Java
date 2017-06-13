@@ -1,7 +1,10 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -11,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2631,6 +2635,372 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return result;
 	}
+	
+	@Override
+	public String saveFormInfoHWP(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
+		logger.debug("saveFormInfoHWP started.");
+		String strBeforeMHT = "";
+		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		Document doc = commonUtil.convertStringToDocument(formInfo);
+		String keepPeriod = "";
+		String keepPeriodCode = "";
+		String securityLevel = "";
+		String isPublic = "";
+		String tbItemCode = "";
+		String tbItemName = "";
+		String tbItemName2 = "";
+		String useFlag = "";
+		String formConnFlag = "";
+		
+		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
+		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
+		String formDescript = doc.getElementsByTagName("FormDescript").item(0).getTextContent();
+		String formKind = doc.getElementsByTagName("FormKind").item(0).getTextContent();
+		
+		if (approvalFlag.equals("S")) {
+			keepPeriod = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
+			keepPeriodCode = doc.getElementsByTagName("KEEPPERIODCODE").item(0).getTextContent();
+			securityLevel = doc.getElementsByTagName("SECURITYLEVEL").item(0).getTextContent();
+			isPublic = doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
+			tbItemCode = doc.getElementsByTagName("TBITEMCODE").item(0).getTextContent();
+			tbItemName = doc.getElementsByTagName("TBITEMNAME").item(0).getTextContent();
+			tbItemName2 = doc.getElementsByTagName("TBITEMNAME2").item(0).getTextContent();
+			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
+		} else {
+			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
+		}
+
+		String recevGroupXML = "";
+		if (formRecevGroup != null && !formRecevGroup.equals("")) {
+			recevGroupXML = formRecevGroup;
+		}
+		
+		boolean isUpdate = false;
+		String saveFileFolder = "";
+		String saveFileName = "";
+
+		if (!formID.equals("") && !formMhtInfo.equals("")) {
+			isUpdate = true;
+			saveFileFolder = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form";
+			saveFileName = saveFileFolder + commonUtil.separator + formID + ".hwp";
+			
+			FileOutputStream stream = null;
+			
+			try {
+				File fileFolder = new File(saveFileFolder);
+				File file = new File(saveFileName);
+				
+				if (!fileFolder.exists()) {
+					fileFolder.mkdirs();
+				}
+				
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				}
+				
+				stream = new FileOutputStream(file);
+				stream.write(Base64.decodeBase64(formMhtInfo));
+				stream.close();
+			} catch (Exception e) {
+				return "ERROR : " + egovMessageSource.getMessage("ezApprovalG.lhj03", userInfo.getLocale()) + e.getMessage();
+			}
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PFORMCONTAINERID", contID);
+		map.put("v_PYEAR", commonUtil.getTodayUTCTime("YYYY"));
+		map.put("v_PFORMNAME", formName);
+		map.put("v_PFORMNAME2", formName2);
+		map.put("v_PFORMDESCRIPT", formDescript);
+		map.put("v_PFORMKIND", formKind);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PFORMCONNFLAG", formConnFlag);
+		map.put("companyID", companyID);
+		map.put("tenantID", userInfo.getTenantId());
+
+		String result = "";
+		
+		if (formID.equals("")) {
+			logger.debug("setFormDataSelect started.");
+			result = ezApprovalGAdminDAO.setFormDataSelect(map);
+			logger.debug("setFormDataSelect ended.");
+			
+			if (result == null) {
+				result = commonUtil.getTodayUTCTime("YYYY") + "000001";
+			} else {
+				if ( result.substring(0,4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
+					result = Integer.toString((Integer.parseInt(result) + 1));
+				} else {
+					result = commonUtil.getTodayUTCTime("YYYY") + "000001";
+				}
+			}
+			
+			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp");
+			map.put("v_PFORMID", result);
+			
+			logger.debug("setFormDataInsert1 started.");
+			ezApprovalGAdminDAO.setFormDataInsert1(map);
+			logger.debug("setFormDataInsert1 ended.");
+			
+			if (approvalFlag.equals("S")) {
+				map.put("keepPeriod", keepPeriod);
+				map.put("keepPeriodCode", keepPeriodCode);
+				map.put("securityLevel", securityLevel);
+				map.put("isPublic", isPublic);
+				map.put("tbItemCode", tbItemCode);
+				map.put("tbItemName", tbItemName);
+				map.put("tbItemName2", tbItemName2);
+				map.put("useFlag", useFlag);
+				
+				logger.debug("setAutoDocNum started.");
+				ezApprovalGAdminDAO.setAutoDocNum(map);
+				logger.debug("setAutoDocNum ended.");
+				
+				if (!formAutoRule.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRule);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleSN", doc.getElementsByTagName("AUTORULESN").item(i).getTextContent());
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("checkFieldType", doc.getElementsByTagName("CHECKFIELDTYPE").item(i).getTextContent());
+						map.put("checkField", doc.getElementsByTagName("CHECKFIELD").item(i).getTextContent());
+						map.put("operatorType", doc.getElementsByTagName("OPERATORTYPE").item(i).getTextContent());
+						map.put("operator", doc.getElementsByTagName("OPERATOR").item(i).getTextContent());
+						map.put("condType", doc.getElementsByTagName("CONDTYPE").item(i).getTextContent());
+						map.put("condValue", doc.getElementsByTagName("CONDVALUE").item(i).getTextContent());
+						map.put("condValueDeptID", doc.getElementsByTagName("CONDVALUEDEPTID").item(i).getTextContent());
+						map.put("docType", doc.getElementsByTagName("DOCTYPE").item(i).getTextContent());
+						
+						logger.debug("insertAutoRule started.");
+						ezApprovalGAdminDAO.insertAutoRule(map);
+						logger.debug("insertAutoRule ended.");
+					}
+				}
+				
+				if (!formAutoRuleLine.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRuleLine);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("aprMemberSN", doc.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
+						map.put("aprType", doc.getElementsByTagName("APRTYPE").item(i).getTextContent());
+						map.put("aprState", doc.getElementsByTagName("APRSTATE").item(i).getTextContent());
+						map.put("aprMemberID", doc.getElementsByTagName("APRMEMBERID").item(i).getTextContent());
+						map.put("aprMemberIsDeptYN", doc.getElementsByTagName("APRMEMBERISDEPTYN").item(i).getTextContent());
+						map.put("aprMemberName", doc.getElementsByTagName("APRMEMBERNAME").item(i).getTextContent());
+						map.put("aprMemberName2", doc.getElementsByTagName("APRMEMBERNAME2").item(i).getTextContent());
+						map.put("aprMemberJobTitle", doc.getElementsByTagName("APRMEMBERJOBTITLE").item(i).getTextContent());
+						map.put("aprMemberJobTitle2", doc.getElementsByTagName("APRMEMBERJOBTITLE2").item(i).getTextContent());
+						map.put("aprMemberDeptID", doc.getElementsByTagName("APRMEMBERDEPTID").item(i).getTextContent());
+						map.put("aprMemberDeptName", doc.getElementsByTagName("APRMEMBERDEPTNAME").item(i).getTextContent());
+						map.put("aprMemberDeptName2", doc.getElementsByTagName("APRMEMBERDEPTNAME2").item(i).getTextContent());
+						map.put("aprMemberLdapPath", doc.getElementsByTagName("APRMEMBERLDAPPATH").item(i).getTextContent());
+						map.put("reasonDoNotApprov", doc.getElementsByTagName("REASONDONOTAPPROV").item(i).getTextContent());
+						map.put("isProposerYN", doc.getElementsByTagName("ISPROPOSERYN").item(i).getTextContent());
+						map.put("isBriefUserYN", doc.getElementsByTagName("ISBRIEFUSERYN").item(i).getTextContent());
+						
+						logger.debug("insertAutoRuleLine started.");
+						ezApprovalGAdminDAO.insertAutoRuleLine(map);
+						logger.debug("insertAutoRuleLine ended.");
+					}
+				}
+			}
+			
+			if (!recevGroupXML.equals("")) {
+				map = new HashMap<String, Object>();
+				map.put("companyID", companyID);
+				map.put("tenantID", userInfo.getTenantId());
+				map.put("approvalFlag", approvalFlag);
+				
+				logger.debug("setFormDataDelete started.");
+				ezApprovalGAdminDAO.setFormDataDelete(map);
+				logger.debug("setFormDataDelete ended.");
+				
+				doc = commonUtil.convertStringToDocument(recevGroupXML);
+				
+				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
+					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
+					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					
+					if (approvalFlag.equals("S")) {
+						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						
+					}
+					
+					logger.debug("setFormDataInsert2 started.");
+					ezApprovalGAdminDAO.setFormDataInsert2(map);
+					logger.debug("setFormDataInsert2 ended.");
+				}
+			}
+		} else {
+			result = formID;
+			map.put("v_PFORMID", formID);
+			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".hwp");
+			
+			logger.debug("setFormDataUpdate started.");
+			ezApprovalGAdminDAO.setFormDataUpdate(map);
+			logger.debug("setFormDataUpdate ended.");
+			
+			if (approvalFlag.equals("S")) {
+				map.put("keepPeriod", keepPeriod);
+				map.put("keepPeriodCode", keepPeriodCode);
+				map.put("securityLevel", securityLevel);
+				map.put("isPublic", isPublic);
+				map.put("tbItemCode", tbItemCode);
+				map.put("tbItemName", tbItemName);
+				map.put("tbItemName2", tbItemName2);
+				map.put("useFlag", useFlag);
+				
+				logger.debug("setAutoDocNum started.");
+				ezApprovalGAdminDAO.setAutoDocNum(map);
+				logger.debug("setAutoDocNum ended.");
+				
+				if (!formAutoRule.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRule);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					logger.debug("deleteAutoRule started.");
+					ezApprovalGAdminDAO.deleteAutoRule(map);
+					logger.debug("deleteAutoRule ended.");
+					
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleSN", doc.getElementsByTagName("AUTORULESN").item(i).getTextContent());
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("checkFieldType", doc.getElementsByTagName("CHECKFIELDTYPE").item(i).getTextContent());
+						map.put("checkField", doc.getElementsByTagName("CHECKFIELD").item(i).getTextContent());
+						map.put("operatorType", doc.getElementsByTagName("OPERATORTYPE").item(i).getTextContent());
+						map.put("operator", doc.getElementsByTagName("OPERATOR").item(i).getTextContent());
+						map.put("condType", doc.getElementsByTagName("CONDTYPE").item(i).getTextContent());
+						map.put("condValue", doc.getElementsByTagName("CONDVALUE").item(i).getTextContent());
+						map.put("condValueDeptID", doc.getElementsByTagName("CONDVALUEDEPTID").item(i).getTextContent());
+						map.put("docType", doc.getElementsByTagName("DOCTYPE").item(i).getTextContent());
+						
+						logger.debug("insertAutoRule started.");
+						ezApprovalGAdminDAO.insertAutoRule(map);
+						logger.debug("insertAutoRule ended.");
+					}
+				}
+				
+				if (!formAutoRuleLine.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRuleLine);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					logger.debug("deleteAutoRuleLine started.");
+					ezApprovalGAdminDAO.deleteAutoRuleLine(map);
+					logger.debug("deleteAutoRuleLine ended.");
+					
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("aprMemberSN", doc.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
+						map.put("aprType", doc.getElementsByTagName("APRTYPE").item(i).getTextContent());
+						map.put("aprState", doc.getElementsByTagName("APRSTATE").item(i).getTextContent());
+						map.put("aprMemberID", doc.getElementsByTagName("APRMEMBERID").item(i).getTextContent());
+						map.put("aprMemberIsDeptYN", doc.getElementsByTagName("APRMEMBERISDEPTYN").item(i).getTextContent());
+						map.put("aprMemberName", doc.getElementsByTagName("APRMEMBERNAME").item(i).getTextContent());
+						map.put("aprMemberName2", doc.getElementsByTagName("APRMEMBERNAME2").item(i).getTextContent());
+						map.put("aprMemberJobTitle", doc.getElementsByTagName("APRMEMBERJOBTITLE").item(i).getTextContent());
+						map.put("aprMemberJobTitle2", doc.getElementsByTagName("APRMEMBERJOBTITLE2").item(i).getTextContent());
+						map.put("aprMemberDeptID", doc.getElementsByTagName("APRMEMBERDEPTID").item(i).getTextContent());
+						map.put("aprMemberDeptName", doc.getElementsByTagName("APRMEMBERDEPTNAME").item(i).getTextContent());
+						map.put("aprMemberDeptName2", doc.getElementsByTagName("APRMEMBERDEPTNAME2").item(i).getTextContent());
+						map.put("aprMemberLdapPath", doc.getElementsByTagName("APRMEMBERLDAPPATH").item(i).getTextContent());
+						map.put("reasonDoNotApprov", doc.getElementsByTagName("REASONDONOTAPPROV").item(i).getTextContent());
+						map.put("isProposerYN", doc.getElementsByTagName("ISPROPOSERYN").item(i).getTextContent());
+						map.put("isBriefUserYN", doc.getElementsByTagName("ISBRIEFUSERYN").item(i).getTextContent());
+						
+						logger.debug("insertAutoRuleLine started.");
+						ezApprovalGAdminDAO.insertAutoRuleLine(map);
+						logger.debug("insertAutoRuleLine ended.");
+					}
+				}
+			}
+			
+			if (!recevGroupXML.equals("")) {
+				logger.debug("recevGroupXML = " + recevGroupXML);
+				map = new HashMap<String, Object>();
+				map.put("v_PFORMID", formID);
+				map.put("companyID", companyID);
+				map.put("tenantID", userInfo.getTenantId());
+				map.put("approvalFlag", approvalFlag);
+				
+				logger.debug("setFormDataDelete started.");
+				ezApprovalGAdminDAO.setFormDataDelete(map);
+				logger.debug("setFormDataDelete ended.");
+				
+				doc = commonUtil.convertStringToDocument(recevGroupXML);
+				
+				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
+					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
+					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					
+					if (approvalFlag.equals("S")) {
+						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						
+					}
+					
+					logger.debug("setFormDataInsert2 started.");
+					ezApprovalGAdminDAO.setFormDataInsert2(map);
+					logger.debug("setFormDataInsert2 ended.");
+				}
+			}
+		}
+		
+		if (!isUpdate) {
+			if (!formMhtInfo.equals("")) {
+				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp";
+				
+				File file = new File(saveFileName);
+				
+				if (file.exists()) {
+					strBeforeMHT = FileUtils.readFileToString(file);
+				} else {
+					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+				}
+				
+				FileOutputStream stream = null;
+				
+				try {
+					stream = new FileOutputStream(file);
+					stream.write(Base64.decodeBase64(formMhtInfo));
+				} catch (FileNotFoundException fnfe) {
+					logger.debug("fnfe: {}", fnfe);
+				} catch (IOException ioe) {
+					logger.debug("ioe: {}", ioe);
+				} catch (Exception e) {
+					logger.debug("e: {}", e);
+				} finally {
+					if (stream != null) {
+						try {
+							stream.close();
+						} catch (Exception ignore) {
+							logger.debug("IGNORED: {}", ignore.getMessage());
+						}
+					}
+				}
+			}
+		}
+		
+		logger.debug("setFormDataInsert,Update ended.");
+		logger.debug("saveFormInfoHWP ended.");
+		
+		return result;
+	}
 
 	@Override
 	public String setContainerIDForDoc1(String deptID, String containerType, String companyID, int tenantID) throws Exception {
@@ -3212,5 +3582,54 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		List<ApprGFormConnInfoVO> list = ezApprovalGAdminDAO.getFormConnInfo();
 		
 		return list;
+	}
+
+	@Override
+	public String formConnSave(String formID, String formText, String path, String companyID) throws Exception {
+		logger.debug("formConnSave started.");
+		logger.debug("formID = " + formID + " || formText = " + formText + " || path = " + path + " || companyID = " + companyID);
+		
+		String saveFileFolder = path + commonUtil.separator + companyID + commonUtil.separator + "form";
+		String saveFileName = saveFileFolder + commonUtil.separator + formID + ".xml"; 
+		
+		String result = "";
+		
+		FileWriter fileWriter = null;
+		
+		try {
+			File fileFolder = new File(saveFileFolder);
+			File file = new File(saveFileName);
+			
+			if (!fileFolder.exists()) {
+				fileFolder.mkdirs();
+			}
+			
+			fileWriter = new FileWriter(file);
+			fileWriter.append(formText);
+		} catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		} finally {
+			if (fileWriter != null) {
+				try {
+					fileWriter.close();
+					result = formText;
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+					result = "ERROR";
+				}
+			}
+		}
+		
+		if (result != null && result.indexOf("<?xml version=\"1.0\" encoding=\"euc-kr\"?>\n") != -1) {
+			result = result.replaceAll("\\<\\?xml version=\"1.0\" encoding=\"euc-kr\"\\?\\>", "").replaceAll("\\<CONNROOT\\>", "").replaceAll("\\</CONNROOT\\>", "").replaceAll("\\n", "").replaceAll("\\t", "");
+		}
+		
+		logger.debug("formConnSave ended. result = " + result);
+		
+		return result;
 	}
 }

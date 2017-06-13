@@ -11,5 +11,6 @@ public enum CheckName {
 	PrimaryLang,
 	USE_FileExtension,
 	ExpirePassPeriod,
-	LicenseKey
+	LicenseKey,
+	Use_FromAddress
 }

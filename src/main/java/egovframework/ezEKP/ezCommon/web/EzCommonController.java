@@ -4,7 +4,10 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URLDecoder;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
@@ -161,6 +164,8 @@ public class EzCommonController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mhtToHTMLContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
+		logger.debug("mhtToHTMLContent started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemID = "";
 		String type = "";
@@ -170,7 +175,8 @@ public class EzCommonController extends EgovFileMngUtil{
 		itemID = request.getParameter("itemID");
 		type = request.getParameter("type");
 		strResult = ezCommonService.getMHTtoHTML(type, itemID, userInfo.getTenantId(), realPath, request, locale);
-		
+
+		logger.debug("mhtToHTMLContent ended");
 		return strResult;
 	}
 	
@@ -246,89 +252,16 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 
 		logger.debug("mhtToHTML ended");
-		
 		return result;
 	}
 	
 	/**
-	 * 게시판 ck에디터 이미지 업로드 호출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/ckImageUpload.do")
-	public String ckImageUpload() {
-		return "ezCommon/ckImageUpload";
-	}
-	
-	/**
-	 * 게시판 ck에디터 업로드 화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/ckUpload.do")
-	public String ckUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		MultipartFile multiFile = request.getFile("file1");
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-        if (!file.exists()) {
-        	file.mkdirs();
-        }
-        
-        int width = 0;
-		int height = 0;
-		
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		
-		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
-
-		if (imageFile.exists()) {			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
-			width = bi.getWidth();
-			height = bi.getHeight();
-		}
-		
-		model.addAttribute("imgPath", (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/"));
-		
-		return "ezCommon/ckUpload";
-	}
-
-	/**
-	 * 게시판 ck에디터 심플업로드화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezCommon/ckSimpleUpload.do", produces = "application/json; charset=utf-8")
-	@ResponseBody
-	public String ckSimpleUpload(@CookieValue("loginCookie")String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		MultipartFile multiFile = request.getFile("upload");
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-		
-		String filePath = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-		
-        if (!file.exists()) {
-        	file.mkdirs();
-        }
-        
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-		//return "<script>window.parent.CKEDITOR.tools.callFunction(2, '" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "', '')</script>";
-		return "{\"uploaded\": 1,\"fileName\": \""+fileName+"\", \"url\": \"" + (filePath + commonUtil.separator + fileName).replace("\\", "/") + "\"}";
-	}
-	
-	/**
-	 * ID크릭시 사용자 정보화면 호출 Method
+	 * ID클릭시 사용자 정보화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezCommon/showPersonInfo.do")
-	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception{
+	public String showPersonInfo(@CookieValue("loginCookie")String loginCookie, Locale locale,HttpServletRequest request, ModelMap model) throws Exception {
+		logger.debug("showPersonInfo started");
+
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String id = "", email = "", pDeptID = "";
 		
@@ -345,104 +278,106 @@ public class EzCommonController extends EgovFileMngUtil{
 		String literalAddress = "";
 		String literalPhone = "";
 		String literalInfo = "";
-        
-        String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
-        
-        if (request.getParameter("id") != null) {
-        	id = request.getParameter("id");
-        }
-        
-        if (request.getParameter("email") != null) {
-        	email = request.getParameter("email");
-        }
-        
-        if (request.getParameter("dept") != null) {
-        	pDeptID = request.getParameter("dept");
-        }
-        
-        if (id.equals("")) {
-        	
-        	if (!email.equals("")) {
-        		id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
-        	}
-        }
-        
-        if (id != null && !id.equals("")) {
-        	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary(), loginVO.getTenantId());
-        	
-        	Document xmldom = commonUtil.convertStringToDocument(infoXML);
-        	if (xmldom.getElementsByTagName("MAIL") == null) {
-        		literalEmail = email;
-        		literalDisplayName = email;
-        		literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
-        	} else {
-        		
+		
+		String proplist = "EXTENSIONATTRIBUTE2;COMPANY;DESCRIPTION;DISPLAYNAME;TITLE;MAIL;TELEPHONENUMBER;MOBILE;INFO;HOMEPHONE;FACSIMILETELEPHONENUMBER;POSTALCODE;STREETADDRESS;DEPARTMENT";
+		
+		if (request.getParameter("id") != null) {
+			id = request.getParameter("id");
+		}
+		
+		if (request.getParameter("email") != null) {
+			email = request.getParameter("email");
+		}
+		
+		if (request.getParameter("dept") != null) {
+			pDeptID = request.getParameter("dept");
+		}
+		
+		if (id.equals("")) {
+			
+			if (!email.equals("")) {
+				id = ezOrganService.getCNByEmail(email, loginVO.getTenantId());
+			}
+		}
+		
+		if (id != null && !id.equals("")) {
+			String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary(), loginVO.getTenantId());
+			
+			Document xmldom = commonUtil.convertStringToDocument(infoXML);
+			if (xmldom.getElementsByTagName("MAIL") == null) {
+				literalEmail = email;
+				literalDisplayName = email;
+				literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
+			} else {
+				
 //        		if (xmldom.getElementsByTagName(email) == null) {
 //        			infoXML = ezOrganService.getSearchLikeByEmail(id);
 //        			xmldom = commonUtil.convertStringToDocument(infoXML);
 //        		}
-        		
-        		if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
-        			String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getLang(), loginVO.getTenantId());
-        			
-        			if (infoXML2!=null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
-        				Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
-        				
-        				literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
-        				literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
-        			} else {
-        				literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
-        				literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
-        			}
-        			
-        		} else {
-        			literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
-    				literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
-        		}
-        		
-        		if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
-        			literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
-        		} else {
-        			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
-        		}
-        		
-        		literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
-        		literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
-        		literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
-        		literalPhone = xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
-        		literalMobile = xmldom.getElementsByTagName("MOBILE").item(0).getTextContent();
-        		literalHomePhone = xmldom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
-        		literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
-        		literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
-        		literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
-        		literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(commonUtil.CRLF, "<BR>");
-        	}
-        } else {
-        	literalEmail = email;
-        	literalDisplayName = email;
-        	literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
-        }
-        
-        
-        model.addAttribute("LiteralEmail", literalEmail);
-        model.addAttribute("LiteralDisplayName", literalDisplayName);
-        model.addAttribute("LiteralPhoto", literalPhoto);
-        model.addAttribute("LiteralDept", literalDept);
-        model.addAttribute("LiteralTitle", literalTitle);
-        model.addAttribute("LiteralCompany", literalCompany);
-        model.addAttribute("LiteralMobile", literalMobile);
-        model.addAttribute("LiteralHomePhone", literalHomePhone);
-        model.addAttribute("LiteralFax", literalFax);
-        model.addAttribute("LiteralPostal", literalPostal);
-        model.addAttribute("LiteralAddress", literalAddress);
-        model.addAttribute("LiteralPhone", literalPhone);
-        model.addAttribute("LiteralInfo", literalInfo);
-        
+				
+				if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
+					String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getLang(), loginVO.getTenantId());
+					
+					if (infoXML2!=null && !infoXML2.equals("") && !infoXML2.equals("<DATA></DATA>")) {
+						Document xmldom2 = commonUtil.convertStringToDocument(infoXML2);
+						
+						literalDept = xmldom2.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+						literalTitle= xmldom2.getElementsByTagName("TITLE").item(0).getTextContent();		
+					} else {
+						literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+						literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+					}
+					
+				} else {
+					literalDept = xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+					literalTitle= xmldom.getElementsByTagName("TITLE").item(0).getTextContent();
+				}
+				
+				if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
+					literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
+				} else {
+					literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
+				}
+				
+				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();
+				literalDisplayName = xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+				literalEmail = xmldom.getElementsByTagName("MAIL").item(0).getTextContent();
+				literalPhone = xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent();
+				literalMobile = xmldom.getElementsByTagName("MOBILE").item(0).getTextContent();
+				literalHomePhone = xmldom.getElementsByTagName("HOMEPHONE").item(0).getTextContent();
+				literalFax = xmldom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent();
+				literalPostal = xmldom.getElementsByTagName("POSTALCODE").item(0).getTextContent();
+				literalAddress= xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent();
+				literalInfo = xmldom.getElementsByTagName("INFO").item(0).getTextContent().replace(commonUtil.CRLF, "<BR>");
+			}
+		} else {
+			literalEmail = email;
+			literalDisplayName = email;
+			literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
+		}
+		
+		model.addAttribute("LiteralEmail", literalEmail);
+		model.addAttribute("LiteralDisplayName", literalDisplayName);
+		model.addAttribute("LiteralPhoto", literalPhoto);
+		model.addAttribute("LiteralDept", literalDept);
+		model.addAttribute("LiteralTitle", literalTitle);
+		model.addAttribute("LiteralCompany", literalCompany);
+		model.addAttribute("LiteralMobile", literalMobile);
+		model.addAttribute("LiteralHomePhone", literalHomePhone);
+		model.addAttribute("LiteralFax", literalFax);
+		model.addAttribute("LiteralPostal", literalPostal);
+		model.addAttribute("LiteralAddress", literalAddress);
+		model.addAttribute("LiteralPhone", literalPhone);
+		model.addAttribute("LiteralInfo", literalInfo);
+
+		logger.debug("showPersonInfo ended");
         return "/ezCommon/showPersonInfo";
 	}
 	
 	@RequestMapping(value = "/ezCommon/downloadAttach.do")
-	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttach started");
+
 		String filePath = request.getParameter("filePath");
 		String fileName = "";
 		String realPath = commonUtil.getRealPath(request);
@@ -452,22 +387,28 @@ public class EzCommonController extends EgovFileMngUtil{
 		} else {
 			fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
 		}
-
+		
 		downFile(request, response, realPath + filePath, fileName);
 //		ezCommonService.responseAttach(filePath, fileName, true, request, response);
+		
+		logger.debug("downloadAttach ended");
 	}
 	
 	/**
-	 * CKEditor SimpleUpload시 image파일용량 줄여주는 함수
+	 * image파일용량 줄여주는 함수
 	 */
 	@RequestMapping(value = "/ezCommon/convertSaveImage.do")
 	public void convertSaveImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("convertSaveImage started");
+
 		String realPath = commonUtil.getRealPath(request);
 		
 		String pImgUrl = request.getParameter("url");
 		String width = request.getParameter("width");
 		String height = request.getParameter("height");
 //		String type = request.getParameter("type");
+		
+		logger.debug("pImgUrl=" + pImgUrl + ",width=" + width + ",height=" + height);
 		
 		String realFilePath = pImgUrl.replace(request.getScheme() + ":" + commonUtil.separator + commonUtil.separator + request.getServerName() + ":" + request.getServerPort(), realPath);
 		
@@ -479,26 +420,30 @@ public class EzCommonController extends EgovFileMngUtil{
 		
 //		int nImgWidth = inputImage.getWidth();
 //      int nImgHeight = inputImage.getHeight();
-        int nWidth = 100, nHeight = 100;
-        
-        if (!width.equals("")) {
-            nWidth = Integer.parseInt(width);
-        }
-        
-        if (!height.equals("")) {
-            nHeight = Integer.parseInt(height);
-        }
-        
-		outputImage= new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_INT_RGB);
-		saveImage = outputImage.createGraphics();
-		saveImage.drawImage(inputImage, 0, 0, nWidth, nHeight, null);
-		saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		int nWidth = 100, nHeight = 100;
 		
-		ImageIO.write(outputImage, realFilePath.substring(realFilePath.lastIndexOf(".") + 1), file);
-        
+		if (!width.equals("")) {
+			nWidth = Integer.parseInt(width);
+		}
+		
+		if (!height.equals("")) {
+			nHeight = Integer.parseInt(height);
+		}
+		
+		if (nWidth > 0 && nHeight > 0) {
+			outputImage= new BufferedImage(nWidth, nHeight, BufferedImage.TYPE_INT_RGB);
+			saveImage = outputImage.createGraphics();
+			saveImage.drawImage(inputImage, 0, 0, nWidth, nHeight, null);
+			saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+			
+			ImageIO.write(outputImage, realFilePath.substring(realFilePath.lastIndexOf(".") + 1), file);
+		}
+		
 		//TODO 2016-07-05 이효진 type1 로 들어오는 경우 있을때 추가 
 		/*if (type.equals("1")) {
 			response.getWriter().print();
 		}*/
+
+		logger.debug("convertSaveImage ended");
 	}
 }

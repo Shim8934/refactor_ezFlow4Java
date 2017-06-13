@@ -160,6 +160,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		logger.debug("mailWrite started.");
 		
+		String from = "";
 		String to = "";
 		String cc = "";
 		String bcc = "";
@@ -236,8 +237,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String displayNamePrintable = userInfo.getDisplayName();
 		String serverName = loginInfo.getServerName();
-		String from = "\""+userInfo.getDisplayName()+"\" <"+userInfo.getMail()+">";
-		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName + ",from=" + from);
+		logger.debug("displayNamePrintable=" + displayNamePrintable + ",serverName=" + serverName);
 		
 		String folderDate = EgovDateUtil.getToday("");
 		String stateName = UUID.randomUUID().toString();
@@ -246,12 +246,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
-		
-		String sendFrom = "";
-		if (request.getParameter("sendfrom") != null) { 
-			sendFrom = request.getParameter("sendfrom");
-		}
-		logger.debug("sendFrom=" + sendFrom);
 		
 		//메일 색상 관련 설정
 		String inMailColor = "#808080";
@@ -448,7 +442,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				if (orgMessage != null) {				        	
 		        	// in case of editing a message in Drafts folder.
-		        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {         						  
+		        	if (folderPath.equals(draftsFolderName) && _cmd.equals("EDIT")) {
+		        		
+		        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
+		        			from = ((InternetAddress)orgMessage.getFrom()[0]).getAddress();
+		        		}
+		        		
 						// retrieve the TO addresses from the message.
 						Address[] addresses = orgMessage.getRecipients(Message.RecipientType.TO);
 						to = ezEmailUtil.getStringListOfAddresses(addresses, true);
@@ -467,7 +466,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -550,7 +549,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						subject = (subject != null) ? subject : "";
 		        		
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -736,7 +735,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -858,6 +857,50 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
         }
         
+        String useFromAddress = ezCommonService.getTenantConfig("Use_FromAddress", loginInfo.getTenantId());
+		String fromAddressHtml = "";
+		
+		if (useFromAddress != null) {
+			if (useFromAddress.equals("YES")) {
+				List<String[]> fromAddressList = ezEmailService.getAliasAddress(loginInfo.getId(), loginInfo.getTenantId());
+				
+				if (fromAddressList.size() < 2) {
+					useFromAddress = "NO";
+				} else {
+					StringBuilder sb = new StringBuilder();
+					sb.append("<select id='ex_select' onchange='fromAddressChange(this.value)'>");
+					
+					boolean isValidFrom = false;
+					
+					for (String[] address : fromAddressList) {
+						if (from.equals(address[0])) {
+							isValidFrom = true;
+							break;
+						}
+					}
+					
+					if (!isValidFrom) {
+						from = loginInfo.getEmail();
+					}
+					
+					for (String[] address : fromAddressList) {
+						if (from.equals(address[0])) {
+							sb.append("<option value='" + address[0] + "' selected>" + address[0] + "</option>");
+						} else {
+							sb.append("<option value='" + address[0] + "'>" + address[0] + "</option>");
+						}
+					}
+					
+					sb.append("</select>");
+					sb.append("<label for='ex_select'>" + from + "</label>");
+					
+					fromAddressHtml = sb.toString();
+				}
+			}
+		} else {
+			useFromAddress = "NO";
+		}
+		
         String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
         
@@ -866,7 +909,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("to", to);
 		model.addAttribute("cc", cc);
 		model.addAttribute("bcc", bcc);
-		model.addAttribute("from", from);
 		//model.addAttribute("body", body);
 		model.addAttribute("subject", subject);
 		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
@@ -887,7 +929,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("docID", docID);
 		model.addAttribute("docImagCnt", docImagCnt);
 		model.addAttribute("docTarget", docTarget);
-		model.addAttribute("sendFrom", sendFrom);
 		model.addAttribute("retransType", retransType);
 		model.addAttribute("useMultiLangMail", useMultiLangMail);
 		model.addAttribute("displayNamePrintable", displayNamePrintable);
@@ -928,6 +969,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("uploadCommonPath", commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("uploadCommunityPath", commonUtil.getUploadPath("upload_community.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("useFromAddress", useFromAddress);
+		model.addAttribute("fromAddressHtml", fromAddressHtml);
 		
 		response.setHeader("X-XSS-Protection", "0");
 		
@@ -972,20 +1015,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		return "ezEmail/mailConfirmDialog";
 	}
 	
-	/**
-	 * 메일 CK에디터 화면 호출 함수
-	 */
-	@RequestMapping(value="/ezEmail/mailCKEditor.do")
-	public String mailCKEditor(
-			@CookieValue("loginCookie") String loginCookie, 
-			LoginVO userInfo, 
-			Model model) throws Exception{
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		model.addAttribute("userInfo", userInfo);
-		return "ezEmail/mailCKEditor";
-	}
-
 	/**
 	 * 메일 파일첨부 화면 호출 함수
 	 */

@@ -54,7 +54,7 @@
 	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 	                ezUtil.UseUTF8 = true;
 	                var file = "";
-	                if (pMode == "modify")	// " + strLang21 + "
+	                if (pMode == "modify")	
 	                {
 	                    file = ezUtil.OpenLoadDlg("" + strLang22 + "", "");
 	                    if (file != "") {

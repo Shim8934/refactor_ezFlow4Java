@@ -762,7 +762,7 @@
 	                }
 	            }
 							
-	            function DocumentComplete() {
+	            function Editor_Complete() {
 	            	if (flag == false) {
 		                flag = true;
 		                
@@ -774,7 +774,7 @@
 		                        var fullPath = strContentLocation;
 		                        
 		                        if (pMode == "reply") {
-		                            var htmlData = message.SetEditorContentURL2(fullPath);
+		                            var htmlData = message.GetEditorContentURL(fullPath);
 		                            htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
 		                            htmlData = ReplaceText(htmlData, "class=FIELD", "");
 		        		            
@@ -975,23 +975,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="height: 100%; vertical-align: top;" id="EdtorSize"><c:choose>
-						<c:when test="${editor == 'TAGFREE' }">
-							<iframe id="message" class="viewbox" name="message"
-								src="TagFree_TFX_Editor.aspx"
-								style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
-						</c:when>
-						<c:when test="${editor =='DEXT' }">
-							<iframe id="message" class="viewbox" name="message"
-								src="DEXT_Editor.aspx"
-								style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
-						</c:when>
-						<c:otherwise>
-							<iframe id="message" class="viewbox" name="message"
-								src="/ezCommunity/ckEditor.do"
-								style="padding: 0; height: 100%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
-						</c:otherwise>
-					</c:choose></td>
+				<td style="height: 100%; vertical-align: top;" id="EdtorSize">
+					<iframe id="message" class="viewbox" name="message"
+						src="/ezEditor/selectEditor.do"
+						style="padding: 0; height: 100%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+				</td>
 			</tr>
 			<tr id="docTR" style="display: none">
 				<td>

@@ -42,12 +42,12 @@ public interface EzEmailService {
 	public void savePop3(int tenantId, String pUserId, String pRet) throws Exception;
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception;
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
-	public List<String> getIndividualAlias(String userAccount) throws Exception;
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
 	public String checkIndividualAlias(String individualAlias) throws Exception;
-	public Map<String, String> getIndividualAliasMap(List<String> addressList, int tenantId) throws Exception;
+	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception;
 	public void sendMail(String loginCookie, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved) throws Exception;
 	public String mailContentDownload(String loginCookie, String url, String realPath) throws Exception;
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 	public int getMaxMessageSize(int tenantId) throws Exception;
+	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception;
 }
