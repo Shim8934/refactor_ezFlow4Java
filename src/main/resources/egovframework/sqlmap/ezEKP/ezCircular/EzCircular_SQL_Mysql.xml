@@ -837,7 +837,7 @@
           DELETE FROM
               TBL_CIRCULAR_USER
           WHERE
-              CIRCULARID = #circularIDList#
+              CIRCULARID = #circularID#
           AND    
               TENANTID = #tenantID#
         ]]>

@@ -268,7 +268,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		List<CircularListVO> list = getCircularUserList(circularID, tenantID);
 		
-		logger.debug("receiverLength : " + receiverLength);
+		logger.debug("@@receiverLength : " + receiverLength);
 		logger.debug("listSize : " + list.size());
 		
 		//회람자 삭제 후 등록
@@ -316,7 +316,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String[] circularIDArr = circularIDList.split(";");
 		
 		for (int i=0; i<circularIDArr.length; i++) {
-			map.put("circularIDList", circularIDArr[i]);
+			map.put("circularID", circularIDArr[i]);
 			map.put("tenantID", tenantID);
 			
 			ezCircularDAO.deleteCircular(map);

@@ -207,8 +207,6 @@
 	                    alert(strLang6);
 	                    return;
 	                }
-	                /* if (document.getElementById('mode').value == "PHOTO")
-	                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
 	            }
 	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
 	                extFlag = true;
