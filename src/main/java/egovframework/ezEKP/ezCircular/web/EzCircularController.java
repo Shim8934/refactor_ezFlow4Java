@@ -130,7 +130,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		for (int i=0; i < list.size(); i++) {
 			rootFolderXML.append("<node imgidx='1' caption='" + 
 					list.get(i).getCircularFolderName() + "' foldername='" + 
-					list.get(i).getCircularFolderName() + "' fullcaption='_NONE' href='" + list.get(i).getCircularFolderId() + "'></node>");
+					list.get(i).getCircularFolderName() + "' fullcaption='_NONE' href='" + 
+					list.get(i).getCircularFolderId() + "'></node>");
 		}
 		
 		String funCode = "1";
@@ -1121,7 +1122,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람판 임시 회람판 등록 실행 Method
+	 * 임시 회람판 등록 실행 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularSaveTemp.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -1139,6 +1140,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		int circularUserId = 0;
 		int updateStatus = 0;
+		int receiverLength = 0;
+		String[] receiverID = null;
+		String[] receiverName = null;
+		String[] receiverName2 = null;
+		
 		circularListVO.setStatus(2);
 		
 		String receiverIDs = request.getParameter("receiverID");
@@ -1149,12 +1155,18 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("receiverList : " + receiverList);
 		logger.debug("receiverList2 : " + receiverList2);
 		
-		int receiverLength = receiverIDs.split(",").length;
-		String[] receiverID = receiverIDs.split(",");
-		String[] receiverName = receiverList.split(",");
-		String[] receiverName2 = receiverList2.split(",");
+		if (!receiverIDs.equals("")) {
+			receiverLength = receiverIDs.split(",").length;			
+			receiverID = receiverIDs.split(",");
+			receiverName = receiverList.split(",");
+			receiverName2 = receiverList2.split(",");
+		}
 		
 		String regDate = commonUtil.getTodayUTCTime("");
+
+System.out.println("## " + circularListVO.getTitle()+ " " + circularListVO.getImportance() + " " 
++ circularListVO.getOption()+ " " + circularListVO.getCircularId() + " " + receiverLength + " " + receiverID + " " +  updateStatus 
++ " " + circularUserId + " " + circularListVO.getMemberName() + " " + circularListVO.getStatus() + " " + receiverID + " " + circularListVO.getContent());
 		
 		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2);
 
@@ -1316,8 +1328,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		String[] receiverID = receiverIDs.split(", ");
 		String[] receiverName = receiverList.split(", ");
 		String[] receiverName2 = receiverList2.split(", ");
+
+System.out.println("## " + circularListVO.getTitle()+ " " + circularListVO.getImportance() + " " 
++ circularListVO.getOption()+ " " + circularListVO.getCircularId() + " " + receiverLength + " " + receiverID + " " +  updateStatus 
++ " " + circularUserId + " " + circularListVO.getMemberName() + " " + circularListVO.getStatus() + " " + receiverID);
 		
-		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId, circularListVO.getMemberName(), circularListVO.getMemberName2(), circularListVO.getStatus(), confirmDate, circularListVO.getContent(), fileList, receiverName, receiverName2);
+//		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularId(), userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId, circularListVO.getMemberName(), circularListVO.getMemberName2(), circularListVO.getStatus(), confirmDate, circularListVO.getContent(), fileList, receiverName, receiverName2);
 
 		logger.debug("saveModifyCircular ended");
 	}

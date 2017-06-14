@@ -385,40 +385,32 @@
     <select id="EzCircularDAO.getCircularTempListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
             SELECT
-                COUNT(A.CIRCULARID) CNT
+                COUNT(CIRCULARID) CNT
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	STATUS = '2'
             AND
-                A.TENANTID = B.TENANTID
+                MEMBERID = #memberId#
             AND
-            	A.STATUS = '2'
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                TENANTID = #tenantId#
         ]]>
     </select>
     
     <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE, B.UPDATESTATUS
+                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE 
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	STATUS = '2'
             AND
-                A.TENANTID = B.TENANTID
+                MEMBERID = #memberId#
             AND
-            	A.STATUS = '2'
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                TENANTID = #tenantId#
             ORDER BY
-            	A.REGDATE DESC
+            	REGDATE DESC
             LIMIT
                 #limit#, #rowCount#        
         ]]>
@@ -427,21 +419,17 @@
     <select id="EzCircularDAO.getCircularTempMapList" resultClass="HashMap" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	STATUS = '2'
             AND
-                A.TENANTID = B.TENANTID
+                MEMBERID = #memberId#
             AND
-            	A.STATUS = '2'
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                TENANTID = #tenantId#
             ORDER BY
-            	A.REGDATE DESC   
+            	REGDATE DESC   
             LIMIT
                 #limit#, #rowCount#        
         ]]>

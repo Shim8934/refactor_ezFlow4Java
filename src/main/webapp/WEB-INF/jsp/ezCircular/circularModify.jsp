@@ -206,17 +206,21 @@
 	       					<th> 옵션</th>
 	       					<td style="width:160px" colspan="3">
 								<c:choose>
-		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked/>&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" />&nbsp;메일공지 사용
-		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="optionRefly" name="chkList" " />&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '2'}">
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '3'}">
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked />&nbsp;댓글기능 사용&nbsp;&nbsp;
-										<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>   									
 	         				</td>
