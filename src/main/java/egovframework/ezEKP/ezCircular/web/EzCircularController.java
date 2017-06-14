@@ -1096,7 +1096,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			fileList = request.getParameter("fileList");
 		}
 		
-		logger.debug("fileList : "+fileList);
+		logger.debug("fileList : " + fileList);
 		
 		int circularUserId = 0;
 		int updateStatus = 0;
@@ -1105,9 +1105,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
 		
-		logger.debug("receiverIDs : "+receiverIDs);
-		logger.debug("receiverList : "+receiverList);
-		logger.debug("receiverList2 : "+receiverList2);
+		logger.debug("receiverIDs : " + receiverIDs);
+		logger.debug("receiverList : " + receiverList);
+		logger.debug("receiverList2 : " + receiverList2);
 		
 		int receiverLength = receiverIDs.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
@@ -1116,6 +1116,13 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String regDate = commonUtil.getTodayUTCTime("");
 		
+		//임시회람판에서 회람등록 시 임시회람판에 있는 데이터 삭제
+		if (!request.getParameter("oldCircularId").isEmpty()) {
+			String oldCircularId = request.getParameter("oldCircularId"); 
+			
+			ezCircularService.circularDeleteItem(oldCircularId, userInfo.getTenantId());
+		}
+
 		ezCircularService.insertCircular(circularListVO.getCircularId(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2);
 
 		logger.debug("saveCircular ended");
@@ -1615,7 +1622,7 @@ System.out.println("## " + circularListVO.getTitle()+ " " + circularListVO.getIm
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String[] circularIDList = request.getParameter("circularIDList").split(";");
+		String circularIDList = request.getParameter("circularIDList");
 		
 		ezCircularService.circularDeleteItem(circularIDList, userInfo.getTenantId());
 

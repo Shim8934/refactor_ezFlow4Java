@@ -310,11 +310,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularDeleteItem(String[] circularIDList, int tenantID) throws Exception {
+	public void circularDeleteItem(String circularIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		for (int i=0; i<circularIDList.length; i++) {
-			map.put("circularIDList", circularIDList[i]);
+		String[] circularIDArr = circularIDList.split(";");
+		
+		for (int i=0; i<circularIDArr.length; i++) {
+			map.put("circularIDList", circularIDArr[i]);
 			map.put("tenantID", tenantID);
 			
 			ezCircularDAO.deleteCircular(map);

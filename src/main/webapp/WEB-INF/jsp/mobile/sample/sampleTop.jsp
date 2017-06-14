@@ -10,7 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="/css/font-awesome-4.7.0/css/font-awesome.min.css" />
 	</head>
 	<body>		
-		<header data-role="header" data-position="fixed">		
+		<header data-role="header" data-position="fixed">
 			<h1>${title}</h1>			
 			<a class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#menu-panel">menu</a>							
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>			
@@ -20,9 +20,9 @@
 						<div style="margin-left:20px;float:left;padding-top:10px">							
 							<i class="fa fa-envelope" style="font-size:13px;"></i>&nbsp;<strong style="font-size:13px;">안읽은편지(17)</strong>												
 						</div>
-						<div style="margin-right:6px;float:right;padding-top:8px">
+						<div style="margin-right:6px;float:right;padding-top:8px">							
 							<c:if test="${type == 'mailReceive'}">								
-								<i class="fa fa-pencil-square-o" style="font-size:24px;cursor: pointer;" onclick="javascript:showDisplay();"></i>
+								<i class="fa fa-pencil-square-o" style="font-size:25px;cursor: pointer;" onclick="javascript:showDisplay(0);"></i>
 							</c:if>									
 						</div>
 					</li>
@@ -31,9 +31,21 @@
 							<i class="fa fa-check-square-o" style="font-size:24px;cursor: pointer;" onclick="javascript:checkAll();"></i>							
 							<i class="fa fa-trash" style="font-size:24px;cursor: pointer;margin-left:20px"></i>
 							<i class="fa fa-arrows" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:moveMail();"></i>
-							<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchMail();"></i>
-						</div>							
+							<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:showDisplay(1);"></i>							
+						</div>													
 					</li>
+					<li style="height:60px;border-bottom:1px solid #f2f2f2;display:none" id="editDisplay1">
+						<div style="padding-left:20px">
+							<!-- <div data-role="controlgroup" data-type="horizontal">
+							    <input id="search-control-group" type="text" data-wrapper-class="controlgroup-textinput ui-btn">
+							    <button class="searchIcon" data-icon="search" data-iconpos="notext">Search</button>
+							</div> -->
+							<div class="searchArea">
+								<input type="text" data-wrapper-class="controlgroup-textinput ui-btn">
+								<a class="ui-btn ui-icon-search ui-btn-icon-notext ui-btn-inline" href="#">No text</a>																
+							</div>
+						</div>
+					</li>	
 				</c:if>
 			</ul>			
 		</header>

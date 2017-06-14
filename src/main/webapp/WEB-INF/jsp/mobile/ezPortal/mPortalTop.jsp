@@ -20,7 +20,7 @@
 		</script>
 	</head>
 	<body>		
-		<header data-role="header" data-position="fixed">		
+		<header data-role="header" data-position="fixed">
 			<h1>KAONI</h1>							
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>			
 		</header>
