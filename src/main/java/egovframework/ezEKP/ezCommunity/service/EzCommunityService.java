@@ -36,7 +36,7 @@ public interface EzCommunityService {
 	
 	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception;
 
-	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 	
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 
@@ -44,7 +44,7 @@ public interface EzCommunityService {
 	
 	public List<CommunityCCategoryVO> mainPageGet4(String cat, int tenantID) throws Exception;
 	
-	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int tenantID) throws Exception;
+	public List<CommunityClubVO> categoryListGet(String type, String mode, int startRow, int endRow, int mariaStart, int mariaEnd, int tenantID) throws Exception;
 	
 	public List<CommunityClubVO> searchCop(String search, String keyword, int startRow, int endRow, String mode, int tenantID) throws Exception ;
 	
@@ -66,7 +66,7 @@ public interface EzCommunityService {
 	
 	public CommunityClubVO adminLeftGet(String code, int tenantID) throws Exception;
 	
-	public CommunityClubVO adminLogoGet(String code, String lang, int tenantID) throws Exception;
+	public CommunityClubVO adminLogoGet(String code, String primary, int tenantID) throws Exception;
 	
 	public CommunityClubVO adminCommCloseOkGet2(String code, int tenantID) throws Exception;
 		
@@ -90,15 +90,15 @@ public interface EzCommunityService {
 	
 	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, LoginVO usreInfo) throws Exception;
 	
-	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id, int tenantID) throws Exception;
+	public CommunityCClubGuestVO guestEditGet(String code, String primary, String no, String id, int tenantID) throws Exception;
 	
 	public CommunityCPollManagerVO pollEditGet1(String managerID, int tenantID) throws Exception;
 
 	public CommunityCPollQuestionVO pollEditGet2(String managerID, int tenantID) throws Exception;
 
-	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String lang, int tenantID) throws Exception;
+	public CommunityMemberInfoVO commOutGet(String cSysopID, String companyID, String primary, int tenantID) throws Exception;
 	
-	public CommunityMemberInfoVO aspCommInfoGet2(String lang, String sysopID, int tenantID) throws Exception;
+	public CommunityMemberInfoVO aspCommInfoGet2(String primary, String sysopID, int tenantID) throws Exception;
 	
 	public CommunityMemberInfoVO getMemberInfo(String companyID, String cID, int tenantID) throws Exception;
 	
@@ -150,8 +150,6 @@ public interface EzCommunityService {
 
 	public String leftCommunityGet1(String code, String userInfoUserID, int tenantID) throws Exception;
 
-	public String getBoardTreeGet1(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, int tenantID) throws Exception;
-
 	public String getCommunityThumInfo(String pBoardID, String pFileName, String pType, int tenantID) throws Exception;
 	
 	public String getBoardTitleName(String strBoardName, String strClubNo, int tenantID) throws Exception;
@@ -164,7 +162,7 @@ public interface EzCommunityService {
 	
 	public String commHomeGet4(String code, int tenantID) throws Exception;
 	
-	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String strLang, int tenantID) throws Exception;
+	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pClubNo, String primary, int tenantID) throws Exception;
 	
 	public String checkIfBoardGroupAdmin(String pRootBoardID, String id, String deptID, String companyID, int tenantID) throws Exception;
 
@@ -178,7 +176,7 @@ public interface EzCommunityService {
 	
 	public String getItemAttachmentXML(String itemID, int tenantID) throws Exception;
 	
-	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang, int tenantID, String offset) throws Exception;
+	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String primary, int tenantID, String offset) throws Exception;
 
 	public String checkReplyPassword(String pItemID, String pReplyID, int tenantID) throws Exception;
 
@@ -246,13 +244,13 @@ public interface EzCommunityService {
 	
 	public int searchItemCount(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 	
-	public int guestOneGet1(String sRadio, String keyword, String code, String lang, int tenantID) throws Exception;
+	public int guestOneGet1(String sRadio, String keyword, String code, String primary, int tenantID) throws Exception;
 		
 	public int pollResGet1(String id, String code, int tenantID) throws Exception;
 	
 	public int pollETCViewGet(String questionID, int tenantID) throws Exception;
 	
-	public int commViewMemberGet2(String code, String lang, String keyword, String sRadio, int tenantID) throws Exception;
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, int tenantID) throws Exception;
 	
 	public int adminMemPermitGet1(String code, int tenantID) throws Exception;
 	

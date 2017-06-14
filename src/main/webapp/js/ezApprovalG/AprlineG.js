@@ -2378,51 +2378,51 @@ function AddDraftUser(pSN,pAprType,pDraftDayFlag,pAprState)
 
 // 결재선정보가 없을때 최초 기안자 삽입
 // [2006.07.06] 특수문자 처리
-function AddDraftUserFirst()
-{
-	var pparsingXML;
-	pparsingXML = "<LISTVIEWDATA><HEADERS>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang230 + "</NAME><WIDTH>30</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang107 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang49 + "</NAME><WIDTH>60</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang108 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang38 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang109 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang231 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-	pparsingXML = pparsingXML + "</HEADERS><ROWS>";
-	pparsingXML = pparsingXML + "<ROW><CELL>";
-	pparsingXML = pparsingXML + "<VALUE>" + "1"+ "</VALUE>";
-	pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
-	pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
-	pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
-	pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(arr_userinfo[1]) + "</DATA4>";
-	pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
-	pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(arr_userinfo[4]) + "</DATA6>";
-	pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
-	pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
-	pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
-	pparsingXML = pparsingXML + "<DATA10>" + MakeXMLString(companyID) + "</DATA10>";
-	pparsingXML = pparsingXML + "<DATA11>" + strAprType1 + "</DATA11>";
-	pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
-	pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";		//primary usernm
-	pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";		//secondary usernm
-	pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(arr_userinfo[15]) + "</DATA15>";		//primary deptname
-	pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(arr_userinfo[16]) + "</DATA16>";		//secondary deptname
-	pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(arr_userinfo[13]) + "</DATA17>";		//primary title
-	pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(arr_userinfo[14]) + "</DATA18>";		//secondary title
-	pparsingXML = pparsingXML + "</CELL><CELL>";
-	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[2]) + "</VALUE>";
-	pparsingXML = pparsingXML + "</CELL><CELL>";
-	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[3]) + "</VALUE>";
-	pparsingXML = pparsingXML + "</CELL><CELL>";
-	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[5]) + "</VALUE>";
-	pparsingXML = pparsingXML + "</CELL><CELL>";
-	pparsingXML = pparsingXML + "<VALUE>" + strLangAprType1 + "</VALUE>";
-	pparsingXML = pparsingXML + "</CELL><CELL>";
-	pparsingXML = pparsingXML + "<VALUE>" + strLangAprState1 + "</VALUE>";
-	pparsingXML = pparsingXML + "</CELL><CELL></CELL></ROW></ROWS></LISTVIEWDATA>"; //새로운 ie 에서 CELL 이 부족하여 빈셀 추가.
-	return pparsingXML;
-}
+//function AddDraftUserFirst()
+//{
+//	var pparsingXML;
+//	pparsingXML = "<LISTVIEWDATA><HEADERS>";
+//	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang230 + "</NAME><WIDTH>30</WIDTH></HEADER>";
+//	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang107 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+//	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang49 + "</NAME><WIDTH>60</WIDTH></HEADER>";
+//	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang108 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+//	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang38 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+//	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang109 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+//	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang231 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+//	pparsingXML = pparsingXML + "</HEADERS><ROWS>";
+//	pparsingXML = pparsingXML + "<ROW><CELL>";
+//	pparsingXML = pparsingXML + "<VALUE>" + "1"+ "</VALUE>";
+//	pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
+//	pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
+//	pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
+//	pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(arr_userinfo[1]) + "</DATA4>";
+//	pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
+//	pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(arr_userinfo[4]) + "</DATA6>";
+//	pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
+//	pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
+//	pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
+//	pparsingXML = pparsingXML + "<DATA10>" + MakeXMLString(companyID) + "</DATA10>";
+//	pparsingXML = pparsingXML + "<DATA11>" + strAprType1 + "</DATA11>";
+//	pparsingXML = pparsingXML + "<DATA12>" + strAprState1 + "</DATA12>";
+//	pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";		//primary usernm
+//	pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";		//secondary usernm
+//	pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(arr_userinfo[15]) + "</DATA15>";		//primary deptname
+//	pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(arr_userinfo[16]) + "</DATA16>";		//secondary deptname
+//	pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(arr_userinfo[13]) + "</DATA17>";		//primary title
+//	pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(arr_userinfo[14]) + "</DATA18>";		//secondary title
+//	pparsingXML = pparsingXML + "</CELL><CELL>";
+//	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[2]) + "</VALUE>";
+//	pparsingXML = pparsingXML + "</CELL><CELL>";
+//	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[3]) + "</VALUE>";
+//	pparsingXML = pparsingXML + "</CELL><CELL>";
+//	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(arr_userinfo[5]) + "</VALUE>";
+//	pparsingXML = pparsingXML + "</CELL><CELL>";
+//	pparsingXML = pparsingXML + "<VALUE>" + strLangAprType1 + "</VALUE>";
+//	pparsingXML = pparsingXML + "</CELL><CELL>";
+//	pparsingXML = pparsingXML + "<VALUE>" + strLangAprState1 + "</VALUE>";
+//	pparsingXML = pparsingXML + "</CELL><CELL></CELL></ROW></ROWS></LISTVIEWDATA>"; //새로운 ie 에서 CELL 이 부족하여 빈셀 추가.
+//	return pparsingXML;
+//}
 
 //감사부서를 사후공람로 추가 한다.
 function addGamsabu(pSN,pAprType,pDraftDayFlag,pAprState)
@@ -3046,27 +3046,27 @@ function chkafterGamSa(AprLineRow)
 //	return rtnVal;
 //}
 
-function chkHabyuiGamsa(AprLineRow)  
-{
-	var i, rtnVal;
-	var aprtype, H, G;
-	H = 0;
-	G = 0;
-	rtnVal = true;
-	
-	for(i=0;i < AprLineRow.length - 1; i++)
-	{
-		// 표준모듈 (2007.05.09) : 다국어
-		aprtype = GetAttribute(AprLineRow[i],"DATA11") //AprLineRow.item(i).cells(0).DATA11;
-		if(aprtype == strLang53 || aprtype == strAprType12 || aprtype == strAprType11)
-			H = H + 1;
-		if(aprtype == strLang264 || aprtype == strAprType5)
-			G = G + 1;
-	}
-	if (H > 0 && G > 0)
-		rtnVal = false;
-	return rtnVal; 
-}
+//function chkHabyuiGamsa(AprLineRow)  
+//{
+//	var i, rtnVal;
+//	var aprtype, H, G;
+//	H = 0;
+//	G = 0;
+//	rtnVal = true;
+//	
+//	for(i=0;i < AprLineRow.length - 1; i++)
+//	{
+//		// 표준모듈 (2007.05.09) : 다국어
+//		aprtype = GetAttribute(AprLineRow[i],"DATA11") //AprLineRow.item(i).cells(0).DATA11;
+//		if(aprtype == strLang53 || aprtype == strAprType12 || aprtype == strAprType11)
+//			H = H + 1;
+//		if(aprtype == strLang264 || aprtype == strAprType5)
+//			G = G + 1;
+//	}
+//	if (H > 0 && G > 0)
+//		rtnVal = false;
+//	return rtnVal; 
+//}
 
 function chkLastKyuljeaCF(AprLineRow)  
 {
@@ -3382,115 +3382,6 @@ function hideProgress() {
 	if (g_progresswin)
 		g_progresswin.close();
   } catch(e) {}
-}
-
-function VerifyWorkFlowXML(AprLineRow)
-{
-	if (WorkFlowOption != "AUTO")
-		return;
-	
-	var CheckNodes = SelectNodes(WorkFlowXML,"LINESCHECK/MUST/APRLINE");//SelectSingleNodeNew(WorkFlowXML,"LINESCHECK/MUST")//WorkFlowXML.selectNodes("LINESCHECK/MUST/APRLINE");
-		
-	var i=0;
-	var rtnVal = "";
-	
-	for (i=0; i<CheckNodes.length; i++)
-	{
-		var pAprType = SelectSingleNodeValue(CheckNodes[i],"APRTYPE") ;//SelectSingleNodeValue(GetChildNodes(CheckNodes)[i],"APRTYPE") ;//CheckNodes.item(i).selectSingleNode("APRTYPE").text
-		var pClass = SelectSingleNodeValue(CheckNodes[i],"CLASS") ;//CheckNodes.item(i).selectSingleNode("CLASS").text
-		var pValue = SelectSingleNodeValue(CheckNodes[i],"VALUE") ;//CheckNodes.item(i).selectSingleNode("VALUE").text
-		var pDesc = SelectSingleNodeValue(CheckNodes[i],"DESC") ;//CheckNodes.item(i).selectSingleNode("DESC").text
-		
-		if (checkAprLine(pAprType, pClass, pValue, pDesc, AprLineRow, "MUST") != "")
-		{
-			// 더해야 한다.
-			if (pClass == "USERID")
-			{
-				AddWorkFlowUser(pAprType, pClass, pValue, AprLineRow, "Y");
-			}
-			// 현재로써는 UserID가 없으면 더해줄 방법이 없다.
-			// 아.. 그리고 이 UserID가 User인지 Dept인지도 알 방법이 없다.
-		}
-	}
-	
-	CheckNodes = SelectNodes(WorkFlowXML,"LINESCHECK/MUSTNOT/APRLINE");//CheckNodes = WorkFlowXML.selectNodes("LINESCHECK/MUSTNOT/APRLINE");
-	
-	for (i=0; i<CheckNodes.length; i++)
-	{
-		var pAprType = SelectSingleNodeValue(CheckNodes[i],"APRTYPE") ;//CheckNodes.item(i).selectSingleNode("APRTYPE").text
-		var pClass = SelectSingleNodeValue(CheckNodes[i],"CLASS") ;//CheckNodes.item(i).selectSingleNode("CLASS").text
-		var pValue = SelectSingleNodeValue(CheckNodes[i],"VALUE") ;//CheckNodes.item(i).selectSingleNode("VALUE").text
-		var pDesc = SelectSingleNodeValue(CheckNodes[i],"DESC") ;//CheckNodes.item(i).selectSingleNode("DESC").text
-		if (checkAprLine(pAprType, pClass, pValue, pDesc, AprLineRow, "MUSTNOT") != "")
-		{
-			// 지워야 한다.
-			RemoveWorkFlowUser(pAprType, pClass, pValue, AprLineRow);
-		}
-	}
-	return rtnVal;
-}
-
-// DeptYN : Y - 부서임. N - 유저임.
-function AddWorkFlowUser(pAprType, pClass, pValue, AprLineRow, DeptYN)
-{
-	// 가장 위에 더해준다.
-	var pparsingXML = "";
-	if(DeptYN == "Y")
-	{
-		pparsingXML = "<LISTVIEWDATA><HEADERS>";
-		pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang230 + "</NAME><WIDTH>30</WIDTH></HEADER>";
-		pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang107 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-		pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang49 + "</NAME><WIDTH>60</WIDTH></HEADER>";
-		pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang108 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang38 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang109 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang231 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-		pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
-		pparsingXML = pparsingXML + "<VALUE>" + AprLineRow.length + "</VALUE>";
-		pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
-		pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
-		pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
-		pparsingXML = pparsingXML + "<DATA4>" + pValue + "</DATA4>";
-		pparsingXML = pparsingXML + "<DATA5>" + "Y" + "</DATA5>";
-		pparsingXML = pparsingXML + "<DATA6>" + pValue + "</DATA6>";
-		pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
-		pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
-		pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
-		pparsingXML = pparsingXML + "<DATA10>" + getDeptInfo_nodName(pValue, "EXTENSIONATTRIBUTE2") + "</DATA10>";
-		pparsingXML = pparsingXML + "</CELL><CELL>";
-		pparsingXML = pparsingXML + "<VALUE>" + "-" + "</VALUE>";
-		pparsingXML = pparsingXML + "</CELL><CELL>";
-		pparsingXML = pparsingXML + "<VALUE>" + "-" + "</VALUE>";
-		pparsingXML = pparsingXML + "</CELL><CELL>";
-		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(getDeptInfo_nodName(pValue, "DISPLAYNAME")) + "</VALUE>";
-		pparsingXML = pparsingXML + "</CELL><CELL>";
-     	pparsingXML = pparsingXML + "<VALUE>" + pAprType + "</VALUE>";
-		pparsingXML = pparsingXML + "</CELL><CELL>";
-		
-		// 표준모듈 (2007.05.09) : 다국어
-		pparsingXML = pparsingXML + "<VALUE>" + strAprState1 + "</VALUE>";
-		
-		pparsingXML = pparsingXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
-	}
-	Resultxml = loadXMLString(pparsingXML);
-	
-	var pAPRLINE = new ListView(); 
-	pAPRLINE.LoadFromID("pAPRLINE");
-	         
-	var objTr = pAPRLINE.AddRow(0);
-	
-	var MaxID = 0;
-    for(var j =0  ; j< InitTr.length  ;j++)
-    {
-        var curnum = Number(pAPRLINE.GetSelectedRowID(j).substring(pAPRLINE.GetSelectedRowID(j).lastIndexOf('_') + 1),pAPRLINE.GetSelectedRowID(j).length);
-        if(MaxID < curnum)
-          MaxID = curnum;
-    }   
-    SetAttribute(objTr,"id","pAPRLINE" + "_TR_" + eval(MaxID + 1));    
-	//SetAttribute(objTr,"id","pAPRLINE" + "_TR_" + InitTr.length);
-	pAPRLINE.AddDataRow(objTr, Resultxml);  
-			    
-	//AprLineRow.item(0).InsertBefore(Resultxml);
 }
 
 function RemoveWorkFlowUser(pAprType, pClass, pValue, AprLineRow)

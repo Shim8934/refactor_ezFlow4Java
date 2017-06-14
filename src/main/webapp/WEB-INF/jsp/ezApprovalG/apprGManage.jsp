@@ -884,7 +884,10 @@
 		        else if (RtnVal == "ERR03") {
 		            var pAlertContent = strLang897;
 		            OpenAlertUI(pAlertContent, "", "OPEN");
-		        }
+		        }else {
+	            	var pAlertContent = strLang898;
+	                OpenAlertUI(pAlertContent);
+	            }
 		    }
 		    function Recipent_onclick() {
 		        var DocList = new ListView();
@@ -926,6 +929,20 @@
 		                getAprDocAproveInfo(tr);
 		            else
 		                getDataInfo("4");
+		            setbuttonenable();
+		        }
+		    }
+		    function Circulation_onclick() {
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var oArrRows = DocList.GetSelectedRows();
+		        if (oArrRows.length > 0) {
+		            var tr = oArrRows[0];
+		
+		            if (pListTypeValue != "5")
+		                getAprDocAproveInfo(tr);
+		            else
+		                getDataInfo("5");
 		            setbuttonenable();
 		        }
 		    }
@@ -1606,7 +1623,12 @@
 				
 				<li id="tbtnRemoveDoc" ><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 				<li id="tbtnViewDoc"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
-				<li id="tbtnGongRam" class="approvalG"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
+				<c:if test="${approvalFlag == 'G'}">
+					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
+				</c:if>
+				<c:if test="${approvalFlag != 'G'}">
+					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
+				</c:if>
 		        <li id="tSearchCondi"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
@@ -1634,6 +1656,9 @@
 		    <li id="tagsub2"><span onClick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()" ><spring:message code='ezApprovalG.t950'/></span></li>
 		    <li id="tagsub3"><span onClick="pDocInfoValue='4'; MM_swapImagesub('3', event);Attach_onclick()" ><spring:message code='ezApprovalG.t56'/></span></li>
 		    <li id="tagsub4"><span onClick="pDocInfoValue='3'; MM_swapImagesub('4', event);Opinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
+		    <c:if test="${approvalFlag != 'G'}">
+			    <li id="tagsub5"><span onClick="pDocInfoValue='5'; MM_swapImagesub('5', event);Circulation_onclick()" ><spring:message code='ezApprovalG.hyj24'/></span></li>
+		    </c:if>
 		  </ul>
 		</div>
 		

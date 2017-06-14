@@ -46,7 +46,7 @@ function AprLineTempletNameCheck(p_AprLineTempletName) {
     }
 
     if (p_AprLineTempleNameFlag && g_TemplateSN == "") {
-    	alert(strLangS194 + "\n     " + strLangS195);
+    	alert(strLangS194 + "\n  " + strLangS195);
 //        var pAlertContent = strLangS194 + "<br> " + strLangS195;
 //        OpenAlertUI(pAlertContent);
         document.getElementById("TxtAprLineTempletName").value = "";

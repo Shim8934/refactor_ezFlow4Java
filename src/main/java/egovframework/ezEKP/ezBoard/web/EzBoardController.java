@@ -86,7 +86,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  * @see
  */
-@Controller
+@Controller("EzBoardController")
 public class EzBoardController extends EgovFileMngUtil{
 	
 	@Autowired
@@ -3077,18 +3077,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 ckeditor 호출 Method
-	 */
-	@RequestMapping(value = "/ezBoard/ckEditor.do")
-	public String ckEditor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
-
-		model.addAttribute("userInfo",userInfo);
-		
-		return "ezBoard/boardCKEditor";
-	}
-	
-	/**
 	 * 게시판 draganddrop 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/dragAndDrop.do")
@@ -5812,7 +5800,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 
-		String result = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
+		String result = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 
 		logger.debug("getItemInfo ended");
 		
@@ -5952,7 +5940,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			return ;
 		}
 		
-		String strXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
+		String strXML = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String strURL =  "javascript:Item_View_New('" + boardID + "','" + itemID + "');";
@@ -6002,7 +5990,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		String strXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
+		String strXML = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String gubun = doc.getElementsByTagName("GUBUN").item(0).getTextContent();

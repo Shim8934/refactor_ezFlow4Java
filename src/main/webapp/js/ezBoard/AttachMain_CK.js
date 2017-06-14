@@ -43,7 +43,7 @@ function btn_ImgDel_onclick(){
 				var pAttachDelSN;
 				var pAttachDelFileName;
 				var is_newfile;
-				var pNewNodeName = "";	// " + strLang15 + "
+				var pNewNodeName = "";	
 				var Rtnval;
 			
 				for (var k=0; k < multi_cnt; k++){
@@ -115,7 +115,7 @@ function btn_AttachDel_onclick()
 			    var pAttachDelSN;
 			    var pAttachDelFileName;
 			    var is_newfile;
-			    var pNewNodeName = "";	// " + strLang15 + "
+			    var pNewNodeName = "";	
 			    var Rtnval;
 
 
@@ -474,7 +474,7 @@ function beginAttachAdd_Photo()
 		    var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
 	        ezUtil.UseUTF8 = true;
 		    fileSize = ezUtil.GetFileSize(g_fileList[i]);
-		    txtPhotoFile.value = ezUtil.ExtractFileName(g_fileList[i]);	//2006.10.20 " + strLang25 + "
+		    txtPhotoFile.value = ezUtil.ExtractFileName(g_fileList[i]);	
 		    ezUtil = null;
 
 		    var Result = attachFilename.substr(3, attachFilename.length-3);

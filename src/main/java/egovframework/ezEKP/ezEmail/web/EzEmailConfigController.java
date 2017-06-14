@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezEmail.web;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -17,10 +15,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.imageio.ImageIO;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -49,8 +45,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -554,9 +548,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 서명관리 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSignatureCK.do")
-	public String mailSignatureCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
-		logger.debug("mailSignatureCK started.");
+	@RequestMapping(value="/ezEmail/mailSignature.do")
+	public String mailSignature(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailSignature started.");
 		
 		String signState = "0";
 		String signature1 = "";
@@ -597,9 +591,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("userId", userInfo.getId());
 		
-		logger.debug("mailSignatureCK ended.");
+		logger.debug("mailSignature ended.");
 		
-		return "ezEmail/mailSignatureCK";
+		return "ezEmail/mailSignature";
 	}
 
 	/**
@@ -659,61 +653,6 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		return rtnValue;
 	}
-
-
-	/**
-	 * 메일 서명관리 ck에디터 이미지 업로드 호출 Method
-	 */
-	@RequestMapping(value = "/ezEmail/ckImageUpload.do")
-	public String ckImageUpload() {
-		return "ezEmail/ckImageUpload";
-	}
-
-	/**
-	 * 메일 서명관리 ck에디터 업로드 화면 호출 Method
-	 */
-	@RequestMapping(value = "/ezEmail/ckUpload.do")
-	public String ckUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
-		logger.debug("ckUpload started.");
-		
-		MultipartFile multiFile = request.getFile("file1");
-		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
-
-		String realPath = commonUtil.getRealPath(request);
-		String today = EgovDateUtil.getToday("");
-		String fileName = UUID.randomUUID() + "." + fileType;
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String filePath = commonUtil.getUploadPath("upload_mail.SIGNIMGS", userInfo.getTenantId());
-		filePath = filePath + commonUtil.separator + today;
-		File file = new File(realPath + filePath);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		int width = 0;
-		int height = 0;
-
-		writeUploadedFile(multiFile, fileName, realPath + filePath);
-
-		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);			
-
-		if (imageFile.exists()) {			
-			BufferedImage bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));			    
-			width = bi.getWidth();
-			height = bi.getHeight();
-		}
-		
-		String imgPath = (filePath + commonUtil.separator + fileName +  "|!|" + width + "|!|" + height).replace("\\", "/");
-		
-		model.addAttribute("imgPath", imgPath);
-		
-		logger.debug("imgPath=" + imgPath);
-		logger.debug("ckUpload ended.");
-		
-		return "ezEmail/ckUpload";
-	}
-
 
 	/**
 	 * 메일 자동삭제 화면 호출 함수
@@ -1229,9 +1168,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중 설정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailOutOfOfficeCK.do")
-	public String mailOutOfOfficeCK(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
-		logger.debug("mailOutOfOfficeCK started.");
+	@RequestMapping(value="/ezEmail/mailOutOfOffice.do")
+	public String mailOutOfOffice(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+		logger.debug("mailOutOfOffice started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1302,9 +1241,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("gExternal", gExternal);
 		model.addAttribute("userLang", userLang);
 		
-		logger.debug("mailOutOfOfficeCK ended.");
+		logger.debug("mailOutOfOffice ended.");
 		
-		return "ezEmail/mailOutOfOfficeCK";
+		return "ezEmail/mailOutOfOffice";
 	}
 
 	/**

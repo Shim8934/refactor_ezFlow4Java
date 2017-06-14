@@ -204,7 +204,7 @@
 			  	</td>
 		  	</tr>
 		</table>
-		<table class="content" style="margin-top:5px" > 
+		<table class="content"> 
 			<tr>
 		    	<th><spring:message code='ezOrgan.t245' /></th>
 		    	<td width="100%">

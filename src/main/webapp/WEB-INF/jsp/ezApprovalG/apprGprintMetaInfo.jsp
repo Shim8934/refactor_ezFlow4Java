@@ -33,6 +33,8 @@
         g_Flag = RetValue[0];
         g_ID1 = RetValue[1];
         g_ID2 = RetValue[2];
+        
+        DocumentComplete();
     }
     function btnPrint_onclick() {
         document.getElementById("menu").style.display = "none";
@@ -83,7 +85,6 @@
 <table style="table-layout:fixed; width:100%; height:450px">
 	<tr> 
 		<td style="height:100%">
-			<iframe id="message" class="viewbox" src="/ezApprovalG/printMetaInfoContent.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;display:none"></iframe>
             <div id="content" style="overflow:auto;height:490px"></div>
 		</td>
 	</tr>

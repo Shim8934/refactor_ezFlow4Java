@@ -202,11 +202,11 @@
 			}
 			
 			var isComplete = false;
-			function DocumentComplete() {
+			function Editor_Complete() {
 			    if(pNo != "") {
 			        GetFileURL();
 			        var fullPath = strContentLocation;
-			        var htmlData = message.SetEditorContentURL2(fullPath);
+			        var htmlData = message.GetEditorContentURL(fullPath);
 			        
 			        if(pMode == "write" && pNo != "") {
 			            htmlData = "<br><br>-----<B>[&nbsp;" + "<spring:message code = "ezCommunity.t1161"/>" + "</B>-----<br><B> " + "<spring:message code = "ezCommunity.t1162"/>" + "</B>" + wDate + "<br><B> " + "<spring:message code = 'ezCommunity.t218'/>" + "</B>" + writerFakeName + "<br><B> " + "<spring:message code = "ezCommunity.t885"/>" + "</B>" + pTitle + "<br><br>" + htmlData;
@@ -312,7 +312,7 @@
 					<table style="width:100%;height:100%;">
 		                <tr> 
 							<td style="vertical-align:top;height:100%" id="EdtorSize">
-					        	<iframe id="message" class="viewbox"  name="message" src="/ezCommunity/ckEditor.do" frameborder="0" style="padding:0; height:100%; width:99.7%; overflow:auto;border-top:0px"></iframe>
+					        	<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" frameborder="0" style="padding:0; height:100%; width:99.7%; overflow:auto;border-top:0px"></iframe>
 							</td>
 		                </tr> 
 		            </table>

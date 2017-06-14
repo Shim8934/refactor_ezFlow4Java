@@ -289,7 +289,7 @@ function makeXML(newDocID) {
             var tempNode3;
             tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "signposition", "");
             if (getNodeText(LineNodes.item(i).getElementsByTagName("OPINION").item(0)) == "YES")
-                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("SIGNPOSITION").item(0)) + "(" + strLang5);
+                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("SIGNPOSITION").item(0)));
             else
                 setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("SIGNPOSITION").item(0)));
 
@@ -372,7 +372,7 @@ function makeXML(newDocID) {
             var tempNode3;
             tempNode3 = createNodeAndAppandNodeText(sihangXML, tempNode2, tempNode3, "signposition", "");
             if (getNodeText(LineNodes.item(i).getElementsByTagName("OPINION").item(0)) == "YES")
-                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)) + "(" + strLang5);
+                setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)));
             else
                 setNodeText(tempNode3, getNodeText(LineNodes.item(i).getElementsByTagName("ORDER").item(0)));
 
@@ -1093,7 +1093,7 @@ function encodeUP(emlName)
 							sendCNT[1] = sendCNT[1] + 1;
 						}
 					}
-					var pAlertContent = strLang189 + TempRecvList + "]" + strLang190;
+					var pAlertContent = strLang189 + "[" + TempRecvList + "]" + strLang190;
 					OpenAlertUI(pAlertContent);
 				}
 				
@@ -1128,7 +1128,7 @@ function encodeUP(emlName)
 							sendCNT[1] = sendCNT[1] + 1;
 						}
 					}
-					var pAlertContent = strLang189 + TempRecvList + "]" + strLang190;
+					var pAlertContent = strLang189 + "[" + TempRecvList + "]" + strLang190;
 					OpenAlertUI(pAlertContent);
 				}			
 				else
@@ -1167,7 +1167,7 @@ function encodeUP(emlName)
 							sendCNT[1] = sendCNT[1] + 1;
 						}
 					}
-					var pAlertContent = strLang189 + TempRecvList + "]" + strLang190;
+					var pAlertContent = strLang189 + "["  + TempRecvList + "]" + strLang190;
 					OpenAlertUI(pAlertContent);
 				}
 				
@@ -1204,7 +1204,7 @@ function encodeUP(emlName)
 							sendCNT[1] = sendCNT[1] + 1;
 						}
 					}
-					var pAlertContent = strLang189 + TempRecvList + "]" + strLang190;
+					var pAlertContent = strLang189 + "["  + TempRecvList + "]" + strLang190;
 					OpenAlertUI(pAlertContent);
 				}			
 				else

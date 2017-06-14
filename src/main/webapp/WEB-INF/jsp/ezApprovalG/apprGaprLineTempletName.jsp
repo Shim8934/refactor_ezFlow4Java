@@ -27,6 +27,7 @@
 		    var g_TemplateSN = "";
 		    var g_TemplateName = "";
 		    var type = "${type}";
+		    var approvalFlag = "${approvalFlag}";
 		    
 		    function btn_SaveAprLineTempletName_onclick() {
 		        var p_AprLineTempletName = document.getElementById("TxtAprLineTempletName").value;
@@ -35,7 +36,11 @@
 		        	if (type == "") {
 	                    pAlertContent = "<spring:message code='ezApprovalG.t387'/>";
 		        	} else {
-		        		pAlertContent = "<spring:message code='ezApprovalG.t6003'/>";
+		        		if (approvalFlag == "G") {
+			        		pAlertContent = "<spring:message code='ezApprovalG.t6003'/>";
+		        		} else {
+			        		pAlertContent = "<spring:message code='ezApprovalG.hyj10'/>";
+		        		}
 		        	}
 		        	
 		            OpenAlertUI(pAlertContent);
@@ -119,8 +124,14 @@
 		<span>▒ <spring:message code='ezApprovalG.t2107'/></span>
 		</c:if>
 		<c:if test="${type != ''}">
-		<h1><spring:message code='ezApprovalG.t6000'/></h1>
-		<span>▒ <spring:message code='ezApprovalG.t6003'/></span>
+			<c:if test="${approvalFlag == 'G'}">
+				<h1><spring:message code='ezApprovalG.t6000'/></h1>
+				<span>▒ <spring:message code='ezApprovalG.t6003'/></span>
+			</c:if>
+			<c:if test="${approvalFlag == 'S'}">
+				<h1><spring:message code='ezApprovalG.hyj07'/></h1>
+				<span>▒ <spring:message code='ezApprovalG.hyj10'/></span>
+			</c:if>
 		</c:if>
 		<div class="nobox" style="margin-top:10px">
 		<input type="text" class="text" style="width:100%" id="TxtAprLineTempletName" name="TxtAprLineTempletName" maxlength="7">

@@ -836,27 +836,11 @@ function Save_onClick_Complete(ReturnValue) {
             createNodeAndInsertText(xmlDoc, rootNode, "TO", GetAddrFormatForSend(MsgToGot));
             createNodeAndInsertText(xmlDoc, rootNode, "CC", GetAddrFormatForSend(MsgCCGot));
             createNodeAndInsertText(xmlDoc, rootNode, "BCC", GetAddrFormatForSend(MsgBCCGot));
-
-            var mhtBody = "";
-            /* dhlee: mhtBody는 TEXTBODY로서 항상 Plain Text를 전송하도록 한다.
-            if (m_rgParams4PostOption["bodyType"] != 1) {
-                mhtBody = message.GetEditorContent();
-                mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
-                // dhlee: this line seems to be not needed.
-//                mhtBody = ConvertHTMLtoMHT(mhtBody);
-            }
-            else {
-            */
-                var div_ = document.createElement("DIV");
-                div_.innerHTML = div_.innerHTML = "<HTML>" + GetCKEditerHeader() + message.GetEditorContent() + "</HTML>";
-                mhtBody = div_.textContent;
-                mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } ", "");
-                mhtBody = mhtBody.replace("P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}", "");
-                mhtBody = mhtBody.replace("P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} DIV { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm;line-height:20px;font-size:10pt;} ", "");
-//            }
-
-            createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", mhtBody.replace(regex, " "));
-            createNodeAndInsertText(xmlDoc, rootNode, "FROM", MakeFromAddress(document.getElementById("eFrom").value));
+            if (document.getElementById("bodyType") != null && document.getElementById("bodyType").value == "1")
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", document.getElementById("plainTextArea").value);
+            else
+                createNodeAndInsertText(xmlDoc, rootNode, "TEXTBODY", message.GetEditorTextContent().replace(/\r\n\r\n/gi, "\r\n").replace(regex, " "));
+            createNodeAndInsertText(xmlDoc, rootNode, "FROM", "\"" + g_myname + "\" <" + g_from + ">");
             createNodeAndInsertText(xmlDoc, rootNode, "SENSITIVITY", m_rgParams4PostOption["postType"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYSENDTIME", m_rgParams4PostOption["replySendTime"]);
             createNodeAndInsertText(xmlDoc, rootNode, "REPLYREADTIME", m_rgParams4PostOption["replyReadTime"]);
@@ -2250,8 +2234,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         }
     } catch (e) { }
 
-
-    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:13px;font-family:Gulim'>" + tempDiv.innerHTML + "</div>";
+    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:13px;font-family:" + defaultFont + "'>" + tempDiv.innerHTML + "</div>";
     
     try {
         // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.
@@ -2591,9 +2574,9 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
     
     if (individualmailuser != "0") {
-        DivPopUpShow(410, 455, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 355, "/ezEmail/letterOption.do");
     } else {
-        DivPopUpShow(410, 375, "/ezEmail/letterOption.do");
+        DivPopUpShow(410, 280, "/ezEmail/letterOption.do");
     }
 }
 
@@ -3143,6 +3126,7 @@ DECMD_SETFONTSIZE = 5045;
 OLECMDEXECOPT_DODEFAULT = 0;
 
 var g_originalHTML = "";
+var g_originalPlainText = "";
 function pzFormProc_DocumentComplete() {
     if (g_isFormat) return;
 
@@ -3168,16 +3152,15 @@ function pzFormProc_DocumentComplete() {
     }
 
     message.SetEditorContent("<div id=msgbody><div>" + messageBody.getAttribute("mbody") + "</div></div>")
-    g_originalHTML = message.GetHtmlValue();
+    g_originalHTML = message.GetEditorContent();
 
     if (eSubject.value != "") {
-        message.SetEditorFocus();
     }
     else
         MsgTo.focus();
 
     var tempDiv = document.createElement("DIV");
-    tempDiv.innerHTML = message.GetHtmlValue();
+    tempDiv.innerHTML = message.GetEditorContent();
     var DivRows = tempDiv.getElementsByTagName("DIV");
     for (var i = 0; i < DivRows.length; i++) {
         if (DivRows.item(i).id == "MailSign" && DivRows.item(i).childNodes.length > 0) {

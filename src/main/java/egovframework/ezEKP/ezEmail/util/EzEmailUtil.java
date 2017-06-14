@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -29,6 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
@@ -50,6 +54,7 @@ import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONObject;
@@ -58,13 +63,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
 /** 
@@ -86,10 +95,16 @@ public class EzEmailUtil {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
     @Autowired
     private Properties config;
 	
+	@Autowired
+	private CommonUtil commonUtil;
+    
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
 	 */
@@ -465,7 +480,7 @@ public class EzEmailUtil {
 	 * 메일 Multipart 정보 반환 함수
 	 */
 	public List<String> getBodyInfo(Part part, String folderPath, long uid, 
-			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint) throws Exception {
+			int bodyPartIndex, List<Map<String, String>> attachedFileList, boolean forPrint, Locale locale) throws Exception {
 		List<String> resultList = new ArrayList<String>();
 		
 		String htmlBody = "";
@@ -743,7 +758,19 @@ public class EzEmailUtil {
 				}				
 //			}
 			
-			htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+			StringBuilder tempText2 = new StringBuilder();
+			String[] tempTexts = tempText.split("<br />");
+			
+			String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+			
+			for (int i=0; i<tempTexts.length; i++) {
+				if (!tempTexts[i].equals("")) {
+					tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
+				}
+			}
+			
+			htmlBody += tempText2.toString();
 			
 			htmlBody = changeURLsToAnchorTags(htmlBody);	
 			htmlBody = stripScriptTags(htmlBody);
@@ -760,7 +787,7 @@ public class EzEmailUtil {
 					logger.debug("disposition=" + p.getDisposition());
 				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
 				} else {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, locale);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -784,7 +811,7 @@ public class EzEmailUtil {
 			Part p = null;
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, locale);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -801,7 +828,7 @@ public class EzEmailUtil {
 				
 				// text/html 파트가 나오거나 multipart/alternative 파트가 나올 수도 있다.
 				if (!p.isMimeType("text/plain") && !(p.getDisposition()!=null && p.getDisposition().equalsIgnoreCase(Part.INLINE))) {
-					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint);
+					List<String> tempList = getBodyInfo(p, folderPath, uid, -1, attachedFileList, forPrint, locale);
 					htmlBody += tempList.get(0);
 					pAttachListHtml += tempList.get(1);
 					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -819,7 +846,7 @@ public class EzEmailUtil {
 			int count = mp.getCount();
 			for (int i = 0; i < count; i++) {
 				Part p = mp.getBodyPart(i);
-				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint);
+				List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, forPrint, locale);
 				htmlBody += tempList.get(0);
 				pAttachListHtml += tempList.get(1);
 				filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
@@ -1839,6 +1866,305 @@ public class EzEmailUtil {
                 throw new Exception("deleteUserQuota failed");
             }                    
         }                 
+    }    
+    
+    /**
+     * 비즈메카 스팸편지함과 연동하기 위한 Credential을 반환하는 메소드
+     * @param emailAddress 스팸편지함 사용자의 이메일 주소
+     * @return
+     * @throws Exception
+     */
+    public String getCredentialForBizmekaSpambox(String emailAddress) throws Exception {
+    	String credential = null;
+    	
+    	if (emailAddress != null && !emailAddress.equals("")) {
+	    	byte[] keyBytes = "bizmGW02".getBytes("UTF-8");
+	    	byte[] ivBytes = "mekaGW02".getBytes("UTF-8");
+	    	byte[] input = emailAddress.getBytes("UTF-8");
+	    	
+	    	SecretKeySpec key = new SecretKeySpec(keyBytes, "DES");
+	    	IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+	    	Cipher cipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+	    	
+	    	cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+	    	byte[] encrypted= new byte[cipher.getOutputSize(input.length)];
+	    	int enc_len = cipher.update(input, 0, input.length, encrypted, 0);
+	    	enc_len += cipher.doFinal(encrypted, enc_len);  
+	    	
+	    	credential = toHexString(encrypted);
+    	}
+    	
+    	return credential;
+    }
+    
+    public String bizmekaAddUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
+    		String userPw, String userName, String deptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=ADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_USER";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+    	sb.append("<USERPW>" + commonUtil.cleanValue(userPw) + "</USERPW>");
+    	sb.append("<USERNAME>" + commonUtil.cleanValue(userName) + "</USERNAME>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=DEL" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_USER";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaAddDept(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String deptId, 
+    		String deptName, String parentDeptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=ADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DEPT";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("<PARENTDEPTID>" + commonUtil.cleanValue(parentDeptId) + "</PARENTDEPTID>");    	
+    	sb.append("<DEPTNAME>" + commonUtil.cleanValue(deptName) + "</DEPTNAME>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteDept(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String deptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=DEL" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DEPT";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaAddDistributionList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String distId, 
+    		String distName, List<String> memberList) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=ADD" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DIST";
+    	
+    	StringBuilder sbMembers = new StringBuilder();    
+    	int memberCount = memberList.size();
+    	
+    	for (int i = 0; i < memberCount; i++) {
+    		sbMembers.append(memberList.get(i));
+    		
+    		if (i != memberCount - 1) {
+    			sbMembers.append("|");
+    		}
+    	}
+
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DISTID>" + commonUtil.cleanValue(distId) + "</DISTID>");
+    	sb.append("<DISTNAME>" + commonUtil.cleanValue(distName) + "</DISTNAME>");    	
+    	sb.append("<MEMBERS>" + commonUtil.cleanValue(sbMembers.toString()) + "</MEMBERS>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaEditDistributionList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String distId, 
+    		String distName, List<String> memberList) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=EDIT" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DIST";
+    	
+    	StringBuilder sbMembers = new StringBuilder();    
+    	int memberCount = memberList.size();
+    	
+    	for (int i = 0; i < memberCount; i++) {
+    		sbMembers.append(memberList.get(i));
+    		
+    		if (i != memberCount - 1) {
+    			sbMembers.append("|");
+    		}
+    	}
+
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DISTID>" + commonUtil.cleanValue(distId) + "</DISTID>");
+    	sb.append("<DISTNAME>" + commonUtil.cleanValue(distName) + "</DISTNAME>");    	
+    	sb.append("<MEMBERS>" + commonUtil.cleanValue(sbMembers.toString()) + "</MEMBERS>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaDeleteDistributionList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String distId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=DEL" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DIST";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DISTID>" + commonUtil.cleanValue(distId) + "</DISTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    private String toHexString(byte[] array) {
+        return DatatypeConverter.printHexBinary(array);
     }    
     
 	/**

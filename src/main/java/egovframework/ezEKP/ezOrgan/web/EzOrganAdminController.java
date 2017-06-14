@@ -330,11 +330,31 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				logger.debug("updateGroupDel rc=" + rc);
 				
 				if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식그룹을 찾지 못해도 성공으로 봄.)
+					String bizmekaResult = "ERROR";
+					
 				    try {
+						String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+						
+						if (useBizmekaSpambox.equals("YES")) {
+							String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+							String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+							String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+							
+							bizmekaResult = ezEmailUtil.bizmekaDeleteDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn);		
+							
+							logger.debug("bizmekaResult=" + bizmekaResult);
+							
+							if (!bizmekaResult.equals("OK")) {
+								throw new Exception("bizmekaDeleteDept failed");
+							}						
+						}
+				    	
     					ezOrganAdminService.deleteDBData(cn, pClass, tenantID);
     					result = "OK";
     				// 예외가 발생하면 그룹 주소를 다시 등록한다.
 				    } catch (Exception e) {
+				    	e.printStackTrace();
+				    	
 				        ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 				        ezEmailUserAdminService.addGroup(mailAddr);
 				        
@@ -466,11 +486,30 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 					
-					if (rc == 0) { // updateGroupAdd 성공
-						vo.setMail(mailAddr);
+					if (rc == 0) { // updateGroupAdd 성공						
+						String bizmekaResult = "ERROR";
 						
 						// insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제.
 						try {
+							String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+							
+							if (useBizmekaSpambox.equals("YES")) {
+								String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+								String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+								String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+								
+								bizmekaResult = ezEmailUtil.bizmekaAddDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
+														cn, vo.getDisplayName(), vo.getParentCn());		
+								
+								logger.debug("bizmekaResult=" + bizmekaResult);
+								
+								if (!bizmekaResult.equals("OK")) {
+									throw new Exception("bizmekaAddDept failed");
+								}						
+							}
+							
+							vo.setMail(mailAddr);
+							
 							ezOrganAdminService.insertDBData_dept(vo);
 							result = "OK";	
 						} catch (Exception e) {
@@ -605,6 +644,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    logger.debug("userInfo started");
 	    
 		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String lang = userInfo.getLang();		
@@ -900,8 +943,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						throw new Exception("retiring the user '" + mailAddr + "' failed.");
 					}
 				} 
-												
+							
+				String bizmekaResult = "ERROR";
+				
 				try {
+					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+					
+					if (useBizmekaSpambox.equals("YES")) {
+						String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+						String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+						String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+						
+						bizmekaResult = ezEmailUtil.bizmekaDeleteUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn[i]);		
+						
+						logger.debug("bizmekaResult=" + bizmekaResult);
+						
+						if (!bizmekaResult.equals("OK")) {
+							throw new Exception("bizmekaDeleteUser failed");
+						}						
+					}
+					
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 				} catch (Exception e) {
@@ -1071,15 +1132,34 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					logger.debug("updateGroupAdd rc=" + rc);
 					
-					if (rc == 0) { // updateGroup 성공
-						vo.setMail(mailAddr);				
-						String userPrincipalName = cn + "@" + domain;
-						vo.setUpnName(userPrincipalName);
-						String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
-						vo.setPassword(pass);
+					if (rc == 0) { // updateGroup 성공												
+						String bizmekaResult = "ERROR";
 						
 						// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 						try {
+							String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+							
+							if (useBizmekaSpambox.equals("YES")) {
+								String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+								String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+								String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+								
+								bizmekaResult = ezEmailUtil.bizmekaAddUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn, "", 
+													vo.getDisplayName(), vo.getParentCn());		
+								
+								logger.debug("bizmekaResult=" + bizmekaResult);
+								
+								if (!bizmekaResult.equals("OK")) {
+									throw new Exception("bizmekaAddUser failed");
+								}
+							}
+							
+							vo.setMail(mailAddr);				
+							String userPrincipalName = cn + "@" + domain;
+							vo.setUpnName(userPrincipalName);
+							String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
+							vo.setPassword(pass);
+							
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo);
 							result = "OK";
@@ -2005,36 +2085,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));
 		
-		List<String> mailList = new ArrayList<String>();
-		
 		OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, userInfo.getPrimary(), tenantID);
-		String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
-		String userAccount = userId + "@" + domainName;
-		if (userAccount.equals(userVO.getMail())) {
-			mailList.add("SMTP:" + userAccount);
-		} else {
-			mailList.add("smtp:" + userAccount);
-		}
 		
-		List<String> aliasMailList = ezEmailService.getIndividualAlias(userAccount);
-		for (String mail : aliasMailList) {
-			if (mail.equals(userVO.getMail())) {
-				mailList.add("SMTP:" + mail);
+		List<String[]> aliasAddressList = ezEmailService.getAliasAddress(userId, tenantID);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;'>");
+		
+		for (String[] aliasAddress : aliasAddressList) {
+			if (aliasAddress[0].equals(userVO.getMail())) {
+				sb.append("<option type='" + aliasAddress[1] + "'>SMTP:" + aliasAddress[0] + "</option>");
 			} else {
-				mailList.add("smtp:" + mail);
+				sb.append("<option type='" + aliasAddress[1] + "'>smtp:" + aliasAddress[0] + "</option>");
 			}
 		}
 		
-		for (String mail : mailList) {
-			logger.debug("mail=" + mail);
-		}
-		
-		//TODO: delete
-		//model.addAttribute("noneActiveX", noneActiveX);
+		sb.append("</select>");
+		String listEmailHtml = sb.toString();
 		
 		model.addAttribute("userId", userId);
-		model.addAttribute("mailList", mailList);
-		model.addAttribute("originalMail", userAccount);
+		model.addAttribute("listEmailHtml", listEmailHtml);
 		
 		logger.debug("configEmail ended.");
 		
@@ -2065,17 +2135,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String primaryMail = xmldom.getElementsByTagName("PRIMARYMAIL").item(0).getTextContent();
 			
 			int tenantID = userInfo.getTenantId();
-			String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
-			String originalMail = userId + "@" + domainName;
 			
 			List<String> mailList = new ArrayList<String>();
 			NodeList mailNodeList = xmldom.getElementsByTagName("MAIL");
 			for (int i=0; i<mailNodeList.getLength(); i++) {
 				String mail = mailNodeList.item(i).getTextContent();
-				
-				if (!mail.substring(5).equals(originalMail)) {
-					mailList.add(mail.substring(5));
-				}
+				mailList.add(mail.substring(5));
 			}
 			
 			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
