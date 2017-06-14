@@ -157,9 +157,9 @@
 		                data : {	title : document.getElementById("title").value,
 		                			importance : document.getElementById("importance").value,
 		                			option : option,
-		                			receiverList : $("#receiverlist").text(),
-		                			receiverList2 : $("#receiverlist2").text(),
-		                			receiverID : $("#receiverID").text(),
+		                			receiverList : document.getElementById("receiverlist").innerHTML,
+		                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
+		                			receiverID : document.getElementById("receiverID").innerHTML,
 		                			content : content,
 		                			fileList : fileList
 		                },  
@@ -278,7 +278,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-		  			<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+		  			<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>

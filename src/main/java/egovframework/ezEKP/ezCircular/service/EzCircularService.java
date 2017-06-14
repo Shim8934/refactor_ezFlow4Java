@@ -86,7 +86,7 @@ public interface EzCircularService {
 	
 	public void confirmStatus(int circularID, String memberID, int tenantID) throws Exception;
 	
-	public void circularDeleteItem(String[] circularIDList,int tenantID) throws Exception;
+	public void circularDeleteItem(String circularIDList,int tenantID) throws Exception;
 	
 	public void deleteCircularUser(int circularID,int tenantID) throws Exception;
 
