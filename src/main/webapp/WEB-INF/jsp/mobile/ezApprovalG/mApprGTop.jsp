@@ -13,17 +13,31 @@
 		<header data-role="header" data-position="fixed">		
 			<h1>결재할문서</h1>			
 			<a class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#menu-panel">menu</a>							
-			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>			
+			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>	
 			<ul style="background-color: white;color:black">
 				<li style="height:40px;border-bottom:1px solid #f2f2f2">							
 					<div style="margin-left:20px;float:left;padding-top:10px">							
-						<i class="fa fa-envelope" style="font-size:13px;"></i>&nbsp;<strong style="font-size:13px;">결재할문서(17)</strong> 
+						<i class="fa fa-pencil-square" style="font-size:13px;"></i>&nbsp;<strong style="font-size:13px;">(${listCount})</strong> 
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchApprove();"></i>
+						<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
 					</div>
 				</li>
-			</ul>			
+				<li style="height:40px;border-bottom:1px solid #f2f2f2;display:none" id="searchApprove">
+						<input type="search" name="search" id="search-basic" value="" />
+<!-- 						<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:alert(123);"></i> -->
+<!-- 						<ul data-role="listview" data-split-icon="gear" data-split-theme="a" data-inset="true"> -->
+<!-- 							<li> -->
+<!-- 								<a href="#"> -->
+<!-- 									<img src="sample.jpg"> -->
+<!-- 									<h2>test1</h2> -->
+<!-- 									<p>teat2</p> -->
+<!-- 								</a> -->
+<!-- 								<a href="#" data-rel="popup" data-position-to="window" data-transition="pop">test3</a> -->
+<!-- 							</li> -->
+<!-- 						</ul>		 -->
+				</li>
+			</ul>	
 		</header>
 		
 		<!-- 왼쪽메뉴 panel -->

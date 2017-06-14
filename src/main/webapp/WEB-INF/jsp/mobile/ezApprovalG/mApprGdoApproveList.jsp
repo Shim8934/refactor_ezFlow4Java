@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
+		<script type="text/javascript" src="/js/mobile/mApprovalG.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
@@ -36,9 +37,7 @@
 					    	</a>
 					    </li>
 					</c:forEach>
-				    <li>
-				    	PAGINATION
-				    </li>	   
+					<li>paging</li>
 				</ul>				
      		</div>     		
      		<!-- body end -->
