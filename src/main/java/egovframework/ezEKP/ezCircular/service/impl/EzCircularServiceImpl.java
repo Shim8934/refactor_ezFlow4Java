@@ -318,7 +318,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		for (int i=0; i<circularIDArr.length; i++) {
 			map.put("circularID", circularIDArr[i]);
 			map.put("tenantID", tenantID);
-			
+		
 			ezCircularDAO.deleteCircular(map);
 			ezCircularDAO.deleteCircularUser(map);
 			ezCircularDAO.deleteCircularAttach(map);			
@@ -742,5 +742,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantId);
 		
 		ezCircularDAO.circularDeleteFolder(map);
+	}
+
+	@Override
+	public String getFolderInfo(int folderId, String memberId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderId", folderId);
+		map.put("memberId", memberId);
+		map.put("tenantId", tenantId);
+		
+		return ezCircularDAO.getFolderInfo(map);
 	}
 }

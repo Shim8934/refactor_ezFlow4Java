@@ -1895,4 +1895,58 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("circularDeleteFolder ended");
 	}
+	
+	/**
+	 * 회람문서함 폴더의 회람판 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularFolderDoc.do")
+	public String circularFolderDoc(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		
+		logger.debug("circularFolderDoc started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int page = 1;
+//		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        int folderId = Integer.parseInt(request.getParameter("folderId"));
+//        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        int startRow = 1;
+        int endRow = 0;
+        
+		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (page - 1)) + 1;
+        endRow = (personalCount * page);
+		
+        int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        
+		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		for (CircularListVO result : list) {
+			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
+		}
+		
+		String folderName = ezCircularService.getFolderInfo(folderId, userInfo.getId(), userInfo.getTenantId());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("page", page);
+//		model.addAttribute("useOcs", useOcs);
+//		model.addAttribute("useRunTime", useRunTime);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("list", list);
+		model.addAttribute("config", config);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("folderId", folderId);
+		model.addAttribute("folderName", folderName);
+		
+		logger.debug("circularMyCircular ended");
+		
+		return "/ezCircular/circularFolderDoc";
+	}
 }

@@ -106,4 +106,6 @@ public interface EzCircularService {
 
 	public void circularFolderModify(String folderId, String folderName, String memberId, String regDate, int tenantId) throws Exception;
 
+	public String getFolderInfo(int folderId, String memberId, int tenantId) throws Exception;
+
 }

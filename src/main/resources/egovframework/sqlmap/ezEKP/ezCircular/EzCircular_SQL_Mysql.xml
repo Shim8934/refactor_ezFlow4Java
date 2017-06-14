@@ -517,6 +517,21 @@
          ]]>
     </select>
     
+    <select id="EzCircularDAO.getFolderInfo" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CIRCULARFOLDERNAME
+			FROM
+				TBL_CIRCULAR_FOLDER
+			WHERE
+				CIRCULARFOLDERID = #folderId#
+			AND
+				MEMBERID = #memberId#
+			AND
+				TENANTID = #tenantId#
+		]]>
+	</select>
+    
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO 
@@ -826,7 +841,7 @@
           DELETE FROM
               TBL_CIRCULAR
           WHERE
-              CIRCULARID = #circularIDList#
+              CIRCULARID = #circularID#
           AND    
               TENANTID = #tenantID#
         ]]>
@@ -859,7 +874,7 @@
           DELETE FROM
               TBL_CIRCULAR_FILE
           WHERE
-              CIRCULARID = #circularIDList#
+              CIRCULARID = #circularID#
           AND 
               TENANTID = #tenantID#
       	]]>   
