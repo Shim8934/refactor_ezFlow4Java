@@ -81,3 +81,18 @@ li a .ui-checkbox label.ui-btn {
 	background-repeat: no-repeat;
 	background-size: 50px;
 }
+.ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn-icon-notext {
+	width:3.2em;
+	height:3.2em;
+}
+
+.searchArea .ui-btn-icon-notext {
+	-webkit-border-radius: .3125em;
+    border-radius: .3125em;
+    width:2.55em;
+    height:2.55em;	
+}
+
+.searchArea .controlgroup-textinput {	
+    width:68%;    
+}

@@ -5,12 +5,12 @@
 	fnInit();
 });
 
-$(document).on('pageshow', '#sampleList', function(){				
-	$('.writeButton').css('top', $(window).height() - 100 );
+$(document).on('pageshow', '#sampleList', function() {
+	$('.writeButton').css('bottom', 60);
 	$('.writeButton').css('left', $(window).width() - 60 );
 	
-	$(window).on('resize', function(){				
-		$('.writeButton').css('top', $(window).height() - 100 );
+	$(window).on('resize', function() {
+		$('.writeButton').css('bottom', 60);
 		$('.writeButton').css('left', $(window).width() - 60 );
 	});
 });
@@ -39,12 +39,24 @@ $(document).on('pageshow', '#main', function(){
 	});
 });
 
-function showDisplay() {
-	if ($("#editDisplay").css("display") == "none") {
-   		$("#editDisplay").slideDown(250);
-   	} else {	
-   		$("#editDisplay").slideUp(250);
-	} 
+function showDisplay(val01) {
+	if (val01 == "1") {
+		if ($("#editDisplay1").css("display") == "none") {
+	   		$("#editDisplay1").slideDown(250);
+	   	} else {	
+	   		$("#editDisplay1").slideUp(250);
+		} 
+	} else {
+		if ($("#editDisplay").css("display") == "none") {
+	   		$("#editDisplay").slideDown(250);	   		
+	   	} else {	
+	   		$("#editDisplay").slideUp(250);
+	   		
+	   		if ($("#editDisplay1").css("display") != "none") {	   			
+	   			$("#editDisplay1").slideUp(250);
+	   		}	   		
+		}
+	}
 }
 
 function actionLogin() {
