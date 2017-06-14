@@ -6,12 +6,15 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<link rel="stylesheet" type="text/css" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css" />
     	<link rel="stylesheet" type="text/css" href="/css/mobile/mobile.css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
+		<script type="text/javascript" src="/js/mobile/mBoard.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
@@ -41,7 +44,7 @@
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/second.jpg')" data-iconpos="right">
 						    	<h2>전자결재&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
 						        <ul data-role="listview" data-inset="true">
-						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서 <span class="ui-li-count">12</span></a></li>
+						            <li><a href="/mobile/ezApprovalG/doApproveList.do"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서 <span class="ui-li-count">12</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재진행문서 <span class="ui-li-count">0</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재한문서 <span class="ui-li-count">4</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;기안한문서 <span class="ui-li-count">328</span></a></li>
@@ -82,13 +85,13 @@
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>업무생활가이드</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;규정 및 지침 <span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;비상연락망및내선번호 <span class="ui-li-count">0</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;배포서식 <span class="ui-li-count">4</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;회사제품매뉴얼및자료 <span class="ui-li-count">328</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공용장비 드라이버<span class="ui-li-count">62</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;전사교육 교악<span class="ui-li-count">62</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;세미나관련<span class="ui-li-count">62</span></a></li>
+								            <li><a href="#" onclick="boardItemList(this)" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;규정 및 지침 <span class="ui-li-count">12</span></a></li>
+								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;비상연락망및내선번호 <span class="ui-li-count">0</span></a></li>
+								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;배포서식 <span class="ui-li-count">4</span></a></li>
+								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;회사제품매뉴얼및자료 <span class="ui-li-count">328</span></a></li>
+								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공용장비 드라이버<span class="ui-li-count">62</span></a></li>
+								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;전사교육 교악<span class="ui-li-count">62</span></a></li>
+								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;세미나관련<span class="ui-li-count">62</span></a></li>
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
