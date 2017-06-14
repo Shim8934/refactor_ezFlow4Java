@@ -11,7 +11,7 @@
 		
 		<script type="text/javascript">
 		function mEnvironment() {
-			$.mobile.changePage("/mobile/ezPortal/environmentMain.do", {
+			$.mobile.changePage("/mobile/ezOption/ezOptionMain.do", {
 				type: "post",
 				transition: "pop",
 				changeHash: true
