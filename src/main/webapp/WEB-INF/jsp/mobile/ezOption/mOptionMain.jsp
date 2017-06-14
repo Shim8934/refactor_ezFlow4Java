@@ -15,12 +15,29 @@
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>		
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>	
+		
+		<script>
+			function saveEnvironment() {
+				 $.ajax({
+                  type:"POST",
+                  dataType:"text",
+                  data : {
+                  	lang : $('input[name = radio-view]:checked').val(),
+                  	dpBoardCnt: $('input[name = slider-2]').val(),
+                  	async: false,
+                  },
+                  url: "/mobile/ezOption/saveOption.do",
+                    success: function (data) {
+                    }
+                });
+			}
+		</script>	
 	</head>
 	<body class="loginbody">
 		<section id="sampleList" data-role="page">
 			<!-- header import -->
-     		<c:import url="/WEB-INF/jsp/mobile/environment/mEnvironmentTop.jsp" />
+     		<c:import url="/WEB-INF/jsp/mobile/ezOption/mOptionTop.jsp" />
      		<!-- header import -->
      		
      		<!-- body start -->
@@ -33,9 +50,9 @@
 					  <div class="ui-body ui-body-a">
 					    <div data-role="fieldcontain">
 						<fieldset data-role="controlgroup" data-type="horizontal">
-						<input type="radio" name="radio-view" id="radio-view-a" value="list"  />
+						<input type="radio" name="radio-view" id="radio-view-a" value ='1' onClick = "javascript:selectLangClick()" />
 						<label for="radio-view-a">한글</label>
-						<input type="radio" name="radio-view" id="radio-view-b" value="grid"  />
+						<input type="radio" name="radio-view" id="radio-view-b" value ='2' onClick = "javascript:selectLangClick()"  />
 						<label for="radio-view-b">영어</label>
 						</fieldset>
 						</div>
@@ -69,7 +86,7 @@
 					</div>
 					<div>
 					<p align="center">
-					<button class="show-page-loading-msg" data-textonly="false" data-textvisible="true" data-inline="true">적용하기</button>
+					<button class="show-page-loading-msg" data-textonly="false" data-textvisible="true" data-inline="true" onclick="javascript:saveEnvironment()">적용하기</button>
 					</p>
 					</div>
 				</form>
