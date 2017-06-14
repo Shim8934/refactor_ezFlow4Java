@@ -255,8 +255,8 @@
 		        setAutoProperty();
 		        process_AfterOpen();
 		
-		        //접수눌렀을때 최근결재선이 박히는건데 없는게 맞을듯
 		        setFirstDrafter();
+		        
 		        if (SignCount < 1) {
 		            pGubun = "12";
 		            document.getElementById("btnSetAprLine").style.display = "none";
@@ -266,8 +266,6 @@
 		            else
 		                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
 		
-		
-		            document.getElementById("btnSendAround").style.display = "";
 		            document.getElementById("btntotaldocinfo").style.display = "none";
 		        }
 		        getGongRamDocInfo();
@@ -1009,7 +1007,31 @@
             	});
 		    }
 		    
-		    function btnMail_onclick() {
+// 		    function btnMail_onclick() {
+// 		    		  $.ajax({
+// 	                        type:"POST",
+// 	                        dataType:"text",
+// 	                        async: false,
+// 	                        data : {
+// 	                        	imgUrl : pFormHref,
+// 	                        	docID: pDocID
+// 	                        },
+// 	                        url: "/ezApprovalG/createMailImg.do",
+// 	                        success: function (data) {
+// 	                        	var pheight = window.screen.availHeight;
+// 	                	        var conHeight = pheight * 0.8;
+// 	                	        var pwidth = window.screen.availWidth;
+// 	                	        var pTop = (pheight - conHeight) / 2;
+// 	                	        var pLeft = (pwidth - 890) / 2;
+// 	                	        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pFormHref);
+// //	                				var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(pFormHref) + "&cmd=docsend&docID=" + pDocID + "&imageCnt=&target=APPROVALG";					
+// 	                	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+// 	                	        newwin.focus();
+// 	                        }
+// 	                    });
+// 		    		  }
+	        
+		      function btnMail_onclick() {
 		    var imgUrl="";
 		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
 		    	background:'#fff',onrendered: function(canvas) {
@@ -1036,7 +1058,7 @@
 	        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	        newwin.focus();
 		    }
-		    
+		      
 		    var tempSecurity = "";
 		    var tempKeep = "";
 		    var tempUrgent = "N";
@@ -1096,20 +1118,6 @@
 	            }
 	        }
 		    
-		    function btnSendAround_onclick() {
-		        var para = new Array();
-		        para[0] = pDocID;
-		
-		        var url = "AprGongRamLine_Cross.aspx";
-		        var feature = "dialogWidth:557px;dialogHeight:530px;scroll:no;resizable:yes;status:no;help:no;edge:sunken";
-		        feature = feature + GetShowModalPosition(557, 530);
-		        var rtn = window.showModalDialog(url, para, feature);
-		        if (rtn == "OK") {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1424'/>";
-		            OpenAlertUI(pAlertContent);
-		            JiJungBeBuDisable();
-		        }
-		    }
 		    function JiJungBeBuDisable() {
 		        btnAssign.style.display = "none";
 		        btnDistribute.style.display = "none";
@@ -1201,7 +1209,7 @@
 		        parameter[9] = false;
 		        parameter[10] = pDocType;
 		        parameter[11] = "";
-		        parameter[12] = "DRAFT";
+		        parameter[12] = "RECV";
 		        parameter[28] = onlydocinfiview;
 		        parameter[30] = cabinetID;
 		        parameter[31] = tempSecurity;
@@ -1337,7 +1345,6 @@
 			<li id="btnSendDraft"><span onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 <%-- 			<li id="btnRJunkyul" class = 'approvalG'><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li> --%>
 			<li id="btnRJunkyul"><span  onClick="return btnRJunkyul_onclick()"><spring:message code='ezApprovalG.t1427'/></span></li>
-			<span style ="display:none" ><li id="btnSendAround" style="display:none"><span  onClick="return btnSendAround_onclick()" ><spring:message code='ezApprovalG.t1428'/></span></li></span>
 			<span style ="display:none" ><li id="btnSetTaskCode"><span onClick="btnSetTaskCode_onclick()"  ><spring:message code='ezApprovalG.t51'/></span></li></span>
 			<span style ="display:none" ><li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>
 			<li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>

@@ -72,7 +72,7 @@
 		        return true;
 		    }
 	    	
-	    	function btn_Save() {
+	    	function btn_Modify() {
 		    	//회람저장 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
@@ -95,7 +95,6 @@
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
-// 				var memberListStr = new Array();
 				var fileList = "";
 				
 				for (var i = 0; i < filelist.length - 1; i++) {	    
@@ -105,10 +104,6 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-	    		
-// 	    		for (var i=0; i<g_attendant["id"].length; i++) {
-// 	    			memberListStr[i] = g_attendant["id"][i];
-// 	    		}	
 
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
@@ -182,8 +177,8 @@
       				<div id="menu">      
         				<ul>
 							<div id="menuTable1" >
-	          					<li><span onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
-	          					<li><span onClick="btn_Save()"> 임시보관</span></li>
+	          					<li><span onClick="btn_Save()"> 회람판 등록</span></li>
+	          					<li><span onClick="btn_Modify()"> 수정</span></li>
 	          				</div>          
         				</ul>
       				</div>
@@ -211,17 +206,21 @@
 	       					<th> 옵션</th>
 	       					<td style="width:160px" colspan="3">
 								<c:choose>
-		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked/>&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" />&nbsp;메일공지 사용
-		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="optionRefly" name="chkList" " />&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '2'}">
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '3'}">
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked />&nbsp;댓글기능 사용&nbsp;&nbsp;
-										<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>   									
 	         				</td>

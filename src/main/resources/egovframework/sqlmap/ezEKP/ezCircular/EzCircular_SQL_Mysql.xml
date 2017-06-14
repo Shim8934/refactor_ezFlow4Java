@@ -385,40 +385,32 @@
     <select id="EzCircularDAO.getCircularTempListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
             SELECT
-                COUNT(A.CIRCULARID) CNT
+                COUNT(CIRCULARID) CNT
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	STATUS = '2'
             AND
-                A.TENANTID = B.TENANTID
+                MEMBERID = #memberId#
             AND
-            	A.STATUS = '2'
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                TENANTID = #tenantId#
         ]]>
     </select>
     
     <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE, B.UPDATESTATUS
+                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE 
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	STATUS = '2'
             AND
-                A.TENANTID = B.TENANTID
+                MEMBERID = #memberId#
             AND
-            	A.STATUS = '2'
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                TENANTID = #tenantId#
             ORDER BY
-            	A.REGDATE DESC
+            	REGDATE DESC
             LIMIT
                 #limit#, #rowCount#        
         ]]>
@@ -427,21 +419,17 @@
     <select id="EzCircularDAO.getCircularTempMapList" resultClass="HashMap" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	STATUS = '2'
             AND
-                A.TENANTID = B.TENANTID
+                MEMBERID = #memberId#
             AND
-            	A.STATUS = '2'
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                TENANTID = #tenantId#
             ORDER BY
-            	A.REGDATE DESC   
+            	REGDATE DESC   
             LIMIT
                 #limit#, #rowCount#        
         ]]>
@@ -450,7 +438,7 @@
     <select id="EzCircularDAO.getTopFolder" parameterClass="Map" resultClass="CircularFolderVO" >
         <![CDATA[
             SELECT
-                CIRCULARFOLDERNAME, MEMBERID
+                *
             FROM
                 TBL_CIRCULAR_FOLDER
             WHERE
@@ -463,7 +451,7 @@
     <select id="EzCircularDAO.getMyCircularListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
              SELECT 
-                 COUNT(A.CIRCULARID) CNT
+                 COUNT(DISTINCT A.CIRCULARID) CNT
              FROM
                  TBL_CIRCULAR A, TBL_CIRCULAR_USER B
              WHERE
@@ -471,9 +459,7 @@
              AND
                  A.TENANTID = B.TENANTID
              AND
-             	 A.STATUS IN ('0', '1')
-             AND
-             	 A.MEMBERID = B.MEMBERID 	 
+             	 A.STATUS IN ('0', '1')	 
              AND
                  A.MEMBERID = #memberId#
              AND
@@ -492,13 +478,13 @@
              AND
                  A.TENANTID = B.TENANTID 
              AND
-             	 A.MEMBERID = B.MEMBERID
-             AND
                  A.MEMBERID = #memberId# 
              AND
                  A.TENANTID = #tenantId# 
              AND
-             	 A.STATUS IN ('0', '1') 
+             	 A.STATUS IN ('0', '1')
+             GROUP BY
+             	 A.CIRCULARID
              ORDER BY
              	 A.REGDATE DESC 
              LIMIT
@@ -515,15 +501,15 @@
              WHERE
                  A.CIRCULARID = B.CIRCULARID
              AND
-                 A.TENANTID = B.TENANTID
-             AND
-             	 A.MEMBERID = B.MEMBERID   
+                 A.TENANTID = B.TENANTID  
              AND
                  A.MEMBERID = #memberId# 
              AND
                  A.TENANTID = #tenantId# 
              AND
-             	 A.STATUS IN ('0', '1') 
+             	 A.STATUS IN ('0', '1')
+             GROUP BY
+             	 A.CIRCULARID
              ORDER BY
              	 A.REGDATE DESC
              LIMIT
@@ -551,7 +537,7 @@
         ]]>
     </insert>
   
-    <insert id="EzScheduleDAO.insertCircularAttach" parameterClass="map">
+    <insert id="EzCircularDAO.insertCircularAttach" parameterClass="map">
         <![CDATA[
             INSERT INTO 
                 TBL_CIRCULAR_FILE
@@ -638,6 +624,16 @@
           VALUES 
               ( #v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
     ]]>
+    </insert>
+    
+    <insert id="EzCircularDAO.circularFolderAdd" parameterClass="map">
+        <![CDATA[
+            INSERT INTO 
+                TBL_CIRCULAR_FOLDER
+                ( CIRCULARFOLDERNAME, MEMBERID, REGDATE, TENANTID ) 
+            VALUES 
+                ( #folderName#, #memberId#, #regDate#, #tenantId# )
+        ]]>
     </insert>
   
     <update id="EzCircularDAO.modifyCircular" parameterClass="Map">
@@ -798,69 +794,98 @@
     
     <update id="EzCircularDAO.circularClose" parameterClass="Map">
         <![CDATA[
-            UPDATE
-                TBL_CIRCULAR
-            SET
-                STATUS = '1'
-            WHERE 
-                CIRCULARID = #circularID#
-            AND
-                TENANTID = #tenantID#      
+          UPDATE
+              TBL_CIRCULAR
+          SET
+              STATUS = '1'
+          WHERE 
+              CIRCULARID = #circularID#
+          AND
+              TENANTID = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.circularFolderModify" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_FOLDER
+          SET
+              CIRCULARFOLDERNAME = #folderName#,
+			  REGDATE = #regDate#
+          WHERE 
+              CIRCULARFOLDERID = #folderId#
+          AND
+          	MEMBERID = #memberId#    
+          AND
+              TENANTID = #tenantId#      
         ]]>
     </update>
   
     <delete id="EzCircularDAO.deleteCircular" parameterClass="Map">
         <![CDATA[
-            DELETE FROM
-                TBL_CIRCULAR
-            WHERE
-                CIRCULARID = #circularIDList#
-            AND    
-                TENANTID = #tenantID#
+          DELETE FROM
+              TBL_CIRCULAR
+          WHERE
+              CIRCULARID = #circularIDList#
+          AND    
+              TENANTID = #tenantID#
         ]]>
     </delete>
   
     <delete id="EzCircularDAO.deleteCircularUser" parameterClass="Map">
         <![CDATA[
-            DELETE FROM
-                TBL_CIRCULAR_USER
-            WHERE
-                CIRCULARID = #circularIDList#
-            AND    
-                TENANTID = #tenantID#
+          DELETE FROM
+              TBL_CIRCULAR_USER
+          WHERE
+              CIRCULARID = #circularIDList#
+          AND    
+              TENANTID = #tenantID#
         ]]>
     </delete>
 	
 	<delete id="EzCircularDAO.circularDeptDel" parameterClass="map">
 		<![CDATA[
-			DELETE FROM
-				TBL_CIRCULAR_BM
-			WHERE
-				CIRCULARBMID = #v_CIRCULARBMID#
-			AND
-				TENANTID = #v_TENANTID#
+		  DELETE FROM
+			  TBL_CIRCULAR_BM
+		  WHERE
+			  CIRCULARBMID = #v_CIRCULARBMID#
+		  AND
+			  TENANTID = #v_TENANTID#
 		]]>
 	</delete>
   
     <delete id="EzCircularDAO.deleteCircularAttach" parameterClass="map">
         <![CDATA[
-            DELETE FROM
-                TBL_CIRCULAR_FILE
-            WHERE
-                CIRCULARID = #circularIDList#
-            AND 
-                TENANTID = #tenantID#
+          DELETE FROM
+              TBL_CIRCULAR_FILE
+          WHERE
+              CIRCULARID = #circularIDList#
+          AND 
+              TENANTID = #tenantID#
       	]]>   
   	</delete>
   
 	<delete id="EzCircularDAO.delete_circularMemberList" parameterClass="Map">
 	  	<![CDATA[
-	        DELETE FROM
-		       	TBL_CIRCULAR_BMUSER 
-	        WHERE
-	         	CIRCULARBMID = #v_CIRCULARBMID#
-	        AND 
-	            TENANTID = #v_TENANTID#
+		  DELETE FROM
+			  TBL_CIRCULAR_BMUSER 
+		  WHERE
+		 	  CIRCULARBMID = #v_CIRCULARBMID#
+		  AND 
+		      TENANTID = #v_TENANTID#
 	    ]]>
-	  </delete>
+	</delete>
+	
+	<delete id="EzCircularDAO.circularDeleteFolder" parameterClass="map">
+		<![CDATA[
+		  DELETE FROM
+			  TBL_CIRCULAR_FOLDER
+		  WHERE
+			  CIRCULARFOLDERID = #deleteFolderId#
+		  AND
+			  MEMBERID = #memberId#	
+		  AND
+			  TENANTID = #tenantId#
+		]]>
+	</delete>
 </sqlMap>

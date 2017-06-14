@@ -24,7 +24,7 @@ function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName) {
         treeView.DataBind("TreeView");
     }
     catch (ErrMsg) {
-//        alert(" TreeViewinitialize : " + ErrMsg.description);
+        alert("TreeViewinitialize : " + ErrMsg.description);
     }
 }
 
@@ -49,10 +49,8 @@ function GetDeptSubTreeInfo(deptID, TreeIdx) {
     createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
     createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName");
 
-
     xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
     xmlHTTP.send(xmlpara);
-
 
     xmlRtn = loadXMLString(xmlHTTP.responseText);
     if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
@@ -63,7 +61,6 @@ function GetDeptSubTreeInfo(deptID, TreeIdx) {
             xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
         }
     }
-
 
     var treeView = new TreeView();
     treeView.LoadFromID("FromTreeView");
@@ -98,14 +95,12 @@ function GetSubTreeInfo_KMS(nodeNM, TreeIdx, nodeLevel) {
     xmlHTTP.open("POST", "/myoffice/ezApproval/conn/kms/aspx/getKmsTreeSub.aspx", false);
     xmlHTTP.send(xmlpara);
 
-    
     xmlRtn = loadXMLString(xmlHTTP.responseText);
 
     if (SelectNodes(xmlRtn, "NODES/NODE/VALUE").length > 0) {
         if (CrossYN() || pNoneActiveX == "YES") {
             xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
-        }
-        else {
+        } else {
             xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
         }
     }
@@ -114,5 +109,4 @@ function GetSubTreeInfo_KMS(nodeNM, TreeIdx, nodeLevel) {
     treeView.LoadFromID("FromTreeView");
 
     treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-
 }

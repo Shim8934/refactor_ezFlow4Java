@@ -15009,16 +15009,6 @@
    			 (#v_ArrayString#, #v_ArrayString1#, #v_ArrayString2#, #v_CABCLASSNO# , #v_TENANTID#)
    </insert>
    
-   <!-- 기안문 제일 처음 작성시 DOCID 초기 설정 -->
-   <insert id="EzApprovalG.insertAprGetNewID" parameterClass="map">
-   	  INSERT INTO 
-   	  	  TBL_LastDocID
-   	  	  (LASTDOCID, TENANT_ID)
-   	  VALUES
-   	  	  (0, #v_TENANTID#)
-   	  	  
-   </insert>
-   
    <delete id="EzApprovalG.deleteFormRecvTB" parameterClass="map">
       DELETE FROM 
       		 TBL_RECEIPTPOINTINFO 

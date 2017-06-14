@@ -2008,9 +2008,6 @@ function SendDraftMappingSign(ret) {
 
         var OpinionText = "";
         var PositionText = "";
-        if (getOpinionCount()) {
-            PositionText = "(" + strLang5;
-        }
 
         if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
             OpinionText = getSignDate() + "<br>";
@@ -2176,32 +2173,6 @@ function getSignDate() {
     xmlhttp.send(xmlpara);
     GyulJeDate = xmlhttp.responseText;
     return GyulJeDate;
-}
-
-function getOpinionCount() {
-    try {
-        var xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pUserID", arr_userinfo[1]);
-        createNodeAndInsertText(xmlpara, objNode, "chkFlag", "ING");
-
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/ezAPROPINION/aspx/GetOpinionCount.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var tempValue = parseInt(xmlhttp.responseText)
-        if (tempValue > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    } catch (e) {
-        return false;
-    }
 }
 
 function UndoSignInfo(signInfo) {

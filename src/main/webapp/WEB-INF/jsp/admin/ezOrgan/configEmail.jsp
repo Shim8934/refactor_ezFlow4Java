@@ -19,13 +19,19 @@
 			}
 	
 		    var index = document.all("ListEmail").selectedIndex;
+		    
+		  	//2017-06-02 이효민 : original 주소, 도메인 Alias 주소 삭제 못하도록 하기 위해 추가
+	    	if (document.all("ListEmail").options[index].getAttribute("type") === "1") {
+	    		alert("<spring:message code='ezOrgan.lhm1' />");
+	            return;
+	    	}
+	    	
+	    	if (document.all("ListEmail").options[index].getAttribute("type") === "2") {
+	    		alert("<spring:message code='ezOrgan.lhm3' />");
+	            return;
+	    	}
+	    	
 		    if (CrossYN()) {
-		    	//2016-12-15 이효민 : original 주소 삭제 못하도록 하기 위해 추가
-		    	if (document.all("ListEmail").options[index].textContent.substring(5) === "${originalMail}") {
-		    		alert("<spring:message code='ezOrgan.lhm1' />");
-		            return;
-		    	}
-		    	
 		        if (document.all("ListEmail").options[index].textContent.indexOf("SMTP") == 0) {
 		            alert("Primary" + "<spring:message code='ezOrgan.t146' />");
 		            return;
@@ -36,12 +42,6 @@
 		            return;
 		        }
 		    } else {
-		    	//2016-12-15 이효민 : original 주소 삭제 못하도록 하기 위해 추가
-		    	if (document.all("ListEmail").options[index].innerText.substring(5) === "${originalMail}") {
-		    		alert("<spring:message code='ezOrgan.lhm1' />");
-		            return;
-		    	}
-		    
 		        if (document.all("ListEmail").options[index].innerText.indexOf("SMTP") == 0) {
 		            alert("Primary" + "<spring:message code='ezOrgan.t146' />");
 	                return;
@@ -143,42 +143,17 @@
 			}
 			//2016-12-15 이효민 END
 			
-			var index = 0;
-			for (var i = 0; i < document.all("ListEmail").length; i++) {
-			    if (CrossYN()) {
-			        if (document.all("ListEmail").options[i].textContent.indexOf("SMTP") != 0 && document.all("ListEmail").options[i].textContent.indexOf("smtp") != 0) {
-			            index = i;
-			            break;
-			        }
-			    } else {
-			        if (document.all("ListEmail").options[i].innerText.indexOf("SMTP") != 0 && document.all("ListEmail").options[i].innerText.indexOf("smtp") != 0) {
-			            index = i;
-			            break;
-			        }
-			    }
-			}
-	
-			var newoption = new Option("", "");
-			document.all("ListEmail").options[document.all("ListEmail").length] = newoption;
-	
-			for (var i = document.all("ListEmail").length - 1; i > index; i--) {
-	            if(CrossYN())
-	                document.all("ListEmail").options[i].textContent = document.all("ListEmail").options[i - 1].textContent;
-	            else
-	                document.all("ListEmail").options[i].innerText = document.all("ListEmail").options[i - 1].innerText;
-			}
-	
-	        if(CrossYN())
-	            document.all("ListEmail").options[index].textContent = "smtp:" + email;
-			else
-	            document.all("ListEmail").options[index].innerText = "smtp:" + email;
-	
+			var newOption = document.createElement("option");        
+			newOption.text = "smtp:" + email;
+			newOption.setAttribute("type", "0");
+			
+			document.all("ListEmail").options.add(newOption);
+			
 			/* 2016-12-15 이효민 : 사용하지 않음.
 			if (document.all("CheckPolicy").checked == true)
 				if (confirm("Email" + "<spring:message code='ezOrgan.t156' />"))
 					document.all("CheckPolicy").checked = false; */
 		}
-		
 		
 		function Check_Address( pEmail )
 		{
@@ -211,20 +186,25 @@
 	        objRoot = createNodeAndInsertText(xmlDom, objNode, "MAILLIST", "");
 	
 			var primarymail = "";
-			for (var i=0; i<document.all("ListEmail").length; i++)
-			{
+			for (var i=0; i<document.all("ListEmail").length; i++) {
 			    if (CrossYN()) {
-			        if (document.all("ListEmail").options[i].textContent.indexOf("SMTP") == 0)
+			        if (document.all("ListEmail").options[i].textContent.indexOf("SMTP") == 0) {
 			            primarymail = document.all("ListEmail").options[i].textContent.substr(5);
-	
-			        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.all("ListEmail").options[i].textContent);
+			        }
+					
+			        if (document.all("ListEmail").options[i].getAttribute("type") === "0") {
+			        	createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.all("ListEmail").options[i].textContent);
+			        }
 			    }
 			    else {
-			        if (document.all("ListEmail").options[i].innerText.indexOf("SMTP") == 0)
+			        if (document.all("ListEmail").options[i].innerText.indexOf("SMTP") == 0) {
 			            primarymail = document.all("ListEmail").options[i].innerText.substr(5);
-	
-			        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.all("ListEmail").options[i].innerText);
-			    }
+			        }
+					
+			        if (document.all("ListEmail").options[i].getAttribute("type") === "0") {
+			        	createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "MAIL", document.all("ListEmail").options[i].innerText);
+			        }
+				}
 			}
 	
 			objRoot = createNodeAndInsertText(xmlDom, objNode, "PRIMARYMAIL", primarymail);
@@ -274,11 +254,7 @@
 			<tr> 
 				<th><spring:message code='ezOrgan.t163' /></th> 
 				<td>
-					<select size="4" name="ListEmail" id="ListEmail" style="height:175px;width:100%;">
-						<c:forEach var="item" items="${mailList}">
-							<option>${item}</option>
-						</c:forEach>	
-					</select>
+					${listEmailHtml}	
 				</td> 
 			</tr> 
 		</table> 

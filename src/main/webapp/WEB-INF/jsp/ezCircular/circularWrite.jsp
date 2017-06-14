@@ -66,17 +66,17 @@
 				
 				//댓글기능 사용할때
 				$(':checkbox[id=optionRefly]:checked').each(function(){
-					option = 0;	
+					option = 1;	
 				});
 				
 				//메일공지 사용할때
 				$(':checkbox[id=optionMail]:checked').each(function(){
-					option = 1;	
+					option = 2;	
 				});
 				
 				//댓글기능, 메일공지 둘 다 사용할 때
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
-					option = 2;
+					option = 3;
 				}
 				
 				//파일 첨부된 목록 가져오기
@@ -121,23 +121,27 @@
 					
 					//댓글기능 사용할때
 					$(':checkbox[id=optionRefly]:checked').each(function(){
-						option = 0;	
+						option = 1;	
 					});
 					
 					//메일공지 사용할때
 					$(':checkbox[id=optionMail]:checked').each(function(){
-						option = 1;	
+						option = 2;	
 					});
 					
 					//댓글기능, 메일공지 둘 다 사용할 때
 					if ($(':checkbox[name=chkList]:checked').length == 2) {
-						option = 2;
+						option = 3;
 					}
 					
 					//파일 첨부된 목록 가져오기
 					var listtable = dadiframe.document.getElementById("filelist");
 					var filelist = GetChildNodes(listtable);
 					var fileList = "";
+					var receiverList = "";
+					var receiverList2 = "";
+					var receiverID = "";
+					
 					for (var i = 0; i < filelist.length - 1; i++) {	    
 						if (i == 0) {
 							fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -153,9 +157,9 @@
 		                data : {	title : document.getElementById("title").value,
 		                			importance : document.getElementById("importance").value,
 		                			option : option,
-		                			receiverList : document.getElementById("receiverlist").innerHTML,
-		                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
-		                			receiverID : document.getElementById("receiverID").innerHTML,
+		                			receiverList : $("#receiverlist").text(),
+		                			receiverList2 : $("#receiverlist2").text(),
+		                			receiverID : $("#receiverID").text(),
 		                			content : content,
 		                			fileList : fileList
 		                },  
@@ -164,6 +168,9 @@
 		                  alert("<spring:message code='ezCircular.t73'/>");
 		                  window.opener.window_reload();
 		             	  window.close();
+		                },
+		                error: function() {
+		                	alert("에러발생");	
 		                }
 		 			});
 	    		}

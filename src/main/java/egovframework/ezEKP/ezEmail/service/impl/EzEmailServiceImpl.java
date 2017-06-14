@@ -881,46 +881,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<String> getIndividualAlias(String userAccount) throws Exception {
-		logger.debug("getIndividualAlias started. userAccount=" + userAccount);
-
-		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
-		logger.debug("inputParams=" + inputParams);
-
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getIndividualAlias";
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-		logger.debug("response=" + response);
-
-		String resultCode = "Error";
-		int reasonCode = -100; 
-		List<String> individualAlias = new ArrayList<String>();	
-				
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-			resultCode = (String)responseObj.get("resultCode");		
-			
-			if (resultCode.equals("OK")) {
-				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-				
-				if (reasonCode == 0) {
-					JSONArray resultArray = (JSONArray)responseObj.get("result");
-					
-					for (int i=0; i<resultArray.size(); i++) {
-						individualAlias.add((String)resultArray.get(i));
-					}
-				}
-			}
-		}						
-		
-		logger.debug("getIndividualAlias ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
-		
-		return individualAlias;		
-	}
-	
-	@Override
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception {
 		logger.debug("setIndividualAlias started.");
 		logger.debug("userId=" + userId + ",tenantID=" + tenantID + ",primaryMail=" + primaryMail);
@@ -989,8 +949,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public Map<String, String> getIndividualAliasMap(List<String> addressList, int tenantId) throws Exception {
-		logger.debug("getIndividualAliasMap started. tenantId=" + tenantId);
+	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception {
+		logger.debug("getAliasAddressMap started. tenantId=" + tenantId);
 		
 		Map<String, String> resultMap = new HashMap<String, String>();
 		
@@ -1008,7 +968,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		logger.debug("inputParams=" + inputParams);
 
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getIndividualAliasMap";
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getAliasAddressMap";
 		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
 		logger.debug("response=" + response);
@@ -1033,7 +993,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			}
 		}
 		
-		logger.debug("getIndividualAliasMap ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug("getAliasAddressMap ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
 		return resultMap;
 	}
@@ -1285,6 +1245,50 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getMaxMessageSize ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode + ",size=" + size);
 		
 		return size;
+	}
+	
+	@Override
+	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception {
+		logger.debug("getAliasAddress started. userId=" + userId);
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+				
+		String inputParams = "userId=" + URLEncoder.encode(userAccount, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getAliasAddress";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		List<String[]> aliasAddressList = new ArrayList<String[]>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						aliasAddressList.add(new String[] {(String)obj.get("address"), (String)obj.get("type")});
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getAliasAddress ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		
+		return aliasAddressList;		
 	}
 	
 }

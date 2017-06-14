@@ -1,0 +1,29 @@
+@import url('xfe-chart-data.css');
+
+body {
+	padding:8px;
+	margin:0px;
+}
+
+.xfe_zb {
+	border : #d3d3d3 1px dotted;	 
+	line-height : 1;
+	*line-height : ;	/* IE 7 이하의 브라우저에 작용. */
+}
+
+input.xfe_hidden_style {
+	border : 1px dashed red;
+}
+
+.xfe_select_object {
+	position: relative;
+}
+
+[contenteditable=true]:hover {
+    cursor:text;
+}
+
+.xfe_wa {
+	/*border : 1px dotted #FF0000;*/
+	cursor : text;	
+}

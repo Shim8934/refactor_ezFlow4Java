@@ -870,7 +870,7 @@ function Set_BoardConfig() {
 		type : "POST",
 		dataType : "text",
 		async : true,
-		url : "/ezCircular/setCircularConfig.do",
+		url : "/ezBoard/setBoardConfig.do",
 		data : { pUserID   : SSUserID, 
 				 pListCount: lCount, 
 				 pPreView  : pPreviewShow_HOW 

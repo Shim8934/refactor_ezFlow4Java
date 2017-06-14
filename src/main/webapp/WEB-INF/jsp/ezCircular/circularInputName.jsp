@@ -9,81 +9,74 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script src="/js/ezEmail/js_cross/string_component.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/ecmascript">
 	        var ReturnFunction;
 	        var CancelFunction;
+	        var InputValue;
+            var FolderId;
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
 	            else
 	                return true;
 	        };
+	        
 	        function window_onload() {
-	            var InputValue;
-	            try {
-	                InputValue = parent.inputNameDlg_cross_dialogArguments[0];
-	                ReturnFunction = parent.inputNameDlg_cross_dialogArguments[1];
-	                CancelFunction = parent.inputNameDlg_cross_dialogArguments[2];
-	            } catch (e) { }
+                ReturnFunction = parent.inputNameDlg_cross_dialogArguments[0];
+                CancelFunction = parent.inputNameDlg_cross_dialogArguments[1];
+                InputValue = parent.inputNameDlg_cross_dialogArguments[2];
+                FolderId = parent.inputNameDlg_cross_dialogArguments[3];
+                
 	            if (InputValue != "") {
 	                txt_FolderName.value = InputValue;
 	            }
-	            try {
-	                txt_FolderName.focus();
-	                var ua = navigator.userAgent;
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    KeEventControl(document.getElementById("txt_FolderName"));
-	                }
-	            }
-	            catch (e)
-	            { }
+
+                txt_FolderName.focus();
+                
+                var ua = navigator.userAgent;
+                
+                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+                    KeEventControl(document.getElementById("txt_FolderName"));
+                }
 	        }
+	        
 	        function btn_ok_onclick() {
-	            var szInput;
-	            szInput = txt_FolderName.value;
-	            szInput = ReplaceText(szInput, " ", "");
-	
-	            if (szInput == "") {
-	                alert("<spring:message code='ezEmail.t349' />");
-	                return;
+	            var folderName = txt_FolderName.value;
+	            
+	            if (FolderId == "") {
+	            	url = "/ezCircular/circularFolderAdd.do"; 
+	            } else {
+	            	url = "/ezCircular/circularFolderModify.do?FolderId=" + FolderId;
 	            }
-	            var szCheckPermit = szInput;
-	            szCheckPermit = ReplaceText(szInput, "=", "");
-	
-	            if (szInput != szCheckPermit) {
-	                alert("<spring:message code='ezEmail.t351' />");
-	                return;
-	            }
-	            ReturnFunction(txt_FolderName.value);
+	            
+				$.ajax({
+					method : "POST",
+					dataType : "text",
+					async : false,
+					url : url,
+					data : {
+						folderName : folderName
+					},
+					success : function() {
+						ReturnFunction();
+					},
+					error : function() {
+						alert("에러 발생");	
+					}
+				})
 	        }
+	        
 	        function btn_cancel_onclick() {
 	            CancelFunction();
 	        }
+	        
 	        function folderName_onkeydown() {
 	            if (event.keyCode == 13)
 	                btn_ok_onclick();
-	        }
-	        function KeEventControl(obj) {
-	            useragt = navigator.userAgent.toUpperCase();
-	            if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
-	            {
-	                useragt = useragt.substring(useragt.indexOf("VERSION/") + 8, useragt.indexOf("VERSION/") + 9);
-	                if (parseInt(useragt) > 5) {
-	                    return;
-	                }
-	            }
-	            obj.onkeydown = function () {
-	                if (parseInt(window.event.keyCode) >= 48 && parseInt(window.event.keyCode) <= 126)
-	                    return false;
-	                if (parseInt(window.event.keyCode) == 189 || parseInt(window.event.keyCode) == 187 ||
-	                        parseInt(window.event.keyCode) == 220 || parseInt(window.event.keyCode) == 219 ||
-	                        parseInt(window.event.keyCode) == 221 || parseInt(window.event.keyCode) == 222 ||
-	                        parseInt(window.event.keyCode) == 186 || parseInt(window.event.keyCode) == 188 ||
-	                        parseInt(window.event.keyCode) == 190 || parseInt(window.event.keyCode) == 191 || parseInt(window.event.keyCode) == 32)
-	                    return false;
-	            };
 	        }
 	    </script>
 	</head>
@@ -97,9 +90,5 @@
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezEmail.t38' /></span></a>
 	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezEmail.t39' /></span></a>
 	    </div>
-	
 	</body>
 </html>
-
-
-

@@ -55,7 +55,6 @@
 	        var gcadmin = "<c:out value='${gcAdmin}' />";
 	        var code = "<c:out value='${code}' />";
 // 	        var ch_CommunityAdmin = "<c:out value='${chCommunityAdmin}' />";
-	        var userinfo_lang = "<c:out value='${strUserLang}' />";
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	var rsa = new RSAKey();
 	    	

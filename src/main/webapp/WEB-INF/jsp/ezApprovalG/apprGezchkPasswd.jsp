@@ -24,6 +24,7 @@
 		            window.focus();
 		        };
 		    }
+		    
 		    function btn_OpinionOK_onclick() {
 		        var rtnVal = "cancel";
 		        if (trim(document.getElementById("inpPassword").value).length == 0) {
@@ -57,6 +58,8 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    window.onload = function () {
+		    	document.getElementById('inpPassword').focus();
+		    	
 		        var ua = navigator.userAgent;
 		        rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		        
@@ -155,7 +158,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" >
 		<h1><spring:message code='ezApprovalG.t1745'/></h1>		
 		<h2><spring:message code='ezApprovalG.t1746'/></h2>
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%" onkeypress="password_OnKeyPress(event)"></div>

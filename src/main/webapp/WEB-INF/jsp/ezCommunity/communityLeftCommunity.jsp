@@ -21,13 +21,14 @@
 // 	        var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 	        var newmember_confirmtype = "<c:out value='${newmemberConfirmType}'/>";
 	        var ch_CheckSysop = "<c:out value='${checkSysop}'/>";
-	        var lang = "<c:out value='${lang}'/>";
+	        var primary = "<c:out value='${userInfo.primary}'/>";
 	        var xmlDom_treeview = createXmlDom();
 	        var xmlhttp = createXMLHttpRequest();
 	        var ch_selected = false;
 			var totalCnt = 0;
 			var xmlhttp;
 			var xmlhttp2;
+			var isCrossBrowser = "${isCrossBrowser}";
 
 			window.onload = function () {
 			    if (screen.height < 1080) {
@@ -104,10 +105,12 @@
 		            var sysopID1 = clubVO.c_SysopID.trim();
 		            var memberCnt1 = clubVO.c_MemberCnt;
 		            var code2 = clubVO.c_ClubNo.trim();
-		            var copName =clubVO.c_ClubName;
-		            if (lang == "2")
-		                copName = clubVO.c_ClubName2;
 		            var copLogo = clubVO.c_Logo_Thumbnail;
+		            var copName = clubVO.c_ClubName;
+		            
+		            if (primary == "2") {
+		                copName = clubVO.c_ClubName2;
+		            }
 		            
 		            if (sysopID1 == "${userInfo.id}" || memberCnt1 >= 0) {
                         if (confirmtype1 == 3 && confirmtype1 == 0) {
@@ -237,14 +240,10 @@
 	        }
 
 	        function SetTreeConfig() {
-	            var xmlHTTP = createXMLHttpRequest();
-	            xmlHTTP.open("GET", "/xml/ezCommunity/organtree_config2.xml", false);
-	            xmlHTTP.send();
-
-	            if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200){
-	                var treeView = new TreeView();
-	                treeView.SetConfig(xmlHTTP.responseXML);
-	            }
+				var xmlDom = loadXMLFile("/xml/ezCommunity/organtree_config2.xml");
+		        
+	            var treeView = new TreeView();
+	            treeView.SetConfig(xmlDom);
 	        }
 
 	        function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
@@ -431,6 +430,7 @@
                     var top = (heigth - wHeight) / 2 - 30;
 
                     var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+                    
                     try {
                     	ret.focus();
                     } catch (e) {
@@ -445,13 +445,11 @@
 		    		async : false,
 		    		data : {code : code},
 		    		success: function (result) {
-		    			<c:if test="${!isCrossBrowser}">
-	    					master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
-		    		    </c:if>
-		    		    
-		    		    <c:if test="${isCrossBrowser}">
-		    		    	master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
-	    		    	</c:if>
+		    			if (isCrossBrowser == 'true') {
+		    				master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
+		    			} else {
+		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
+		    			}
 	    		    
 				        if (master == null) {
 				        	master = "";
@@ -496,14 +494,12 @@
 		    		async : false,
 		    		data : {code : code},
 		    		success: function (result) {
-		    			<c:if test="${!isCrossBrowser}">
+		    			if (isCrossBrowser) {
+		    				master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
+		    			} else {
 		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
-		    		    </c:if>
-		    		    
-		    		    <c:if test="${isCrossBrowser}">
-		    		    	master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
-	    		    	</c:if>
-	    		    
+		    			}
+		    			
 				        if (master == null) {
 				        	master = "";
 				        }
@@ -512,10 +508,11 @@
 					    UserID = UserID.toLowerCase();
 					    isin = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/ISIN")[0], "VALUE");
 
-					    if (UserID == master)
+					    if (UserID == master) {
 		                    return true;
-		                else
+					    } else {
 		                    return false;
+					    }
 		    		}
             	});
             }

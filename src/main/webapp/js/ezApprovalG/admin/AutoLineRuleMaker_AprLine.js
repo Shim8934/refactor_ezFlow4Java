@@ -42,22 +42,6 @@ function Tree_setconfig() {
     }
 }
 
-function displayUserList(DeptID) {
-    var xmlpara = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;Description;Title");
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "DEPARTMENT;DISPLAYNAME;DESCRIPTION;TITLE;PHYSICALDELIVERYOFFICENAME");
-    createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-
-    g_xmlHTTP = createXMLHttpRequest();
-    g_xmlHTTP.open("POST", "/ezOrgan/getDeptMemberList.do", true);
-    g_xmlHTTP.onreadystatechange = event_displayUserList;
-    g_xmlHTTP.send(xmlpara);
-}
-
 function LineAprTyepSet() {
     var pAPRLINE = new ListView();
     pAPRLINE.LoadFromID("lvAPRAUTORULELINE");

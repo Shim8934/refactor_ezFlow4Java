@@ -4,7 +4,7 @@ var pageSize = "10";
 var CallPage = "Right";
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
-var arrySubTab = new Array(0, 6, 4, 4, 3); 
+var arrySubTab = new Array(0, 6, 4, 4, 3, 4); 
 var pTotalCnt = "";
 function getDocList() {
     pageSize = "10";
@@ -564,13 +564,15 @@ function getAprLine(tr) {
     else
         pDocID = GetAttribute(tr, "DATA1");
 
-
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
     	pMode = "END";
     } else if (pListTypeValue == "21") {
 //    	pFlag = "TMP";
 //      닷넷에서는 2가지 값만 보내서 controller 에서 노드(0),노드(1) 로 빼서 사용해서  mode로 통일
     	pMode = "TMP";
+    } else if (pListTypeValue == "10" || pListTypeValue == "99") {
+    	pDocID = GetAttribute(tr, "DATA2");
+    	pMode = "END";
     } else {
     	pMode = "APR";
     }
@@ -1220,6 +1222,9 @@ function getAprDocAproveInfo(tr) {
         	pFlag = "END";
     	} else if (pListTypeValue == "21") {
         	pFlag = "TMP";
+    	} else if (pListTypeValue == "10" || pListTypeValue == "99") {
+    		pDocID = GetAttribute(tr, "DATA2");
+    		pFlag = "END";
         } else {
         	pFlag = "APR";
         }
@@ -1239,12 +1244,16 @@ function getAprDocAproveInfo(tr) {
     	});
     }
     else if (pDocInfoValue == "3") {
-        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         	pFlag = "END";
-        else if (pListTypeValue == "21")
+        } else if (pListTypeValue == "21") {
         	pFlag = "TMP";
-        else
-        	pFlag = "APR";
+        } else if (pListTypeValue == "10" || pListTypeValue == "99") {
+    		pDocID = GetAttribute(tr, "DATA2");
+    		pFlag = "END";
+    	} else {
+    		pFlag = "APR";
+    	}
 
         $.ajax({
     		type : "POST",
@@ -1261,12 +1270,16 @@ function getAprDocAproveInfo(tr) {
     	});
     }
     else if (pDocInfoValue == "2") {
-        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
+        if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         	pFlag = "END";
-        else if (pListTypeValue == "21")
+        } else if (pListTypeValue == "21") {
         	pFlag = "TMP";
-        else
-        	pFlag = "APR";
+        } else if (pListTypeValue == "10" || pListTypeValue == "99") {
+    		pDocID = GetAttribute(tr, "DATA2");
+    		pFlag = "END";
+    	} else {
+    		pFlag = "APR";
+    	}
 
         $.ajax({
     		type : "POST",
@@ -1277,6 +1290,28 @@ function getAprDocAproveInfo(tr) {
     				docID : pDocID,
     				mode  : pFlag
     				},
+    		success: function(xml){
+    			RtnVal = xml;
+    		}
+    	});
+    }
+    else if (pDocInfoValue == "5") {
+    	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99" || pListTypeValue == "10") {
+    		pDocID = GetAttribute(tr, "DATA2");
+    		pFlag = "END";
+    	} else {
+    		pFlag = "APR";
+    	}
+    	
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getCirculationinfo.do",
+    		data : {
+    			docID : pDocID,
+    			mode  : pFlag
+    		},
     		success: function(xml){
     			RtnVal = xml;
     		}
@@ -2175,6 +2210,9 @@ function doCancel(pDocID, tempListType) {
     else if (RtnVal == "ERR03") {
         var pAlertContent = strLang897;
         OpenAlertUI(pAlertContent, "", "OPEN");
+    } else {
+    	var pAlertContent = strLang898;
+        OpenAlertUI(pAlertContent);
     }
 }
 

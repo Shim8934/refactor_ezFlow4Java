@@ -595,7 +595,7 @@ function selFirstRow(Resultxml) {
         
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
-            DocState = GetAttribute(tr, "DATA7");
+            DocState = GetAttribute(tr, "DATA12");
             
             if (DocType == strDocType4) {
                 document.getElementById("tenforce").style.display = "none";
@@ -606,6 +606,12 @@ function selFirstRow(Resultxml) {
                 document.getElementById("tresend").style.display = "";
             }
 
+            if (DocState != strDocState1) {
+	        	document.getElementById("tsendCir").style.display = "none";
+	        } else {
+	        	document.getElementById("tsendCir").style.display = "";
+	        }
+            
             if (DocState == strDocState31) {
                 document.getElementById("tenforce").style.display = "none";
             }
@@ -670,6 +676,10 @@ function selFirstRow(Resultxml) {
         case "RECIPENT":
             Recipent_onclick();
             break;
+            
+        case "CIRCUL":
+        	Circulation_onclick();
+        	break;
     }
 }
 
@@ -692,6 +702,10 @@ function getDataInfo() {
         case "RECIPENT":
         	pUrl = "/ezApprovalG/getReceiptinfo.do";
             break;
+            
+        case "CIRCUL":
+        	pUrl = "/ezApprovalG/getCirculationinfo.do";
+        	break;
     }
     $.ajax({
 		type : "POST",
@@ -762,7 +776,7 @@ function lvtDoclist_SelChange() {
 
         if (approvalFlag == "S") {
         	DocType = GetAttribute(tr, "DATA9");
-            DocState = GetAttribute(tr, "DATA7");
+            DocState = GetAttribute(tr, "DATA12");
 
 	        if (DocType == strDocType4) {
 	            document.getElementById("tenforce").style.display = "none";
@@ -770,6 +784,12 @@ function lvtDoclist_SelChange() {
 	        } else {
 	            document.getElementById("tenforce").style.display = "";
 	            document.getElementById("tresend").style.display = "";
+	        }
+	        
+	        if (DocState != strDocState1) {
+	        	document.getElementById("tsendCir").style.display = "none";
+	        } else {
+	        	document.getElementById("tsendCir").style.display = "";
 	        }
 	
 	        if (DocState == strDocState31) {
@@ -810,6 +830,10 @@ function lvtDoclist_SelChange() {
             case "RECIPENT":
                 Recipent_onclick();
                 break;
+                
+            case "CIRCUL":
+            	Circulation_onclick();
+            	break;
         }
     }
 }

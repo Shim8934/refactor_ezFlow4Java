@@ -1643,18 +1643,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 자원관리 ckEditor 호출 Method
-	 */
-	@RequestMapping(value = "/ezResource/ckEditor.do")
-	public String ckEditor(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
-
-		model.addAttribute("userInfo",userInfo);
-		
-		return "/ezResource/resCKEditor";
-	}
-	
-	/**
 	 * 자원관리 스케줄 폼 호출 Method
 	 */
 	@RequestMapping(value = "/ezResource/scheduleGetForm.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")

@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
-			var strlang = "<c:out value='${strLang }'/>";
+			var primary = "<c:out value='${primary}'/>";
 			var xmlDomTreeView = createXmlDom();
 			var treedate = "${retXML }";
 			var code = "<c:out value='${code }'/>";
@@ -32,6 +32,7 @@
 		    var strLang3 = "<spring:message code='ezCommunity.t1103' />"; 
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
+		    var isCrossBrowser = "{isCrossBrowser}";
 		    
 		    $(function () {
 		        $.ajax({
@@ -115,7 +116,7 @@
 								var p = document.createElement("P");
 	                            p.className = "title";
 	                            
-	                            if (strlang == "" || strlang == "1") {
+	                            if (primary == "1") {
 	                                p.innerHTML=infoVO.boardName;
 	                            } else {
 	                            	p.innerHTML=infoVO.boardName2;
@@ -232,7 +233,7 @@
 	            
 	            document.getElementById("homeimg").appendChild(_img);
 
-	            if (strlang == "" || strlang == "1") {
+	            if (primary == "1") {
 	                document.getElementById("copname").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
 	                document.title = SelectSingleNodeValueNew(xmldom, "DATA/C_CLUBNAME");
 	            } else {
@@ -593,10 +594,10 @@
 		                    
 		                    var wWeight = "330";
 		                    var wHeight = "170";
-		                    var heigth = window.screen.availHeight;
+		                    var height = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
 		                    var left = (width - wWeight) / 2;
-		                    var top = (heigth - wHeight) / 2;
+		                    var top = (height - wHeight) / 2;
 		                    
 		                    if (newMemberConfirmType == "2") {
 		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
@@ -639,13 +640,11 @@
 		    			
 		    			var master = "";
 		    			
-		    			<c:if test="${!isCrossBrowser}">
+		    			if (isCrossBrowser == 'true') {
+		    				master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
+		    			} else {
 		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
-		    		    </c:if>
-		    		    
-		    		    <c:if test="${isCrossBrowser}">
-		    		    	master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
-	    		    	</c:if>
+		    			}
 	    		    
 				        if (master == null) {
 				        	master = "";

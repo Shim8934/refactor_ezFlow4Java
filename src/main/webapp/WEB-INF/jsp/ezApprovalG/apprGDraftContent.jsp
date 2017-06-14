@@ -1,12 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
 	<head>
 	    <title></title>
 	    <script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	     <style>
-          P { margin-top: 0px;margin-bottom: 0px; } 
+		<style>
+			P { margin-top: 0px;margin-bottom: 0px; } 
+			.viewbox {
+				border:1px solid #b6b6b6;
+				padding:5px;
+				height:100%;
+				background-color:#fff;
+				border-collapse:collapse
+			}
    	 	</style>
 	    <script language="javascript" type="text/javascript">
 	    
@@ -52,7 +60,6 @@
 	            { }
 	            
 	            try {
-		        	$('#div_Content #body').css('overflow', 'auto');
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        	
 		        	if($('#frame_doctitle')) {
@@ -299,12 +306,7 @@
 	                        if (document.getElementById("body") != null) {
 	                            if (BODYTag.getAttribute("editor") == null) {
 	                                isEditor = true;
-	                                if (pEditor == "TAGFREE")
-	                                    BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='../TagFree_TFX_Editor.aspx?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                                else if (pEditor == "DEXT")
-	                                    BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='../Dext_Editor.aspx?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                                else
-	                                    BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/ckEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
+	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "' frameborder='0'></ifrmae>";
 	                            }
 	                            else {
 	                                try {
@@ -371,16 +373,8 @@
 	                    if (document.getElementById("body") != null) {
 	                        if (BODYTag.getAttribute("editor") == null) {
 	                            isEditor = true;
-	                            if (pEditor == "TAGFREE") 
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px;" +
-	                                                    "height:" + EditorHeight + "px;' scrolling='no' src='../TagFree_TFX_Editor.aspx' frameborder='0'></ifrmae>";
-	                            else if(pEditor == "DEXT")
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px;" +
-	                                                "height:" + EditorHeight + "px;' scrolling='no' src='../DEXT_Editor.aspx?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                            else 
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox' style='width:100%;margin:0px;padding:0px;" +
-	                                                "height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/ckEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
-	                            
+	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px;" +
+	                                                "height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
 	                        }
 	                        else {
 	                            try {

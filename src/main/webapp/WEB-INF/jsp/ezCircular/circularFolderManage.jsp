@@ -7,50 +7,119 @@
 		<title>회람문서함 관리</title>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.c1' />"></script>
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/email_tree.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
+		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-			var inputNameDlg_cross_dialogArguments = new Array();
+			var PostTreeView = null;
+			var treeconfig = "";
+			var EventCheck = false;
+			var CurrentHeight = 0;
+			var CurrenWidth = 0;
 			
-			function add_onclick() {
-// 			    if (PostTreeView.selectedIndex() == -1) {
-// 			        alert("<spring:message code='ezEmail.t158' />");
-// 			        return;
-// 			    }
+		    document.onselectstart = function () {
+		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+		            return false;
+		        else
+		            return true;
+		    };
+		    
+		    window.onunload = function () {
+		        if(ReturnFunction != null)
+			        ReturnFunction(EventCheck);
+			}
+		    
+			var ReturnFunction;
+			window.onload = function () {
+			    CurrentHeight = document.body.clientHeight;
+			    CurrenWidth = document.body.clientWidth;
 			    
-			    inputNameDlg_cross_dialogArguments[0] = "";
-			    inputNameDlg_cross_dialogArguments[1] = add_onclick_Complete;
-			    inputNameDlg_cross_dialogArguments[2] = DivPopUpHidden;
+			    try {
+			        ReturnFunction = opener.mail_foldermanage_Cross_dialogArguments[1];
+			    } catch (e) { }
+			    
+                PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
+                
+                var xmlHTTP = createXMLHttpRequest();
+                xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+                xmlHTTP.send();
+                
+                var treeconfig;
+                
+                if (CrossYN()) {
+                    treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
+                }
+                else
+                    treeconfig = xmlHTTP.responseXML;
+
+                PostTreeView.config(treeconfig);
+                PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+                PostTreeView.update();
+            }
+			
+            var inputNameDlg_cross_dialogArguments = new Array();
+            
+            function add_onclick() {
+			    inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
+			    inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
+			    inputNameDlg_cross_dialogArguments[2] = "";
+			    inputNameDlg_cross_dialogArguments[3] = "";
+			    
 			    DivPopUpShow(330, 150, "/ezCircular/circularInputName.do");
 			}
-			
-		    function add_onclick_Complete(szName) {
-		        DivPopUpHidden();
-		        if (typeof (szName) == "undefined" || szName.trim() == "") {
-		            return;
-		        }
-		        else if (checkBadFolderName(szName)) {
+            
+		    function modify_onclick() {
+		        if (PostTreeView.selectedIndex() == -1) {
+		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
 		        
-		        var szURL = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-		        var result = mail_make_folder("NEW", szURL, "", szName);
-		        if (result != "OK") {
-		            if (result == "ALREADY_EXISTS") {
-		                alert("<spring:message code='ezEmail.t456' />");
-		            } else {
-		                alert("<spring:message code='ezEmail.t457' />");
-		            }
+		        inputNameDlg_cross_dialogArguments[0] = onclick_Complete;
+		        inputNameDlg_cross_dialogArguments[1] = DivPopUpHidden;
+		        inputNameDlg_cross_dialogArguments[2] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "foldername");
+		        inputNameDlg_cross_dialogArguments[3] = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+    
+		        DivPopUpShow(330, 150, "/ezCircular/circularInputName.do");
+		    }
+		    
+		    function onclick_Complete(szName) {
+		    	DivPopUpHidden();
+		        location.reload();
+		    }
+		    
+		    function delete_onclick() {
+		    	if (PostTreeView.selectedIndex() == -1) {
+		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
-		        
-		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
-             	PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
-             
-		        EventCheck = true;
-		     }
+		    	
+		        var deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+
+				if (confirm("삭제하시겠습니까?")) {
+					$.ajax({
+						method : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularDeleteFolder.do",
+						data : {
+							deleteFolder : deleteFolder 
+						},
+						success : function() {
+							alert("삭제하였습니다.");
+							location.reload();
+						},
+						error : function() {
+							alert("에러발생");
+						}
+					})
+				}
+		    }
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">

@@ -183,8 +183,6 @@ public interface EzApprovalGService {
 	public String chkAprLines(Document doc, String lang, LoginVO userInfo) throws Exception;
 	
 	public String chkDeptLines(Document doc, String companyID, String lang, LoginVO userInfo) throws Exception;
-
-	public String getOpinionCount(String docID, String userID, String ingFlag, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
 			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception;
@@ -443,5 +441,13 @@ public interface EzApprovalGService {
 	public String getDocHref(String docID, String docStatus, String type, String companyID, int tenantId) throws Exception;
 
 	public String getDocInfoS(String docID, String mode, String selected, LoginVO userInfo, String companyID, int tenantID) throws Exception;
+
+	public String getIsUse(String code1, String code2, String companyID, String userLang, int tenantID) throws Exception;
+	
+	public String gongRamSaveIng(Document xmlDom, String dirPath, String companyID, String lang, int tenantId, String offset) throws Exception;
+
+	public void delCirculation(String docID, String companyID, int tenantID) throws Exception;
+
+	public String getCirculationinfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception;
 
 }
