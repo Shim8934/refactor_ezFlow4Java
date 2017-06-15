@@ -50,11 +50,6 @@
 							</c:when>
 						</c:choose>
 					</div>
-					<div style="float:right;padding-top:1px">
-						<c:if test="${type == 'mailReceive'}">
-							<i id="editBtn" class="fa fa-pencil-square-o" style="font-size:24px;cursor: pointer;"></i>
-						</c:if>
-					</div>
 				</li>
 				
 				<li id="editDisplay">
@@ -89,13 +84,13 @@
 	    <div id="menu-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
 	    	<div style="font-size:16px"><b>메뉴선택</b></div>
 	        <ul data-role="listview" style="margin-top:10px">
-	        	<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
+	        	<li data-icon="carat-r"><a onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
                 <li data-icon="carat-r"><a href="javascript:favoriteBoardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물</a></li>
-                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
 	        </ul>
 	        <div style="margin-top:45px">
 	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
