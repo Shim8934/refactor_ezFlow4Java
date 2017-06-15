@@ -55,7 +55,7 @@ public class MBoardInfoVO {
 	private String formLocation;
 	/** 템플릿 게시판	*/
 	private String formFlag;
-	/** ?	*/
+	/** 승인여부	*/
 	private String apprFlag;
 	/** ?	*/
 	private String apprMailFlag;

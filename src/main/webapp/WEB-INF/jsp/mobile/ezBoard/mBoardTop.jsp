@@ -15,53 +15,29 @@
 			<a class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#menu-panel">menu</a>
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>
 			<ul data-role="listview" data-inset="false" data-theme="a">
-				<%-- <c:if test="${type != 'mailRead' }">
-					<li data-position="fixed" style="height:25px">							
-						<div style="margin-left:5px;float:left;font-size:15px;padding-top:2px">
-							<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>${type == 'mailReceive' ? '받은편지함 : 17' : '보낸편지함 : 25'}</strong>
-						</div>
-						<div style="float:right;padding-top:1px">
-							<c:if test="${type == 'mailReceive'}">
-								<i id="editBtn" class="fa fa-pencil-square-o" style="font-size:24px;cursor: pointer;"></i>
-							</c:if>									
-						</div>
-					</li>
-					<li style="display:none" id="editDisplay">
-						<div style="margin-left:5px;">
-							<i class="fa fa-check-square-o" style="font-size:24px;cursor: pointer;" onclick="javascript:checkAll();"></i>							
-							<i class="fa fa-trash" style="font-size:24px;cursor: pointer;margin-left:20px"></i>
-							<i class="fa fa-arrows" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:moveMail();"></i>
-							<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchMail();"></i>
-						</div>							
-					</li>
-				</c:if> --%>
-				
 				<li data-position="fixed" style="height:25px">
 					<div style="margin-left:5px;float:left;font-size:15px;padding-top:2px">
 						<c:choose>
-							<c:when test="${type == 'favoriteBoardItemList'}">
-								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>newBoardItemList</strong>
+							<c:when test="${mBoardInfo.type == 'newBoardItemList'}">
+								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>새게시물카운트</strong>
 							</c:when>
-							<c:when test="${type == 'boardItemList'}">
-								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>boardItemList</strong>
+							<c:when test="${mBoardInfo.type == 'boardItemList'}">
+								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>게시물카운트</strong>
 							</c:when>
-							<c:when test="${type == 'boardItem'}">
-								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>boardItem</strong>
+							<c:when test="${mBoardInfo.type == 'boardItem'}">
+								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>뒤로가기아이콘</strong>
 							</c:when>
 						</c:choose>
 					</div>
-				</li>
-				
-				<li id="editDisplay">
-					<div style="margin-left:5px;">
+					<div style="margin-left:5px;float:right;font-size:15px;padding-top:2px">
 						<c:choose>
-							<c:when test="${type == 'favoriteBoardItemList'}">
+							<c:when test="${mBoardInfo.type == 'newBoardItemList'}">
 		<!-- 						기간 -->
 								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 		<!-- 						검색 -->
 								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 							</c:when>
-							<c:when test="${type == 'boardItemList'}">
+							<c:when test="${mBoardInfo.type == 'boardItemList'}">
 		<!-- 						즐겨찾기 -->
 								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 		<!-- 						기간 -->
@@ -69,13 +45,11 @@
 		<!-- 						검색 -->
 								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 							</c:when>
-							<c:when test="${type == 'boardItem'}">
-								
+							<c:when test="${mBoardInfo.type == 'boardItem'}">
+							
 							</c:when>
 						</c:choose>
-						
-						
-					</div>							
+					</div>
 				</li>
 			</ul>
 		</header>
@@ -84,13 +58,15 @@
 	    <div id="menu-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
 	    	<div style="font-size:16px"><b>메뉴선택</b></div>
 	        <ul data-role="listview" style="margin-top:10px">
-	        	<li data-icon="carat-r"><a onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
-                <li data-icon="carat-r"><a href="javascript:favoriteBoardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+	        	<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = newboardItemList boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물</a></li>
+                <li data-icon="carat-r"><a onclick="newBoardList(this)" type = "boardList"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾슬라이드</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판바로가기1</a></li>
+                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{66c95ea2-d205-85e6-cd53-2801f4c98560}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판바로가기2</a></li>
+                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
+                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
+                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
+                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
 	        </ul>
 	        <div style="margin-top:45px">
 	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>

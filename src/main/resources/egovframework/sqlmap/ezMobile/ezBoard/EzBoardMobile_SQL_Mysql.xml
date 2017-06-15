@@ -2,11 +2,10 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezBoardMobile">
-
-	<typeAlias  alias="userInfo" 					type="egovframework.let.user.login.vo.LoginVO"/>
-	<typeAlias  alias="MBoardInfoVO" 				type="egovframework.ezMobile.ezBoard.vo.MBoardInfoVO"/>
-	<typeAlias  alias="MBoardListHeaderVO" 			type="egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO"/>
-	<typeAlias  alias="MBoardItemVO" 			type="egovframework.ezMobile.ezBoard.vo.MBoardItemVO"/>
+	<typeAlias  alias="userInfo"					type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias  alias="MBoardInfoVO"				type="egovframework.ezMobile.ezBoard.vo.MBoardInfoVO"/>
+	<typeAlias  alias="MBoardListHeaderVO"			type="egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO"/>
+	<typeAlias  alias="MBoardItemVO"				type="egovframework.ezMobile.ezBoard.vo.MBoardItemVO"/>
 	
 	<!-- <typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
@@ -104,7 +103,7 @@
 		]]>
 	</select>
 	
-	<select id="MBoardDAO.getBoarditemList" parameterClass="Map" resultClass="MBoardItemVO">
+	<select id="MBoardDAO.getBoardItemList" parameterClass="Map" resultClass="MBoardItemVO">
 		<![CDATA[
 			SELECT 
 				A.boardid,
@@ -113,9 +112,9 @@
 				A.writername,
 				A.writerdeptname,
 				A.writercompanyname,
-				A.startdate,
-				A.writedate,
-				A.parentwritedate,
+				DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
+				DATE_ADD(DATE_FORMAT(A.parentwritedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS parentwritedate,
 				A.importance,
 				A.title,
 				A.readcount,
@@ -156,7 +155,7 @@
 						TBL_BOARD_ITEM A
 					LEFT OUTER JOIN
 						(SELECT
-							COUNT(userid) AS TOTALCOUNT, 
+							COUNT(userid) AS totalcount, 
 							itemid,
 							tenant_id 
 						FROM
@@ -180,11 +179,24 @@
 							boardid = #boardID#
 		]]>
 		
-		<isNotEmpty property="tempString" prepend="AND">
-			A.apprflag = 'Y'
-		</isNotEmpty>
-		<isEqual property="type" compareValue="2">
+		<isEqual property="apprFlag" compareValue="Y">
+			<![CDATA[
+				AND
+					A.apprflag = 'Y'
+			]]>
+		</isEqual>
+		
+		<isEqual property="gubun" compareValue="1">
 		  	<![CDATA[
+				AND
+					startdate <= #nowDate#
+				AND
+					enddate > #nowDate#
+			]]>
+		</isEqual>
+		
+		<isEqual property="gubun" compareValue="2">
+			<![CDATA[
 				AND
 					startdate <= #nowDate#
 				AND
@@ -193,17 +205,136 @@
 					D.totalcount IS NULL
 			]]>
 		</isEqual>
-		<isNotEqual property="type" compareValue="2">
+			
+		<isEqual property="gubun" compareProperty="3">
 			<![CDATA[
 				AND
 					startdate <= #nowDate#
 				AND
+					enddate < #nowDate#
+			]]>
+		</isEqual>
+		
+		<![CDATA[
+			ORDER BY
+				A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE
+			LIMIT
+				0, 20
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getBoardApprFlag" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				DISTINCT B.apprflag
+			FROM
+				TBL_BOARD_APPRLIST A
+			JOIN
+				TBL_BOARD_BOARDINFO B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.boardid = B.boardid
+			WHERE
+				B.tenant_id = #tenantID#
+			AND
+				B.boardid = #boardID#
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getBoardItemListCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="gubun" compareValue="1">
+			<![CDATA[
+				SELECT 
+					COUNT(itemid) totalcount
+				FROM 
+					TBL_BOARD_ITEM 
+				WHERE  
+					tenant_id = #tenantID#
+				AND
+					boardid = #boardID#
+				AND
+					startdate < #nowDate#
+				AND
 					enddate > #nowDate#
 			]]>
-		</isNotEqual>
+			
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						apprflag = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
 		
-		LIMIT
-			0, 20
+		<isEqual property="gubun" compareValue="2">
+			<![CDATA[
+				SELECT 
+					COUNT(A.itemid)  totalcount
+				FROM 
+                	TBL_BOARD_ITEM A
+				LEFT JOIN 
+					(SELECT
+						COUNT(userid) totalcount,
+						itemid,
+						tenant_id
+					FROM
+						TBL_BOARD_ITEM_READ
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						userid = #userID#
+					AND
+						boardid = #boardID#
+					GROUP BY
+						itemid) D
+				ON
+					A.tenant_id = D.tenant_id
+				AND
+					A.itemid = D.itemid
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					boardid = #boardID#
+				AND
+					startdate < #nowDate#
+				AND
+					enddate > #nowDate#
+				AND
+					D.totalcount IS NULL
+			]]>
+			
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						apprflag = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
+		
+		<isEqual property="gubun" compareValue="3">
+			<![CDATA[
+				SELECT
+					COUNT(itemid) totalcount
+				FROM
+					TBL_BOARD_ITEM 
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					boardid = #boardDd#
+				AND
+					startdate < #nowDate#
+				AND
+					enddate < #nowDate#
+			]]>
+			
+			<isEqual property="apprFlag" compareValue="Y">
+				<![CDATA[
+					AND
+						apprflag = 'Y'
+				]]>
+			</isEqual>
+		</isEqual>
 	</select>
 </sqlMap>
 
