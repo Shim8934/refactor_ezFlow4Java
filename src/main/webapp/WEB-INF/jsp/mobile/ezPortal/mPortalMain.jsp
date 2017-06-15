@@ -201,14 +201,6 @@
 							   		<div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>회의실</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="#" onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물리스트<span class="ui-li-count">12</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;일반게시판리스트<span class="ui-li-count">0</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;일반게시판리스트<span class="ui-li-count">4</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;일반게시판리스트<span class="ui-li-count">328</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;일반게시판리스트<span class="ui-li-count">62</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;일반게시판리스트<span class="ui-li-count">62</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;일반게시판리스트<span class="ui-li-count">62</span></a></li>
-								        </ul>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
@@ -222,13 +214,6 @@
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>빔프로젝터</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="#" onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;규정 및 지침 <span class="ui-li-count">12</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;비상연락망및내선번호 <span class="ui-li-count">0</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;배포서식 <span class="ui-li-count">4</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;회사제품매뉴얼및자료 <span class="ui-li-count">328</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공용장비 드라이버<span class="ui-li-count">62</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;전사교육 교악<span class="ui-li-count">62</span></a></li>
-								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;세미나관련<span class="ui-li-count">62</span></a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
