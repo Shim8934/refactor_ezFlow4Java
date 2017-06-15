@@ -89,6 +89,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailMoveCopy.do")
 	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		if (request.getParameter("fm") != null) {
+			model.addAttribute("isFolderManager", "1");
+		} else {
+			model.addAttribute("isFolderManager", "0");
+		}
 		
 		return "ezEmail/mailMoveCopy";
 	}
@@ -147,6 +152,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            				returnValue = "ALREADY_EXISTS";
 	            			} else {
 	            				boolean isCreated = newFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+	            				newFolder.setSubscribed(true);
 	            				if (isCreated) {
 	            					logger.debug(newFolder.getFullName() + " folder is created.");
 	            					returnValue = "OK";
@@ -290,6 +296,58 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
         
 		logger.debug("returnValue=" + returnValue);
 		logger.debug("mailMakeFolder ended.");
+		
+		return returnValue;
+	}
+	
+	/**
+	 * 편지함 구독 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/setSubscribe.do")
+	@ResponseBody
+	public String setSubscribe(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("setSubscribe started.");
+		
+		String folderId = request.getParameter("folderId");
+		String subscribeStr = request.getParameter("subscribe");
+		logger.debug("folderId=" + folderId + ",subscribeStr=" + subscribeStr);
+		
+		String returnValue = "ERROR";
+		
+		boolean subscribe = false;
+		if (subscribeStr.equals("1")) {
+			subscribe = true;
+		}
+		
+		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userIdnPw.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userEmail=" + userAccount);
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+        			userAccount, password, egovMessageSource, locale);
+			
+			Folder f = ia.getFolder(folderId);
+			
+			f.setSubscribed(subscribe);
+			
+			returnValue = "OK";
+		} catch (MessagingException e) {
+			returnValue = "ERROR";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("setSubscribe ended. returnValue=" + returnValue);
 		
 		return returnValue;
 	}

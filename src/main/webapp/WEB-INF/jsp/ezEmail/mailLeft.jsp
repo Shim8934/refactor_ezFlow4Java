@@ -112,7 +112,7 @@
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
-	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true);
+	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
 	        function selectnode() {
@@ -231,7 +231,7 @@
 	            if (RtnVal) {
 	                var href = PostTreeView.getvalue(1, "href");
 	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
-	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
+	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	                PostTreeView.update();
 	                if (PostTreeView.selectedIndex() == -1) {
 	                    PostTreeView.select(1);
@@ -354,7 +354,7 @@
 	        function mail_import_Complete() {
 	        	if (typeof (window.parent.frames["right"].MailListRefresh) == "function")
 	                window.parent.frames["right"].MailListRefresh();
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	            if (PostTreeView.selectedIndex() == -1) {
 	                PostTreeView.select(1);

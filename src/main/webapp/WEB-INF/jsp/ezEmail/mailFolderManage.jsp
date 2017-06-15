@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
@@ -55,7 +56,7 @@
                     treeconfig = xmlHTTP.responseXML;
 
                 PostTreeView.config(treeconfig);
-                PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+                PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, true) + "</nodes></tree>");
                 PostTreeView.update();
                 if (PostTreeView.selectedIndex() == -1) {
                     PostTreeView.select(5);
@@ -67,7 +68,7 @@
                 if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
                     nodeIdx = arguments[0].nodeIdx;
                 }
-                var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false)
+                var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, false, true)
                 PostTreeView.putchildxml(nodeIdx, childxml);
             }
             
@@ -103,7 +104,7 @@
 		            return;
 		        }
 		        
-		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
+		        var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, true);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
                 
 		        EventCheck = true;
@@ -160,7 +161,7 @@
 		        
 		        mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
 		        mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
-		        DivPopUpShow(320, 375,"/ezEmail/mailMoveCopy.do");
+		        DivPopUpShow(320, 375,"/ezEmail/mailMoveCopy.do?fm=1");
 		    }
 		    function move_onclick_Complete(moveUrl) {
 		        DivPopUpHidden();
@@ -376,7 +377,7 @@
 		    
 			function LoadAddressTree(idx) {
 		        PostTreeView.config(treeconfig);
-		        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+		        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, true) + "</nodes></tree>");
 		        PostTreeView.update();
 		        PostTreeView.toggle(idx);
 		    }
@@ -400,6 +401,50 @@
 			    document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
 			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
 			    document.getElementById("MailProgress").style.display = "";
+			}
+			
+			function subscribe_onclick() {
+				var sIdx = PostTreeView.selectedIndex();
+				
+				if (sIdx == -1) {
+		            alert("선택 쿠다사이");
+		            return;
+		        }
+		        
+		        var folderId = PostTreeView.getvalue(sIdx, "href");
+		        var subscribe = PostTreeView.getvalue(sIdx, "subscribe");
+		        
+		        if (subscribe == "1") {
+		        	subscribe = "0";
+		        } else {
+		        	subscribe = "1";
+		        }
+		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezEmail/setSubscribe.do",
+					data : { 
+						folderId : folderId,
+						subscribe : subscribe
+					},
+					success: function(result) {
+						if (result == "OK") {
+							PostTreeView.putvalue(sIdx, "subscribe", subscribe);
+							
+							if (subscribe == "1") {
+								
+							} else {
+								
+							}
+							
+							PostTreeView.update();
+						} else {
+							alert("에라다 에라");
+						}
+					}        			
+				});
 			}
 			
 			/* 2016-12-28 이효민 : 사용하지 않음 
@@ -455,6 +500,7 @@
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezEmail.t95' /></span></a>
 		    <a class="imgbtn"><span onClick="move_onclick()" style="width:70px;text-align:center;"><spring:message code='ezEmail.t482' /></span></a>
 		    <a class="imgbtn"><span onClick="delete_mail_onclick()" style="width:70px;text-align:center;"><spring:message code='ezEmail.t483' /></span></a>
+		    <a class="imgbtn"><span onClick="subscribe_onclick()" style="width:70px;text-align:center;">구독지정</span></a>
 		</div>
 		<table class="popuplist" style="width:100%">
 		  <tr>
