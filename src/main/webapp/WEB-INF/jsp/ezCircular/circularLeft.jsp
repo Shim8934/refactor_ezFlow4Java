@@ -132,19 +132,11 @@
 	        
 	        function selectnode() {
 	            var nodeIdx = PostTreeView.selectedIndex();
-	            var href = PostTreeView.getvalue(nodeIdx, "href");
+	            var folderId = PostTreeView.getvalue(nodeIdx, "href");
 	            
-	            alert(href);
-// 	            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
-// 	            try {
-// 	                if (typeof (parent.frames["right"]) != "undefined")
-// 	                    parent.frames["right"].Window_onunload();
-// 	            } catch (e) { }
-// 	            if (g_firstOpen)
-// 	                g_firstOpen = false;
-// 	            else
-// 	                window.open(url, "right");
-// 	            get_unreadcount();
+	            var url = "/ezCircular/circularFolderDoc.do?folderId=" + folderId;
+ 	            
+				window.open(url, "right");
 	        }
 	        
 // 	        function email_dragdrop(event) {

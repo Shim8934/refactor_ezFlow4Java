@@ -90,11 +90,18 @@ private static final Logger logger = LoggerFactory.getLogger(MPortalController.c
 	@RequestMapping(value = "/mobile/ezOption/saveOption.do")
 	public String saveOption(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("saveOption Start");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String langFlag = req.getParameter("lang");
 		String dpBoardCnt = req.getParameter("dpBoardCnt");
+		String resourceChk = req.getParameter("resourceChk");
 		
+		if (langFlag == null) {
+			langFlag = userInfo.getPrimary();
+		}
 		System.out.println(langFlag);
 		System.out.println(dpBoardCnt);
+		System.out.println(resourceChk);
 		logger.debug("saveOption End");
 		return "true";
 	}

@@ -6,6 +6,7 @@
 	<typeAlias  alias="userInfo" 					type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias  alias="MBoardInfoVO" 				type="egovframework.ezMobile.ezBoard.vo.MBoardInfoVO"/>
 	<typeAlias  alias="MBoardListHeaderVO" 			type="egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO"/>
+	<typeAlias  alias="MBoardItemVO" 			type="egovframework.ezMobile.ezBoard.vo.MBoardItemVO"/>
 	
 	<!-- <typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
@@ -22,7 +23,7 @@
 	<select id="MBoardDAO.getListHeader" parameterClass="Map" resultClass="MBoardListHeaderVO">
 		<![CDATA[
 			SELECT
-				CASE #primary# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END name,
+				CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END name,
 				width,
 				colname
 			FROM
@@ -59,7 +60,6 @@
 				portlet,
 				onelinereply,
 				boardtreepath,
-				background,
 				formlocation,
 				formflag,
 				apprflag,
@@ -73,6 +73,137 @@
 			AND
 				boardid = #boardID#
 		]]>
+	</select>
+	
+	<select id="MBoardDAO.getACL" parameterClass="Map" resultClass="MBoardInfoVO">
+		<![CDATA[
+			SELECT 
+				boardid,
+				accessid,
+				accesslevel,
+				access_,
+				parentboardid,
+				boardadmin_fg,
+				listview_fg,
+				read_fg,
+				write_fg,
+				reply_fg,
+				delete_fg,
+				inherit_fg,
+				postnotice,
+				boardgroupacl
+			FROM 
+				TBL_BOARD_BOARDMANAGE 
+			WHERE  
+				TENANT_ID = #tenantID#
+			AND
+				boardid = #boardID# 
+			AND 
+				accessid = #userDeptPath#
+			LIMIT 1
+		]]>
+	</select>
+	
+	<select id="MBoardDAO.getBoarditemList" parameterClass="Map" resultClass="MBoardItemVO">
+		<![CDATA[
+			SELECT 
+				A.boardid,
+				A.itemid,
+				A.writerid,
+				A.writername,
+				A.writerdeptname,
+				A.writercompanyname,
+				A.startdate,
+				A.writedate,
+				A.parentwritedate,
+				A.importance,
+				A.title,
+				A.readcount,
+				A.attachments,
+				A.itemlevel,
+				A.abstract,
+				CASE WHEN D.totalcount IS NULL THEN '0' ELSE '1' END readflag,
+				A.extensionattribute5,
+				A.writername2,
+				A.writerdeptname2,
+				A.writercompanyname2,
+				(SELECT 
+					COUNT(*)  
+				FROM 
+					TBL_BOARD_ONELINEREPLY
+				WHERE  
+					tenant_id = A.tenant_id
+				AND
+					itemid = A.itemid) onelinecnt,
+					A.upperitemidtree,
+					A.docno,
+					'' AS notice,
+					A.maincontent,
+					A.extensionattribute6,
+					A.extensionattribute7,
+					A.extensionattribute8,
+					A.extensionattribute9,
+					A.extensionattribute10,
+					(SELECT
+						gubun
+					FROM
+						TBL_BOARD_BOARDINFO B
+					WHERE
+						B.tenant_id = #tenantID#
+					AND
+						B.boardid = A.boardid) AS gubun
+					FROM
+						TBL_BOARD_ITEM A
+					LEFT OUTER JOIN
+						(SELECT
+							COUNT(userid) AS TOTALCOUNT, 
+							itemid,
+							tenant_id 
+						FROM
+							TBL_BOARD_ITEM_READ
+						WHERE
+							tenant_id = #tenantID#
+						AND
+							userid = #userID#
+						AND
+							boardid = #boardID#
+						GROUP BY
+							itemid,
+							tenant_id ) D
+						ON
+							A.tenant_id = D.tenant_id
+						AND
+							A.itemid = D.itemid
+						WHERE
+							A.tenant_id = #tenantID#
+						AND
+							boardid = #boardID#
+		]]>
+		
+		<isNotEmpty property="tempString" prepend="AND">
+			A.apprflag = 'Y'
+		</isNotEmpty>
+		<isEqual property="type" compareValue="2">
+		  	<![CDATA[
+				AND
+					startdate <= #nowDate#
+				AND
+					enddate > #nowDate#
+				AND
+					D.totalcount IS NULL
+			]]>
+		</isEqual>
+		<isNotEqual property="type" compareValue="2">
+			<![CDATA[
+				AND
+					startdate <= #nowDate#
+				AND
+					enddate > #nowDate#
+			]]>
+		</isNotEqual>
+		
+		LIMIT
+			0, 20
 	</select>
 </sqlMap>
 

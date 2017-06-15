@@ -59,13 +59,56 @@
                 <li data-icon="carat-r"><a href="javascript:goSendMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함</a></li>
                 <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;임시보관함</a></li>
                 <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;지운편지함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개인편지함</a></li>
+                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개인편지함</a></li>                
 	        </ul>
+	        <div style="font-size:16px;margin-top:45px"><b>자원관리 테스트</b></div>
+	        <ul data-role="listview" style="margin-top:10px">
+	        	<li data-icon="forward"><a href="#menu-panel1"><i class="fa fa-folder" style="font-size:15px"></i>&nbsp;&nbsp;회의실</a></li>
+	        	<li data-icon="forward"><a href="#menu-panel2"><i class="fa fa-folder" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝터</a></li>
+	        	<li data-icon="forward"><a href="#menu-panel3"><i class="fa fa-folder" style="font-size:15px"></i>&nbsp;&nbsp;공용차량</a></li>
+	        </ul>	
 	        <div style="margin-top:45px">
 	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
 	        </div>
 	    </div>
-	    <!-- 왼쪽메뉴 panel -->		
+	    <!-- 왼쪽메뉴 panel -->	
+	    
+	    <div id="menu-panel1" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
+	    	<div style="font-size:16px"><b><i class="fa fa-folder" style="font-size:15px"></i>&nbsp;&nbsp;회의실</b></div>		    	
+	        <ul data-role="listview" style="margin-top:10px">	        	
+                <li data-icon="carat-r"><a href="#"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
+                <li data-icon="carat-r"><a href="#"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
+                <li data-icon="carat-r"><a href="#"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
+                <li data-icon="carat-r"><a href="#"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>                              
+	        </ul>
+	        <div style="margin-top:45px">
+	        	<a href="#menu-panel" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-b">BACK</a>
+	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
+	        </div>
+	    </div>
+	    
+	    <div id="menu-panel2" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
+	    	<div style="font-size:16px"><b><i class="fa fa-folder" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝터</b></div>		    	
+	        <ul data-role="listview" style="margin-top:10px">	        	
+                <li data-icon="carat-r"><a href="#"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
+                <li data-icon="carat-r"><a href="#"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>                                
+	        </ul>
+	        <div style="margin-top:45px">
+	        	<a href="#menu-panel" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-b">BACK</a>
+	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
+	        </div>
+	    </div>
+	    
+	    <div id="menu-panel3" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
+	    	<div style="font-size:16px"><b><i class="fa fa-folder" style="font-size:15px"></i>&nbsp;&nbsp;공용차량</b></div>		    	
+	        <ul data-role="listview" style="margin-top:10px">	        	
+                <li data-icon="carat-r"><a href="#"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;58하3101 아반테</a></li>                                
+	        </ul>
+	        <div style="margin-top:45px">
+	        	<a href="#menu-panel" type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-back ui-btn-b">BACK</a>
+	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
+	        </div>
+	    </div>
 		
 		<!-- 환경설정 panel -->
 	    <div id="option-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="right">
