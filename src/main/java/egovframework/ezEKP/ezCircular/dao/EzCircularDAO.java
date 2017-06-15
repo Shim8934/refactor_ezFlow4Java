@@ -257,4 +257,24 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		delete("EzCircularDAO.circularDeleteFolder", map);
 	}
 
+	
+	
+	public int getCircularTDListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getCircularTDListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CircularListVO> getCircularTDList(Map<String, Object> map) throws Exception {
+		return (List<CircularListVO>) list("EzCircularDAO.getCircularTDList", map);
+	}
+
+	public void tempDeleteCircular(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.tempDeleteCircular", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> getCircularTDMapList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularTDMapList", map);
+	}
+
 }
