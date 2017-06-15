@@ -51,8 +51,6 @@ public class MBoardInfoVO {
 	private String oneLineReply;
 	/** 게시판 트리경로	*/
 	private String boardTreePath;
-	/** 배경 여부	*/
-	private String backGround;
 	/** 폼 경로	*/
 	private String formLocation;
 	/** 템플릿 게시판	*/
@@ -75,10 +73,6 @@ public class MBoardInfoVO {
 	private String boardGroupAdmin_FG;
 	/** 접근아이디*/
 	private String accessID;
-	/** 접근표시이름*/
-	private String accessName;
-	/** 접근표시이름(다국어)*/
-	private String accessName2;
 	/** 접근레벨(사용안함)*/
 	private String accessLevel;
 	/** 트리뷰에서 보이는지 여부*/
@@ -127,6 +121,8 @@ public class MBoardInfoVO {
 	private int tenantID;
 	/** */
 	private String displayName;
+	/** 모바일 페이지(새게시물/리스트/글읽기) 구분 */
+	private String type;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -260,12 +256,6 @@ public class MBoardInfoVO {
 	public void setBoardTreePath(String boardTreePath) {
 		this.boardTreePath = boardTreePath;
 	}
-	public String getBackGround() {
-		return backGround;
-	}
-	public void setBackGround(String backGround) {
-		this.backGround = backGround;
-	}
 	public String getFormLocation() {
 		return formLocation;
 	}
@@ -307,18 +297,6 @@ public class MBoardInfoVO {
 	}
 	public void setAccessID(String accessID) {
 		this.accessID = accessID;
-	}
-	public String getAccessName() {
-		return accessName;
-	}
-	public void setAccessName(String accessName) {
-		this.accessName = accessName;
-	}
-	public String getAccessName2() {
-		return accessName2;
-	}
-	public void setAccessName2(String accessName2) {
-		this.accessName2 = accessName2;
 	}
 	public String getAccessLevel() {
 		return accessLevel;
@@ -501,4 +479,11 @@ public class MBoardInfoVO {
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 }

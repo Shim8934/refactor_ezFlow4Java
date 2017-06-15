@@ -207,8 +207,6 @@
 	                    alert(strLang6);
 	                    return;
 	                }
-	                /* if (document.getElementById('mode').value == "PHOTO")
-	                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
 	            }
 	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
 	                extFlag = true;
@@ -230,7 +228,6 @@
 	    }
 		</script>
 	</head>
-	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

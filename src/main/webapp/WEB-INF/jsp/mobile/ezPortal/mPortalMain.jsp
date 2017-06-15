@@ -6,13 +6,12 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />		
 		<link rel="stylesheet" type="text/css" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css" />
     	<link rel="stylesheet" type="text/css" href="/css/mobile/mobile.css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>		
+		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>		
 		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
 		<script type="text/javascript" src="/js/mobile/mBoard.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
@@ -33,125 +32,313 @@
 						<div data-role="collapsibleset" data-theme="a" data-inset="false">
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/first.jpg');" data-iconpos="right">
 						    	<h2>메일&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
-						        <ul data-role="listview" data-inset="true" >
-						            <li><a href="/mobile/sample/sampleList.do?type=mailReceive"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;받은편지함 <span class="ui-li-count">12</span></a></li>
-						            <li><a href="/mobile/sample/sampleList.do?type=mailSend"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함 <span class="ui-li-count">0</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;임시보관함 <span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;지운편지함<span class="ui-li-count">328</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개인편지함 <span class="ui-li-count">62</span></a></li>
+						        <ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">						        	
+						            <li data-role="list-divider">받은편지함 <span class="ui-li-count">9</span></li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope" style="font-size:15px"></i>&nbsp;&nbsp;오픈솔루션팀 장진혁 입니다.
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope" style="font-size:15px"></i>&nbsp;&nbsp;안녕하십니까? 개발팀에 새로 입사한 박창현입니다.
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope" style="font-size:15px"></i>&nbsp;&nbsp;Maven 공부내용 정리입니다.
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope" style="font-size:15px"></i>&nbsp;&nbsp;[알림]회신: [영어연구회] 다음 기사
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;6월 13일자 인사/동정/부음
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;[공지] 백업CS제출 안내
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;[공지] 악성코드 탐지내역 2017.06.14
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개발 및 프로젝트 시 소스 형상관리 툴 사용 건
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;[FYI] 유니코드의 UCS와 UTF
+						            	</a>
+						            </li>
+						            <li data-icon="false">
+						            	<a href="/mobile/sample/sampleList.do?type=mailReceive" style="text-align:center">
+						            		. . .
+						            	</a>
+						            </li>						            						          					            
 						        </ul>
 						    </div>
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/second.jpg')" data-iconpos="right">
 						    	<h2>전자결재&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
-						        <ul data-role="listview" data-inset="true">
+						        <!-- <ul data-role="listview" data-inset="true">
 						            <li><a href="/mobile/ezApprovalG/doApproveList.do"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서 <span class="ui-li-count">12</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재진행문서 <span class="ui-li-count">0</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;결재한문서 <span class="ui-li-count">4</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;기안한문서 <span class="ui-li-count">328</span></a></li>
 						            <li><a href="index.html"><i class="fa fa-pencil" style="font-size:15px"></i>&nbsp;&nbsp;부재자설정</a></li>
-						        </ul>
-						    </div>
-						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/forth.jpg')" data-iconpos="right">
-						    	<h2>일정관리</h2>
-						        <ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">
-						        	<li><a href="index.html"><i class="fa fa-calendar" style="font-size:15px"></i>&nbsp;&nbsp;일정보기</a></li>
-						            <li data-role="list-divider">2017년 5월 30일 <span class="ui-li-count">2</span></li>
+						        </ul> -->
+						        <ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">						        	
+						            <li data-role="list-divider">결재할문서 <span class="ui-li-count">6</span></li>
 						            <li>
 						            	<a href="index.html">
-						                	<h3>장진혁</h3>
-						                	<p><strong>디자인팀과 오후 미팅</strong></p>						                	
-						                    <p class="ui-li-aside"><strong>15:00</strong></p>
+						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;2017년 6월 9일 장진혁 휴가원
 						            	</a>
 						            </li>
 						            <li>
 						            	<a href="index.html">
-						                	<h3>강민석</h3>
-						            		<p><strong>이메일 관련 세미나</strong></p>						            		
-						                	<p class="ui-li-aside"><strong>10:30</strong></p>
+						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;2017년 6월 9일 김길동 휴가원
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;지출결의서 상신합니다.
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;기안문 상신합니다.
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;2017년 6월 출장신청서
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;인력충원요청서 상신합니다.
+						            	</a>
+						            </li>						            
+						            <li data-icon="false">
+						            	<a href="#" style="text-align:center">
+						            		. . .
+						            	</a>
+						            </li>						            						          					            
+						        </ul>
+						    </div>
+						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/forth.jpg')" data-iconpos="right">
+						    	<h2>일정관리&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
+						        <ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">						        	
+						            <li data-role="list-divider">오늘의일정 <span class="ui-li-count">2</span></li>
+						            <li>						            	
+						            	<a href="index.html">
+						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
+						                	오픈솔루션 개발 세미나<br/>
+						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">15:30 ~ 16:30</span>						                    
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
+						                	디자인팀과 오후 미팅<br/>
+						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
+						            	</a>
+						            </li>
+						            <li data-icon="false">
+						            	<a href="#" style="text-align:center">
+						            		. . .
 						            	</a>
 						            </li>						          					            
 						        </ul>
 						    </div>
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/third.jpg')" data-iconpos="right">
 						   		<h2>게시판&nbsp;&nbsp;<img src="/images/mobile/new2.png"/></h2>
+						   		<ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">						        	
+						            <li data-role="list-divider">새게시물<span class="ui-li-count">5</span></li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-book " style="font-size:15px"></i>&nbsp;&nbsp;[공지] 6월 월례보고 자료
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-book " style="font-size:15px"></i>&nbsp;&nbsp;[공지] 연차 발생 조견표
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-book " style="font-size:15px"></i>&nbsp;&nbsp;2017년 적용 최저임금 고시
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-book " style="font-size:15px"></i>&nbsp;&nbsp;[안내] 건강보험 피부양자 등록사항 조회 및 등록 방법
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-book " style="font-size:15px"></i>&nbsp;&nbsp;부서(팀) 단위 월간 회식지침
+						            	</a>
+						            </li>						            
+						            <li data-icon="false">
+						            	<a href="#" onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}" style="text-align:center">
+						            		. . .
+						            	</a>
+						            </li>						            						          					            
+						        </ul>		
+						    </div>						    
+						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/third.jpg')" data-iconpos="right">
+						   		<h2>자원관리</h2>
 						   		<div data-role="collapsibleset" data-theme="a" data-inset="true">	
 							   		<div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
-								   		<h2>공지사항</h2>
+								   		<h2>회의실</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공지사항 <span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;노사협의회 회의록 <span class="ui-li-count">0</span></a></li>								            
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
-								   		<h2>업무생활가이드</h2>
+								   		<h2>빔프로젝터</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="#" onclick="boardItemList(this)" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;규정 및 지침 <span class="ui-li-count">12</span></a></li>
-								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;비상연락망및내선번호 <span class="ui-li-count">0</span></a></li>
-								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;배포서식 <span class="ui-li-count">4</span></a></li>
-								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;회사제품매뉴얼및자료 <span class="ui-li-count">328</span></a></li>
-								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공용장비 드라이버<span class="ui-li-count">62</span></a></li>
-								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;전사교육 교악<span class="ui-li-count">62</span></a></li>
-								            <li><a href="#"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;세미나관련<span class="ui-li-count">62</span></a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
-								   		<h2>유지보수현황</h2>
+								   		<h2>공용차량</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;유지보수현황 <span class="ui-li-count">12</span></a></li>								            
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;58하3101 아반테</a></li>								            
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
-								   		<h2>::패치모듈::</h2>
+								   		<h2>모바일기기</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;표준모듈 <span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;폼프로세서2016<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;폼프로세서2015<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;ezRendition<span class="ui-li-count">12</span></a></li>								            
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그1번 (CP041)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그2번 (CP048)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그3번 (CP050)</a></li>								            
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
-								   		<h2>개선 및 버그게시판</h2>
+								   		<h2>콘도회원권</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;속도개선 <span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;포탈<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;메일<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;PIMS<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판/설문<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;전자결재<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;Cop<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;자원관리<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;지식관리/문서관리<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;기타<span class="ui-li-count">12</span></a></li>								            
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067477</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067478</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067479</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067480</a></li>							            
 								        </ul>	
 								    </div>
-								</div>
-								 
-						        <!-- <ul data-role="listview" data-inset="true">
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;마이게시판 <span class="ui-li-count">12</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;공지사항 <span class="ui-li-count">0</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;업무생활가이드 <span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;유지보수현황 <span class="ui-li-count">328</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;포토게시판<span class="ui-li-count">62</span></a></li>
-						        </ul> -->		
-						    </div>						    
-						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/fifth.jpg')" data-iconpos="right">
-						    	<h2>자원관리</h2>
-						        <ul data-role="listview" data-inset="true">
-						            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;회의실<span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝터<span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;공용차량 <span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;모바일기기 <span class="ui-li-count">328</span></a></li>
-						            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;콘도회원권<span class="ui-li-count">62</span></a></li>
-						        </ul>
+								</div>										
 						    </div>
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/fifth.jpg')" data-iconpos="right">
 						    	<h2>직원조회</h2>
-						        <ul data-role="listview" data-inset="true">
-						            <li><a href="index.html">회의실<span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html">빔프로젝터<span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html">공용차량 <span class="ui-li-count">4</span></a></li>
-						            <li><a href="index.html">모바일기기 <span class="ui-li-count">328</span></a></li>
-						            <li><a href="index.html">콘도회원권<span class="ui-li-count">62</span></a></li>
+						        <ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">
+						        	<li>						            	
+						            	<a href="index.html">
+						            		<i class="fa fa-users" style="font-size:15px"></i>
+						            		직원목록						                							                    
+						            	</a>
+						            </li>
+						            <li data-role="list-divider">오픈솔루션팀<span class="ui-li-count">14</span></li>
+						            <li>						            	
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	김경식 [팀장]						                					                    
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	이동호 [수석부장]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	장진혁 [차장]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	박정진 [대리]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	정주호 [대리]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	정지혜 [대리]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	황윤진 [대리]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	이효민 [사원]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	지정석 [사원]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	이효진 [사원]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	정수현 [사원]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	강민석 [사원]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	김유진 [사원]						                	
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="index.html">
+						            		<i class="fa fa-user" style="font-size:15px"></i>
+						                	박종균 [사원]						                	
+						            	</a>
+						            </li>
 						        </ul>
 						    </div>						    						    					    
 						</div>
