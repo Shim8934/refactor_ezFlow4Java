@@ -19,9 +19,9 @@ function getBoardItemList() {
 				contentList += "<li>";
 				contentList += "<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezBoard/getBoardItem.do?'>";
 				contentList += "<label>";
-				contentList += "<h2 style='font-size:12px'>" + vo.writerName + "</h2>";
+				contentList += "<h2 style='font-size:12px'>" + vo.title + "</h2>";
 				contentList += "<p class='ui-li-aside'>" + vo.writeDate + "</p>";
-				contentList += "<p>" + vo.title + "</p>";
+				contentList += "<p>" + vo.writerName + "(" + vo.writerDeptName + ")</p>";
 				contentList += "</label>";
 				contentList += "</a>";
 				contentList += "</li>";
