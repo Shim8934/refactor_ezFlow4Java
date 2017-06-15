@@ -39,11 +39,8 @@
 				<li data-position="fixed" style="height:25px">
 					<div style="margin-left:5px;float:left;font-size:15px;padding-top:2px">
 						<c:choose>
-							<c:when test="${type == 'favoriteList'}">
-								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>boardName</strong>
-							</c:when>
-							<c:when test="${type == 'boardList'}">
-								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>boardList</strong>
+							<c:when test="${type == 'favoriteBoardItemList'}">
+								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>newBoardItemList</strong>
 							</c:when>
 							<c:when test="${type == 'boardItemList'}">
 								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>boardItemList</strong>
@@ -56,32 +53,24 @@
 					<div style="float:right;padding-top:1px">
 						<c:if test="${type == 'mailReceive'}">
 							<i id="editBtn" class="fa fa-pencil-square-o" style="font-size:24px;cursor: pointer;"></i>
-						</c:if>									
+						</c:if>
 					</div>
 				</li>
 				
 				<li id="editDisplay">
 					<div style="margin-left:5px;">
 						<c:choose>
-							<c:when test="${type == 'favoriteList'}">
-								<i class="fa fa-check-square-o" style="font-size:24px;cursor: pointer;" onclick="javascript:checkAll();"></i>
-		<!-- 						삭제							 -->
-								<i class="fa fa-trash" style="font-size:24px;cursor: pointer;margin-left:20px"></i>
-		<!-- 						이동 -->
-								<i class="fa fa-arrows" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:moveBoardItem();"></i>
+							<c:when test="${type == 'favoriteBoardItemList'}">
+		<!-- 						기간 -->
+								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 		<!-- 						검색 -->
 								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 							</c:when>
-							<c:when test="${type == 'boardList'}">
-		<!-- 						검색 -->
-								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoard();"></i>
-							</c:when>
 							<c:when test="${type == 'boardItemList'}">
-								<i class="fa fa-check-square-o" style="font-size:24px;cursor: pointer;" onclick="javascript:checkAll();"></i>
-		<!-- 						삭제							 -->
-								<i class="fa fa-trash" style="font-size:24px;cursor: pointer;margin-left:20px"></i>
-		<!-- 						이동 -->
-								<i class="fa fa-arrows" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:moveBoardItem();"></i>
+		<!-- 						즐겨찾기 -->
+								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
+		<!-- 						기간 -->
+								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 		<!-- 						검색 -->
 								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 							</c:when>
@@ -101,12 +90,12 @@
 	    	<div style="font-size:16px"><b>메뉴선택</b></div>
 	        <ul data-role="listview" style="margin-top:10px">
 	        	<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
-                <li data-icon="carat-r"><a href="javascript:goBoardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐겨찾기 목록</a></li>
-                <li data-icon="carat-r"><a href="javascript:goBoardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾1게</a></li>
-                <li data-icon="carat-r"><a href="javascript:goSendMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾2게</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾3게</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾4게</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾5게</a></li>
+                <li data-icon="carat-r"><a href="javascript:favoriteBoardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물</a></li>
+                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
+                <li data-icon="carat-r"><a href="javascript:boardItemList();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류</a></li>
 	        </ul>
 	        <div style="margin-top:45px">
 	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
