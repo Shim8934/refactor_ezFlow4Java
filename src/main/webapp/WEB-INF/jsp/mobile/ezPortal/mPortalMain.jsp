@@ -189,7 +189,7 @@
 						            	</a>
 						            </li>						            
 						            <li data-icon="false">
-						            	<a href="#" style="text-align:center">
+						            	<a href="#" onclick="boardItemList(this)" type = "favoriteBoardItemList" boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}" style="text-align:center">
 						            		. . .
 						            	</a>
 						            </li>						            						          					            
@@ -205,11 +205,17 @@
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>빔프로젝터</h2>
 								        <ul data-role="listview" data-inset="true">
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
 								        </ul>	

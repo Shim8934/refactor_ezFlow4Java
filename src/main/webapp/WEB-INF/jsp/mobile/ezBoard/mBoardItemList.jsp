@@ -19,30 +19,35 @@
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		
 		<script type="text/javascript">
+			//변수 선언
+			var mBoardInfo = '${mBoardInfo}';
+			var type = '${mBoardInfo.type}';
+			var boardID = '${mBoardInfo.boardID}';
+			
 			$(document).ready(function () {
 				getBoardItemList();
 			})
 		</script>			
 	</head>
 	<body class="loginbody">
-		<div id="boardList" data-role="page">
+		<div id="boardItemList" data-role="page">
 			<!-- header import -->
      		<c:import url="/WEB-INF/jsp/mobile/ezBoard/mBoardTop.jsp" />
      		<!-- header import -->
      		
      		<!-- body start -->
-			<div class="ui-content" data-role="content">				
+			<div class="ui-content" data-role="content">
 				<ul data-role="listview" data-inset="false" data-theme="a">
-				    <li>
-				    	<a href="/mobile/sample/sampleDetail.do?type=mailRead">
-				    		<input name="checkbox" id="checkbox-0" type="checkbox">
-    						<label for="checkbox-0">
-    							<h2 style="font-size:12px">장진혁</h2>
-    							<p class="ui-li-aside">06:24</p>
-				    			<p>안녕하세요. 오픈솔루션팀 장진혁 차장입니다.</p>
-    						</label>				    						    						    						        	
-				    	</a>
-				    </li>
+					<li>
+						<a href="/mobile/ezBoard/getBoardItem.do?">
+							<input name="checkbox" id="checkbox-0" type="checkbox">
+							<label for="checkbox-0">
+								<h2 style="font-size:12px">장진혁</h2>
+								<p class="ui-li-aside">06:24</p>
+								<p>안녕하세요. 오픈솔루션팀 장진혁 차장입니다.</p>
+							</label>				    						    						    						        	
+						</a>
+					</li>
 				    <li>
 				    	<a href="index.html">
 				    		<input name="checkbox" id="checkbox-1" type="checkbox">
@@ -134,6 +139,15 @@
 					<input name="search-1" id="search-1" type="search" placeholder="search mail..">
 					<a class="ui-btn" href="#">검 색</a>
 				</div>
+			</div>
+			
+			<div>
+				<span id = "newBoardItemListCount"></span>
+				<span id = "boardItemListCount"></span>
+				
+				<ul id = "boardItemList">
+					
+				</ul>
 			</div>
      	</div>
 	</body>	
