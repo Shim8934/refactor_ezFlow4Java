@@ -1,0 +1,70 @@
+package egovframework.ezMobile.ezApprovalG.vo;
+
+public class MApprovalGAprLineInfoVO {
+	/** 결재상태*/
+	private String aprState;
+	/** 결재자이름*/
+	private String aprMemberName;
+	/** 결재자직위*/
+	private String aprMemberJobTitle;
+	/** 결재자부서명*/
+	private String aprMemberDeptName;
+	/** 결재날짜*/
+	private String receivedDate;
+	/** 대리결재자이름*/
+	private String proxyUserName;
+	/** 대리결재자직위*/
+	private String proxyUserJobTitle;
+	/** 대리결재자부서명*/
+	private String proxyUserDeptName;
+	
+	public String getAprState() {
+		return aprState;
+	}
+	public void setAprState(String aprState) {
+		this.aprState = aprState;
+	}
+	public String getAprMemberName() {
+		return aprMemberName;
+	}
+	public void setAprMemberName(String aprMemberName) {
+		this.aprMemberName = aprMemberName;
+	}
+	public String getAprMemberJobTitle() {
+		return aprMemberJobTitle;
+	}
+	public void setAprMemberJobTitle(String aprMemberJobTitle) {
+		this.aprMemberJobTitle = aprMemberJobTitle;
+	}
+	public String getAprMemberDeptName() {
+		return aprMemberDeptName;
+	}
+	public void setAprMemberDeptName(String aprMemberDeptName) {
+		this.aprMemberDeptName = aprMemberDeptName;
+	}
+	public String getReceivedDate() {
+		return receivedDate;
+	}
+	public void setReceivedDate(String receivedDate) {
+		this.receivedDate = receivedDate;
+	}
+	public String getProxyUserName() {
+		return proxyUserName;
+	}
+	public void setProxyUserName(String proxyUserName) {
+		this.proxyUserName = proxyUserName;
+	}
+	public String getProxyUserJobTitle() {
+		return proxyUserJobTitle;
+	}
+	public void setProxyUserJobTitle(String proxyUserJobTitle) {
+		this.proxyUserJobTitle = proxyUserJobTitle;
+	}
+	public String getProxyUserDeptName() {
+		return proxyUserDeptName;
+	}
+	public void setProxyUserDeptName(String proxyUserDeptName) {
+		this.proxyUserDeptName = proxyUserDeptName;
+	}
+
+}

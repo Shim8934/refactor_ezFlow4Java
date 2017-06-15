@@ -12,16 +12,22 @@
 	</head>
 	<body>
 		<header data-role="header" data-position="fixed">
-			<h1>결재할문서</h1>
+			<h1>문서보기</h1>
 			<a class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#menu-panel">menu</a>
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>
 			<ul style="background-color: white;color:black">
 				<li style="height:40px;border-bottom:1px solid #f2f2f2">							
 					<div style="margin-left:20px;float:left;padding-top:10px">
-						<i class="fa fa-pencil-square" style="font-size:13px;"></i>&nbsp;<strong style="font-size:13px;" id="listCount">(${listCount})</strong>
+						<i class="fa fa-long-arrow-left" style="font-size:24px;"></i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
+						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
+					</div>
+					<div style="margin-right:6px;float:right;padding-top:8px">
+						<i class="fa fa-file-text-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
+					</div>
+					<div style="margin-right:6px;float:right;padding-top:8px">
+						<i class="fa fa-pencil" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
 					</div>
 				</li>
 				<li style="height:60px;border-bottom:1px solid #f2f2f2;display:none" id="searchApprove">
