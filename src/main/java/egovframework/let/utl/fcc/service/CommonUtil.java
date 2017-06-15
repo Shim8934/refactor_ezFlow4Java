@@ -85,6 +85,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Component
 public class CommonUtil {
 	
+	public static final String PT_BASIC = "basic";
+	public static final String PT_STANDARD = "standard";
+	
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 	
