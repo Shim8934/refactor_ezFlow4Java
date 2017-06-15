@@ -12,7 +12,7 @@ public interface MBoardService {
 	
 	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception;
 
-	List<MBoardItemVO> getFavorateBoarditemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception;
+	List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception;
 	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception;
 	

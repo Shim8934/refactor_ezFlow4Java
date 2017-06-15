@@ -3,19 +3,20 @@
 
 <sqlMap namespace="ezApprovalGMobile">
 	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
+	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
 	
-	<select id="MApprovalG.getDoApproveList" parameterClass="userInfo" resultClass="MApprGDocInfoVO">
+	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO">
 		<![CDATA[
 			SELECT 
 				DOCID,
 				DOCTITLE,
-				STARTDATE,
+				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 				WRITERNAME,
 				WRITERDEPTNAME
 			FROM 
 				VAPRDOINGDOCLIST 
    			WHERE
-   				TENANT_ID = #tenantId#
+   				TENANT_ID = #tenantID#
    			AND
    				COMPANYID = #companyID#
    			AND 
@@ -23,5 +24,82 @@
    			AND 
    				APRTYPE <> '015' 
 		]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+	</select>
+	
+	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+			FROM 
+				VAPRDOINGDOCLIST 
+   			WHERE
+   				TENANT_ID = #tenantID#
+   			AND
+   				COMPANYID = #companyID#
+   			AND 
+   				APRMEMBERID IN ($id$) 
+   			AND 
+   				APRTYPE <> '015' 
+		]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+	</select>
+	
+	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
+		SELECT 
+              	TBL_APRLINEINFO.APRSTATE,
+              	CASE 
+   					WHEN (TBL_APRLINEINFO.APRMEMBERNAME$lang$ = '' OR TBL_APRLINEINFO.APRMEMBERNAME$lang$ IS NULL) THEN TBL_APRLINEINFO.APRMEMBERNAME
+   					ELSE TBL_APRLINEINFO.APRMEMBERNAME$lang$
+   				END APRMEMBERNAME,
+              	CASE 
+   					WHEN (TBL_APRLINEINFO.APRMEMBERJOBTITLE$lang$ = '' OR TBL_APRLINEINFO.APRMEMBERJOBTITLE$lang$ IS NULL) THEN TBL_APRLINEINFO.APRMEMBERJOBTITLE
+   					ELSE TBL_APRLINEINFO.APRMEMBERJOBTITLE$lang$
+   				END APRMEMBERJOBTITLE,
+              	CASE 
+   					WHEN (TBL_APRLINEINFO.APRMEMBERDEPTNAME$lang$ = '' OR TBL_APRLINEINFO.APRMEMBERDEPTNAME$lang$ IS NULL) THEN TBL_APRLINEINFO.APRMEMBERDEPTNAME
+   					ELSE TBL_APRLINEINFO.APRMEMBERDEPTNAME$lang$
+   				END APRMEMBERDEPTNAME,
+              	DATE_ADD(DATE_FORMAT(TBL_APRLINEINFO.RECEIVEDDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) RECEIVEDDATE,
+   				CASE 
+   					WHEN (TBL_EXPAPRLINE.PROXYUSERNAME$lang$ = '' OR TBL_EXPAPRLINE.PROXYUSERNAME$lang$ IS NULL) THEN TBL_EXPAPRLINE.PROXYUSERNAME
+   					ELSE TBL_EXPAPRLINE.PROXYUSERNAME$lang$
+   				END PROXYUSERNAME,
+   				CASE 
+   					WHEN (TBL_EXPAPRLINE.PROXYUSERJOBTITLE$lang$ = '' OR TBL_EXPAPRLINE.PROXYUSERJOBTITLE$lang$ IS NULL) THEN TBL_EXPAPRLINE.PROXYUSERJOBTITLE
+   					ELSE TBL_EXPAPRLINE.PROXYUSERJOBTITLE$lang$
+   				END PROXYUSERJOBTITLE,
+   				CASE 
+   					WHEN (TBL_EXPAPRLINE.PROXYUSERDEPTNAME$lang$ = '' OR TBL_EXPAPRLINE.PROXYUSERDEPTNAME$lang$ IS NULL) THEN TBL_EXPAPRLINE.PROXYUSERDEPTNAME
+   					ELSE TBL_EXPAPRLINE.PROXYUSERDEPTNAME$lang$
+   				END PROXYUSERDEPTNAME
+            FROM 
+            	TBL_APRLINEINFO 
+            INNER JOIN 
+            	TBL_EXPAPRLINE 
+            ON 
+            	TBL_APRLINEINFO.DOCID = TBL_EXPAPRLINE.DOCID 
+            AND 
+            	TBL_APRLINEINFO.APRMEMBERSN = TBL_EXPAPRLINE.APRMEMBERSN
+            AND
+            	TBL_APRLINEINFO.TENANT_ID = TBL_EXPAPRLINE.TENANT_ID
+            AND
+            	TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID
+            WHERE 
+            	TBL_APRLINEINFO.DOCID = #docID#  
+            AND
+            	TBL_APRLINEINFO.TENANT_ID = #tenantID#   
+            AND
+            	TBL_APRLINEINFO.COMPANYID = #companyID#
+            ORDER BY 
+				TBL_APRLINEINFO.APRMEMBERSN DESC  
 	</select>
 </sqlMap>

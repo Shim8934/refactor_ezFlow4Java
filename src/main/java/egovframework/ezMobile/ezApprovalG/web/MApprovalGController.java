@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -59,24 +60,72 @@ public class MApprovalGController {
 	 * 모바일 전자결재G 결재할문서 호출 Method
 	 */
 	@RequestMapping(value = "/mobile/ezApprovalG/doApproveList.do")
-	public String doApprovList(@CookieValue("loginCookie") String loginCookie, Model model, String listType) throws Exception {
+	public String doApprovList(@CookieValue("loginCookie") String loginCookie, Model model, String pListType) throws Exception {
 		logger.debug("doApprovList started");
-		logger.debug("listType : " + listType);
+		logger.debug("listType : " + pListType);
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		//임시 
-		listType = "1";
+		pListType = "1";
 		
 		//결재할 문서 카운트
-		int listCount = ezApprovalGService.getWebPartListCount("1", userInfo.getId(), userInfo.getDeptID(), "", "COUNT", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, listType);
+		int listCount = MApprovalGService.getDoApproveListCount(userInfo, pListType, "");
+		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, pListType, "");
 		
 		model.addAttribute("listCount", listCount);
-		model.addAttribute("apprGList", approvalGDocInfoVOs);
+		model.addAttribute("docList", approvalGDocInfoVOs);
 		
-		logger.debug("doApprovList ended");
+		logger.debug("doApprovList ended"); 
 		
 		return "mobile/ezApprovalG/mApprGdoApproveList";
+	}
+	
+	/**
+	 * 모바일 전자결재G 결재할문서 검색 표출 Method
+	 */
+	@RequestMapping(value = "/mobile/ezApprovalG/doSearchApproveList.do")
+	public String doSearchApproveList(@CookieValue("loginCookie") String loginCookie, Model model, String pSearchText, String pListType) throws Exception {
+		logger.debug("doSearchApproveList started");
+		logger.debug("searchText : " + pSearchText);
+		logger.debug("listType : " + pListType);
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		//임시 결재할문서 타입
+		pListType = "1";
+		
+		//결재할 문서 카운트
+		int listCount = MApprovalGService.getDoApproveListCount(userInfo, pListType, pSearchText);
+		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, pListType, pSearchText);
+		
+		model.addAttribute("listCount", listCount);
+		model.addAttribute("docList", approvalGDocInfoVOs);
+
+		logger.debug("doSearchApproveList ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 모바일 전자결재G 문서보기 호출 Method
+	 */
+	@RequestMapping(value = "/mobile/ezApprovalG/doApprovalGDetail.do")
+	public String doApprovalGDetail(@CookieValue("loginCookie") String loginCookie, Model model, String pDocID, String pListType) throws Exception {
+		logger.debug("doApprovalGDetail started");
+		logger.debug("docID : " + pDocID);
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		//임시 결재할문서 타입
+		pListType = "1";
+				
+		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = MApprovalGService.getAprLineInfo(pDocID, pListType, userInfo);
+		
+		model.addAttribute("aprLineList", approvalGAprLineInfoVOs);
+
+		logger.debug("doApprovalGDetail ended");
+		
+		return "mobile/ezApprovalG/mApprGdoApproveDetail";
 	}
 }

@@ -57,7 +57,7 @@ html head + body .ui-btn.ui-btn-a:hover{
 }
 .ui-bar-a, .ui-page-theme-a .ui-bar-inherit, html .ui-bar-a .ui-bar-inherit, html .ui-body-a .ui-bar-inherit, html body .ui-group-theme-a .ui-bar-inherit {
 	color:white;
-	background-color:black;
+	background-color:rgb(31, 63, 105);
 }    	
 .animateMe .ui-collapsible-heading-toggle {
 	line-height : 2.35;
@@ -95,4 +95,8 @@ li a .ui-checkbox label.ui-btn {
 
 .searchArea .controlgroup-textinput {	
     width:68%;    
+}
+
+.ui-li-divider {
+	background-color: rgb(31, 63, 105);
 }
