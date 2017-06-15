@@ -563,9 +563,11 @@
             AND
             	B.UPDATESTATUS = '2'
             AND
-                B.MEMBERID = #memberId#
+                A.MEMBERID = #memberId#
             AND
                 A.TENANTID = #tenantId#
+            GROUP BY
+				A.CIRCULARID    
             ORDER BY
             	A.REGDATE DESC
             LIMIT
@@ -576,7 +578,7 @@
 	<select id="EzCircularDAO.getCircularTDListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
             SELECT
-                COUNT(A.CIRCULARID) CNT
+                COUNT(DISTINCT A.CIRCULARID) CNT
             FROM
                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B
             WHERE
@@ -586,7 +588,7 @@
             AND
             	B.UPDATESTATUS = '2'
             AND
-                B.MEMBERID = #memberId#
+                A.MEMBERID = #memberId#
             AND
                 A.TENANTID = #tenantId#
         ]]>

@@ -309,6 +309,16 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
+	        
+	        function chk_onselect(obj) {
+		        if (obj.checked) {
+		            strListInfo += obj.id;
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		        }
+		        
+		        listEventCheckbox = true;
+		    }
 	
 	        function makePageSelPage() {
 	            var strtext;
@@ -580,18 +590,48 @@
 	                search("quick");
 	            }
 	        }
-	
-// 	        var writeboardselect_modal_dialogArguments = new Array();
-// 	        function CircularWrite_onclick() {
-// 	        	var feature = GetOpenPosition(820, 700);
-// 	        	url = "/ezCircular/circularWrite.do";
-// 	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
-//                 OpenWin.focus();     
-// 	        }
-	
+
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
-	        } 
+	        }
+	        
+	        function Delete_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+	        	
+	        	if(confirm("<spring:message code='ezCircular.t74'/>")) {
+		        	var arrList = new Array();
+			        var circularIDList = "";
+			        var i = 0;
+			        
+			        arrList = strListInfo.split(";");
+			        
+			        for (i = 0; i < arrList.length - 1; i++) {
+			        	circularIDList += arrList[i].split(",")[1] + ";";
+			        }
+			        
+			        arrList = null;
+			        
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularDeleteItem.do",
+						data : { circularIDList : circularIDList
+								},
+						success: function() {
+							alert("<spring:message code='ezCircular.t77'/>");
+						},
+						error: function() {
+							alert("삭제실패");
+						}
+					});
+
+		            location.href = location.href;
+	        	}	
+	        }
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;">
@@ -603,7 +643,7 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t62'/></span></li>
+	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t62'/></span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>

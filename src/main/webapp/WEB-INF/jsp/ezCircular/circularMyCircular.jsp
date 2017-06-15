@@ -621,12 +621,11 @@
 						type : "POST",
 						dataType : "text",
 						async : false,
-// 						url : "/ezCircular/circularDeleteItem.do",
 						url : "/ezCircular/circularDeleteTemp.do",
 						data : { circularIDList : circularIDList
 								},
 						success: function() {
-							alert("삭제하였습니다.");
+							alert("삭제되었습니다.");
 						},
 						error: function() {
 							alert("삭제실패");
