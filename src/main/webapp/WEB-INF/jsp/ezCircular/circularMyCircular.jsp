@@ -559,8 +559,8 @@
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
 	        	url = "/ezCircular/circularWrite.do";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
-                OpenWin.focus();     
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+                OpenWin.focus();
 	        }
 	        
 	        function CircularClose_onclick() {
@@ -635,6 +635,72 @@
 		            location.href = location.href;
 	        	}
 	        }
+	        
+	        var mail_movecopy_cross_dialogArguments = new Array();
+	        function CircularMove_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+	        	
+		        mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
+		        mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
+		        
+	        	var feature = GetOpenPosition(820, 700);
+	        	url = "/ezCircular/circularMove.do";
+	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+// 		        DivPopUpShow(320, 375, "/ezCircular/circularMove.do");
+		    }
+	        
+		    function move_onclick_Complete(moveUrl) {
+// 		        DivPopUpHidden();
+// 		        if (typeof (moveUrl) == "undefined") {
+// 		            return;
+// 		        }
+
+// 		        var oldUrl = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+// 		        var szURL = moveUrl["url"];
+
+// 		        if (moveUrl["url"] == oldUrl) {
+// 		            alert("<spring:message code='ezEmail.t466' />");
+// 		            return;
+// 		        }
+
+// 		        if (szURL.indexOf(oldUrl) == 0) {
+// 		            alert("<spring:message code='ezEmail.t467' />");
+// 		            return;
+// 		        }
+		        
+// 		        if (moveUrl["cmd"] == "MOVE") {
+// 		            var result = mail_make_folder("MOVE", oldUrl, szURL, "");
+		            
+// 		            if (result != "OK") {
+// 		            	if (result == "ALREADY_EXISTS") {
+// 		            		alert("<spring:message code='ezEmail.lhm03' />");
+// 		            	} else {
+// 		            		alert("<spring:message code='ezEmail.t468' />");
+// 		            	}
+// 		                return;
+// 		            }
+// 		        }
+// 		        else if (moveUrl["cmd"] == "COPY") {
+// 		            var result = mail_make_folder("COPY", oldUrl, szURL, "");
+		            
+// 		            if (result != "OK") {
+// 		            	if (result == "ALREADY_EXISTS") {
+// 		            		alert("<spring:message code='ezEmail.lhm03' />");
+// 		            	} else if (result.indexOf("NO COPY processing failed.") > -1) {
+// 		            		alert(strLang241);
+// 		            	} else {
+// 		            		alert("<spring:message code='ezEmail.t469' />");
+// 		            	}
+// 		            	return;
+// 		            }
+// 		        }
+		        
+// 		        LoadAddressTree(moveUrl["idx"]);
+// 		        EventCheck = true;
+		    }
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
@@ -653,7 +719,7 @@
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
 	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t58'/></span></li>
-	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t56'/></span></li>
+	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>
