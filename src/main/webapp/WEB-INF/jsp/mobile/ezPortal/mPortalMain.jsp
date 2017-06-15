@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>		
 		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
 		<script type="text/javascript" src="/js/mobile/mBoard.js"></script>
+		<script type="text/javascript" src="/js/mobile/mEMail.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>

@@ -143,7 +143,7 @@
 	            var totalLen = totalRows.length;
 	
 	            var stridlength = 0;
-	            if (RetValue != undefined && RetValue["id"] != undefined)
+	            if (RetValue != undefined && RetValue["id"] != undefined && RetValue["id"] != "")
 	                stridlength = RetValue["id"].length;
 
 	            for (var i = 0; i < stridlength; i++) {

@@ -49,43 +49,41 @@
 		}
 		</style>
 	    <script type="text/javascript">
- 	        var ShowAdjacent = "";
-	        var USE_OCS = "${useOcs}";
+//  	        var ShowAdjacent = "";
+// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
-	        //var CurPage = "${page}";
-	        //var CurPage = "${totalCount}";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
 	        var OrderCell = "";
 	        var OrderOption = "";
 	        var PreviewH_Move = false;
 	        var PreviewW_Move = false;
-	        var clickPreviweType = "";
+// 	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-	        var pMailListHeightW = 0;
-	        var pMailPreHeightW = 0;
+// 	        var pMailListHeightW = 0;
+// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
-	        var pMailListWidthH = 0;
-	        var pMailPreWidthH = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-	        var p_ListorderValue = "";
+// 	        var pMailListWidthH = 0;
+// 	        var pMailPreWidthH = 0;
+// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-	        var SmallSizeList = false;
-	        var OldSmallSizeList = false;
-	        var onclickFlag = false;
+// 	        var SmallSizeList = false;
+// 	        var OldSmallSizeList = false;
+// 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-	        var pMode = "new";
-	        var pAdminType = "n";
-	        var pUse_Editor = "${useEditor}";
-	        var pNoneActiveX = "YES";
-	        var pUse_IE11Browser = "CK";
+// 	        var pMode = "new";
+// 	        var pAdminType = "n";
+// 	        var pUse_Editor = "${useEditor}";
+// 	        var pNoneActiveX = "YES";
+// 	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
@@ -299,6 +297,16 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
+	        
+	        function chk_onselect(obj) {
+		        if (obj.checked) {
+		            strListInfo += obj.id;
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		        }
+		        
+		        listEventCheckbox = true;
+		    }
 	
 	        function makePageSelPage() {
 	            var strtext;
@@ -595,7 +603,7 @@
 						type : "POST",
 						dataType : "text",
 						async : false,
-						url : "/ezCircular/circularDeleteItem.do",
+						url : "/ezCircular/circularDeleteTemp.do",
 						data : { circularIDList : circularIDList
 								},
 						success: function() {

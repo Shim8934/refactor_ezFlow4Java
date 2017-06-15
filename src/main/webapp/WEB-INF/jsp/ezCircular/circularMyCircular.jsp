@@ -49,8 +49,8 @@
 		}
 		</style>
 	    <script type="text/javascript">
- 	        var ShowAdjacent = "";
-	        var USE_OCS = "${useOcs}";
+//  	        var ShowAdjacent = "";
+// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
 	        //var CurPage = "${page}";
@@ -64,28 +64,28 @@
 	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
-	        var clickPreviweType = "";
+// 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-	        var pMailListHeightW = 0;
-	        var pMailPreHeightW = 0;
+// 	        var pMailListHeightW = 0;
+// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
-	        var pMailListWidthH = 0;
-	        var pMailPreWidthH = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-	        var p_ListorderValue = "";
+// 	        var pMailListWidthH = 0;
+// 	        var pMailPreWidthH = 0;
+// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-	        var SmallSizeList = false;
-	        var OldSmallSizeList = false;
-	        var onclickFlag = false;
+// 	        var SmallSizeList = false;
+// 	        var OldSmallSizeList = false;
+// 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-	        var pMode = "new";
-	        var pAdminType = "n";
-	        var pUse_Editor = "${useEditor}";
-	        var pNoneActiveX = "YES";
-	        var pUse_IE11Browser = "CK";
+// 	        var pMode = "new";
+// 	        var pAdminType = "n";
+// 	        var pUse_Editor = "${useEditor}";
+// 	        var pNoneActiveX = "YES";
+// 	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
@@ -229,13 +229,10 @@
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
-	                //var pstCnt = getNodeText(pntNode);
 	                var pstCnt = "${totalCount}";
 	                totalCount = lstCnt;
-	                //var perCnt = getNodeText(perNode);
 	                var perCnt = "${config.listCnt}";
 	
-	                //listcount.value = perCnt;
 	                listcount.value = "${config.listCnt}";
 
 	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
@@ -268,18 +265,7 @@
 	                DocList = null;
 	
 	                var tempno = 0;
-	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-	                    if (CrossYN()) {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                    else {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                } */
+	                
 	                tempno = tempno + "";
 	                
 	                if (tempno.length > 10) {
@@ -329,7 +315,7 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            /* document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]"; */
+	            
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
@@ -483,56 +469,32 @@
 	            	var feature = GetOpenPosition(790, 700);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
-                
-                //클릭했을때 그아이디에 해당하는 
-//                 $.ajax({
-// 					type : "POST",
-// 					dataType : "text",
-// 					async : false,
-// 					url : "/ezCircular/confirmStatus.do",
-// 					data : { circularId 	: circularId 
-// 							},
-// 					success: function(xml){
-						
-// 					}     			
-// 				});
 	        }
 		
-		    function event_HeaderCheckBoxClick(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                SelList.GetDataRows()[i].setAttribute("selected", true);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                SelList.GetDataRows()[i].setAttribute("selected", false);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-		                strListInfo = "";
-		            }
-		        }
-		    }
+// 		    function event_HeaderCheckBoxClick(obj) {
+// 		        var SelList = new ListView();
+// 		        SelList.LoadFromID("BoardList");
+// 		        if (obj.checked) {
+// 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
+// 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+// 		                SelList.GetDataRows()[i].setAttribute("selected", true);
+// 		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
+// 		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+// 		            }
+// 		        }
+// 		        else {
+// 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
+// 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+// 		                SelList.GetDataRows()[i].setAttribute("selected", false);
+// 		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+// 		                strListInfo = "";
+// 		            }
+// 		        }
+// 		    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
-		    }
-		
-// 		    function refresh_onclick() {
-// 		    	window.location.href = "/ezcircular/newCircular.do";
-// 		    }
-		
-		    function MemberInfo_onclick(pUserID) {
-		        if (gubun == "2") return;
-		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		
 		    function window_reload() {
@@ -659,11 +621,11 @@
 						type : "POST",
 						dataType : "text",
 						async : false,
-						url : "/ezCircular/circularDeleteItem.do",
+						url : "/ezCircular/circularDeleteTemp.do",
 						data : { circularIDList : circularIDList
 								},
 						success: function() {
-							alert("<spring:message code='ezCircular.t77'/>");
+							alert("삭제되었습니다.");
 						},
 						error: function() {
 							alert("삭제실패");
