@@ -27,7 +27,7 @@
 			<div class="content" data-role="content">				
 		      	<div class="ui-body ui-body-a ui-corner-all">
 		      		<div data-role="fieldcontain">
-		        		<h1>안녕하세요. 오픈솔루션팀 차장 장진혁입니다.</h1>
+		        		<h1>오픈솔루션팀 차장 장진혁입니다.</h1>
 		        	</div>	
      				<div data-role="fieldcontain" style="font-size:12px">     				
      					보낸사람 : "장진혁"     				
