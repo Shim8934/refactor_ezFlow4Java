@@ -2,13 +2,3 @@
 
 h1{font-size:20px;}
 
-.approveArea .ui-btn-icon-notext {
-	-webkit-border-radius: .3125em;
-    border-radius: .3125em;
-    width:2.55em;
-    height:2.55em;	
-}
-
-.approveArea .controlgroup-textinput {	
-    width:30%;    
-}
