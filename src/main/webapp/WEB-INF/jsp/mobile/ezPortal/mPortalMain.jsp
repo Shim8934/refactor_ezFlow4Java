@@ -35,8 +35,8 @@
 						        <ul data-role="listview" data-theme="a" data-divider-theme="b" data-inset="true">						        	
 						            <li data-role="list-divider">받은편지함 <span class="ui-li-count">9</span></li>
 						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-envelope" style="font-size:15px"></i>&nbsp;&nbsp;오픈솔루션팀 장진혁 입니다.
+						            	<a href="/mobile/sample/sampleDetail.do?type=mailRead">
+						            		<i class="fa fa-envelope" style="font-size:15px"></i>&nbsp;&nbsp;오픈솔루션팀 차장 장진혁입니다.
 						            	</a>
 						            </li>
 						            <li>
@@ -197,50 +197,44 @@
 						    </div>						    
 						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/third.jpg')" data-iconpos="right">
 						   		<h2>자원관리</h2>
-						   		<div data-role="collapsibleset" data-theme="a" data-inset="true">	
+						   		<div data-role="collapsibleset" data-theme="a" data-inset="true">
 							   		<div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>회의실</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
+								            <li><a href="/mobile/sample/sampleResourceList.do"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>빔프로젝터</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>공용차량</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;58하3101 아반테</a></li>								            
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;58하3101 아반테</a></li>								            
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>모바일기기</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그1번 (CP041)</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그2번 (CP048)</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그3번 (CP050)</a></li>								            
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;에그1번 (CP041)</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;에그2번 (CP048)</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;에그3번 (CP050)</a></li>								            
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>콘도회원권</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067477</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067478</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067479</a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;067480</a></li>							            
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;067477</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;067478</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;067479</a></li>
+								            <li><a href="index.html"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;067480</a></li>							            
 								        </ul>	
 								    </div>
 								</div>										
