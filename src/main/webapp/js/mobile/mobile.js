@@ -192,6 +192,41 @@ function goSendMail() {
 	});
 }
 
+function goTest(val01) {    
+	if (val01 == 1) {
+		var testValue = '<li class="ui-first-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;3층 소회의실</a></li>';
+		testValue += '<li data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;3층 대회의실</a></li>';
+		testValue += '<li data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;5층 소회의실</a></li>';
+		testValue += '<li class="ui-last-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;5층 대회의실</a></li>';
+		
+		$("#testTile").html("회의실");
+	} else {
+		var testValue = '<li class="ui-first-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>';		
+		testValue += '<li class="ui-last-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>';
+		
+		$("#testTile").html("빔프로젝터");
+	}
+	$("#testListView").html(testValue);
+	
+	$("#firstPanel").animate({
+		left: '-=55px'
+	}, 350);
+	
+	$("#secondPanel").animate({
+		left: '-=240px'
+	}, 350);
+}
+
+function goTestBack() {
+	$("#secondPanel").animate({
+		left: '+=240px'
+	}, 350);
+	
+	$("#firstPanel").animate({
+		left: '0px'
+	}, 350);	
+}
+
 function logout() {
 	$.ajax({
 		type : "POST",
