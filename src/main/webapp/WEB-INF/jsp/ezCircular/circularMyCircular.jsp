@@ -642,12 +642,24 @@
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
+				
+	        	var arrList = new Array();
+		        var circularIDList = "";
+		        var i = 0;
+		        
+		        arrList = strListInfo.split(";");
+		        
+		        for (i = 0; i < arrList.length - 1; i++) {
+		        	circularIDList += arrList[i].split(",")[1] + ";";
+		        }
+
+		        arrList = null;
 	        	
 		        mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
 		        mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
 		        
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularMove.do";
+	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 // 		        DivPopUpShow(320, 375, "/ezCircular/circularMove.do");
 		    }

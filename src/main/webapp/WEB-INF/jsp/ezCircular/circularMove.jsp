@@ -63,8 +63,26 @@
         }
         
         function btn_Move_onclick() {
-        	var a = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-        	alert(a);
+//         	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+        	var circularIdList = "${circularIdList}";
+alert("##" + circularIdList);        	
+//         	$.ajax ({
+//                 type : 'POST',
+//                 dataType : 'text',
+//                 cache: false,
+//  			   	url : '/ezCircular/moveCircular.do',
+//                 data : {	
+//                 	circularIdList : circularIdList
+//                 },  
+//                 success : function(data) {	
+//                   alert("이동하였습니다.");
+//                   window.opener.window_reload();
+//              	  window.close();
+//                 },
+//                 error : function() {
+//                 	alert("에러발생")
+//                 }
+//  			});
         }
 //         function Window_Close() {
 //             if (ReturnFunction!=null) {

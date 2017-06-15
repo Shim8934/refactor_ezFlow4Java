@@ -932,7 +932,24 @@
           WHERE 
               CIRCULARID = #circularID#
           AND
+          	  MEMBERID = #memberId#
+          AND
               TENANTID = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.moveCircular" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_USER
+          SET
+              UPDATESTATUS = '3'
+          WHERE 
+              CIRCULARID = #circularId#
+          AND
+          	  MEMBERID = #memberId#
+          AND
+              TENANTID = #tenantId#
         ]]>
     </update>
   

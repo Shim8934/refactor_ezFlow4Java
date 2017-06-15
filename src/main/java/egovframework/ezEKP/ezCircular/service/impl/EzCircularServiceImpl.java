@@ -778,13 +778,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularDeleteTemp(String circularIDList, int tenantId) throws Exception {
+	public void circularDeleteTemp(String circularIDList, String memberId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String[] circularIDArr = circularIDList.split(";");
 		
 		for (int i=0; i<circularIDArr.length; i++) {
 			map.put("circularID", circularIDArr[i]);
+			map.put("memberId", memberId);
 			map.put("tenantID", tenantId);
 		
 			ezCircularDAO.tempDeleteCircular(map);
@@ -801,5 +802,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantId);
 		
 		return ezCircularDAO.getCircularTDMapList(map);
+	}
+
+	@Override
+	public void moveCircular(String circularIdList, String memberId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String[] circularIdArr = circularIdList.split(";");
+		
+		for (int i=0; i<circularIdArr.length; i++) {
+			map.put("circularId", circularIdArr[i]);
+			map.put("memberId", memberId);
+			map.put("tenantId", tenantId);
+			
+			ezCircularDAO.moveCircular(map);
+		}
 	}
 }
