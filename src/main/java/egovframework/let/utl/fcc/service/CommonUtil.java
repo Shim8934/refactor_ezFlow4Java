@@ -102,10 +102,7 @@ public class CommonUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-	
-	@Autowired
-	private EgovMessageSource egovMessageSource;
-	
+		
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
@@ -821,6 +818,16 @@ public class CommonUtil {
          return retFormat;
 	}
 
-
+	public String getPackageType(int tenantId) throws Exception {
+		String packageType;
+		
+		packageType = ezCommonService.getTenantConfig("PackageType", tenantId);
+		
+		if (packageType.equals("")) {
+			packageType = "standard";
+		}
+		
+		return packageType;
+	}
 
 }
