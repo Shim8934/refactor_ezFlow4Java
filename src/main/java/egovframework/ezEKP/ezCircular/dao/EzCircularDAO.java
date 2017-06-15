@@ -281,4 +281,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.moveCircular", map);
 	}
 
+	public void moveCircular2(Map<String, Object> map) {
+		insert("EzCircularDAO.moveCircular2", map);
+	}
+
 }

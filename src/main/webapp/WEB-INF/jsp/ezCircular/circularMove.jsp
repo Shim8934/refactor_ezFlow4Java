@@ -10,6 +10,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
     <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
     <script type="text/javascript" src="/js/ezCircular/email_tree.js"></script>
@@ -63,26 +64,27 @@
         }
         
         function btn_Move_onclick() {
-//         	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+        	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
         	var circularIdList = "${circularIdList}";
-alert("##" + circularIdList);        	
-//         	$.ajax ({
-//                 type : 'POST',
-//                 dataType : 'text',
-//                 cache: false,
-//  			   	url : '/ezCircular/moveCircular.do',
-//                 data : {	
-//                 	circularIdList : circularIdList
-//                 },  
-//                 success : function(data) {	
-//                   alert("이동하였습니다.");
-//                   window.opener.window_reload();
-//              	  window.close();
-//                 },
-//                 error : function() {
-//                 	alert("에러발생")
-//                 }
-//  			});
+        	
+        	$.ajax ({
+                type : 'POST',
+                dataType : 'text',
+                cache: false,
+ 			   	url : '/ezCircular/moveCircular.do',
+                data : {	
+                		folderId : folderId,
+                		circularIdList : circularIdList
+                },  
+                success : function(data) {	
+                  alert("이동하였습니다.");
+                  window.opener.window_reload();
+             	  window.close();
+                },
+                error : function() {
+                	alert("에러발생")
+                }
+ 			});
         }
 //         function Window_Close() {
 //             if (ReturnFunction!=null) {

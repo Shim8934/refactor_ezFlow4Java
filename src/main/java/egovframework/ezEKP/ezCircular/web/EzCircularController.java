@@ -2118,10 +2118,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 
 		String circularIdList = request.getParameter("circularIdList");
+		String folderId = request.getParameter("folderId");
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
 			
-		ezCircularService.moveCircular(circularIdList, memberId, tenantId);
+		ezCircularService.moveCircular(folderId, circularIdList, memberId, tenantId);
 		
 		logger.debug("moveCircular ended");
 	}
