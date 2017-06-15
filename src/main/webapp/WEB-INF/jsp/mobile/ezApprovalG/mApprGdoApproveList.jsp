@@ -30,7 +30,7 @@
 				<ul data-role="listview" data-inset="false" data-theme="a" id="apprList">
 					<c:forEach var="docList" items="${docList}" varStatus="status">
 					    <li>
-					    	<a href="/mobile/ezApprovalG/doApprovalGDetail.do?docID=" + ${docList.docID}>					    		
+					    	<a href="/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=${docList.docID}">					    		
 						    	<h2 style="font-size:12px">${docList.writerName}</h2>
 						    	<p class="ui-li-aside">${docList.startDate}</p>
 						    	<p>${docList.docTitle}</p>						    	

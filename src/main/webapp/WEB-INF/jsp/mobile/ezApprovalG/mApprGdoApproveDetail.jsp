@@ -30,13 +30,36 @@
 		      	<div class="ui-body ui-body-a ui-corner-all">
 		      		<div data-role="fieldcontain">
 		        		<h1>야근수당</h1>
-		        	</div>	
-		      		<div data-role="fieldcontain">
-		      			<div class="ui-grid-a">
-						    <div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:60px">Block A</div></div>
-						    <div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:60px">Block B</div></div>
-						</div><!-- /grid-a -->
-		        	</div>	
+		        		<br/>
+		        		<h5>지정석 사원(오픈솔루션팀)</h5>
+		        	</div>
+		        	<c:forEach var="aprLineList" items="${aprLineList}" varStatus="status">
+			        	<div data-role="fieldcontain">
+			        		<div style="float:left;">
+				        		<img src="/images/OrganTree/porson_noimg.gif">
+			        		</div>
+			        		<div style="padding-top:12px; float:left;">
+				        		<h4>${aprLineList.aprMemberName} ${aprLineList.aprMemberJobTitle}(${aprLineList.aprMemberDeptName})</h4><br/>
+				        		<h4>${aprLineList.receivedDate}</h4>
+				        	</div>
+			        		<div style="padding-top:30px; float:right;">
+			        			<c:if test="${aprLineList.aprState == '001'}">
+			        				대기
+			        			</c:if>
+			        			<c:if test="${aprLineList.aprState == '002'}">
+			        				진행
+			        			</c:if>
+			        			<c:if test="${aprLineList.aprState == '003'}">
+			        				결재
+			        			</c:if>
+				        		
+				        	</div>
+			        	</div>	
+		        	</c:forEach>
+		        	<br/><br/><br/><br/>
+		        	<div data-role="fieldcontain">
+		        		<h1 style="text-align: center">본문</h1>
+		        	</div>
 		      	</div>	
 		      	<div class="writeButton" onclick="alert('write!')"></div>										
      		</div>

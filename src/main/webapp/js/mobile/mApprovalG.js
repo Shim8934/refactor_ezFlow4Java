@@ -26,6 +26,14 @@ function searchApprove() {
 	} 
 }
 
+function approveList() {
+	if ($("#approveList").css("display") == "none") {
+		$("#approveList").slideDown(250);
+	} else {	
+		$("#approveList").slideUp(250);
+	} 
+}
+
 //검색버튼 누른후 리스트 가져오기
 function searchApproveList() {
 	var searchText = $("#searchApprroveInput").val();
@@ -44,7 +52,7 @@ function searchApproveList() {
 			if (data.docList.length > 0) {
 				$.each(data.docList, function(key, value) {
 					list += "<li class='ui-first-child'>";
-					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/doApprovalGDetail.do?docID=" + value.docID + "' >";					    		
+					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=" + value.docID + "' >";					    		
 					list +=	"  		<h2 style='font-size:12px'>" + value.writerName + "</h2>";
 					list += "  		<p class='ui-li-aside'>" + value.startDate + "</p>";
 					list +=	"  		<p>" + value.docTitle + "</p>";						    	
@@ -68,5 +76,16 @@ function searchApproveList() {
 			
 		}
 	});
-	
+}
+
+function backApproveList() {
+	window.location.href = "/mobile/ezApprovalG/doApproveList.do";
+}
+
+function showOriginal() {
+	alert("원문보기");
+}
+
+function showComment() {
+	alert("의견보기");
 }

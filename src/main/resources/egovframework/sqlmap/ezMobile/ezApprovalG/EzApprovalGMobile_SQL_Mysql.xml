@@ -94,9 +94,9 @@
             AND
             	TBL_APRLINEINFO.COMPANYID = TBL_EXPAPRLINE.COMPANYID
             WHERE 
-            	TBL_APRLINEINFO.DOCID = #v_DOCID#  
+            	TBL_APRLINEINFO.DOCID = #docID#  
             AND
-            	TBL_APRLINEINFO.TENANT_ID = #v_TENANTID#   
+            	TBL_APRLINEINFO.TENANT_ID = #tenantID#   
             AND
             	TBL_APRLINEINFO.COMPANYID = #companyID#
             ORDER BY 

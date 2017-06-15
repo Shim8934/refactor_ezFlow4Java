@@ -128,7 +128,7 @@
 						            	</a>
 						            </li>						            
 						            <li data-icon="false">
-						            	<a href="#" style="text-align:center">
+						            	<a href="/mobile/ezApprovalG/doApproveList.do" style="text-align:center">
 						            		. . .
 						            	</a>
 						            </li>						            						          					            

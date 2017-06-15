@@ -18,23 +18,24 @@
 			<ul style="background-color: white;color:black">
 				<li style="height:40px;border-bottom:1px solid #f2f2f2">							
 					<div style="margin-left:20px;float:left;padding-top:10px">
-						<i class="fa fa-long-arrow-left" style="font-size:24px;"></i>
+						<i class="fa fa-long-arrow-left" style="font-size:24px; cursor: pointer;" onclick="backApproveList()"></i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
+						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showComment()"></i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-file-text-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
+						<i class="fa fa-file-text-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showOriginal()"></i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-pencil" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="searchApprove()"></i>
+						<i class="fa fa-pencil" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="approveList()"></i>
 					</div>
 				</li>
-				<li style="height:60px;border-bottom:1px solid #f2f2f2;display:none" id="searchApprove">
+				<li style="height:30px;border-bottom:1px solid #f2f2f2;display:none" id="approveList">
 					<div style="padding-left:20px">
-						<div class="searchArea">
-							<input type="text" data-wrapper-class="controlgroup-textinput ui-btn" id="searchApprroveInput">
-							<a class="ui-btn ui-icon-search ui-btn-icon-notext ui-btn-inline" href="javascript:searchApproveList()">No text</a>
+						<div class="approveArea">
+							<div style="float:left;">
+								<i class="fa fa-long-arrow-left" style="font-size:24px; cursor: pointer;"></i>
+							</div>
 						</div>
 					</div>
 				</li>
