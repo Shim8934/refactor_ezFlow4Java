@@ -55,14 +55,8 @@
 		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	    	}
 		    
-		    window.onunload = function () {
-		    }
-		    
 		    function DocumentComplete() {
 				message.SetEditorContent(sigBody.innerHTML);
-	    	}
-
-	    	function FieldsAvailable() {
 	    	}
 
 		    function keyword_onkeydown() {
@@ -72,24 +66,95 @@
 		        return true;
 		    }
 	    	
+		    function btn_Save() {
+		    	//회람저장 눌렀을 시
+	        	var content = message.GetEditorContent();
+				var option = 0;
+				var oldCircularId = "${circularID}";
+
+				if ($("#title").val() == "") {
+					alert("<spring:message code='ezCircular.t52'/>");
+					return;
+				}
+				
+				if ($("#receiverlist").text() == "") {
+	    			alert("<spring:message code='ezCircular.t53'/>")
+	    			return;
+	    		}
+				
+				//댓글기능 사용할때
+				$(':checkbox[id=option]:checked').each(function(){
+					option = 1;	
+				});
+				
+				//메일공지 사용할때
+				$(':checkbox[id=AllDay]:checked').each(function(){
+					option = 2;	
+				});
+				
+				//댓글기능, 메일공지 둘 다 사용할 때
+				if ($(':checkbox[name=chkList]:checked').length == 2) {
+					option = 3;
+				}
+				
+				//파일 첨부된 목록 가져오기
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				var fileList = "";
+				for (var i = 0; i < filelist.length - 1; i++) {	    
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "fileinfo");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+            		}
+				}
+				
+	    		$.ajax ({
+	 			   	url : '/ezCircular/saveCircular.do',
+	                type : 'POST',
+	                dataType : 'text',
+	                data : {	title : document.getElementById("title").value,
+	                			importance : document.getElementById("importance").value,
+	                			option : option,
+	                			receiverList : document.getElementById("receiverlist").innerHTML,
+	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
+	                			receiverID : document.getElementById("receiverID").innerHTML,
+	                			content : content,
+	                			fileList : fileList,
+	                			oldCircularId : oldCircularId
+	                },  
+	                cache: false,
+	                success: function(data) {
+	                  deleteCircularTemp();	
+	                  alert("회람을 저장하였습니다. \n작성한 회람판에서 확인하실 수 있습니다.");
+	                  window.opener.window_reload();
+	             	  window.close();
+	                }
+	 			});
+		    }
+		    
+		    function deleteCircularTemp() {
+		    	
+		    }
+		    
 	    	function btn_Modify() {
 		    	//회람저장 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
 				
 				//댓글기능 사용할때
-				$(':checkbox[id=optionRefly]:checked').each(function(){
-					option = 0;	
+				$(':checkbox[id=option]:checked').each(function(){
+					option = 1;	
 				});
 				
 				//메일공지 사용할때
-				$(':checkbox[id=optionMail]:checked').each(function(){
-					option = 1;	
+				$(':checkbox[id=AllDay]:checked').each(function(){
+					option = 2;	
 				});
 				
 				//댓글기능, 메일공지 둘 다 사용할 때
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
-					option = 2;
+					option = 3;
 				}
 				
 				//파일 첨부된 목록 가져오기
@@ -142,8 +207,6 @@
 	                    alert(strLang6);
 	                    return;
 	                }
-	                /* if (document.getElementById('mode').value == "PHOTO")
-	                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
 	            }
 	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
 	                extFlag = true;
@@ -165,7 +228,6 @@
 	    }
 		</script>
 	</head>
-	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -206,17 +268,21 @@
 	       					<th> 옵션</th>
 	       					<td style="width:160px" colspan="3">
 								<c:choose>
-		                			<c:when test="${result.option eq '0'}">
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked/>&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" />&nbsp;메일공지 사용
-		                			</c:when>
 		                			<c:when test="${result.option eq '1'}">
-		                			<input type="checkbox" id="optionRefly" name="chkList" " />&nbsp;댓글기능 사용&nbsp;&nbsp;
-		                				<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList" checked/>댓글기능 사용
+		                				<input type="checkbox" id="AllDay" name="chkList"/>메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '2'}">
+		                				<input type="checkbox" id="option" name="chkList"/>댓글기능 사용
+		                				<input type="checkbox" id="AllDay" name="chkList" checked/>메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '3'}">
+		                				<input type="checkbox" id="option" name="chkList" checked/>댓글기능 사용
+										<input type="checkbox" id="AllDay" name="chkList" checked/>메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="optionRefly" name="chkList" checked />&nbsp;댓글기능 사용&nbsp;&nbsp;
-										<input type="checkbox" id="optionMail" name="chkList" checked />&nbsp;메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList"/>댓글기능 사용
+										<input type="checkbox" id="AllDay" name="chkList"/>메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>   									
 	         				</td>
@@ -242,7 +308,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-					<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>

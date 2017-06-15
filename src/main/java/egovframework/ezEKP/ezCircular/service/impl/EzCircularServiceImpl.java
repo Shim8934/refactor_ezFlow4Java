@@ -268,7 +268,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		List<CircularListVO> list = getCircularUserList(circularID, tenantID);
 		
-		logger.debug("receiverLength : " + receiverLength);
+		logger.debug("@@receiverLength : " + receiverLength);
 		logger.debug("listSize : " + list.size());
 		
 		//회람자 삭제 후 등록
@@ -310,13 +310,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularDeleteItem(String[] circularIDList, int tenantID) throws Exception {
+	public void circularDeleteItem(String circularIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		for (int i=0; i<circularIDList.length; i++) {
-			map.put("circularIDList", circularIDList[i]);
+		String[] circularIDArr = circularIDList.split(";");
+		
+		for (int i=0; i<circularIDArr.length; i++) {
+			map.put("circularID", circularIDArr[i]);
 			map.put("tenantID", tenantID);
-			
+		
 			ezCircularDAO.deleteCircular(map);
 			ezCircularDAO.deleteCircularUser(map);
 			ezCircularDAO.deleteCircularAttach(map);			
@@ -740,5 +742,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantId);
 		
 		ezCircularDAO.circularDeleteFolder(map);
+	}
+
+	@Override
+	public String getFolderInfo(int folderId, String memberId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderId", folderId);
+		map.put("memberId", memberId);
+		map.put("tenantId", tenantId);
+		
+		return ezCircularDAO.getFolderInfo(map);
 	}
 }

@@ -66,17 +66,17 @@
 				
 				//댓글기능 사용할때
 				$(':checkbox[id=optionRefly]:checked').each(function(){
-					option = 0;	
+					option = 1;	
 				});
 				
 				//메일공지 사용할때
 				$(':checkbox[id=optionMail]:checked').each(function(){
-					option = 1;	
+					option = 2;	
 				});
 				
 				//댓글기능, 메일공지 둘 다 사용할 때
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
-					option = 2;
+					option = 3;
 				}
 				
 				//파일 첨부된 목록 가져오기
@@ -121,23 +121,27 @@
 					
 					//댓글기능 사용할때
 					$(':checkbox[id=optionRefly]:checked').each(function(){
-						option = 0;	
+						option = 1;	
 					});
 					
 					//메일공지 사용할때
 					$(':checkbox[id=optionMail]:checked').each(function(){
-						option = 1;	
+						option = 2;	
 					});
 					
 					//댓글기능, 메일공지 둘 다 사용할 때
 					if ($(':checkbox[name=chkList]:checked').length == 2) {
-						option = 2;
+						option = 3;
 					}
 					
 					//파일 첨부된 목록 가져오기
 					var listtable = dadiframe.document.getElementById("filelist");
 					var filelist = GetChildNodes(listtable);
 					var fileList = "";
+					var receiverList = "";
+					var receiverList2 = "";
+					var receiverID = "";
+					
 					for (var i = 0; i < filelist.length - 1; i++) {	    
 						if (i == 0) {
 							fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -209,7 +213,6 @@
 	    }
 		</script>
 	</head>
-	<xmp id="sigBody" style="display: none;"></xmp>
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -274,7 +277,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-		  			<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+		  			<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>

@@ -86,7 +86,7 @@ public interface EzCircularService {
 	
 	public void confirmStatus(int circularID, String memberID, int tenantID) throws Exception;
 	
-	public void circularDeleteItem(String[] circularIDList,int tenantID) throws Exception;
+	public void circularDeleteItem(String circularIDList,int tenantID) throws Exception;
 	
 	public void deleteCircularUser(int circularID,int tenantID) throws Exception;
 
@@ -105,5 +105,7 @@ public interface EzCircularService {
 	public void circularDeleteFolder(String deleteFolderId, String memberId, int tenantId) throws Exception;
 
 	public void circularFolderModify(String folderId, String folderName, String memberId, String regDate, int tenantId) throws Exception;
+
+	public String getFolderInfo(int folderId, String memberId, int tenantId) throws Exception;
 
 }

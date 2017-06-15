@@ -213,6 +213,10 @@
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;3층 대회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 소회의실</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;5층 대회의실</a></li>
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
@@ -227,6 +231,8 @@
 								            <li><a href="#" onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}" ><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;세미나관련<span class="ui-li-count">62</span></a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
 								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>								            
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
@@ -238,10 +244,9 @@
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">
 								   		<h2>모바일기기</h2>
 								        <ul data-role="listview" data-inset="true">
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;표준모듈 <span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;폼프로세서2016<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;폼프로세서2015<span class="ui-li-count">12</span></a></li>
-								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;ezRendition<span class="ui-li-count">12</span></a></li>								            
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그1번 (CP041)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그2번 (CP048)</a></li>
+								            <li><a href="index.html"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;에그3번 (CP050)</a></li>								            
 								        </ul>	
 								    </div>
 								    <div data-role="collapsible" class="animateMe1" style="" data-iconpos="right">

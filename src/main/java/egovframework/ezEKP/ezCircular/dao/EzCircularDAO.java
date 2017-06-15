@@ -113,6 +113,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public String getCircularConfig(Map<String, Object> map) throws Exception {
 		return (String) select("EzCircularDAO.getCircularConfig", map);
 	}
+
+	public String getFolderInfo(Map<String, Object> map) {
+		return (String) select("EzCircularDAO.getFolderInfo", map);
+	}
 	
 	public int getCircularListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getCircularListCount", map);

@@ -11,7 +11,7 @@
 		
 		<script type="text/javascript">
 		function mEnvironment() {
-			$.mobile.changePage("/mobile/ezPortal/environmentMain.do", {
+			$.mobile.changePage("/mobile/ezOption/ezOptionMain.do", {
 				type: "post",
 				transition: "pop",
 				changeHash: true
@@ -20,7 +20,7 @@
 		</script>
 	</head>
 	<body>		
-		<header data-role="header" data-position="fixed">		
+		<header data-role="header" data-position="fixed">
 			<h1>KAONI</h1>							
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>			
 		</header>

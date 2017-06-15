@@ -315,14 +315,4 @@ public class MPortalController extends EgovFileMngUtil {
 		
 		return "/mobile/ezPortal/mPortalMain";
 	}	
-	
-	/**
-	 * 모바일 포탈 메인 화면 호출 함수
-	 */
-	@RequestMapping(value = "/mobile/ezPortal/environmentMain.do")
-	public String enviromentMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("enviromentMain Start");
-		logger.debug("enviromentMain End");
-		return "/mobile/environment/mEnvironmentMain";
-	}
 }
