@@ -1,4 +1,4 @@
-function boardItemList(obj) {	
+function boardItemList(obj) {
 	location.href = '/mobile/ezBoard/boardItemList.do?type=' + $(obj).attr("type") + '&boardID=' + $(obj).attr("boardID");
 }
 
