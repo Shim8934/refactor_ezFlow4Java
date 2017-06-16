@@ -3116,15 +3116,24 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 상단 화면 호출 함수
 	 */
+	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/top.do")
 	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("top started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String pakageType = "";
+		
+		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
+			pakageType = commonUtil.PT_BASIC;
+		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
+			pakageType = commonUtil.PT_STANDARD;
+		}
 		
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
-
+		model.addAttribute("pakageType", pakageType);
+		
 		logger.debug("top ended");
 		return "/ezPortal/help/top";
 	}
@@ -3284,13 +3293,22 @@ public class EzPortalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 - 도움말 leftEnv 화면 호출 함수
 	 */
+	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String pakageType = "";
+		
+		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
+			pakageType = commonUtil.PT_BASIC;
+		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
+			pakageType = commonUtil.PT_STANDARD;
+		}
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("pakageType", pakageType);
 
 		logger.debug("leftEnv ended");
 		return "/ezPortal/help/leftEnv";
