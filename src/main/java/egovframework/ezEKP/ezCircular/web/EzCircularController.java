@@ -1755,8 +1755,10 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularIDList = request.getParameter("circularIDList");
+		String memberId = userInfo.getId();
+		int tenantId = userInfo.getTenantId(); 
 		
-		ezCircularService.circularDeleteTemp(circularIDList, userInfo.getTenantId());
+		ezCircularService.circularDeleteTemp(circularIDList, memberId, tenantId);
 
 		logger.debug("circularDeleteTemp ended");
 	}
@@ -2086,5 +2088,42 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularMyCircular ended");
 		
 		return "/ezCircular/circularFolderDoc";
+	}
+	
+	/**
+	 * 회람판 이동 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezCircular/circularMove.do")
+	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("circularMove started");
+		
+		String circularIdList = request.getParameter("circularIdList");
+		
+		model.addAttribute("circularIdList", circularIdList);
+		
+		logger.debug("circularMove ended");
+		
+		return "/ezCircular/circularMove";
+	}
+	
+	/**
+	 * 회람판 이동 함수 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/moveCircular.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void moveCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
+		
+		logger.debug("moveCircular started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String circularIdList = request.getParameter("circularIdList");
+		String folderId = request.getParameter("folderId");
+		String memberId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+			
+		ezCircularService.moveCircular(folderId, circularIdList, memberId, tenantId);
+		
+		logger.debug("moveCircular ended");
 	}
 }

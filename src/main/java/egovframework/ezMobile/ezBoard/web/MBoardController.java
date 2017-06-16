@@ -22,7 +22,6 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
-import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -58,34 +57,14 @@ public class MBoardController {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
-	//{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF} 새 게시물
 	final public int mobileListSize = 20;
-	final public int mobileCollapseSize = 5;
-	
-	/**
-	 * 모바일 게시판 즐겨찾기게시판목록 조회
-	 * 타입에 따라
-	 * 1. 포탈일땐 환경설정값 참조해서 환경설정갯수만큼만 조회 + more
-	 * 2. 분류별 목록보기에서는 전체 목록조회
-	 * 
-	 * 호출 <- 포탈, 메뉴바
-	 */
-	@RequestMapping("/mobile/ezBoard/getFavoriteBoardList.do")
-	public String getFavoriteBoardList() throws Exception {
-		logger.debug("getFavoriteBoardList started.");
-		
-		logger.debug("getFavoriteBoardList ended.");
-		
-		return "";
-	}
+	final public String newBoardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
 	
 	/**
 	 * 모바일 게시판 게시판그룹목록 조회
-	 * 타입에따라
-	 * 1. 포탈일땐 환경설정값 참조해서 환경설정갯수만큼만 조회 + more
-	 * 2. 분류별 목록보기에서는 전체 목록조회
-	 * getBoardTree 참조  (권한체크, dept표시)
-	 * 호출 <- 포탈, 분류별하위게시판목록
+	 * 1. 즐겨찾기 게시판목록
+	 * 2. 분류별 게시판목록
+	 * getBoardTree 참조  (권한체크)
 	 */
 	@RequestMapping("/mobile/ezBoard/getBoardList.do")
 	public String getBoardList() throws Exception {
@@ -102,7 +81,7 @@ public class MBoardController {
 	@RequestMapping(value = "/mobile/ezBoard/boardItemList.do")
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, MBoardInfoVO mBoardInfoVO, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("boardItemList started.");
-		logger.debug("type = " + mBoardInfoVO.getType() + " || boardID = " + mBoardInfoVO.getBoardID());
+		logger.debug("boardID = " + mBoardInfoVO.getBoardID() + " || type = " + mBoardInfoVO.getType());
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -146,17 +125,16 @@ public class MBoardController {
 		//게시판정보
 		mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), primary, tenantID);
 		mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
-		/*//리스트 헤더
-		List<MBoardListHeaderVO> headerList = mBoardService.getListHeader(mBoardInfoVO, userInfo.getLang(), tenantID);*/
+		
 		//리스트
 		List<MBoardItemVO> mBoardItemList = null;
 		
-		if (mBoardInfoVO.getType().equals("boardItemList")) {
+		if (mBoardInfoVO.getType().equals("newBoardItemList")) {
+			//새 게시물리스트
+			mBoardItemList = mBoardService.getNewBoarditemList(mBoardInfoVO, userInfo);
+		} else {
 			//해당게시판 글목록
 			mBoardItemList = mBoardService.getBoardItemList(mBoardInfoVO, userInfo);
-		} else if (mBoardInfoVO.getType().equals("favorateBoardItemList")) {
-			//새 게시물리스트
-			mBoardItemList = mBoardService.getFavorateBoarditemList(mBoardInfoVO, userInfo);
 		}
 		
 //		if (boardType.equals("4")) { // 썸네일 

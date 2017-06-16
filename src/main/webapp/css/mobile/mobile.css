@@ -5,7 +5,7 @@ body{font-family:NanumGothic,Apple Gothic,Malgun Gothic,Gulim,Arial,Helvetica, S
 div, p ,span{word-break:break-all; font-size:14px;}
 h1{font-size:12px;}
 
-#address{position:relative; top:0px; margin:0px; height:31px; padding:6px 0px 0px 10px; background:black; color:white}
+#address{position:relative; top:0px; margin:0px; height:31px; padding:6px 0px 0px 10px; background:rgb(31, 63, 105); color:white}
 
 .loginbody:after {
     content : "";
@@ -18,6 +18,19 @@ h1{font-size:12px;}
     height: 100%;
     opacity : 0.2;
     z-index: -1;
+}
+
+.leftPanel:after {
+    content : "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background:url(/images/mobile/leftPanel4.jpg) repeat;
+    width: 100%;
+    height: 100%;
+    opacity : 0.2;
+    z-index: -1;    
 }
 
 /* section:after {
@@ -73,7 +86,7 @@ li a .ui-checkbox label.ui-btn {
 }
 .writeButton {	
 	position: fixed;
-	z-index:10;		
+	z-index:100;		
 	width:100%;
 	height:50px;
 	cursor:pointer;
@@ -100,3 +113,14 @@ li a .ui-checkbox label.ui-btn {
 .ui-li-divider {
 	background-color: rgb(31, 63, 105);
 }
+
+.ui-page-theme-b .ui-btn, html .ui-bar-b .ui-btn, html .ui-body-b .ui-btn, html body .ui-group-theme-b .ui-btn, html head + body .ui-btn-b.ui-btn, .ui-page-theme-b .ui-btn:visited, html .ui-bar-b .ui-btn:visited, html .ui-body-b .ui-btn:visited, html body .ui-group-theme-b .ui-btn:visited, html head + body .ui-btn-b.ui-btn:visited {
+	background-color: rgb(31, 63, 105);
+	border-color: rgb(31, 63, 105);
+}
+
+.ui-page-theme-b .ui-btn:hover, html .ui-bar-b .ui-btn:hover, html .ui-body-b .ui-btn:hover, html body .ui-group-theme-b .ui-btn:hover, html head + body .ui-btn-b.ui-btn:hover {
+	background-color: rgb(31, 63, 105);
+	border-color: rgb(31, 63, 105);
+} 
+

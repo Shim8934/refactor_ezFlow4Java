@@ -26,7 +26,7 @@ public class MBoardServiceImpl implements MBoardService {
 	private static final Logger logger = LoggerFactory.getLogger(MBoardServiceImpl.class);
 	
 	final public int mobileListSize = 20;
-	final public int mobileCollapseSize = 5;
+	final public String newBoardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -50,7 +50,6 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		
 		//모바일은 확장컬럼미사용으로 개발
-		
 		List<MBoardListHeaderVO> list = mBoardDAO.getListHeader(map);
 		
 		logger.debug("getListHeader ended.");
@@ -320,34 +319,52 @@ public class MBoardServiceImpl implements MBoardService {
 	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
 		logger.debug("getBoardItemList started.");
 		
+		String boardID = mBoardInfoVO.getBoardID();
+		String gubun = mBoardInfoVO.getGuBun();
+		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
+		String userID = userInfo.getId();
+		String offset = userInfo.getOffset();
+		int tenantID = userInfo.getTenantId();
+		
 		/** 공지사항 카운트 및 리스트 */
-//		Integer noticeCount = 0;
-//		if (noticeCount != null) {
-//			noticeCount = ezBoardService.getNoticePostItemCount(mBoardInfoVO);
-//		}
+		Integer noticeCount = 0;
+		if (((gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun).equals("1")) {
+			noticeCount = getNoticePostItemListCount(boardID, userID, gubun, tenantID);
+		}
 		
-//		List<MBoardItemVO> mBoardNoticeItemList = ezBoardService.getNoticePostItem(mBoardInfoVO, mobileListSize);
-		
+		List<MBoardItemVO> mBoardNoticeItemList = getNoticePostItemList(boardID, userID, gubun, page, tenantID, offset);
+        
 		/** 전체 리스트 카운트 및 리스트 */
-//		int boardCount = ezBoardService.getBrdTotalItemCount(mBoardInfoVO);
-		List<MBoardItemVO> mBoatdItemList = getBoarditemList(mBoardInfoVO.getBoardID(), userInfo.getId(), 1, 20, 20, userInfo.getTenantId());
+		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
+        int endRow = (mobileListSize * page) - noticeCount;
+        
+        if (startRow <= 0) {
+        	startRow = 1;
+        }
+        
+		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
+		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
 		
-		logger.debug("mBoatdItemListSize = " + mBoatdItemList.size());
+		for (MBoardItemVO vo : mBoardNoticeItemList) {
+			mBoardItemList.add(0, vo);
+		}
+		
 		logger.debug("getBoardItemList ended.");
 		
-		return mBoatdItemList;
+		return mBoardItemList;
 	}
 
+
 	@Override
-	public List<MBoardItemVO> getFavorateBoarditemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
+	public List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
 		return null;
 	}
 
 	//게시판 정보조회 -> MBoardInfoVO.parentBoardID 불필요시 추후 삭제
 	@Override
 	public MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
-		mBoardInfoVO.setSs_board_maxRows(20);
-		mBoardInfoVO.setSs_searchBoard_maxRows(20);
+		mBoardInfoVO.setSs_board_maxRows(mobileListSize);
+		mBoardInfoVO.setSs_searchBoard_maxRows(mobileListSize);
 		
 		String deptPath = userInfo.getDeptPathCode();
 	    String deptPathOrgan="";
@@ -427,7 +444,8 @@ public class MBoardServiceImpl implements MBoardService {
 
 	@Override
 	public MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception {
-		logger.debug("getBoardProperty started. boardID = " + boardID + " || primary = " + primary + " || tenantID = " + tenantID);
+		logger.debug("getBoardProperty started.");
+		logger.debug("boardID = " + boardID + " || primary = " + primary + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardID", boardID);
@@ -437,7 +455,7 @@ public class MBoardServiceImpl implements MBoardService {
 		MBoardInfoVO vo = mBoardDAO.getBoardProperty(map);
 		
 		if (vo.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-			vo.setType("favorateBoardItemList");
+			vo.setType("newBoardItemList");
 		} else {
 			vo.setType("boardItemList");
 		}
@@ -447,7 +465,6 @@ public class MBoardServiceImpl implements MBoardService {
 		return vo;
 	}
 
-	//게시판 권한체크
 	private MBoardInfoVO getACL(MBoardInfoVO vo, String userDeptPath, int tenantID) throws Exception {
 		logger.debug("getACL started.");
 		logger.debug("boardID = " + vo.getBoardID() + " || userDeptPath = " + userDeptPath + " || tenantID = " + tenantID);
@@ -464,18 +481,109 @@ public class MBoardServiceImpl implements MBoardService {
 		return vo;
 	}
 	
-	
-	private List<MBoardItemVO> getBoarditemList(String boardID, String userID, int startRow, int endRow, int boardItemListCount, int tenantID) throws Exception {
+	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset) throws Exception {
+		logger.debug("getBoarditemList started.");
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || startRow = " + startRow + " || endRow = " + endRow + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardID", boardID);
 		map.put("userID", userID);
+		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
+		//Oracle
 		map.put("startRow", startRow);
 		map.put("endRow", endRow);
+		//Maria
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantID", tenantID);
+		
+		List<MBoardItemVO> list = mBoardDAO.getBoardItemList(map);
+		
+		logger.debug("getBoarditemList ended.");
+		
+		return list;
+	}
+	
+	private List<MBoardItemVO> getNoticePostItemList(String boardID, String userID, String gubun, int pageNum, int tenantID, String offset) throws Exception {
+		logger.debug("getNoticePostItemList started");
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " pageNum = " + pageNum + " || tenantID = " + tenantID);
+		
+		int startRow = ((pageNum - 1) * mobileListSize) + 1;
+	 	int endRow = (pageNum * mobileListSize); 
+				
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		//Oracle
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		//Maria
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantID", tenantID);
+		
+    	String apprFlag = mBoardDAO.getBoardApprFlag(map);
+		
+		if (apprFlag != null && apprFlag.equals("Y")) {
+			map.put("apprFlag", apprFlag);
+		}
+		
+		List<MBoardItemVO> list = mBoardDAO.getNoticePostItemList(map);
+		
+		logger.debug("getNoticePostItemList ended.");
+		
+		return list;
+	}
+	
+	private int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
+		logger.debug("getBoardItemListCount started.");
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
-		List<MBoardItemVO> list = mBoardDAO.getBoarditemList(map);
+		String apprFlag = mBoardDAO.getBoardApprFlag(map);
 		
-		return list;
+		if (apprFlag != null && apprFlag.equals("Y")) {
+			map.put("apprFlag", apprFlag);
+		}
+		
+		int result = mBoardDAO.getBoardItemListCount(map);
+		
+		logger.debug("getBoardItemListCount ended. result = " + result);
+		
+		return result;
+	}
+	
+	private int getNoticePostItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
+		logger.debug("getNoticePostItemListCount started.");
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantID);
+		
+		String apprFlag = mBoardDAO.getBoardApprFlag(map);
+		
+		if (apprFlag != null && apprFlag.equals("Y")) {
+			map.put("apprFlag", apprFlag);
+		}
+		
+		int result = mBoardDAO.getNoticePostItemListCount(map);
+		
+		logger.debug("getNoticePostItemListCount ended. result = " + result);
+		
+		return result;
 	}
 }

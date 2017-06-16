@@ -114,8 +114,10 @@ public interface EzCircularService {
 
 	public List<CircularListVO> getCircularTDList(String memberId, int startRow, int endRow, int tenantId) throws Exception;
 
-	public void circularDeleteTemp(String circularIDList, int tenantId) throws Exception;
+	public void circularDeleteTemp(String circularIDList, String memberId, int tenantId) throws Exception;
 
 	public List<HashMap<String, Object>> getCircularTDMapList(String memberId, int startRow, int endRow, int tenantId) throws Exception;
+
+	public void moveCircular(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
 }

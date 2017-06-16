@@ -1,19 +1,29 @@
 package egovframework.ezMobile.ezApprovalG.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MApprovalGDAO")
 public class MApprovalGDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
-	public List<MApprovalGDocInfoVO> getDoApproveList(LoginVO userInfo) throws Exception {
-		return (List<MApprovalGDocInfoVO>) list("MApprovalG.getDoApproveList", userInfo);
+	public List<MApprovalGDocInfoVO> getDoApproveList(Map<String, Object> map) throws Exception {
+		return (List<MApprovalGDocInfoVO>) list("MApprovalG.getDoApproveList", map);
+	}
+
+	public int getDoApproveListCount(Map<String, Object> map) throws Exception {
+		return (int) select("MApprovalG.getDoApproveListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MApprovalGAprLineInfoVO> getAprLineInfo(Map<String, Object> map) throws Exception {
+		return (List<MApprovalGAprLineInfoVO>) list("MApprovalG.getAprLineInfo", map);
 	}
 
 }

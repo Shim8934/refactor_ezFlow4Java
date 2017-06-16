@@ -737,6 +737,16 @@
                 ( #folderName#, #memberId#, #regDate#, #tenantId# )
         ]]>
     </insert>
+    
+    <insert id="EzCircularDAO.moveCircular2" parameterClass="map">
+        <![CDATA[
+            INSERT INTO 
+                TBL_CIRCULAR_LINK
+                ( CIRCULARFOLDERID, CIRCULARID, MEMBERID, TENANTID ) 
+            VALUES 
+                ( #folderId#, #circularId#, #memberId#, #tenantId# )
+        ]]>
+    </insert>
   
     <update id="EzCircularDAO.modifyCircular" parameterClass="Map">
         <![CDATA[
@@ -932,7 +942,24 @@
           WHERE 
               CIRCULARID = #circularID#
           AND
+          	  MEMBERID = #memberId#
+          AND
               TENANTID = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.moveCircular" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_USER
+          SET
+              UPDATESTATUS = '3'
+          WHERE 
+              CIRCULARID = (SELECT CIRCULARID
+              				FROM TBL_CIRCULAR
+              				WHERE CIRCULARID = #circularId#) 
+          AND
+              TENANTID = #tenantId#
         ]]>
     </update>
   

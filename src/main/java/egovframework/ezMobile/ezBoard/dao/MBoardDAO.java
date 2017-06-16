@@ -18,8 +18,13 @@ public class MBoardDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MBoardItemVO> getBoarditemList(Map<String, Object> map) throws Exception {
-		return (List<MBoardItemVO>) list("MBoardDAO.getBoarditemList", map);
+	public List<MBoardItemVO> getBoardItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardItemVO>) list("MBoardDAO.getBoardItemList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MBoardItemVO> getNoticePostItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardItemVO>) list("MBoardDAO.getNoticePostItemList", map);
 	}
 
 	public MBoardInfoVO getBoardProperty(Map<String, Object> map) throws Exception {
@@ -30,4 +35,15 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (MBoardInfoVO) select("MBoardDAO.getACL", map);
 	}
 
+	public String getBoardApprFlag(Map<String, Object> map) throws Exception {
+		return (String) select("MBoardDAO.getBoardApprFlag", map);
+	}
+
+	public Integer getBoardItemListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.getBoardItemListCount", map);
+	}
+
+	public Integer getNoticePostItemListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.getNoticePostItemListCount", map);
+	}
 }

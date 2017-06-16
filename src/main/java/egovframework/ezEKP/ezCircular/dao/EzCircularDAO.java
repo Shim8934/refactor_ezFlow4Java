@@ -277,4 +277,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularTDMapList", map);
 	}
 
+	public void moveCircular(Map<String, Object> map) {
+		update("EzCircularDAO.moveCircular", map);
+	}
+
+	public void moveCircular2(Map<String, Object> map) {
+		insert("EzCircularDAO.moveCircular2", map);
+	}
+
 }

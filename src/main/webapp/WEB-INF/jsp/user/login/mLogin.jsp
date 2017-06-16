@@ -7,8 +7,8 @@
 <html>
 	<head>
 		<title>::: ezMobile Java :::</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
+		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 		<link rel="stylesheet" type="text/css" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css" />
@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>		
 	</head>
 	<body class="loginbody">
 		<section id="login" data-role="page">     	
@@ -44,7 +44,7 @@
 							<p style="margin-top:10px">
 			                	<input type="password" placeholder="비밀번호를 입력하세요" id="upw" name="password" class="login_inp" data-clear-btn="true" maxlength="16" onKeyPress="if(event.keyCode==13) actionLogin();"/>
 			               	</p>		               	
-			               	<button type="button" style="height:70px;background-color:black;color:white;margin-top:10px;" onclick="javascript:actionLogin();">L O G I N</button>							                    	                
+			               	<button type="button" style="height:70px;background-color:rgb(31, 63, 105);color:white;margin-top:10px;" onclick="javascript:actionLogin();">L O G I N</button>							                    	                
 			                <div style="margin-top:10px;">
 			                	<label for="checkId" style="color:black">ID SAVE</label>		             
 			                	<input type="checkbox" value="" id="checkId" name="checkId" class="" />	                        
