@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -111,21 +113,52 @@ public class MApprovalGController {
 	 * 모바일 전자결재G 문서보기 호출 Method
 	 */
 	@RequestMapping(value = "/mobile/ezApprovalG/doApprovalGDetail.do")
-	public String doApprovalGDetail(@CookieValue("loginCookie") String loginCookie, Model model, String pDocID, String pListType) throws Exception {
+	public String doApprovalGDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID, String pListType) throws Exception {
 		logger.debug("doApprovalGDetail started");
 		logger.debug("docID : " + pDocID);
+		logger.debug("listType : " + pListType);
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
 		
 		//임시 결재할문서 타입
 		pListType = "1";
-				
+
+		//결재선
 		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = MApprovalGService.getAprLineInfo(pDocID, pListType, userInfo);
+		String photoPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId());
+		
+		//본문
+		String domain = request.getServerName() + ":" + request.getServerPort();
+		String bodyHTML = MApprovalGService.getMHTBody(pDocID, pListType, realPath, domain, userInfo);
+		
+		//의견갯수
+		String commentCount = MApprovalGService.getAprCommentCount(pDocID, pListType, userInfo);
 		
 		model.addAttribute("aprLineList", approvalGAprLineInfoVOs);
+		model.addAttribute("photoPath", photoPath);
+		model.addAttribute("bodyHTML", bodyHTML);
+		model.addAttribute("commentCount", commentCount);
 
 		logger.debug("doApprovalGDetail ended");
 		
 		return "mobile/ezApprovalG/mApprGdoApproveDetail";
+	}
+	
+	@RequestMapping(value = "/mobile/ezApprovalG/getOpinionInfo.do")
+	public String getOpinionInfo(@CookieValue("loginCookie") String loginCookie, Model model, String pDocID, String pListType) throws Exception {
+		logger.debug("getOpinionInfo started");
+		logger.debug("docID : " + pDocID);
+		logger.debug("listType : " + pListType);
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = MApprovalGService.getOpinionInfo(pDocID, pListType, userInfo);
+
+		model.addAttribute("opinionList", approvalGOpinionInfoVOs);
+		
+		logger.debug("getOpinionInfo ended");
+		
+		return "json";
 	}
 }

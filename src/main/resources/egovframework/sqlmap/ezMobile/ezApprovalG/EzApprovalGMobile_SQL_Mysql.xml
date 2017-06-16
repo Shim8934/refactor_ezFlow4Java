@@ -4,6 +4,7 @@
 <sqlMap namespace="ezApprovalGMobile">
 	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
 	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
+	<typeAlias  alias="MApprovalGOpinionInfoVO" 			type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
 	
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO">
 		<![CDATA[
@@ -29,6 +30,8 @@
 					OR 
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
+			ORDER BY 
+				STARTDATE DESC
 	</select>
 	
 	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer">
@@ -80,7 +83,15 @@
    				CASE 
    					WHEN (TBL_EXPAPRLINE.PROXYUSERDEPTNAME$lang$ = '' OR TBL_EXPAPRLINE.PROXYUSERDEPTNAME$lang$ IS NULL) THEN TBL_EXPAPRLINE.PROXYUSERDEPTNAME
    					ELSE TBL_EXPAPRLINE.PROXYUSERDEPTNAME$lang$
-   				END PROXYUSERDEPTNAME
+   				END PROXYUSERDEPTNAME,
+   				(SELECT 
+   					EXTENSIONATTRIBUTE2
+   				FROM
+   					TBL_USERMASTER
+   				WHERE
+   					TENANT_ID = #tenantID#
+   				AND
+   					CN = TBL_APRLINEINFO.APRMEMBERID) APRMEMBERPHOTO
             FROM 
             	TBL_APRLINEINFO 
             INNER JOIN 
@@ -101,5 +112,67 @@
             	TBL_APRLINEINFO.COMPANYID = #companyID#
             ORDER BY 
 				TBL_APRLINEINFO.APRMEMBERSN DESC  
+	</select>
+	
+	<select id="MApprovalG.getAprDocHref" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				HREF
+			FROM
+				VAPRDOINGDOCLIST 
+   			WHERE
+   				TENANT_ID = #tenantID#
+   			AND
+   				COMPANYID = #companyID#
+   			AND
+   				DOCID = #docID#
+		]]>
+	</select>
+	
+	<select id="MApprovalG.getAprCommentCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_APROPINIONINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+		]]>
+	</select>
+	
+	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprovalGOpinionInfoVO">
+		<![CDATA[
+			SELECT 
+				 CONTENT,
+				 CASE 
+   					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
+   					THEN USERNAME
+   					ELSE USERNAME$lang$
+   				 END USERNAME,
+   				 CASE 
+   					WHEN (USERJOBTITLE$lang$ = '' OR USERJOBTITLE$lang$ IS NULL) 
+   					THEN USERJOBTITLE
+   					ELSE USERJOBTITLE$lang$
+   				 END USERJOBTITLE,
+   				 CASE 
+   					WHEN (USERDEPTNAME$lang$ = '' OR USERDEPTNAME$lang$ IS NULL) 
+   					THEN USERDEPTNAME
+   					ELSE USERDEPTNAME$lang$
+   				 END USERDEPTNAME
+			FROM 
+				TBL_APROPINIONINFO  
+			WHERE 
+				TENANT_ID =#tenantID#
+			AND
+				COMPANYID = #companyID#	
+			AND 
+				DOCID = #docID#
+			ORDER BY 
+				OPINIONSN DESC
+		]]>
 	</select>
 </sqlMap>

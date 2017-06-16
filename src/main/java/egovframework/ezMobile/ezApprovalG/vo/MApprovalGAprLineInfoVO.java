@@ -17,6 +17,8 @@ public class MApprovalGAprLineInfoVO {
 	private String proxyUserJobTitle;
 	/** 대리결재자부서명*/
 	private String proxyUserDeptName;
+	/** 결재자사진*/
+	private String aprMemberPhoto;
 	
 	public String getAprState() {
 		return aprState;
@@ -65,6 +67,12 @@ public class MApprovalGAprLineInfoVO {
 	}
 	public void setProxyUserDeptName(String proxyUserDeptName) {
 		this.proxyUserDeptName = proxyUserDeptName;
+	}
+	public String getAprMemberPhoto() {
+		return aprMemberPhoto;
+	}
+	public void setAprMemberPhoto(String aprMemberPhoto) {
+		this.aprMemberPhoto = aprMemberPhoto;
 	}
 
 }

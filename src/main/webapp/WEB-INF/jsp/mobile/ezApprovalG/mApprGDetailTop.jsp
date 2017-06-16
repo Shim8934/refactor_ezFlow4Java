@@ -21,7 +21,7 @@
 						<i class="fa fa-long-arrow-left" style="font-size:24px; cursor: pointer;" onclick="backApproveList()"></i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showComment()"></i>
+						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showComment()">${commentCount}</i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
 						<i class="fa fa-file-text-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showOriginal()"></i>
@@ -39,6 +39,18 @@
 				</li>
 			</ul>	
 		</header>
+		
+		<div class="ui-content" id="popupComment" style="min-width: 255px; max-width: 285px; height:200px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="pop">
+		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+	   		<div data-role="collapsible" class="animateMe1" data-iconpos="right" data-inset="true">
+		   		<h2>Comment 1</h2>
+		   		<p>Comment Content</p>
+		    </div>
+		    <div data-role="collapsible" class="animateMe1" data-iconpos="right" data-inset="true">
+		   		<h2>Comment 2</h2>
+		   		<p>Comment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment Content</p>
+		    </div>
+		</div>
 		
 		<!-- 왼쪽메뉴 panel -->
 	    <div id="menu-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
