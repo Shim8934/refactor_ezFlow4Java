@@ -41,9 +41,9 @@ function getBoardItemList() {
 				}
 				
 				//writeDate 오늘날짜 1일보다 작게 차이나면 new
-				if (getNodeText(oDatas[6]) == "Y") {
-					titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
-				}
+//				if (getNodeText(oDatas[6]) == "Y") {
+//					titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
+//				}
 				
 				for (var i = 1; i < parseInt(vo.itemLevel); i++) {
 					titleImage += "&nbsp;";
