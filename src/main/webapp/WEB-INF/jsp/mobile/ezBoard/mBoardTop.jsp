@@ -55,36 +55,38 @@
 		</header>
 		
 		<!-- 왼쪽메뉴 panel -->
-	    <div id="menu-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="left">
-	    	<div style="font-size:16px"><b>메뉴선택</b></div>
-	        <ul data-role="listview" style="margin-top:10px">
-	        	<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = newboardItemList boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물</a></li>
-                <li data-icon="carat-r"><a onclick="newBoardList(this)" type = "boardList"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾슬라이드</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판바로가기1</a></li>
-                <li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{66c95ea2-d205-85e6-cd53-2801f4c98560}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판바로가기2</a></li>
-                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
-                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
-                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
-                <li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
-	        </ul>
-	        <div style="margin-top:45px">
-	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
-	        </div>
-	    </div>
-	    <!-- 왼쪽메뉴 panel -->		
+		<div id="menu-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="left" style="overflow: hidden;">
+			<div>	    	
+				<div style="font-size:16px;text-align:center;background-color: rgb(31, 63, 105);color:white;height:33px;padding-top:10px"><b>메뉴선택</b></div>		    	
+				<ul data-role="listview" style="margin-top:10px">
+					<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
+					<li data-icon="carat-r"><a onclick="boardItemList(this)" type = newboardItemList boardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물</a></li>
+					<li data-icon="carat-r"><a onclick="newBoardList(this)" type = "boardList"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;즐찾슬라이드</a></li>
+					<li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판바로가기1</a></li>
+					<li data-icon="carat-r"><a onclick="boardItemList(this)" type = "boardItemList" boardID = "{66c95ea2-d205-85e6-cd53-2801f4c98560}"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;게시판바로가기2</a></li>
+					<li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
+					<li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
+					<li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
+					<li data-icon="carat-r"><a onclick="boardList(this)" type = "boardList" boardID = "#"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;대분류슬라이드</a></li>
+				</ul>
+				<div style="margin-top:25px;padding:1em">	        	
+					<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
+				</div>
+			</div>
+		</div>
 		
 		<!-- 환경설정 panel -->
 	    <div id="option-panel" data-role="panel" data-theme="a" data-display="overlay" data-position="right">
-	    	<div style="font-size:16px"><b>환경설정</b></div>
-	        <ul data-role="listview" style="margin-top:10px">
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-cog" style="font-size:18px"></i>&nbsp;&nbsp;언어설정</a></li>
-                <li data-icon="carat-r"><a href="javascript:logout()"><i class="fa fa-power-off" style="font-size:18px"></i>&nbsp;&nbsp;로그아웃</a></li>
-	        </ul>
-	        <div style="margin-top:45px">
-	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
-	        </div>
-	    </div>
-	    <!-- 환경설정 panel -->	    	    
+	    	<div>		    	
+		    	<div style="font-size:16px;text-align:center;background-color: rgb(31, 63, 105);color:white;height:33px;padding-top:10px"><b>OPTION</b></div>	
+		        <ul data-role="listview" style="margin-top:10px">		            
+	                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-cog" style="font-size:18px"></i>&nbsp;&nbsp;환경설정</a></li>
+	                <li data-icon="carat-r"><a href="javascript:logout()"><i class="fa fa-power-off" style="font-size:18px"></i>&nbsp;&nbsp;로그아웃</a></li>	                		               
+		        </ul>
+		        <div style="margin-top:25px;padding:1em">
+		        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
+		        </div>
+			</div>
+	    </div>	    
 	</body>
 </html>
