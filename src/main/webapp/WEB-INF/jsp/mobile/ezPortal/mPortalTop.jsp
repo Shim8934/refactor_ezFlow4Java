@@ -30,7 +30,7 @@
 	    	<div>		    	
 		    	<div style="font-size:16px;text-align:center;background-color: rgb(31, 63, 105);color:white;height:33px;padding-top:10px"><b>OPTION</b></div>	
 		        <ul data-role="listview" style="margin-top:30px">		            
-	                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-cog" style="font-size:18px"></i>&nbsp;&nbsp;환경설정</a></li>
+	                <li data-icon="carat-r"><a href="javascript:mOption()"><i class="fa fa-cog" style="font-size:18px"></i>&nbsp;&nbsp;환경설정</a></li>
 	                <li data-icon="carat-r"><a href="javascript:logout()"><i class="fa fa-power-off" style="font-size:18px"></i>&nbsp;&nbsp;로그아웃</a></li>	                		               
 		        </ul>
 		        <div style="margin-top:25px;padding:1em">
