@@ -619,6 +619,80 @@
          ]]>
     </select>
     
+    <select id="EzCircularDAO.getFolderCircularListCount" parameterClass="Map" resultClass="Integer" >
+        <![CDATA[
+             SELECT 
+                 COUNT(DISTINCT A.CIRCULARID) CNT
+             FROM
+                 TBL_CIRCULAR A
+             JOIN
+             	 (SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberId#) B
+             	ON A.CIRCULARID = B.CIRCULARID
+             JOIN TBL_CIRCULAR_FOLDER C
+             	ON B.CIRCULARFOLDERID = C.CIRCULARFOLDERID
+             JOIN TBL_CIRCULAR_USER D
+             	ON A.CIRCULARID = D.CIRCULARID
+             WHERE
+             	 B.CIRCULARFOLDERID = #folderId#	
+             AND
+                 D.UPDATESTATUS = '3'  
+             AND
+                 A.TENANTID = #tenantId#
+         ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
+        <![CDATA[
+             SELECT
+                 DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE, D.UPDATESTATUS 
+             FROM
+                 TBL_CIRCULAR A
+             JOIN
+             	 (SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberId#) B
+             	ON A.CIRCULARID = B.CIRCULARID
+             JOIN TBL_CIRCULAR_FOLDER C
+             	ON B.CIRCULARFOLDERID = C.CIRCULARFOLDERID
+             JOIN TBL_CIRCULAR_USER D
+             	ON A.CIRCULARID = D.CIRCULARID
+             WHERE
+             	 B.CIRCULARFOLDERID = #folderId#
+             AND
+                 D.UPDATESTATUS = '3'  
+             AND
+                 A.TENANTID = #tenantId# 
+             ORDER BY
+             	 A.REGDATE DESC 
+             LIMIT
+                 #limit#, #rowCount#
+         ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getFolderCircularMapList" resultClass="HashMap" >
+        <![CDATA[
+             SELECT
+                 DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE 
+             FROM
+                 TBL_CIRCULAR A
+             JOIN
+             	 (SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberId#) B
+             	ON A.CIRCULARID = B.CIRCULARID
+             JOIN TBL_CIRCULAR_FOLDER C
+             	ON B.CIRCULARFOLDERID = C.CIRCULARFOLDERID
+             JOIN TBL_CIRCULAR_USER D
+             	ON A.CIRCULARID = D.CIRCULARID
+             WHERE
+             	 B.CIRCULARFOLDERID = #folderId#
+             AND	 
+                 D.UPDATESTATUS = '3'  
+             AND
+                 A.TENANTID = #tenantId# 
+             ORDER BY
+             	 A.REGDATE DESC 
+             LIMIT
+                 #limit#, #rowCount#
+         ]]>
+    </select>
+    
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO 
@@ -942,9 +1016,9 @@
           WHERE 
               CIRCULARID = #circularID#
           AND
-          	  MEMBERID = #memberId#
+          	  MEMBERID IN ('', #memberID#)
           AND
-              TENANTID = #tenantID#      
+              TENANTID = #tenantID#
         ]]>
     </update>
     

@@ -785,7 +785,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		for (int i=0; i<circularIDArr.length; i++) {
 			map.put("circularID", circularIDArr[i]);
-			map.put("memberId", memberId);
+			map.put("memberID", memberId);
 			map.put("tenantID", tenantId);
 		
 			ezCircularDAO.tempDeleteCircular(map);
@@ -819,5 +819,42 @@ public class EzCircularServiceImpl implements EzCircularService {
 			ezCircularDAO.moveCircular(map);
 			ezCircularDAO.moveCircular2(map);
 		}
+	}
+
+	@Override
+	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderId", folderId);
+		map.put("memberId", memberId);
+		map.put("tenantId", tenantId);
+		
+		return ezCircularDAO.getFolderCircularListCount(map);
+	}
+
+	@Override
+	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderId", folderId);
+		map.put("memberId", memberId);
+		map.put("limit", startRow-1);
+		map.put("rowCount", endRow-(startRow-1));
+		map.put("tenantId", tenantId);
+		
+		return ezCircularDAO.getFolderCircularList(map);
+	}
+
+	@Override
+	public List<HashMap<String, Object>> getFolderCircularMapList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderId", folderId);
+		map.put("memberId", memberId);
+		map.put("limit", startRow-1);
+		map.put("rowCount", endRow-(startRow-1));
+		map.put("tenantId", tenantId);
+		
+		return ezCircularDAO.getFolderCircularMapList(map);
 	}
 }

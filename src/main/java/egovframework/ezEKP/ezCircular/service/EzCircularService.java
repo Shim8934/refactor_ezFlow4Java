@@ -120,4 +120,10 @@ public interface EzCircularService {
 
 	public void moveCircular(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
+	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception;
+
+	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
+
+	public List<HashMap<String, Object>> getFolderCircularMapList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
+
 }

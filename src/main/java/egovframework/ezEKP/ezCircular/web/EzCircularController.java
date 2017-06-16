@@ -230,9 +230,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int page = 1;
-		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
-        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+//		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
+//        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+//        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
         int startRow = 1;
         int endRow = 0;
         
@@ -261,9 +261,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
-		model.addAttribute("useOcs", useOcs);
-		model.addAttribute("useRunTime", useRunTime);
-		model.addAttribute("useEditor", useEditor);
+//		model.addAttribute("useOcs", useOcs);
+//		model.addAttribute("useRunTime", useRunTime);
+//		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", list);
 		model.addAttribute("config", config);
 		model.addAttribute("totalCount", totalCount);
@@ -2048,7 +2048,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		int page = 1;
 //		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
-        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+//        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
         int folderId = Integer.parseInt(request.getParameter("folderId"));
 //        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
         int startRow = 1;
@@ -2078,7 +2078,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("page", page);
 //		model.addAttribute("useOcs", useOcs);
 //		model.addAttribute("useRunTime", useRunTime);
-		model.addAttribute("useEditor", useEditor);
+//		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", list);
 		model.addAttribute("config", config);
 		model.addAttribute("totalCount", totalCount);
@@ -2126,4 +2126,131 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("moveCircular ended");
 	}
+	
+	/**
+	 * 개인폴더 회람판 리스트 표출 Method
+	 */
+    @RequestMapping(value = "/ezCircular/getFolderCircularList.do", produces = "text/xml; charset=utf-8")
+    @ResponseBody
+    public String getFolderCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
+    	logger.debug("getFolderCircularList started");
+
+    	userInfo = commonUtil.userInfo(loginCookie);
+    	//TODO
+    	
+    	BoardVO boardVO = new BoardVO();
+    	
+    	boardVO.setBoardType("C");
+    	boardVO.setLang(userInfo.getLang());
+    	boardVO.setTenantID(userInfo.getTenantId());
+    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
+    	
+    	int page = 1;
+        int startRow = 1;
+        int endRow = 0;
+        
+        String pageNum = "1";
+        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
+        	pageNum = req.getParameter("pageNum"); 
+        }
+        
+        int folderId = Integer.parseInt(req.getParameter("folderId"));
+    	
+    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		
+		int personalCount = config.getListCnt();
+		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
+        endRow = (personalCount * Integer.parseInt(pageNum));
+		
+        int totalCount = ezCircularService.getFolderCircularListCount(folderId, userInfo.getId(), userInfo.getTenantId());
+        
+		List<CircularListVO> list = ezCircularService.getFolderCircularList(folderId, userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		List<HashMap<String, Object>> list2 = ezCircularService.getFolderCircularMapList(folderId, userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		
+		StringBuffer resultXML = new StringBuffer();
+        
+        resultXML.append("<DOCLIST>");
+        resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
+        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for (BoardListHeaderVO vo:headerList) {
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+       
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        
+        for (int j = 0; j < list.size(); j++) {
+    		resultXML.append("<ROW>");
+    		String fieldName = "";
+    		String fieldValue = "";
+    		for (int i = 0; i < headerList.size(); i++) {
+    			resultXML.append("<CELL>");
+    			fieldName = headerList.get(i).getColName().toUpperCase();
+    			
+    			fieldValue = commonUtil.cleanValue(String.valueOf(list2.get(j).get(fieldName)));
+    			
+    			if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
+    				fieldValue = "";
+    			}
+    			
+    			if (fieldName.equals("IMPORTANCE")) {
+    				fieldValue = fieldValue.equals("0") ? "0" : "1";
+    			} else if (fieldName.equals("HASFILE")) {
+    				fieldValue = fieldValue.equals("0") ? "0" : "1";
+    			} else if (fieldName.equals("STATUS")) {
+    				if (fieldValue.equals("0")) {
+    					fieldValue = "진행중";
+    				} else if (fieldValue.equals("1")) {
+    					fieldValue = "종료";
+    				} else {
+    					fieldValue = "임시";
+    				}
+    			} else if (fieldName.equals("CONFIRMSTATUS")) {
+    				int firstValue = ezCircularService.getConfirmStatusFirst(list.get(j).getCircularId(), userInfo.getTenantId());
+    				int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularId(), userInfo.getTenantId());
+    				
+    				fieldValue = firstValue + "/" + secondValue;
+    			} else if (fieldName.equals("REGDATE")) {
+    				fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false); 
+    			} else if (fieldName.equals("CONFIRMDATE")) {
+    				fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
+    			}
+    			
+    			resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
+    			resultXML.append("<CIRCULARID>" + list.get(j).getCircularId() + "</CIRCULARID>");
+    			
+    			resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
+    			
+    			if (i == 0) {
+    				resultXML.append("<TITLE>" + list.get(j).getTitle() + "</TITLE>");
+    				resultXML.append("<MEMBERID>" + list.get(j).getMemberId() + "</MEMBERID>");
+    			}
+    			resultXML.append("</CELL>");
+    		}
+    		resultXML.append("</ROW>");
+        }
+        
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
+        
+        logger.debug("resultXML : "+resultXML);
+		logger.debug("getFolderCircularList ended");
+        return resultXML.toString();
+    }
 }
