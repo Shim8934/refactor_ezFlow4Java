@@ -58,7 +58,6 @@ public class MBoardController {
 	private EzCommonService ezCommonService;
 	
 	final public int mobileListSize = 20;
-	final public int mobileCollapseSize = 5;
 	final public String newBoardID = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
 	
 	/**

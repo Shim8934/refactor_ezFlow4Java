@@ -79,7 +79,7 @@ public class MBoardItemVO {
 	private String notiNo;
 	/** 확장속성*/
 	private String extensionAttribute1;
-	/** 확장속성*/
+	/** 공지사항(1/0)*/
 	private String extensionAttribute2;
 	/** 작성자직위*/
 	private String extensionAttribute3;
