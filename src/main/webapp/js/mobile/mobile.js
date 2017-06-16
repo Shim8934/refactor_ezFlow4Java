@@ -6,6 +6,7 @@
 });
 
 $(document).on('pageshow', '#sampleList', function() {
+	$('.writeButton').css('display', "");
 	$('.writeButton').css('bottom', 60);
 	$('.writeButton').css('left', $(window).width() - 60 );
 	
@@ -207,19 +208,19 @@ function goTest(val01) {
 		$("#testTile").html("빔프로젝터");
 	}
 	$("#testListView").html(testValue);
+		
+	$("#secondPanel").animate({
+		left: '-=238px'
+	}, 350);
 	
 	$("#firstPanel").animate({
-		left: '-=55px'
-	}, 350);
-	
-	$("#secondPanel").animate({
-		left: '-=240px'
-	}, 350);
+		left: '-=238px'
+	}, 350);	
 }
 
 function goTestBack() {
 	$("#secondPanel").animate({
-		left: '+=240px'
+		left: '+=238px'
 	}, 350);
 	
 	$("#firstPanel").animate({

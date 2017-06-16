@@ -25,12 +25,20 @@
 			var boardID = '${mBoardInfo.boardID}';
 			
 			$(document).ready(function () {
+				$('.writeButton').css('bottom', 60);
+				$('.writeButton').css('left', $(window).width() - 60 );
+				
+				$(window).on('resize', function() {
+					$('.writeButton').css('bottom', 60);
+					$('.writeButton').css('left', $(window).width() - 60 );
+				});
+				
 				getBoardItemList();
 			})
 		</script>			
 	</head>
 	<body class="loginbody">
-		<div id="boardItemList" data-role="page">
+		<section id="boardItemList" data-role="page">
 			<!-- header import -->
      		<c:import url="/WEB-INF/jsp/mobile/ezBoard/mBoardTop.jsp" />
      		<!-- header import -->
@@ -39,6 +47,7 @@
 			<div class="ui-content" data-role="content">
 				<ul data-role="listview" data-inset="false" data-theme="a">
 				</ul>
+				<div class="writeButton" onclick="alert('write!')"></div>
      		</div>
      		<!-- body end -->
 
@@ -49,23 +58,6 @@
      		<!-- layer Popup import -->
      		<c:import url="/WEB-INF/jsp/mobile/ezBoard/mBoardPopup.jsp" />
      		<!-- layer Popup import -->
-     		
-     		<div id="test" class="ui-content" style="min-width: 255px; max-width: 285px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="slidedown">
-		    	<a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-		    	<div>
-					<input name="search-1" id="search-1" type="search" placeholder="search mail..">
-					<a class="ui-btn" href="#">검 색</a>
-				</div>
-			</div>
-			
-			<div>
-				<span id = "newBoardItemListCount"></span>
-				<span id = "boardItemListCount"></span>
-				
-				<ul id = "boardItemList">
-					
-				</ul>
-			</div>
-     	</div>
+     	</section>
 	</body>	
 </html>

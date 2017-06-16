@@ -635,8 +635,7 @@
 		            location.href = location.href;
 	        	}
 	        }
-	        
-	        var mail_movecopy_cross_dialogArguments = new Array();
+
 	        function CircularMove_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
@@ -655,16 +654,12 @@
 
 		        arrList = null;
 	        	
-		        mail_movecopy_cross_dialogArguments[1] = move_onclick_Complete;
-		        mail_movecopy_cross_dialogArguments[2] = DivPopUpHidden;
-		        
 	        	var feature = GetOpenPosition(820, 700);
 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
-// 		        DivPopUpShow(320, 375, "/ezCircular/circularMove.do");
 		    }
 	        
-		    function move_onclick_Complete(moveUrl) {
+// 		    function move_onclick_Complete(moveUrl) {
 // 		        DivPopUpHidden();
 // 		        if (typeof (moveUrl) == "undefined") {
 // 		            return;
@@ -712,7 +707,7 @@
 		        
 // 		        LoadAddressTree(moveUrl["idx"]);
 // 		        EventCheck = true;
-		    }
+// 		    }
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";

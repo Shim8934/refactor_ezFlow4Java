@@ -22,9 +22,9 @@
         var lang = "${userinfo.lang}";
         var PostTreeView = null;
         var treeconfig = "";
-        var ReturnFunction;
-        var CancelFunction;
-        var isDivPopUp = false;
+//         var ReturnFunction;
+//         var CancelFunction;
+//         var isDivPopUp = false;
         document.onselectstart = function () {
             if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
                 return false;
@@ -32,23 +32,23 @@
                 return true;
         };
         function window_onload() {
-            try {
-                ReturnFunction = parent.mail_movecopy_cross_dialogArguments[1];
-                CancelFunction = parent.mail_movecopy_cross_dialogArguments[2];
-                isDivPopUp = true;
-            } catch (e) {
-                try {
-                    ReturnFunction = opener.mail_movecopy_cross_dialogArguments[1];
-                    CancelFunction = opener.mail_movecopy_cross_dialogArguments[2];
-                } catch (e) { }
-            }
+//             try {
+//                 ReturnFunction = parent.mail_movecopy_cross_dialogArguments[1];
+//                 CancelFunction = parent.mail_movecopy_cross_dialogArguments[2];
+//                 isDivPopUp = true;
+//             } catch (e) {
+//                 try {
+//                     ReturnFunction = opener.mail_movecopy_cross_dialogArguments[1];
+//                     CancelFunction = opener.mail_movecopy_cross_dialogArguments[2];
+//                 } catch (e) { }
+//             }
             PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
 //             PostTreeView.attachEvent('requestdata', requestdata);
 //             PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });
             var xmlHTTP = createXMLHttpRequest();
             xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
             xmlHTTP.send();
-            var treeconfig;
+//             var treeconfig;
             if (CrossYN()) {
                 treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
             }
@@ -185,16 +185,16 @@
 //             else
 //                 return false;
 //         }
-        function requestdata(event) {
-            if (!event) event = window.event;
-            var nodeIdx = event.nodeIdx;
+//         function requestdata(event) {
+//             if (!event) event = window.event;
+//             var nodeIdx = event.nodeIdx;
 
-            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-                nodeIdx = arguments[0].nodeIdx;
-            }
-            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true)
-            PostTreeView.putchildxml(nodeIdx, childxml);
-        }
+//             if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
+//                 nodeIdx = arguments[0].nodeIdx;
+//             }
+//             var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true)
+//             PostTreeView.putchildxml(nodeIdx, childxml);
+//         }
     </script>
 </head>
 <body scroll="no" class="popup" onload="javascript:window_onload()">

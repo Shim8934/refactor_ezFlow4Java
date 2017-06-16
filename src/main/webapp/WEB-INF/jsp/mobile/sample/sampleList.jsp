@@ -5,8 +5,8 @@
 <html>
 	<head>
 		<title>::: ezEKP Java :::</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />				
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />			
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 		<link rel="stylesheet" type="text/css" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css" />
     	<link rel="stylesheet" type="text/css" href="/css/mobile/mobile.css" />  		  	
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -112,7 +112,7 @@
 						P A G I N G
 					</li>					
 				</ul>
-				<div class="writeButton" onclick="alert('write!')"></div>				
+				<div class="writeButton" onclick="alert('write!')" style="display:none"></div>				
      		</div>     		
      		<!-- body end -->
 

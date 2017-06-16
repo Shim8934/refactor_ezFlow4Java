@@ -49,8 +49,8 @@
 		}
 		</style>
 	    <script type="text/javascript">
- 	        var ShowAdjacent = "";
-	        var USE_OCS = "${useOcs}";
+//  	        var ShowAdjacent = "";
+// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
 	        //var CurPage = "${page}";
@@ -64,28 +64,28 @@
 	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
-	        var clickPreviweType = "";
+// 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-	        var pMailListHeightW = 0;
-	        var pMailPreHeightW = 0;
+// 	        var pMailListHeightW = 0;
+// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
-	        var pMailListWidthH = 0;
-	        var pMailPreWidthH = 0;
+// 	        var pMailListWidthH = 0;
+// 	        var pMailPreWidthH = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-	        var p_ListorderValue = "";
+// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-	        var SmallSizeList = false;
-	        var OldSmallSizeList = false;
-	        var onclickFlag = false;
+// 	        var SmallSizeList = false;
+// 	        var OldSmallSizeList = false;
+// 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-	        var pMode = "new";
-	        var pAdminType = "n";
-	        var pUse_Editor = "${useEditor}";
-	        var pNoneActiveX = "YES";
-	        var pUse_IE11Browser = "CK";
+// 	        var pMode = "new";
+// 	        var pAdminType = "n";
+// 	        var pUse_Editor = "${useEditor}";
+// 	        var pNoneActiveX = "YES";
+// 	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
@@ -274,10 +274,6 @@
 	                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
 	                }
 	
-// 	                if ("${useOcs}" == "YES" && lstCnt > 0) {
-// 	                    check_presence();
-// 	                }
-	
 	                if (!firstFlag) {
 	                    PreviewRayerChange(pPreviewShow_HOW);
 	                    if (CrossYN()) {
@@ -302,6 +298,16 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
+	        
+	        function chk_onselect(obj) {
+		        if (obj.checked) {
+		            strListInfo += obj.id;
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		        }
+		        
+		        listEventCheckbox = true;
+		    }
 	
 	        function makePageSelPage() {
 	            var strtext;
@@ -461,21 +467,30 @@
 	            	var feature = GetOpenPosition(790, 700);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
-                
-//                 //클릭했을때 그아이디에 해당하는 
-//                 $.ajax({
-// 					type : "POST",
-// 					dataType : "text",
-// 					async : false,
-// 					url : "/ezCircular/confirmStatus.do",
-// 					data : { circularId 	: circularId 
-// 							},
-// 					success: function(xml){
-						
-// 					}     			
-// 				});
-                
 	        }
+	        
+	        function CircularMove_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+				
+	        	var arrList = new Array();
+		        var circularIDList = "";
+		        var i = 0;
+		        
+		        arrList = strListInfo.split(";");
+		        
+		        for (i = 0; i < arrList.length - 1; i++) {
+		        	circularIDList += arrList[i].split(",")[1] + ";";
+		        }
+
+		        arrList = null;
+	        	
+	        	var feature = GetOpenPosition(820, 700);
+	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
+	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    }
 		
 		    function event_HeaderCheckBoxClick(obj) {
 		        var SelList = new ListView();
@@ -502,11 +517,7 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
-		
-		    function refresh_onclick() {
-// 		    	window.location.href = "/ezcircular/newCircular.do";
-		    }
-		
+
 		    function MemberInfo_onclick(pUserID) {
 		        if (gubun == "2") return;
 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
@@ -597,7 +608,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t56'/></span></li>
+	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>

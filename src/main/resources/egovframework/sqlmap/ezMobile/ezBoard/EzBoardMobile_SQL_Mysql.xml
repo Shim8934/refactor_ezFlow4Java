@@ -114,7 +114,7 @@
 				A.writercompanyname,
 				DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
 				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
-				DATE_ADD(DATE_FORMAT(A.parentwritedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS parentwritedate,
+				A.parentwritedate,
 				A.importance,
 				A.title,
 				A.readcount,
@@ -219,9 +219,100 @@
 			ORDER BY
 				A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE
 			LIMIT
-				0, 20
+				#limit#, #rowCount#
 		]]>
 	</select>
+	
+	<select id="MBoardDAO.getNoticePostItemList" parameterClass="Map" resultClass="MBoardItemVO">
+		<![CDATA[
+			SELECT 
+				A.boardid ,
+				A.itemid ,
+				A.writerid ,
+				A.writername ,
+				A.writerdeptname ,
+				A.writercompanyname ,
+				DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
+				A.parentwritedate,
+				A.importance ,
+				A.title ,
+				A.readcount ,
+				A.attachments ,
+				A.itemlevel ,
+				A.abstract ,
+				'0' readflag  ,
+				A.extensionattribute5 ,
+				A.writername2 ,
+				A.writerdeptname2 ,
+				A.writercompanyname2 ,
+				(SELECT
+					COUNT(*)
+				FROM
+					TBL_BOARD_ONELINEREPLY
+				WHERE
+					tenant_id = A.tenant_id
+				AND
+					itemid = A.ITEMID) onelinecnt,
+				A.upperitemidtree,
+				A.docno,
+				A.extensionattribute2 notice,
+				A.notino,
+				A.maincontent,
+				A.extensionattribute6,
+				A.extensionattribute7,
+				A.extensionattribute8,
+				A.extensionattribute9,
+				A.extensionattribute10,
+				(SELECT
+					gubun 
+				FROM 
+					TBL_BOARD_BOARDINFO B 
+				WHERE
+					B.tenant_id = #tenantID#
+				AND 
+					B.boardid = A.boardid) as gubun
+				FROM
+					TBL_BOARD_ITEM A
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #boardID#
+				AND
+					STARTDATE <= #nowDate#
+				AND
+					ENDDATE > #nowDate#
+				AND
+					extensionAttribute1 = '0'
+				AND
+					extensionAttribute2 = '1'
+		]]>
+		
+		<isEqual property="apprFlag" compareValue="Y">
+			<![CDATA[
+				AND
+					A.apprflag = 'Y'
+				ORDER BY
+					A.parentwritedate,
+					A.writedate DESC
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="apprFlag" compareValue="N">
+			<![CDATA[
+				ORDER BY
+					A.notino ASC,
+					A.parentwritedate,
+					A.writedate DESC
+			]]>
+		</isNotEqual>
+		
+		<![CDATA[
+			LIMIT
+				#limit#, #rowCount#
+		]]>
+	</select>
+	
 	
 	<select id="MBoardDAO.getBoardApprFlag" parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -335,6 +426,27 @@
 				]]>
 			</isEqual>
 		</isEqual>
+	</select>
+	
+	<select id="MBoardDAO.getNoticePostItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(itemid) CNT  
+	        FROM 
+	        	TBL_BOARD_ITEM 
+	        WHERE  
+	        	tenant_id = #tenantID#
+	        AND
+	        	boardid = #boardID#
+	        AND 
+	        	startdate <= #nowDate#
+	        AND 
+	        	enddate > #nowDate#
+	        AND 
+	        	extensionattribute1 = '0'
+	        AND 
+	        	extensionattribute2 = '1'
+        ]]>
 	</select>
 </sqlMap>
 
