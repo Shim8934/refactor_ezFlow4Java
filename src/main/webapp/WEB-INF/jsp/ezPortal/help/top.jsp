@@ -125,21 +125,33 @@
 					</div>
 				<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 			  <tr>
-			      <td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">포탈</td>
-			      <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
-			      <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
-			      <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
-			      <!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td> -->
-			      <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
-			      <td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자설문</td>  
-			      <c:if test="${userApprovalG == 'YES'}">
-			      	<td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 </td>
-			      </c:if>
-			      <!-- <td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 G</td> -->
-			      <td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">커뮤니티</td>
-			      <td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">자원관리</td>
-			      <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
-			    <td style="width:100%">&nbsp;</td>
+			  	  <c:choose>
+			  	  	<c:when test="${pakageType == 'basic'}">
+				      <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+				      <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
+				      <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
+				      <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
+				      <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
+					  <td style="width:100%">&nbsp;</td>
+			  	  	</c:when>
+			  	  	<c:otherwise>
+			  	  	  <td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">포탈</td>
+				      <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">메일</td>
+				      <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">주소록</td>
+				      <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">일정관리</td>
+				      <!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td> -->
+				      <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
+				      <td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자설문</td>  
+				      <c:if test="${userApprovalG == 'YES'}">
+				      	<td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 </td>
+				      </c:if>
+				      <!-- <td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 G</td> -->
+				      <td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">커뮤니티</td>
+				      <td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">자원관리</td>
+				      <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">환경설정</td>
+					  <td style="width:100%">&nbsp;</td>
+			  	  	</c:otherwise>
+			  	  </c:choose>
 			  </tr>
 			</table>
 		</c:when>
@@ -149,19 +161,31 @@
 			</div>
 			<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 	  			<tr>
-	      			<td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">ポータル</td>
-				    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子メール</td>
-				    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
-				    <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">日程管理</td>
-				    <!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">業務管理</td> -->
-				    <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
-				    <td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アンケート</td>  
-				    <!-- <td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁 </td> -->
-				    <!-- <td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁G</td> -->
-				    <td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">コミュニティー</td>
-				    <td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">設備管理</td>
-				    <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">マイポータルの設定</td>
-	    			<td style="width:100%">&nbsp;</td>
+	  				<c:choose>
+	  					<c:when test="${pakageType == 'basic'}">
+						    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子メール</td>
+						    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
+						    <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">日程管理</td>
+						    <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
+						    <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">マイポータルの設定</td>
+			    			<td style="width:100%">&nbsp;</td>
+	  					</c:when>
+	  					<c:otherwise>
+	  						<td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">ポータル</td>
+						    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子メール</td>
+						    <td class="normal" id="menu09" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アドレス帳</td>
+						    <td class="normal" id="menu08" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">日程管理</td>
+						    <!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">業務管理</td> -->
+						    <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">掲示板</td>
+						    <td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">アンケート</td>  
+						    <!-- <td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁 </td> -->
+						    <!-- <td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子決裁G</td> -->
+						    <td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">コミュニティー</td>
+						    <td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">設備管理</td>
+						    <td class="normal" id="menu06" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">マイポータルの設定</td>
+			    			<td style="width:100%">&nbsp;</td>
+	  					</c:otherwise>
+	  				</c:choose>
 	  			</tr>	
 			</table>
 		</c:otherwise>

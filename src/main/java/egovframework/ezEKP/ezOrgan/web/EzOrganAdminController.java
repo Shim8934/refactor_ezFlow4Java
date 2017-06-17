@@ -497,9 +497,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
 								String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
 								String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+								String parentDeptId = vo.getParentCn();
+								
+								// 비즈메카에서는 조직도 최상위 회사의 ID가 Top이 아닌 companyId를 사용하므로 상위부서가 Top인 경우 변경한다.
+								if (parentDeptId.equals("Top")) {
+									parentDeptId = bizmekaCompanyId;
+								}
 								
 								bizmekaResult = ezEmailUtil.bizmekaAddDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
-														cn, vo.getDisplayName(), vo.getParentCn());		
+														cn, vo.getDisplayName(), parentDeptId);		
 								
 								logger.debug("bizmekaResult=" + bizmekaResult);
 								
@@ -1143,9 +1149,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
 								String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
 								String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+								String parentDeptId = vo.getParentCn();
+								
+								// 비즈메카에서는 조직도 최상위 회사의 ID가 Top이 아닌 companyId를 사용하므로 상위부서가 Top인 경우 변경한다.
+								if (parentDeptId.equals("Top")) {
+									parentDeptId = bizmekaCompanyId;
+								}
 								
 								bizmekaResult = ezEmailUtil.bizmekaAddUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn, "", 
-													vo.getDisplayName(), vo.getParentCn());		
+													vo.getDisplayName(), parentDeptId);		
 								
 								logger.debug("bizmekaResult=" + bizmekaResult);
 								
