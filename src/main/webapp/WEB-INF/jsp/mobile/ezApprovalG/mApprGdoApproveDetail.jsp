@@ -28,21 +28,28 @@
      		<!-- body start -->
 			<div class="content" data-role="content">
 		      	<div class="ui-body ui-body-a ui-corner-all">
-		      		<div data-role="fieldcontain">
+		      		<div class="ui-field-contain">
 		        		<h1>야근수당</h1>
 		        		<br/>
 		        		<h5>지정석 사원(오픈솔루션팀)</h5>
 		        	</div>
 		        	<c:forEach var="aprLineList" items="${aprLineList}" varStatus="status">
-			        	<div data-role="fieldcontain">
+			        	<div class="ui-field-contain">
 			        		<div style="float:left;">
-				        		<img src="/images/OrganTree/porson_noimg.gif">
+			        			<c:choose>
+			        				<c:when test="${aprLineList.aprMemberPhoto != null}">
+						        		<img src="/ezCommon/downloadAttach.do?filePath=${photoPath}/${aprLineList.aprMemberPhoto}" style="width: 50px; height: 60px;">
+			        				</c:when>
+			        				<c:otherwise>
+						        		<img src="/images/OrganTree/porson_noimg.gif" style="width: 50px; height: 60px;">
+			        				</c:otherwise>
+			        			</c:choose>
 			        		</div>
-			        		<div style="padding-top:12px; float:left;">
+			        		<div style="float:left;">
 				        		<h4>${aprLineList.aprMemberName} ${aprLineList.aprMemberJobTitle}(${aprLineList.aprMemberDeptName})</h4><br/>
 				        		<h4>${aprLineList.receivedDate}</h4>
 				        	</div>
-			        		<div style="padding-top:30px; float:right;">
+			        		<div style="padding-top:15px; float:right;">
 			        			<c:if test="${aprLineList.aprState == '001'}">
 			        				대기
 			        			</c:if>
@@ -52,13 +59,14 @@
 			        			<c:if test="${aprLineList.aprState == '003'}">
 			        				결재
 			        			</c:if>
-				        		
 				        	</div>
 			        	</div>	
 		        	</c:forEach>
-		        	<br/><br/><br/><br/>
-		        	<div data-role="fieldcontain">
+		        	<div class="ui-field-contain">
+		        	</div>
+		        	<div class="ui-field-contain">
 		        		<h1 style="text-align: center">본문</h1>
+		        		<div style="overflow: auto;">${bodyHTML}</div>
 		        	</div>
 		      	</div>	
 		      	<div class="writeButton" onclick="alert('write!')"></div>										

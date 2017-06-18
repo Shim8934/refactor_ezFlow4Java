@@ -87,5 +87,37 @@ function showOriginal() {
 }
 
 function showComment() {
-	alert("의견보기");
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/getOpinionInfo.do",
+		dataType : "json",
+		data : {
+			pDocID : docID,
+			pListType : listType
+		},
+		success : function(data) {
+			var list = "";
+			
+			if (data.opinionList.length > 0) {
+				$.each(data.opinionList, function(key, value) {
+					list += "<div class='animateMe1 ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content' data-role='collapsible' data-iconpos='right' data-inset='true'>";
+					list += "	<h2 class='ui-collapsible-heading'>";
+					list += "		<a class='ui-collapsible-heading-toggle ui-btn ui-btn-icon-right ui-btn-inherit ui-icon-minus' href='#'>";
+					list += "			Comment 1";
+					list += "			<span class='ui-collapsible-heading-status'> click to collapse contents</span>";
+					list += "		</a>";
+					list += "	</h2>";
+					list += "	<div class='ui-collapsible-content ui-body-inherit' aria-hidden='false'>";
+					list += "		<p>Comment Content</p>";
+					list += "	</div>";
+					list += "</div>";
+				});
+			}
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+	
+	$("#popupComment").popup("open");
 }

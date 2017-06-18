@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezApprovalG.service.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,8 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +17,12 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezApprovalG.dao.MApprovalGDAO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -40,6 +45,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@Override
 	public List<MApprovalGDocInfoVO> getDoApproveList(LoginVO userInfo, String pListType, String pSearchText) throws Exception {
@@ -98,7 +106,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 	@Override
 	public List<MApprovalGAprLineInfoVO> getAprLineInfo(String pDocID, String pListType, LoginVO userInfo) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getAprLineInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -116,5 +123,82 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		return approvalGAprLineInfoVOs;
 	}
 
+	@Override
+	public String getMHTBody(String pDocID, String pListType, String realPath, String domain, LoginVO userInfo) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("getMHTBody started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", pDocID);
+		map.put("listType", pListType);
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		String docHref = MApprovalGDAO.getAprDocHref(map);
+		logger.debug("docHref : " + docHref);
+		String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator;
+		String filePath = realPath + uploadModule;
+        
+        File file = new File(filePath);
+        if (!file.exists()) {
+        	file.mkdirs();
+        }
+        
+        String m_strMHT = "";
+        
+        try {
+        	m_strMHT = ezCommonService.loadMHTFile(realPath + docHref);
+		} catch (Exception e) {
+			e.printStackTrace();
+			m_strMHT= "";
+		}
+        
+        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, userInfo.getLocale(), domain);
+        logger.debug("strHTML : " + strHTML);
+        
+        Document doc = Jsoup.parse(strHTML);
+        
+        String bodyHTML = doc.getElementById("body").html();
+
+		logger.debug("getMHTBody ended");
+		
+		return bodyHTML;
+	}
+
+	@Override
+	public String getAprCommentCount(String pDocID, String pListType, LoginVO userInfo) throws Exception {
+		logger.debug("getAprCommentCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", pDocID);
+		map.put("listType", pListType);
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		String commentCount = MApprovalGDAO.getAprCommentCount(map);
+
+		logger.debug("getAprCommentCount ended");
+		
+		return commentCount;
+	}
+
+	@Override
+	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String pListType, LoginVO userInfo) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("getOpinionInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", pDocID);
+		map.put("listType", pListType);
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = MApprovalGDAO.getOpinionInfo(map);
+
+		logger.debug("getOpinionInfo ended");
+		
+		return approvalGOpinionInfoVOs;
+	}
 	
 }
