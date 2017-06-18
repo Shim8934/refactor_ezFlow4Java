@@ -1493,7 +1493,7 @@
         </script>
     </head>
             
-        <body > 
+        <body class="mainbody"> 
         
         <div id="objectDiv"></div>
         <div id= 'top'>
@@ -1504,10 +1504,11 @@
                 <article class='utmenu'>
                     <ul>
                         <c:if test="${checkAdmin}">
-                            <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/admin/main.do", "", "")'><spring:message code='ezResource.t106' /></span></li>
+                            <li><span style='cursor:pointer' onclick='OpenWindow(event, "/admin/main.do", "", "")'><spring:message code='ezResource.t106' /></span></li>
                         </c:if>
-                        <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "null", "height=550px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")'><spring:message code='ezPersonal.t210' /></span></li>
-                        <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")'><spring:message code='ezPersonal.t999900011' /></span></li>
+                        <li><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "null", "height=550px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")'><spring:message code='ezPersonal.t210' /></span></li>
+                        <li><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")'><spring:message code='ezPersonal.t999900011' /></span></li>
+                        <li><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPortal/help/help.do", "helpWindow", "height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0")'><spring:message code='main.t00037' /></span></li>                        
                         <li class='btn_logout'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
                     </ul>
                 </article>
@@ -1563,9 +1564,24 @@
                         </c:if>           
                         <c:if test="${lang == '4'}">
                         <img src='/files/upload_portal/S907000/Menu/top_menu02(4).gif' id="top_menu02" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu02o(2).gif', this);" onmouseout="img_onMouseOut(this);" name='09e1d12c-5ffd-4240-8791-020431a5c47b' style='cursor:pointer' onclick='OpenWindow(event, "/ezEmail/mailMain.do", "main", " ")' width='94' height='33'>
-                        </c:if>                                                                                                
+                        </c:if>
+                    </li>
+                    <li>
+                        <c:if test="${lang == '1'}">
+                        <img src='/files/upload_portal/S907000/Menu/top_menu03(4).gif' id="top_menu03(4)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(8).gif', this);" onmouseout="img_onMouseOut(this);" name='6cdb78b7-ae72-48ce-990f-5c0f6838fbbc' style='cursor:pointer' onclick='OpenWindow(event, "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ")' width='121' height='33'>
+                        </c:if>
+                        <c:if test="${lang == '3'}">
+                        <img src='/files/upload_portal/S907000/Menu/top_menu03(7).gif' id="top_menu03(7)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu03o(11).gif', this);" onmouseout="img_onMouseOut(this);" name='6cdb78b7-ae72-48ce-990f-5c0f6838fbbc' style='cursor:pointer' onclick='OpenWindow(event, "/ezSchedule/scheduleIndex.do?funCode=2", "main", " ")' width='121' height='33'>
+                        </c:if>
                     </li>   
-                    
+                    <li>
+                        <c:if test="${lang == '1'}">
+                        <img src='/files/upload_portal/S907000/Menu/top_menu05.gif' id="top_menu05" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o.gif', this);" onmouseout="img_onMouseOut(this);" name='1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d' style='cursor:pointer' onclick='OpenWindow(event, "/EgovPageLink.do?menuNo=11&link=ezBoard%2FboardMain", "main", " ")' width='110' height='33'>
+                        </c:if>
+                        <c:if test="${lang == '3'}">
+                        <img src='/files/upload_portal/S907000/Menu/top_menu05(4).gif' id="top_menu05(4)" onmouseover="img_onMouseOver('/files/upload_portal/S907000/Menu/top_menu05o(4).gif', this);" onmouseout="img_onMouseOut(this);" name='1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d' style='cursor:pointer' onclick='OpenWindow(event, "/EgovPageLink.do?menuNo=11&link=ezBoard%2FboardMain", "main", " ")' width='110' height='33'>
+                        </c:if>
+                    </li>                                                                                                                                                                                        
                 </ul>
             </nav> 
             <div class="topSubMenu">
@@ -1577,14 +1593,37 @@
                 <ul id="menu7431401e-6b06-4363-ba5b-fc7026757d63" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
                 <ul id="menuf31e5262-c633-4f0d-ac95-817843fc5f38" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
                 <ul id="menu62ef609e-ab67-4b30-bde9-0412c3378290" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
-                <ul id="menu_1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx" onmouseover="submenuover()" onmouseout="submenuout()">
+                <ul id="menu_1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d" id="menu01_sub" style="DISPLAY:none;top:0px;left:100px" onmouseover="submenuover()" onmouseout="submenuout()">
                     <li class="left">
-                        <li class="right"></ul><ul id="menu_09e1d12c-5ffd-4240-8791-020431a5c47b" id="menu01_sub" style="DISPLAY:none;top:0px;left:100px" onmouseover="submenuover()" onmouseout="submenuout()"><li class="left"><li onclick="javascript:submenuclick('c93e6f29-ac0a-46a4-84c2-ae809e9c7c9e');OpenWindow(event, '/ezEmail/mailMain.do?funCode=1', 'main', ' ')"><spring:message code='main.t78' /></li>
-                        <li onclick="javascript:submenuclick('8d13543c-7747-4828-a141-1e28045ff722');OpenWindow(event, '/ezEmail/mailMain.do?funCode=2', 'main', ' ')"><spring:message code='main.t205' /></li>
-                        <li class="right"></ul><ul id="menu23ced55b-ace8-48cb-9834-19b8d9fb8d8b" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu0fbe027c-9241-4922-bf97-cc6d10e402c9" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menue254ef6f-d602-4d40-8e39-b44177a8737c" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu2016a429-cb39-4653-b92c-c9595c12acec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu8593cc87-7630-420b-a6d5-f7a8577c5a31" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu8e9ebb41-5631-4c6f-9887-ec824464bce3" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuf6f7ecd7-1969-4025-9bcc-bbc181e41073" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuce2fd9b5-3934-4cba-b13f-a32d36a5d63a" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuba0d5a0d-7ea9-469a-a981-a00e2b8825ec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menu698d7b32-1fe1-4fcc-af02-643b08fddfce" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul><ul id="menuf5c278f0-b62d-4437-8b08-1a81c2410497" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx">
-                    </ul>
-                </div>
+                    <li onclick="javascript:submenuclick('9f3651b2-fb17-429b-88db-b9d91cadfdbe');OpenWindow(event, '/ezBoard/boardMain.do', 'main', ' ')"><spring:message code='ezBoard.t360' /></li>
+                    <c:if test="${lang == '1'}">
+                    <li onclick="javascript:submenuclick('3a666e56-b5c5-4dc3-b455-2a4b607ce332');OpenWindow(event, '/ezBoard/boardMain.do?subFunc=1', 'main', ' ')">나의게시물</li>
+                    </c:if>
+                    <c:if test="${lang == '3'}">
+                    <li onclick="javascript:submenuclick('3a666e56-b5c5-4dc3-b455-2a4b607ce332');OpenWindow(event, '/ezBoard/boardMain.do?subFunc=1', 'main', ' ')">マイ掲示板</li>
+                    </c:if>
+                    <li onclick="javascript:submenuclick('451ef007-5316-472d-9a22-eeafbe8367e9');OpenWindow(event, '/ezBoard/boardMain.do?subFunc=2', 'main', ' ')"><spring:message code='ezBoard.t229' /></li>
+                    <li class="right">                
+                </ul>
+                <ul id="menu_09e1d12c-5ffd-4240-8791-020431a5c47b" id="menu01_sub" style="DISPLAY:none;top:0px;left:100px" onmouseover="submenuover()" onmouseout="submenuout()">
+                    <li class="left">
+                    <li onclick="javascript:submenuclick('c93e6f29-ac0a-46a4-84c2-ae809e9c7c9e');OpenWindow(event, '/ezEmail/mailMain.do?funCode=1', 'main', ' ')"><spring:message code='main.t78' /></li>
+                    <li onclick="javascript:submenuclick('8d13543c-7747-4828-a141-1e28045ff722');OpenWindow(event, '/ezEmail/mailMain.do?funCode=2', 'main', ' ')"><spring:message code='main.t205' /></li>
+                    <li class="right">
+                </ul>
+                <ul id="menu23ced55b-ace8-48cb-9834-19b8d9fb8d8b" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menu0fbe027c-9241-4922-bf97-cc6d10e402c9" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menue254ef6f-d602-4d40-8e39-b44177a8737c" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menu2016a429-cb39-4653-b92c-c9595c12acec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menu8593cc87-7630-420b-a6d5-f7a8577c5a31" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menu8e9ebb41-5631-4c6f-9887-ec824464bce3" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menuf6f7ecd7-1969-4025-9bcc-bbc181e41073" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menuce2fd9b5-3934-4cba-b13f-a32d36a5d63a" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menuba0d5a0d-7ea9-469a-a981-a00e2b8825ec" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menu698d7b32-1fe1-4fcc-af02-643b08fddfce" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
+                <ul id="menuf5c278f0-b62d-4437-8b08-1a81c2410497" id="menu01_sub" style="DISPLAY:none;top:0px;left:nullpx"></ul>
             </div>
+        </div>
 
                        
         <!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->

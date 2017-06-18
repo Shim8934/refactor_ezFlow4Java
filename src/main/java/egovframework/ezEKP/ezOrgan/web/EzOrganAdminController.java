@@ -1023,8 +1023,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String items[] = licenseKey.split(":");
 		
-		if (items.length != 2) {
-			logger.debug("Number of License Key Items is not 2");
+		if (items.length < 2) {
+			logger.debug("Number of License Key Items is less than 2");
 			
 			return "INVALID_LICENSE_KEY";					
 		}
