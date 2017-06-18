@@ -22,6 +22,7 @@
         var lang = "${userinfo.lang}";
         var PostTreeView = null;
         var treeconfig = "";
+        var oldFolderId = "${folderId}";
 //         var ReturnFunction;
 //         var CancelFunction;
 //         var isDivPopUp = false;
@@ -74,7 +75,8 @@
  			   	url : '/ezCircular/moveCircular.do',
                 data : {	
                 		folderId : folderId,
-                		circularIdList : circularIdList
+                		circularIdList : circularIdList,
+                		oldFolderId : oldFolderId
                 },  
                 success : function(data) {	
                   alert("이동하였습니다.");

@@ -632,7 +632,7 @@
 						type : "POST",
 						dataType : "text",
 						async : false,
-						url : "/ezCircular/circularDeleteItem.do",
+						url : "/ezCircular/circularDeleteTemp.do",
 						data : { circularIDList : circularIDList
 								},
 						success: function() {
@@ -646,6 +646,29 @@
 		            location.href = location.href;
 	        	}
 	        }
+	        
+	        function CircularMove_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+				
+	        	var arrList = new Array();
+		        var circularIDList = "";
+		        var i = 0;
+		        
+		        arrList = strListInfo.split(";");
+		        
+		        for (i = 0; i < arrList.length - 1; i++) {
+		        	circularIDList += arrList[i].split(",")[1] + ";";
+		        }
+
+		        arrList = null;
+	        	
+	        	var feature = GetOpenPosition(820, 700);
+	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId;
+	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+		    }
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
@@ -662,9 +685,9 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-	            <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
+<%-- 	            <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li> --%>
 	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t58'/></span></li>
-	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t56'/></span></li>
+	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>

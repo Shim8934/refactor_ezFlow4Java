@@ -235,7 +235,7 @@ public class EzCircularController extends EgovFileMngUtil {
 //        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
         int startRow = 1;
         int endRow = 0;
-        
+
 		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
@@ -2098,6 +2098,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularMove started");
 		
 		String circularIdList = request.getParameter("circularIdList");
+		String folderId = request.getParameter("folderId");
+		
+		if (folderId != null) {
+			model.addAttribute("folderId", folderId);
+		}
 		
 		model.addAttribute("circularIdList", circularIdList);
 		
@@ -2119,10 +2124,15 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
+		String oldFolderId = request.getParameter("oldFolderId");
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
-			
-		ezCircularService.moveCircular(folderId, circularIdList, memberId, tenantId);
+
+		if (oldFolderId != null) {
+			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
+		} else {
+			ezCircularService.moveCircular(folderId, circularIdList, memberId, tenantId);			
+		}
 		
 		logger.debug("moveCircular ended");
 	}

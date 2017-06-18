@@ -857,4 +857,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return ezCircularDAO.getFolderCircularMapList(map);
 	}
+
+	@Override
+	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String[] circularIdArr = circularIdList.split(";");
+
+		for (int i=0; i<circularIdArr.length; i++) {
+			map.put("folderId", folderId);
+			map.put("circularId", circularIdArr[i]);
+			map.put("memberId", memberId);
+			map.put("tenantId", tenantId);
+			
+			ezCircularDAO.updateFolderId(map);
+		}
+	}
 }

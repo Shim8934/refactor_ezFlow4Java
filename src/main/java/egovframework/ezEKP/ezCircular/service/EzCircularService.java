@@ -126,4 +126,6 @@ public interface EzCircularService {
 
 	public List<HashMap<String, Object>> getFolderCircularMapList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
 
+	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
+
 }

@@ -1029,9 +1029,20 @@
           SET
               UPDATESTATUS = '3'
           WHERE 
-              CIRCULARID = (SELECT CIRCULARID
-              				FROM TBL_CIRCULAR
-              				WHERE CIRCULARID = #circularId#) 
+              CIRCULARID = #circularId# 
+          AND
+              TENANTID = #tenantId#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateFolderId" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_LINK
+          SET
+              CIRCULARFOLDERID = #folderId#
+          WHERE 
+              CIRCULARID = #circularId#
           AND
               TENANTID = #tenantId#
         ]]>

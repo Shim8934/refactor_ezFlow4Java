@@ -299,4 +299,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<HashMap<String, Object>>) list("EzCircularDAO.getFolderCircularMapList", map);
 	}
 
+	public void updateFolderId(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateFolderId", map);
+	}
+
 }
