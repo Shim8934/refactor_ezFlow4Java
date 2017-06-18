@@ -805,7 +805,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void moveCircular(String folderId, String circularIdList, String memberId, int tenantId) throws Exception {
+	public void moveCircular(String folderId, String circularIdList, String memberId, int updateStatus, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String[] circularIdArr = circularIdList.split(";");
@@ -814,6 +814,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("folderId", folderId);
 			map.put("circularId", circularIdArr[i]);
 			map.put("memberId", memberId);
+			map.put("updateStatus", updateStatus);
 			map.put("tenantId", tenantId);
 			
 			ezCircularDAO.moveCircular(map);

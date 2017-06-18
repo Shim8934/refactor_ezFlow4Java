@@ -2064,9 +2064,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (page - 1)) + 1;
         endRow = (personalCount * page);
 		
-        int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        int totalCount = ezCircularService.getFolderCircularListCount(folderId, userInfo.getId(), userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getFolderCircularList(folderId, userInfo.getId(), startRow, endRow, userInfo.getTenantId());
 		
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
@@ -2099,12 +2099,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
+		String updateStatus = request.getParameter("updateStatus");
 		
 		if (folderId != null) {
 			model.addAttribute("folderId", folderId);
 		}
 		
 		model.addAttribute("circularIdList", circularIdList);
+		model.addAttribute("updateStatus", updateStatus);
 		
 		logger.debug("circularMove ended");
 		
@@ -2125,13 +2127,20 @@ public class EzCircularController extends EgovFileMngUtil {
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
 		String oldFolderId = request.getParameter("oldFolderId");
+		int updateStatus = Integer.parseInt(request.getParameter("updateStatus"));
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
 
 		if (oldFolderId != null) {
 			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
 		} else {
-			ezCircularService.moveCircular(folderId, circularIdList, memberId, tenantId);			
+			if (updateStatus == 1) {
+				updateStatus = 3;
+			} else {
+				updateStatus = 1;
+			}
+			
+			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);			
 		}
 		
 		logger.debug("moveCircular ended");

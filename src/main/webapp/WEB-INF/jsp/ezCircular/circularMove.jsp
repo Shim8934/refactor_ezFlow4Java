@@ -67,26 +67,28 @@
         function btn_Move_onclick() {
         	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
         	var circularIdList = "${circularIdList}";
-        	
-        	$.ajax ({
-                type : 'POST',
-                dataType : 'text',
-                cache: false,
- 			   	url : '/ezCircular/moveCircular.do',
-                data : {	
-                		folderId : folderId,
-                		circularIdList : circularIdList,
-                		oldFolderId : oldFolderId
-                },  
-                success : function(data) {	
-                  alert("이동하였습니다.");
-                  window.opener.window_reload();
-             	  window.close();
-                },
-                error : function() {
-                	alert("에러발생")
-                }
- 			});
+        	var updateStatus = "${updateStatus}";
+alert(updateStatus);        	
+//         	$.ajax ({
+//                 type : 'POST',
+//                 dataType : 'text',
+//                 cache: false,
+//  			   	url : '/ezCircular/moveCircular.do',
+//                 data : {	
+//                 		folderId : folderId,
+//                 		circularIdList : circularIdList,
+//                 		oldFolderId : oldFolderId,
+//                 		updateStatus : updateStatus
+//                 },  
+//                 success : function(data) {	
+//                   alert("이동하였습니다.");
+//                   window.opener.window_reload();
+//              	  window.close();
+//                 },
+//                 error : function() {
+//                 	alert("에러발생")
+//                 }
+//  			});
         }
 //         function Window_Close() {
 //             if (ReturnFunction!=null) {

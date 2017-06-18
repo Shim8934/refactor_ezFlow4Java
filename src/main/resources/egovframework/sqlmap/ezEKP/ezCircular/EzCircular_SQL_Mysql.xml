@@ -1027,7 +1027,7 @@
           UPDATE
               TBL_CIRCULAR_USER
           SET
-              UPDATESTATUS = '3'
+              UPDATESTATUS = #updateStatus#
           WHERE 
               CIRCULARID = #circularId# 
           AND

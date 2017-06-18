@@ -89,6 +89,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var updateStatus = "${list.updateStatus}";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	
@@ -655,7 +656,7 @@
 		        arrList = null;
 	        	
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
+	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&updateStatus=" + updateStatus;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 	        

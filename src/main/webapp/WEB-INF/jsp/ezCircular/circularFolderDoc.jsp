@@ -652,7 +652,18 @@
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
-				
+	        	
+				var updateStatusList = new Array();
+				var updateStatus = "";
+	        	
+	        	<c:forEach items="${list}" var="item">
+	        		updateStatusList.push("${item.updateStatus}");
+	        	</c:forEach>
+	        	
+	        	for (var i=0; i<updateStatusList.length; i++) {
+	        		updateStatus += updateStatusList[i].split(",") + ";";
+	        	}
+	        	
 	        	var arrList = new Array();
 		        var circularIDList = "";
 		        var i = 0;
@@ -666,7 +677,7 @@
 		        arrList = null;
 	        	
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId;
+	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId + "&updateStatus=" + updateStatus;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 	
