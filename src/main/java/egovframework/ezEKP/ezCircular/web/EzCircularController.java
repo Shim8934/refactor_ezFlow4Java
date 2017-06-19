@@ -202,12 +202,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		
         int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
         
-        logger.debug("startRow : "+startRow);
-        logger.debug("endRow : "+endRow);
+        logger.debug("startRow : " + startRow);
+        logger.debug("endRow : " + endRow);
         
 		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
 		
-		logger.debug("listSize : "+list.size());
+		logger.debug("listSize : " + list.size());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
@@ -2073,7 +2073,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		
 		String folderName = ezCircularService.getFolderInfo(folderId, userInfo.getId(), userInfo.getTenantId());
-		
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
 //		model.addAttribute("useOcs", useOcs);
@@ -2099,14 +2099,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
-		String updateStatus = request.getParameter("updateStatus");
+//		String updateStatus = request.getParameter("updateStatus");
 		
 		if (folderId != null) {
 			model.addAttribute("folderId", folderId);
 		}
 		
 		model.addAttribute("circularIdList", circularIdList);
-		model.addAttribute("updateStatus", updateStatus);
+//		model.addAttribute("updateStatus", updateStatus);
 		
 		logger.debug("circularMove ended");
 		
@@ -2127,20 +2127,20 @@ public class EzCircularController extends EgovFileMngUtil {
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
 		String oldFolderId = request.getParameter("oldFolderId");
-		int updateStatus = Integer.parseInt(request.getParameter("updateStatus"));
+//		int updateStatus = Integer.parseInt(request.getParameter("updateStatus"));
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
 
 		if (oldFolderId != null) {
 			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
 		} else {
-			if (updateStatus == 1) {
-				updateStatus = 3;
-			} else {
-				updateStatus = 1;
-			}
-			
-			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);			
+//			if (updateStatus == 1) {
+//				updateStatus = 3;
+//			} else {
+//				updateStatus = 1;
+//			}
+//			
+			ezCircularService.moveCircular(folderId, circularIdList, memberId, tenantId);
 		}
 		
 		logger.debug("moveCircular ended");
