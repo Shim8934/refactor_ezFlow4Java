@@ -132,7 +132,7 @@
 			            if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
 			                location.href = GetAttribute(checks.item(suffix++), "filepath");
 			            } else {		            	
-			                location.href = "/ezSchedule/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
+			                location.href = "/ezCircular/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
 			            }
 			            setTimeout(function () { downloadAll(checks) }, 1000);
 			        } else {
@@ -279,7 +279,7 @@
                                     		<c:if test="${item.fileType == 'ecm'}">
                                     			<c:set var="imagePath" value="/images/ecm.png" />
                                     		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
                                     	</div>
                                     </c:forEach>
                                 </div>

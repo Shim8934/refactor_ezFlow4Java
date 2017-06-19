@@ -287,6 +287,31 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 회람판 첨부파일 다운로드
+	 */
+	@RequestMapping(value = "/ezCircular/downloadAttach.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadAttach started");
+		
+		userInfo = commonUtil.userInfoSimple(loginCookie);		
+
+		String filePath = request.getParameter("filePath");		
+		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
+		String uploadFilePath = commonUtil.getUploadPath("upload_circular.ROOT", userInfo.getTenantId());
+		
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath; 
+		}
+		
+		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.separator + filePath;
+
+		downFile(request, response, fullFilePath, fileName);
+		
+		logger.debug("downloadAttach ended");
+	}
+	
+	/**
 	 * 확인완료 회람판 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularComplete.do")

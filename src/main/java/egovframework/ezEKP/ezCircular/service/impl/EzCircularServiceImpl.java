@@ -261,7 +261,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		List<CircularListVO> list = getCircularUserList(circularID, tenantID);
 		
-		logger.debug("@@receiverLength : " + receiverLength);
+		logger.debug("receiverLength : " + receiverLength);
 		logger.debug("listSize : " + list.size());
 		
 		//회람자 삭제 후 등록
