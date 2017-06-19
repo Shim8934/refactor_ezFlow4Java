@@ -32,6 +32,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
@@ -217,6 +218,76 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("newCircular ended");
 		return "/ezCircular/newCircular";
+	}
+	
+	/**
+	 * 회람판 미리보기 표출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/getPreviewItem.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getPreviewItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pcircularId = "";
+		String pmemberId = "";
+ 		
+		pcircularId = request.getParameter("pcircularId"); 		
+		pmemberId = request.getParameter("pmemberId"); 		
+
+		String retXML = "";
+
+		retXML = ezCircularService.getItemXML(pcircularId, pmemberId, userInfo.getOffset(), userInfo.getTenantId());
+System.out.println("@@" + retXML);		
+		return retXML;
+	}
+	
+	/**
+	 * 회람판 미리보기게시물 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularItemPreviewContent.do")
+	public String circularItemPreviewContent() throws Exception{
+		return "/ezCircular/circularItemPreviewContent";
+	}
+	
+	/**
+	 * 회람판 첨부파일가져오기 표출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/getItemAttachments.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String getItemAttachments(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pcircularId = "";
+		String strXML = "";
+        
+        pcircularId = request.getParameter("pcircularId");
+
+       	strXML = getItemAttachmentXML(pcircularId, userInfo.getTenantId());
+        
+        return strXML;
+	}
+	
+	/**
+	 * 
+	 * 회람판 첨부파일관련 표출 Method 
+	 */
+	public String getItemAttachmentXML(String pcircularId, int tenantId) throws Exception{
+		List<CircularAttachVO> circularAttachVOList = ezCircularService.getAttachList(Integer.parseInt(pcircularId), tenantId);
+		
+		StringBuilder resultXML = new StringBuilder();
+		resultXML.append("<NODES>");
+		
+		for (int i = 0; i < circularAttachVOList.size(); i++) {
+			resultXML.append("<NODE>");
+			resultXML.append("<CircularFileId>" + circularAttachVOList.get(i).getCircularFileId() + "</CircularFileId>");
+			resultXML.append("<FileSize>" + circularAttachVOList.get(i).getFileSize() + "</FileSize>");
+			resultXML.append("<FileName>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFileName()) + "</FileName>");
+			resultXML.append("<FilePath>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFilePath()) + "</FilePath>");
+			resultXML.append("</NODE>");
+		}
+		resultXML.append("</NODES>");
+		
+		return resultXML.toString();
 	}
 	
 	/**

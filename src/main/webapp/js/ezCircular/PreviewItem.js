@@ -269,23 +269,23 @@ function PreviewMode_ChangeBtn() {
 function ItemPreviewRead_click(obj) {
     selobj = document.getElementById(obj);
     onclickFlag = true;
-alert("##" + selobj);    
-//    if (g_bPrevShow) {
-//        ItemPreviewRead(document.getElementById(obj));
-//    }
+
+    if (g_bPrevShow) {
+        ItemPreviewRead(document.getElementById(obj));
+    }
 }
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
 function ItemPreviewRead(obj) {
     obj.childNodes[2].style.fontWeight = "normal";
 
-    var pboardid = obj.getAttribute("DATA1");
-    var pitemid = obj.getAttribute("DATA2");
-
-    if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) {
-        document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-        document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
-    }
+    var pcircularId = obj.getAttribute("CIRCULARID");
+    var pmemberId = obj.getAttribute("MEMBERID");
+alert("##" + pcircularId + " / " + pmemberId);
+//    if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) {
+//        document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
+//        document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+//    }
 //    if (previewType == "PHOTO" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4")) {
 //        clickPreviweType = "PHOTO";
 //        if (document.getElementById("previewmail_bar_h") != null)
@@ -305,11 +305,11 @@ function ItemPreviewRead(obj) {
         if (document.getElementById("previewmail_bar_h") != null)
             document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
         xmlhttp = createXMLHttpRequest();
-        xmlhttp.open("POST", "/ezCircular/getPreviewItem.do?boardID=" + pboardid + "&itemID=" + pitemid + "&mode=" + pMode + "&location=GENERAL", true);
+        xmlhttp.open("POST", "/ezCircular/getPreviewItem.do?pcircularId=" + pcircularId + "&pmemberId=" + pmemberId, true);
         xmlhttp.onreadystatechange = event_ItemPreviewRead;
         xmlhttp.send();
         xmlhttp2 = createXMLHttpRequest();
-        xmlhttp2.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pitemid, true);
+        xmlhttp2.open("POST", "/ezCircular/getItemAttachments.do?pcircularId=" + pcircularId, true);
         xmlhttp2.onreadystatechange = event_ItemPreviewRead;
         xmlhttp2.send();
 //    }
@@ -398,28 +398,28 @@ function event_ItemPreviewRead() {
             	document.getElementById("PreViewBottom").style.display = "";
             }
      
-            if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
-                alert(strLang173);
-                return;
-            }
-            ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");
-            WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
-            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
-            WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
-            WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
-            WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
-            Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
-            ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+//            if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
+//                alert(strLang173);
+//                return;
+//            }
+//            CircularId = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/CircularId");
+//            MemberId = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/MemberId");
+//            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
+//            WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
+//            WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
+//            RegDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/RegDate");
+//            Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
+//            ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
-                document.getElementById("ifrmPreViewW").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewW").src = "/ezCircular/circularItemPreviewContent.do";
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
-                document.getElementById("ifrmPreViewH").src = "/ezBoard/boardItemPreviewContent.do";
+                document.getElementById("ifrmPreViewH").src = "/ezCircular/circularItemPreviewContent.do";
             }
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
@@ -448,19 +448,19 @@ function previewItemSet() {
     		boardType = "BOARDCONTENT";
     	}
     	
-    	$.ajax({
-			type : "POST",
-			dataType : "text",
-			async : true,
-			url : "/ezCommon/mhtToHTMLContent.do",
-			data : { type   	 : boardType, 
-					 itemID 	 : ItemID,
-					 href        : ContentLocation
-				   },
-			success: function(result){
-				event_downContent(result, xmlhttp2.responseText);
-			}        			
-		});	
+//    	$.ajax({
+//			type : "POST",
+//			dataType : "text",
+//			async : true,
+//			url : "/ezCommon/mhtToHTMLContent.do",
+//			data : { type   	 : boardType, 
+//					 itemID 	 : ItemID,
+//					 href        : ContentLocation
+//				   },
+//			success: function(result){
+//				event_downContent(result, xmlhttp2.responseText);
+//			}        			
+//		});	
     } else {
         document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
         document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;

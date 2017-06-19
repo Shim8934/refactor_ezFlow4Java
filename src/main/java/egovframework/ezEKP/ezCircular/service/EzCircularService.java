@@ -128,4 +128,6 @@ public interface EzCircularService {
 
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
+	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
+
 }

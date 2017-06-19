@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
@@ -873,5 +874,35 @@ public class EzCircularServiceImpl implements EzCircularService {
 			
 			ezCircularDAO.updateFolderId(map);
 		}
+	}
+
+	@Override
+	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+		if (pcircularId != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("circularId", pcircularId);
+			map.put("tenantId", tenantId);
+			
+			CircularListVO itemInfo = ezCircularDAO.getCircular(map);
+			
+			sb.append("<NODES>");
+			sb.append("<NODE>");
+			sb.append("<CircularId>" + itemInfo.getCircularId() + "</CircularId>");
+			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
+			sb.append("<HasFile>" + itemInfo.getHasFile() + "</HasFile>");
+			sb.append("<Status>" + itemInfo.getStatus() + "</Status>");
+			sb.append("<Title>" + itemInfo.getTitle() + "</Title>");
+			sb.append("<MemberId>" + itemInfo.getMemberId() + "</MemberId>");
+			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(itemInfo.getRegDate(), offset, false) + "</RegDate>");
+			sb.append("<Option>" + itemInfo.getOption() + "</Option>");
+			sb.append("<Content>" + commonUtil.cleanValue(itemInfo.getContent()) + "</Content>");
+		} else {
+			sb.append("<NODES>");
+			sb.append("</NODES>");
+		}
+
+		return sb.toString();
 	}
 }
