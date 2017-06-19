@@ -8,23 +8,7 @@
     <typeAlias alias="CircularAttachVO"        		type="egovframework.ezEKP.ezCircular.vo.CircularAttachVO"/>
     <typeAlias alias="CircularMemberVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularMemberVO"/>
     <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
-    
-	<resultMap class="CircularDeptVO"      			id="circularDeptVO">
-		<result property="circularBMId"				column="CIRCULARBMID"		 columnIndex="1"/>
-		<result property="title"			        column="TITLE"				 columnIndex="2"/>
-		<result property="regDate"					column="REGDATE"			 columnIndex="3"/>
-		<result property="memberName"				column="MEMBERNAME"			 columnIndex="4"/>
-	</resultMap>
 	
-	<resultMap class="CircularMemberVO" 			id="circularMemberVO">
-		<result property="memberId"					column="MEMBERID"			 columnIndex="1"/>
-		<result property="company"					column="COMPANY"			 columnIndex="2"/>
-		<result property="description"				column="DESCRIPTION"		 columnIndex="3"/>
-		<result property="title"				    column="TITLE"				 columnIndex="4"/>
-		<result property="memberName"				column="MEMBERNAME"			 columnIndex="5"/>
-		<result property="mail"						column="MAIL"				 columnIndex="6"/>
-    </resultMap>
-    
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
 		    SELECT
@@ -261,7 +245,7 @@
         ]]>     
     </select>
   
-    <select id="EzCircularDAO.getcircularDeptList" parameterClass="CircularDeptVO" resultMap="circularDeptVO">
+    <select id="EzCircularDAO.getcircularDeptList" parameterClass="CircularDeptVO" resultClass="CircularDeptVO">
         <![CDATA[
             SELECT
                 A.CIRCULARBMID,
@@ -272,9 +256,9 @@
             FROM
                 TBL_CIRCULAR_BM A
             WHERE
-                A.MEMBERID = #memberId#
+                A.MEMBERID = #memberID#
             AND
-                A.TENANTID = #tenantId#
+                A.TENANTID = #tenantID#
         ]]>
     </select>
     
@@ -284,7 +268,7 @@
         ]]>
     </select> 
       
-    <select id="EzCircularDAO.getMemberName" parameterClass="map" resultMap="circularMemberVO">
+    <select id="EzCircularDAO.getMemberName" parameterClass="map" resultClass="CircularMemberVO">
         <![CDATA[
           SELECT
             A.MEMBERID,   B.COMPANY,    B.DESCRIPTION,    B.TITLE,    A.MEMBERNAME,   B.MAIL
@@ -759,7 +743,7 @@
               CIRCULAROPTIONID, MEMBERID, ISMAILRECEIVE,  LISTCNT,  ISPREVIEW,  PREVIEWLISTVALUE, PREVIEWCONTENTVALUE,  TENANTID  
           )
             VALUES (
-              #circularOptionId#, #memberId#, #isMailReceive#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantId#
+              #circularOptionID#, #memberID#, #isMailReceive#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantID#
           )
         ]]>
     </insert>
@@ -770,7 +754,7 @@
             TITLE,    MEMBERID,   REGDATE,    TENANTID
           )
           VALUES (
-            #title#, #memberId#, #regDate#, #tenantId#
+            #title#, #memberID#, #regDate#, #tenantID#
           )
         ]]>
     </insert>
@@ -904,9 +888,9 @@
             PREVIEWLISTVALUE = #previewListValue#,
             PREVIEWCONTENTVALUE = #previewContentValue#
           WHERE
-            TENANTID = #tenantId#
+            TENANTID = #tenantID#
           AND
-            MEMBERID = #memberId#
+            MEMBERID = #memberID#
         ]]>   
     </update>
   
@@ -970,11 +954,11 @@
           SET
             TITLE = #title#
           WHERE
-            CIRCULARBMID = #circularBMId#
+            CIRCULARBMID = #circularBMID#
           AND
-            TENANTID = #tenantId#
+            TENANTID = #tenantID#
           AND
-            MEMBERID = #memberId#
+            MEMBERID = #memberID#
         ]]>
     </update>
     
