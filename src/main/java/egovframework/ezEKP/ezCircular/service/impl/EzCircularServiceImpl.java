@@ -909,7 +909,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		List<CircularCommentVO> list = ezCircularDAO.getCircularComment(map);
 		
-		logger.debug("getCircularComment ended.");
+		logger.debug("getCircularComment ended. listSize=" + list.size());
 		
 		return list;
 	}

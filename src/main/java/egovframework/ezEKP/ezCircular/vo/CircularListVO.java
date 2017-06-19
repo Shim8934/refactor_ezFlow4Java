@@ -14,7 +14,7 @@ public class CircularListVO {
 	/** 첨부파일 */
 	private int hasFile;
 	/** 회람상태 */
-	private int status;
+	private Integer status;
 	/** 작성자 */
 	private String memberID;
 	/** 작성자이름 */
@@ -84,11 +84,11 @@ public class CircularListVO {
 		this.hasFile = hasFile;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 

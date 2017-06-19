@@ -294,14 +294,21 @@
                             </td>
                         </tr>
                     </table>
-                    
-                    <table id="comments">
+                    <br/>
+                    <table id="comments" style="width:100%;">
+                    	<tr>
+                    		<th style="width: 30px">회람댓글</th>
+                    		<td id="pos1" style="border: 1px solid #b6b6b6;">
+                    			<div id="commentUserList" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left"></div>
+                    		</td>
+<!--                     		<td id="pos2"> -->
+<!--                     			<a href="#" class="imgbtn"> -->
+<!--                                 	<span style="width:57px;" onclick="#">댓글</span> -->
+<!--                                 </a> -->
+<!--                     		</td> -->
+                    	</tr>
+                    	
                     </table>
-                    
-                    <input type="text" id="circularComment">
-                    <a href='#' class='imgbtn'>
-                    	<span onclick='editCircularComment()'>댓글저장</span>
-                    </a>
 	        	</td>
         	</tr>
 		</table>
