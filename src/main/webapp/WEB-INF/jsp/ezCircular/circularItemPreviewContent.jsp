@@ -71,7 +71,8 @@
 	        }
 	
 	        function makeWriteContent(responseText, AttachText) {
-	            try {
+alert(AttachText);	            
+	        	try {
 	                nowZoom = 100;
 	                maxZoom = 200;
 	                minZoom = 80;
@@ -139,7 +140,7 @@
 	
 	            var totalSize = 0;
 	            for (var j = 0; j < xmldomNodes.length; j++) {
-	                totalSize += parseInt(getNodeText(SelectSingleNode(xmldomNodes[j], "FileSize2")));
+	                totalSize += parseInt(getNodeText(SelectSingleNode(xmldomNodes[j], "FileSize")));
 	            }
 	
 	            var strSize = "";
@@ -150,14 +151,14 @@
 	
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	            	filename = filepath.substr(120, filepath.length - 119);
+	            	filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 // 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
 // 	                filename = ReplaceText(filename, "%2b", "+");
 // 	                filename = ReplaceText(filename, "%3b", ";");
 // 	                filename = ReplaceText(filename, "%7e", "~");
 // 	                filename = ReplaceText(filename, "%3d", "=");
 	                filepath = "/upload_board/" + filepath;
-	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize2")));
+	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize")));
 	
 	                var strTarget = "target=''";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -169,10 +170,10 @@
 	                }
 	                
 	                strAttach += "<li>";
-	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
+	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
+	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
 	                strAttach += "</span>";
 	                strAttach += "</li>";
 	            }

@@ -281,7 +281,7 @@ function ItemPreviewRead(obj) {
 
     var pcircularId = obj.getAttribute("CIRCULARID");
     var pmemberId = obj.getAttribute("MEMBERID");
-alert("##" + pcircularId + " / " + pmemberId);
+
 //    if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) {
 //        document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
 //        document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
@@ -444,7 +444,6 @@ function previewItemSet() {
         document.getElementById('ifrmPreViewH').style.display = "";
         document.getElementById('ifrmPreViewW').style.display = "";
     }
-alert(Content);    
 //    if (CrossYN()) {
 //    	var boardType = "";
 //    	
