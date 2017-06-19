@@ -128,9 +128,9 @@ public interface EzCircularService {
 
 	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
 
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO) throws Exception;
 
-	public void editCircularComment(CircularCommentVO circularCommentVO, String type, LoginVO userInfo) throws Exception;
+	public void editCircularComment(CircularCommentVO circularCommentVO) throws Exception;
 
 
 }

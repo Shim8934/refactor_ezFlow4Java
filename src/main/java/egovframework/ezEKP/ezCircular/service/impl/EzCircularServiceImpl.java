@@ -896,12 +896,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return sb.toString();
 	}
 
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, LoginVO userInfo) throws Exception {
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo) throws Exception {
 		logger.debug("getCircularComment started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", vo.getCircularID());
-		map.put("tenantID", userInfo.getTenantId());
+		map.put("tenantID", vo.getTenantID());
 		
 		List<CircularCommentVO> list = ezCircularDAO.getCircularComment(map);
 		
@@ -911,16 +911,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void editCircularComment(CircularCommentVO vo, String type, LoginVO userInfo) throws Exception {
+	public void editCircularComment(CircularCommentVO vo) throws Exception {
 		logger.debug("editCircularComment started.");
 		
-//		if (type.equals("write")) {
-//			writeCircularComment(vo, userInfo.getId(), userInfo.getTenantId());
-//		} else if (type.equals("update")) {
-//			updateCircularComment(vo, userInfo.getId(), userInfo.getTenantId());
-//		}
+		ezCircularDAO.updateCircularUser(vo);
+		ezCircularDAO.insertComment(vo);
+		
+//		이건 글 읽었을때 추가하자
+//		ezCircularDAO.updateComment(vo);
 		
 		logger.debug("editCircularComment ended.");
-	}	
-	
+	}
 }

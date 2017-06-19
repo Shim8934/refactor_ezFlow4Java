@@ -2346,7 +2346,9 @@ System.out.println("@@" + retXML);
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	
-    	List<CircularCommentVO> list = ezCircularService.getCircularComment(circularCommentVO, userInfo);
+    	circularCommentVO.setTenantID(userInfo.getTenantId());
+    	
+    	List<CircularCommentVO> list = ezCircularService.getCircularComment(circularCommentVO);
     	
     	logger.debug("getCircularComment ended.");
     	
@@ -2365,14 +2367,12 @@ System.out.println("@@" + retXML);
     	logger.debug("editCircularComment started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
-    	String type = request.getParameter("type");
     	
-    	ezCircularService.editCircularComment(circularCommentVO, type, userInfo);
+    	circularCommentVO.setTenantID(userInfo.getTenantId());
+    	ezCircularService.editCircularComment(circularCommentVO);
     	
     	logger.debug("editCircularComment ended.");
     	
-    	return "";
+    	return "json";
     }
-    
-    
 }
