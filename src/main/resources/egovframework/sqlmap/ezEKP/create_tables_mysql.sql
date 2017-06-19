@@ -7114,7 +7114,8 @@ CREATE TABLE `tbl_usermaster` (
   `LASTLOGIN` datetime DEFAULT NULL,
   `LOGINCNT` bigint(10) DEFAULT '0',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`TENANT_ID`,`CN`)
+  PRIMARY KEY (`TENANT_ID`,`CN`),
+  KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

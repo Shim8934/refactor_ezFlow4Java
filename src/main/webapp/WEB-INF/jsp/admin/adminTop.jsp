@@ -9,10 +9,10 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){
-			    <c:if test="${IsJMochaStandAlone == 'YES'}">
+			    <c:if test="${IsJMochaStandAlone == 'YES' || packageType == 'basic'}">
 			    window.open("/admin/ezOrgan/organMain.do", "bottom");
 			    </c:if>
-			    <c:if test="${IsJMochaStandAlone != 'YES'}">
+			    <c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
 				//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
 				//메인화면 포탈로 설정 2016-10-04 지정석
 				window.open("/admin/ezPortal/portalMain.do", "bottom");
@@ -131,25 +131,31 @@
                     <li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
                     </c:if>
                     <c:if test="${IsJMochaStandAlone != 'YES'}">
-		      		<c:if test="${use_portal == 'YES'}">
+		      		<c:if test="${use_portal == 'YES' && packageType != 'basic'}">
 		      			<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
 		      		</c:if>			      
+                    <c:if test="${packageType != 'basic'}">
 		      		<li><span id="menu01" onClick="menu_change(70, event)"><spring:message code="main.t7" /></span></li>
+                    </c:if>
 		      		<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>      
 		      		<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
 		      		<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
 		      		<%-- 전자결재 --%>
 		      		<%-- <li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li> --%>
-                    <c:if test="${use_approvalG == 'YES'}">
+                    <c:if test="${use_approvalG == 'YES' && packageType != 'basic'}">
 		      		<%-- 전자결재 공공 --%>
 		      		<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t25" /></span></li>
 		      		</c:if>	
+                    <c:if test="${packageType != 'basic'}">
 		      		<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
+                    </c:if>
 		      		<%-- 시스템 --%>          
 		      		<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 		      		<%-- 통계 --%>
 		      		<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
-		      		<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>		      		
+                    <c:if test="${packageType != 'basic'}">
+		      		<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
+                    </c:if>		      		
 		      		<c:if test="${use_ezKMS == 'YES'}">
 		      			<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
 		      		</c:if>

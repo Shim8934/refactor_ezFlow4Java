@@ -888,6 +888,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(itemInfo.getRegDate(), offset, false) + "</RegDate>");
 			sb.append("<Option>" + itemInfo.getOption() + "</Option>");
 			sb.append("<Content>" + commonUtil.cleanValue(itemInfo.getContent()) + "</Content>");
+			sb.append("</NODE>");
+			sb.append("</NODES>");
 		} else {
 			sb.append("<NODES>");
 			sb.append("</NODES>");
