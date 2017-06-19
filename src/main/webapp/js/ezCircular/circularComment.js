@@ -2,14 +2,23 @@
 function getcircularComment() {
 	$.ajax({
 		type : "POST",
-		url : "/ezCircular/getcircularComment.do",
+		url : "/ezCircular/getCircularComment.do",
 		dataType : "json",
 		data : {
 			circularID : circularID
 		},
 		success : function(result) {
 			//회람자 목록
+			userList = "";
+			list = result.userList;
+			list.forEach(function(vo, index) {
+				userList += "<tr circularUserID='" + vo.memberID + "'>";
+				userList += "<td circularUserID='" + vo.memberID + "'>" + vo.memberName + "("+ vo.memberID +")</td></tr>";
+			});
 			
+			
+			$("#comments").html("");
+			$("#comments").append(userList);
 			//회람자 목록에 해당하는 코멘트
 			
 		},

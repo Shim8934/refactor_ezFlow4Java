@@ -2378,11 +2378,13 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	circularCommentVO.setTenantID(userInfo.getTenantId());
     	
-    	List<CircularCommentVO> list = ezCircularService.getCircularComment(circularCommentVO);
+    	List<CircularListVO> userList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), userInfo.getTenantId());
+    	List<CircularCommentVO> commentList = ezCircularService.getCircularComment(circularCommentVO);
     	
     	logger.debug("getCircularComment ended.");
     	
-    	model.addAttribute("list", list);
+    	model.addAttribute("userList", userList);
+    	model.addAttribute("commentList", commentList);
     	
     	return "json";
     }

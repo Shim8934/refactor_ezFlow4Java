@@ -1120,7 +1120,7 @@
 			SELECT
 				*
 			FROM
-				TBL_CIRCULAR_CIRCULAR_COMMENT
+				TBL_CIRCULAR_COMMENT
 			WHERE
 				circularid = #circularID#
 			AND
