@@ -43,14 +43,14 @@
 	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
-		    	var circularID = "${result.circularId}";
+		    	var circularID = "${result.circularID}";
 				
 	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID;
 	        }
 		    
 		    //삭제버튼 클릭시
 	        function btn_delete() {
-		    	var circularID = "${result.circularId}";
+		    	var circularID = "${result.circularID}";
 				
 	            if (!confirm("회람을 삭제하시겠습니까?"))
 	                return;
