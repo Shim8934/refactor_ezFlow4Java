@@ -70,8 +70,7 @@
 	            }
 	        }
 	
-	        function makeWriteContent(responseText, AttachText) {
-alert(AttachText);	            
+	        function makeWriteContent(responseText, AttachText) {	            
 	        	try {
 	                nowZoom = 100;
 	                maxZoom = 200;
@@ -170,10 +169,10 @@ alert(AttachText);
 	                }
 	                
 	                strAttach += "<li>";
-	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
+	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezCircular/getCircularAttachInfo.do?CircularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
+	                strAttach += "<a name='filename' href='/ezCircular/getCircularAttachInfo.do?CircularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
 	                strAttach += "</span>";
 	                strAttach += "</li>";
 	            }

@@ -151,7 +151,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2) throws Exception {
+	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String realPath) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		//파일이 있으면 hasFile을 1로 설정
@@ -182,6 +182,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
 		}
 		
+		
+		
 		//첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
@@ -195,10 +197,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String fileName = files[1];
 				String fileSize = files[2];
 				
-				String uploadFilePath = commonUtil.separator + "uploadFile";
-				
-				filePath = uploadFilePath + commonUtil.separator + filePath;
-				
+//				String uploadFilePath = realPath + commonUtil.getUploadPath("upload_circular.ROOT", tenantID) + commonUtil.separator + "uploadFile";
+
+//				filePath = uploadFilePath + commonUtil.separator + filePath;
+		
 				attachMap.put("circularID", lastID);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
@@ -923,5 +925,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 //		ezCircularDAO.updateComment(vo);
 		
 		logger.debug("editCircularComment ended.");
+	}
+
+	@Override
+	public CircularAttachVO getAttachInfo(String circularFileID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("circularFileID", circularFileID);
+		map.put("tenantID", tenantID);
+		
+		return ezCircularDAO.getAttachInfo(map);
 	}
 }

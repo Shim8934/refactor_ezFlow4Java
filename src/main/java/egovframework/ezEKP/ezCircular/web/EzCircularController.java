@@ -1298,6 +1298,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
+		String realPath = commonUtil.getRealPath(request);
 		
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
@@ -1315,7 +1316,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			ezCircularService.circularDeleteItem(oldCircularId, userInfo.getTenantId());
 		}
 
-		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2);
+		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2, realPath);
 
 		logger.debug("saveCircular ended");
 	}
@@ -1346,6 +1347,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
+		String realPath = commonUtil.getRealPath(request);
 		
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
@@ -1358,7 +1360,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String regDate = commonUtil.getTodayUTCTime("");
 
-		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2);
+		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2, realPath);
 
 		logger.debug("saveCircular ended");
 	}
@@ -1568,7 +1570,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	@ResponseBody
 	public String uploadItemAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
 		
-		logger.debug("============ uploadScheduleAttach started ============");
+		logger.debug("uploadCircularAttach started");
 		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
@@ -1605,7 +1607,7 @@ public class EzCircularController extends EgovFileMngUtil {
             pFileName[i] = pFileName[i].replace(";", "%3b");
         }
         
-        String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
+        String pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 
         pDirPath = realPath + pDirPath;
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
@@ -1638,8 +1640,36 @@ public class EzCircularController extends EgovFileMngUtil {
         }
         strXML.append("</NODES></ROOT>");
         
+        logger.debug("uploadCircularAttach ended");
+        
         return strXML.toString();
     }
+	
+	/**
+	 * 회람판 첨부관련정보 표출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/getCircularAttachInfo.do")
+	public void getCircularAttachInfo(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		logger.debug("getCircularAttachInfo started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		String circularFileID = request.getParameter("CircularFileID");
+		String fileName = "";
+		String filePath = "";
+		String realPath = commonUtil.getRealPath(request);
+	
+		CircularAttachVO result = ezCircularService.getAttachInfo(circularFileID, userInfo.getTenantId());
+		
+		filePath = result.getFilePath();
+		fileName = result.getFileName();
+		
+		if (filePath != null && !filePath.equals("")) {
+			downFile(request, response, filePath, fileName);
+		}
+		
+		logger.debug("getCircularAttachInfo ended");
+	}
 
 	@RequestMapping(value = "/ezCircular/circularDeptConfig.do")
 	public String circularDeptConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, Model model) throws Exception {

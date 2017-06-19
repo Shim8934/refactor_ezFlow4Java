@@ -2123,16 +2123,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 		String filePath = request.getParameter("filePath");		
 		String fileName = request.getParameter("fileName");
-		String realPath = commonUtil.getRealPath(request);
-		String uploadFilePath = commonUtil.getUploadPath("upload_schedule.ROOT", userInfo.getTenantId());
 		
 		if (fileName == null || fileName.equals("")) {
 			fileName = filePath; 
 		}
-		
-		String fullFilePath = realPath + uploadFilePath + filePath;
 
-		downFile(request, response, fullFilePath, fileName);	
+		downFile(request, response, filePath, fileName);	
 	}
     
 	
