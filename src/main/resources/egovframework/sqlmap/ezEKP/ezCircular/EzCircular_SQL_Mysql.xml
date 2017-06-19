@@ -8,6 +8,7 @@
     <typeAlias alias="CircularAttachVO"        		type="egovframework.ezEKP.ezCircular.vo.CircularAttachVO"/>
     <typeAlias alias="CircularMemberVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularMemberVO"/>
     <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
+    <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
@@ -1112,4 +1113,43 @@
 				tenantid = #tenantID#
 		]]>
 	</select>
+	
+	<update id="EzCircularDAO.updateCircularUser" parameterClass="CircularCommentVO">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				updatestatus = '4'
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
+	
+	<insert id="EzCircularDAO.insertComment" parameterClass="CircularCommentVO">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_COMMENT
+				(circularid, circularcommentid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
+            VALUES
+                (#circularID#, #circularCommentID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #regDate#, #status#, #tenantID#)
+		]]>
+	</insert>
+	
+	<update id="EzCircularDAO.updateComment" parameterClass="CircularCommentVO">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_COMMENT
+			SET
+				confirmDate = #confirmDate#
+			WHERE
+				circularid = #circularID#
+			AND
+				circularuserid= #circularUserID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
 </sqlMap>
