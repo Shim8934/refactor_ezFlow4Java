@@ -2,62 +2,46 @@ package egovframework.ezEKP.ezCircular.vo;
 
 public class CircularListVO {
 	/** 회람판ID */
-	private int circularId;
-	
+	private int circularID;
 	/** 제목 */
 	private String title;
-	
 	/** 중요도 */
 	private int importance;
-	
 	/** 옵션 */
 	private int option;
-	
 	/** 내용 */
 	private String content;
-	
 	/** 첨부파일 */
 	private int hasFile;
-	
 	/** 회람상태 */
 	private int status;
-	
 	/** 작성자 */
-	private String memberId;
-	
+	private String memberID;
 	/** 작성자이름 */
 	private String memberName;
-	
 	/** 작성자이름2 */
 	private String memberName2;
-	
 	/** 작성일 */
 	private String regDate;
-	
 	/** 종료일 */
 	private String endDate;
-	
 	/** 회람자Id */
-	private String circularUserId;
-	
+	private String circularUserID;
 	/** 확인상태 */
 	private String confirmStatus;
-	
 	/** 확인일 */
 	private String confirmDate;
-	
 	/** 변경상태 */
 	private int updateStatus;
-
 	/** 테넌트 ID */
-	private int tenantId;
+	private int tenantID;
 
-	public int getCircularId() {
-		return circularId;
+	public int getCircularID() {
+		return circularID;
 	}
 
-	public void setCircularId(int circularId) {
-		this.circularId = circularId;
+	public void setCircularID(int circularID) {
+		this.circularID = circularID;
 	}
 
 	public String getTitle() {
@@ -108,12 +92,12 @@ public class CircularListVO {
 		this.status = status;
 	}
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberID() {
+		return memberID;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberID(String memberID) {
+		this.memberID = memberID;
 	}
 
 	public String getMemberName() {
@@ -148,12 +132,12 @@ public class CircularListVO {
 		this.endDate = endDate;
 	}
 
-	public String getCircularUserId() {
-		return circularUserId;
+	public String getCircularUserID() {
+		return circularUserID;
 	}
 
-	public void setCircularUserId(String circularUserId) {
-		this.circularUserId = circularUserId;
+	public void setCircularUserID(String circularUserID) {
+		this.circularUserID = circularUserID;
 	}
 
 	public String getConfirmStatus() {
@@ -172,14 +156,6 @@ public class CircularListVO {
 		this.confirmDate = confirmDate;
 	}
 
-	public int getTenantId() {
-		return tenantId;
-	}
-
-	public void setTenantId(int tenantId) {
-		this.tenantId = tenantId;
-	}
-	
 	public int getUpdateStatus() {
 		return updateStatus;
 	}
@@ -187,4 +163,14 @@ public class CircularListVO {
 	public void setUpdateStatus(int updateStatus) {
 		this.updateStatus = updateStatus;
 	}
+
+	public int getTenantID() {
+		return tenantID;
+	}
+
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
+	
+	
 }

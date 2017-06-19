@@ -2,6 +2,7 @@ package egovframework.ezMobile.ezResource.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -72,6 +73,9 @@ public class MResourceController extends EgovFileMngUtil {
 	@Resource(name = "MResourceService")
 	private MResourceService mResourceService;
 	
+	/**
+	 * 모바일 자원관리 sub 리스트 가져오기 실행 함수
+	 */
 	@RequestMapping(value="/mobile/ezResource/getSubList.do")
 	public String getSubList(HttpServletRequest req, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse resp) throws Exception {
 		logger.debug("getSubList started.");
@@ -92,6 +96,19 @@ public class MResourceController extends EgovFileMngUtil {
 		return "json";
 	}
 	
-	
-	
+	/**
+	 * 모바일 자원관리 자원예약리스트 화면 호출 함수
+	 */
+	@RequestMapping(value = "/mobile/sample/sampleResourceList.do")
+	public String sampleResourceList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("sampleResourceList Start");
+
+		String title = "3층 소회의실";		
+		
+		model.addAttribute("title", title);		
+		
+		logger.debug("sampleResourceList End");
+		
+		return "/mobile/ezResource/mResourceList";
+	}
 }

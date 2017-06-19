@@ -49,8 +49,6 @@
 		}
 		</style>
 	    <script type="text/javascript">
-//  	        var ShowAdjacent = "";
-// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
 	        //var CurPage = "${page}";
@@ -83,7 +81,7 @@
 	        var SQLPARADATA = "";
 // 	        var pMode = "new";
 // 	        var pAdminType = "n";
-// 	        var pUse_Editor = "${useEditor}";
+	        var useEditor = "${useEditor}";
 // 	        var pNoneActiveX = "YES";
 // 	        var pUse_IE11Browser = "CK";
 	        var starttime;

@@ -2,15 +2,15 @@ package egovframework.ezEKP.ezCircular.service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
+import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 
 public interface EzCircularService {
 	
@@ -45,8 +45,6 @@ public interface EzCircularService {
 	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
 
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
-	
-	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception;
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
@@ -129,5 +127,10 @@ public interface EzCircularService {
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
 	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
+
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
+
+	public void editCircularComment(CircularCommentVO circularCommentVO, String type, LoginVO userInfo) throws Exception;
+
 
 }
