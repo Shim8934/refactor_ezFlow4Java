@@ -387,28 +387,33 @@ var ContentLocation;
 //        }
 //    }
 //}
+var CircularId;
 var Title;
 var pOCS;
-var WriteDate;
-var interValue;
+var RegDate;
+var Content;
+//var interValue;
 function event_ItemPreviewRead() {
     if ((xmlhttp != null && xmlhttp.readyState == 4) && (xmlhttp2 != null && xmlhttp2.readyState == 4)) {
         if ((xmlhttp.status >= 200 && xmlhttp.status < 300) && (xmlhttp2.status >= 200 && xmlhttp2.status < 300)) {
             if (document.getElementById("PreViewBottom") != null){
             	document.getElementById("PreViewBottom").style.display = "";
             }
-     
+            
+            xmlDoc = loadXMLString(xmlhttp.responseText);
+
 //            if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
 //                alert(strLang173);
 //                return;
 //            }
-//            CircularId = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/CircularId");
-//            MemberId = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/MemberId");
-//            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
+            CircularId = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/CircularId");
+            MemberId = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/MemberId");
+            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
 //            WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
 //            WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
-//            RegDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/RegDate");
-//            Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
+            RegDate = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/RegDate");
+            Title = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Title");
+            Content = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Content");
 //            ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
 
             if (pPreviewShow_HOW.trim() == "W") {
@@ -439,15 +444,16 @@ function previewItemSet() {
         document.getElementById('ifrmPreViewH').style.display = "";
         document.getElementById('ifrmPreViewW').style.display = "";
     }
-    if (CrossYN()) {
-    	var boardType = "";
-    	
-    	if(pMode == "temp"){
-    		boardType = "BOARDCONTENTTEMP";
-    	}else{
-    		boardType = "BOARDCONTENT";
-    	}
-    	
+alert(Content);    
+//    if (CrossYN()) {
+//    	var boardType = "";
+//    	
+//    	if(pMode == "temp"){
+//    		boardType = "BOARDCONTENTTEMP";
+//    	}else{
+//    		boardType = "BOARDCONTENT";
+//    	}
+//    	
 //    	$.ajax({
 //			type : "POST",
 //			dataType : "text",
@@ -461,11 +467,11 @@ function previewItemSet() {
 //				event_downContent(result, xmlhttp2.responseText);
 //			}        			
 //		});	
-    } else {
+//    } else {
         document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
-        document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = pOCS;
-        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = WriteDate;
-        var readHTML = WriteContent(ContentLocation, ItemID);
+        document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = MemberId;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = RegDate;
+        var readHTML = Content;
         var tempText = xmlhttp2.responseText;
 
         if (xmlhttp2.readyState == 4) {
@@ -480,7 +486,7 @@ function previewItemSet() {
                 }
             }, 100);
         }
-    }
+//    }
 }
 
 function loadsetInterval(readHTML, responseText) {

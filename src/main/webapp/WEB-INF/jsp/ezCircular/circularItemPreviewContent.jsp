@@ -26,7 +26,8 @@
 	        var strLang3 = "<spring:message code='ezBoard.t10024'/>";
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
-// 	            window.parent.previewItemSet();
+	            window.parent.previewItemSet();
+
 	        };
 	
 	        function Bigger() {
