@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +15,11 @@ import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCircularService")
@@ -41,7 +40,18 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("v_MEMBERID", memberId);
 		map.put("v_TENANTID", tenantId);
 		
-		return ezCircularDAO.getCircularList_Config(map);
+		CircularConfigVO vo = ezCircularDAO.getCircularList_Config(map);
+		
+		if (vo == null) {
+			vo = new CircularConfigVO();
+			vo.setIsMailReceive(0);
+			vo.setListCnt(10);
+			vo.setIsPreview(0);
+			vo.setPreviewListValue("50");
+			vo.setPreviewContentValue("50");
+		}
+		
+		return vo;
 	}
 
 	@Override
@@ -138,27 +148,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getSearchCircularMapList(map);
 	}
 	
-	@Override
-	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_MEMBERID", userInfo.getId());
-		map.put("v_TENANTID", userInfo.getTenantId());
-		
-		CircularConfigVO circularConfigVO = ezCircularDAO.getCircularList_Config(map);
-		
-		if (circularConfigVO == null) {
-			circularConfigVO = new CircularConfigVO();
-			circularConfigVO.setIsMailReceive(0);
-			circularConfigVO.setListCnt(10);
-			circularConfigVO.setIsPreview(0);
-			circularConfigVO.setPreviewListValue("50");
-			circularConfigVO.setPreviewContentValue("50");
-		}
-		
-		return circularConfigVO;
-	}
-
 	@Override
 	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

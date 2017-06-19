@@ -5,13 +5,10 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.mail.Folder;
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,7 +30,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
-import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
@@ -43,7 +39,6 @@ import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.let.user.login.service.LoginService;
@@ -194,7 +189,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (page - 1)) + 1;
@@ -240,7 +235,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (page - 1)) + 1;
@@ -294,7 +289,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (page - 1)) + 1;
@@ -343,7 +338,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (page - 1)) + 1;
@@ -397,7 +392,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (page - 1)) + 1;
@@ -578,7 +573,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
     	
-    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
@@ -703,7 +698,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
     	
-    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
@@ -831,7 +826,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
     	
-    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
@@ -959,7 +954,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
     	
-    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
@@ -1084,7 +1079,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
     	
-    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
@@ -1796,7 +1791,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	keyword = req.getParameter("keyword"); 
         }
     	
-    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
@@ -2047,10 +2042,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int page = 1;
-//		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
-//        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
         int folderId = Integer.parseInt(request.getParameter("folderId"));
-//        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
         int startRow = 1;
         int endRow = 0;
         
@@ -2058,7 +2051,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
 		
-		CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+		CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (page - 1)) + 1;
@@ -2076,9 +2069,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
-//		model.addAttribute("useOcs", useOcs);
-//		model.addAttribute("useRunTime", useRunTime);
-//		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", list);
 		model.addAttribute("config", config);
 		model.addAttribute("totalCount", totalCount);
@@ -2175,7 +2166,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         int folderId = Integer.parseInt(req.getParameter("folderId"));
     	
-    	CircularConfigVO config = ezCircularService.getPersonalCount(userInfo);
+    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;

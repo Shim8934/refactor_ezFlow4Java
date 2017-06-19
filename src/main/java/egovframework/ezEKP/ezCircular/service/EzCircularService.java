@@ -2,15 +2,14 @@ package egovframework.ezEKP.ezCircular.service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 
 public interface EzCircularService {
 	
@@ -45,8 +44,6 @@ public interface EzCircularService {
 	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
 
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
-	
-	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception;
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
