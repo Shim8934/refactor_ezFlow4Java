@@ -247,7 +247,7 @@ public class IMAPAccess {
 			}						
 			
 			if (rootFolder.listSubscribed().length == 0) {
-				setSubscribeReculsive(rootFolder, true);
+				setReculsiveSubscribe(rootFolder, true);
 			}
 			
 			Folder[] folderList = null;
@@ -730,13 +730,12 @@ public class IMAPAccess {
 		
 	}		
 	
-	private void setSubscribeReculsive(Folder folder, boolean isSubscribe) throws MessagingException {
-		folder.setSubscribed(isSubscribe);
-		
+	private void setReculsiveSubscribe(Folder folder, boolean isSubscribe) throws MessagingException {
 		Folder[] folderArr = folder.list();
 		
 		for (Folder f : folderArr) {
-			setSubscribeReculsive(f, isSubscribe);
+			f.setSubscribed(isSubscribe);
+			setReculsiveSubscribe(f, isSubscribe);
 		}
 	}
 }
