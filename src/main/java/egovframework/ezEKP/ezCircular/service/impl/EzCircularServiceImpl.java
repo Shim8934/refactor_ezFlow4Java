@@ -56,8 +56,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception {
-		String memberId = circularConfigVO.getMemberId();
-		int tenantId = circularConfigVO.getTenantId();
+		String memberId = circularConfigVO.getMemberID();
+		int tenantId = circularConfigVO.getTenantID();
 		
 		CircularConfigVO circularListConfig = getCircularList_Config(memberId, tenantId);
 				
@@ -407,7 +407,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				
 		ezCircularDAO.set_circularDeptSave(circularDeptVO);
 		
-		int tenantId = circularDeptVO.getTenantId();
+		int tenantId = circularDeptVO.getTenantID();
 		int circularBMId = ezCircularDAO.getCircularBMId(); // CircularBMId 값 가져옴
 		
 		for (int i=0; i<memberListStr.length; i++) {
@@ -458,7 +458,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		ezCircularDAO.update_circularDept(circularDeptVO);
 		
-		int tenantId = circularDeptVO.getTenantId();
+		int tenantId = circularDeptVO.getTenantID();
 		
 		map.put("v_CIRCULARBMID", circularBMId);
 		map.put("v_TENANTID", tenantId);

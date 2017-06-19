@@ -1,8 +1,7 @@
 package egovframework.ezEKP.ezCircular.vo;
 
 public class CircularAttachVO {
-	
-	private int		circularFileId;
+	private int		circularFileID;
 	private long 	fileSize;
 	private String 	fileName;
 	private String 	filePath;
@@ -10,11 +9,12 @@ public class CircularAttachVO {
 	private String	fileEncodeName;
 	private String	fileTranSize;
 	
-	public int getCircularFileId() {
-		return circularFileId;
+	int tenantID;
+	public int getCircularFileID() {
+		return circularFileID;
 	}
-	public void setCircularFileId(int circularFileId) {
-		this.circularFileId = circularFileId;
+	public void setCircularFileID(int circularFileID) {
+		this.circularFileID = circularFileID;
 	}
 	public long getFileSize() {
 		return fileSize;
@@ -52,4 +52,12 @@ public class CircularAttachVO {
 	public void setFileTranSize(String fileTranSize) {
 		this.fileTranSize = fileTranSize;
 	}
+	public int getTenantID() {
+		return tenantID;
+	}
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}
+	
+	
 }
