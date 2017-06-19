@@ -233,7 +233,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String retXML = "";
 
 		retXML = ezCircularService.getItemXML(pcircularId, pmemberId, userInfo.getOffset(), userInfo.getTenantId());
-System.out.println("@@" + retXML);		
+	
 		return retXML;	
 	}
 	

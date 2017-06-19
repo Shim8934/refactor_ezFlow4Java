@@ -478,7 +478,7 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				circularId = obj.getAttribute("CIRCULARID");
+				circularID = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
@@ -494,11 +494,14 @@
 					dataType : "text",
 					async : false,
 					url : "/ezCircular/confirmStatus.do",
-					data : { circularId 	: circularId 
+					data : { circularID 	: circularID 
 							},
 					success: function(xml){
 						
-					}     			
+					},
+					error: function() {
+						alert("에러발생");
+					}
 				});
                 
 	        }
