@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
@@ -89,6 +91,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailMoveCopy.do")
 	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		if (request.getParameter("fm") != null) {
+			model.addAttribute("isFolderManager", "1");
+		} else {
+			model.addAttribute("isFolderManager", "0");
+		}
 		
 		return "ezEmail/mailMoveCopy";
 	}
@@ -147,6 +154,7 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            				returnValue = "ALREADY_EXISTS";
 	            			} else {
 	            				boolean isCreated = newFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+	            				newFolder.setSubscribed(true);
 	            				if (isCreated) {
 	            					logger.debug(newFolder.getFullName() + " folder is created.");
 	            					returnValue = "OK";
@@ -168,7 +176,24 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		            		if (newFolder.exists()) {
 		            			returnValue = "ALREADY_EXISTS";
 		            		} else {
-			            		boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(newFolder);
+		            			Set<String> folderSet = new HashSet<String>();
+                				
+                				folderSet = unSubscribeAndGetSubscribeFolderSet(oldFolder, folderSet);
+                				String oldFolderPath = oldFolder.getFullName();
+                				String newFolderPath = newFolder.getFullName();
+                				
+                				Set<String> newFolderSet = new HashSet<String>();
+                				
+                				for (String folderPath : folderSet) {
+                					newFolderSet.add(folderPath.replace(oldFolderPath, newFolderPath));
+                				}
+                				
+                				boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(newFolder);
+                				
+                				for (String folderPath : newFolderSet) {
+                					ia.getFolder(folderPath).setSubscribed(true);
+                				}
+			            		
 			            		if (isRenamed) {
 			            			logger.debug(url + " folder is renamed as " + newFolder.getFullName() + ".");
 			            			returnValue = "OK";
@@ -191,7 +216,24 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
                 			if (movedFolder.exists()) {
                 				returnValue = "ALREADY_EXISTS";
                 			} else {
+                				Set<String> folderSet = new HashSet<String>();
+                				
+                				folderSet = unSubscribeAndGetSubscribeFolderSet(oldFolder, folderSet);
+                				String oldFolderPath = oldFolder.getFullName();
+                				String movedFolderPath = movedFolder.getFullName();
+                				
+                				Set<String> movedFolderSet = new HashSet<String>();
+                				
+                				for (String folderPath : folderSet) {
+                					movedFolderSet.add(folderPath.replace(oldFolderPath, movedFolderPath));
+                				}
+                				
                 				boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(movedFolder);
+                				
+                				for (String folderPath : movedFolderSet) {
+                					ia.getFolder(folderPath).setSubscribed(true);
+                				}
+                				
 	    	            		if (isRenamed) {
 	    	            			logger.debug(url + " folder is moved to " + destination + ".");
 	    	            			returnValue = "OK";
@@ -215,7 +257,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            				returnValue = "ALREADY_EXISTS";
 	            			} else {
 	            				boolean isCreated = copiedFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-		        				if (isCreated) {
+	            				copiedFolder.setSubscribed(true);
+	            				
+	            				if (isCreated) {
 		        					logger.debug(folder.getName() + " folder is created.");
 		        					folder.open(Folder.READ_WRITE);
 		        					folder.copyMessages(folder.getMessages(), copiedFolder);
@@ -234,7 +278,10 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	if (!url.equals("")) {
 	            		Folder folder = ia.getFolder(url);
 	            		if (folder.exists()) {
+	            			unSubscribeAndGetSubscribeFolderSet(folder, new HashSet<String>());
+	            			
 	            			boolean isDeleted = folder.delete(true);
+	            			
 	            			if (isDeleted) {
 	            				logger.debug(url + " folder is deleted.");
 	            				returnValue = "OK";
@@ -293,4 +340,72 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		
 		return returnValue;
 	}
+	
+	/**
+	 * 편지함 구독 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/setSubscribe.do")
+	@ResponseBody
+	public String setSubscribe(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("setSubscribe started.");
+		
+		String folderId = request.getParameter("folderId");
+		String subscribeStr = request.getParameter("subscribe");
+		logger.debug("folderId=" + folderId + ",subscribeStr=" + subscribeStr);
+		
+		String returnValue = "ERROR";
+		
+		boolean subscribe = false;
+		if (subscribeStr.equals("1")) {
+			subscribe = true;
+		}
+		
+		List<String> userIdnPw = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userIdnPw.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userEmail=" + userAccount);
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+        			userAccount, password, egovMessageSource, locale);
+			
+			Folder f = ia.getFolder(folderId);
+			
+			f.setSubscribed(subscribe);
+			
+			returnValue = "OK";
+		} catch (MessagingException e) {
+			returnValue = "ERROR";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("setSubscribe ended. returnValue=" + returnValue);
+		
+		return returnValue;
+	}
+	
+	private Set<String> unSubscribeAndGetSubscribeFolderSet(Folder folder, Set<String> folderSet) throws MessagingException {
+		if (folder.isSubscribed()) {
+			folder.setSubscribed(false);
+			folderSet.add(folder.getFullName());
+		}
+		
+		Folder[] folderArr = folder.listSubscribed();
+		
+		for (Folder f : folderArr) {
+			unSubscribeAndGetSubscribeFolderSet(f, folderSet);
+		}
+		
+		return folderSet;
+	}
+	
 }

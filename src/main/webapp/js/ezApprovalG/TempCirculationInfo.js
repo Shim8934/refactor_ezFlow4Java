@@ -78,7 +78,7 @@ function btn_AprDeptTempletAddCC_onclick() {
             return;
         }
 
-        p_CheckAprDeptTempletSN = ListViewLen[0].getAttribute("DATA1");
+        p_CheckAprDeptTempletSN = GetAttribute(ListViewLen[0], "DATA1");
 
         if (p_CheckAprDeptTempletSN == "") {
             var pAlertContent = linealt14;
@@ -193,7 +193,7 @@ function SetGongRamList(pstrXML) {
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + strLang752 + "</VALUE>";
+                pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
@@ -218,9 +218,9 @@ function SetGongRamList(pstrXML) {
                         var pAPRLINE = new ListView();
                         pAPRLINE.SetID("pAPRLINE");
                         pAPRLINE.SetMulSelectable(false);
-                        pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
+                        pAPRLINE.SetRowOnDblClick("AprlineDel_onclickCC");
                         pAPRLINE.SetSelectFlag(false);
-                        listview.SetHeightFree(true);
+                        pAPRLINE.SetHeightFree(true);
                         pAPRLINE.DataSource(objXML);
                         pAPRLINE.DataBind("APRLINECC");
                         AprLineAddIndex++;

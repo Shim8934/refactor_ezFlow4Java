@@ -48,6 +48,10 @@ public class EzMainAdminController {
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		
+        String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+        
+        model.addAttribute("packageType", packageType);
+		
 		return "admin/adminTop";
 	}	
 }
