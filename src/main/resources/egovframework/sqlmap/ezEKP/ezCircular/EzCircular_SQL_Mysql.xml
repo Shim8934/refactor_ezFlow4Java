@@ -678,6 +678,20 @@
          ]]>
     </select>
     
+    <select id="EzCircularDAO.getAttachInfo" parameterClass="Map" resultClass="CircularAttachVO">
+		<![CDATA[
+			SELECT 
+				FILEPATH, 
+				FILENAME 
+			FROM 
+				TBL_CIRCULAR_FILE
+			WHERE 
+				TENANTID = #tenantID#
+			AND
+				CIRCULARFILEID = #circularFileID#
+		]]>
+	</select>
+    
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO 
