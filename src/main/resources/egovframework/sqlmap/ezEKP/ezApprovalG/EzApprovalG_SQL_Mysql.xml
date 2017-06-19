@@ -16599,7 +16599,7 @@
        				FROM (
    							SELECT 
    								CASE WHEN DocState='017' THEN 'Y' 
-           							 WHEN FunctionType = ' ' OR FunctionType IS NULL THEN 'Y' 
+           							 WHEN FunctionType = ' ' OR FunctionType ='000' THEN 'Y' 
            							 WHEN COUNT(DOCSTATE) = 0 THEN 'N'
            							 ELSE 'N' END AS FLAG
           					FROM (
