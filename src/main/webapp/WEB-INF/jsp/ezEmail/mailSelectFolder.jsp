@@ -61,7 +61,7 @@
 	                treeconfig = loadXMLString(xmlHTTP.responseText);
 	
 	            PostTreeView.config(treeconfig);
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	
 	            if (PostTreeView.selectedIndex() == -1) {
@@ -75,7 +75,7 @@
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
-	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true)
+	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false)
 	            PostTreeView.putchildxml(nodeIdx, childxml);
 	        }
 	        function btn_Select_onclick() {
@@ -123,13 +123,13 @@
 		            return;
 		        }
 	            
-	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false);
+	            var childxml = get_childXML(PostTreeView.getvalue(PostTreeView.selectedIndex(), "href"), false, false, false);
                 PostTreeView.putchildxml(PostTreeView.selectedIndex(), childxml);
 	        }
 	        
 	        function LoadAddressTree(SelectIndex) {
 	            PostTreeView.config(treeconfig);
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, false, false) + "</nodes></tree>");
 	            PostTreeView.update();
 	            PostTreeView.toggle(SelectIndex);
 	        }
