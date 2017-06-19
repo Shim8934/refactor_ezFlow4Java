@@ -13,12 +13,20 @@ function getcircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td circularUserID='" + vo.memberID + "'>" + vo.memberName + "("+ vo.memberID +")</td></tr>";
+				userList += "<td>" + vo.memberName + "("+ vo.memberID +")</td>";
+				userList += "<td><table circularUserID='" + vo.memberID + "'></table></td></tr>"
 			});
 			
+			commentList = "";
+			$("#commentUserList").html("");
+			$("#commentUserList").append(userList);
 			
-			$("#comments").html("");
-			$("#comments").append(userList);
+			list = result.commentList;
+			list.forEach(function(vo, index) {
+				commentList += "<tr><td circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td></tr>";
+				$("tr[circularUserID='" + vo.circularUserID + "'").append(commentList);
+			});
+			
 			//회람자 목록에 해당하는 코멘트
 			
 		},

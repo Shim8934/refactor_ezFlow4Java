@@ -526,9 +526,9 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		
-// 		    function window_reload() {
-// 		        window.location.href = window.location.href;
-// 		    }
+		    function window_reload() {
+		        window.location.href = window.location.href;
+		    }
 		
 		    function checkBox_checkAll(obj) {
 		        var SelList = new ListView();

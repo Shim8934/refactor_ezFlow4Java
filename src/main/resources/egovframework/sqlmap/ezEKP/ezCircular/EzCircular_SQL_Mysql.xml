@@ -207,7 +207,7 @@
     <select id="EzCircularDAO.getCircularUserList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                MEMBERID, MEMBERNAME, MEMBERNAME2
+                *
             FROM
                 TBL_CIRCULAR_USER
             WHERE
@@ -1101,7 +1101,7 @@
 		]]>
 	</delete>
 	
-	<select id="EzCircularDAO.getCircularComment" parameterClass="Map">
+	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO">
 		<![CDATA[
 			SELECT
 				*
