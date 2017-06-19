@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
+import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
@@ -2263,4 +2264,44 @@ public class EzCircularController extends EgovFileMngUtil {
 		
         return resultXML.toString();
     }
+    
+    /**
+     * 해당회람자 댓글 목록 조회
+     * 회람판ID, 회람자ID
+     */
+    @RequestMapping(value = "/ezCircular/getCircularComment.do")
+    public String getCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, HttpServletRequest request, Model model) throws Exception {
+    	logger.debug("getCircularComment started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
+    	List<CircularCommentVO> list = ezCircularService.getCircularComment(circularCommentVO, userInfo);
+    	
+    	logger.debug("getCircularComment ended.");
+    	
+    	model.addAttribute("list", list);
+    	
+    	return "json";
+    }
+    
+    /**
+     * comment 저장
+     * 회람판ID, 회람자ID, 댓글작성자ID, 글내용
+     * 저장할때 
+     */
+    @RequestMapping(value = "/ezCircular/editCircularComment.do")
+    public String editCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, HttpServletRequest request) throws Exception {
+    	logger.debug("editCircularComment started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String type = request.getParameter("type");
+    	
+    	ezCircularService.editCircularComment(circularCommentVO, type, userInfo);
+    	
+    	logger.debug("editCircularComment ended.");
+    	
+    	return "";
+    }
+    
+    
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
+import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
@@ -863,4 +864,33 @@ public class EzCircularServiceImpl implements EzCircularService {
 			ezCircularDAO.updateFolderId(map);
 		}
 	}
+
+	@Override
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, LoginVO userInfo) throws Exception {
+		logger.debug("getCircularComment started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", vo.getCircularID());
+		map.put("tenantID", userInfo.getTenantId());
+		
+		List<CircularCommentVO> list = ezCircularDAO.getCircularComment(map);
+		
+		logger.debug("getCircularComment ended.");
+		
+		return list;
+	}
+
+	@Override
+	public void editCircularComment(CircularCommentVO vo, String type, LoginVO userInfo) throws Exception {
+		logger.debug("editCircularComment started.");
+		
+//		if (type.equals("write")) {
+//			writeCircularComment(vo, userInfo.getId(), userInfo.getTenantId());
+//		} else if (type.equals("update")) {
+//			updateCircularComment(vo, userInfo.getId(), userInfo.getTenantId());
+//		}
+		
+		logger.debug("editCircularComment ended.");
+	}	
+	
 }

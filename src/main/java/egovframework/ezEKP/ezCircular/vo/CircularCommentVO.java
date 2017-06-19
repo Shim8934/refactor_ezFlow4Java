@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezCircular.vo;
 
 public class CircularCommentVO {
+	/** 회람팜ID */
+	String circularID;
 	/** 코멘트ID */
 	String circularCommentID;
 	/** 회람자ID */
@@ -20,6 +22,12 @@ public class CircularCommentVO {
 	/** 테넌트ID */
 	int tenantID;
 	
+	public String getCircularID() {
+		return circularID;
+	}
+	public void setCircularID(String circularID) {
+		this.circularID = circularID;
+	}
 	public String getCircularCommentID() {
 		return circularCommentID;
 	}

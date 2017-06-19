@@ -1099,4 +1099,17 @@
 			  TENANTID = #tenantId#
 		]]>
 	</delete>
+	
+	<select id="EzCircularDAO.getCircularComment" parameterClass="Map">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_CIRCULAR_CIRCULAR_COMMENT
+			WHERE
+				circularid = #circularID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
 </sqlMap>
