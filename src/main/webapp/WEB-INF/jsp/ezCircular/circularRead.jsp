@@ -10,11 +10,14 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
+		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" >
+			var circularID = "${result.circularID}";
+			
 	        window.onload = function () {
 	            document.getElementById('itemList').innerHTML = "${listUser}";
 	            
@@ -29,14 +32,11 @@
 	                }
 	            }
 	            
-	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	            //document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
-	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
-	        }
-			
-	        window.onresize = function () {
-	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	        	document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
+// 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+// 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 500 + "px";
+	            
+	            getcircularComment();
 	        }
 			
 	        window.onunload = window_onUnload;
@@ -293,7 +293,15 @@
                                 </a>
                             </td>
                         </tr>
-                    </table>			                
+                    </table>
+                    
+                    <table id="comments">
+                    </table>
+                    
+                    <input type="text" id="circularComment">
+                    <a href='#' class='imgbtn'>
+                    	<span onclick='editCircularComment()'>댓글저장</span>
+                    </a>
 	        	</td>
         	</tr>
 		</table>
