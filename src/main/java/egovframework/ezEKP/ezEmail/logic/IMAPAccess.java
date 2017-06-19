@@ -246,28 +246,32 @@ public class IMAPAccess {
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
 			}						
 			
+			if (rootFolder.listSubscribed().length == 0) {
+				setSubscribeReculsive(rootFolder, true);
+			}
+			
 			Folder[] folderList = null;
 			if (isSubscribe) {
 				//add subscribe folders and inbox folder into top-level folder list
 				topLevelFolders.add(inbox);
 				
-				if (sent.isSubscribed()) {
+				if (sent.isSubscribed() || sent.listSubscribed().length > 0) {
 					topLevelFolders.add(sent);
 				}
 				
-				if (draft.isSubscribed()) {
+				if (draft.isSubscribed() || draft.listSubscribed().length > 0) {
 					topLevelFolders.add(draft);
 				}
 				
-				if (trash.isSubscribed()) {
+				if (trash.isSubscribed() || trash.listSubscribed().length > 0) {
 					topLevelFolders.add(trash);
 				}
 				
-				if (personal.isSubscribed()) {
+				if (personal.isSubscribed() || personal.listSubscribed().length > 0) {
 					topLevelFolders.add(personal);
 				}
 				
-				if (junk.isSubscribed()) {
+				if (junk.isSubscribed() || junk.listSubscribed().length > 0) {
 					topLevelFolders.add(junk);
 				}
 				
@@ -726,4 +730,13 @@ public class IMAPAccess {
 		
 	}		
 	
+	private void setSubscribeReculsive(Folder folder, boolean isSubscribe) throws MessagingException {
+		folder.setSubscribed(isSubscribe);
+		
+		Folder[] folderArr = folder.list();
+		
+		for (Folder f : folderArr) {
+			setSubscribeReculsive(f, isSubscribe);
+		}
+	}
 }

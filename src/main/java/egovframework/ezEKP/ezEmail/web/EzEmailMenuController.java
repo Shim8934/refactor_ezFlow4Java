@@ -287,11 +287,16 @@ public class EzEmailMenuController {
 						} else {
 							subFolderXML.append(" subscribe='0'");
 						}
+						
+						if (fd.list().length > 0) {
+							subFolderXML.append(" hassub='1'");
+						}
+					} else {
+						if (fd.listSubscribed().length > 0) {
+							subFolderXML.append(" hassub='1'");
+						}
 					}
 					
-					if (fd.list().length>0) {
-						subFolderXML.append(" hassub='1'");
-					}
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount() > 0) {
 							subFolderXML.append(" style='font-weight:bold'");
@@ -362,11 +367,16 @@ public class EzEmailMenuController {
 						} else {
 							subFolderXML.append(" subscribe='0'");
 						}
+						
+						if (fd.list().length > 0) {
+							subFolderXML.append(" hassub='1'");
+						}
+					} else {
+						if (fd.listSubscribed().length > 0) {
+							subFolderXML.append(" hassub='1'");
+						}
 					}
 					
-					if (fd.list().length > 0) {
-						subFolderXML.append(" hassub='1'");
-					}
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount() > 0) {
 							subFolderXML.append(" style='font-weight:bold'");
