@@ -139,6 +139,7 @@ public class MApprovalGController {
 		model.addAttribute("photoPath", photoPath);
 		model.addAttribute("bodyHTML", bodyHTML);
 		model.addAttribute("commentCount", commentCount);
+		model.addAttribute("docID", pDocID);
 
 		logger.debug("doApprovalGDetail ended");
 		

@@ -21,7 +21,7 @@
 						<i class="fa fa-long-arrow-left" style="font-size:24px; cursor: pointer;" onclick="backApproveList()"></i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showComment()">${commentCount}</i>
+						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showComment('${docID}', 1)">${commentCount}</i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
 						<i class="fa fa-file-text-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showOriginal()"></i>
@@ -37,19 +37,32 @@
 						<i class="fa fa-hand-rock-o" style="font-size:24px; cursor: pointer;"></i>&nbsp;&nbsp;
 					</div>
 				</li>
-			</ul>	
+			</ul>
 		</header>
 		
-		<div class="ui-content" id="popupComment" style="min-width: 255px; max-width: 285px; height:200px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="pop">
+<!-- 		<div class="ui-content" id="popupComment" style="min-width: 255px; max-width: 285px; height:200px; text-align:center;" data-role="popup" data-overlay-theme="b" data-transition="pop"> -->
+		<div data-role="popup" id="popupComment" data-overlay-theme="b" data-theme="a" data-transition="pop" style="max-width:255px; min-width: 255px; height: 300px;">
+		    <div data-role="header" data-theme="a">
+				<h1>의견보기</h1>
+				<a class="ui-btn ui-btn-icon-left ui-btn-b ui-btn-inline" href="#">save</a>
+			</div>
 		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-	   		<div data-role="collapsible" class="animateMe1" data-iconpos="right" data-inset="true">
-		   		<h2>Comment 1</h2>
-		   		<p>Comment Content</p>
-		    </div>
-		    <div data-role="collapsible" class="animateMe1" data-iconpos="right" data-inset="true">
-		   		<h2>Comment 2</h2>
-		   		<p>Comment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment ContentComment Content</p>
-		    </div>
+			<div style="height: 260px; overflow: auto" id="opinionList">
+			    <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="set">
+			    </div>
+			</div>
+		</div>
+		
+		<div class="ui-content" id="popupWriteComment" style="min-width: 255px; max-width: 285px; height:200px; text-align:center;" data-role="popup" data-overlay-theme="b" data-transition="pop">
+			<div data-role="header" data-theme="a">
+				<h1>의견보기</h1>
+				<a class="ui-btn ui-btn-icon-left ui-btn-b ui-btn-inline" href="#">save</a>
+			</div>
+		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+			<div style="height: 260px; overflow: auto" id="opinionList">
+			    <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="set">
+			    </div>
+			</div>
 		</div>
 		
 		<!-- 왼쪽메뉴 panel -->
