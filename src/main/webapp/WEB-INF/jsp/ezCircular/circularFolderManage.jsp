@@ -94,12 +94,19 @@
 		    }
 		    
 		    function delete_onclick() {
+		    	var deleteFolder = "";
+		    	
 		    	if (PostTreeView.selectedIndex() == -1) {
 		            alert("<spring:message code='ezEmail.t158' />");
 		            return;
 		        }
 		    	
-		        var deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+
+		        if (deleteFolder == "") {
+		            alert("해당폴더는 삭제할 수 없습니다.");
+		            return;
+		        }
 
 				if (confirm("삭제하시겠습니까?")) {
 					$.ajax({

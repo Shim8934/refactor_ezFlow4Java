@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCircular.web;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -9,6 +10,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,6 +43,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.let.user.login.service.LoginService;
@@ -531,6 +534,73 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDelete ended");
 		
 		return "/ezCircular/circularDelete";
+	}
+	
+	/**
+	 * 회람판 검색 화면 호출 Method
+	 */
+	@RequestMapping("/ezCircular/circularSearchView.do")
+	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, 
+			Locale locale,
+			HttpServletRequest request,
+			Model model) throws Exception {
+		logger.debug("circularSearchView started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		
+		// get user credentials
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);	
+		
+		String serverName = userInfo.getServerName();
+		String userLang = userInfo.getLang();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String userTimeSet = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
+		
+		logger.debug("userTimeSet=" + userTimeSet + ",offsetMin=" + offsetMin);
+		
+		List<String> topLevelFolderNames = null;
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale);
+			
+			List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
+			
+			topLevelFolderNames = new ArrayList<String>();
+			int maxFolderCount = Math.min(5, topLevelFolders.size());
+			
+			for (int i = 0; i < maxFolderCount; i++) {
+				Folder folder = topLevelFolders.get(i);
+				
+				topLevelFolderNames.add(folder.getName());
+			}
+			
+			logger.debug("topLevelFolderNames=" + topLevelFolderNames);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("userLang", userLang);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("userTimeSet", userTimeSet);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
+		
+		logger.debug("circularSearchView ended.");
+		
+		return "/ezCircular/circularSearchView";		
 	}
 	
 	/**
