@@ -546,6 +546,11 @@
 		            }
 		        }
 		    }
+		    
+		    function BoardSearchOptionHidden() {
+		        document.getElementById("layer_popup").style.display = "none";
+		        document.getElementById("SearchOption").setAttribute("mode", "off");
+		    }
 		
 	        function search(type) {
 	            if (type == "basic") {

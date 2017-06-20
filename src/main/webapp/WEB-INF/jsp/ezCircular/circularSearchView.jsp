@@ -28,7 +28,7 @@
 		var g_userID = "${userId}";
 		var importanceColor = "#ff0000";
 // 		var g_userLang = "${userLang}";
-		var g_timezone = "${userTimeSet}";
+// 		var g_timezone = "${userTimeSet}";
 		var offsetMin = "${offsetMin}";
 	    var checkval = "f";
 	    var m_strColorSelect = "rgb(233, 241, 244)";

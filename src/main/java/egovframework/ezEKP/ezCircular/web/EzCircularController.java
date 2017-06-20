@@ -544,12 +544,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularSearchView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userEmail = userInfo.getId() + "@" + domainName;
+//		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+//		String userEmail = userInfo.getId() + "@" + domainName;
 		
 		// get user credentials
-		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String password = userIdAndPassword.get(1);	
+//		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+//		String password = userIdAndPassword.get(1);	
 		
 //		String serverName = userInfo.getServerName();
 //		String userLang = userInfo.getLang();
@@ -560,33 +560,33 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("userTimeSet=" + userTimeSet + ",offsetMin=" + offsetMin);
 		
-		List<String> topLevelFolderNames = null;
-		IMAPAccess ia = null;
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-			
-			List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
-			
-			topLevelFolderNames = new ArrayList<String>();
-			int maxFolderCount = Math.min(5, topLevelFolders.size());
-			
-			for (int i = 0; i < maxFolderCount; i++) {
-				Folder folder = topLevelFolders.get(i);
-				
-				topLevelFolderNames.add(folder.getName());
-			}
-			
-			logger.debug("topLevelFolderNames=" + topLevelFolderNames);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
-System.out.println("@@" + topLevelFolderNames.toString());		
+//		List<String> topLevelFolderNames = null;
+//		IMAPAccess ia = null;
+//		try {
+//			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+//					userEmail, password, egovMessageSource, locale);
+//			
+//			List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
+//			
+//			topLevelFolderNames = new ArrayList<String>();
+//			int maxFolderCount = Math.min(5, topLevelFolders.size());
+//			
+//			for (int i = 0; i < maxFolderCount; i++) {
+//				Folder folder = topLevelFolders.get(i);
+//				
+//				topLevelFolderNames.add(folder.getName());
+//			}
+//			
+//			logger.debug("topLevelFolderNames=" + topLevelFolderNames);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (ia != null) {
+//				ia.close();
+//			}
+//		}
+//System.out.println("@@" + topLevelFolderNames.toString());		
 		model.addAttribute("userId", userInfo.getId());
 //		model.addAttribute("serverName", serverName);
 //		model.addAttribute("userLang", userLang);
@@ -1396,8 +1396,9 @@ System.out.println("@@" + topLevelFolderNames.toString());
 		
 		int circularUserId = 0;
 		int updateStatus = 0;
-		String oldCircularId = request.getParameter("oldCircularId");
+		circularListVO.setStatus(0);
 		
+		String oldCircularId = request.getParameter("oldCircularId");
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
