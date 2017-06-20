@@ -160,6 +160,15 @@ public class EzCircularController extends EgovFileMngUtil {
 		StringBuilder subFolderXML = new StringBuilder();
 		
 		for (int i=0; i<list.size(); i++) {
+			if (i == 0) {
+				subFolderXML.append("<node imgidx='1'");
+				subFolderXML.append(" caption='" + "확인완료회람판" + "'");
+				subFolderXML.append(" foldername='" + "확인완료회람판" + "'");
+				subFolderXML.append(" fullcaption='_NONE'");
+				subFolderXML.append(" href='" + "'");
+				subFolderXML.append("></node>");
+			}
+			
 			subFolderXML.append("<node imgidx='1'");
 			subFolderXML.append(" caption='" + list.get(i).getCircularFolderName() + "'");
 			subFolderXML.append(" foldername='" + list.get(i).getCircularFolderName() + "'");
@@ -342,12 +351,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		
         int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), userInfo.getTenantId());
         
-        logger.debug("startRow : "+startRow);
-        logger.debug("endRow : "+endRow);
+        logger.debug("startRow : " + startRow);
+        logger.debug("endRow : " + endRow);
         
 		List<CircularListVO> list = ezCircularService.getCircularCompleteList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
 		
-		logger.debug("listSize : "+list.size());
+		logger.debug("listSize : " + list.size());
 		
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
@@ -2214,20 +2223,23 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 이동 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCircular/circularMove.do")
-	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("circularMove started");
 		
+		userInfo = commonUtil.userInfo(loginCookie);
+
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
-//		String updateStatus = request.getParameter("updateStatus");
-		
+
 		if (folderId != null) {
+			String updateStatus = ezCircularService.getUpdateStatus(circularIdList, userInfo.getId(), userInfo.getTenantId());
+			
 			model.addAttribute("folderId", folderId);
+			model.addAttribute("updateStatus", updateStatus);
 		}
-		
+
 		model.addAttribute("circularIdList", circularIdList);
-//		model.addAttribute("updateStatus", updateStatus);
-		
+
 		logger.debug("circularMove ended");
 		
 		return "/ezCircular/circularMove";
@@ -2247,20 +2259,20 @@ public class EzCircularController extends EgovFileMngUtil {
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
 		String oldFolderId = request.getParameter("oldFolderId");
-//		int updateStatus = Integer.parseInt(request.getParameter("updateStatus"));
+		String updateStatus = request.getParameter("updateStatus");
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
 
-		if (oldFolderId != null) {
+		if (oldFolderId != null && folderId != "") { // 폴더에서 폴더로 이동 시
 			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
 		} else {
-//			if (updateStatus == 1) {
-//				updateStatus = 3;
-//			} else {
-//				updateStatus = 1;
-//			}
-//			
-			ezCircularService.moveCircular(folderId, circularIdList, memberId, tenantId);
+			if (updateStatus != "") { // 폴더에서 확인완료 회람판으로 이동 시
+				updateStatus = "1";
+			} else { // 확인완료 및 작성한 회람판에서 폴더로 이동 시
+				updateStatus = "3";				
+			}
+		
+			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);
 		}
 		
 		logger.debug("moveCircular ended");

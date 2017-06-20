@@ -798,20 +798,33 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void moveCircular(String folderId, String circularIdList, String memberId, int tenantId) throws Exception {
+	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String[] circularIdArr = circularIdList.split(";");
 		
-		for (int i=0; i<circularIdArr.length; i++) {
-			map.put("folderId", folderId);
-			map.put("circularId", circularIdArr[i]);
-			map.put("memberId", memberId);
-//			map.put("updateStatus", updateStatus);
-			map.put("tenantId", tenantId);
-			
-			ezCircularDAO.moveCircular(map);
-			ezCircularDAO.moveCircular2(map);
+		if (updateStatus.equals("3")) {
+			for (int i=0; i<circularIdArr.length; i++) {
+				map.put("folderId", folderId);
+				map.put("circularId", circularIdArr[i]);
+				map.put("memberId", memberId);
+				map.put("updateStatus", updateStatus);
+				map.put("tenantId", tenantId);
+				
+				ezCircularDAO.moveCircular(map);
+				ezCircularDAO.moveCircular2(map);
+			}
+		} else {
+			for (int i=0; i<circularIdArr.length; i++) {
+				map.put("folderId", folderId);
+				map.put("circularId", circularIdArr[i]);
+				map.put("memberId", memberId);
+				map.put("updateStatus", updateStatus);
+				map.put("tenantId", tenantId);
+				
+				ezCircularDAO.moveCircular(map);
+				ezCircularDAO.moveCircular3(map);
+			}
 		}
 	}
 
@@ -935,5 +948,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		
 		return ezCircularDAO.getAttachInfo(map);
+	}
+
+	@Override
+	public String getUpdateStatus(String circularIdList, String memberID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String rtnValue = "";
+		String[] circularIdArr = circularIdList.split(";");
+		
+		for (int i=0; i<circularIdArr.length; i++) {
+			map.put("circularID", circularIdArr[i]);
+			map.put("memberID", memberID);
+			map.put("tenantID", tenantID);
+			
+			rtnValue += ezCircularDAO.getUpdateStatus(map) + ";";
+		}
+		
+		return rtnValue;
 	}
 }

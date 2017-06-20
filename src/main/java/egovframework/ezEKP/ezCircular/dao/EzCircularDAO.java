@@ -326,4 +326,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (CircularAttachVO) select("EzCircularDAO.getAttachInfo", map);
 	}
 
+	public String getUpdateStatus(Map<String, Object> map) {
+		return (String) select("EzCircularDAO.getUpdateStatus", map);
+	}
+
+	public void moveCircular3(Map<String, Object> map) {
+		delete("EzCircularDAO.moveCircular3", map);
+	}
+
 }

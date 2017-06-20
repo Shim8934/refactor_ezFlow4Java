@@ -48,7 +48,7 @@
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
 	            }	            
 	            Function_Flag(funcCode);
-	            LoadAddressTree(true);
+// 	            LoadAddressTree(true);
 	            
 	            /* 2017-05-18 장진혁 신규회람판에 클릭이벤트 생성 */ 
 	            $("#newCircular").click();
