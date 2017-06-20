@@ -3108,9 +3108,17 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("help started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String pakageType = "";
+		
+		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
+			pakageType = commonUtil.PT_BASIC;
+		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
+			pakageType = commonUtil.PT_STANDARD;
+		}
 		
 		model.addAttribute("lang", userInfo.getLang());
-
+		model.addAttribute("pakageType", pakageType);
+		
 		logger.debug("help ended");
 		return "/ezPortal/help/help";
 	}
