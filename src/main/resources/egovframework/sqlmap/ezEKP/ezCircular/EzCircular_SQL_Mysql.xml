@@ -74,9 +74,32 @@
             WHERE
                 A.CIRCULARID = B.CIRCULARID
             AND
+            	B.UPDATESTATUS = '0'
+            AND
                 A.TENANTID = B.TENANTID
             AND
-            	A.STATUS = '0'
+                B.MEMBERID = #memberId#
+            AND
+                A.TENANTID = #tenantId#
+            AND
+                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
+            LIMIT
+                #limit#, #rowCount#        
+        ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
+        <![CDATA[
+            SELECT
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+            	B.UPDATESTATUS = '0'
+            AND
+                A.TENANTID = B.TENANTID
             AND
                 B.MEMBERID = #memberId#
             AND
@@ -112,30 +135,7 @@
                 #limit#, #rowCount#        
         ]]>
     </select>
-  
-    <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
-        <![CDATA[
-            SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
-            FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-            WHERE
-                A.CIRCULARID = B.CIRCULARID
-            AND
-                A.TENANTID = B.TENANTID
-            AND
-            	B.UPDATESTATUS = '0'
-            AND
-                B.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
-            AND
-                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
-            LIMIT
-                #limit#, #rowCount#        
-        ]]>
-    </select>
-  
+    
     <select id="EzCircularDAO.getCircularListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
             SELECT

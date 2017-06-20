@@ -767,11 +767,11 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
         resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
         resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
-        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
-        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
-        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
-        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
-        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
+//        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
+//        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
+//        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
+//        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
+//        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
@@ -2009,7 +2009,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		List<HashMap<String, Object>> list2 = ezCircularService.getSearchCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(),keyword);
 		
-		
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
 		}
@@ -2021,14 +2020,14 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
         resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
         resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
-        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
-        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
-        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
-        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
-        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
+//        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
+//        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
+//        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
+//        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
+//        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
-        
+//        
         for (BoardListHeaderVO vo:headerList) {
         	resultXML.append("<HEADER>");
     		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
