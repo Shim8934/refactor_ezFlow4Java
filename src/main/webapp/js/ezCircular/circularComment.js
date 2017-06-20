@@ -1,4 +1,5 @@
 /** 이효진 작성*/
+//댓글목록조회
 function getcircularComment() {
 	$.ajax({
 		type : "POST",
@@ -12,9 +13,11 @@ function getcircularComment() {
 			userList = "";
 			list = result.userList;
 			list.forEach(function(vo, index) {
-				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td>" + vo.memberName + "("+ vo.memberID +")</td>";
-				userList += "<td><table circularUserID='" + vo.memberID + "'></table></td></tr>"
+				userList += "<ul circularUserID='" + vo.memberID + "'>";
+				userList += "<li>" + vo.memberName + "("+ vo.memberID +") <a href='#' class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글</span></a></li>";
+				userList += "<table circularUserID='" + vo.memberID + "'></table>";
+				userList += "<div class='circularComment' circularUserID='" + vo.memberID + "' style='display:none'><input type = 'text'/><a href='#' class='imgbtn'><span onclick='showEdit()'>저장</span></a></div>";
+				userList += "</ul>";
 			});
 			
 			commentList = "";
@@ -23,8 +26,12 @@ function getcircularComment() {
 			
 			list = result.commentList;
 			list.forEach(function(vo, index) {
-				commentList += "<tr><td circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td></tr>";
-				$("tr[circularUserID='" + vo.circularUserID + "'").append(commentList);
+				commentList = "<tr>";
+				commentList += "<td circularCommentID='" + vo.circularCommentID + "'>content : " + vo.circularComment + "</td>";
+				commentList += "<td>id,name : (" + vo.memberID + "/ " + vo.memberName + ")</td>";
+				commentList += "<td>regDate : " + vo.regDate + "</td>";
+				commentList += "</tr>";
+				$("table[circularUserID='" + vo.circularUserID + "'").append(commentList);
 			});
 			
 			//회람자 목록에 해당하는 코멘트
@@ -36,6 +43,12 @@ function getcircularComment() {
 	});
 }
 
+function showEdit(obj) {
+	$(".circularComment").hide();
+	$(".circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").show();
+}
+
+//댓글작성
 function editCircularComment(circularID, circularUserID, circularComment, memberID, memberName, memberName2) {
 	$.ajax({
 		type : "POST",
