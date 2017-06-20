@@ -6,7 +6,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
+import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
@@ -297,6 +299,31 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<HashMap<String, Object>> getFolderCircularMapList(Map<String, Object> map) throws Exception{
 		return (List<HashMap<String, Object>>) list("EzCircularDAO.getFolderCircularMapList", map);
+	}
+
+	public void updateFolderId(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateFolderId", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CircularCommentVO> getCircularComment(Map<String, Object> map) throws Exception {
+		return (List<CircularCommentVO>) list("EzCircularDAO.getCircularComment", map);
+	}
+
+	public void updateCircularUser(CircularCommentVO vo) throws Exception {
+		update("EzCircularDAO.updateCircularUser", vo);
+	}
+
+	public void insertComment(CircularCommentVO vo) throws Exception {
+		insert("EzCircularDAO.insertComment", vo);
+	}
+	
+	public void updateComment(CircularCommentVO vo) throws Exception {
+		insert("EzCircularDAO.updateComment", vo);
+	}
+
+	public CircularAttachVO getAttachInfo(Map<String, Object> map) {
+		return (CircularAttachVO) select("EzCircularDAO.getAttachInfo", map);
 	}
 
 }

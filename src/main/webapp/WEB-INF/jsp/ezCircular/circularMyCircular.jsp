@@ -64,7 +64,7 @@
 	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
-// 	        var clickPreviweType = "";
+	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
 // 	        var pMailListHeightW = 0;
@@ -79,10 +79,10 @@
 	        var pPreviewShow_HOW = "OFF";
 // 	        var SmallSizeList = false;
 // 	        var OldSmallSizeList = false;
-// 	        var onclickFlag = false;
+	        var onclickFlag = false;
 	        var SQLPARADATA = "";
 // 	        var pMode = "new";
-// 	        var pAdminType = "n";
+	        var pAdminType = "n";
 // 	        var pUse_Editor = "${useEditor}";
 // 	        var pNoneActiveX = "YES";
 // 	        var pUse_IE11Browser = "CK";
@@ -655,7 +655,8 @@
 		        arrList = null;
 	        	
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
+// 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&updateStatus=" + updateStatus;
+				url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 	        

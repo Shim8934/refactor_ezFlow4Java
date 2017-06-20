@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		 window.onload = function () {
-		        if ("${funCode}" == "1") {
+		        if ("${funCode}" == "1" || "${packageType}" == "basic") {
 		            document.getElementById("UserInfo").parentNode.onclick()
 		            document.getElementById("UserInfo").onclick();
 		        }
@@ -158,7 +158,7 @@
 	<body  class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
 			<div class="left_env"></div>
-			<c:if test="${IsJMochaStandAlone != 'YES'}">
+			<c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
 			<%
 				String usePortal = (String)request.getAttribute("usePortal");
 			%>
@@ -177,7 +177,7 @@
 			<h2><span  id="MailEnv" name="MailEnv" onClick="mail_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900006' /></span></h2><ul></ul>
             <c:if test="${IsJMochaStandAlone != 'YES'}">
 			<h2><span  id="ScheduleEnv" name="ScheduleEnv" onClick="Pims_Config()" style="width:100%;display:inline-block" ><spring:message code='ezPersonal.t999900007' /></span></h2><ul></ul>
-            <c:if test="${use_approvalG == 'YES'}">
+            <c:if test="${use_approvalG == 'YES' && packageType != 'basic'}">
 			<h2><span id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900008' /></span></h2><ul></ul>
             </c:if>
     		<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>

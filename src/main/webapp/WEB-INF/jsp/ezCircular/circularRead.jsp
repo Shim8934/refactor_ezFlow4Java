@@ -10,11 +10,14 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
+		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" >
+			var circularID = "${result.circularID}";
+			
 	        window.onload = function () {
 	            document.getElementById('itemList').innerHTML = "${listUser}";
 	            
@@ -29,28 +32,25 @@
 	                }
 	            }
 	            
-	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	            //document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
-	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
-	        }
-			
-	        window.onresize = function () {
-	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	        	document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
+// 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+// 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 500 + "px";
+	            
+	            getcircularComment();
 	        }
 			
 	        window.onunload = window_onUnload;
 	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
-		    	var circularID = "${result.circularId}";
+		    	var circularID = "${result.circularID}";
 				
 	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID;
 	        }
 		    
 		    //삭제버튼 클릭시
 	        function btn_delete() {
-		    	var circularID = "${result.circularId}";
+		    	var circularID = "${result.circularID}";
 				
 	            if (!confirm("회람을 삭제하시겠습니까?"))
 	                return;
@@ -132,7 +132,7 @@
 			            if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
 			                location.href = GetAttribute(checks.item(suffix++), "filepath");
 			            } else {		            	
-			                location.href = "/ezSchedule/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
+			                location.href = "/ezCircular/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
 			            }
 			            setTimeout(function () { downloadAll(checks) }, 1000);
 			        } else {
@@ -163,6 +163,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
+                	    		<li id="btn_comment"><span onclick="btn_comment()">댓글</span></li>
 <!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
 <!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
 <!--                         	<li><span>회람종료</span></li> -->
@@ -278,7 +279,7 @@
                                     		<c:if test="${item.fileType == 'ecm'}">
                                     			<c:set var="imagePath" value="/images/ecm.png" />
                                     		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
                                     	</div>
                                     </c:forEach>
                                 </div>
@@ -292,7 +293,17 @@
                                 </a>
                             </td>
                         </tr>
-                    </table>			                
+                    </table>
+                    <br/>
+                    <table id="comments" style="width:100%;">
+                    	<tr>
+                    		<th style="width: 30px">회람댓글</th>
+                    		<td id="pos1" style="border: 1px solid #b6b6b6;">
+                    			<div id="commentUserList" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left"></div>
+                    		</td>
+                    	</tr>
+                    	
+                    </table>
 	        	</td>
         	</tr>
 		</table>

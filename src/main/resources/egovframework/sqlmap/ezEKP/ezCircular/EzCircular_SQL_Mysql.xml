@@ -8,23 +8,8 @@
     <typeAlias alias="CircularAttachVO"        		type="egovframework.ezEKP.ezCircular.vo.CircularAttachVO"/>
     <typeAlias alias="CircularMemberVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularMemberVO"/>
     <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
-    
-	<resultMap class="CircularDeptVO"      			id="circularDeptVO">
-		<result property="circularBMId"				column="CIRCULARBMID"		 columnIndex="1"/>
-		<result property="title"			        column="TITLE"				 columnIndex="2"/>
-		<result property="regDate"					column="REGDATE"			 columnIndex="3"/>
-		<result property="memberName"				column="MEMBERNAME"			 columnIndex="4"/>
-	</resultMap>
+    <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
 	
-	<resultMap class="CircularMemberVO" 			id="circularMemberVO">
-		<result property="memberId"					column="MEMBERID"			 columnIndex="1"/>
-		<result property="company"					column="COMPANY"			 columnIndex="2"/>
-		<result property="description"				column="DESCRIPTION"		 columnIndex="3"/>
-		<result property="title"				    column="TITLE"				 columnIndex="4"/>
-		<result property="memberName"				column="MEMBERNAME"			 columnIndex="5"/>
-		<result property="mail"						column="MAIL"				 columnIndex="6"/>
-    </resultMap>
-    
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
 		    SELECT
@@ -222,7 +207,7 @@
     <select id="EzCircularDAO.getCircularUserList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                MEMBERID, MEMBERNAME, MEMBERNAME2
+                *
             FROM
                 TBL_CIRCULAR_USER
             WHERE
@@ -261,7 +246,7 @@
         ]]>     
     </select>
   
-    <select id="EzCircularDAO.getcircularDeptList" parameterClass="CircularDeptVO" resultMap="circularDeptVO">
+    <select id="EzCircularDAO.getcircularDeptList" parameterClass="CircularDeptVO" resultClass="CircularDeptVO">
         <![CDATA[
             SELECT
                 A.CIRCULARBMID,
@@ -272,9 +257,9 @@
             FROM
                 TBL_CIRCULAR_BM A
             WHERE
-                A.MEMBERID = #memberId#
+                A.MEMBERID = #memberID#
             AND
-                A.TENANTID = #tenantId#
+                A.TENANTID = #tenantID#
         ]]>
     </select>
     
@@ -284,7 +269,7 @@
         ]]>
     </select> 
       
-    <select id="EzCircularDAO.getMemberName" parameterClass="map" resultMap="circularMemberVO">
+    <select id="EzCircularDAO.getMemberName" parameterClass="map" resultClass="CircularMemberVO">
         <![CDATA[
           SELECT
             A.MEMBERID,   B.COMPANY,    B.DESCRIPTION,    B.TITLE,    A.MEMBERNAME,   B.MAIL
@@ -693,6 +678,20 @@
          ]]>
     </select>
     
+    <select id="EzCircularDAO.getAttachInfo" parameterClass="Map" resultClass="CircularAttachVO">
+		<![CDATA[
+			SELECT 
+				FILEPATH, 
+				FILENAME 
+			FROM 
+				TBL_CIRCULAR_FILE
+			WHERE 
+				TENANTID = #tenantID#
+			AND
+				CIRCULARFILEID = #circularFileID#
+		]]>
+	</select>
+    
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO 
@@ -759,7 +758,7 @@
               CIRCULAROPTIONID, MEMBERID, ISMAILRECEIVE,  LISTCNT,  ISPREVIEW,  PREVIEWLISTVALUE, PREVIEWCONTENTVALUE,  TENANTID  
           )
             VALUES (
-              #circularOptionId#, #memberId#, #isMailReceive#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantId#
+              #circularOptionID#, #memberID#, #isMailReceive#, #listCnt#, #isPreview#, #previewListValue#, #previewContentValue#, #tenantID#
           )
         ]]>
     </insert>
@@ -770,7 +769,7 @@
             TITLE,    MEMBERID,   REGDATE,    TENANTID
           )
           VALUES (
-            #title#, #memberId#, #regDate#, #tenantId#
+            #title#, #memberID#, #regDate#, #tenantID#
           )
         ]]>
     </insert>
@@ -904,9 +903,9 @@
             PREVIEWLISTVALUE = #previewListValue#,
             PREVIEWCONTENTVALUE = #previewContentValue#
           WHERE
-            TENANTID = #tenantId#
+            TENANTID = #tenantID#
           AND
-            MEMBERID = #memberId#
+            MEMBERID = #memberID#
         ]]>   
     </update>
   
@@ -970,11 +969,11 @@
           SET
             TITLE = #title#
           WHERE
-            CIRCULARBMID = #circularBMId#
+            CIRCULARBMID = #circularBMID#
           AND
-            TENANTID = #tenantId#
+            TENANTID = #tenantID#
           AND
-            MEMBERID = #memberId#
+            MEMBERID = #memberID#
         ]]>
     </update>
     
@@ -1029,9 +1028,20 @@
           SET
               UPDATESTATUS = '3'
           WHERE 
-              CIRCULARID = (SELECT CIRCULARID
-              				FROM TBL_CIRCULAR
-              				WHERE CIRCULARID = #circularId#) 
+              CIRCULARID = #circularId# 
+          AND
+              TENANTID = #tenantId#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateFolderId" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_LINK
+          SET
+              CIRCULARFOLDERID = #folderId#
+          WHERE 
+              CIRCULARID = #circularId#
           AND
               TENANTID = #tenantId#
         ]]>
@@ -1104,4 +1114,64 @@
 			  TENANTID = #tenantId#
 		]]>
 	</delete>
+	
+	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO">
+		<![CDATA[
+			SELECT
+				circularid,
+				circularcommentid,
+				circularuserid,
+				circularcomment,
+				memberid,
+				membername,
+				DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+				status,
+				tenantid
+			FROM
+				TBL_CIRCULAR_COMMENT
+			WHERE
+				circularid = #circularID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+	
+	<update id="EzCircularDAO.updateCircularUser" parameterClass="CircularCommentVO">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				updatestatus = '4'
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
+	
+	<insert id="EzCircularDAO.insertComment" parameterClass="CircularCommentVO">
+		<![CDATA[
+			INSERT INTO TBL_CIRCULAR_COMMENT
+				(circularid, circularcommentid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
+            VALUES
+                (#circularID#, #circularCommentID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #regDate#, #status#, #tenantID#)
+		]]>
+	</insert>
+	
+	<update id="EzCircularDAO.updateComment" parameterClass="CircularCommentVO">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_COMMENT
+			SET
+				confirmDate = #confirmDate#
+			WHERE
+				circularid = #circularID#
+			AND
+				circularuserid= #circularUserID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
 </sqlMap>

@@ -22,6 +22,7 @@
         var lang = "${userinfo.lang}";
         var PostTreeView = null;
         var treeconfig = "";
+        var oldFolderId = "${folderId}";
 //         var ReturnFunction;
 //         var CancelFunction;
 //         var isDivPopUp = false;
@@ -66,6 +67,7 @@
         function btn_Move_onclick() {
         	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
         	var circularIdList = "${circularIdList}";
+//         	var updateStatus = "${updateStatus}";
         	
         	$.ajax ({
                 type : 'POST',
@@ -74,7 +76,9 @@
  			   	url : '/ezCircular/moveCircular.do',
                 data : {	
                 		folderId : folderId,
-                		circularIdList : circularIdList
+                		circularIdList : circularIdList,
+                		oldFolderId : oldFolderId
+//                 		updateStatus : updateStatus
                 },  
                 success : function(data) {	
                   alert("이동하였습니다.");

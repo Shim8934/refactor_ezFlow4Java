@@ -2693,9 +2693,8 @@ function ChkWhoKyulLast(AprLineRow)
 }
 
 //합의정보
-function CheckHapYuiCellValue()
-{
-  try{
+function CheckHapYuiCellValue() {
+  try {
     var pAPRLINE = new ListView();      //// ListView 선언
     pAPRLINE.LoadFromID("pAPRLINE");
     

@@ -3,11 +3,10 @@ package egovframework.ezEKP.ezCircular.vo;
 public class CircularMemberVO {
 	private String circularBMUserId;
 	
-	/** 회람처 Id */
-	private int circularBMId;
-	
+	/** 회람처 ID */
+	private int circularBMID;
 	/** 작성자 */
-	private String memberId;
+	private String memberID;
 	
 	private String memberName;
 	
@@ -21,6 +20,48 @@ public class CircularMemberVO {
 	
 	private String mail;
 	
+	int tenantID;
+
+	public String getCircularBMUserId() {
+		return circularBMUserId;
+	}
+
+	public void setCircularBMUserId(String circularBMUserId) {
+		this.circularBMUserId = circularBMUserId;
+	}
+
+	public int getCircularBMID() {
+		return circularBMID;
+	}
+
+	public void setCircularBMID(int circularBMID) {
+		this.circularBMID = circularBMID;
+	}
+
+	public String getMemberID() {
+		return memberID;
+	}
+
+	public void setMemberID(String memberID) {
+		this.memberID = memberID;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	public String getMemberName2() {
+		return memberName2;
+	}
+
+	public void setMemberName2(String memberName2) {
+		this.memberName2 = memberName2;
+	}
+
 	public String getCompany() {
 		return company;
 	}
@@ -53,57 +94,13 @@ public class CircularMemberVO {
 		this.mail = mail;
 	}
 
-	/** 테넌트 Id */
-	private int tenantId;
-
-	public String getCircularBMUserId() {
-		return circularBMUserId;
+	public int getTenantID() {
+		return tenantID;
 	}
 
-	public void setCircularBMUserId(String circularBMUserId) {
-		this.circularBMUserId = circularBMUserId;
-	}
-
-	public int getCircularBMId() {
-		return circularBMId;
-	}
-
-	public void setCircularBMId(int circularBMId) {
-		this.circularBMId = circularBMId;
-	}
-
-	public String getMemberId() {
-		return memberId;
-	}
-
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
-	}
-
-	public String getMemberName() {
-		return memberName;
-	}
-
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
-	}
-
-	public String getMemberName2() {
-		return memberName2;
-	}
-
-	public void setMemberName2(String memberName2) {
-		this.memberName2 = memberName2;
-	}
-
-	public int getTenantId() {
-		return tenantId;
-	}
-
-	public void setTenantId(int tenantId) {
-		this.tenantId = tenantId;
-	}
-	
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
+	}	
 	
 	
 }

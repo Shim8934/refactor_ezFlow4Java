@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +11,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
+import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCircularService")
@@ -41,13 +42,24 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("v_MEMBERID", memberId);
 		map.put("v_TENANTID", tenantId);
 		
-		return ezCircularDAO.getCircularList_Config(map);
+		CircularConfigVO vo = ezCircularDAO.getCircularList_Config(map);
+		
+		if (vo == null) {
+			vo = new CircularConfigVO();
+			vo.setIsMailReceive(0);
+			vo.setListCnt(10);
+			vo.setIsPreview(0);
+			vo.setPreviewListValue("50");
+			vo.setPreviewContentValue("50");
+		}
+		
+		return vo;
 	}
 
 	@Override
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception {
-		String memberId = circularConfigVO.getMemberId();
-		int tenantId = circularConfigVO.getTenantId();
+		String memberId = circularConfigVO.getMemberID();
+		int tenantId = circularConfigVO.getTenantID();
 		
 		CircularConfigVO circularListConfig = getCircularList_Config(memberId, tenantId);
 				
@@ -139,28 +151,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
-	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_MEMBERID", userInfo.getId());
-		map.put("v_TENANTID", userInfo.getTenantId());
-		
-		CircularConfigVO circularConfigVO = ezCircularDAO.getCircularList_Config(map);
-		
-		if (circularConfigVO == null) {
-			circularConfigVO = new CircularConfigVO();
-			circularConfigVO.setIsMailReceive(0);
-			circularConfigVO.setListCnt(10);
-			circularConfigVO.setIsPreview(0);
-			circularConfigVO.setPreviewListValue("50");
-			circularConfigVO.setPreviewContentValue("50");
-		}
-		
-		return circularConfigVO;
-	}
-
-	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2) throws Exception {
+	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String realPath) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		//파일이 있으면 hasFile을 1로 설정
@@ -191,6 +182,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
 		}
 		
+		
+		
 		//첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
@@ -204,10 +197,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String fileName = files[1];
 				String fileSize = files[2];
 				
-				String uploadFilePath = commonUtil.separator + "uploadFile";
-				
-				filePath = uploadFilePath + commonUtil.separator + filePath;
-				
+//				String uploadFilePath = realPath + commonUtil.getUploadPath("upload_circular.ROOT", tenantID) + commonUtil.separator + "uploadFile";
+
+//				filePath = uploadFilePath + commonUtil.separator + filePath;
+		
 				attachMap.put("circularID", lastID);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
@@ -268,7 +261,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		List<CircularListVO> list = getCircularUserList(circularID, tenantID);
 		
-		logger.debug("@@receiverLength : " + receiverLength);
+		logger.debug("receiverLength : " + receiverLength);
 		logger.debug("listSize : " + list.size());
 		
 		//회람자 삭제 후 등록
@@ -418,7 +411,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				
 		ezCircularDAO.set_circularDeptSave(circularDeptVO);
 		
-		int tenantId = circularDeptVO.getTenantId();
+		int tenantId = circularDeptVO.getTenantID();
 		int circularBMId = ezCircularDAO.getCircularBMId(); // CircularBMId 값 가져옴
 		
 		for (int i=0; i<memberListStr.length; i++) {
@@ -469,7 +462,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		ezCircularDAO.update_circularDept(circularDeptVO);
 		
-		int tenantId = circularDeptVO.getTenantId();
+		int tenantId = circularDeptVO.getTenantID();
 		
 		map.put("v_CIRCULARBMID", circularBMId);
 		map.put("v_TENANTID", tenantId);
@@ -814,6 +807,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("folderId", folderId);
 			map.put("circularId", circularIdArr[i]);
 			map.put("memberId", memberId);
+//			map.put("updateStatus", updateStatus);
 			map.put("tenantId", tenantId);
 			
 			ezCircularDAO.moveCircular(map);
@@ -856,5 +850,92 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantId);
 		
 		return ezCircularDAO.getFolderCircularMapList(map);
+	}
+
+	@Override
+	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String[] circularIdArr = circularIdList.split(";");
+
+		for (int i=0; i<circularIdArr.length; i++) {
+			map.put("folderId", folderId);
+			map.put("circularId", circularIdArr[i]);
+			map.put("memberId", memberId);
+			map.put("tenantId", tenantId);
+			
+			ezCircularDAO.updateFolderId(map);
+		}
+	}
+
+	@Override
+	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+		if (pcircularId != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("circularId", pcircularId);
+			map.put("tenantId", tenantId);
+			
+			CircularListVO itemInfo = ezCircularDAO.getCircular(map);
+			
+			sb.append("<NODES>");
+			sb.append("<NODE>");
+			sb.append("<CircularId>" + itemInfo.getCircularID() + "</CircularId>");
+			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
+			sb.append("<HasFile>" + itemInfo.getHasFile() + "</HasFile>");
+			sb.append("<Status>" + itemInfo.getStatus() + "</Status>");
+			sb.append("<Title>" + itemInfo.getTitle() + "</Title>");
+			sb.append("<MemberId>" + itemInfo.getMemberID() + "</MemberId>");
+			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(itemInfo.getRegDate(), offset, false) + "</RegDate>");
+			sb.append("<Option>" + itemInfo.getOption() + "</Option>");
+			sb.append("<Content>" + commonUtil.cleanValue(itemInfo.getContent()) + "</Content>");
+			sb.append("</NODE>");
+			sb.append("</NODES>");
+		} else {
+			sb.append("<NODES>");
+			sb.append("</NODES>");
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, String offset, int tenantID) throws Exception {
+		logger.debug("getCircularComment started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", vo.getCircularID());
+		map.put("offset", offset);
+		map.put("tenantID", vo.getTenantID());
+		
+		List<CircularCommentVO> list = ezCircularDAO.getCircularComment(map);
+		
+		logger.debug("getCircularComment ended. listSize=" + list.size());
+		
+		return list;
+	}
+
+	@Override
+	public void editCircularComment(CircularCommentVO vo) throws Exception {
+		logger.debug("editCircularComment started.");
+		
+		ezCircularDAO.updateCircularUser(vo);
+		ezCircularDAO.insertComment(vo);
+		
+//		이건 글 읽었을때 추가하자
+//		ezCircularDAO.updateComment(vo);
+		
+		logger.debug("editCircularComment ended.");
+	}
+
+	@Override
+	public CircularAttachVO getAttachInfo(String circularFileID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("circularFileID", circularFileID);
+		map.put("tenantID", tenantID);
+		
+		return ezCircularDAO.getAttachInfo(map);
 	}
 }

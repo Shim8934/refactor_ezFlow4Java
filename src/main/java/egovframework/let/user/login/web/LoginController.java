@@ -157,6 +157,29 @@ public class LoginController {
     	//일반 로그인 처리
         LoginVO resultVO = loginService.selectUser(loginVO);
         
+        String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+        
+        if (useEmpNumberLogin.equals("YES")) {
+	        if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
+	        	logger.debug(_uid + " failed to login. Trying using it as an employee number");
+	        	
+	        	loginVO.setDn("NOPASSWORD");
+	        	resultVO = loginService.selectUser(loginVO);
+	        	        	
+	        	if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+	        		_uid = resultVO.getId();
+	        		
+	        		logger.debug("found user id=" + _uid);
+	        		
+	        		_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+	        		loginVO.setId(_uid);
+	        		loginVO.setPassword(_pwd);
+	            	loginVO.setDn("PASSWORD");
+	            	resultVO = loginService.selectUser(loginVO);
+	        	}
+	        }
+        }
+        
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
         	//비밀번호 변경 팝업 상태 값 초기화
         	int diff = 1;

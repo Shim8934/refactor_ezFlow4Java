@@ -554,7 +554,7 @@
 		                return;
 		            }
 		
-		            p_CheckAprDeptTempletSN = ListViewLen[0].getAttribute("DATA1");
+		            p_CheckAprDeptTempletSN = GetAttribute(ListViewLen[0], "DATA1");
 		            if (p_CheckAprDeptTempletSN == "") {
 		                var pAlertContent = linealt14;
 		                OpenAlertUI(pAlertContent);
@@ -695,7 +695,7 @@
 		                            pAPRLINE.SetMulSelectable(false);
 		                            pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
 		                            pAPRLINE.SetSelectFlag(false);
-		                            listview.SetHeightFree(true);
+		                            pAPRLINE.SetHeightFree(true);
 		                            pAPRLINE.DataSource(objXML);
 		                            pAPRLINE.DataBind("APRLINE");
 		                            AprLineAddIndex++;

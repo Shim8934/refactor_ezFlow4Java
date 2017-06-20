@@ -62,7 +62,7 @@
 	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
-// 	        var clickPreviweType = "";
+	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
 // 	        var pMailListHeightW = 0;
@@ -77,10 +77,10 @@
 	        var pPreviewShow_HOW = "OFF";
 // 	        var SmallSizeList = false;
 // 	        var OldSmallSizeList = false;
-// 	        var onclickFlag = false;
+	        var onclickFlag = false;
 	        var SQLPARADATA = "";
 // 	        var pMode = "new";
-// 	        var pAdminType = "n";
+	        var pAdminType = "n";
 // 	        var pUse_Editor = "${useEditor}";
 // 	        var pNoneActiveX = "YES";
 // 	        var pUse_IE11Browser = "CK";

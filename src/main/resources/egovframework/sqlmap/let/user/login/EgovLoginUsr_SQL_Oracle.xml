@@ -65,7 +65,7 @@
 		  	FROM 
 		  		TBL_USERMASTER a
 		 	WHERE 
-		 		cn = #id# AND tenant_id = #tenantId#
+		 		(cn = #id# OR extensionattribute14 = #id#) AND tenant_id = #tenantId#
 		]]>
 		<isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >			
 			password = #password#

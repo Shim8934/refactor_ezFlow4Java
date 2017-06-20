@@ -2,15 +2,15 @@ package egovframework.ezEKP.ezCircular.service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
+import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 
 public interface EzCircularService {
 	
@@ -45,8 +45,6 @@ public interface EzCircularService {
 	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
 
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
-	
-	public CircularConfigVO getPersonalCount(LoginVO userInfo) throws Exception;
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
@@ -76,7 +74,7 @@ public interface EzCircularService {
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
 	
-	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2) throws Exception;
+	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String realPath) throws Exception;
 	
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception;
 	
@@ -125,5 +123,15 @@ public interface EzCircularService {
 	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
 
 	public List<HashMap<String, Object>> getFolderCircularMapList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
+
+	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
+
+	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
+
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String offset, int tenantID) throws Exception;
+
+	public void editCircularComment(CircularCommentVO circularCommentVO) throws Exception;
+
+	public CircularAttachVO getAttachInfo(String circularFileID, int tenantId) throws Exception;
 
 }

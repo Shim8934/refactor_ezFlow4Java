@@ -1209,8 +1209,7 @@ function check_presence2() {
         try { ContOpen.focus() } catch (e) { }
     }
     
-    function RegUserCont_Complete(RtnVal)
-    {
+    function RegUserCont_Complete(RtnVal) {
         ContOpen.close();
         var DocList = new ListView();
         DocList.LoadFromID("DocList");

@@ -98,21 +98,4 @@ System.out.println(req.getParameter("type"));
 		
 		return "/mobile/sample/sampleDetail";
 	}
-	
-	/**
-	 * 모바일 자원관리 샘플 리스트 함수
-	 */
-	@RequestMapping(value = "/mobile/sample/sampleResourceList.do")
-	public String sampleResourceList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		logger.debug("sampleResourceList Start");
-
-		String title = "3층 소회의실";		
-		
-		model.addAttribute("title", title);		
-		
-		logger.debug("sampleResourceList End");
-		
-		return "/mobile/ezResource/sampleList";
-	}
-	
 }
