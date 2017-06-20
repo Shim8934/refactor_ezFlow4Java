@@ -1137,8 +1137,6 @@
 		  WHERE
 			  CIRCULARID = #circularId#
 		  AND
-			  CIRCULARFOLDERID = #folderId#	
-		  AND
 			  MEMBERID = #memberId#
 		  AND
 		  	  TENANTID = #tenantId#

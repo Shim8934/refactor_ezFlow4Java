@@ -540,10 +540,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 검색 화면 호출 Method
 	 */
 	@RequestMapping("/ezCircular/circularSearchView.do")
-	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, 
-			Locale locale,
-			HttpServletRequest request,
-			Model model) throws Exception {
+	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularSearchView started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -554,9 +551,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password = userIdAndPassword.get(1);	
 		
-		String serverName = userInfo.getServerName();
-		String userLang = userInfo.getLang();
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+//		String serverName = userInfo.getServerName();
+//		String userLang = userInfo.getLang();
+//		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
@@ -589,14 +586,14 @@ public class EzCircularController extends EgovFileMngUtil {
 				ia.close();
 			}
 		}
-		
+System.out.println("@@" + topLevelFolderNames.toString());		
 		model.addAttribute("userId", userInfo.getId());
-		model.addAttribute("serverName", serverName);
-		model.addAttribute("userLang", userLang);
-		model.addAttribute("useEditor", useEditor);
+//		model.addAttribute("serverName", serverName);
+//		model.addAttribute("userLang", userLang);
+//		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("userTimeSet", userTimeSet);
 		model.addAttribute("offsetMin", offsetMin);
-		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
+//		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
 		
 		logger.debug("circularSearchView ended.");
 		
@@ -2333,18 +2330,20 @@ public class EzCircularController extends EgovFileMngUtil {
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
 
-		if (oldFolderId != null && folderId != "") { // 폴더에서 폴더로 이동 시
-			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
-		} else {
-			if (updateStatus != "") { // 폴더에서 확인완료 회람판으로 이동 시
-				updateStatus = "1";
-			} else { // 확인완료 및 작성한 회람판에서 폴더로 이동 시
-				updateStatus = "3";				
-			}
-		
+		if (oldFolderId.equals("")) { // 확인완료 및 작성한 회람판에서 폴더로 이동 시
+			updateStatus = "3";
 			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);
 		}
 		
+		if (oldFolderId != null && folderId != "") { // 폴더에서 폴더로 이동 시
+			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
+		}
+		
+		if (oldFolderId != null && folderId == "") { // 폴더에서 확인완료 회람판으로 이동 시
+			updateStatus = "1";
+			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);
+		}
+
 		logger.debug("moveCircular ended");
 	}
 	
