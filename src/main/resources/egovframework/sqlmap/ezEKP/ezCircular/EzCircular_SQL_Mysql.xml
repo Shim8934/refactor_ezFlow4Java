@@ -1148,7 +1148,15 @@
 	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO">
 		<![CDATA[
 			SELECT
-				*
+				circularid,
+				circularcommentid,
+				circularuserid,
+				circularcomment,
+				memberid,
+				membername,
+				DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+				status,
+				tenantid
 			FROM
 				TBL_CIRCULAR_COMMENT
 			WHERE
