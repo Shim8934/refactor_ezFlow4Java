@@ -113,6 +113,8 @@ public class MEmailController extends EgovFileMngUtil {
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userIdAndPassword.get(1);
 		
+		boolean isSubscribe = true;
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userInfo.getId() + "@" + domainName;
@@ -132,9 +134,9 @@ public class MEmailController extends EgovFileMngUtil {
 			List<Folder> subMailFolder = null;
 			
 			if (folderId != null && !folderId.equals("")) {
-				subMailFolder = ia.getSubFolders(folderId);
+				subMailFolder = ia.getSubFolders(folderId, isSubscribe);
 			} else {
-				subMailFolder = ia.getTopLevelFolders();
+				subMailFolder = ia.getTopLevelFolders(isSubscribe);
 			}
 			
 			MEmailFolderVO folder = null;
