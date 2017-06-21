@@ -44,24 +44,24 @@
 		<div data-role="popup" id="popupComment" data-overlay-theme="b" data-theme="a" data-transition="pop" style="max-width:255px; min-width: 255px; height: 300px;">
 		    <div data-role="header" data-theme="a">
 				<h1>의견보기</h1>
-				<a class="ui-btn ui-btn-icon-left ui-btn-b ui-btn-inline" href="#">save</a>
 			</div>
 		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-			<div style="height: 260px; overflow: auto" id="opinionList">
-			    <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="set">
+			<div style="height: 260px; overflow: auto">
+			    <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="popupCommentSet">
 			    </div>
 			</div>
 		</div>
 		
-		<div class="ui-content" id="popupWriteComment" style="min-width: 255px; max-width: 285px; height:200px; text-align:center;" data-role="popup" data-overlay-theme="b" data-transition="pop">
-			<div data-role="header" data-theme="a">
-				<h1>의견보기</h1>
-				<a class="ui-btn ui-btn-icon-left ui-btn-b ui-btn-inline" href="#">save</a>
+		<div data-role="popup" id="popupWriteComment" data-overlay-theme="b" data-theme="a" data-transition="pop" style="max-width:255px; min-width: 255px; height: 300px;">
+		    <div data-role="header" data-theme="a">
+				<h1>의견쓰기</h1>
+				<a class="ui-btn ui-btn-icon-left ui-btn-b ui-btn-inline" href="javascript:commentSave('${docID}')">save</a>
 			</div>
 		    <a href="#" data-rel="back" data-role="button" data-theme="b" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-			<div style="height: 260px; overflow: auto" id="opinionList">
-			    <div data-role="collapsibleset" data-content-theme="a" data-iconpos="right" id="set">
-			    </div>
+			<div style="height: 260px; overflow: auto">
+				<form>
+					<textarea name="writeComment" id="writeComment" placeholder="의견을 작성해주세요."></textarea>
+				</form>
 			</div>
 		</div>
 		

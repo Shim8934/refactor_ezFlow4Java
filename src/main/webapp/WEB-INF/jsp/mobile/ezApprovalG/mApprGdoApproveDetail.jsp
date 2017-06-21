@@ -69,7 +69,7 @@
 		        		<div style="overflow: auto;">${bodyHTML}</div>
 		        	</div>
 		      	</div>	
-		      	<div class="writeButton" onclick="javascript:writeComment()"></div>										
+		      	<div class="writeButton" onclick="javascript:writeComment('${docID}', 1)"></div>										
      		</div>
      		<!-- body end -->
 

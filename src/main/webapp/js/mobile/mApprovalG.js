@@ -100,30 +100,18 @@ function showComment(docID, listType) {
 			
 			if (data.opinionList.length > 0) {
 				$.each(data.opinionList, function(key, value) {
-//					list += "<div class='animateMe1 ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content ui-collapsible-collapsed' data-role='collapsible' data-iconpos='right' data-inset='true'>";
-//					list += "	<h2 class='ui-collapsible-heading ui-collapsible-heading-collapsed'>";
-//					list += "		<a class='ui-collapsible-heading-toggle ui-btn ui-btn-icon-right ui-btn-inherit ui-icon-plus' href='#'>";
-//					list += 			value.userName + " " + value.userJobTitle + "(" + value.userDeptName + ")";
-//					list += "			<span class='ui-collapsible-heading-status'> click to expand contents</span>";
-//					list += "		</a>";
-//					list += "	</h2>";
-//					list += "	<div class='ui-collapsible-content ui-body-inherit ui-collapsible-content-collapsed' aria-hidden='true'>";
-//					list += "		<p>" + value.content + "</p>";
-//					list += "	</div>";
-//					list += "</div>";
-					
 					list += "<div data-role=\"collapsible\" class=\"animateMe1\" data-iconpos=\"right\" data-inset=\"true\">";
 					list += "	<h2>" + value.userName + " " + value.userJobTitle + "(" + value.userDeptName + ")</h2>";
-					list += "	<p>" + value.content + "</p>";
+					list += "	<p>" + "의견종류 : " + value.opinionGB + "<br/>내용 : " + value.content + "</p>";
 					list += "</div>";
 				});
 				
-				$("#set").html(list).collapsibleset("refresh");
+				$("#popupCommentSet").html(list).collapsibleset("refresh");
 				
 			} else {
 				list += "<h3 style='text-align: center'>의견이 없습니다.</h3>";
 				
-				$("#opinionList").html(list);
+				$("#popupCommentSet").html(list);
 			}
 			
 		},
@@ -135,6 +123,51 @@ function showComment(docID, listType) {
 	$("#popupComment").popup("open");
 }
 
-function writeComment() {
+function writeComment(docID, listType) {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/getOpinionInfo.do",
+		dataType : "json",
+		data : {
+			pDocID : docID,
+			pListType : listType
+		},
+		success : function(data) {
+			var list = "";
+			
+			if (data.opinionList.length > 0) {
+				$.each(data.opinionList, function(key, value) {
+					if (value.userID == data.userID) {
+						$("#writeComment").val(value.content);
+					}
+				});
+			} 
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
 	
+	$("#popupWriteComment").popup("open");
+}
+
+function commentSave(docID) {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/saveOpinionInfo.do",
+		dataType : "json",
+		data : {
+			pDocID    : docID,
+			pContent  : $("#writeComment").val(), 
+			pOpinionGB: "001"
+		},
+		success : function() {
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+	
+	//닫는게 아니라 새로고침을 한번 해주든가 카운트만 새로고침해야할듯
+	$("#popupWriteComment").popup("close");
 }

@@ -184,7 +184,6 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
 	@Override
 	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String pListType, LoginVO userInfo) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getOpinionInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -199,6 +198,30 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		logger.debug("getOpinionInfo ended");
 		
 		return approvalGOpinionInfoVOs;
+	}
+
+	@Override
+	public void saveOpinionInfo(String pDocID, String pContent, String pOpinionGB, LoginVO userInfo) throws Exception {
+		logger.debug("saveOpinionInfo started");
+
+		String rtnVal = ezApprovalGService.deleteOpinionInfo(pDocID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		if (rtnVal.equals("TRUE")) {
+			if (pContent != null && !pContent.equals("")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("docID", pDocID);
+				map.put("content", pContent);
+				map.put("opinionGB", pOpinionGB);
+				map.put("userID", userInfo.getId());
+				map.put("tenantID", userInfo.getTenantId());
+				map.put("companyID", userInfo.getCompanyID());
+				
+				MApprovalGDAO.insertOpinionInfo(map);
+				MApprovalGDAO.updateDocOpinionInfo(map);
+			}
+		}
+
+		logger.debug("saveOpinionInfo ended");
 	}
 	
 }
