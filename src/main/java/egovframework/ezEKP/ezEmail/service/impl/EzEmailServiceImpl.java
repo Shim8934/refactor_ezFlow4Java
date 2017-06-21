@@ -386,7 +386,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		
         		MailDeleteVO mailDeleteVO = new MailDeleteVO();
         		
-        		mailDeleteVO.setUserId(((String)obj.get("userId")).split("@")[0]);
+        		mailDeleteVO.setUserEmail(((String)obj.get("userId")));
         		mailDeleteVO.setPath((String)obj.get("folderPath"));
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
