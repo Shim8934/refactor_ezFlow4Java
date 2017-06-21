@@ -67,7 +67,7 @@
         function btn_Move_onclick() {
         	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
         	var circularIdList = "${circularIdList}";
-//         	var updateStatus = "${updateStatus}";
+        	var updateStatus = "${updateStatus}";
         	
         	$.ajax ({
                 type : 'POST',
@@ -77,8 +77,8 @@
                 data : {	
                 		folderId : folderId,
                 		circularIdList : circularIdList,
-                		oldFolderId : oldFolderId
-//                 		updateStatus : updateStatus
+                		oldFolderId : oldFolderId,
+                		updateStatus : updateStatus
                 },  
                 success : function(data) {	
                   alert("이동하였습니다.");

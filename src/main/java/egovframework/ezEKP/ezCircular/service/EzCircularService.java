@@ -116,7 +116,7 @@ public interface EzCircularService {
 
 	public List<HashMap<String, Object>> getCircularTDMapList(String memberId, int startRow, int endRow, int tenantId) throws Exception;
 
-	public void moveCircular(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
+	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, int tenantId) throws Exception;
 
 	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception;
 
@@ -133,5 +133,7 @@ public interface EzCircularService {
 	public void editCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
 
 	public CircularAttachVO getAttachInfo(String circularFileID, int tenantId) throws Exception;
+
+	public String getUpdateStatus(String circularIdList, String memberID, int tenantID) throws Exception;
 
 }

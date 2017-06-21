@@ -488,7 +488,6 @@
 		        arrList = null;
 	        	
 	        	var feature = GetOpenPosition(820, 700);
-// 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&updateStatus=" + updateStatus;
 				url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
@@ -546,6 +545,11 @@
 		                strListInfo = "";
 		            }
 		        }
+		    }
+		    
+		    function BoardSearchOptionHidden() {
+		        document.getElementById("layer_popup").style.display = "none";
+		        document.getElementById("SearchOption").setAttribute("mode", "off");
 		    }
 		
 	        function search(type) {

@@ -169,7 +169,6 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
-
 	        	var keyword = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
