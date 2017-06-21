@@ -16,6 +16,8 @@
 		<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script src="/js/ezApprovalG/Lineinfo.js" type="text/javascript"></script>
+		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
@@ -145,6 +147,19 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(nodeIdx.NodeID);
 
+		        var deptid = treeNode.GetNodeData("CN"); 
+		        if (!isgetUser(deptid)) {
+		            var pAlertContent = strLang291 + strLang1102;
+		            alert(pAlertContent);
+		            return;
+		        }
+		        if (!isReceiverChk(deptid)) {
+		            var pAlertContent = strLang1101 + strLang1102;
+		            alert(pAlertContent);
+		            return;
+		        }
+
+		        
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "html",
@@ -441,6 +456,14 @@
 	        }
 	        
 	        function AddDept(aDeptID, aDeptName, aDeptName2, aCompanyID) {
+	        	
+	            if (!isgetUser(aDeptID)) { 
+	                return;
+	            }
+	            if (!isReceiverChk(aDeptID)) { 
+	                return;
+	            }
+
 	            $.ajax({
 	            	type : "POST",
 	            	url : "/admin/ezApprovalG/setGroupSubItemInfo.do",
