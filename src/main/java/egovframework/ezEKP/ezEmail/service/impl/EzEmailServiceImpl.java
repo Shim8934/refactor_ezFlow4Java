@@ -1079,7 +1079,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 	    		
 	    		if (!sentFolder.exists()) {
 	    			sentFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-	    			sentFolder.setSubscribed(true);
 					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
 	    		}
 	    		

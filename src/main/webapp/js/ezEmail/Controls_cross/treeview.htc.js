@@ -766,19 +766,9 @@
             } catch (e) {
 
             }
+            
 
             SPAN3.appendChild(SPAN_TAG);
-            
-            //2017-06-15 이효민 : 편지함관리 > 구독지정 관련 추가 start
-            var subscribeImg = '/images/ImgIcon/subscribe.png';
-            var subscribe = GetAttribute(childNode, 'subscribe');
-            if (subscribe != null && subscribe == "1") {
-        		var IMG_TAG2 = document.createElement("IMG");
-            	IMG_TAG2.setAttribute("src", subscribeImg);
-            	SPAN3.appendChild(IMG_TAG2);
-            }
-            //2017-06-15 이효민 : 편지함관리 > 구독지정 관련 추가 end
-            
             SPAN2.appendChild(SPAN3);
 
             var SPAN_TAG = document.createElement("SPAN");
