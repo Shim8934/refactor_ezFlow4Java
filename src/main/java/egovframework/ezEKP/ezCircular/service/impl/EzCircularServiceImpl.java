@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
@@ -114,27 +113,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId) throws Exception {
+	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberId", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantId", tenantId);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		return ezCircularDAO.getCircularList(map);
-	}
-	
-	@Override
-	public List<HashMap<String, Object>> getCircularMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("memberId", memberID);
-		map.put("limit", startRow-1);
-		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantId);
-		
-		return ezCircularDAO.getCircularMapList(map);
 	}
 	
 	@Override
@@ -332,12 +320,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public int getCircularListCount(String memberID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+		logger.debug("getCircularListCount started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberId", memberID);
 		map.put("tenantId", tenantID);
 		
-		return ezCircularDAO.getCircularListCount(map);
+		int result = ezCircularDAO.getCircularListCount(map);
+		
+		logger.debug("getCircularListCount ended. result = " + result);
+		
+		return result;
 	}
 
 	@Override
@@ -360,6 +353,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		if (checkUpdateStatus != 1) {
 			updateStatusUser(firstValue, circularID, confirmDate, tenantID);
 		}
+		
+		int folderCheck = ezCircularDAO.confirmFolderCheck(map);
+		
+		//0 문서함에 없고 완료문서함이 있는것, else 문서함에 저장된 문서
+		logger.debug("folderCheck = " + folderCheck);
+		map.put("updateStatus", folderCheck == 0 ? 1 : 3);
 		
 		ezCircularDAO.confirmStatus(map);
 	}
@@ -397,12 +396,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void updateStatusUser(int status, int circularID, String confirmDate, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+		logger.debug("updateStatusUser started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", status);
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
 		map.put("confirmDate", confirmDate);
+		
+		logger.debug("confirmDate = " + confirmDate);
+		logger.debug("updateStatusUser ended.");
 		
 		ezCircularDAO.updateStatusUser(map);
 	}
@@ -921,7 +924,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", vo.getCircularID());
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", vo.getTenantID());
 		
 		List<CircularCommentVO> list = ezCircularDAO.getCircularComment(map);

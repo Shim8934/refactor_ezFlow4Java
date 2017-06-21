@@ -61,9 +61,6 @@ function editCircularComment(obj) {
 	var circularUserID = $(obj).attr("circularUserID");
 	var circularComment = $("div.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > input[type='text']").val();
 	
-	alert(circularUserID);
-	alert(circularComment);
-	
 	$.ajax({
 		type : "POST",
 		url : "/ezCircular/editCircularComment.do",

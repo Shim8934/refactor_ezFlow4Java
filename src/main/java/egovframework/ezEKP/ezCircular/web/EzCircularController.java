@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezCircular.web;
 import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.mail.Folder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,7 +33,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
@@ -47,14 +44,9 @@ import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -226,7 +218,7 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("startRow : " + startRow);
         logger.debug("endRow : " + endRow);
         
-		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), userInfo.getOffset());
 		
 		logger.debug("listSize : " + list.size());
 		
@@ -783,7 +775,6 @@ System.out.println("@@" + list.size());
     	boardVO.setTenantID(userInfo.getTenantId());
     	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
     	
-    	int page = 1;
         int startRow = 1;
         int endRow = 0;
         
@@ -800,7 +791,7 @@ System.out.println("@@" + list.size());
 		
         int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), userInfo.getOffset());
 		
 		List<HashMap<String, Object>> list2 = ezCircularService.getCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
 		
@@ -832,53 +823,16 @@ System.out.println("@@" + list.size());
         
         for (int j = 0; j < list.size(); j++) {
     		resultXML.append("<ROW>");
-    		String fieldName = "";
-    		String fieldValue = "";
-    		for (int i = 0; i < headerList.size(); i++) {
-    			resultXML.append("<CELL>");
-    			fieldName = headerList.get(i).getColName().toUpperCase();
-    			
-    			fieldValue = commonUtil.cleanValue(String.valueOf(list2.get(j).get(fieldName)));
-    			
-    			if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
-    				fieldValue = "";
-    			}
-    			
-    			if (fieldName.equals("IMPORTANCE")) {
-    				fieldValue = fieldValue.equals("0") ? "0" : "1";
-    			} else if (fieldName.equals("HASFILE")) {
-    				fieldValue = fieldValue.equals("0") ? "0" : "1";
-    			} else if (fieldName.equals("STATUS")) {
-    				if (fieldValue.equals("0")) {
-    					fieldValue = "진행중";
-    				} else if (fieldValue.equals("1")) {
-    					fieldValue = "종료";
-    				} else {
-    					fieldValue = "임시";
-    				}
-    			} else if (fieldName.equals("CONFIRMSTATUS")) {
-    				int firstValue = ezCircularService.getConfirmStatusFirst(list.get(j).getCircularID(), userInfo.getTenantId());
-    				int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularID(), userInfo.getTenantId());
-    				
-    				fieldValue = firstValue + "/" + secondValue;
-    			} else if (fieldName.equals("REGDATE")) {
-    				fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false); 
-    			} else if (fieldName.equals("CONFIRMDATE")) {
-    				fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
-    			}
-    			
-    			resultXML.append("<MEMBERID>" + list.get(j).getMemberID() + "</MEMBERID>");
-    			resultXML.append("<CIRCULARID>" + list.get(j).getCircularID() + "</CIRCULARID>");
-    			
-    			resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
-    			
-    			if (i == 0) {
-    				resultXML.append("<TITLE>" + list.get(j).getTitle() + "</TITLE>");
-    				resultXML.append("<MEMBERID>" + list.get(j).getMemberID() + "</MEMBERID>");
-    			}
-    			resultXML.append("</CELL>");
-    		}
-    		resultXML.append("</ROW>");
+    		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + (vo.getUpdateStatus() == 0 ? "진행중" : "댓글") + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+			resultXML.append("</ROW>");
         }
         
         resultXML.append("</ROWS>");
