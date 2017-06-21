@@ -99,7 +99,7 @@ public class EzEmailMenuController {
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
-			List<Folder> rootMailFolderList = ia.getTopLevelFolders();
+			List<Folder> rootMailFolderList = ia.getTopLevelFolders(true);
 			
 			for (int i=0,j=0; i<rootMailFolderList.size(); i++) {
 				Folder folder = rootMailFolderList.get(i);
@@ -247,6 +247,12 @@ public class EzEmailMenuController {
 		String bcount = doc.getElementsByTagName("BCOUNT").item(0).getTextContent();
 		logger.debug("folderName=" + folderName);
 		
+		boolean isSubscribe = true;
+		String folderManamger = request.getParameter("fm");
+		if (folderManamger != null) {
+			isSubscribe = false;
+		}
+		
 		StringBuilder subFolderXML = new StringBuilder();
 		
 		IMAPAccess ia = null;
@@ -256,64 +262,73 @@ public class EzEmailMenuController {
 			List<Folder> subMailFolder = null;
 			
 			if (!folderName.equals("")) {
-				subMailFolder = ia.getSubFolders(folderName);
+				subMailFolder = ia.getSubFolders(folderName, isSubscribe);
 				
 				for (int i=0; i<subMailFolder.size(); i++) {
 					Folder fd = subMailFolder.get(i);
 					subFolderXML.append("<node imgidx='1'");
 					if (bcount.equals("-1")) {
-						if (fd.getUnreadMessageCount()>0) {
-							subFolderXML.append(" caption='"+fd.getName()+"("+fd.getUnreadMessageCount()+")'");
+						if (fd.getUnreadMessageCount() > 0) {
+							subFolderXML.append(" caption='" + fd.getName() + "(" + fd.getUnreadMessageCount() + ")'");
 						} else {
-							subFolderXML.append(" caption='"+fd.getName()+"'");
+							subFolderXML.append(" caption='" + fd.getName() + "'");
 						}
 					} else {
-						subFolderXML.append(" caption='"+fd.getName()+"'");
+						subFolderXML.append(" caption='" + fd.getName() + "'");
 					}
-					subFolderXML.append(" foldername='"+fd.getName()+"'");
-					subFolderXML.append(" orgBoxName='"+i+"'");
+					subFolderXML.append(" foldername='" + fd.getName() + "'");
+					subFolderXML.append(" orgBoxName='" + i + "'");
 					subFolderXML.append(" fullcaption='_NONE'"); //수정
-					subFolderXML.append(" href='"+fd.getFullName()+"'"); //수정
+					subFolderXML.append(" href='" + fd.getFullName() + "'");
+					
+					if (!isSubscribe) {
+						if (fd.isSubscribed()) {
+							subFolderXML.append(" subscribe='1'");
+						} else {
+							subFolderXML.append(" subscribe='0'");
+						}
+					}
+					
 					if (fd.list().length>0) {
 						subFolderXML.append(" hassub='1'");
 					}
 					if (bcount.equals("-1")) {
-						if (fd.getUnreadMessageCount()>0) {
+						if (fd.getUnreadMessageCount() > 0) {
 							subFolderXML.append(" style='font-weight:bold'");
 						}
 					}
 					subFolderXML.append("></node>");
 				}
 			} else {
-				subMailFolder = ia.getTopLevelFolders();
+				subMailFolder = ia.getTopLevelFolders(isSubscribe);
 				for (int i=0,j=0; i<subMailFolder.size(); i++) {
 					Folder fd = subMailFolder.get(i);
 					subFolderXML.append("<node imgidx='1'");
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount()>0) {
 							if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-								subFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"("+fd.getUnreadMessageCount()+")'");
+								subFolderXML.append(" caption='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "(" + fd.getUnreadMessageCount() + ")'");
 							} else {
-								subFolderXML.append(" caption='"+fd.getName()+"("+fd.getUnreadMessageCount()+")'");
+								subFolderXML.append(" caption='" + fd.getName() + "(" + fd.getUnreadMessageCount() + ")'");
 							}
 						} else {
 							if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))){
-								subFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"'");
+								subFolderXML.append(" caption='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
 							} else {
-								subFolderXML.append(" caption='"+fd.getName()+"'");
+								subFolderXML.append(" caption='" + fd.getName() + "'");
 							}
 						}
 					} else {
 						if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))){
-							subFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"'");
+							subFolderXML.append(" caption='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
 						} else {
-							subFolderXML.append(" caption='"+fd.getName()+"'");
+							subFolderXML.append(" caption='" + fd.getName() + "'");
 						}
 					}
 					if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
-						subFolderXML.append(" foldername='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"'");
+						subFolderXML.append(" foldername='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
 					} else {
-						subFolderXML.append(" foldername='"+fd.getName()+"'");
+						subFolderXML.append(" foldername='" + fd.getName() + "'");
 					}
 
 					if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
@@ -335,16 +350,25 @@ public class EzEmailMenuController {
 						subFolderXML.append(" orgBoxName='5'");
 						subFolderXML.append(" fullcaption='_JUNK'"); //수정
 					} else {
-						subFolderXML.append(" orgBoxName='"+((j++)+6)+"'");
+						subFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
 						subFolderXML.append(" fullcaption='_NONE'"); //수정
 					}
 
-					subFolderXML.append(" href='"+fd.getFullName()+"'"); //수정
-					if (fd.list().length>0) {
+					subFolderXML.append(" href='" + fd.getFullName() + "'");
+					
+					if (!isSubscribe) {
+						if (fd.isSubscribed()) {
+							subFolderXML.append(" subscribe='1'");
+						} else {
+							subFolderXML.append(" subscribe='0'");
+						}
+					}
+					
+					if (fd.list().length > 0) {
 						subFolderXML.append(" hassub='1'");
 					}
 					if (bcount.equals("-1")) {
-						if (fd.getUnreadMessageCount()>0) {
+						if (fd.getUnreadMessageCount() > 0) {
 							subFolderXML.append(" style='font-weight:bold'");
 						}
 					}
