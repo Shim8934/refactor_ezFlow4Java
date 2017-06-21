@@ -32,9 +32,11 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        if (startdate != "") {
-		            document.getElementById('keyword').value = keyword;
-		        }
+		        
+		        $("keyword").text = "";
+// 		        if (startdate != "") {
+// 		            document.getElementById('keyword').value = keyword;
+// 		        }
 		    }
 			
 		    $(function () {
@@ -115,7 +117,7 @@
 		        var edate = "";
 		        var keyword = "";
 		        var strSearch = "";
-		        var filter = "ScheduleID=ScheduleID";		        
+		        var filter = "";		        
 		
 	            sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	            edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -129,7 +131,7 @@
 		            filter = document.getElementsByName("search_field")[0].value;
 		            keyword = document.getElementById("keyword").value;
 		        }
-
+				
 		        window.location.href = "/ezCircular/circularSearchView.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + keyword;
 		    }
 			
@@ -209,13 +211,13 @@
 		      		<th>검색조건</th> 
 		      		<td style="width:100%">
 		      			<select name="search_field" id="search_field" style="WIDTH: 130px"> 
-		          			<option value="circularNew"selected>신규회람판</option> 
+		          			<option value="circularNew">신규회람판</option> 
 		          			<option value="circularComplete">확인완료회람판</option>
 		          			<option value="circularMy">작성한회람판</option>
 		          			<option value="circularTemp">임시회람판</option>
 		          			<option value="circularFolder">회람문서함</option> 
 		        		</select>
-		        		<input type="text" id="keyword" size="21" value="${keyword}" onkeypress="return search_keypress(event)" /> 
+		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()">검색</span></a>
 		        	</td> 
 		    	</tr> 

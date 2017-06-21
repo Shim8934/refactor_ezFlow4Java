@@ -110,19 +110,45 @@
                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B
             WHERE
                 A.CIRCULARID = B.CIRCULARID
+            ]]>
+        <isEqual property="filterVal" compareValue="1">
             AND
             	B.UPDATESTATUS = '0'
+        </isEqual>
+        <isEqual property="filterVal" compareValue="2">
+            AND
+            	A.STATUS IN ('0', '1')
+            AND
+            	B.UPDATESTATUS = '1'
+        </isEqual>
+        <isEqual property="filterVal" compareValue="3">
+            AND
+            	A.STATUS IN ('0', '1')
+            AND
+            	B.UPDATESTATUS IN ('0', '1')
+        </isEqual>
+        <isEqual property="filterVal" compareValue="4">
+            AND
+            	A.STATUS = '2'
+            AND
+            	B.UPDATESTATUS IN ('0', '1')
+        </isEqual>
+        <isEqual property="filterVal" compareValue="5">
+            AND
+            	A.STATUS = '2'
+            AND
+            	B.UPDATESTATUS IN ('0', '1')
+        </isEqual>
             AND
                 A.TENANTID = B.TENANTID
             AND
-                B.MEMBERID = #memberID#
+                A.MEMBERID = #memberID#
             AND
                 A.TENANTID = #tenantID#
             AND
                 A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
             LIMIT
-                #limit#, #rowCount#        
-        ]]>
+                #limit#, #rowCount#
     </select>
     
     <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
@@ -204,17 +230,41 @@
                 A.CIRCULARID = B.CIRCULARID
             AND
                 A.TENANTID = B.TENANTID
+        ]]>
+        <isEqual property="filterVal" compareValue="1">
             AND
-            	A.STATUS = '0'
+            	B.UPDATESTATUS = '0'
+        </isEqual>
+        <isEqual property="filterVal" compareValue="2">
             AND
-            	B.UPDATESTATUS = '0'	
+            	A.STATUS IN ('0', '1')
             AND
-                B.MEMBERID = #memberID#
+            	B.UPDATESTATUS = '1'
+        </isEqual>
+        <isEqual property="filterVal" compareValue="3">
+            AND
+            	A.STATUS IN ('0', '1')
+            AND
+            	B.UPDATESTATUS IN ('0', '1')
+        </isEqual>
+        <isEqual property="filterVal" compareValue="4">
+            AND
+            	A.STATUS = '2'
+            AND
+            	B.UPDATESTATUS IN ('0', '1')
+        </isEqual>
+        <isEqual property="filterVal" compareValue="5">
+            AND
+            	A.STATUS = '2'
+            AND
+            	B.UPDATESTATUS IN ('0', '1')
+        </isEqual>
+            AND
+                A.MEMBERID = #memberID#
             AND
                 A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')    
             AND
-                A.TENANTID = #tenantID#     
-        ]]>
+                A.TENANTID = #tenantID#
     </select>
   
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
