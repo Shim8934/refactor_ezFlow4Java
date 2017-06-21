@@ -43,26 +43,43 @@
     <select id="EzCircularDAO.getCircularList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE, B.UPDATESTATUS
+                A.circularid,
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                B.status AS confirmstatus,
+                DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS confirmdate,
+                B.updatestatus,
+                DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate
+                
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+                A.tenantid = B.tenantid
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	A.status = '0'
             AND
-                A.TENANTID = B.TENANTID
+            	(B.updatestatus = '0' OR B.updatestatus = '4')
             AND
-            	A.STATUS = '0'
+                B.memberid = #memberId#
             AND
-            	B.UPDATESTATUS = '0'
-            AND
-                B.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                A.tenantid = #tenantId#
             ORDER BY
-            	A.REGDATE DESC
+            	B.updatestatus DESC,
+            	B.updatedate DESC,
+            	A.regdate DESC
             LIMIT
-                #limit#, #rowCount#        
+                #limit#, #rowCount#
         ]]>
+        
+        
     </select>
   
     <select id="EzCircularDAO.getSearchCircularList" resultClass="CircularListVO" >
@@ -88,6 +105,84 @@
         ]]>
     </select>
     
+    <select id="EzCircularDAO.getSearchAllCircularList" resultClass="CircularListVO" >
+        <isNotEqual property="filterVal" compareValue="5">
+	        <![CDATA[
+	            SELECT
+	                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+	            FROM
+	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+	            WHERE
+	                A.CIRCULARID = B.CIRCULARID
+	            ]]>
+	        <isEqual property="filterVal" compareValue="1">
+	        <![CDATA[
+		        AND
+	            	A.STATUS = '0'
+	            AND
+	            	B.UPDATESTATUS = '0'
+	        ]]> 
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="2">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS = '1'
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="3">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="4">
+			<![CDATA[
+	            AND
+	            	A.STATUS = '2'
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>	
+	        </isEqual>
+			<![CDATA[
+	            AND
+	                A.TENANTID = B.TENANTID
+	            AND
+	                A.MEMBERID = #memberID#
+	            AND
+	                A.TENANTID = #tenantID#
+	            AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
+	            LIMIT
+	                #limit#, #rowCount#
+			]]>
+        </isNotEqual>
+        <isEqual property="filterVal" compareValue="5">
+        	<![CDATA[
+				SELECT
+					DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE, D.UPDATESTATUS 
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
+					ON A.CIRCULARID = B.CIRCULARID
+				JOIN TBL_CIRCULAR_USER D
+					ON A.CIRCULARID = D.CIRCULARID
+				WHERE
+					D.UPDATESTATUS = '3'  
+				AND
+					A.TENANTID = #tenantID#
+				AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
+	            LIMIT
+	                #limit#, #rowCount#	
+        	]]>
+        </isEqual>
+    </select>
+    
     <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
         <![CDATA[
             SELECT
@@ -110,51 +205,102 @@
                 #limit#, #rowCount#        
         ]]>
     </select>
-  
-    <select id="EzCircularDAO.getCircularMapList" resultClass="HashMap" >
-        <![CDATA[
-            SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
-            FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-            WHERE
-                A.CIRCULARID = B.CIRCULARID
-            AND
-                A.TENANTID = B.TENANTID
-            AND
-            	A.STATUS = '0'
-            AND
-            	B.UPDATESTATUS = '0'	
-            AND
-                B.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
-            ORDER BY
-            	A.REGDATE DESC
-            LIMIT
-                #limit#, #rowCount#        
-        ]]>
-    </select>
     
     <select id="EzCircularDAO.getCircularListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
-            SELECT
-                COUNT(A.CIRCULARID) CNT
+        	SELECT
+                COUNT(*) cnt
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+                A.tenantid = B.tenantid
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	A.status = '0'
             AND
-                A.TENANTID = B.TENANTID
+            	(B.updatestatus = '0' OR B.updatestatus = '4')
             AND
-            	A.STATUS = '0'
+                B.memberid = #memberId#
             AND
-            	B.UPDATESTATUS = '0'	
-            AND
-                B.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#     
+                A.tenantid = #tenantId#
         ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getCircularAllListCount" parameterClass="Map" resultClass="Integer" >
+        <isNotEqual property="filterVal" compareValue="5">
+	        <![CDATA[
+	            SELECT
+	                COUNT(DISTINCT A.CIRCULARID) CNT
+	            FROM
+	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+	            WHERE
+	                A.CIRCULARID = B.CIRCULARID
+	            AND
+	                A.TENANTID = B.TENANTID
+	        ]]>
+	        <isEqual property="filterVal" compareValue="1">
+	        <![CDATA[
+	            AND
+	            	A.STATUS = '0'
+	            AND
+	            	B.UPDATESTATUS = '0'
+	        ]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="2">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS = '1'
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="3">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="4">
+			<![CDATA[
+	            AND
+	            	A.STATUS = '2'
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>
+	        </isEqual>
+			<![CDATA[
+	            AND
+	                A.MEMBERID = #memberID#
+	            AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')    
+	            AND
+	                A.TENANTID = #tenantID#
+			]]>
+        </isNotEqual>        
+		<isEqual property="filterVal" compareValue="5">
+        	<![CDATA[
+				SELECT
+					COUNT(DISTINCT A.CIRCULARID) CNT
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
+					ON A.CIRCULARID = B.CIRCULARID
+				JOIN TBL_CIRCULAR_USER D
+					ON A.CIRCULARID = D.CIRCULARID
+				WHERE
+					D.UPDATESTATUS = '3'  
+				AND
+					A.TENANTID = #tenantID#
+				AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
+        	]]>
+        </isEqual>                
     </select>
   
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
@@ -866,13 +1012,28 @@
                 MEMBERID = #v_USERID#
         ]]>
     </update>
+    
+    <select id="EzCircularDAO.confirmFolderCheck" parameterClass="Map" resultClass="Integer">
+    	<![CDATA[
+    		SELECT
+    			IFNULL(COUNT(*), 0) AS cnt
+			FROM
+				TBL_CIRCULAR_LINK
+			WHERE
+				circularID = #circularID#
+			AND
+				memberID = #memberID#
+			AND
+				tenantID = #tenantID#
+    	]]>
+    </select>
   
     <update id="EzCircularDAO.confirmStatus" parameterClass="Map">
         <![CDATA[
             UPDATE
 	            TBL_CIRCULAR_USER
 	        SET
-	            UPDATESTATUS = '1'
+	            UPDATESTATUS = #updateStatus#
 	        WHERE 
 	            CIRCULARID = #circularID#
 	        AND
@@ -1169,8 +1330,7 @@
 			UPDATE
 				TBL_CIRCULAR_USER
 			SET
-				updatestatus = 4
-			AND
+				updatestatus = 4,
 				updatedate = #nowDate#
 			WHERE
 				circularid = #circularID#
@@ -1186,7 +1346,7 @@
 			INSERT INTO TBL_CIRCULAR_COMMENT
 				(circularid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
             VALUES
-                (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #regDate#, #status#, #tenantID#)
+                (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #nowDate#, #status#, #tenantID#)
 		]]>
 	</insert>
 	

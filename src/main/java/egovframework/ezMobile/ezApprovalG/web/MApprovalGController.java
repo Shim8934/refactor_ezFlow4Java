@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +69,7 @@ public class MApprovalGController {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		//임시 
+		//임시로 박고 리스트타입으로 문서리스트 종류 구분 결재할,결재한,결재진행 등등 
 		pListType = "1";
 		
 		//결재할 문서 카운트
@@ -139,6 +140,7 @@ public class MApprovalGController {
 		model.addAttribute("photoPath", photoPath);
 		model.addAttribute("bodyHTML", bodyHTML);
 		model.addAttribute("commentCount", commentCount);
+		model.addAttribute("docID", pDocID);
 
 		logger.debug("doApprovalGDetail ended");
 		
@@ -156,9 +158,24 @@ public class MApprovalGController {
 		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = MApprovalGService.getOpinionInfo(pDocID, pListType, userInfo);
 
 		model.addAttribute("opinionList", approvalGOpinionInfoVOs);
+		model.addAttribute("userID", userInfo.getId());
 		
 		logger.debug("getOpinionInfo ended");
 		
 		return "json";
+	}
+	
+	@RequestMapping(value = "/mobile/ezApprovalG/saveOpinionInfo.do")
+	public void saveOpinionInfo(@CookieValue("loginCookie") String loginCookie, String pDocID, String pContent, String pOpinionGB, HttpServletResponse response) throws Exception {
+		logger.debug("saveOpinionInfo started");
+		logger.debug("docID : " + pDocID);
+		logger.debug("content : " + pContent);
+		logger.debug("opinionGB : " + pOpinionGB);
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		MApprovalGService.saveOpinionInfo(pDocID, pContent, pOpinionGB, userInfo);
+
+		logger.debug("saveOpinionInfo ended");
 	}
 }

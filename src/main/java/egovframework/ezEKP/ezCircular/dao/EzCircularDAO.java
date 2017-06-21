@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
@@ -27,11 +26,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<CircularListVO> getSearchCircularList(Map<String, Object> map) throws Exception {
 		return (List<CircularListVO>) list("EzCircularDAO.getSearchCircularList", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getCircularMapList(Map<String, Object> map) throws Exception {
-		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularMapList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -332,6 +326,19 @@ public class EzCircularDAO extends EgovAbstractDAO{
 
 	public void moveCircular3(Map<String, Object> map) {
 		delete("EzCircularDAO.moveCircular3", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CircularListVO> getSearchAllCircularList(Map<String, Object> map) {
+		return (List<CircularListVO>) list("EzCircularDAO.getSearchAllCircularList", map);
+	}
+
+	public int getCircularAllListCount(Map<String, Object> map) {
+		return (int) select("EzCircularDAO.getCircularAllListCount", map);
+	}
+
+	public int confirmFolderCheck(Map<String, Object> map) {
+		return (int) select("EzCircularDAO.confirmFolderCheck", map);
 	}
 
 }

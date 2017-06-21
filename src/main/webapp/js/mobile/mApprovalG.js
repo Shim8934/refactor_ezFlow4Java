@@ -63,7 +63,7 @@ function searchApproveList() {
 				$("#apprList").html(list);
 			} else {
 				list += "<li class='ui-first-child'>";
-				list +=	"  	<p>데이터가 없습니다.</p>";						    	
+				list +=	"  	<p>결재할문서가 없습니다.</p>";						    	
 				list += "</li>";
 				
 				$("#apprList").html(list);
@@ -86,7 +86,7 @@ function showOriginal() {
 	alert("원문보기");
 }
 
-function showComment() {
+function showComment(docID, listType) {
 	$.ajax({
 		type : "POST",
 		url : "/mobile/ezApprovalG/getOpinionInfo.do",
@@ -100,19 +100,20 @@ function showComment() {
 			
 			if (data.opinionList.length > 0) {
 				$.each(data.opinionList, function(key, value) {
-					list += "<div class='animateMe1 ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content' data-role='collapsible' data-iconpos='right' data-inset='true'>";
-					list += "	<h2 class='ui-collapsible-heading'>";
-					list += "		<a class='ui-collapsible-heading-toggle ui-btn ui-btn-icon-right ui-btn-inherit ui-icon-minus' href='#'>";
-					list += "			Comment 1";
-					list += "			<span class='ui-collapsible-heading-status'> click to collapse contents</span>";
-					list += "		</a>";
-					list += "	</h2>";
-					list += "	<div class='ui-collapsible-content ui-body-inherit' aria-hidden='false'>";
-					list += "		<p>Comment Content</p>";
-					list += "	</div>";
+					list += "<div data-role=\"collapsible\" class=\"animateMe1\" data-iconpos=\"right\" data-inset=\"true\">";
+					list += "	<h2>" + value.userName + " " + value.userJobTitle + "(" + value.userDeptName + ")</h2>";
+					list += "	<p>" + "의견종류 : " + value.opinionGB + "<br/>내용 : " + value.content + "</p>";
 					list += "</div>";
 				});
+				
+				$("#popupCommentSet").html(list).collapsibleset("refresh");
+				
+			} else {
+				list += "<h3 style='text-align: center'>의견이 없습니다.</h3>";
+				
+				$("#popupCommentSet").html(list);
 			}
+			
 		},
 		error : function(xhr, status, error) {
 			
@@ -120,4 +121,53 @@ function showComment() {
 	});
 	
 	$("#popupComment").popup("open");
+}
+
+function writeComment(docID, listType) {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/getOpinionInfo.do",
+		dataType : "json",
+		data : {
+			pDocID : docID,
+			pListType : listType
+		},
+		success : function(data) {
+			var list = "";
+			
+			if (data.opinionList.length > 0) {
+				$.each(data.opinionList, function(key, value) {
+					if (value.userID == data.userID) {
+						$("#writeComment").val(value.content);
+					}
+				});
+			} 
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+	
+	$("#popupWriteComment").popup("open");
+}
+
+function commentSave(docID) {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/saveOpinionInfo.do",
+		dataType : "json",
+		data : {
+			pDocID    : docID,
+			pContent  : $("#writeComment").val(), 
+			pOpinionGB: "001"
+		},
+		success : function() {
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+	
+	//닫는게 아니라 새로고침을 한번 해주든가 카운트만 새로고침해야할듯
+	$("#popupWriteComment").popup("close");
 }
