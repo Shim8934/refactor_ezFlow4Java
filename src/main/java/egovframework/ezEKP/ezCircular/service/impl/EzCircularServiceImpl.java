@@ -967,4 +967,28 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return rtnValue;
 	}
+
+	@Override
+	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberID", memberID);
+		map.put("limit", startRow-1);
+		map.put("rowCount", endRow-(startRow-1));
+		map.put("tenantID", tenantID);
+		map.put("searchKeyword", keyword);
+		
+		return ezCircularDAO.getSearchAllCircularList(map);
+	}
+
+	@Override
+	public int getCircularAllListCount(String memberID, int tenantID, String keyword) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		map.put("searchKeyword", keyword);
+		
+		return ezCircularDAO.getCircularAllListCount(map);
+	}
 }

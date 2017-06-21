@@ -334,4 +334,13 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		delete("EzCircularDAO.moveCircular3", map);
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<CircularListVO> getSearchAllCircularList(Map<String, Object> map) {
+		return (List<CircularListVO>) list("EzCircularDAO.getSearchAllCircularList", map);
+	}
+
+	public int getCircularAllListCount(Map<String, Object> map) {
+		return (int) select("EzCircularDAO.getCircularAllListCount", map);
+	}
+
 }
