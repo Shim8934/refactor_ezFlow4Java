@@ -106,26 +106,101 @@
     </select>
     
     <select id="EzCircularDAO.getSearchAllCircularList" resultClass="CircularListVO" >
-        <![CDATA[
-            SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
-            FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-            WHERE
-                A.CIRCULARID = B.CIRCULARID
-            AND
-            	B.UPDATESTATUS = '0'
-            AND
-                A.TENANTID = B.TENANTID
-            AND
-                B.MEMBERID = #memberID#
-            AND
-                A.TENANTID = #tenantID#
-            AND
-                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
-            LIMIT
-                #limit#, #rowCount#        
-        ]]>
+        <isNotEqual property="filterVal" compareValue="5">
+	        <![CDATA[
+	            SELECT
+	                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+	            FROM
+	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+	            WHERE
+	                A.CIRCULARID = B.CIRCULARID
+	            ]]>
+	        <isEqual property="filterVal" compareValue="1">
+	        <![CDATA[
+		        AND
+	            	A.STATUS = '0'
+	            AND
+	            	B.UPDATESTATUS = '0'
+	        ]]> 
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="2">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS = '1'
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="3">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="4">
+			<![CDATA[
+	            AND
+	            	A.STATUS = '2'
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>	
+	        </isEqual>
+			<![CDATA[
+	            AND
+	                A.TENANTID = B.TENANTID
+	            AND
+	                A.MEMBERID = #memberID#
+	            AND
+	                A.TENANTID = #tenantID#
+	            AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
+	        ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[    	
+	            LIMIT
+	                #limit#, #rowCount#
+			]]>
+        </isNotEqual>
+        <isEqual property="filterVal" compareValue="5">
+        	<![CDATA[
+				SELECT
+					DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE, D.UPDATESTATUS 
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
+					ON A.CIRCULARID = B.CIRCULARID
+				JOIN TBL_CIRCULAR_USER D
+					ON A.CIRCULARID = D.CIRCULARID
+				WHERE
+					D.UPDATESTATUS = '3'  
+				AND
+					A.TENANTID = #tenantID#
+				AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
+	        ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[
+	            LIMIT
+	                #limit#, #rowCount#	
+        	]]>
+        </isEqual>
     </select>
     
     <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
@@ -175,26 +250,97 @@
     </select>
     
     <select id="EzCircularDAO.getCircularAllListCount" parameterClass="Map" resultClass="Integer" >
-         <![CDATA[
-            SELECT
-                COUNT(A.CIRCULARID) CNT
-            FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-            WHERE
-                A.CIRCULARID = B.CIRCULARID
-            AND
-                A.TENANTID = B.TENANTID
-            AND
-            	A.STATUS = '0'
-            AND
-            	B.UPDATESTATUS = '0'	
-            AND
-                B.MEMBERID = #memberID#
-            AND
-                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')    
-            AND
-                A.TENANTID = #tenantID#     
-        ]]>              
+        <isNotEqual property="filterVal" compareValue="5">
+	        <![CDATA[
+	            SELECT
+	                COUNT(DISTINCT A.CIRCULARID) CNT
+	            FROM
+	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+	            WHERE
+	                A.CIRCULARID = B.CIRCULARID
+	            AND
+	                A.TENANTID = B.TENANTID
+	        ]]>
+	        <isEqual property="filterVal" compareValue="1">
+	        <![CDATA[
+	            AND
+	            	A.STATUS = '0'
+	            AND
+	            	B.UPDATESTATUS = '0'
+	        ]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="2">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS = '1'
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="3">
+			<![CDATA[
+	            AND
+	            	A.STATUS IN ('0', '1')
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>
+	        </isEqual>
+	        <isEqual property="filterVal" compareValue="4">
+			<![CDATA[
+	            AND
+	            	A.STATUS = '2'
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+			]]>
+	        </isEqual>
+			<![CDATA[
+	            AND
+	                A.MEMBERID = #memberID#
+	        ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[        
+	            AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')    
+	            AND
+	                A.TENANTID = #tenantID#
+			]]>
+        </isNotEqual>        
+		<isEqual property="filterVal" compareValue="5">
+        	<![CDATA[
+				SELECT
+					COUNT(DISTINCT A.CIRCULARID) CNT
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
+					ON A.CIRCULARID = B.CIRCULARID
+				JOIN TBL_CIRCULAR_USER D
+					ON A.CIRCULARID = D.CIRCULARID
+				WHERE
+					D.UPDATESTATUS = '3'  
+				AND
+					A.TENANTID = #tenantID#
+		    ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[    
+				AND
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
+        	]]>
+        </isEqual>                
     </select>
   
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >

@@ -991,7 +991,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword) throws Exception {
+	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
@@ -999,18 +999,24 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
 		map.put("searchKeyword", keyword);
+		map.put("filterVal", filterVal);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
 		
 		return ezCircularDAO.getSearchAllCircularList(map);
 	}
 
 	@Override
-	public int getCircularAllListCount(String memberID, int tenantID, String keyword) throws Exception {
+	public int getCircularAllListCount(String memberID, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
 		map.put("searchKeyword", keyword);
-		
+		map.put("filterVal", filterVal);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+
 		return ezCircularDAO.getCircularAllListCount(map);
 	}
 
@@ -1029,6 +1035,5 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		logger.debug("readComment ended.");
 	}
-	
 	
 }

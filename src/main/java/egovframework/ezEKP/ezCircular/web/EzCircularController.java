@@ -545,52 +545,52 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularSearchView started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-//		List<ScheduleInfoVO> sList = null;
+
 		String filter = request.getParameter("filter");
 		String keyword = request.getParameter("keyword");
-//		String search_field = request.getParameter("search_field");
 		String startDate = request.getParameter("sdate");
 		String endDate = request.getParameter("edate");
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
-System.out.println("@@" + filter);
-					
-		String utcStartTime = "";
-		String utcEndTime = "";
-		
-		if (keyword == null) keyword = "";
-		if (startDate == null) startDate = "";
-		if (endDate == null) endDate = "";			
-		
-		if (startDate == null || startDate.equals("") || endDate == null || endDate.equals("")) {
-			String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date now = sdf.parse(utcTime);
+	
+		if (filter != null && !filter.equals("")) {			
+//			String utcStartTime = "";
+//			String utcEndTime = "";
+			int filterVal = 0;
+
+			if (filter.equals("circularNew")) {
+				filterVal = 1;
+			} else if (filter.equals("circularComplete")) {
+				filterVal = 2;
+			} else if (filter.equals("circularMy")) {
+				filterVal = 3;
+			} else if (filter.equals("circularTemp")) {
+				filterVal = 4;
+			} else {
+				filterVal = 5;
+			}
 			
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(now);
-			startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), userInfo.getOffset(), false).substring(0, 10);
+			if (keyword == null) keyword = "";
+			if (startDate == null) startDate = "";
+			if (endDate == null) endDate = "";
 			
-			cal.setTime(now);
-			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), userInfo.getOffset(), false).substring(0, 10);
-		}
+			if (startDate != "" && endDate != "") {
+				startDate = startDate + " 00:00:00";
+				endDate = endDate + " 23:59:59";				
+			}
+
+//			utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+//			utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
+			
+//			startDate = startDate.substring(0,10);
+//			endDate = endDate.substring(0,10);
 		
-		startDate = startDate + " 00:00:00";
-		endDate = endDate + " 23:59:59";
-		
-		utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
-		utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
-		
-		startDate = startDate.substring(0,10);
-		endDate = endDate.substring(0,10);
-		
-        int startRow = 1;
-        int endRow = 0;
-        
-        String pageNum = "1";
-        
-        if (request.getParameter("pageNum") != null && !request.getParameter("pageNum").equals("")) {
-        	pageNum = request.getParameter("pageNum"); 
+	        int startRow = 1;
+	        int endRow = 0;
+	        
+	        String pageNum = "1";
+	        
+	        if (request.getParameter("pageNum") != null && !request.getParameter("pageNum").equals("")) {
+	        	pageNum = request.getParameter("pageNum"); 
 	        }
 	    	
 	    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
@@ -598,14 +598,15 @@ System.out.println("@@" + filter);
 			int personalCount = config.getListCnt();
 			startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
 	        endRow = (personalCount * Integer.parseInt(pageNum));
-			
-	        int totalCount = ezCircularService.getCircularAllListCount(userInfo.getId(), userInfo.getTenantId(), keyword);
-	        
-			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword);
-System.out.println("@@" + list.size());		
 
-		model.addAttribute("totalCount", totalCount);
-        model.addAttribute("list", list);		
+	        int totalCount = ezCircularService.getCircularAllListCount(userInfo.getId(), userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
+        
+			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
+
+			model.addAttribute("totalCount", totalCount);
+	        model.addAttribute("list", list);
+		}
+		
 		model.addAttribute("offSetMin", offSetMin);
 		model.addAttribute("filter", filter);
 		model.addAttribute("keyword", keyword);
