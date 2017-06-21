@@ -175,7 +175,7 @@
     </select>
     
     <select id="EzCircularDAO.getCircularAllListCount" parameterClass="Map" resultClass="Integer" >
-        <![CDATA[
+         <![CDATA[
             SELECT
                 COUNT(A.CIRCULARID) CNT
             FROM
@@ -194,7 +194,7 @@
                 A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')    
             AND
                 A.TENANTID = #tenantID#     
-        ]]>
+        ]]>              
     </select>
   
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
