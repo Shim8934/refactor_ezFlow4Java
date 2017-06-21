@@ -398,6 +398,7 @@ function AddOpinionContent(Opstate, OpContent) {
             var pAlertContent = strLang402;
             OpenAlertUI(pAlertContent);
             document.getElementById("txt_OpinionContent").focus();
+            ChkFlag = false;
         }
     } catch (e) {
         alert("AddOpinionContent :: " + e.description);
