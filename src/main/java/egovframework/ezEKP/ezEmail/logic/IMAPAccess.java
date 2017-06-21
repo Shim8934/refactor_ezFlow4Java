@@ -158,6 +158,10 @@ public class IMAPAccess {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
+			} else {
+				if (!inbox.isSubscribed()) {
+					inbox.setSubscribed(true);
+				}
 			}
 			
 			if (!sent.exists()) {
@@ -214,6 +218,10 @@ public class IMAPAccess {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
+			} else {
+				if (!inbox.isSubscribed()) {
+					inbox.setSubscribed(true);
+				}
 			}
 			
 			if (!sent.exists()) {
