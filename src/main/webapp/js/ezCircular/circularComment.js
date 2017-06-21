@@ -14,19 +14,19 @@ function getcircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td>" + vo.memberName + "("+ vo.memberID +")<a href='#' class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글</span></a></td>"
+				userList += "<td style='width:35%;'>" + vo.memberName + "("+ vo.memberID +")<a href='#' class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글</span></a></td>"
 				
 				if (vo.status == 1) {
-					userList += "<td style='float:right;' colspan='2'>확인완료</td>"
+					userList += "<td style='text-align:right;' colspan='2'>확인완료</td>"
 				} else {
-					userList += "<td style='float:right;' colspan='2'>미확인</td>";
+					userList += "<td style='text-align:right;' colspan='2'>미확인</td>";
 				}
 				userList += "</tr>";
-				userList += "<tr>";
-				userList += "<td colspan='3'><table circularUserID='" + vo.memberID + "'></table></td>";
+				userList += "<tr style='display:none'>";
+				userList += "<td colspan='3'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
 				userList += "</tr>";
-				userList += "<tr>";
-				userList += "<td colspan='3'><div class='circularComment' circularUserID='" + vo.memberID + "' circularID='" + vo.circularID + "' style='display:none'><input type = 'text'/><a href='#' class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></div></td>";
+				userList += "<tr style='display:none'>";
+				userList += "<td colspan='3'><div class='circularComment' circularUserID='" + vo.memberID + "' circularID='" + vo.circularID + "'><input type = 'text'/><a href='#' class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></div></td>";
 				userList += "</tr>";
 			});
 			
@@ -37,11 +37,12 @@ function getcircularComment() {
 			list = result.commentList;
 			list.forEach(function(vo, index) {
 				commentList = "<tr>";
-				commentList += "<td circularCommentID='" + vo.circularCommentID + "'>content : " + vo.circularComment + "</td>";
-				commentList += "<td>id,name : (" + vo.memberID + "/ " + vo.memberName + ")</td>";
-				commentList += "<td>regDate : " + vo.regDate + "</td>";
+				commentList += "<td style='width:60%;' circularCommentID='" + vo.circularCommentID + "'>content : " + vo.circularComment + "</td>";
+				commentList += "<td style='width:30%;'>id,name : (" + vo.memberID + "/ " + vo.memberName + ")</td>";
+				commentList += "<td style='width:10%;'>" + vo.regDate + "</td>";
 				commentList += "</tr>";
 				$("table[circularUserID='" + vo.circularUserID + "'").append(commentList);
+				$("table[circularUserID='" + vo.circularUserID + "'").closest("tr").show();
 			});
 			
 			//회람자 목록에 해당하는 코멘트
@@ -54,8 +55,8 @@ function getcircularComment() {
 }
 
 function showEdit(obj) {
-	$(".circularComment").hide();
-	$(".circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").show();
+	$(".circularComment").closest("tr").hide();
+	$(".circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").closest("tr").show();
 }
 
 //댓글작성

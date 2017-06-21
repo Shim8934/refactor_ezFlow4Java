@@ -14,10 +14,11 @@
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
 			
-	        window.onload = function () {
+			$(document).ready(function(){
 	            document.getElementById('itemList').innerHTML = "${listUser}";
 	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
@@ -34,9 +35,9 @@
 // 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
 // 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
 	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
-	        }
-			
-	        window.onunload = window_onUnload;
+	            
+	            getcircularComment();
+	        });
 	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
@@ -76,20 +77,6 @@
 				});	
 	        }
 		    
-		    function btn_comment() {
-		    	if (CrossYN()) {
-		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularComment.do?circularID="+circularID, "", "width=720, height=700, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	        	} else {
-	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularComment.do?circularID="+circularID, "", "width=670, height=700, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	        	}
-		    }
-
-	        function window_onUnload() {
-	        	window.opener.window_reload();
-	        }
-	        
 	        //인쇄버튼 클릭시
 	        function print_onClick2(printTrueFalse) {
 	            g_printTrueFalse = printTrueFalse;
@@ -170,7 +157,6 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li id="btn_comment"><span onclick="btn_comment()">댓글</span></li>
 <!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
 <!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
 <!--                         	<li><span>회람종료</span></li> -->
@@ -257,7 +243,6 @@
                             </th>
                             <td class="pos1">
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">	                                
-                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:20px">
                                     		<c:set var="imagePath" value="/images/file.gif" />
@@ -306,59 +291,17 @@
 <!-- 여기부터 댓글 작성	        		 -->
 	        		<table class="content">
 	                    <tr>
-    	                    <th style="width: 70px;">제목</th>
-        	                <td colspan="3" style="width: 100%">
-            	                ${result.title}
+    	                    <th style="width: 70px;">댓글</th>
+        	                <td style="width: 100%">
+            	                <table id="comments" style="width:100%">
+									<tr>
+										<td>
+											<table id="commentUserList" style="width:100%"></table>
+										</td>
+									</tr>	
+								</table>
                 	        </td>
                     	</tr>
-                    	<tr>
-	                        <th>중요도</th>
-    	                    <td colspan="3">${result.importance == '0' ? '일반' : '중요'}</td>
-                    	</tr>
-		        		<tr>
-		            		<th>옵션</th>
-		            		<td colspan="3" style="width: 100%">
-		                		<c:choose>
-		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
-		                			</c:when>
-		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
-		                			</c:when>
-		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
-										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
-		                			</c:when>
-		                			<c:otherwise>
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
-		                			</c:otherwise>
-		                		</c:choose>
-							</td>
-		        		</tr>
-		        		<tr>
-		            		<th>회람자</th>
-		            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
-		        		</tr>
-		        		<tr>
-		            		<th>상태</th>
-		            		<td colspan="3">
-		            			<c:choose>
-			            			<c:when test="${result.status eq '0'}">
-			            				<div id="status">진행중</div>
-			            			</c:when>
-			            			<c:when test="${result.status eq '1'}">
-			            				<div id="status">종료</div>
-			            			</c:when>
-			            			<c:otherwise>
-			            				<div id="status">임시</div>
-			            			</c:otherwise>
-		                		</c:choose>
-		            		</td>
-		        		</tr>
-	        			
 	        		</table>
 	        	</td>
         	</tr>
