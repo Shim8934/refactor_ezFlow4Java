@@ -155,7 +155,17 @@
 	            AND
 	                A.TENANTID = #tenantID#
 	            AND
-	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
+	        ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[    	
 	            LIMIT
 	                #limit#, #rowCount#
 			]]>
@@ -176,7 +186,17 @@
 				AND
 					A.TENANTID = #tenantID#
 				AND
-	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
+	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
+	        ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[
 	            LIMIT
 	                #limit#, #rowCount#	
         	]]>
@@ -276,6 +296,16 @@
 			<![CDATA[
 	            AND
 	                A.MEMBERID = #memberID#
+	        ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[        
 	            AND
 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')    
 	            AND
@@ -297,6 +327,16 @@
 					D.UPDATESTATUS = '3'  
 				AND
 					A.TENANTID = #tenantID#
+		    ]]>
+        <isNotEmpty property="startDate">
+	        <![CDATA[
+	            AND
+	            	#startDate# <= A.REGDATE
+	            AND
+	            	#endDate# > A.REGDATE	        
+	        ]]>
+        </isNotEmpty>
+	        <![CDATA[    
 				AND
 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
         	]]>

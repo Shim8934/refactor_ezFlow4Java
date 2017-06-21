@@ -117,21 +117,23 @@
 		        var edate = "";
 		        var keyword = "";
 		        var strSearch = "";
-		        var filter = "";		        
-		
-	            sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	            edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        var filter = "";
+
+		        if ($("#Sdatepicker").is(":enabled")) {
+		            sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		            edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        }		
 
 		        if (sdate > edate) {
 		        	alert("<spring:message code='ezResource.dateChk' />");
 		        	return;
 		        }
-			
+
 		        if (document.getElementById("keyword").value != "") {
 		            filter = document.getElementsByName("search_field")[0].value;
 		            keyword = document.getElementById("keyword").value;
 		        }
-				
+
 		        window.location.href = "/ezCircular/circularSearchView.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + keyword;
 		    }
 			
