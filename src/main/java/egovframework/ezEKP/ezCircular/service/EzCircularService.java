@@ -16,15 +16,13 @@ public interface EzCircularService {
 	
 	public List<HashMap<String, Object>> getSearchCircularMapList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
 	
-	public List<HashMap<String, Object>> getCircularCompleteMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
-
 	public List<HashMap<String, Object>> getCircularTempMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 
 	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
 	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception;
 
-	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
+	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
 	public List<CircularListVO> getCircularUserList(int circularID, int tenantID) throws Exception;
 	
@@ -104,8 +102,6 @@ public interface EzCircularService {
 
 	public void circularFolderModify(String folderId, String folderName, String memberId, String regDate, int tenantId) throws Exception;
 
-	
-
 	public int getCircularTDListCount(String memberId, int tenantId) throws Exception;
 
 	public List<CircularListVO> getCircularTDList(String memberId, int startRow, int endRow, int tenantId) throws Exception;
@@ -137,5 +133,7 @@ public interface EzCircularService {
 	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
 
 	public int getCircularAllListCount(String memberID, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
+	
+	public void updateReadStatus(int circularID, String circularUserID, int status, int tenantID) throws Exception;
 
 }

@@ -49,6 +49,8 @@ function deleteMail(){
 }
 
 function readMail(params){
+	//params 
+	//ex){iptURL:'INBOX/16', PNFlag:'Y', CONTENTCLASS:'IPM.Note'}
 	var form = document.createElement("form");
     
 	form.setAttribute("method", "get");
@@ -83,4 +85,12 @@ function Get_MailReceiverList(param) {
     
     document.body.appendChild(form);
     form.submit();    
+}
+
+function toggleCc(parma){
+
+}
+
+function loadAddress(){
+	
 }

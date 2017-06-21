@@ -953,7 +953,7 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		logger.debug("readMail ended.");
 		
-		return "ezEmail/mailRead";
+		return "/mobile/ezEmail/mMailRead";
 	}
 	
 	@RequestMapping(value="/mobile/ezEmail/mailReadContent.do")
@@ -1282,7 +1282,12 @@ public class MEmailController extends EgovFileMngUtil {
 			model.addAttribute("readJSON", readJSON);
 			return "json";
 		}
-
+	
+	@RequestMapping(value="/mobile/ezEmail/mMailWrite.do")
+	public String mailWrite(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		return "/mobile/ezEmail/mMailWrite";
+	}
+	
 	private String getReceiverHTML(String name, String address){
 		return "<span style='cursor:pointer' title='" + (address==null?"":EgovStringUtil.getSpclStrCnvr(address)) + "' onclick='show_personinfo(\"" + address + "\")'>" + (name==null?"":EgovStringUtil.getSpclStrCnvr(name)) + "</span>";
 	}
