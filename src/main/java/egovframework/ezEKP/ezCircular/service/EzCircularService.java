@@ -74,7 +74,7 @@ public interface EzCircularService {
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
 	
-	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2) throws Exception;
+	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String realPath) throws Exception;
 	
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception;
 	
@@ -116,7 +116,7 @@ public interface EzCircularService {
 
 	public List<HashMap<String, Object>> getCircularTDMapList(String memberId, int startRow, int endRow, int tenantId) throws Exception;
 
-	public void moveCircular(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
+	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, int tenantId) throws Exception;
 
 	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception;
 
@@ -128,9 +128,12 @@ public interface EzCircularService {
 
 	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
 
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String offset, int tenantID) throws Exception;
 
-	public void editCircularComment(CircularCommentVO circularCommentVO, String type, LoginVO userInfo) throws Exception;
+	public void editCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
 
+	public CircularAttachVO getAttachInfo(String circularFileID, int tenantId) throws Exception;
+
+	public String getUpdateStatus(String circularIdList, String memberID, int tenantID) throws Exception;
 
 }

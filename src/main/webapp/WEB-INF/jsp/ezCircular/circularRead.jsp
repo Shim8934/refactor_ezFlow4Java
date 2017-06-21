@@ -15,6 +15,8 @@
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" >
+			var circularID = "${result.circularID}";
+			
 	        window.onload = function () {
 	            document.getElementById('itemList').innerHTML = "${listUser}";
 	            
@@ -29,28 +31,23 @@
 	                }
 	            }
 	            
-	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	            //document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
+// 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+// 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
 	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
-	        }
-			
-	        window.onresize = function () {
-	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	        	document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
 	        }
 			
 	        window.onunload = window_onUnload;
 	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
-		    	var circularID = "${result.circularId}";
+		    	var circularID = "${result.circularID}";
 				
 	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID;
 	        }
 		    
 		    //삭제버튼 클릭시
 	        function btn_delete() {
-		    	var circularID = "${result.circularId}";
+		    	var circularID = "${result.circularID}";
 				
 	            if (!confirm("회람을 삭제하시겠습니까?"))
 	                return;
@@ -78,6 +75,16 @@
 					}
 				});	
 	        }
+		    
+		    function btn_comment() {
+		    	if (CrossYN()) {
+		            var feature = GetOpenPosition(820, 700);
+	            	window.open("/ezCircular/circularComment.do?circularID="+circularID, "", "width=720, height=700, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	} else {
+	            	var feature = GetOpenPosition(790, 700);
+	            	window.open("/ezCircular/circularComment.do?circularID="+circularID, "", "width=670, height=700, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	}
+		    }
 
 	        function window_onUnload() {
 	        	window.opener.window_reload();
@@ -132,7 +139,7 @@
 			            if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
 			                location.href = GetAttribute(checks.item(suffix++), "filepath");
 			            } else {		            	
-			                location.href = "/ezSchedule/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
+			                location.href = "/ezCircular/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
 			            }
 			            setTimeout(function () { downloadAll(checks) }, 1000);
 			        } else {
@@ -152,7 +159,7 @@
 	
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
-	<body id="mainbodytag" class="popup" style="height: 100%; overflow:hidden;">
+	<body id="mainbodytag" class="popup">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -163,6 +170,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
+               	    		<li id="btn_comment"><span onclick="btn_comment()">댓글</span></li>
 <!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
 <!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
 <!--                         	<li><span>회람종료</span></li> -->
@@ -278,7 +286,7 @@
                                     		<c:if test="${item.fileType == 'ecm'}">
                                     			<c:set var="imagePath" value="/images/ecm.png" />
                                     		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
                                     	</div>
                                     </c:forEach>
                                 </div>
@@ -292,7 +300,66 @@
                                 </a>
                             </td>
                         </tr>
-                    </table>			                
+                    </table>
+                    <br/>
+
+<!-- 여기부터 댓글 작성	        		 -->
+	        		<table class="content">
+	                    <tr>
+    	                    <th style="width: 70px;">제목</th>
+        	                <td colspan="3" style="width: 100%">
+            	                ${result.title}
+                	        </td>
+                    	</tr>
+                    	<tr>
+	                        <th>중요도</th>
+    	                    <td colspan="3">${result.importance == '0' ? '일반' : '중요'}</td>
+                    	</tr>
+		        		<tr>
+		            		<th>옵션</th>
+		            		<td colspan="3" style="width: 100%">
+		                		<c:choose>
+		                			<c:when test="${result.option eq '1'}">
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '2'}">
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '3'}">
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:otherwise>
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                			</c:otherwise>
+		                		</c:choose>
+							</td>
+		        		</tr>
+		        		<tr>
+		            		<th>회람자</th>
+		            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
+		        		</tr>
+		        		<tr>
+		            		<th>상태</th>
+		            		<td colspan="3">
+		            			<c:choose>
+			            			<c:when test="${result.status eq '0'}">
+			            				<div id="status">진행중</div>
+			            			</c:when>
+			            			<c:when test="${result.status eq '1'}">
+			            				<div id="status">종료</div>
+			            			</c:when>
+			            			<c:otherwise>
+			            				<div id="status">임시</div>
+			            			</c:otherwise>
+		                		</c:choose>
+		            		</td>
+		        		</tr>
+	        			
+	        		</table>
 	        	</td>
         	</tr>
 		</table>

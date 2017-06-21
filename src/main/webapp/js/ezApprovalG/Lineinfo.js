@@ -2189,9 +2189,8 @@ function SAPRLINETEMPLETXMLParsing() {
     return pAprLineXml[0];
 }
 
-function CheckHapYuiCellValue()
-{
-  try{
+function CheckHapYuiCellValue() {
+  try {
     var pAPRLINE = new ListView();      
     pAPRLINE.LoadFromID("lvAPRLINE");
     
@@ -2206,8 +2205,7 @@ function CheckHapYuiCellValue()
     pAprTypeFlag = "012"; //부서 병렬 합의
     pAprTypeFlag = ConvertAprLineType(pAprTypeFlag,"Value");
     pCurAprDeptLen = getAprLineGyulJeLen(AprLineRow , CurListLen , pAprTypeFlag);
-    if (pHapYuiCount == "0")
-    {
+    if (pHapYuiCount == "0") {
 		var pAlertContent = "" + strLang369 + "<br>  " + strLang371 + "";
 		OpenAlertUI(pAlertContent);
 		return false;
@@ -2231,8 +2229,7 @@ function getAprLineGyulJeLen(AprLineRow , CurListLen , pAprTypeFlag)
 	return pTotalIndex;
 }
 //############################################################################################################################################# 결재방법 이벤트 처리
-function APRLINETYPECHANGEFunction(valuecode, valueName)
-{
+function APRLINETYPECHANGEFunction(valuecode, valueName) {
 	var p_AprLineValueCode, p_AprLineValueName;
 	var p_CurAprlineStat;
 	var pAPRLINE = new ListView();

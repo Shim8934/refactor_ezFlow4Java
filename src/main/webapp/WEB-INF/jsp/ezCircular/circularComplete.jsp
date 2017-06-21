@@ -64,7 +64,7 @@
 	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
-// 	        var clickPreviweType = "";
+	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
 // 	        var pMailListHeightW = 0;
@@ -79,10 +79,10 @@
 	        var pPreviewShow_HOW = "OFF";
 // 	        var SmallSizeList = false;
 // 	        var OldSmallSizeList = false;
-// 	        var onclickFlag = false;
+	        var onclickFlag = false;
 	        var SQLPARADATA = "";
 // 	        var pMode = "new";
-// 	        var pAdminType = "n";
+	        var pAdminType = "n";
 // 	        var pUse_Editor = "${useEditor}";
 // 	        var pNoneActiveX = "YES";
 // 	        var pUse_IE11Browser = "CK";
@@ -462,10 +462,10 @@
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1 " + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1 " + feature);
 	        	}
 	        }
 	        
@@ -488,7 +488,6 @@
 		        arrList = null;
 	        	
 	        	var feature = GetOpenPosition(820, 700);
-// 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&updateStatus=" + updateStatus;
 				url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
@@ -526,9 +525,9 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		
-// 		    function window_reload() {
-// 		        window.location.href = window.location.href;
-// 		    }
+		    function window_reload() {
+		        window.location.href = window.location.href;
+		    }
 		
 		    function checkBox_checkAll(obj) {
 		        var SelList = new ListView();
@@ -546,6 +545,11 @@
 		                strListInfo = "";
 		            }
 		        }
+		    }
+		    
+		    function BoardSearchOptionHidden() {
+		        document.getElementById("layer_popup").style.display = "none";
+		        document.getElementById("SearchOption").setAttribute("mode", "off");
 		    }
 		
 	        function search(type) {

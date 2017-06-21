@@ -470,7 +470,7 @@
             			if (result == 'TRUE') {
             				
             			} else {
-            				alert(strLangS163);
+            				alert(strLangS163 + strLangS164);
             			}
             		}
             	});

@@ -169,7 +169,6 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
-
 	        	var keyword = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
@@ -478,14 +477,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				circularId = obj.getAttribute("CIRCULARID");
+				circularID = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
-		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            var feature = GetOpenPosition(820, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
-	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	var feature = GetOpenPosition(790, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=770, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
@@ -494,11 +493,14 @@
 					dataType : "text",
 					async : false,
 					url : "/ezCircular/confirmStatus.do",
-					data : { circularId 	: circularId 
+					data : { circularID 	: circularID 
 							},
 					success: function(xml){
 						
-					}     			
+					},
+					error: function() {
+						alert("에러발생");
+					}
 				});
                 
 	        }

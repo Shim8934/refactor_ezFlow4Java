@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
@@ -307,6 +308,30 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<CircularCommentVO> getCircularComment(Map<String, Object> map) throws Exception {
 		return (List<CircularCommentVO>) list("EzCircularDAO.getCircularComment", map);
+	}
+
+	public void updateCircularUser(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircularUser", map);
+	}
+
+	public void insertComment(Map<String, Object> map) throws Exception {
+		insert("EzCircularDAO.insertComment", map);
+	}
+	
+	public void updateComment(CircularCommentVO vo) throws Exception {
+		insert("EzCircularDAO.updateComment", vo);
+	}
+
+	public CircularAttachVO getAttachInfo(Map<String, Object> map) {
+		return (CircularAttachVO) select("EzCircularDAO.getAttachInfo", map);
+	}
+
+	public String getUpdateStatus(Map<String, Object> map) {
+		return (String) select("EzCircularDAO.getUpdateStatus", map);
+	}
+
+	public void moveCircular3(Map<String, Object> map) {
+		delete("EzCircularDAO.moveCircular3", map);
 	}
 
 }
