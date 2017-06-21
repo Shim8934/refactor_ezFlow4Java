@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
@@ -34,9 +33,7 @@
 	            
 // 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
 // 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
-	            document.getElementById("divCross").style.height = window.innerHeight - 500 + "px";
-	            
-	            getcircularComment();
+	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
 	        }
 			
 	        window.onunload = window_onUnload;
@@ -78,6 +75,16 @@
 					}
 				});	
 	        }
+		    
+		    function btn_comment() {
+		    	if (CrossYN()) {
+		            var feature = GetOpenPosition(820, 700);
+	            	window.open("/ezCircular/circularComment.do?circularID="+circularID, "", "width=720, height=700, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	} else {
+	            	var feature = GetOpenPosition(790, 700);
+	            	window.open("/ezCircular/circularComment.do?circularID="+circularID, "", "width=670, height=700, status=no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	}
+		    }
 
 	        function window_onUnload() {
 	        	window.opener.window_reload();
@@ -152,7 +159,7 @@
 	
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
-	<body id="mainbodytag" class="popup" style="height: 100%; overflow:hidden;">
+	<body id="mainbodytag" class="popup">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -163,7 +170,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    		<li id="btn_comment"><span onclick="btn_comment()">댓글</span></li>
+               	    		<li id="btn_comment"><span onclick="btn_comment()">댓글</span></li>
 <!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
 <!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
 <!--                         	<li><span>회람종료</span></li> -->
@@ -295,15 +302,64 @@
                         </tr>
                     </table>
                     <br/>
-                    <table id="comments" style="width:100%;">
-                    	<tr>
-                    		<th style="width: 30px">회람댓글</th>
-                    		<td id="pos1" style="border: 1px solid #b6b6b6;">
-                    			<div id="commentUserList" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left"></div>
-                    		</td>
+
+<!-- 여기부터 댓글 작성	        		 -->
+	        		<table class="content">
+	                    <tr>
+    	                    <th style="width: 70px;">제목</th>
+        	                <td colspan="3" style="width: 100%">
+            	                ${result.title}
+                	        </td>
                     	</tr>
-                    	
-                    </table>
+                    	<tr>
+	                        <th>중요도</th>
+    	                    <td colspan="3">${result.importance == '0' ? '일반' : '중요'}</td>
+                    	</tr>
+		        		<tr>
+		            		<th>옵션</th>
+		            		<td colspan="3" style="width: 100%">
+		                		<c:choose>
+		                			<c:when test="${result.option eq '1'}">
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '2'}">
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:when test="${result.option eq '3'}">
+		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                			</c:when>
+		                			<c:otherwise>
+		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
+										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                			</c:otherwise>
+		                		</c:choose>
+							</td>
+		        		</tr>
+		        		<tr>
+		            		<th>회람자</th>
+		            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
+		        		</tr>
+		        		<tr>
+		            		<th>상태</th>
+		            		<td colspan="3">
+		            			<c:choose>
+			            			<c:when test="${result.status eq '0'}">
+			            				<div id="status">진행중</div>
+			            			</c:when>
+			            			<c:when test="${result.status eq '1'}">
+			            				<div id="status">종료</div>
+			            			</c:when>
+			            			<c:otherwise>
+			            				<div id="status">임시</div>
+			            			</c:otherwise>
+		                		</c:choose>
+		            		</td>
+		        		</tr>
+	        			
+	        		</table>
 	        	</td>
         	</tr>
 		</table>

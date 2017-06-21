@@ -130,7 +130,7 @@ public interface EzCircularService {
 
 	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String offset, int tenantID) throws Exception;
 
-	public void editCircularComment(CircularCommentVO circularCommentVO) throws Exception;
+	public void editCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
 
 	public CircularAttachVO getAttachInfo(String circularFileID, int tenantId) throws Exception;
 

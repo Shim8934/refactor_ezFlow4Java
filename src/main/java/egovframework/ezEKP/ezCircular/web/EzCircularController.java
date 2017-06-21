@@ -2400,6 +2400,7 @@ public class EzCircularController extends EgovFileMngUtil {
     @RequestMapping(value = "/ezCircular/getCircularComment.do")
     public String getCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("getCircularComment started.");
+    	logger.debug("circularID = " + circularCommentVO.getCircularID());
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	
@@ -2425,8 +2426,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	
-    	circularCommentVO.setTenantID(userInfo.getTenantId());
-    	ezCircularService.editCircularComment(circularCommentVO);
+    	ezCircularService.editCircularComment(circularCommentVO, userInfo);
     	
     	logger.debug("editCircularComment ended.");
     	

@@ -1136,12 +1136,14 @@
 		]]>
 	</select>
 	
-	<update id="EzCircularDAO.updateCircularUser" parameterClass="CircularCommentVO">
+	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				TBL_CIRCULAR_USER
 			SET
-				updatestatus = '4'
+				updatestatus = 4
+			AND
+				updatedate = #nowDate#
 			WHERE
 				circularid = #circularID#
 			AND
@@ -1151,12 +1153,12 @@
 		]]>
 	</update>
 	
-	<insert id="EzCircularDAO.insertComment" parameterClass="CircularCommentVO">
+	<insert id="EzCircularDAO.insertComment" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_COMMENT
-				(circularid, circularcommentid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
+				(circularid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
             VALUES
-                (#circularID#, #circularCommentID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #regDate#, #status#, #tenantID#)
+                (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #regDate#, #status#, #tenantID#)
 		]]>
 	</insert>
 	
