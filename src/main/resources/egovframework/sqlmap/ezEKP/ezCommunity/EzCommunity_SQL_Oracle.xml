@@ -2782,18 +2782,16 @@
 	<select id="EzCommunityDAO.adminNoticeMailOkGet2"			parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				B.email,
-				B.username 
+				B.mail email,
+				B.displayname username
 			FROM
 				TBL_C_CLUBUSER A
 			JOIN
-				TBL_C_MEMBERINFO B
+				TBL_USERMASTER B
 			ON
+				A.c_id = B.cn
+			AND
 				A.tenant_id = B.tenant_id
-			AND
-				TRIM(A.c_id) = B.userid
-			AND
-				A.companyid = B.companyid
 			WHERE
 				TRIM(A.c_clubno) = #v_CODE#
 			AND
