@@ -649,14 +649,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		CircularConfigVO circularListConfig = ezCircularService.getCircularList_Config(memberId, loginVO.getTenantId());
 		
-		if (circularListConfig == null) {
-			circularListConfig = new CircularConfigVO();
-			circularListConfig.setIsMailReceive(0);
-			circularListConfig.setListCnt(10);
-			circularListConfig.setIsPreview(0);
-			circularListConfig.setPreviewListValue("50");
-			circularListConfig.setPreviewContentValue("50");
-		}
+//		if (circularListConfig == null) {
+//			circularListConfig = new CircularConfigVO();
+//			circularListConfig.setIsMailReceive(0);
+//			circularListConfig.setListCnt(10);
+//			circularListConfig.setIsPreview(0);
+//			circularListConfig.setPreviewListValue("50");
+//			circularListConfig.setPreviewContentValue("50");
+//		}
 		
 		model.addAttribute("circularListConfig", circularListConfig);
 		
@@ -701,7 +701,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String previewMode = request.getParameter("previewMode");
 		String list = request.getParameter("list");
 		String content = request.getParameter("content");
-		
+System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + list + " / " + content);		
 		ezCircularService.setCircularList_Config2(userID, listCount, previewMode, list, content, userInfo.getTenantId());
 		
 		return "json";
