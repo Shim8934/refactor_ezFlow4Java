@@ -906,13 +906,28 @@
                 MEMBERID = #v_USERID#
         ]]>
     </update>
+    
+    <select id="EzCircularDAO.confirmFolderCheck" parameterClass="Map" resultClass="Integer">
+    	<![CDATA[
+    		SELECT
+    			IFNULL(COUNT(*), 0) AS cnt
+			FROM
+				TBL_CIRCULAR_LINK
+			WHERE
+				circularID = #circularID#
+			AND
+				memberID = #memberID#
+			AND
+				tenantID = #tenantID#
+    	]]>
+    </select>
   
     <update id="EzCircularDAO.confirmStatus" parameterClass="Map">
         <![CDATA[
             UPDATE
 	            TBL_CIRCULAR_USER
 	        SET
-	            UPDATESTATUS = '1'
+	            UPDATESTATUS = #updateStatus#
 	        WHERE 
 	            CIRCULARID = #circularID#
 	        AND

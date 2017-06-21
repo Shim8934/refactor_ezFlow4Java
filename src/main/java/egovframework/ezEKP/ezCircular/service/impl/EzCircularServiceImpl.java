@@ -354,6 +354,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 			updateStatusUser(firstValue, circularID, confirmDate, tenantID);
 		}
 		
+		int folderCheck = ezCircularDAO.confirmFolderCheck(map);
+		
+		//0 문서함에 없고 완료문서함이 있는것, else 문서함에 저장된 문서
+		logger.debug("folderCheck = " + folderCheck);
+		map.put("updateStatus", folderCheck == 0 ? 1 : 3);
+		
 		ezCircularDAO.confirmStatus(map);
 	}
 

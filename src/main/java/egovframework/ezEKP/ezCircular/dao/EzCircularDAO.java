@@ -337,4 +337,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (int) select("EzCircularDAO.getCircularAllListCount", map);
 	}
 
+	public int confirmFolderCheck(Map<String, Object> map) {
+		return (int) select("EzCircularDAO.confirmFolderCheck", map);
+	}
+
 }
