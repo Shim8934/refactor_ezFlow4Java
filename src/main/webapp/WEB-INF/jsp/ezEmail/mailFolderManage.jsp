@@ -438,7 +438,6 @@
 						if (result == "OK") {
 							PostTreeView.putvalue(sIdx, "subscribe", subscribe);
 							PostTreeView.update();
-							EventCheck = true;
 						} else {
 							alert("<spring:message code='ezEmail.lhm31' />");
 						}
