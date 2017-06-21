@@ -404,7 +404,13 @@ public class IMAPAccess {
 			else if (part.isMimeType("message/rfc822")) {
 				hasAttachment((Part)part.getContent());
 			}
-			else if (part.getDisposition()!= null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+			// Content-Disposition 헤더가 없이 첨부된 파일이 있어
+			// Content-Type이 application으로 시작하는 경우도 추가함 
+			// 예) Content-Type: application/octet-stream;
+			//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
+		    //    Content-Transfer-Encoding: base64	    											
+			else if ((part.getDisposition()!= null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+						|| part.isMimeType("application/*")) {
 				isAttached = true;
 			}			
 		} catch (Exception e) {

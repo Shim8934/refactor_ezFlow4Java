@@ -501,9 +501,16 @@ public class EzEmailUtil {
 		// 이 경우엔 message/rfc822 type을 처리하는 if문 조건절에서 처리하도록 하기 위해 조건을 추가함.
 		// Content-Type: message/rfc822
 		// Content-Transfer-Encoding: 7bit
-		// Content-Disposition: attachment		
-		if (part.getDisposition() != null 
-		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null)) {
+		// Content-Disposition: attachment
+		//
+		// Content-Disposition 헤더가 없이 첨부된 파일이 있어
+		// Content-Type이 application으로 시작하는 경우도 추가함 
+		// 예) Content-Type: application/octet-stream;
+		//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
+	    //    Content-Transfer-Encoding: base64	    										
+		if ((part.getDisposition() != null 
+		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
+				|| part.isMimeType("application/*")) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             
@@ -549,6 +556,31 @@ public class EzEmailUtil {
 			String filename = part.getFileName();
 			
 			logger.debug("filename=" + filename);
+			
+			// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
+			// 예) Content-Type: application/octet-stream; name=
+			//        "=?utf-8?B?MTcwNjIwMC00MTkwMDAxOTE1LVQ1MFBCTOyaqSBHQ1UoU042NCntmZXsoJVQTyDrsI8gR0NVM+uM?==?utf-8?B?gChTTiAzLTM3LTc0KSDsiJjrpqzsnoTsi5wgUE8ucGRm?="
+			int pos = filename.indexOf("?==?");
+			
+			if (pos >= 0) {
+				StringBuilder sb = new StringBuilder();
+				
+				sb.append(filename.substring(0, pos));
+				
+				int nextPos = filename.indexOf("?", pos + 4);
+				
+				if (nextPos >= 0) {
+					nextPos = filename.indexOf("?", nextPos + 1);
+					
+					if (nextPos >= 0) {
+						sb.append(filename.substring(nextPos + 1));
+						
+						filename = sb.toString();
+						
+						logger.debug("line broken new filename=" + filename);						
+					}
+				}				
+			}
 									
             // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
             // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.
