@@ -21,6 +21,7 @@ function getcircularComment() {
 				} else {
 					userList += "<td style='text-align:right;' colspan='2'>미확인</td>";
 				}
+				
 				userList += "</tr>";
 				userList += "<tr style='display:none'>";
 				userList += "<td colspan='3'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
@@ -41,6 +42,7 @@ function getcircularComment() {
 				commentList += "<td style='width:30%;'>id,name : (" + vo.memberID + "/ " + vo.memberName + ")</td>";
 				commentList += "<td style='width:10%;'>" + vo.regDate + "</td>";
 				commentList += "</tr>";
+				
 				$("table[circularUserID='" + vo.circularUserID + "'").append(commentList);
 				$("table[circularUserID='" + vo.circularUserID + "'").closest("tr").show();
 			});

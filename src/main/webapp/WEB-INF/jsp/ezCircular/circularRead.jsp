@@ -288,7 +288,6 @@
                     </table>
                     <br/>
 
-<!-- 여기부터 댓글 작성	        		 -->
 	        		<table class="content">
 	                    <tr>
     	                    <th style="width: 70px;">댓글</th>

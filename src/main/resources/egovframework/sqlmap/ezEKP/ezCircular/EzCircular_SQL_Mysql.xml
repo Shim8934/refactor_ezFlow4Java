@@ -660,27 +660,43 @@
     
     <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
         <![CDATA[
-             SELECT
-                 DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE, D.UPDATESTATUS 
-             FROM
-                 TBL_CIRCULAR A
-             JOIN
-             	 (SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberId#) B
-             	ON A.CIRCULARID = B.CIRCULARID
-             JOIN TBL_CIRCULAR_FOLDER C
-             	ON B.CIRCULARFOLDERID = C.CIRCULARFOLDERID
-             JOIN TBL_CIRCULAR_USER D
-             	ON A.CIRCULARID = D.CIRCULARID
-             WHERE
-             	 B.CIRCULARFOLDERID = #folderId#
-             AND
-                 D.UPDATESTATUS = '3'  
-             AND
-                 A.TENANTID = #tenantId# 
-             ORDER BY
-             	 A.REGDATE DESC 
-             LIMIT
-                 #limit#, #rowCount#
+			SELECT
+				distinct a.circularid,
+				a.importance,
+				a.hasfile,
+				a.status,
+				a.title,
+				a.memberid,
+				a.regdate,
+				d.status as confirmstatus,
+				d.confirmdate,
+				d.updatestatus 
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberId#) B
+			ON
+				A.CIRCULARID = B.CIRCULARID
+			JOIN
+				TBL_CIRCULAR_FOLDER C
+			ON
+				B.circularfolderid = C.circularfolderid
+			JOIN
+				TBL_CIRCULAR_USER D
+			ON
+				A.CIRCULARID = D.CIRCULARID
+			WHERE
+				B.circularfolderid = #folderId#
+			AND
+				D.memberid = #memberId#
+			AND
+				D.updatestatus = '3'  
+			AND
+				A.tenantid = #tenantId# 
+			ORDER BY
+				A.REGDATE DESC 
+			LIMIT
+				#limit#, #rowCount#
          ]]>
     </select>
     
