@@ -39,7 +39,7 @@
 	</resultMap>
 	
 	<resultMap id="mailDelete2" class="MailDeleteVO">
-		<result property="userId" column="USERID" columnIndex="1"/>
+		<result property="userEmail" column="USERID" columnIndex="1"/>
 		<result property="expireTime" column="EXPIRETIME" columnIndex="2"/>
 		<result property="path" column="PATH" columnIndex="3"/>
 		<result property="deleteUnread" column="DELETEUNREAD" columnIndex="4"/>

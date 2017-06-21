@@ -98,7 +98,13 @@
 				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftAddr.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/addr_" + pUrl + "01", "bottom");
 				        break;
 				    case "menu06":
-				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "01", "bottom");
+				    	var pakageType = "${pakageType}";
+				    	if (pakageType == 'basic') {
+				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "02", "bottom");	
+				    	} else {
+				    		window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftEnv.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/env_" + pUrl + "01", "bottom");	
+				    	}
+				        
 				        break;
 				    case "menu10":
 				        window.open("/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftApprG.do?lang=" + lang + "&rUrl=/ezPortal/help/main.do?id=/images/help/apprG_" + pUrl + "01", "bottom");

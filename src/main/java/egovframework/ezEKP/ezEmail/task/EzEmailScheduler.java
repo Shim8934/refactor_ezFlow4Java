@@ -102,7 +102,7 @@ public class EzEmailScheduler {
 			IMAPAccess ia = null;
 			
 			try {
-				String userEmail = vo.getUserId();
+				String userEmail = vo.getUserEmail();
 
 				String password = jspw;
 				String path = vo.getPath();
