@@ -110,9 +110,9 @@
 		            var Opstate;
 		            OpContent = document.getElementById("txt_OpinionContent").value;
 		            Opstate = document.getElementById("btn_OpinionAdd").textContent;
+		            ChkFlag = true;
 		            AddOpinionContent(Opstate, OpContent);
 		            g_OpinionModifyFlagAdd = false;
-		            ChkFlag = true;
 		        }
 		        catch (e) {
 		            alert("btn_OpinionAdd ::" + e.description);
