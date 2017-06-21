@@ -1133,6 +1133,7 @@ function isgetUser(DeptID) {
 	});
 
     var nodes = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
+    if(nodes.length < 0) rtnVal = false;
     if (rtnVal) {
         nodeCnt = nodes.length;
 
@@ -1141,7 +1142,7 @@ function isgetUser(DeptID) {
         else
             rtnVal = false;
     }
-    
+
     return rtnVal;
 }
 
