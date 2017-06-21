@@ -322,6 +322,10 @@ public class MPortalController extends EgovFileMngUtil {
 		
 		if (mainOption.equals("F")) {
 			return "/mobile/ezPortal/mPortalFlow";
+		} else if (mainOption.equals("S")) {
+			return "/mobile/ezPortal/mPortalSlide";
+		} else if (mainOption.equals("T")) {
+			return "/mobile/ezPortal/mPortalTimeLine";
 		} else {
 			return "/mobile/ezPortal/mPortalMain";
 		}
