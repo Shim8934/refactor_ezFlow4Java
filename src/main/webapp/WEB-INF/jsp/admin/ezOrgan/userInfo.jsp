@@ -267,6 +267,9 @@
 		            else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
 		                // 0-9
 		            }
+		            else if (pValue.charCodeAt(iCnt) == 45) {
+		                // -
+		            }
 		            else if (pValue.charCodeAt(iCnt) == 46) {
 		                // .
 		            }

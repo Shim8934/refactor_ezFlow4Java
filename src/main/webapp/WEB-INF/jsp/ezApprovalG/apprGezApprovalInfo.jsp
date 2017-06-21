@@ -506,6 +506,10 @@
 	                document.getElementById("1tab3").onclick();
 	                ChangeTab(document.getElementById("1tab3"));
 	            }
+	            if (pHapYuiCount == 0) {
+	                document.getElementById("deptaddbtn").style.display = "none";
+	            }
+
 	        }
 	
 	        var bool = false;

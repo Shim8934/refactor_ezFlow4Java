@@ -782,6 +782,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
 
+        String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+        
+        model.addAttribute("packageType", packageType);
+		
 		logger.debug("leftEnvironment ended");
 		return "/ezPersonal/persLeftEnvirionment";
 	}

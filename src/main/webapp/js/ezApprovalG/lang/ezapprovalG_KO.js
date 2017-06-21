@@ -1285,6 +1285,7 @@ var strLangS110 = "결재일";
 var strLangS111 = "수신일";
 var strLangS131 = "수신";
 var strLangS163 = "수신처목록 저장시 오류가 ";
+var strLangS164 = "발생하였습니다.";
 var strLangS174 = "추가할 문서를 선택하세요.";
 var strLangS214 = "일반";
 var strLangS222 = "해당 부서에 사원이 존재하지 않아 ";

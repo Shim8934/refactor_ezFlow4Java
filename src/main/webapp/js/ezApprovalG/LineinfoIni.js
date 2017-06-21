@@ -332,8 +332,7 @@ function AprlineType_onchangeLine(obj) {
     if (onclickLine && CrossYN()) {
         onclickLine = false;
         setTimeout(AprlineType_onchangeLine, 1, obj);
-    }
-    else {
+    } else {
         var pCheckTypevalue = obj.value;
         var TypeName = obj.childNodes[obj.selectedIndex].innerText;
 

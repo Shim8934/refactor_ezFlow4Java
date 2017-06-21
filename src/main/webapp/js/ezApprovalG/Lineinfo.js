@@ -1133,6 +1133,7 @@ function isgetUser(DeptID) {
 	});
 
     var nodes = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
+    if(nodes.length < 0) rtnVal = false;
     if (rtnVal) {
         nodeCnt = nodes.length;
 
@@ -1141,7 +1142,7 @@ function isgetUser(DeptID) {
         else
             rtnVal = false;
     }
-    
+
     return rtnVal;
 }
 
@@ -1634,13 +1635,13 @@ function AprLineUserAdd(AprLineAddIndex, AprLineRow, pSelectedRow, selnode)
 function AprLineDeptAdd(AprLineAddIndex,AprLineRow,pSelectedRow ,selnode)
 {
     var pparsingXML = "<LISTVIEWDATA><HEADERS>";
-    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang230 + "</NAME><WIDTH>30</WIDTH></HEADER>";
-    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang107 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang49 + "</NAME><WIDTH>60</WIDTH></HEADER>";
-    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang108 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang38 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang109 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang231 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>30</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>60</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>80</WIDTH></HEADER>";
     pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
     pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
     pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -2189,9 +2190,8 @@ function SAPRLINETEMPLETXMLParsing() {
     return pAprLineXml[0];
 }
 
-function CheckHapYuiCellValue()
-{
-  try{
+function CheckHapYuiCellValue() {
+  try {
     var pAPRLINE = new ListView();      
     pAPRLINE.LoadFromID("lvAPRLINE");
     
@@ -2206,8 +2206,7 @@ function CheckHapYuiCellValue()
     pAprTypeFlag = "012"; //부서 병렬 합의
     pAprTypeFlag = ConvertAprLineType(pAprTypeFlag,"Value");
     pCurAprDeptLen = getAprLineGyulJeLen(AprLineRow , CurListLen , pAprTypeFlag);
-    if (pHapYuiCount == "0")
-    {
+    if (pHapYuiCount == "0") {
 		var pAlertContent = "" + strLang369 + "<br>  " + strLang371 + "";
 		OpenAlertUI(pAlertContent);
 		return false;
@@ -2231,8 +2230,7 @@ function getAprLineGyulJeLen(AprLineRow , CurListLen , pAprTypeFlag)
 	return pTotalIndex;
 }
 //############################################################################################################################################# 결재방법 이벤트 처리
-function APRLINETYPECHANGEFunction(valuecode, valueName)
-{
+function APRLINETYPECHANGEFunction(valuecode, valueName) {
 	var p_AprLineValueCode, p_AprLineValueName;
 	var p_CurAprlineStat;
 	var pAPRLINE = new ListView();

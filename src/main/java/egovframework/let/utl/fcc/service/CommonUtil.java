@@ -85,6 +85,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Component
 public class CommonUtil {
 	
+	public static final String PT_BASIC = "basic";
+	public static final String PT_STANDARD = "standard";
+	
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 	
@@ -102,10 +105,7 @@ public class CommonUtil {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-	
-	@Autowired
-	private EgovMessageSource egovMessageSource;
-	
+		
 	/* File separator 공통 함수 */
 	public String separator = "/";
 	
@@ -821,6 +821,41 @@ public class CommonUtil {
          return retFormat;
 	}
 
+	/**
+	 * Package Type을 반환
+	 *   - standard : 모든 모듈 포함
+	 *   - basic : 메일, 주소록, 일정, 게시판, 직원조회만 포함
+	 * @param tenantId
+	 * @return
+	 * @throws Exception
+	 */
+	public String getPackageType(int tenantId) throws Exception {
+		String packageType = "standard";
+		
+		String licenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantId);
+		
+		logger.debug("licenseKey=" + licenseKey);
+		
+		if (!licenseKey.equals("")) {
+			try {
+				// 라이센스키를 복호화한다.
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				
+				logger.debug("Decrypted licenseKey=" + licenseKey);
+				
+				String items[] = licenseKey.split(":");
 
+				if (items.length >= 3) {
+					packageType = items[2];					
+				}
+			} catch (Exception e) {
+				logger.debug("License Key Decryption failed.");
+			}			
+		}
+		
+		logger.debug("packageType=" + packageType);
+		
+		return packageType;
+	}
 
 }

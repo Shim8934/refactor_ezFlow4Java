@@ -88,7 +88,7 @@ public class EzSystemAdminController {
 						
 						String items[] = licenseKey.split(":");
 						
-						if (items.length == 2) {
+						if (items.length >= 2) {
 							licensedUserCount = Integer.parseInt(items[1]);
 						}						
 					} catch (Exception e) {
