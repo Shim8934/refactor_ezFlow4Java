@@ -44,9 +44,6 @@ function getcircularComment() {
 				$("table[circularUserID='" + vo.circularUserID + "'").append(commentList);
 				$("table[circularUserID='" + vo.circularUserID + "'").closest("tr").show();
 			});
-			
-			//회람자 목록에 해당하는 코멘트
-			
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			

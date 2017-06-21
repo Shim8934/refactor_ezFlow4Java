@@ -941,9 +941,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularID", vo.getCircularID());
 		map.put("circularUserID", vo.getCircularUserID());
 		map.put("circularComment", vo.getCircularComment());
-		map.put("mamberID", userInfo.getId());
+		map.put("memberID", userInfo.getId());
 		map.put("memberName", userInfo.getDisplayName());
 		map.put("memberName2", userInfo.getDisplayName2());
+		map.put("status", 0);// 0공개, 1비공개
 		map.put("nowDate", nowDate);
 		map.put("tenantID", userInfo.getTenantId());
 		
