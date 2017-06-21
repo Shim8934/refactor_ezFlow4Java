@@ -359,15 +359,15 @@
     <select id="EzCircularDAO.getConfirmStatusFirst" resultClass="Integer" >
         <![CDATA[
             SELECT
-                COUNT(CIRCULARID)
+                COUNT(circularid)
             FROM
                 TBL_CIRCULAR_USER
             WHERE
-                UPDATESTATUS = 1
+                (updatestatus = 1 OR updatestatus = 3)
             AND
-                CIRCULARID = #circularID#
+                circularid = #circularID#
             AND
-                TENANTID = #tenantID#        
+                tenantid = #tenantID#        
         ]]>
     </select>
   
@@ -1393,6 +1393,7 @@
 			UPDATE
 				TBL_CIRCULAR_USER
 			SET
+				status = 0,
 				updatestatus = 4,
 				updatedate = #nowDate#
 			WHERE
