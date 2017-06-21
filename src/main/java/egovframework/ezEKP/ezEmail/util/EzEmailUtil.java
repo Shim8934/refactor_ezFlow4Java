@@ -497,6 +497,11 @@ public class EzEmailUtil {
 		// 이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
 		// disposition이 attachment인지 체크하는 조건을 뺐다.
 		//
+		// 본문인(첨부파일이 아닌) text/plain 혹은 text/html에서 Content-Disposition 헤더가 있는 경우가 있어 
+		// disposition이 attachment인지 체크하는 조건을 다시 추가함
+		// Content-Type: text/plain; charset="UTF-8"
+		//		 Content-Disposition: inline
+		
 		// 다음과 같이 message/rfc822이면서 Content-Disposition에 filename이 없는 경우가 있어
 		// 이 경우엔 message/rfc822 type을 처리하는 if문 조건절에서 처리하도록 하기 위해 조건을 추가함.
 		// Content-Type: message/rfc822
@@ -508,7 +513,7 @@ public class EzEmailUtil {
 		// 예) Content-Type: application/octet-stream;
 		//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 	    //    Content-Transfer-Encoding: base64	    										
-		if ((part.getDisposition() != null 
+		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
 				|| part.isMimeType("application/*")) {
             double size = part.getSize();
@@ -557,29 +562,31 @@ public class EzEmailUtil {
 			
 			logger.debug("filename=" + filename);
 			
-			// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
-			// 예) Content-Type: application/octet-stream; name=
-			//        "=?utf-8?B?MTcwNjIwMC00MTkwMDAxOTE1LVQ1MFBCTOyaqSBHQ1UoU042NCntmZXsoJVQTyDrsI8gR0NVM+uM?==?utf-8?B?gChTTiAzLTM3LTc0KSDsiJjrpqzsnoTsi5wgUE8ucGRm?="
-			int pos = filename.indexOf("?==?");
-			
-			if (pos >= 0) {
-				StringBuilder sb = new StringBuilder();
+			if (filename != null) {
+				// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
+				// 예) Content-Type: application/octet-stream; name=
+				//        "=?utf-8?B?MTcwNjIwMC00MTkwMDAxOTE1LVQ1MFBCTOyaqSBHQ1UoU042NCntmZXsoJVQTyDrsI8gR0NVM+uM?==?utf-8?B?gChTTiAzLTM3LTc0KSDsiJjrpqzsnoTsi5wgUE8ucGRm?="
+				int pos = filename.indexOf("?==?");
 				
-				sb.append(filename.substring(0, pos));
-				
-				int nextPos = filename.indexOf("?", pos + 4);
-				
-				if (nextPos >= 0) {
-					nextPos = filename.indexOf("?", nextPos + 1);
+				if (pos >= 0) {
+					StringBuilder sb = new StringBuilder();
+					
+					sb.append(filename.substring(0, pos));
+					
+					int nextPos = filename.indexOf("?", pos + 4);
 					
 					if (nextPos >= 0) {
-						sb.append(filename.substring(nextPos + 1));
+						nextPos = filename.indexOf("?", nextPos + 1);
 						
-						filename = sb.toString();
-						
-						logger.debug("line broken new filename=" + filename);						
-					}
-				}				
+						if (nextPos >= 0) {
+							sb.append(filename.substring(nextPos + 1));
+							
+							filename = sb.toString();
+							
+							logger.debug("line broken new filename=" + filename);						
+						}
+					}				
+				}
 			}
 									
             // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
