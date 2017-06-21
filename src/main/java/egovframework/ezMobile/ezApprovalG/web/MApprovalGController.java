@@ -69,7 +69,7 @@ public class MApprovalGController {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		//임시 
+		//임시로 박고 리스트타입으로 문서리스트 종류 구분 결재할,결재한,결재진행 등등 
 		pListType = "1";
 		
 		//결재할 문서 카운트
