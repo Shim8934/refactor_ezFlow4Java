@@ -793,8 +793,6 @@ System.out.println("@@" + list.size());
         
 		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), userInfo.getOffset());
 		
-		List<HashMap<String, Object>> list2 = ezCircularService.getCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
-		
 		StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
@@ -821,7 +819,7 @@ System.out.println("@@" + list.size());
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
-        for (int j = 0; j < list.size(); j++) {
+        for (CircularListVO vo : list) {
     		resultXML.append("<ROW>");
     		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
