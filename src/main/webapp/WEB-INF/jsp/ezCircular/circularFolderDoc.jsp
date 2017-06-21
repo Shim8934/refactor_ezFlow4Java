@@ -59,7 +59,7 @@
 	        var OrderOption = "";
 	        var PreviewH_Move = false;
 	        var PreviewW_Move = false;
-// 	        var clickPreviweType = "";
+	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
 	        var clickPreviweType = "";
@@ -77,10 +77,10 @@
 	        var pPreviewShow_HOW = "OFF";
 // 	        var SmallSizeList = false;
 // 	        var OldSmallSizeList = false;
-// 	        var onclickFlag = false;
+	        var onclickFlag = false;
 	        var SQLPARADATA = "";
 // 	        var pMode = "new";
-// 	        var pAdminType = "n";
+	        var pAdminType = "n";
 	        var useEditor = "${useEditor}";
 // 	        var pNoneActiveX = "YES";
 // 	        var pUse_IE11Browser = "CK";
@@ -459,7 +459,7 @@
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
 				var circularId = obj.getAttribute("CIRCULARID");
-
+		
 				if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
@@ -499,12 +499,12 @@
 // 		    	window.location.href = "/ezcircular/newCircular.do";
 // 		    }
 		
-		    function MemberInfo_onclick(pUserID) {
-		        if (gubun == "2") return;
-		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
-		    }
+// 		    function MemberInfo_onclick(pUserID) {
+// 		        if (gubun == "2") return;
+// 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+// 		        feature = feature + GetOpenPosition(420, 450);
+// 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+// 		    }
 		
 		    function window_reload() {
 		        window.location.href = window.location.href;
@@ -744,7 +744,7 @@
 	
 	    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
 	        <div style="width:100%; overflow:AUTO;" id="divList">
-	             <div id="lvBoardList"></div> 
+	             <div id="lvBoardList"></div>
 	        </div>
 	        <div id="tblPageRayer" style="text-align:center"></div>
 	    </span>

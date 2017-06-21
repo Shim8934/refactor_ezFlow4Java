@@ -74,9 +74,32 @@
             WHERE
                 A.CIRCULARID = B.CIRCULARID
             AND
+            	B.UPDATESTATUS = '0'
+            AND
                 A.TENANTID = B.TENANTID
             AND
-            	A.STATUS = '0'
+                B.MEMBERID = #memberId#
+            AND
+                A.TENANTID = #tenantId#
+            AND
+                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
+            LIMIT
+                #limit#, #rowCount#        
+        ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
+        <![CDATA[
+            SELECT
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+            FROM
+                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+            WHERE
+                A.CIRCULARID = B.CIRCULARID
+            AND
+            	B.UPDATESTATUS = '0'
+            AND
+                A.TENANTID = B.TENANTID
             AND
                 B.MEMBERID = #memberId#
             AND
@@ -112,30 +135,7 @@
                 #limit#, #rowCount#        
         ]]>
     </select>
-  
-    <select id="EzCircularDAO.getSearchCircularMapList" resultClass="HashMap" >
-        <![CDATA[
-            SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
-            FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-            WHERE
-                A.CIRCULARID = B.CIRCULARID
-            AND
-                A.TENANTID = B.TENANTID
-            AND
-            	B.UPDATESTATUS = '0'
-            AND
-                B.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
-            AND
-                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')   
-            LIMIT
-                #limit#, #rowCount#        
-        ]]>
-    </select>
-  
+    
     <select id="EzCircularDAO.getCircularListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
             SELECT
@@ -691,6 +691,21 @@
 				CIRCULARFILEID = #circularFileID#
 		]]>
 	</select>
+	
+	<select id="EzCircularDAO.getUpdateStatus" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				UPDATESTATUS
+			FROM
+				TBL_CIRCULAR_USER
+			WHERE
+				CIRCULARID = #circularID#
+			AND
+				MEMBERID = #memberID#
+			AND
+				TENANTID = #tenantID#
+		]]>
+	</select>
     
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
@@ -1026,7 +1041,7 @@
           UPDATE
               TBL_CIRCULAR_USER
           SET
-              UPDATESTATUS = '3'
+              UPDATESTATUS = #updateStatus#
           WHERE 
               CIRCULARID = #circularId# 
           AND
@@ -1115,6 +1130,19 @@
 		]]>
 	</delete>
 	
+	<delete id="EzCircularDAO.moveCircular3" parameterClass="map">
+		<![CDATA[
+		  DELETE FROM
+			  TBL_CIRCULAR_LINK
+		  WHERE
+			  CIRCULARID = #circularId#
+		  AND
+			  MEMBERID = #memberId#
+		  AND
+		  	  TENANTID = #tenantId#
+		]]>
+	</delete>
+	
 	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO">
 		<![CDATA[
 			SELECT
@@ -1136,12 +1164,14 @@
 		]]>
 	</select>
 	
-	<update id="EzCircularDAO.updateCircularUser" parameterClass="CircularCommentVO">
+	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				TBL_CIRCULAR_USER
 			SET
-				updatestatus = '4'
+				updatestatus = 4
+			AND
+				updatedate = #nowDate#
 			WHERE
 				circularid = #circularID#
 			AND
@@ -1151,12 +1181,12 @@
 		]]>
 	</update>
 	
-	<insert id="EzCircularDAO.insertComment" parameterClass="CircularCommentVO">
+	<insert id="EzCircularDAO.insertComment" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_COMMENT
-				(circularid, circularcommentid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
+				(circularid, circularuserid, circularcomment, memberid, membername, membername2, regdate, status, tenantid)
             VALUES
-                (#circularID#, #circularCommentID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #regDate#, #status#, #tenantID#)
+                (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #regDate#, #status#, #tenantID#)
 		]]>
 	</insert>
 	
