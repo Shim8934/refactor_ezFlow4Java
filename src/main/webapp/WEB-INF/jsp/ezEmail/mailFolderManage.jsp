@@ -407,17 +407,12 @@
 				var sIdx = PostTreeView.selectedIndex();
 				
 				if (sIdx == -1) {
-		            alert("<spring:message code='ezEmail.lhm32' />");
+		            alert("선택 쿠다사이");
 		            return;
 		        }
 		        
 		        var folderId = PostTreeView.getvalue(sIdx, "href");
 		        var subscribe = PostTreeView.getvalue(sIdx, "subscribe");
-		        
-		        if (folderId == "INBOX" && subscribe == "1") {
-		        	alert("<spring:message code='ezEmail.lhm33' />");
-		        	return;
-		        }
 		        
 		        if (subscribe == "1") {
 		        	subscribe = "0";
@@ -437,11 +432,18 @@
 					success: function(result) {
 						if (result == "OK") {
 							PostTreeView.putvalue(sIdx, "subscribe", subscribe);
+							
+							if (subscribe == "1") {
+								
+							} else {
+								
+							}
+							
 							PostTreeView.update();
 						} else {
-							alert("<spring:message code='ezEmail.lhm31' />");
+							alert("에라다 에라");
 						}
-					}
+					}        			
 				});
 			}
 			
