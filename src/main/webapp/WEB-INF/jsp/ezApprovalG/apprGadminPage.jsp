@@ -517,14 +517,14 @@
 	function btnStaTargetDeli_onclick() {
 	}
 	function btnSndProdList_onclick() {
-	    var ConStr = <spring:message code='ezApprovalG.t492'/>+ "<br>" +
-	                 " * " + <spring:message code='ezApprovalG.t912'/> + "\n" +
-	                 " * " + <spring:message code='ezApprovalG.t552'/> + "\n" +
-	                 " * " + <spring:message code='ezApprovalG.t96'/> + "\n" +
-	                 " * " + <spring:message code='ezApprovalG.t92'/> + "\n" +
-	                 " * " + <spring:message code='ezApprovalG.t93'/> + "\n" +
-	                 " * " + <spring:message code='ezApprovalG.t498'/> +
-	                 " * " + <spring:message code='ezApprovalG.t499'/> ;
+	    var ConStr = "<spring:message code='ezApprovalG.t492'/>"+ "<br>" +
+	                 " * " + "<spring:message code='ezApprovalG.t912'/>" + "\n" +
+	                 " * " + "<spring:message code='ezApprovalG.t552'/>" + "\n" +
+	                 " * " + "<spring:message code='ezApprovalG.t96'/>" + "\n" +
+	                 " * " + "<spring:message code='ezApprovalG.t92'/>" + "\n" +
+	                 " * " + "<spring:message code='ezApprovalG.t93'/>" + "\n" +
+	                 " * " + "<spring:message code='ezApprovalG.t498'/>" +
+	                 " * " + "<spring:message code='ezApprovalG.t499'/>" ;
 	    bCon = OpenConfirmUI(ConStr);
 	    if (bCon) {
 	        if (TransferProdList(DeptID, "0")) {
