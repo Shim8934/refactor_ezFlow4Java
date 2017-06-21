@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Flags;
@@ -174,7 +176,24 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		            		if (newFolder.exists()) {
 		            			returnValue = "ALREADY_EXISTS";
 		            		} else {
-			            		boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(newFolder);
+		            			Set<String> folderSet = new HashSet<String>();
+                				
+                				folderSet = unSubscribeAndGetSubscribeFolderSet(oldFolder, folderSet);
+                				String oldFolderPath = oldFolder.getFullName();
+                				String newFolderPath = newFolder.getFullName();
+                				
+                				Set<String> newFolderSet = new HashSet<String>();
+                				
+                				for (String folderPath : folderSet) {
+                					newFolderSet.add(folderPath.replace(oldFolderPath, newFolderPath));
+                				}
+                				
+                				boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(newFolder);
+                				
+                				for (String folderPath : newFolderSet) {
+                					ia.getFolder(folderPath).setSubscribed(true);
+                				}
+			            		
 			            		if (isRenamed) {
 			            			logger.debug(url + " folder is renamed as " + newFolder.getFullName() + ".");
 			            			returnValue = "OK";
@@ -197,7 +216,24 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
                 			if (movedFolder.exists()) {
                 				returnValue = "ALREADY_EXISTS";
                 			} else {
+                				Set<String> folderSet = new HashSet<String>();
+                				
+                				folderSet = unSubscribeAndGetSubscribeFolderSet(oldFolder, folderSet);
+                				String oldFolderPath = oldFolder.getFullName();
+                				String movedFolderPath = movedFolder.getFullName();
+                				
+                				Set<String> movedFolderSet = new HashSet<String>();
+                				
+                				for (String folderPath : folderSet) {
+                					movedFolderSet.add(folderPath.replace(oldFolderPath, movedFolderPath));
+                				}
+                				
                 				boolean isRenamed = ((IMAPFolder)oldFolder).renameTo(movedFolder);
+                				
+                				for (String folderPath : movedFolderSet) {
+                					ia.getFolder(folderPath).setSubscribed(true);
+                				}
+                				
 	    	            		if (isRenamed) {
 	    	            			logger.debug(url + " folder is moved to " + destination + ".");
 	    	            			returnValue = "OK";
@@ -221,7 +257,9 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            				returnValue = "ALREADY_EXISTS";
 	            			} else {
 	            				boolean isCreated = copiedFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-		        				if (isCreated) {
+	            				copiedFolder.setSubscribed(true);
+	            				
+	            				if (isCreated) {
 		        					logger.debug(folder.getName() + " folder is created.");
 		        					folder.open(Folder.READ_WRITE);
 		        					folder.copyMessages(folder.getMessages(), copiedFolder);
@@ -240,7 +278,10 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	            	if (!url.equals("")) {
 	            		Folder folder = ia.getFolder(url);
 	            		if (folder.exists()) {
+	            			unSubscribeAndGetSubscribeFolderSet(folder, new HashSet<String>());
+	            			
 	            			boolean isDeleted = folder.delete(true);
+	            			
 	            			if (isDeleted) {
 	            				logger.debug(url + " folder is deleted.");
 	            				returnValue = "OK";
@@ -351,4 +392,20 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		
 		return returnValue;
 	}
+	
+	private Set<String> unSubscribeAndGetSubscribeFolderSet(Folder folder, Set<String> folderSet) throws MessagingException {
+		if (folder.isSubscribed()) {
+			folder.setSubscribed(false);
+			folderSet.add(folder.getFullName());
+		}
+		
+		Folder[] folderArr = folder.listSubscribed();
+		
+		for (Folder f : folderArr) {
+			unSubscribeAndGetSubscribeFolderSet(f, folderSet);
+		}
+		
+		return folderSet;
+	}
+	
 }
