@@ -21,4 +21,6 @@ public interface MApprovalGService {
 
 	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String pListType, LoginVO userInfo) throws Exception;
 
+	public void saveOpinionInfo(String pDocID, String pContent, String pOpinionGB, LoginVO userInfo) throws Exception;
+
 }

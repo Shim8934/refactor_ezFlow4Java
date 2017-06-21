@@ -40,4 +40,12 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		return (List<MApprovalGOpinionInfoVO>) list("MApprovalG.getOpinionInfo", map);
 	}
 
+	public void insertOpinionInfo(Map<String, Object> map) throws Exception {
+		insert("MApprovalG.insertOpinionInfo", map);
+	}
+
+	public void updateDocOpinionInfo(Map<String, Object> map) throws Exception {
+		update("MApprovalG.updateDocOpinionInfo", map);
+	}
+
 }

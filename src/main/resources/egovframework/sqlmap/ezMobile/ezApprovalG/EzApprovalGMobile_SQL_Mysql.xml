@@ -148,6 +148,8 @@
 		<![CDATA[
 			SELECT 
 				 CONTENT,
+				 OPINIONGB,
+				 USERID,
 				 CASE 
    					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
    					THEN USERNAME
@@ -175,4 +177,35 @@
 				OPINIONSN DESC
 		]]>
 	</select>
+	
+	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">
+		<![CDATA[
+	   		INSERT INTO TBL_APROPINIONINFO (
+	   			DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID
+	   		)
+	   		SELECT
+	   			#docID#,    CN,			#opinionGB#,  #content#,	DISPLAYNAME,  DISPLAYNAME2,  TITLE,			   TITLE2,			  DEPARTMENT,	 DESCRIPTION,	   DESCRIPTION2,	   (SELECT CASE WHEN MAX(OPINIONSN) IS NULL THEN 1 ELSE MAX(OPINIONSN) + 1 END OPINIONSN FROM TBL_APROPINIONINFO WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID# AND DOCID = #docID#), #tenantID#, #companyID#
+	   		FROM
+	   			TBL_USERMASTER
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			CN = #userID#	
+		]]>
+   </insert>
+   
+   <update id="MApprovalG.updateDocOpinionInfo" parameterClass="Map">
+   		<![CDATA[
+   			UPDATE
+	   			TBL_APRDOCINFO
+	   		SET
+	   			HASOPINIONYN = 'Y'
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			COMPANYID = #companyID#
+	   		AND
+	   			DOCID = #docID#
+		]]>
+   </update>
 </sqlMap>

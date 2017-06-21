@@ -10,15 +10,15 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
 			
-	        window.onload = function () {
+			$(document).ready(function(){
 	            document.getElementById('itemList').innerHTML = "${listUser}";
 	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
@@ -34,12 +34,10 @@
 	            
 // 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
 // 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
-	            document.getElementById("divCross").style.height = window.innerHeight - 500 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
 	            
 	            getcircularComment();
-	        }
-			
-	        window.onunload = window_onUnload;
+	        });
 	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
@@ -78,11 +76,7 @@
 					}
 				});	
 	        }
-
-	        function window_onUnload() {
-	        	window.opener.window_reload();
-	        }
-	        
+		    
 	        //인쇄버튼 클릭시
 	        function print_onClick2(printTrueFalse) {
 	            g_printTrueFalse = printTrueFalse;
@@ -152,7 +146,7 @@
 	
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
-	<body id="mainbodytag" class="popup" style="height: 100%; overflow:hidden;">
+	<body id="mainbodytag" class="popup">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -163,7 +157,6 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    		<li id="btn_comment"><span onclick="btn_comment()">댓글</span></li>
 <!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
 <!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
 <!--                         	<li><span>회람종료</span></li> -->
@@ -250,7 +243,6 @@
                             </th>
                             <td class="pos1">
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">	                                
-                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:20px">
                                     		<c:set var="imagePath" value="/images/file.gif" />
@@ -295,15 +287,22 @@
                         </tr>
                     </table>
                     <br/>
-                    <table id="comments" style="width:100%;">
-                    	<tr>
-                    		<th style="width: 30px">회람댓글</th>
-                    		<td id="pos1" style="border: 1px solid #b6b6b6;">
-                    			<div id="commentUserList" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left"></div>
-                    		</td>
+
+<!-- 여기부터 댓글 작성	        		 -->
+	        		<table class="content">
+	                    <tr>
+    	                    <th style="width: 70px;">댓글</th>
+        	                <td style="width: 100%">
+            	                <table id="comments" style="width:100%">
+									<tr>
+										<td>
+											<table id="commentUserList" style="width:100%"></table>
+										</td>
+									</tr>	
+								</table>
+                	        </td>
                     	</tr>
-                    	
-                    </table>
+	        		</table>
 	        	</td>
         	</tr>
 		</table>

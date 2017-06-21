@@ -102,8 +102,8 @@ li a .ui-checkbox label.ui-btn {
 .searchArea .ui-btn-icon-notext {
 	-webkit-border-radius: .3125em;
     border-radius: .3125em;
-    width:2.55em;
-    height:2.55em;	
+    width:100%;
+    height:2.55em;
 }
 
 .searchArea .controlgroup-textinput {	
