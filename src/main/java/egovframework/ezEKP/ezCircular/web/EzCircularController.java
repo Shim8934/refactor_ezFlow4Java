@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezCircular.web;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.ibm.icu.util.Calendar;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
@@ -42,6 +46,11 @@ import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -66,6 +75,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzResourceService ezResourceService;
+	
+	@Resource(name="EzScheduleService")
+	private EzScheduleService ezScheduleService;
 	
 	@Autowired
 	private LoginService loginService;
@@ -536,62 +548,81 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 검색 화면 호출 Method
 	 */
 	@RequestMapping("/ezCircular/circularSearchView.do")
-	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("circularSearchView started.");
+	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo) throws Exception {
+		logger.debug("circularSearchView started");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-//		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-//		String userEmail = userInfo.getId() + "@" + domainName;
+		userInfo = commonUtil.userInfo(loginCookie);
 		
-		// get user credentials
-//		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-//		String password = userIdAndPassword.get(1);	
+//		List<ScheduleInfoVO> sList = null;
+		String filter = request.getParameter("filter");
+		String keyword = request.getParameter("keyword");
+//		String search_field = request.getParameter("search_field");
+		String startDate = request.getParameter("sdate");
+		String endDate = request.getParameter("edate");
+		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+System.out.println("@@" + filter);
+					
+		String utcStartTime = "";
+		String utcEndTime = "";
 		
-//		String serverName = userInfo.getServerName();
-//		String userLang = userInfo.getLang();
-//		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		if (keyword == null) keyword = "";
+		if (startDate == null) startDate = "";
+		if (endDate == null) endDate = "";			
 		
-		String userTimeSet = userInfo.getOffset();
-		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
+		if (startDate == null || startDate.equals("") || endDate == null || endDate.equals("")) {
+			String utcTime = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date now = sdf.parse(utcTime);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(now);
+			startDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), userInfo.getOffset(), false).substring(0, 10);
+			
+			cal.setTime(now);
+			endDate = commonUtil.getDateStringInUTC(sdf.format(cal.getTime()), userInfo.getOffset(), false).substring(0, 10);
+		}
 		
-		logger.debug("userTimeSet=" + userTimeSet + ",offsetMin=" + offsetMin);
+		startDate = startDate + " 00:00:00";
+		endDate = endDate + " 23:59:59";
 		
-//		List<String> topLevelFolderNames = null;
-//		IMAPAccess ia = null;
-//		try {
-//			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-//					userEmail, password, egovMessageSource, locale);
-//			
-//			List<Folder> topLevelFolders = ia.getTopLevelFolders(true);		
-//			
-//			topLevelFolderNames = new ArrayList<String>();
-//			int maxFolderCount = Math.min(5, topLevelFolders.size());
-//			
-//			for (int i = 0; i < maxFolderCount; i++) {
-//				Folder folder = topLevelFolders.get(i);
-//				
-//				topLevelFolderNames.add(folder.getName());
-//			}
-//			
-//			logger.debug("topLevelFolderNames=" + topLevelFolderNames);
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			if (ia != null) {
-//				ia.close();
-//			}
-//		}
-//System.out.println("@@" + topLevelFolderNames.toString());		
-		model.addAttribute("userId", userInfo.getId());
-//		model.addAttribute("serverName", serverName);
-//		model.addAttribute("userLang", userLang);
-//		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("userTimeSet", userTimeSet);
-		model.addAttribute("offsetMin", offsetMin);
-//		model.addAttribute("topLevelFolderNames", topLevelFolderNames);
+		utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+		utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 		
-		logger.debug("circularSearchView ended.");
+		startDate = startDate.substring(0,10);
+		endDate = endDate.substring(0,10);
+		
+        int startRow = 1;
+        int endRow = 0;
+        
+        String pageNum = "1";
+        
+        if (request.getParameter("pageNum") != null && !request.getParameter("pageNum").equals("")) {
+        	pageNum = request.getParameter("pageNum"); 
+	        }
+	    	
+	    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
+			
+			int personalCount = config.getListCnt();
+			startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
+	        endRow = (personalCount * Integer.parseInt(pageNum));
+			
+	        int totalCount = ezCircularService.getCircularAllListCount(userInfo.getId(), userInfo.getTenantId(), keyword);
+	        
+			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword);
+System.out.println("@@" + list.size());		
+
+		model.addAttribute("totalCount", totalCount);
+        model.addAttribute("list", list);		
+		model.addAttribute("offSetMin", offSetMin);
+		model.addAttribute("filter", filter);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("primary", userInfo.getPrimary());
+//		model.addAttribute("resultXML", resultXML.toString());
+		
+		logger.debug("circularSearchView ended");
 		
 		return "/ezCircular/circularSearchView";		
 	}
@@ -1992,7 +2023,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
         }
-       
+
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
 
