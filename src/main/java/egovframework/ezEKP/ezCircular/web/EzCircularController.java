@@ -1907,11 +1907,25 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 	 */
     @RequestMapping(value = "/ezCircular/getSearchCircularList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
-    public String getSearchCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
+    public String getSearchCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
     	logger.debug("getSearchCircularList started");
 
     	userInfo = commonUtil.userInfo(loginCookie);
-    	//TODO
+    	
+    	int circularType = 0;
+    	String type = request.getParameter("type");
+    	
+    	if (type.equals("new")) {
+    		circularType = 1;
+    	} else if (type.equals("complete")) {
+    		circularType = 2;
+    	} else if (type.equals("my")) {
+    		circularType = 3;
+    	} else if (type.equals("temp")) {
+    		circularType = 4;
+    	} else if (type.equals("delete")) {
+    		circularType = 5;
+    	}
     	
     	BoardVO boardVO = new BoardVO();
     	
@@ -1920,19 +1934,18 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
     	boardVO.setTenantID(userInfo.getTenantId());
     	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
     	
-    	int page = 1;
         int startRow = 1;
         int endRow = 0;
         
         String pageNum = "1";
         
-        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
-        	pageNum = req.getParameter("pageNum"); 
+        if (request.getParameter("pageNum") != null && !request.getParameter("pageNum").equals("")) {
+        	pageNum = request.getParameter("pageNum"); 
         }
         
         String keyword = "";
-        if (req.getParameter("keyword") != null && !req.getParameter("keyword").equals("")) {
-        	keyword = req.getParameter("keyword"); 
+        if (request.getParameter("keyword") != null && !request.getParameter("keyword").equals("")) {
+        	keyword = request.getParameter("keyword"); 
         }
     	
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
@@ -1940,13 +1953,11 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
-		
-        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), userInfo.getTenantId());
+System.out.println("@@" + keyword + " / " + circularType);		
+        int totalCount = ezCircularService.getSearchCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, circularType);
         
-		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword);
-		
-		List<HashMap<String, Object>> list2 = ezCircularService.getSearchCircularMapList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(),keyword);
-		
+		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, circularType);
+
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
 		}
@@ -1958,14 +1969,9 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
         resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
         resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
         resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
-//        resultXML.append("<PREVIEWWLIST>" + 0 + "</PREVIEWWLIST>");
-//        resultXML.append("<PREVIEWWCONTENT>" + 0 + "</PREVIEWWCONTENT>");
-//        resultXML.append("<PREVIEWHLIST>" + 0 + "</PREVIEWHLIST>");
-//        resultXML.append("<PREVIEWHCONTENT>" + 0 + "</PREVIEWHCONTENT>");
-//        resultXML.append("<TITLENUM>" + 0 + "</TITLENUM>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
-//        
+        
         for (BoardListHeaderVO vo:headerList) {
         	resultXML.append("<HEADER>");
     		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
@@ -1973,61 +1979,22 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
         }
-
+        
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
-
-        for (int j = 0; j < list.size(); j++) {
-        	resultXML.append("<ROW>");
-        	String fieldName = "";
-        	String fieldValue = "";
-            for (int i = 0; i < headerList.size(); i++) {
-            	resultXML.append("<CELL>");
-                fieldName = headerList.get(i).getColName().toUpperCase();
-                
-                fieldValue = commonUtil.cleanValue(String.valueOf(list2.get(j).get(fieldName)));
-
-                if (fieldValue == null || fieldValue.equals(null) || fieldValue.equals("null")) {
-                	fieldValue = "";
-				}
-                
-                if (fieldName.equals("IMPORTANCE")) {
-                	fieldValue = fieldValue.equals("0") ? "일반" : "중요";
-                } else if (fieldName.equals("HASFILE")) {
-                	//태그안에넣어서 에러나서 추후에 수정
-                	//fieldValue = fieldValue.equals("0") ? " " : "<img src=\"/images/newAttach.gif\">";
-                	fieldValue = fieldValue.equals("0") ? "0" : "1";
-                } else if (fieldName.equals("STATUS")) {
-    				if (fieldValue.equals("0")) {
-    					fieldValue = "진행중";
-    				} else if (fieldValue.equals("1")) {
-    					fieldValue = "종료";
-    				} else {
-    					fieldValue = "임시";
-    				}
-    			} else if (fieldName.equals("CONFIRMSTATUS")) {
-                	int firstValue = ezCircularService.getConfirmStatusFirst(list.get(j).getCircularID(), userInfo.getTenantId());
-                	int secondValue = ezCircularService.getConfirmStatusSecond(list.get(j).getCircularID(), userInfo.getTenantId());
-                	
-                	fieldValue = firstValue + "/" + secondValue;
-                } else if (fieldName.equals("REGDATE")) {
-                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false); 
-                } else if (fieldName.equals("CONFIRMDATE")) {
-                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
-                }
-            	
-				resultXML.append("<MEMBERID>" + list.get(j).getMemberID() + "</MEMBERID>");
-				resultXML.append("<CIRCULARID>" + list.get(j).getCircularID() + "</CIRCULARID>");
-				
-                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
-                
-                if (i == 0) {
-					resultXML.append("<TITLE>" + list.get(j).getTitle() + "</TITLE>");
-					resultXML.append("<MEMBERID>" + list.get(j).getMemberID() + "</MEMBERID>");
-                }
-                resultXML.append("</CELL>");
-            }
-            resultXML.append("</ROW>");
+        
+        for (CircularListVO vo : list) {
+    		resultXML.append("<ROW>");
+			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + (vo.getUpdateStatus() == 0 ? "진행중" : "댓글") + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+			resultXML.append("</ROW>");
         }
         
         resultXML.append("</ROWS>");

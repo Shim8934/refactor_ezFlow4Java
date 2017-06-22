@@ -27,12 +27,7 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public List<CircularListVO> getSearchCircularList(Map<String, Object> map) throws Exception {
 		return (List<CircularListVO>) list("EzCircularDAO.getSearchCircularList", map);
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getSearchCircularMapList(Map<String, Object> map) throws Exception {
-		return (List<HashMap<String, Object>>) list("EzCircularDAO.getSearchCircularMapList", map);
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<CircularListVO> getCircularUserList(Map<String, Object> map) throws Exception {
 		return (List<CircularListVO>) list("EzCircularDAO.getCircularUserList", map);
@@ -247,6 +242,9 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void circularDeleteFolder(Map<String, Object> map) throws Exception {
 		delete("EzCircularDAO.circularDeleteFolder", map);
 	}
+	
+	
+	
 
 	public int getCircularTDListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getCircularTDListCount", map);
@@ -336,6 +334,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 
 	public void updateReadStatus(Map<String, Object> map) throws Exception {
 		update("EzCircularDAO.updateReadStatus", map);
+	}
+
+	public int getSearchCircularListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getSearchCircularListCount", map);
 	}
 
 }
