@@ -55,9 +55,6 @@
 		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	    	}
 		    
-		    function DocumentComplete() {
-				message.SetEditorContent(sigBody.innerHTML);
-	    	}
 
 		    function keyword_onkeydown() {
 	    	    if (event.keyCode == 13) {
@@ -198,36 +195,43 @@
 	    	
 	    	//파일업로드
     	    function returnvalue(strXML) {
-	        var pAttachXml = loadXMLString(strXML);
-	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
-	        var extFlag = false;        
-	        for (var i = 0; i < nodes.length; i++) {
-	            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-	                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
-	                    alert(strLang6);
-	                    return;
-	                }
-	            }
-	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
-	                extFlag = true;
-	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-	                alert(strLang8 + AttachLimit + "MB" + strLang9);
-	                return;
-	            }
-	            else {
-	                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
-	            }
-	        }
-	        if (extFlag)
-	            alert(strLang54);
-	
-	        if (dadiframe.document.getElementById("lstAttachLink") == null)
-	            setTimeout(function () { AttachFileInfo(strXML); }, 500);
-	        else
-	            AttachFileInfo(strXML);
-	    }
+		        var pAttachXml = loadXMLString(strXML);
+		        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+		        var extFlag = false;        
+		        for (var i = 0; i < nodes.length; i++) {
+		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
+		                    alert(strLang6);
+		                    return;
+		                }
+		            }
+		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+		                extFlag = true;
+		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+		                alert(strLang8 + AttachLimit + "MB" + strLang9);
+		                return;
+		            }
+		            else {
+		                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
+		            }
+		        }
+		        if (extFlag)
+		            alert(strLang54);
+		
+		        if (dadiframe.document.getElementById("lstAttachLink") == null)
+		            setTimeout(function () { AttachFileInfo(strXML); }, 500);
+		        else
+		            AttachFileInfo(strXML);
+		    }
+	    	
+			function Editor_Complete() {
+    	    	message.SetEditorContent(sigBody.innerHTML);
+    	    }
 		</script>
 	</head>
+	
+	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
+	
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -308,7 +312,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+					<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>
