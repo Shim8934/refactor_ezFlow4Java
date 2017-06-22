@@ -958,11 +958,15 @@
 		        		<c:when test="${boardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 		        			<c:if test="${guBun != '3'}">
 			        			<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+<%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 		        			</c:if>
 		        		</c:when>
 		        		<c:when test="${pReservedItem == 'true'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                    <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
+		        			<c:if test="${guBun != '3'}">
+<%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
+		        			</c:if>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'N'}">
 		        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
@@ -991,6 +995,7 @@
 			                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
 			                        <c:if test="${guBun != '3'}">
 			                        	<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+<%-- 			        					<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
 			                        </c:if>
 			        			</c:when>
@@ -1007,6 +1012,7 @@
 								            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
 			                        	</c:if>
 			                      		<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+<%-- 			                      		<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 			                    	</c:if>
 			                    	<c:if test="${guBun != '2'}">
 			                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
@@ -1019,6 +1025,9 @@
 			        				<c:if test="${guBun != '3'}">
 				                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 				                        <li ID='btn_Move' style="display:none;"><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+				                        <c:if test="${guBun != '2'}">
+<%-- 				                        	<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
+				                        </c:if>
 				                        <li ID='btn_Move' style="display:none;"><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 				                        <li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
 				                    </c:if>
