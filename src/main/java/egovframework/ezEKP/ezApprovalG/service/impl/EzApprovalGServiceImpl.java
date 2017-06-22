@@ -6656,6 +6656,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String deleteOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("deleteOpinionInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
 		map.put("v_OpinionYN", "N");
@@ -6665,12 +6666,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ezApprovalGDAO.deleteOpinionInfo(map);
 		ezApprovalGDAO.updateAprDocOptionInfo(map);
 		
+		logger.debug("deleteOpinionInfo ended");
 		return "TRUE";
 	}
 
 	@Override
 	public String updateOpinionInfo(Document docXML, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("updateOpinionInfo started");
 		String docID = docXML.getElementsByTagName("ROW").item(0).getChildNodes().item(4).getTextContent();
+		
+		logger.debug("updateOpinionInfo param : docID = " + docID);
+
 		String rtnVal = deleteOpinionInfo(docID, companyID, lang, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6702,7 +6708,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			ezApprovalGDAO.updateAprDocOptionInfo(map);
 		}
-		
+		logger.debug("updateOpinionInfo ended");
+
 		return rtnVal;
 	}
 
