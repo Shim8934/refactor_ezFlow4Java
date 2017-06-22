@@ -14,20 +14,23 @@ function getcircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='width:35%;'>" + vo.memberName + "("+ vo.memberID +")<a href='#' class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글</span></a></td>"
-				
+				userList += "<td style='width:35%;'>" + vo.memberName + "("+ vo.memberID +")</td>"
 				if (vo.status == 1) {
-					userList += "<td style='text-align:right;' colspan='2'>확인완료</td>"
+					userList += "<td style='width:55%; text-align:right;' colspan='2'>확인완료</td>"
 				} else {
-					userList += "<td style='text-align:right;' colspan='2'>미확인</td>";
+					userList += "<td style='width:55%; text-align:right;' colspan='2'>미확인</td>";
 				}
 				
+				userList += "<td style='width:10%;'><a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글작성</span></a></td>"
+				
 				userList += "</tr>";
-				userList += "<tr style='display:none'>";
-				userList += "<td colspan='3'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
+				userList += "<tr style='display:none;'>";
+				userList += "<td colspan='4'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
 				userList += "</tr>";
-				userList += "<tr style='display:none'>";
-				userList += "<td colspan='3'><div class='circularComment' circularUserID='" + vo.memberID + "' circularID='" + vo.circularID + "'><input type = 'text'/><a href='#' class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></div></td>";
+				userList += "<tr class='circularComment' circularUserID='" + vo.memberID + "' circularID='" + vo.circularID + "' style='display:none;'>";
+				userList += "<td>" + result.userInfo["displayName"] + "</td>";
+				userList += "<td><input type = 'text'/></td>";
+				userList += "<td><a class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></td>";
 				userList += "</tr>";
 			});
 			
@@ -38,9 +41,9 @@ function getcircularComment() {
 			list = result.commentList;
 			list.forEach(function(vo, index) {
 				commentList = "<tr>";
-				commentList += "<td style='width:60%;' circularCommentID='" + vo.circularCommentID + "'>content : " + vo.circularComment + "</td>";
-				commentList += "<td style='width:30%;'>id,name : (" + vo.memberID + "/ " + vo.memberName + ")</td>";
-				commentList += "<td style='width:10%;'>" + vo.regDate + "</td>";
+				commentList += "<td style='width:15%; border:0px;'>" + vo.memberName + "</td>";
+				commentList += "<td style='width:65%; border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
+				commentList += "<td style='width:20%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
 				commentList += "</tr>";
 				
 				$("table[circularUserID='" + vo.circularUserID + "'").append(commentList);
@@ -70,7 +73,7 @@ function editCircularComment(obj) {
 		data : {
 			circularID : circularID, // 회람ID
 			circularUserID : circularUserID, // 회람자ID
-			circularComment : $("div.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > input[type='text']").val(), //회람 코멘트 본문
+			circularComment : $("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > td > input[type='text']").val(), //회람 코멘트 본문
 		},
 		success : function(result) {
 			getcircularComment();

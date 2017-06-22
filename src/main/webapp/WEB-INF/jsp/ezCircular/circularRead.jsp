@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -147,7 +146,7 @@
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
 	<body id="mainbodytag" class="popup">
-    	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+    	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
@@ -288,14 +287,18 @@
                     </table>
                     <br/>
 
-	        		<table class="content">
+	        		<table class="mainlist">
 	                    <tr>
-    	                    <th style="width: 70px;">댓글</th>
-        	                <td style="width: 100%">
+    	                    <th style="width: 70px;">댓글상세보기</th>
+    	                    <th style="text-align:right;"><input type='text'/><a class='imgbtn'><span onclick="alert('검색')">검색</span></a></th>
+    	                    <th style="width: 40px; text-align:right;"><a class='imgbtn'><span onclick="alert('확인메일')">확인재촉메일발송</span></a></th>
+						</tr>
+						<tr>
+        	                <td style="width: 100%; border:0px;" colspan='3'>
             	                <table id="comments" style="width:100%">
 									<tr>
-										<td>
-											<table id="commentUserList" style="width:100%"></table>
+										<td style="border:0px;">
+											<table id="commentUserList" class="mainlist" style="width:100%"></table>
 										</td>
 									</tr>	
 								</table>

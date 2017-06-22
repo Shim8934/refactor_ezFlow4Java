@@ -2430,6 +2430,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	model.addAttribute("userList", userList);
     	model.addAttribute("commentList", commentList);
+    	model.addAttribute("userInfo", userInfo);
     	
     	return "json";
     }
