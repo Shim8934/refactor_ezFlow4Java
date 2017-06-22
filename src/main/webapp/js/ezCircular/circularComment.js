@@ -6,7 +6,8 @@ function getcircularComment() {
 		url : "/ezCircular/getCircularComment.do",
 		dataType : "json",
 		data : {
-			circularID : circularID
+			circularID : circularID,
+			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
 			//회람자 목록
@@ -49,6 +50,10 @@ function getcircularComment() {
 				$("table[circularUserID='" + vo.circularUserID + "'").append(commentList);
 				$("table[circularUserID='" + vo.circularUserID + "'").closest("tr").show();
 			});
+			
+			if (($("#option").prop("checked") != true) || (status == 1)) {
+				$("#commentUserList > tbody > tr > td > a").hide();
+			}
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -76,6 +81,7 @@ function editCircularComment(obj) {
 			circularComment : $("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > td > input[type='text']").val(), //회람 코멘트 본문
 		},
 		success : function(result) {
+			$("#searchValue").val("");
 			getcircularComment();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

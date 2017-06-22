@@ -1507,6 +1507,13 @@
 			AND
 				tenantid = #tenantID#
 		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+			<![CDATA[
+				AND
+					circularcomment LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">
