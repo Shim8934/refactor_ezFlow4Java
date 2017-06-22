@@ -520,7 +520,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("searchKeyword", keyword);
 		map.put("circularType", circularType);
 		
-		return ezCircularDAO.getSearchCircularList(map);
+		if (circularType != 4) {
+			return ezCircularDAO.getSearchCircularList(map);			
+		} else {
+			return ezCircularDAO.getSearchCircularList2(map);
+		}
+		
 	}
 	
 	@Override
@@ -1034,9 +1039,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		map.put("searchKeyword", keyword);
 		map.put("circularType", circularType);
-
-		int result = ezCircularDAO.getSearchCircularListCount(map);
 		
+		int result = 0;
+		
+		if (circularType != 4) {
+			result = ezCircularDAO.getSearchCircularListCount(map);
+		} else {
+			result = ezCircularDAO.getSearchCircularListCount2(map);
+		}
+
 		logger.debug("getCircularListCount ended. result = " + result);
 		
 		return result;
