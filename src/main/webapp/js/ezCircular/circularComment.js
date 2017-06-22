@@ -14,7 +14,7 @@ function getcircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='width:35%;'>" + vo.memberName + "("+ vo.memberID +")</td>"
+				userList += "<td style='width:35%;'>" + vo.memberName + "</td>"
 				if (vo.status == 1) {
 					userList += "<td style='width:55%; text-align:right;' colspan='2'>확인완료</td>"
 				} else {
@@ -29,8 +29,8 @@ function getcircularComment() {
 				userList += "</tr>";
 				userList += "<tr class='circularComment' circularUserID='" + vo.memberID + "' circularID='" + vo.circularID + "' style='display:none;'>";
 				userList += "<td>" + result.userInfo["displayName"] + "</td>";
-				userList += "<td><input type = 'text'/></td>";
-				userList += "<td><a class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></td>";
+				userList += "<td style='text-align:right;' colspan='2'><input type = 'text'/></td>";
+				userList += "<td style='text-align:right;'><a class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></td>";
 				userList += "</tr>";
 			});
 			
@@ -41,8 +41,8 @@ function getcircularComment() {
 			list = result.commentList;
 			list.forEach(function(vo, index) {
 				commentList = "<tr>";
-				commentList += "<td style='width:15%; border:0px;'>" + vo.memberName + "</td>";
-				commentList += "<td style='width:65%; border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
+				commentList += "<td style='width:70px; border:0px;'>" + vo.memberName + "</td>";
+				commentList += "<td style=' border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
 				commentList += "<td style='width:20%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
 				commentList += "</tr>";
 				

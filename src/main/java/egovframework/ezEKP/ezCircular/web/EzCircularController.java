@@ -894,7 +894,7 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + (vo.getUpdateStatus() == 0 ? "진행중" : "댓글") + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + (vo.getUpdateStatus() == 1 ? "진행중" : "댓글") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
