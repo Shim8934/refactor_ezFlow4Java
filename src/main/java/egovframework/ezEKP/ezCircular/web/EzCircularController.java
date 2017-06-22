@@ -2186,7 +2186,7 @@ System.out.println("@@" + keyword + " / " + circularType);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("folderName", folderName);
 		
-		logger.debug("circularMyCircular ended");
+		logger.debug("circularFolderDoc ended");
 		
 		return "/ezCircular/circularFolderDoc";
 	}

@@ -16,10 +16,13 @@
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
+			var circularUserID = "${result.memberID}";
 			var status = "${result.status}";
+			var userInfoID = "${userInfo.id}";
+			
 			
 			$(document).ready(function(){
-	            document.getElementById('itemList').innerHTML = "${listUser}";
+	            document.getElementById('circularUserList').innerHTML = "${listUser}";
 	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
@@ -39,15 +42,11 @@
 	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
-		    	var circularID = "${result.circularID}";
-				
 	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID;
 	        }
 		    
 		    //삭제버튼 클릭시
 	        function btn_delete() {
-		    	var circularID = "${result.circularID}";
-				
 	            if (!confirm("회람을 삭제하시겠습니까?"))
 	                return;
 	            
@@ -155,9 +154,10 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-<!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
-<!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
-<!--                         	<li><span>회람종료</span></li> -->
+                	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
+                	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
+                	    	</c:if>
+                        	
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -208,7 +208,7 @@
 		        		</tr>
 		        		<tr>
 		            		<th>회람자</th>
-		            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
+		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
 		        		</tr>
 		        		<tr>
 		            		<th>상태</th>
