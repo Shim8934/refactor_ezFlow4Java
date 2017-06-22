@@ -459,13 +459,21 @@
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE, OPTION, CONTENT
+                circularid,
+                importance,
+                hasfile,
+                status,
+                title,
+                memberid,
+                regdate,
+                option,
+                content
             FROM
                 TBL_CIRCULAR
             WHERE
-                CIRCULARID = #circularId#
+                circularid = #circularId#
             AND
-                TENANTID = #tenantId#        
+                tenantid = #tenantId#    
         ]]>
     </select>
   
