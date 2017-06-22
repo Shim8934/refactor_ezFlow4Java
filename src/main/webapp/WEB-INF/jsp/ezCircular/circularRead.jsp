@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
+			var status = "${result.status}";
 			
 			$(document).ready(function(){
 	            document.getElementById('itemList').innerHTML = "${listUser}";
@@ -187,20 +188,20 @@
 		            		<td colspan="3" style="width: 100%">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" checked  />댓글기능 사용
+		                				<input type="checkbox" id="AllDay"  />메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option"  />댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked />메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
-										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" checked />댓글기능 사용
+										<input type="checkbox" id="AllDay" checked />메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" />댓글기능 사용
+										<input type="checkbox" id="AllDay" />메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>
@@ -288,7 +289,7 @@
 	        		<table class="mainlist">
 	                    <tr>
     	                    <th style="width: 70px;">댓글상세보기</th>
-    	                    <th style="text-align:right;"><input type='text'/><a class='imgbtn'><span onclick="alert('검색')">검색</span></a></th>
+    	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getcircularComment()">검색</span></a></th>
     	                    <th style="width: 40px; text-align:right;"><a class='imgbtn'><span onclick="alert('확인메일')">확인재촉메일발송</span></a></th>
 						</tr>
 						<tr>

@@ -894,7 +894,7 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 1 ? "진행중" : "종료") + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
@@ -2390,9 +2390,10 @@ System.out.println("@@" + keyword + " / " + circularType);
     	logger.debug("circularID = " + circularCommentVO.getCircularID());
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String searchValue = request.getParameter("searchValue");
     	
     	List<CircularListVO> userList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), userInfo.getTenantId());
-    	List<CircularCommentVO> commentList = ezCircularService.getCircularComment(circularCommentVO, userInfo.getOffset(), userInfo.getTenantId());
+    	List<CircularCommentVO> commentList = ezCircularService.getCircularComment(circularCommentVO, searchValue, userInfo.getOffset(), userInfo.getTenantId());
     	
     	logger.debug("getCircularComment ended.");
     	

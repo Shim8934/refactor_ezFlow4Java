@@ -461,13 +461,21 @@
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                CIRCULARID, IMPORTANCE, HASFILE, STATUS, TITLE, MEMBERID, REGDATE, OPTION, CONTENT
+                circularid,
+                importance,
+                hasfile,
+                status,
+                title,
+                memberid,
+                regdate,
+                option,
+                content
             FROM
                 TBL_CIRCULAR
             WHERE
-                CIRCULARID = #circularId#
+                circularid = #circularId#
             AND
-                TENANTID = #tenantId#        
+                tenantid = #tenantId#    
         ]]>
     </select>
   
@@ -1501,6 +1509,13 @@
 			AND
 				tenantid = #tenantID#
 		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+			<![CDATA[
+				AND
+					circularcomment LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">
