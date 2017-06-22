@@ -1006,7 +1006,7 @@
               TBL_CIRCULAR_OPTION 
               ( MEMBERID,   LISTCNT,     ISPREVIEW,   TENANTID )
           VALUES 
-              ( #v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
+              ( #v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
     ]]>
     </insert>
     
@@ -1057,7 +1057,7 @@
             WHERE  
                 TENANTID = #v_TENANTID#
             AND
-                MEMBERID = #v_USERID#
+                MEMBERID = #v_MEMBERID#
         ]]>
     </update>
     

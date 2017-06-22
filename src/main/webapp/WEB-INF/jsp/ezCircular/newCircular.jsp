@@ -51,6 +51,7 @@
 	    <script type="text/javascript">
 	        //var CurPage = "${page}";
 	        //var CurPage = "${totalCount}";
+	        var SSUserID = "${userInfo.id}";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
 	        var OrderCell = "";
@@ -108,7 +109,8 @@
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
-	                var divStyle, ifrmStyle, listCount;
+	                var divStyle, ifrmStyle; 
+	                var listCount = 0;
 	
 	                if (document.getElementById("listcount") != null){
 		            	listCount = document.getElementById("listcount").value;
@@ -116,19 +118,39 @@
 		            	listCount = 20;
 		            }
 	                
-	                 if (pPreviewShow_HOW == "W") {
-	                    divStyle = parseInt(document.getElementById("divList").style.height);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else if (pPreviewShow_HOW == "H") {
-	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else {
-	                    divStyle = 0;
-	                } 
+// 	                 if (pPreviewShow_HOW == "W") {
+// 	                    divStyle = parseInt(document.getElementById("divList").style.height);
+// alert("@@" + divStyle);	                    
+// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
+// alert("@@" + ifrmStyle);
+// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+// alert("@@" + divStyle);
+// 	                 }
+// 	                else if (pPreviewShow_HOW == "H") {
+// 	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
+// alert("!@" + divStyle);	                    
+// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
+// alert("!@" + ifrmStyle);
+// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+// alert("!@" + divStyle);
+// 	                }
+// 	                else {
+// 	                    divStyle = 0;
+// 	                }
+					if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+alert(divStyle);		                
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H);
+alert(divStyle);
+		            } else {
+		                divStyle = 0;
+		            }
+		            
+		            if (divStyle < 24) {
+		                divStyle = 24;
+		            }
+	                 
 	                if (divStyle < 24)
 	                    divStyle = 24;
 	                
@@ -202,15 +224,13 @@
 	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-	                
-	                
-	/*                 pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
 	
-	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
-	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
-	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); */
-	                
+// 	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
+// 	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
+// 	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
+// 	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); 
+alert("1" + pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / " + pMailPreVDiv_H);	                
+// 	                pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
 	
 	                pPreviewShow_HOW = "${config.isPreview}";
 
@@ -230,7 +250,7 @@
 	                pMailPreVDiv = "${config.previewContentValue}";
 	                pMailListDiv_H = "${config.previewListValue}";
 	                pMailPreVDiv_H = "${config.previewContentValue}";
-	
+	                alert(pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / " + pMailPreVDiv_H);	
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
