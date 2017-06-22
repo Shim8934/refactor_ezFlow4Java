@@ -249,7 +249,7 @@
 					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC">확인일</th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${list}">
-<%-- 		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','${item.repeatCount}','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff> --%>
+		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.circularID}')" bgcolor=#ffffff>
 		    	<tr style="cursor:pointer;padding:0" bgcolor=#ffffff>
 		    		<td style="width:20px"><input type="checkbox" onClick="check_change(this)"></td>
 		    		<td style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center">
