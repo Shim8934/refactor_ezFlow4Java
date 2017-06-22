@@ -158,7 +158,7 @@
     <select id="EzCircularDAO.getSearchCircularList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, B.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
             FROM
                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B
             WHERE
@@ -195,8 +195,10 @@
 			]]>	
 	        </isEqual>
 	        <![CDATA[
-	            AND
+	        	AND
 	                B.MEMBERID = #memberID#
+	            AND
+	        		A.MEMBERID = B.MEMBERID
 	        	AND
 	                A.TENANTID = B.TENANTID
 	            AND

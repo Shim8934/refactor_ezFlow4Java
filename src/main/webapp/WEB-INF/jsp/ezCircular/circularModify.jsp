@@ -180,7 +180,7 @@
 	                			receiverList : document.getElementById("receiverlist").innerHTML,
 	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
 	                			receiverID : document.getElementById("receiverID").innerHTML,
-	                			circularId : "${circularID}",
+	                			circularID : "${circularID}",
 	                			content : content,
 	                			fileList : fileList
 	                },  

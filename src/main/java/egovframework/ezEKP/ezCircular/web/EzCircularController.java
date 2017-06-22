@@ -1552,6 +1552,7 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 		int updateStatus = 0;
 		String confirmDate = "";
 		int receiverLength = 0;
+		circularListVO.setStatus(0);
 		
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
