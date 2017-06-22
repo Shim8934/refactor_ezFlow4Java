@@ -124,20 +124,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return ezCircularDAO.getCircularList(map);
 	}
-	
-	@Override
-	public List<HashMap<String, Object>> getSearchCircularMapList(String memberID, int startRow, int endRow, int tenantId,String keyword) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("memberId", memberID);
-		map.put("limit", startRow-1);
-		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantId);
-		map.put("searchKeyword", keyword);
-		
-		return ezCircularDAO.getSearchCircularMapList(map);
-	}
-	
+
 	@Override
 	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String realPath) throws Exception {
 		logger.debug("insertCircular started.");
@@ -523,14 +510,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword) throws Exception {
+	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword, int circularType) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("memberId", memberID);
+		map.put("memberID", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantId);
+		map.put("tenantID", tenantId);
 		map.put("searchKeyword", keyword);
+		map.put("circularType", circularType);
 		
 		return ezCircularDAO.getSearchCircularList(map);
 	}
@@ -1034,6 +1022,24 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.updateReadStatus(map);
 		
 		logger.debug("readComment ended.");
+	}
+
+	@Override
+	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType) throws Exception {
+		logger.debug("getCircularListCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		map.put("searchKeyword", keyword);
+		map.put("circularType", circularType);
+
+		int result = ezCircularDAO.getSearchCircularListCount(map);
+		
+		logger.debug("getCircularListCount ended. result = " + result);
+		
+		return result;
 	}
 	
 }

@@ -78,7 +78,7 @@
 	        var OldSmallSizeList = false;
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-	        var pMode = "new";
+// 	        var pMode = "new";
 	        var pAdminType = "n";
 	        var starttime;
 	        var endtime;
@@ -139,10 +139,8 @@
 // 	                }
 					if (pPreviewShow_HOW == "W") {
 		                divStyle = Math.round(pMailListDiv);
-alert(divStyle);		                
 		            } else if (pPreviewShow_HOW == "H") {
-		                divStyle = Math.round(pMailListDiv_H);
-alert(divStyle);
+		                divStyle = Math.round(pMailListDiv_H)
 		            } else {
 		                divStyle = 0;
 		            }
@@ -150,10 +148,7 @@ alert(divStyle);
 		            if (divStyle < 24) {
 		                divStyle = 24;
 		            }
-	                 
-	                if (divStyle < 24)
-	                    divStyle = 24;
-	                
+		            
 	                $.ajax({
 						type : "POST",
 						dataType : "json",
@@ -195,7 +190,7 @@ alert(divStyle);
 	        	
 		        starttime = new Date().getTime();
 		        if (keyword != ""){
-		        	url = "/ezCircular/getSearchCircularList.do";
+		        	url = "/ezCircular/getSearchCircularList.do?type=new";
 		        }
 		        else{
 		        	url = "/ezCircular/getCircularList.do";
@@ -228,8 +223,7 @@ alert(divStyle);
 // 	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
 // 	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
 // 	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-// 	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); 
-alert("1" + pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / " + pMailPreVDiv_H);	                
+// 	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT")));              
 // 	                pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
 	
 	                pPreviewShow_HOW = "${config.isPreview}";
@@ -250,7 +244,7 @@ alert("1" + pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / "
 	                pMailPreVDiv = "${config.previewContentValue}";
 	                pMailListDiv_H = "${config.previewListValue}";
 	                pMailPreVDiv_H = "${config.previewContentValue}";
-	                alert(pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / " + pMailPreVDiv_H);	
+
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
@@ -675,7 +669,7 @@ alert("1" + pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / "
 	<body class="mainbody" style="overflow:hidden;">
 	    <h1>신규 회람판<span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" value='' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
@@ -757,7 +751,7 @@ alert("1" + pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / "
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
+<!-- 	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe> -->
 	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 	            </span>
 	        </span>
@@ -784,7 +778,7 @@ alert("1" + pMailListDiv + " / " + pMailPreVDiv + " / " + pMailListDiv_H + " / "
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
+<!-- 	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe> -->
 	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 	            </span>
 	        </span>
