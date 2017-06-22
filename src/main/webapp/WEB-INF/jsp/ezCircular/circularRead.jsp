@@ -31,8 +31,6 @@
 	                }
 	            }
 	            
-// 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-// 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
 	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
 	            
 	            getcircularComment();
