@@ -14,7 +14,7 @@ function getcircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='width:35%;'>" + vo.memberName + "</td>"
+				userList += "<td style='width:70px;'>" + vo.memberName + "</td>"
 				if (vo.status == 1) {
 					userList += "<td style='width:55%; text-align:right;' colspan='2'>확인완료</td>"
 				} else {
@@ -28,8 +28,8 @@ function getcircularComment() {
 				userList += "<td colspan='4'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
 				userList += "</tr>";
 				userList += "<tr class='circularComment' circularUserID='" + vo.memberID + "' circularID='" + vo.circularID + "' style='display:none;'>";
-				userList += "<td>" + result.userInfo["displayName"] + "</td>";
-				userList += "<td style='text-align:right;' colspan='2'><input type = 'text'/></td>";
+				userList += "<td style='width:70px'>" + result.userInfo["displayName"] + "</td>";
+				userList += "<td colspan='2'><input type='text' style='width:100%;' /></td>";
 				userList += "<td style='text-align:right;'><a class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></td>";
 				userList += "</tr>";
 			});
