@@ -121,19 +121,27 @@
 		            	listCount = 20;
 		            }
 	                
-	                 if (pPreviewShow_HOW == "W") {
-	                    divStyle = parseInt(document.getElementById("divList").style.height);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else if (pPreviewShow_HOW == "H") {
-	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else {
-	                    divStyle = 0;
-	                } 
+// 	                 if (pPreviewShow_HOW == "W") {
+// 	                    divStyle = parseInt(document.getElementById("divList").style.height);
+// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
+// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+// 	                }
+// 	                else if (pPreviewShow_HOW == "H") {
+// 	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
+// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
+// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+// 	                }
+// 	                else {
+// 	                    divStyle = 0;
+// 	                } 
+					if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H)
+		            } else {
+		                divStyle = 0;
+		            }
+					
 	                if (divStyle < 24)
 	                    divStyle = 24;
 	                
@@ -622,7 +630,7 @@
 	        }
 	    </script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
+	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezCircular.t60'/><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
