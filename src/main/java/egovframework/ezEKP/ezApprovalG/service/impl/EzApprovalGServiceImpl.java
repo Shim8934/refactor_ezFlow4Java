@@ -21351,4 +21351,46 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return sb.toString();
 	}
+
+	@Override
+	public String deleteCapInfo(String cabinetID, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CABINETID", cabinetID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		ezApprovalGDAO.deleteCabInfo(map);
+		
+		logger.debug("deleteCapInfo : cabinetID = " + cabinetID + " companyID = " + companyID + " tenantID = " + tenantID );
+		return "TRUE";
+	}
+
+	@Override
+	public String insertDelCapInfo(String cabinetID, String delUserID, String ipAddress, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CABINETID", cabinetID);
+		map.put("v_DELUSERID", delUserID);
+		map.put("v_IPADDRESS", ipAddress);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		ezApprovalGDAO.insertDelCabInfo(map);
+		
+		logger.debug("insertDelCapInfo : cabinetID = " + cabinetID + " ipAddress = " + ipAddress);
+		return "TRUE";
+	}
+
+	@Override
+	public String selectExpCabDocInfo(String cabinetID) throws Exception {
+		String result = "";
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CABINETID", cabinetID);
+		String cnt = ezApprovalGDAO.selectExpCabDocInfo(map);
+		if (cnt.equals("0")) {
+			result="TRUE";
+		} else {
+			result="FALSE";
+		}
+		logger.debug("serviceimpl : selectExpendDocInfo_beforeDel : select map : error : result :"+ result + cnt);
+		return result;
+	}
 }

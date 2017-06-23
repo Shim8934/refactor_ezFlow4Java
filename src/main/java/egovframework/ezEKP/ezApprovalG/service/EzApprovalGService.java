@@ -15,7 +15,16 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
+	
+	// 캐비닛 기록물철 문서 삭제
+	public String deleteCapInfo(String cabinetID, String companyID, int tenantID) throws Exception;
 
+	// 캐비닛 기록물철 문서 삭제 정보 추가
+	public String insertDelCapInfo(String cabinetID, String delUserID, String ipAddress, String companyID, int tenantID) throws Exception;
+	
+	// 캐비닛 기록물철 삭제 전 진행중문서 확인
+	public String selectExpCabDocInfo(String cabinetID) throws Exception;
+	
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception;
 	
 	public List<ApprGgetDeptStacticsVO> getDeptStactics (String pStartDate, String pEndDate, String pLang, String companyID, int tenantID) throws Exception;

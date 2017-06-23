@@ -7102,4 +7102,42 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		logger.debug("delCirculation ended");
 	}
+	
+	/**
+	 * 전자결재G 기록물철 삭제
+	 */
+	@RequestMapping(value = "/ezApprovalG/deleteCabInfo.do")
+	@ResponseBody
+	public String deleteCabInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("deleteCabInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String cabinetID = request.getParameter("cabClassNO");
+		String ipAddress = request.getLocalAddr(); 
+		
+		String deleteResult = ezApprovalGService.deleteCapInfo(cabinetID, userInfo.getCompanyID(), userInfo.getTenantId());
+		if (!(deleteResult=="TRUE")) {
+			logger.debug("error");
+		}
+		String insertResult = ezApprovalGService.insertDelCapInfo(cabinetID, userInfo.getId(), ipAddress, userInfo.getCompanyID(), userInfo.getTenantId());
+		if (!(deleteResult=="TRUE" && insertResult=="TRUE")) {
+			logger.debug("error");
+		}
+		
+		logger.debug("deleteCabInfo ended");
+		
+		return "TRUE";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/selectExpCabDocInfo.do")
+	@ResponseBody
+	public String selectExpCabDocInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		logger.debug("selectExpCabDocInfo started");
+		String cabinetID = request.getParameter("cabClassNO");
+		String result = ezApprovalGService.selectExpCabDocInfo(cabinetID);
+		
+		logger.debug("selectExpCabDocInfo ended");
+		return result;
+	}
+	
 }
