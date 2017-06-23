@@ -1,6 +1,6 @@
 /** 이효진 작성*/
 //댓글목록조회
-function getcircularComment() {
+function getCircularComment() {
 	$.ajax({
 		type : "POST",
 		url : "/ezCircular/getCircularComment.do",
@@ -15,17 +15,17 @@ function getcircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='text-align:left;'>" + vo.memberName + "<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글작성</span></a></td>"
+				userList += "<td style='text-align:left;'>" + vo.memberName + "&nbsp;<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글작성</span></a></td>"
 				
 				if (vo.status == 1) {
-					userList += "<td style='width:55%; text-align:right;' >확인완료</td>"
+					userList += "<td style='width:55%; text-align:right; padding-right:10px;' >확인완료</td>"
 				} else {
-					userList += "<td style='width:55%; text-align:right;' >미확인</td>";
+					userList += "<td style='width:55%; text-align:right; padding-right:10px;' >미확인</td>";
 				}
 				
 				userList += "</tr>";
 				userList += "<tr style='display:none;'>";
-				userList += "<td colspan='2'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
+				userList += "<td style='padding:5px 2px;' colspan='2'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
 				userList += "</tr>";
 			});
 			
@@ -35,10 +35,11 @@ function getcircularComment() {
 			commentList = "";
 			list = result.commentList;
 			list.forEach(function(vo, index) {
-				commentList = "<tr>";
+				commentList = "<tr style='padding:10px; 4px;'>";
 				commentList += "<td style='width:70px; border:0px;'>" + vo.memberName + "</td>";
-				commentList += "<td style=' border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
-				commentList += "<td style='width:20%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
+				commentList += "<td style='border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
+				commentList += "<td style='width:17%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
+				commentList += "<td style='border:0px;' ><a class='imgbtn' style='vertical-align:middle;'><span class='deleteComment' memberID='" + vo.memberID + "' circularID='" + circularID + "' circularCommentID='" + vo.circularCommentID + "' onclick='deleteComment(this)'>삭제</span></a></td>"
 				commentList += "</tr>";
 				
 				$("table[circularUserID='" + vo.circularUserID + "']").append(commentList);
@@ -48,6 +49,8 @@ function getcircularComment() {
 			if (($("#option").prop("checked") != true) || (status == 1)) {
 				$("#commentUserList > tbody > tr > td > a").hide();
 			}
+			
+			$(".deleteComment[memberID != '" + userInfoID + "']").closest("td").hide();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -59,7 +62,8 @@ function showEdit(obj) {
 	if ($("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").length == 0) {
 		var commentEditor = "";
 		commentEditor += "<tr class='circularComment' circularUserID='" + $(obj).attr("circularUserID") + "' circularID='" + circularID + "' style='display:none;'>";
-		commentEditor += "<td colspan='3'><textarea style='width:90%; text-align:left;' /><a class='imgbtn' style='text-align:right;'><span circularUserID='" + $(obj).attr("circularUserID") + "' onclick='editCircularComment(this)'>저장</span></a></td>";
+		commentEditor += "<td style='border:0px;' colspan='3'><textarea style='width:97%; text-align:left;' /></td>";
+		commentEditor += "<td style='border:0px; text-align: right;'><a class='imgbtn' style='text-align:right;'><span circularUserID='" + $(obj).attr("circularUserID") + "' onclick='editCircularComment(this)'>저장</span></a></td>";
 		commentEditor += "</tr>";
 		
 		$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html($("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html() + commentEditor);
@@ -89,7 +93,27 @@ function editCircularComment(obj) {
 		},
 		success : function(result) {
 			$("#searchValue").val("");
-			getcircularComment();
+			getCircularComment();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			
+		}
+	});
+}
+
+function deleteCircularComment(obj) {
+	var circularCommentID = $(obj).attr("circularCommentID");
+alert(circularCommentID);
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/deleteComment.do",
+		dataType : "json",
+		data : {
+			circularID : circularID, // 회람ID
+			circularCommentID : circularCommentID
+		},
+		success : function(result) {
+			alert("댓글을 삭제했습니다.");
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -113,4 +137,9 @@ function commentSendMail() {
 			
 		}
 	});
+}
+
+//댓글보기
+function openCircularComment() {
+	
 }

@@ -51,5 +51,5 @@ public interface EzEmailService {
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 	public int getMaxMessageSize(int tenantId) throws Exception;
 	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception;
-	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, Locale locale, String dateTime, int count) throws Exception;
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 }
