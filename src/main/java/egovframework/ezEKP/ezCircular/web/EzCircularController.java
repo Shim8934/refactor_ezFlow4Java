@@ -11,6 +11,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -44,6 +45,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
@@ -68,6 +70,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzCircularService ezCircularService;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	@Autowired
 	private EzResourceService ezResourceService;
@@ -2426,15 +2431,32 @@ System.out.println("@@" + keyword + " / " + circularType);
      * 회람 댓글 확인재촉메일
      */
     @RequestMapping(value = "/ezCircular/commentSendMail.do")
-    public String commentSendMail(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, HttpServletRequest request) throws Exception {
+    public String commentSendMail(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
     	logger.debug("commentSendMail started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	
-    	ezCircularService.commentSendMail(circularCommentVO, userInfo);
+    	CircularListVO circularVO = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getTenantId());
+    	List<CircularCommentVO> list = ezCircularService.getCircularCommentUserList(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getTenantId());
     	
+    	String subject = "[회람확인요청] " +  circularVO.getTitle();
+    	StringBuilder bodyContent = new StringBuilder("");
+    	bodyContent.append(circularVO.getContent());
+    	
+		for (CircularCommentVO vo : list) {
+			InternetAddress from = new InternetAddress();
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			
+			InternetAddress to = new InternetAddress();
+			to.setPersonal(vo.getMemberName(), "UTF-8");
+			to.setAddress(vo.getMemberID());
+			
+			ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+		}
+		
     	logger.debug("commentSendMail ended.");
     	
-    	return "";
+    	return "json";
     }
 }

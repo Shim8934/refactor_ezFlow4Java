@@ -348,5 +348,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public List<CircularListVO> getSearchCircularList2(Map<String, Object> map) throws Exception {
 		return (List<CircularListVO>) list("EzCircularDAO.getSearchCircularList2", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CircularCommentVO> getCircularCommentUserList(Map<String, Object> map) throws Exception {
+		return (List<CircularCommentVO>) list("EzCircularDAO.getCircularCommentUserList", map);
+	}
 
 }

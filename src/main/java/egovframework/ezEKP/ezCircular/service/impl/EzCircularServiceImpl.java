@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1055,9 +1056,18 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void commentSendMail(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception {
+	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String id, int tenantID) throws Exception {
+		logger.debug("getCircularUserList started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("id", id);
+		map.put("tenantID", tenantID);
+		
+		List<CircularCommentVO> list = ezCircularDAO.getCircularCommentUserList(map);
+		
+		logger.debug("getCircularUserList ended.");
+		
+		return list;
 	}
-
-	
 }

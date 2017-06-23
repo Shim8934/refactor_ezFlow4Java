@@ -1559,12 +1559,27 @@
 		]]>
 	</update>
 	
-	<update id="EzCircularDAO.readComment" parameterClass="Map">
+	<select id="EzCircularDAO.getCircularCommentUserList" parameterClass="Map" resultClass="CircularCommentVO">
 		<![CDATA[
-			UPDATE
-				TBL_CIRCULAR_COMMENT
-			SET
-				status = 
+			SELECT
+				B.cn AS memberid,
+				B.displayName AS membername,
+				B.displayName2 AS membername2,
+				B.mail AS mail
+			FROM
+				TBL_CIRCULAR_USER A
+			JOIN
+				TBL_USERMASTER B
+			ON
+				A.memberid = B.cn
+			AND
+				A.tenantid = B.tenant_id
+			WHERE
+				A.circularid = #circularID#
+			AND
+				A.status = 0
+			AND
+				A.tenantid = #tenantID#
 		]]>
-	</update>
+	</select>
 </sqlMap>

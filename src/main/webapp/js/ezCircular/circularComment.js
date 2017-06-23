@@ -90,6 +90,7 @@ function editCircularComment(obj) {
 	});
 }
 
+//확인재촉메일
 function commentSendMail() {
 	$.ajax({
 		type : "POST",
