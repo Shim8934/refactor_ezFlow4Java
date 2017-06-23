@@ -51,6 +51,7 @@
 	    <script type="text/javascript">
 	        //var CurPage = "${page}";
 	        //var CurPage = "${totalCount}";
+	        var SSUserID = "${userInfo.id}";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
 	        var OrderCell = "";
@@ -63,21 +64,21 @@
 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-	        var pMailListHeightW = 0;
-	        var pMailPreHeightW = 0;
+// 	        var pMailListHeightW = 0;
+// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
-	        var pMailListWidthH = 0;
-	        var pMailPreWidthH = 0;
+// 	        var pMailListWidthH = 0;
+// 	        var pMailPreWidthH = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-	        var p_ListorderValue = "";
+// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-	        var SmallSizeList = false;
-	        var OldSmallSizeList = false;
+// 	        var SmallSizeList = false;
+// 	        var OldSmallSizeList = false;
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-	        var pMode = "new";
+// 	        var pMode = "new";
 	        var pAdminType = "n";
 	        var starttime;
 	        var endtime;
@@ -108,7 +109,8 @@
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
-	                var divStyle, ifrmStyle, listCount;
+	                var divStyle, ifrmStyle; 
+	                var listCount = 0;
 	
 	                if (document.getElementById("listcount") != null){
 		            	listCount = document.getElementById("listcount").value;
@@ -116,22 +118,18 @@
 		            	listCount = 20;
 		            }
 	                
-	                 if (pPreviewShow_HOW == "W") {
-	                    divStyle = parseInt(document.getElementById("divList").style.height);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else if (pPreviewShow_HOW == "H") {
-	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else {
-	                    divStyle = 0;
-	                } 
-	                if (divStyle < 24)
-	                    divStyle = 24;
-	                
+					if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H)
+		            } else {
+		                divStyle = 0;
+		            }
+		            
+		            if (divStyle < 24) {
+		                divStyle = 24;
+		            }
+		            
 	                $.ajax({
 						type : "POST",
 						dataType : "json",
@@ -173,7 +171,7 @@
 	        	
 		        starttime = new Date().getTime();
 		        if (keyword != ""){
-		        	url = "/ezCircular/getSearchCircularList.do";
+		        	url = "/ezCircular/getSearchCircularList.do?type=new";
 		        }
 		        else{
 		        	url = "/ezCircular/getCircularList.do";
@@ -199,22 +197,17 @@
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
 	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+	                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-	                
-	                
-	/*                 pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
-	
-	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
-	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
-	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT"))); */
-	                
-	
-	                pPreviewShow_HOW = "${config.isPreview}";
 
-	                switch (parseInt("${config.isPreview}")) {
+	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
+
+	                switch (pPreviewShow_HOW) {
 					case 0:
 						pPreviewShow_HOW = "OFF";
 						break;
@@ -226,26 +219,15 @@
 						break;
 					}
 	                
-	                pMailListDiv = "${config.previewListValue}";
-	                pMailPreVDiv = "${config.previewContentValue}";
-	                pMailListDiv_H = "${config.previewListValue}";
-	                pMailPreVDiv_H = "${config.previewContentValue}";
-	
 	                if (listNode == null) return;
-	
+	            	
 	                var lstCnt = getNodeText(cntNode);
-	                //var pstCnt = getNodeText(pntNode);
-	                var pstCnt = "${totalCount}";
-	                totalCount = lstCnt;
-	                //var perCnt = getNodeText(perNode);
-	                var perCnt = "${config.listCnt}";
-	
-	                //listcount.value = perCnt;
-	                listcount.value = "${config.listCnt}";
-
-	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
+	                var pageCnt = getNodeText(pageNode);
+	                var perCnt = getNodeText(perNode);
+  
+	                listcount.value = perCnt;
+	                totalPage = Math.ceil(new Number(pageCnt / perCnt));
 	                pTotalCnt = lstCnt;
-	
 	                makePageSelPage();
 	
 	                var xmlDoc;
@@ -481,10 +463,10 @@
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=770, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
                 
                 //클릭했을때 그아이디에 해당하는 
@@ -652,10 +634,10 @@
 	        
 	    </script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
+	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1>신규 회람판<span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" value='' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
@@ -737,7 +719,7 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
+<!-- 	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe> -->
 	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 	            </span>
 	        </span>
@@ -764,7 +746,7 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
+<!-- 	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe> -->
 	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 	            </span>
 	        </span>

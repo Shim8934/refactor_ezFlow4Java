@@ -123,19 +123,14 @@
 		            	listCount = 20;
 		            }
 	                
-	                 if (pPreviewShow_HOW == "W") {
-	                    divStyle = parseInt(document.getElementById("divList").style.height);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else if (pPreviewShow_HOW == "H") {
-	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else {
-	                    divStyle = 0;
-	                } 
+					if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H)
+		            } else {
+		                divStyle = 0;
+		            }
+					
 	                if (divStyle < 24)
 	                    divStyle = 24;
 	                
@@ -176,9 +171,11 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
+	        	var keyword = document.getElementById("txt_keyword").value;
+	        	
 		        starttime = new Date().getTime();
-		        if (SQLPARADATA != ""){
-		        	url = "/ezBoard/getSearchBoardList.do";
+		        if (keyword != ""){
+		        	url = "/ezCircular/getSearchCircularList.do?type=my";
 		        }
 		        else{
 		        	url = "/ezCircular/getMyCircularList.do";
@@ -192,7 +189,8 @@
 							 pageNum 	 : CurPage, 
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
-							 searchQuery : SQLPARADATA
+							 searchQuery : SQLPARADATA,
+							 keyword	 : keyword
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -202,14 +200,18 @@
 	
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
-	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+		        	var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+	                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 	                
-	                pPreviewShow_HOW = "${config.isPreview}";
-
-	                switch (parseInt("${config.isPreview}")) {
+	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
+	
+	                switch (pPreviewShow_HOW) {
 					case 0:
 						pPreviewShow_HOW = "OFF";
 						break;
@@ -220,24 +222,16 @@
 						pPreviewShow_HOW = "W";
 						break;
 					}
-	                
-	                pMailListDiv = "${config.previewListValue}";
-	                pMailPreVDiv = "${config.previewContentValue}";
-	                pMailListDiv_H = "${config.previewListValue}";
-	                pMailPreVDiv_H = "${config.previewContentValue}";
 	
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
-	                var pstCnt = "${totalCount}";
-	                totalCount = lstCnt;
-	                var perCnt = "${config.listCnt}";
+	                var pageCnt = getNodeText(pageNode);
+	                var perCnt = getNodeText(perNode);
 	
-	                listcount.value = "${config.listCnt}";
-
-	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
+	                listcount.value = perCnt;
+	                totalPage = Math.ceil(new Number(pageCnt / perCnt));
 	                pTotalCnt = lstCnt;
-	
 	                makePageSelPage();
 	
 	                var xmlDoc;
@@ -546,7 +540,7 @@
 	                }
 	            }
 	            CurPage = "1";
-	            BoardSearchOptionHidden();
+// 	            BoardSearchOptionHidden();
 	            getBoardList();
 	        }
 
@@ -715,10 +709,10 @@
 	        } 
 	    </script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
+	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezCircular.t59'/><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" value='제목/댓글 검색' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>

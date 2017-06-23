@@ -10,16 +10,19 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
+			var circularUserID = "${result.memberID}";
+			var status = "${result.status}";
+			var userInfoID = "${userInfo.id}";
+			
 			
 			$(document).ready(function(){
-	            document.getElementById('itemList').innerHTML = "${listUser}";
+	            document.getElementById('circularUserList').innerHTML = "${listUser}";
 	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
@@ -31,9 +34,7 @@
 	                    Bodytd[i].style.height = Bodytd[i].height + "px";
 	                }
 	            }
-	            
-// 	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-// 	            document.getElementById("divCross").style.height = window.innerHeight - 265 + "px";
+
 	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
 	            
 	            getcircularComment();
@@ -41,15 +42,11 @@
 	        
 		    //수정버튼 클릭시
 	        function btn_modify() {
-		    	var circularID = "${result.circularID}";
-				
 	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID;
 	        }
 		    
 		    //삭제버튼 클릭시
 	        function btn_delete() {
-		    	var circularID = "${result.circularID}";
-				
 	            if (!confirm("회람을 삭제하시겠습니까?"))
 	                return;
 	            
@@ -147,7 +144,7 @@
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
 	<body id="mainbodytag" class="popup">
-    	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+    	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
@@ -157,9 +154,10 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-<!--                         	<li id="btn_modify"><span onclick="btn_modify()">수정</span></li> -->
-<!--                         	<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li> -->
-<!--                         	<li><span>회람종료</span></li> -->
+                	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
+                	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
+                	    	</c:if>
+                        	
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -190,27 +188,27 @@
 		            		<td colspan="3" style="width: 100%">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;" />댓글기능 사용
-										<input type="checkbox" id="AllDay" checked onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" onClick="return false;" />댓글기능 사용
-										<input type="checkbox" id="AllDay" onClick="return false;" />메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+										<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>
 		        		</tr>
 		        		<tr>
 		            		<th>회람자</th>
-		            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
+		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
 		        		</tr>
 		        		<tr>
 		            		<th>상태</th>
@@ -288,14 +286,18 @@
                     </table>
                     <br/>
 
-	        		<table class="content">
+	        		<table class="mainlist">
 	                    <tr>
-    	                    <th style="width: 70px;">댓글</th>
-        	                <td style="width: 100%">
+    	                    <th style="width: 70px;">댓글상세보기</th>
+    	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getcircularComment()">검색</span></a></th>
+    	                    <th style="width: 40px; text-align:right;"><a class='imgbtn'><span onclick="commentSendMail()">확인재촉메일발송</span></a></th>
+						</tr>
+						<tr>
+        	                <td style="width: 100%; border:0px;" colspan='3'>
             	                <table id="comments" style="width:100%">
 									<tr>
-										<td>
-											<table id="commentUserList" style="width:100%"></table>
+										<td style="border:0px;">
+											<table id="commentUserList" class="mainlist" style="width:100%"></table>
 										</td>
 									</tr>	
 								</table>

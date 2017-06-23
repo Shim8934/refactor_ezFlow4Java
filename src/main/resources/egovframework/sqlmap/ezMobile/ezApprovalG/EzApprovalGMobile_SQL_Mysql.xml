@@ -2,6 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezApprovalGMobile">
+	<typeAlias  alias="MApprovalGTLVO" 						type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO"/>
 	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
 	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
 	<typeAlias  alias="MApprovalGOpinionInfoVO" 			type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
@@ -208,4 +209,102 @@
 	   			DOCID = #docID#
 		]]>
    </update>
+   
+   <select id="MApprovalG.getTimeLineList" parameterClass="Map" resultClass="MApprovalGTLVO">
+   		<![CDATA[
+   			(SELECT 
+				DOCTITLE as title,
+				STARTDATE,
+				'결재' as module
+			FROM 
+				VAPRDOINGDOCLIST 
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND 
+				APRMEMBERID IN (#userID#) 
+			AND 
+				APRTYPE <> '015' 
+			AND
+				STARTDATE < #sessionDate#)
+			
+			UNION
+			
+			(SELECT A.TITLE,	A.STARTDATE, '게시판' as module
+			  FROM 
+				TBL_BOARD_ITEM A 
+			  INNER JOIN 
+					( SELECT 
+						BOARDID, 
+						BOARDNAME, 
+						BOARDNAME2,
+						TENANT_ID 
+					  FROM 
+						TBL_BOARD_MYBOARDS 
+					  WHERE   
+						TENANT_ID = #tenantID#
+					  AND
+						USERID = #userID# ) B 
+			  ON 
+				A.TENANT_ID = B.TENANT_ID
+			  AND
+				A.BOARDID = B.BOARDID                
+			  INNER JOIN 
+				TBL_BOARD_BOARDINFO P  
+			  ON 
+				A.TENANT_ID = P.TENANT_ID
+			  AND
+				A.BOARDID = P.BOARDID
+			  AND 
+				A.TENANT_ID = #tenantID#
+			  AND
+				(A.APPRFLAG = 'Y' 
+				 OR A.APPRFLAG IS NULL)
+			  AND 
+				A.STARTDATE > DATE_SUB(sysdate(), INTERVAL 5 DAY) 
+			  AND 
+				A.STARTDATE <= sysdate()
+			  AND 
+				A.ENDDATE > sysdate()
+			  AND 
+				(NOT EXISTS
+							(SELECT 
+								USERID 
+							 FROM 
+								TBL_BOARD_ITEM_READ S 
+							 WHERE 
+								S.TENANT_ID = A.TENANT_ID
+							 AND
+								S.BOARDID = A.BOARDID 
+							 AND 
+								S.ITEMID = A.ITEMID 
+							 AND 
+								S.TENANT_ID = #tenantID#
+							 AND
+								S.USERID = #userID#
+							 AND 
+								S.READDATE > DATE_SUB(sysdate(), INTERVAL 5 DAY)))
+				AND
+					STARTDATE < #sessionDate#)
+								
+			UNION
+			
+			
+			(select 
+				title, createdate as startdate, '일정관리' as module
+			from 
+				tbl_schedule
+			where  
+				ownerid in (#userID#)
+			and 
+				tenant_id = #tenantID#
+			and
+				STARTDATE < #sessionDate#)
+			ORDER BY
+				startdate desc
+			LIMIT 
+				10
+		]]>
+   </select>
 </sqlMap>
