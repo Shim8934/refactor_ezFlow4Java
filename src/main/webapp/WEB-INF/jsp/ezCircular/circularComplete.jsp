@@ -108,10 +108,11 @@
 	                document.body.style.UserSelect = 'none';
             }
             
-            var height = parseInt(document.documentElement.clientHeight - 180);
-            document.getElementById("divList").style.height = height + "px";
-            window_onunload_Event = true;
-            getBoardList();
+	            var height = parseInt(document.documentElement.clientHeight - 180);
+	            document.getElementById("divList").style.height = height + "px";
+	            
+	            getBoardList();
+	            window_onunload_Event = true;
 	        };
 	        
 	        var Save_unloadSave = false;
@@ -121,24 +122,10 @@
 	
 	                if (document.getElementById("listcount") != null){
 		            	listCount = document.getElementById("listcount").value;
-		            } else {
+	                } else {
 		            	listCount = 20;
-		            }
+	                }
 	                
-// 	                 if (pPreviewShow_HOW == "W") {
-// 	                    divStyle = parseInt(document.getElementById("divList").style.height);
-// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-// 	                }
-// 	                else if (pPreviewShow_HOW == "H") {
-// 	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-// 	                }
-// 	                else {
-// 	                    divStyle = 0;
-// 	                }
-
 					if (pPreviewShow_HOW == "W") {
 		                divStyle = Math.round(pMailListDiv);
 		            } else if (pPreviewShow_HOW == "H") {
@@ -217,13 +204,17 @@
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
 	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+	                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 	                
-	                pPreviewShow_HOW = "${config.isPreview}";
+	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
 
-	                switch (parseInt("${config.isPreview}")) {
+	                switch (pPreviewShow_HOW) {
 					case 0:
 						pPreviewShow_HOW = "OFF";
 						break;
@@ -234,24 +225,16 @@
 						pPreviewShow_HOW = "W";
 						break;
 					}
-	                
-	                pMailListDiv = "${config.previewListValue}";
-	                pMailPreVDiv = "${config.previewContentValue}";
-	                pMailListDiv_H = "${config.previewListValue}";
-	                pMailPreVDiv_H = "${config.previewContentValue}";
-	
+
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
-	                var pstCnt = "${totalCount}";
-	                totalCount = lstCnt;
-	                var perCnt = "${config.listCnt}";
-
-	                listcount.value = "${config.listCnt}";
-
-	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
+	                var pageCnt = getNodeText(pageNode);
+	                var perCnt = getNodeText(perNode);
+  
+	                listcount.value = perCnt;
+	                totalPage = Math.ceil(new Number(pageCnt / perCnt));
 	                pTotalCnt = lstCnt;
-	
 	                makePageSelPage();
 	
 	                var xmlDoc;

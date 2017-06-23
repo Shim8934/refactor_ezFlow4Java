@@ -69,18 +69,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getCircularTempMapList(Map<String, Object> map) throws Exception {
-		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularTempMapList", map);
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<CircularListVO> getMyCircularList(Map<String, Object> map) throws Exception {
 		return (List<CircularListVO>) list("EzCircularDAO.getMyCircularList", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getMyCircularMapList(Map<String, Object> map) throws Exception {
-		return (List<HashMap<String, Object>>) list("EzCircularDAO.getMyCircularMapList", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -259,11 +249,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.tempDeleteCircular", map);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getCircularTDMapList(Map<String, Object> map) throws Exception {
-		return (List<HashMap<String, Object>>) list("EzCircularDAO.getCircularTDMapList", map);
-	}
-
 	public void moveCircular(Map<String, Object> map) throws Exception{
 		update("EzCircularDAO.moveCircular", map);
 	}
@@ -279,11 +264,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<CircularListVO> getFolderCircularList(Map<String, Object> map) throws Exception{
 		return (List<CircularListVO>) list("EzCircularDAO.getFolderCircularList", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<HashMap<String, Object>> getFolderCircularMapList(Map<String, Object> map) throws Exception{
-		return (List<HashMap<String, Object>>) list("EzCircularDAO.getFolderCircularMapList", map);
 	}
 
 	public void updateFolderId(Map<String, Object> map) throws Exception {

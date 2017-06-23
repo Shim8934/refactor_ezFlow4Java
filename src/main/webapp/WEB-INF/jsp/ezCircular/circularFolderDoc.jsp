@@ -121,20 +121,15 @@
 		            } else {
 		            	listCount = 20;
 		            }
-	                
-	                 if (pPreviewShow_HOW == "W") {
-	                    divStyle = parseInt(document.getElementById("divList").style.height);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else if (pPreviewShow_HOW == "H") {
-	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else {
-	                    divStyle = 0;
-	                } 
+
+	                if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H)
+		            } else {
+		                divStyle = 0;
+		            }
+
 	                if (divStyle < 24)
 	                    divStyle = 24;
 	                
@@ -175,9 +170,11 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
+	        	var keyword = document.getElementById("txt_keyword").value;
+	        	
 		        starttime = new Date().getTime();
-		        if (SQLPARADATA != ""){
-		        	url = "/ezBoard/getSearchBoardList.do";
+		        if (keyword != ""){
+		        	url = "/ezCircular/getSearchCircularList.do?type=folder";
 		        }
 		        else{
 		        	url = "/ezCircular/getFolderCircularList.do";
@@ -192,7 +189,8 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 folderId 	 : folderId
+							 folderId 	 : folderId,
+							 keyword	 : keyword
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -202,14 +200,18 @@
 	
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
-	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+		        	var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+	                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-	                
-	                pPreviewShow_HOW = "${config.isPreview}";
-
-	                switch (parseInt("${config.isPreview}")) {
+	
+	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
+	
+	                switch (pPreviewShow_HOW) {
 					case 0:
 						pPreviewShow_HOW = "OFF";
 						break;
@@ -221,23 +223,15 @@
 						break;
 					}
 	                
-	                pMailListDiv = "${config.previewListValue}";
-	                pMailPreVDiv = "${config.previewContentValue}";
-	                pMailListDiv_H = "${config.previewListValue}";
-	                pMailPreVDiv_H = "${config.previewContentValue}";
-	
 	                if (listNode == null) return;
-	
+	            	
 	                var lstCnt = getNodeText(cntNode);
-	                var pstCnt = "${totalCount}";
-	                totalCount = lstCnt;
-	                var perCnt = "${config.listCnt}";
-
-	                listcount.value = "${config.listCnt}";
-
-	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
-	                pTotalCnt = lstCnt;
+	                var pageCnt = getNodeText(pageNode);
+	                var perCnt = getNodeText(perNode);
 	
+	                listcount.value = perCnt;
+	                totalPage = Math.ceil(new Number(pageCnt / perCnt));
+	                pTotalCnt = lstCnt;
 	                makePageSelPage();
 	
 	                var xmlDoc;
@@ -494,18 +488,7 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
-		
-// 		    function refresh_onclick() {
-// 		    	window.location.href = "/ezcircular/newCircular.do";
-// 		    }
-		
-// 		    function MemberInfo_onclick(pUserID) {
-// 		        if (gubun == "2") return;
-// 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-// 		        feature = feature + GetOpenPosition(420, 450);
-// 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
-// 		    }
-		
+
 		    function window_reload() {
 		        window.location.href = window.location.href;
 		    }
@@ -651,17 +634,6 @@
 	        		return;
 	        	}
 	        	
-// 				var updateStatusList = new Array();
-// 				var updateStatus = "";
-	        	
-// 	        	<c:forEach items="${list}" var="item">
-// 	        		updateStatusList.push("${item.updateStatus}");
-// 	        	</c:forEach>
-	        	
-// 	        	for (var i=0; i<updateStatusList.length; i++) {
-// 	        		updateStatus += updateStatusList[i].split(",") + ";";
-// 	        	}
-	        	
 	        	var arrList = new Array();
 		        var circularIDList = "";
 		        var i = 0;
@@ -675,7 +647,6 @@
 		        arrList = null;
 	        	
 	        	var feature = GetOpenPosition(820, 700);
-// 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId + "&updateStatus=" + updateStatus;
 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
@@ -685,10 +656,10 @@
 	        } 
 	    </script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
+	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1>${folderName}<span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" value='제목/댓글 검색' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>

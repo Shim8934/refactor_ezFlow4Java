@@ -621,18 +621,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getCircularTempMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("memberId", memberID);
-		map.put("limit", startRow-1);
-		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantId);
-		
-		return ezCircularDAO.getCircularTempMapList(map);
-	}
-
-	@Override
 	public int getMyCircularListCount(String memberID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -652,18 +640,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantID);
 		
 		return ezCircularDAO.getMyCircularList(map);
-	}
-
-	@Override
-	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("memberId", memberID);
-		map.put("limit", startRow-1);
-		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantID);
-		
-		return ezCircularDAO.getMyCircularMapList(map);
 	}
 
 	@Override
@@ -773,18 +749,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getCircularTDMapList(String memberId, int startRow, int endRow, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("memberId", memberId);
-		map.put("limit", startRow-1);
-		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantId);
-		
-		return ezCircularDAO.getCircularTDMapList(map);
-	}
-
-	@Override
 	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -837,19 +801,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantId", tenantId);
 		
 		return ezCircularDAO.getFolderCircularList(map);
-	}
-
-	@Override
-	public List<HashMap<String, Object>> getFolderCircularMapList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("folderId", folderId);
-		map.put("memberId", memberId);
-		map.put("limit", startRow-1);
-		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantId);
-		
-		return ezCircularDAO.getFolderCircularMapList(map);
 	}
 
 	@Override
