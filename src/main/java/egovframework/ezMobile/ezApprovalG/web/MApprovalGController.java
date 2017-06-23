@@ -212,7 +212,7 @@ public class MApprovalGController {
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password = userIdAndPassword.get(1);   
 	      
-		List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, password, userInfo.getLocale(), sessionDate, 20);
+		List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, password, sessionDate, 20);
 		//sender, receivedDate, title
 		
 		for (Map<String, String> maps : mailList) {
