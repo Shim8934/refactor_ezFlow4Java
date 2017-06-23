@@ -64,18 +64,18 @@
 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-	        var pMailListHeightW = 0;
-	        var pMailPreHeightW = 0;
+// 	        var pMailListHeightW = 0;
+// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
-	        var pMailListWidthH = 0;
-	        var pMailPreWidthH = 0;
+// 	        var pMailListWidthH = 0;
+// 	        var pMailPreWidthH = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-	        var p_ListorderValue = "";
+// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-	        var SmallSizeList = false;
-	        var OldSmallSizeList = false;
+// 	        var SmallSizeList = false;
+// 	        var OldSmallSizeList = false;
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
 // 	        var pMode = "new";
@@ -118,25 +118,6 @@
 		            	listCount = 20;
 		            }
 	                
-// 	                 if (pPreviewShow_HOW == "W") {
-// 	                    divStyle = parseInt(document.getElementById("divList").style.height);
-// alert("@@" + divStyle);	                    
-// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-// alert("@@" + ifrmStyle);
-// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-// alert("@@" + divStyle);
-// 	                 }
-// 	                else if (pPreviewShow_HOW == "H") {
-// 	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-// alert("!@" + divStyle);	                    
-// 	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-// alert("!@" + ifrmStyle);
-// 	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-// alert("!@" + divStyle);
-// 	                }
-// 	                else {
-// 	                    divStyle = 0;
-// 	                }
 					if (pPreviewShow_HOW == "W") {
 		                divStyle = Math.round(pMailListDiv);
 		            } else if (pPreviewShow_HOW == "H") {
@@ -216,19 +197,17 @@
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
 	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+	                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-	
-// 	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
-// 	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
-// 	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-// 	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT")));              
-// 	                pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
-	
-	                pPreviewShow_HOW = "${config.isPreview}";
 
-	                switch (parseInt("${config.isPreview}")) {
+	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+		            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
+
+	                switch (pPreviewShow_HOW) {
 					case 0:
 						pPreviewShow_HOW = "OFF";
 						break;
@@ -240,26 +219,15 @@
 						break;
 					}
 	                
-	                pMailListDiv = "${config.previewListValue}";
-	                pMailPreVDiv = "${config.previewContentValue}";
-	                pMailListDiv_H = "${config.previewListValue}";
-	                pMailPreVDiv_H = "${config.previewContentValue}";
-
 	                if (listNode == null) return;
-	
+	            	
 	                var lstCnt = getNodeText(cntNode);
-	                //var pstCnt = getNodeText(pntNode);
-	                var pstCnt = "${totalCount}";
-	                totalCount = lstCnt;
-	                //var perCnt = getNodeText(perNode);
-	                var perCnt = "${config.listCnt}";
-	
-	                //listcount.value = perCnt;
-	                listcount.value = "${config.listCnt}";
-
-	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
+	                var pageCnt = getNodeText(pageNode);
+	                var perCnt = getNodeText(perNode);
+  
+	                listcount.value = perCnt;
+	                totalPage = Math.ceil(new Number(pageCnt / perCnt));
 	                pTotalCnt = lstCnt;
-	
 	                makePageSelPage();
 	
 	                var xmlDoc;

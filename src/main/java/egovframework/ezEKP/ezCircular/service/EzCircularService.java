@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezCircular.service;
 
-import java.util.HashMap;
 import java.util.List;
 
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
@@ -13,8 +12,6 @@ import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCircularService {
-	
-	public List<HashMap<String, Object>> getCircularTempMapList(String memberID, int startRow, int endRow, int tenantId) throws Exception;
 
 	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
@@ -35,8 +32,6 @@ public interface EzCircularService {
 	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception;
 	
 	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
-
-	public List<HashMap<String, Object>> getMyCircularMapList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
 
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
 
@@ -106,15 +101,11 @@ public interface EzCircularService {
 
 	public void circularDeleteTemp(String circularIDList, String memberId, int tenantId) throws Exception;
 
-	public List<HashMap<String, Object>> getCircularTDMapList(String memberId, int startRow, int endRow, int tenantId) throws Exception;
-
 	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, int tenantId) throws Exception;
 
 	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception;
 
 	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
-
-	public List<HashMap<String, Object>> getFolderCircularMapList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
 
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 

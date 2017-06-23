@@ -709,30 +709,7 @@
                 #limit#, #rowCount#
         ]]>
     </select>
-    
-    <select id="EzCircularDAO.getCircularTempMapList" resultClass="HashMap" >
-        <![CDATA[
-            SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE 
-            FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-            WHERE
-            	A.STATUS = '2'
-            AND
-            	A.CIRCULARID = B.CIRCULARID
-            AND
-             	B.UPDATESTATUS IN ('0', '1')	
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
-            ORDER BY
-            	A.REGDATE DESC
-            LIMIT
-                #limit#, #rowCount#       
-        ]]>
-    </select>
-    
+
     <select id="EzCircularDAO.getTopFolder" parameterClass="Map" resultClass="CircularFolderVO" >
         <![CDATA[
             SELECT
@@ -793,34 +770,7 @@
                  #limit#, #rowCount#
          ]]>
     </select>
-    
-    <select id="EzCircularDAO.getMyCircularMapList" resultClass="HashMap" >
-        <![CDATA[
-             SELECT
-                 A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE 
-             FROM
-                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B 
-             WHERE
-                 A.CIRCULARID = B.CIRCULARID
-             AND
-                 A.TENANTID = B.TENANTID  
-             AND
-                 A.MEMBERID = #memberId# 
-             AND
-                 A.TENANTID = #tenantId# 
-             AND
-             	 A.STATUS IN ('0', '1')
-             AND
-             	 B.UPDATESTATUS IN ('0', '1')
-             GROUP BY
-             	 A.CIRCULARID
-             ORDER BY
-             	 A.REGDATE DESC
-             LIMIT
-                 #limit#, #rowCount#
-         ]]>
-    </select>
-    
+
     <select id="EzCircularDAO.getFolderInfo" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -879,32 +829,7 @@
                 A.TENANTID = #tenantId#
         ]]>
     </select>
-    
-    <select id="EzCircularDAO.getCircularTDMapList" resultClass="HashMap" >
-        <![CDATA[
-             SELECT
-                 A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE 
-             FROM
-                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B 
-             WHERE
-                 A.CIRCULARID = B.CIRCULARID
-             AND
-                 A.TENANTID = B.TENANTID  
-             AND
-                 A.MEMBERID = #memberId# 
-             AND
-                 A.TENANTID = #tenantId# 
-             AND
-             	 B.UPDATESTATUS = '2'
-             GROUP BY
-             	 A.CIRCULARID
-             ORDER BY
-             	 A.REGDATE DESC
-             LIMIT
-                 #limit#, #rowCount#
-         ]]>
-    </select>
-    
+
     <select id="EzCircularDAO.getFolderCircularListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
              SELECT 
@@ -968,33 +893,7 @@
 				#limit#, #rowCount#
          ]]>
     </select>
-    
-    <select id="EzCircularDAO.getFolderCircularMapList" resultClass="HashMap" >
-        <![CDATA[
-             SELECT
-                 DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE 
-             FROM
-                 TBL_CIRCULAR A
-             JOIN
-             	 (SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberId#) B
-             	ON A.CIRCULARID = B.CIRCULARID
-             JOIN TBL_CIRCULAR_FOLDER C
-             	ON B.CIRCULARFOLDERID = C.CIRCULARFOLDERID
-             JOIN TBL_CIRCULAR_USER D
-             	ON A.CIRCULARID = D.CIRCULARID
-             WHERE
-             	 B.CIRCULARFOLDERID = #folderId#
-             AND	 
-                 D.UPDATESTATUS = '3'  
-             AND
-                 A.TENANTID = #tenantId# 
-             ORDER BY
-             	 A.REGDATE DESC 
-             LIMIT
-                 #limit#, #rowCount#
-         ]]>
-    </select>
-    
+
     <select id="EzCircularDAO.getAttachInfo" parameterClass="Map" resultClass="CircularAttachVO">
 		<![CDATA[
 			SELECT 
