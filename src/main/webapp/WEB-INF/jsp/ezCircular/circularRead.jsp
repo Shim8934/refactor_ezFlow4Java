@@ -188,20 +188,20 @@
 		            		<td colspan="3" style="width: 100%">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" checked  />댓글기능 사용
-		                				<input type="checkbox" id="AllDay"  />메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+		                				<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option"  />댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked />메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+		                				<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" checked />댓글기능 사용
-										<input type="checkbox" id="AllDay" checked />메일공지 사용
+		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+										<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" />댓글기능 사용
-										<input type="checkbox" id="AllDay" />메일공지 사용
+		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+										<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>
