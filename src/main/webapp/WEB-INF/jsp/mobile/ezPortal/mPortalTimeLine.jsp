@@ -165,7 +165,7 @@
 				<form id="mainForm" name="mainForm" method="post">							
 					<div>						
 						<ul data-role="listview" data-theme="a" data-divider-theme="a" data-inset="false" id="listView">
-<!-- 							<li data-role="list-divider">TimeLine</li> -->
+							<li data-role="list-divider" style="background-color: white"><img style="padding-left: 10px;" height="35px" src="/images/mobile/timeLine.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TimeLine</li>
 						</ul>
 					</div>					
 				</form>
