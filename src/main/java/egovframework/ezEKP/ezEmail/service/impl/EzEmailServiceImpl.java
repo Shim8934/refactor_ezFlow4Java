@@ -1303,7 +1303,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, Locale locale, String dateTime, int count)
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count)
 			throws Exception {
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
@@ -1317,9 +1317,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000);
+					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000);
 		
-			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));		
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));		
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
@@ -1330,7 +1330,7 @@ public class EzEmailServiceImpl implements EzEmailService {
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
 	        
  			// set mailCount
- 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", locale));
+ 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));
  			if (unreadCount < count) {
  				count = unreadCount;
  			}
