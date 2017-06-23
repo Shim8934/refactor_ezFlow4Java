@@ -1,0 +1,122 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>::: ezEKP Java :::</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+		<link rel="stylesheet" type="text/css" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css" />		
+    	<link rel="stylesheet" type="text/css" href="/css/mobile/mobile.css" />
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>		
+		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>		
+		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
+		<script type="text/javascript" src="/js/mobile/mBoard.js"></script>
+		<script type="text/javascript" src="/js/mobile/mEMail.js"></script>
+		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		<script type="text/javascript">
+			function getTimeLineList(flag) {
+				$.ajax({
+					type : "POST",
+					url : "/mobile/ezApprovalG/getTimeLineList.do",
+					dataType : "json",
+					data : {
+						pTempFlag : flag
+					},
+					beforeSend: function() {
+						$.mobile.loading('show');
+					},
+		            complete: function() { 
+		            	$.mobile.loading('hide');
+		            },
+					success : function(data) {
+						if (data.timeLineList.length > 0) {
+							var list = "";
+							
+							$.each(data.timeLineList, function(key, value) {
+								list += "<li><a href=\"#\">";
+								
+								if (value.module == "결재") {
+									list += "    <img src=\"/images/mobile/approval.png\">";
+								} else if (value.module == "게시판") {
+									list += "    <img src=\"/images/mobile/board.png\">";
+								} else if (value.module == "일정관리") {
+									list += "    <img src=\"/images/mobile/schedule.png\">";
+								} else if (value.module == "메일") {
+									list += "    <img src=\"/images/mobile/mail.png\">";
+								}
+								
+								list += "<h2>" + value.title + "</h2>";
+								list += "<p>" + value.startDate + "</p></a>";
+								list += "</li>";
+							});
+							
+							$("#listView").append(list);
+							$("#listView").listview("refresh");
+						}
+					},
+					error : function(xhr, status, error) {
+						
+					}
+				});
+			}
+			
+			$(document).on("pagecreate",function() {
+				getTimeLineList(0);
+			});
+		
+			$(document).on("pagecreate", "#main", function() {
+				$(document).on("scrollstop",function() {
+// console.log($(window).scrollTop() + " == " + $(document).height() + " - " + $(window).height());
+					if ($(window).scrollTop() >= $(document).height() - $(window).height()) {
+						getTimeLineList(1);
+					}
+				});
+			});
+		</script>
+		<style>
+			.ui-li-divider {
+				background-color: transparent;
+				color: rgb(31, 63, 105);
+				border-color: rgb(220, 220, 220);
+			}
+			.ui-grid-a .ui-block-a input {
+				height:40px;
+			}
+			.ui-grid-a .ui-block-b .ui-icon-search {
+				height:40px;
+				width:100%;
+				-webkit-border-radius: .3125em;
+    			border-radius: .3125em;
+			}
+		</style>
+	</head>
+	<body class="loginbody">
+		<section id="main" data-role="page">
+			<!-- header import -->
+     		<c:import url="/WEB-INF/jsp/mobile/ezPortal/mPortalTop.jsp" />
+     		<!-- header import -->
+     		
+     		<!-- body start -->
+			<div class="content" data-role="content">
+				<form id="mainForm" name="mainForm" method="post">							
+					<div>						
+						<ul data-role="listview" data-theme="a" data-divider-theme="a" data-inset="false" id="listView">
+							<li data-role="list-divider">TimeLine</li>
+						</ul>
+					</div>					
+				</form>
+     		</div>
+     		<!-- body end -->
+     		     		     		
+     		<!-- footer import -->
+     		<c:import url="/WEB-INF/jsp/mobile/ezPortal/mPortalFooter.jsp" />
+     		<!-- footer import -->     		     		
+     	</section>	
+	</body>	
+</html>
