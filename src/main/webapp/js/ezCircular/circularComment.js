@@ -15,23 +15,17 @@ function getcircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='width:70px;'>" + vo.memberName + "</td>"
-				if (vo.status == 1) {
-					userList += "<td style='width:55%; text-align:right;' colspan='2'>확인완료</td>"
-				} else {
-					userList += "<td style='width:55%; text-align:right;' colspan='2'>미확인</td>";
-				}
+				userList += "<td style='text-align:left;'>" + vo.memberName + "<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글작성</span></a></td>"
 				
-				userList += "<td style='width:10%;'><a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글작성</span></a></td>"
+				if (vo.status == 1) {
+					userList += "<td style='width:55%; text-align:right;' >확인완료</td>"
+				} else {
+					userList += "<td style='width:55%; text-align:right;' >미확인</td>";
+				}
 				
 				userList += "</tr>";
 				userList += "<tr style='display:none;'>";
-				userList += "<td colspan='4'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
-				userList += "</tr>";
-				userList += "<tr class='circularComment' circularUserID='" + vo.memberID + "' circularID='" + vo.circularID + "' style='display:none;'>";
-				userList += "<td style='width:70px'>" + result.userInfo["displayName"] + "</td>";
-				userList += "<td colspan='2'><input type='text' style='width:100%;' /></td>";
-				userList += "<td style='text-align:right;'><a class='imgbtn'><span circularUserID='" + vo.memberID + "' onclick='editCircularComment(this)'>저장</span></a></td>";
+				userList += "<td colspan='2'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
 				userList += "</tr>";
 			});
 			
@@ -47,8 +41,8 @@ function getcircularComment() {
 				commentList += "<td style='width:20%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
 				commentList += "</tr>";
 				
-				$("table[circularUserID='" + vo.circularUserID + "'").append(commentList);
-				$("table[circularUserID='" + vo.circularUserID + "'").closest("tr").show();
+				$("table[circularUserID='" + vo.circularUserID + "']").append(commentList);
+				$("table[circularUserID='" + vo.circularUserID + "']").closest("tr").show();
 			});
 			
 			if (($("#option").prop("checked") != true) || (status == 1)) {
@@ -62,14 +56,27 @@ function getcircularComment() {
 }
 
 function showEdit(obj) {
-	$(".circularComment").closest("tr").hide();
-	$(".circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").closest("tr").show();
+	if ($("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").length == 0) {
+		var commentEditor = "";
+		commentEditor += "<tr class='circularComment' circularUserID='" + $(obj).attr("circularUserID") + "' circularID='" + circularID + "' style='display:none;'>";
+		commentEditor += "<td colspan='3'><textarea style='width:90%; text-align:left;' /><a class='imgbtn' style='text-align:right;'><span circularUserID='" + $(obj).attr("circularUserID") + "' onclick='editCircularComment(this)'>저장</span></a></td>";
+		commentEditor += "</tr>";
+		
+		$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html($("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html() + commentEditor);
+		$("tr.circularComment").hide();
+		$("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").show();
+	}
 }
 
 //댓글작성
 function editCircularComment(obj) {
 	var circularUserID = $(obj).attr("circularUserID");
-	var circularComment = $("div.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > input[type='text']").val();
+	var circularComment = $("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > td > textarea").val();
+	
+	if (circularComment == "") {
+		alert("댓글을 입력해주세요");
+		return ;
+	}
 	
 	$.ajax({
 		type : "POST",
@@ -78,7 +85,7 @@ function editCircularComment(obj) {
 		data : {
 			circularID : circularID, // 회람ID
 			circularUserID : circularUserID, // 회람자ID
-			circularComment : $("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > td > input[type='text']").val(), //회람 코멘트 본문
+			circularComment : circularComment, //회람 코멘트 본문
 		},
 		success : function(result) {
 			$("#searchValue").val("");
