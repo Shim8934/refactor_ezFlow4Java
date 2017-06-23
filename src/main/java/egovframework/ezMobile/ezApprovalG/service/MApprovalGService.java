@@ -5,6 +5,7 @@ import java.util.List;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface MApprovalGService {
@@ -22,5 +23,7 @@ public interface MApprovalGService {
 	public List<MApprovalGOpinionInfoVO> getOpinionInfo(String pDocID, String pListType, LoginVO userInfo) throws Exception;
 
 	public void saveOpinionInfo(String pDocID, String pContent, String pOpinionGB, LoginVO userInfo) throws Exception;
+
+	public List<MApprovalGTLVO> getTimeLineList(LoginVO userInfo, String sessionDate) throws Exception;
 
 }

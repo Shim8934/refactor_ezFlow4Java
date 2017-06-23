@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -177,5 +179,35 @@ public class MApprovalGController {
 		MApprovalGService.saveOpinionInfo(pDocID, pContent, pOpinionGB, userInfo);
 
 		logger.debug("saveOpinionInfo ended");
+	}
+	
+	@RequestMapping(value = "/mobile/ezApprovalG/getTimeLineList.do")
+	public String getTimeLineList(@CookieValue("loginCookie") String loginCookie, HttpSession session, Model model, String pTempFlag) throws Exception {
+		logger.debug("getTimeLineList started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String sessionDate = "";
+		
+		if (pTempFlag.equals("0")) {
+			sessionDate = commonUtil.getTodayUTCTime("");
+			session.setAttribute("timeLineStartDate", sessionDate);
+		} else {
+			sessionDate = (String) session.getAttribute("timeLineStartDate");
+		}
+		
+		logger.debug("sessionDate : " + sessionDate);
+		
+		List<MApprovalGTLVO> mApprovalGTLVOs = MApprovalGService.getTimeLineList(userInfo, sessionDate);
+		
+		if (mApprovalGTLVOs.size() > 0) {
+			session.setAttribute("timeLineStartDate", mApprovalGTLVOs.get(mApprovalGTLVOs.size() - 1).getStartDate());
+		}
+
+		model.addAttribute("timeLineList", mApprovalGTLVOs);
+		
+		logger.debug("getTimeLineList ended");
+		
+		return "json";
 	}
 }

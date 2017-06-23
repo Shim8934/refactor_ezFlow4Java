@@ -23,6 +23,7 @@ import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -222,6 +223,27 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		}
 
 		logger.debug("saveOpinionInfo ended");
+	}
+
+	@Override
+	public List<MApprovalGTLVO> getTimeLineList(LoginVO userInfo, String sessionDate) throws Exception {
+		logger.debug("getTimeLineList started");
+
+		if (sessionDate == null || sessionDate.equals("")) {
+			sessionDate = commonUtil.getTodayUTCTime("");
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("sessionDate", sessionDate);
+		map.put("userID", userInfo.getId());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<MApprovalGTLVO> approvalGTLVOs = MApprovalGDAO.getTimeLineList(map);
+
+		logger.debug("getTimeLineList ended");
+		
+		return approvalGTLVOs;
 	}
 	
 }
