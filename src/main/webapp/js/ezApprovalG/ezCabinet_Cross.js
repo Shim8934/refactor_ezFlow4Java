@@ -186,6 +186,16 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
+            if (g_bRecAdmin || AdminYN == "TRUE") {
+                document.getElementById("tdVeiwRecHist").style.display = "";
+                document.getElementById("tdbtnViewRecReadHist").style.display = "";
+                CheckBtnSetRecRole();
+            } else {
+                document.getElementById("tdVeiwRecHist").style.display = "none";
+                document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                document.getElementById("tdbtnSetRecRole").style.display = "none";
+            }
+            
             if (typeof (tdNotify_Rec) != "undefined" && typeof (tdNotify_Rec) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
                     if (IsUserDeptRec() == "true")
@@ -220,10 +230,12 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
-                    if (IsUserDeptRec() == "true" && document.getElementById("tdbtnViewRecReadHist").style.display == "")
-                        document.getElementById("tdbtnViewRecReadHist").style.display = "";
-                    else
-                        document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                    if (IsUserDeptRec() == "true" && document.getElementById("tdbtnViewRecReadHist").style.display == "") {
+                    	document.getElementById("tdbtnViewRecReadHist").style.display = "";
+                    }
+                    else{
+                    	document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                    }
                 }
                 else {
                     document.getElementById("tdbtnViewRecReadHist").style.display = "none";
