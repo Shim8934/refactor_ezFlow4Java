@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
@@ -50,4 +51,5 @@ public interface EzEmailService {
 	public boolean checkMailQuota(LoginVO userInfo, String password) throws Exception;
 	public int getMaxMessageSize(int tenantId) throws Exception;
 	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception;
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count) throws Exception;
 }
