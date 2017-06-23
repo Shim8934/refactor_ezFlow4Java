@@ -518,12 +518,25 @@
             SELECT
                 *
             FROM
-                TBL_CIRCULAR_USER
+				TBL_CIRCULAR_USER
+			JOIN
+				TBL_USERMASTER
+			ON
+				TBL_CIRCULAR_USER.memberid = TBL_USERMASTER.cn
+			AND
+				TBL_CIRCULAR_USER.tenantid = TBL_USERMASTER.tenant_id
             WHERE
                 CIRCULARID = #circularID#
             AND
-                TENANTID = #tenantID#     
+                TENANTID = #tenantID#
         ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+			<![CDATA[
+				AND
+					TBL_USERMASTER.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+			]]>
+		</isNotEqual>
     </select>
     
     <select id="EzCircularDAO.getCircularDeptUserList" resultClass="CircularListVO" >
@@ -1408,13 +1421,6 @@
 			AND
 				tenantid = #tenantID#
 		]]>
-		
-		<isNotEqual property="searchValue" compareValue="">
-			<![CDATA[
-				AND
-					circularcomment LIKE CONCAT(CONCAT('%', #searchValue#),'%')
-			]]>
-		</isNotEqual>
 	</select>
 	
 	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">

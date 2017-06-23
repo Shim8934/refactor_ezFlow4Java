@@ -19,7 +19,7 @@ public interface EzCircularService {
 
 	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
-	public List<CircularListVO> getCircularUserList(int circularID, int tenantID) throws Exception;
+	public List<CircularListVO> getCircularUserList(int circularID, String searchValue, int tenantID) throws Exception;
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	

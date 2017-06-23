@@ -1296,7 +1296,7 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
 		
-		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId());
 		
 		String listUser = "";
 		
@@ -1348,7 +1348,7 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
 				
-		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId());
 		
 		String userID = "";
 		String userName = "";
@@ -2221,7 +2221,7 @@ System.out.println("@@" + keyword + " / " + circularType);
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	String searchValue = request.getParameter("searchValue");
     	
-    	List<CircularListVO> userList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), userInfo.getTenantId());
+    	List<CircularListVO> userList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchValue, userInfo.getTenantId());
     	List<CircularCommentVO> commentList = ezCircularService.getCircularComment(circularCommentVO, searchValue, userInfo.getOffset(), userInfo.getTenantId());
     	
     	logger.debug("getCircularComment ended.");
