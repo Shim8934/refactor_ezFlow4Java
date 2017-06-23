@@ -4,23 +4,34 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.FetchProfile;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
+import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.search.AndTerm;
+import javax.mail.search.DateTerm;
+import javax.mail.search.ReceivedDateTerm;
+import javax.mail.search.SearchTerm;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1289,6 +1300,77 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getAliasAddress ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
 		return aliasAddressList;		
+	}
+
+	@Override
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, Locale locale, String dateTime, int count)
+			throws Exception {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, 40*1000, 20*1000);
+		
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));		
+			folder.open(Folder.READ_ONLY);
+	        UIDFolder uidFolder = (UIDFolder)folder;
+	        
+	        SearchTerm term = new ReceivedDateTerm(DateTerm.LT, sdf.parse(dateTime));
+	        Message[] messages = folder.search(term);
+	        
+	        // sort the messages
+ 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
+	        
+ 			// set mailCount
+ 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", locale));
+ 			if (unreadCount < count) {
+ 				count = unreadCount;
+ 			}
+ 			
+ 			messages = Arrays.copyOfRange(messages, 0, count);
+ 			
+	        // pre-fetch
+	        FetchProfile fp = new FetchProfile();
+	        fp.add(UIDFolder.FetchProfileItem.UID);
+	        fp.add(FetchProfile.Item.ENVELOPE);
+	        folder.fetch(messages, fp);
+	        
+	        for (int i=0; i<messages.length; i++) {
+	        	Message message = messages[i];
+	        	
+	        	Date receivedDate = message.getReceivedDate();
+	        	String receivedDateStr = sdf.format(receivedDate);
+	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+	        	
+	        	String subject = ezEmailUtil.getSubject(message);
+				subject = (subject != null) ? subject : "";
+	        	
+	        	Map<String, String> map = new HashMap<String, String>();
+	        	map.put("subject", subject);
+	        	map.put("sender", ezEmailUtil.getFromNameOrAddressOfMessage(message));
+	        	map.put("receivedDate", receivedDateStr);
+	        	map.put("uid", String.valueOf(uidFolder.getUID(message)));
+	        	
+	        	list.add(map);
+	        }
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		return list;
 	}
 	
 }
