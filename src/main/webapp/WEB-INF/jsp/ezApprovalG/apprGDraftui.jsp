@@ -220,11 +220,6 @@
 		            if (approvalFlag == "S") {
 			            SetAutoDocnumItem();
 		            }
-		            
-		            //재기안시 임시저장 버튼 숨기기
-		            if (pDraftFlag == "REDRAFT")
-		                setMenuBar("btnSaveServer", false);
-
 		        }
 		    }
 		    
