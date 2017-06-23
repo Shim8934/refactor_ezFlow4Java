@@ -512,10 +512,8 @@
 		                if (g_bRecAdmin || AdminYN == "TRUE") {
 		                    document.getElementById("tdVeiwRecHist").style.display = "";
 		                    document.getElementById("tdbtnViewRecReadHist").style.display = "";
-		
 		                    CheckBtnSetRecRole();
-		                }
-		                else {
+		                } else {
 		                    document.getElementById("tdVeiwRecHist").style.display = "none";
 		                    document.getElementById("tdbtnViewRecReadHist").style.display = "none";
 		                    document.getElementById("tdbtnSetRecRole").style.display = "none";
