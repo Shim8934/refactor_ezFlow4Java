@@ -42,13 +42,13 @@
 								list += "<li><a href=\"#\">";
 								
 								if (value.module == "결재") {
-									list += "    <img src=\"/images/mobile/approval.png\">";
+									list += "    <img style=\"padding-left: 5px;padding-top: 5px;\" height=65 src=\"/images/mobile/approval.png\">";
 								} else if (value.module == "게시판") {
-									list += "    <img src=\"/images/mobile/board.png\">";
+									list += "    <img style=\"padding-left: 5px;padding-top: 5px;\" height=65 src=\"/images/mobile/board.png\">";
 								} else if (value.module == "일정관리") {
-									list += "    <img src=\"/images/mobile/schedule.png\">";
+									list += "    <img style=\"padding-left: 5px;padding-top: 5px;\" height=65 src=\"/images/mobile/schedule.png\">";
 								} else if (value.module == "메일") {
-									list += "    <img src=\"/images/mobile/mail.png\">";
+									list += "    <img style=\"padding-left: 5px;padding-top: 5px;\" height=65 src=\"/images/mobile/mail.png\">";
 								}
 								
 								list += "<h2>" + value.title + "</h2>";
@@ -94,6 +94,13 @@
 				-webkit-border-radius: .3125em;
     			border-radius: .3125em;
 			}
+			.ui-listview .ui-li-has-thumb > p:first-child, .ui-listview .ui-li-has-thumb > .ui-btn > p:first-child, .ui-listview .ui-li-has-thumb .ui-li-thumb .ui-li-has-thumb{
+	            position : absolute;
+	            left:10px;
+	            top:0px;
+	            max-height:5em;
+	            max-width:5em;
+	         }
 		</style>
 	</head>
 	<body class="loginbody">
@@ -107,7 +114,7 @@
 				<form id="mainForm" name="mainForm" method="post">							
 					<div>						
 						<ul data-role="listview" data-theme="a" data-divider-theme="a" data-inset="false" id="listView">
-							<li data-role="list-divider">TimeLine</li>
+<!-- 							<li data-role="list-divider">TimeLine</li> -->
 						</ul>
 					</div>					
 				</form>

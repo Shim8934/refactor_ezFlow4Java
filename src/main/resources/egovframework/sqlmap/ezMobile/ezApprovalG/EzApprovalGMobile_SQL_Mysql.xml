@@ -261,38 +261,14 @@
 			  AND
 				(A.APPRFLAG = 'Y' 
 				 OR A.APPRFLAG IS NULL)
-			  AND 
-				A.STARTDATE > DATE_SUB(sysdate(), INTERVAL 5 DAY) 
-			  AND 
-				A.STARTDATE <= sysdate()
-			  AND 
-				A.ENDDATE > sysdate()
-			  AND 
-				(NOT EXISTS
-							(SELECT 
-								USERID 
-							 FROM 
-								TBL_BOARD_ITEM_READ S 
-							 WHERE 
-								S.TENANT_ID = A.TENANT_ID
-							 AND
-								S.BOARDID = A.BOARDID 
-							 AND 
-								S.ITEMID = A.ITEMID 
-							 AND 
-								S.TENANT_ID = #tenantID#
-							 AND
-								S.USERID = #userID#
-							 AND 
-								S.READDATE > DATE_SUB(sysdate(), INTERVAL 5 DAY)))
-				AND
-					STARTDATE < #sessionDate#)
+			  AND
+				A.STARTDATE < #sessionDate#)
 								
 			UNION
 			
 			
 			(select 
-				title, createdate as startdate, '일정관리' as module
+				title, startdate, '일정관리' as module
 			from 
 				tbl_schedule
 			where  
@@ -304,7 +280,7 @@
 			ORDER BY
 				startdate desc
 			LIMIT 
-				10
+				20
 		]]>
    </select>
 </sqlMap>

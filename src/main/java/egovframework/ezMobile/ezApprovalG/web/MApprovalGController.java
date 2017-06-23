@@ -1,6 +1,9 @@
 package egovframework.ezMobile.ezApprovalG.web;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
@@ -57,6 +61,9 @@ public class MApprovalGController {
 	
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
+	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	@Resource(name = "MApprovalGService")
 	private MApprovalGService MApprovalGService;
@@ -200,8 +207,34 @@ public class MApprovalGController {
 		
 		List<MApprovalGTLVO> mApprovalGTLVOs = MApprovalGService.getTimeLineList(userInfo, sessionDate);
 		
+
+		//메일 조인 부분
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password = userIdAndPassword.get(1);   
+	      
+		List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, password, userInfo.getLocale(), sessionDate, 20);
+		//sender, receivedDate, title
+		
+		for (Map<String, String> maps : mailList) {
+			MApprovalGTLVO mApprovalGTLVO = new MApprovalGTLVO();
+			mApprovalGTLVO.setTitle(maps.get("subject"));
+			mApprovalGTLVO.setStartDate(maps.get("receivedDate"));
+			mApprovalGTLVO.setModule("메일");
+			
+			mApprovalGTLVOs.add(mApprovalGTLVO);
+		}
+		
+		Collections.sort(mApprovalGTLVOs, new Comparator<MApprovalGTLVO>() {
+			@Override
+			public int compare(MApprovalGTLVO o1, MApprovalGTLVO o2) {
+				return o2.getStartDate().compareTo(o1.getStartDate());
+			}
+		});
+		
+		sessionDate = mApprovalGTLVOs.get(mApprovalGTLVOs.size() - 1).getStartDate();
+		
 		if (mApprovalGTLVOs.size() > 0) {
-			session.setAttribute("timeLineStartDate", mApprovalGTLVOs.get(mApprovalGTLVOs.size() - 1).getStartDate());
+			session.setAttribute("timeLineStartDate", sessionDate);
 		}
 
 		model.addAttribute("timeLineList", mApprovalGTLVOs);
