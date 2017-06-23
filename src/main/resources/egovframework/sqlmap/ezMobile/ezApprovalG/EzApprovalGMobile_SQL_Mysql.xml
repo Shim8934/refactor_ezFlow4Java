@@ -215,7 +215,8 @@
    			(SELECT 
 				DOCTITLE as title,
 				STARTDATE,
-				'결재' as module
+				'결재' as module,
+				WRITERNAME
 			FROM 
 				VAPRDOINGDOCLIST 
 			WHERE
@@ -231,7 +232,7 @@
 			
 			UNION
 			
-			(SELECT A.TITLE,	A.STARTDATE, '게시판' as module
+			(SELECT A.TITLE,	A.STARTDATE, '게시판' as module, WRITERNAME
 			  FROM 
 				TBL_BOARD_ITEM A 
 			  INNER JOIN 
@@ -266,9 +267,8 @@
 								
 			UNION
 			
-			
 			(select 
-				title, startdate, '일정관리' as module
+				title, startdate, '일정관리' as module, OWNERNAME as writername
 			from 
 				tbl_schedule
 			where  
@@ -276,7 +276,9 @@
 			and 
 				tenant_id = #tenantID#
 			and
-				STARTDATE < #sessionDate#)
+				STARTDATE < #sessionDate#
+			and
+				STARTDATE > STR_TO_DATE(substring(now(), 1, 10),'%Y-%m-%d'))
 			ORDER BY
 				startdate desc
 			LIMIT 

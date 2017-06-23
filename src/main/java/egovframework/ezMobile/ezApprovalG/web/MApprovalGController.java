@@ -210,7 +210,7 @@ public class MApprovalGController {
 
 		//메일 조인 부분
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String password = userIdAndPassword.get(1);   
+		String password = userIdAndPassword.get(1);
 	      
 		List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, password, sessionDate, 20);
 		//sender, receivedDate, title
@@ -220,6 +220,7 @@ public class MApprovalGController {
 			mApprovalGTLVO.setTitle(maps.get("subject"));
 			mApprovalGTLVO.setStartDate(maps.get("receivedDate"));
 			mApprovalGTLVO.setModule("메일");
+			mApprovalGTLVO.setWriterName(maps.get("sender"));
 			
 			mApprovalGTLVOs.add(mApprovalGTLVO);
 		}

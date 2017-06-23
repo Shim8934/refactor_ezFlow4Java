@@ -20,6 +20,51 @@
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript">
+			function setTime(date) {
+				var result = "";
+				var nowDate = getDatePickerTime(false);
+				
+				if (nowDate == date.substring(0, 10)) {
+					result = date.substring(11, 16);
+				} else {
+					result = date.substring(5, 10);
+				}
+				
+				return result;
+			}
+			
+			function getDatePickerTime(type) {
+				var returnDate = "";
+				var pOffsetHour = 0
+				var pOffsetMinute = 0
+				var tempDate = new Date();
+				
+				tempDate.setUTCHours(Number(tempDate.getUTCHours()) + Number(pOffsetHour), Number(tempDate.getUTCMinutes()) + Number(pOffsetMinute), tempDate.getUTCSeconds());
+				
+				var rYear = tempDate.getFullYear();
+				var rMonth = addzero(tempDate.getMonth() + 1);
+				var rDate = addzero(tempDate.getDate());
+				var rHour = addzero(tempDate.getHours());
+				var rMin = addzero(tempDate.getMinutes());
+				var rSec = addzero(tempDate.getSeconds());
+				
+				if (type) {
+					returnDate = rYear + "-" + rMonth + "-" + rDate + " " + rHour + ":" + rMin + ":" + rSec;
+				} else {
+					returnDate = rYear + "-" + rMonth + "-" + rDate;
+				}
+				
+				return returnDate;
+			}
+			
+			function addzero(arg) {
+				if (arg < 10) {
+					arg = "0" + arg;
+				}
+				
+				return arg;
+			}
+			
 			function getTimeLineList(flag) {
 				$.ajax({
 					type : "POST",
@@ -52,7 +97,13 @@
 								}
 								
 								list += "<h2>" + value.title + "</h2>";
-								list += "<p>" + value.startDate + "</p></a>";
+								
+								if (value.module == "일정관리") {
+									list += "<p>" + value.writerName + "  " + value.startDate.substring(11,  16) + " " + "</p></a>";
+								} else {
+									list += "<p>" + value.writerName + "  " + setTime(value.startDate) + " " + "</p></a>";
+								}
+								
 								list += "</li>";
 							});
 							

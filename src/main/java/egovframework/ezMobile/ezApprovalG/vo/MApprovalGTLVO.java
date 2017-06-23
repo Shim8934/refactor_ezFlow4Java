@@ -7,6 +7,8 @@ public class MApprovalGTLVO {
 	private String startDate;
 	/** 타임라인 모듈*/
 	private String module;
+	/** 타임라인 작성자 (일정관리는 enddate)*/
+	private String writerName;
 	
 	public String getTitle() {
 		return title;
@@ -25,6 +27,12 @@ public class MApprovalGTLVO {
 	}
 	public void setModule(String module) {
 		this.module = module;
+	}
+	public String getWriterName() {
+		return writerName;
+	}
+	public void setWriterName(String writerName) {
+		this.writerName = writerName;
 	}
 
 }
