@@ -89,3 +89,20 @@ function editCircularComment(obj) {
 		}
 	});
 }
+
+function commentSendMail() {
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/commentSendMail.do",
+		dataType : "json",
+		data : {
+			circularID : circularID // 회람ID
+		},
+		success : function(result) {
+			alert("mail send");
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			
+		}
+	});
+}

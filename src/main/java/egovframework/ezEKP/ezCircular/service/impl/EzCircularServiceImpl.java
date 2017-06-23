@@ -1053,5 +1053,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return result;
 	}
+
+	@Override
+	public void commentSendMail(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception {
+		
+	}
+
 	
 }

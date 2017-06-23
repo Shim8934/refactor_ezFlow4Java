@@ -2410,7 +2410,7 @@ System.out.println("@@" + keyword + " / " + circularType);
      * 저장할때 
      */
     @RequestMapping(value = "/ezCircular/editCircularComment.do")
-    public String editCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, HttpServletRequest request) throws Exception {
+    public String editCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
     	logger.debug("editCircularComment started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -2420,5 +2420,21 @@ System.out.println("@@" + keyword + " / " + circularType);
     	logger.debug("editCircularComment ended.");
     	
     	return "json";
+    }
+    
+    /**
+     * 회람 댓글 확인재촉메일
+     */
+    @RequestMapping(value = "/ezCircular/commentSendMail.do")
+    public String commentSendMail(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, HttpServletRequest request) throws Exception {
+    	logger.debug("commentSendMail started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
+    	ezCircularService.commentSendMail(circularCommentVO, userInfo);
+    	
+    	logger.debug("commentSendMail ended.");
+    	
+    	return "";
     }
 }

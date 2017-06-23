@@ -290,7 +290,7 @@
 	                    <tr>
     	                    <th style="width: 70px;">댓글상세보기</th>
     	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getcircularComment()">검색</span></a></th>
-    	                    <th style="width: 40px; text-align:right;"><a class='imgbtn'><span onclick="alert('확인메일')">확인재촉메일발송</span></a></th>
+    	                    <th style="width: 40px; text-align:right;"><a class='imgbtn'><span onclick="commentSendMail()">확인재촉메일발송</span></a></th>
 						</tr>
 						<tr>
         	                <td style="width: 100%; border:0px;" colspan='3'>
