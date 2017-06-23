@@ -2538,7 +2538,7 @@
                    writername,
                    writername2,
                    writerdeptname,
-                   writedate,
+                   DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
                    title,
                    itemcnt,
                    c_membercnt,

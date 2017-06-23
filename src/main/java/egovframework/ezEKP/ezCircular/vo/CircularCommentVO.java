@@ -23,6 +23,9 @@ public class CircularCommentVO {
 	int status;
 	/** 테넌트ID */
 	int tenantID;
+	/** 댓글재촉메일 tbl_usermaster 조인 */
+	String mail;
+	
 	
 	public String getCircularID() {
 		return circularID;
@@ -89,6 +92,12 @@ public class CircularCommentVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 	
 }

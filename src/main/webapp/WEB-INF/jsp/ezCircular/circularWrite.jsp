@@ -33,11 +33,11 @@
 		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	    	}
 		    
-		    function DocumentComplete() {
-	            if (msgRtn != "") {
-	                message.SetEditorContent(msgRtn);
-    	        }
-	    	}
+// 		    function DocumentComplete() {
+// 	            if (msgRtn != "") {
+// 	                message.SetEditorContent(msgRtn);
+//     	        }
+// 	    	}
 
 	    	function FieldsAvailable() {
 	    	}
@@ -181,36 +181,40 @@
 	    	
 	    	//파일업로드
     	    function returnvalue(strXML) {
-	        var pAttachXml = loadXMLString(strXML);
-	        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
-	        var extFlag = false;        
-	        for (var i = 0; i < nodes.length; i++) {
-	            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-	                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
-	                    alert(strLang6);
-	                    return;
-	                }
-	                /* if (document.getElementById('mode').value == "PHOTO")
-	                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
-	            }
-	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
-	                extFlag = true;
-	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-	                alert(strLang8 + AttachLimit + "MB" + strLang9);
-	                return;
-	            }
-	            else {
-	                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
-	            }
-	        }
-	        if (extFlag)
-	            alert(strLang54);
-	
-	        if (dadiframe.document.getElementById("lstAttachLink") == null)
-	            setTimeout(function () { AttachFileInfo(strXML); }, 500);
-	        else
-	            AttachFileInfo(strXML);
-	    }
+		        var pAttachXml = loadXMLString(strXML);
+		        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+		        var extFlag = false;
+		        for (var i = 0; i < nodes.length; i++) {
+		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
+		                    alert(strLang6);
+		                    return;
+		                }
+		                /* if (document.getElementById('mode').value == "PHOTO")
+		                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
+		            }
+		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+		                extFlag = true;
+		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+		                alert(strLang8 + AttachLimit + "MB" + strLang9);
+		                return;
+		            }
+		            else {
+		                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
+		            }
+		        }
+		        if (extFlag)
+		            alert(strLang54);
+		
+		        if (dadiframe.document.getElementById("lstAttachLink") == null)
+		            setTimeout(function () { AttachFileInfo(strXML); }, 500);
+		        else
+		            AttachFileInfo(strXML);
+			}
+	    	
+    	    function Editor_Complete() {
+    	    	
+    	    }
 		</script>
 	</head>
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
@@ -277,7 +281,7 @@
   			</tr>
   			<tr>
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
-		  			<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+		  			<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
       			</td>
   			</tr>
   			<tr>

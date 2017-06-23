@@ -859,13 +859,11 @@ function Window_resize_photo() {
 }
 var lCount;
 function ListCount(pCount) {
-    lCount = pCount;
+	lCount = pCount;
     selobj = null;
     MailOptionHidden();
     Set_BoardConfig();
     CurPage = 1;
-    getBoardList();
-    
 }
 
 function Set_BoardConfig()
@@ -880,6 +878,7 @@ function Set_BoardConfig()
 				 pPreView  : pPreviewShow_HOW 
 				},
 		success: function(result){
+			getBoardList();
 		}     			
 	});
 }

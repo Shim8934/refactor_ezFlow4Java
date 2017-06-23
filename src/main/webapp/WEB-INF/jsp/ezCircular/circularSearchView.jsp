@@ -34,9 +34,6 @@
 		        }
 		        
 		        $("keyword").text = "";
-// 		        if (startdate != "") {
-// 		            document.getElementById('keyword').value = keyword;
-// 		        }
 		    }
 			
 		    $(function () {
@@ -155,31 +152,21 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
+		    
+		    function event_click(obj) {
+		    	
+		    }
 			
-		    function open_schedule(scheduleid, repeatcount, date, scheduletype, datetype, recurring) {
-		        date = date.substring(0, 10);
-		
-		        if (scheduletype == "<spring:message code='ezSchedule.t281'/>") {
-		            scheduletype = "1";
-		        }
-		
-		        else if (scheduletype == "<spring:message code='ezSchedule.t12'/>") {
-		            scheduletype = "2";
-		        }
-		
-		        else if (scheduletype == "<spring:message code='ezSchedule.t11'/>") {
-		            scheduletype = "3";
-		        }
-		
-		        var feature = GetOpenPosition(770, 660);
-		        if (recurring == "1") {
-		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=Y" + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&recurring=" + recurring + "&pageFrom=search&pattern=0", "",
-							    "height = 670px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
-		        else {
-		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&date=" + date + "&datetype=" + datetype + "&recurring=" + recurring + "&pattern=0", "",
-					            "height = 670px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
+		    function open_schedule(circularID) {
+		        var circularID = circularID;
+
+		        if (CrossYN()) {
+		            var feature = GetOpenPosition(820, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	        	} else {
+	            	var feature = GetOpenPosition(790, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	        	}
 		    }
 			
 		    function RefreshView() {
@@ -238,7 +225,7 @@
 		    </h2>		
 		  	<table class="mainlist" style="table-layout:fixed;width:100%">
 		    	<tr> 
-		      		<th style="width:20px; padding: 0px; color: black;padding-left:3px;" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
+		      		<th style="width:20px; padding: 0px; color: black;padding-left:3px;" nowrap title><input type="checkbox" onClick="open_schedule(this)" id="Checkbox1"></th>
 			        <th style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 			        <th style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)" porp="attach" orderoption="ASC"><img src="/images/newAttach.gif" border="0"></th>
 					<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)" porp="from" orderoption="ASC">상태</th> 
@@ -248,29 +235,28 @@
 					<th style="width:100px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC">확인</th>
 					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC">확인일</th> 
 		    	</tr>
-		    	<c:forEach var="item" items="${list}">
-<%-- 		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','${item.repeatCount}','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff> --%>
-		    	<tr style="cursor:pointer;padding:0" bgcolor=#ffffff>
-		    		<td style="width:20px"><input type="checkbox" onClick="check_change(this)"></td>
-		    		<td style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center">
-		    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>
-		    			<c:if test="${item.importance == '1'}"><img src='/images/ImgIcon/view-importance.gif'/></c:if>
-		    		</td>
-		    		<td style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center">
-		    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>
-		    			<c:if test="${item.importance == '1'}"><img src='/images/newAttach.gif'/></c:if>
-		    		</td>
-		    		<td style="width:80px;cursor:pointer;text-align:center">
-		    			<c:if test="${item.status == '0'}">진행</c:if>
-		    			<c:if test="${item.status == '1'}">종료</c:if>
-		    			<c:if test="${item.status == '2'}">임시</c:if>
-		    		</td>
-		    		<td style="width:350px" align="left">${item.title}</td> 
-	          		<td style="width:120px" align="left">${item.memberID}</td>		         
-	            	<td style="width:150px" align="left">${item.regDate}</td>
-	            	<td style="width:100px;cursor:pointer;text-align:center">${item.confirmStatus}</td>
-	            	<td style="width:150px;cursor:pointer" align="left">${item.confirmDate}</td>
-		    	</tr>
+		    	<c:forEach var="item" items="${list}" varStatus="status">
+			    	<tr id="searchList${status.count}" style="cursor:pointer;padding:0" onClick="event_click(this)" ondblClick="open_schedule('${item.circularID}')" bgcolor=#ffffff>
+			    		<td style="width:20px"><input type="checkbox" onClick="open_schedule('${item.circularID}')"></td>
+			    		<td style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center">
+			    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>
+			    			<c:if test="${item.importance == '1'}"><img src='/images/ImgIcon/view-importance.gif'/></c:if>
+			    		</td>
+			    		<td style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center">
+			    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>
+			    			<c:if test="${item.importance == '1'}"><img src='/images/newAttach.gif'/></c:if>
+			    		</td>
+			    		<td style="width:80px;cursor:pointer;text-align:center">
+			    			<c:if test="${item.status == '0'}">진행</c:if>
+			    			<c:if test="${item.status == '1'}">종료</c:if>
+			    			<c:if test="${item.status == '2'}">임시</c:if>
+			    		</td>
+			    		<td style="width:350px" align="left">${item.title}</td> 
+		          		<td style="width:120px" align="left">${item.memberID}</td>		         
+		            	<td style="width:150px" align="left">${item.regDate}</td>
+		            	<td style="width:100px;cursor:pointer;text-align:center">${item.confirmStatus}</td>
+		            	<td style="width:150px;cursor:pointer" align="left">${item.confirmDate}</td>
+			    	</tr>
 		    	</c:forEach>		    	
 		    	<c:if test="${totalCount == 0 && keyword != null && startDate != null}">
 			    	<tr> 
