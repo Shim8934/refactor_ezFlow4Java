@@ -37,7 +37,7 @@
 
 	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
 	            
-	            getcircularComment();
+	            getCircularComment();
 	        });
 	        
 		    //수정버튼 클릭시
@@ -286,14 +286,15 @@
                     </table>
                     <br/>
 
-	        		<table class="mainlist">
+	        		<table class="mainlist" style="width:100%">
 	                    <tr>
-    	                    <th style="width: 70px;">댓글상세보기</th>
-    	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getcircularComment()">검색</span></a></th>
-    	                    <th style="width: 40px; text-align:right;"><a class='imgbtn'><span onclick="commentSendMail()">확인재촉메일발송</span></a></th>
+    	                    <th style="width: 51.5px;">댓글목록</th>
+    	                    <th style="text-align:left;"><a class='imgbtn'><span onclick="openCircularComment()">댓글상세보기</span></a></th> 
+    	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a></th>
+    	                    <th style="width: 130px; text-align:right;"><a class='imgbtn'><span onclick="commentSendMail()">확인재촉메일발송</span></a></th>
 						</tr>
 						<tr>
-        	                <td style="width: 100%; border:0px;" colspan='3'>
+        	                <td style="width: 100%; border:0px;" colspan='4'>
             	                <table id="comments" style="width:100%">
 									<tr>
 										<td style="border:0px;">
