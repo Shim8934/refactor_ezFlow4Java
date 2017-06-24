@@ -381,7 +381,7 @@ public class EzEmailUtil {
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
                         
-                        logger.debug("changed ks_c_5601-1987 to ms949.");
+                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
                         
                         subject = MimeUtility.decodeText(rawHeader);
                     }                        
@@ -594,7 +594,7 @@ public class EzEmailUtil {
             if (originalFilename != null && originalFilename.startsWith("=?ks_c_5601-1987")) {
                 originalFilename = originalFilename.replace("ks_c_5601-1987", "ms949");
                 
-                logger.debug("changed ks_c_5601-1987 to ms949.");
+                logger.debug("originalFilename changed ks_c_5601-1987 to ms949.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
@@ -639,7 +639,8 @@ public class EzEmailUtil {
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
-			/*
+            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.			
 			if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
 				InputStream is = getContentInputStream(part);
 				
@@ -647,10 +648,11 @@ public class EzEmailUtil {
 					byte[] buf = new byte[is.available()];
 					is.read(buf);
 					
+					logger.debug("text/html changed ks_c_5601-1987 to ms949.");
+					
 					strContent = new String(buf, "ms949");
 				}				
-			} else {
-			*/							
+			} else {							
 				String[] headers = part.getHeader("Content-Type");
 				String rawContentType = "";
 				
@@ -698,7 +700,7 @@ public class EzEmailUtil {
 						strContent = decodeNonAsciiBytes(buf);						
 					}
 				}
-//			}
+			}
 			
 			// process in-line images
 			int index1 = -1;
@@ -766,7 +768,8 @@ public class EzEmailUtil {
 			else {
 				String contentType = part.getContentType();
 				
-				/*
+                // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+                // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.				
 				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
 					InputStream is = getContentInputStream(part);
 					
@@ -774,10 +777,11 @@ public class EzEmailUtil {
 						byte[] buf = new byte[is.available()];
 						is.read(buf);
 						
+						logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
+						
 						strContent = new String(buf, "ms949");
 					}				
-				} else {
-				*/							
+				} else {							
 					try {
 						strContent = part.getContent().toString();
 					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
@@ -795,7 +799,7 @@ public class EzEmailUtil {
 						}
 					}
 				}				
-//			}
+			}
 			
 			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 			StringBuilder tempText2 = new StringBuilder();
