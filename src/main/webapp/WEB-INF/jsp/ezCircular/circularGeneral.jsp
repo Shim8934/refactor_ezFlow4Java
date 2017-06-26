@@ -60,13 +60,11 @@
             	}
         	}
         	function Cancel_Click() {
-        		document.getElementById("isMailReceive").value = 0;
         		document.getElementById("listcount").value = 10;
         		document.getElementById("PreviewMode").value = 0;
       			document.getElementById("PreviewDiv").style.display = "none";        		
         	}
         	function Change_Click() {
-        		var isMailReceive = document.getElementById("isMailReceive").value;
         		var listCount = document.getElementById("listcount").value;
      			var Preview = document.getElementById("PreviewMode").value;
      			var previewListValue = document.getElementById("previewListValue").value;
@@ -77,7 +75,6 @@
      				method : 'POST',
      				dataType : 'text',
      				data : {
-     					isMailReceive : isMailReceive,
 	     				listCnt : listCount ,
     	 				isPreview : Preview,
     	 				previewListValue : previewListValue,
@@ -99,15 +96,6 @@
     		<span class="txt">▒ <spring:message code="ezCircular.t16" /></span>
         	<br />    
         	<table class="content" style="width: 623px;margin-top:5px">
-        		<tr>
-        			<th><spring:message code="ezCircular.t13" /></th>
-        			<td>
-	        			<select id="isMailReceive" style="width: 100px">
-	        				<option value='0' ${circularListConfig.isMailReceive == '0' ? 'selected' : ''}><spring:message code="ezCircular.t14" /></option>
-	        				<option value='1' ${circularListConfig.isMailReceive == '1' ? 'selected' : ''}><spring:message code="ezCircular.t15" /></option>
-	        			</select>
-        			</td>
-        		</tr>
             	<tr>
                 	<th><spring:message code="ezCircular.t18" /></th>
                		<td>               

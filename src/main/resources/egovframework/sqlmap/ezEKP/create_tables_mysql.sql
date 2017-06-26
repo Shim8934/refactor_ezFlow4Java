@@ -2799,17 +2799,17 @@ DROP TABLE IF EXISTS `tbl_circular_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_circular_comment` (
+  `circularId` bigint(10) NOT NULL,
   `circularCommentId` bigint(10) NOT NULL AUTO_INCREMENT,
-  `circularUserId` bigint(10) DEFAULT NULL,
-  `circularComment` varchar(500) DEFAULT NULL,
+  `circularUserId` varchar(100) DEFAULT NULL,
+  `circularComment` text,
   `memberId` varchar(100) DEFAULT NULL,
   `memberName` varchar(100) DEFAULT NULL,
   `memberName2` varchar(100) DEFAULT NULL,
   `regDate` varchar(40) DEFAULT NULL,
   `status` mediumint(5) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
-  PRIMARY KEY (`circularCommentId`),
-  KEY `tenantId_memberId_circularUserId_index` (`tenantId`,`memberId`,`circularUserId`)
+  `tenantId` mediumint(5) NOT NULL,
+  PRIMARY KEY (`circularCommentId`,`circularId`,`tenantId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2852,6 +2852,42 @@ CREATE TABLE `tbl_circular_file` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_circular_folder`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_folder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_folder` (
+  `circularFolderId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularFolderName` varchar(100) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `regDate` varchar(40) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularFolderId`),
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_link`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_link`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_link` (
+  `circularLinkId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularFolderId` bigint(10) DEFAULT NULL,
+  `circularId` bigint(10) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularLinkId`),
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_circular_option`
 --
 
@@ -2861,7 +2897,6 @@ DROP TABLE IF EXISTS `tbl_circular_option`;
 CREATE TABLE `tbl_circular_option` (
   `circularOptionId` bigint(10) NOT NULL AUTO_INCREMENT,
   `memberId` varchar(100) DEFAULT NULL,
-  `isMailReceive` mediumint(5) DEFAULT NULL,
   `listCnt` mediumint(5) DEFAULT NULL,
   `isPreview` mediumint(5) DEFAULT NULL,
   `previewListValue` varchar(10) DEFAULT NULL,
@@ -2888,6 +2923,7 @@ CREATE TABLE `tbl_circular_user` (
   `status` mediumint(5) DEFAULT NULL,
   `confirmDate` varchar(40) DEFAULT NULL,
   `updateStatus` mediumint(5) DEFAULT NULL,
+  `updateDate` varchar(40) DEFAULT NULL,
   `tenantId` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
@@ -3328,6 +3364,23 @@ CREATE TABLE `tbl_dailyformcountlog` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(100) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`REGDATE`,`FORMID`,`FORMCONTID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_deletecabinetinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_deletecabinetinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_deletecabinetinfo` (
+  `CabinetID` varchar(28) NOT NULL,
+  `DelUserID` varchar(50) DEFAULT NULL,
+  `IPAddress` varchar(50) DEFAULT NULL,
+  `companyID` varchar(45) NOT NULL,
+  `tenantID` varchar(6) NOT NULL,
+  PRIMARY KEY (`CabinetID`,`tenantID`,`companyID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4525,6 +4578,25 @@ CREATE TABLE `tbl_menuitem_parameters` (
   `PARAMTYPE` bigint(10) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`UID_`,`PARAMNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_mobileoption`
+--
+
+DROP TABLE IF EXISTS `tbl_mobileoption`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_mobileoption` (
+  `USERID` varchar(200) NOT NULL,
+  `TIMEZONE` varchar(40) NOT NULL,
+  `LANG` varchar(4) NOT NULL,
+  `MAINVIEWCOUNT` int(100) NOT NULL,
+  `RESOURCEYN` varchar(4) NOT NULL,
+  `RESOURCEDETAIL` varchar(8) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
