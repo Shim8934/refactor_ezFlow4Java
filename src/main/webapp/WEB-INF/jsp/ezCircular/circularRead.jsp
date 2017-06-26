@@ -24,6 +24,7 @@
 			$(document).ready(function(){
 	            document.getElementById('circularUserList').innerHTML = "${listUser}";
 	            
+	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
 	            for (var i = 0; i < Bodytd.length; i++) {
@@ -88,9 +89,14 @@
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
 	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
-	            strContent = strContent + "<div style='width:100%'><table id='printScreen' class='layout'>";
+	            strContent = strContent + "<div style='width:100%'>";
+	            strContent = strContent + "<table id='printScreen' class='layout'>";
 	            strContent = strContent + document.getElementById("printScreen").innerHTML;
 	            strContent = strContent + "</table></div>";
+// 	            strContent = strContent + "<div style='width:100%'>";
+// 	            strContent = strContent + "<table id='printComment' class='layout'>";
+// 	            strContent = strContent + document.getElementById("printComment").innerHTML;
+// 	            strContent = strContent + "</table></div>";
 	            strContent = strContent + "</body>";
 	            printWindow.document.write(strContent);
 	            printWindow.document.close();
@@ -314,24 +320,84 @@
 				<td style="vertical-align:top">
 					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
- 							<td style="padding-left:10px"> <div id="printOwner"></div></td> 
+ 							<th style="padding-left:10px" width="60">제목</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printTitle">
+ 									${result.title}
+ 								</div>
+ 							</td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th> 
- 							<td style="padding-left:10px"> <div id="printImportance"></div></td> 
+ 							<th style="padding-left:10px">중요도</th> 
+ 							<td style="padding-left:4px"> 
+ 								<div id="printImportance">
+ 									${result.importance == '0' ? '일반' : '중요'}
+ 								</div>
+ 							</td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
- 							<td style="padding-left:10px"> <div id="printDate"></div></td> 
+ 							<th style="padding-left:10px">옵션</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printOption">
+ 									<c:choose>
+		                				<c:when test="${result.option eq '1'}">
+			                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+			                				<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+			                			</c:when>
+			                			<c:when test="${result.option eq '2'}">
+			                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+			                				<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+			                			</c:when>
+			                			<c:when test="${result.option eq '3'}">
+			                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+											<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+			                			</c:when>
+			                			<c:otherwise>
+			                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+											<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+			                			</c:otherwise>
+		                			</c:choose>
+ 								</div>
+ 							</td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
- 							<td style="padding-left:10px"> <div id="printTitle"></div></td> 
-						</tr> 
+ 							<th style="padding-left:10px">회람자</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printCircularUser">
+ 									${listUser}
+ 								</div>
+ 							</td>
+						</tr>
+						<tr style="height:25px"> 
+ 							<th style="padding-left:10px">상태</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printStatus">
+ 									<c:choose>
+				            			<c:when test="${result.status eq '0'}">
+				            				<div id="status">진행중</div>
+				            			</c:when>
+				            			<c:when test="${result.status eq '1'}">
+				            				<div id="status">종료</div>
+				            			</c:when>
+				            			<c:otherwise>
+				            				<div id="status">임시</div>
+				            			</c:otherwise>
+		                			</c:choose>
+ 								</div>
+ 							</td> 
+						</tr>  
 						<tr> 
  							<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
-						</tr> 
+						</tr>
+						
+					</table>
+					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; margin-top:5px;" class="content2">
+						<tr style="height:25px"> 
+							<th style="padding-left:10px" width="60">댓글</th> 
+							<td style="padding-left:4px">
+								<table id="printComment" style="width:100%"></table>
+							</td>
+						</tr> 					
 					</table>
 				</td>
 			</tr>

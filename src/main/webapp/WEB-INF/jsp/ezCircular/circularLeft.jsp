@@ -363,9 +363,9 @@
 // 	                PostTreeView.select(1);
 // 	            }
 // 	        }
-	        function mail_Config() {
-	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
-	        }
+// 	        function mail_Config() {
+// 	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
+// 	        }
 	        function Address_Menu_Click() {
 	            /* LoadAddressTree(true);
 	            if (AddressTreeView.selectedIndex() == -1)

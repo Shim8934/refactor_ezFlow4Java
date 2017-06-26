@@ -634,8 +634,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("circularConfig started");
 		
-		
-		
 		logger.debug("circularConfig ended");
 		
 		return "/ezCircular/circularConfig";
@@ -654,14 +652,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		CircularConfigVO circularListConfig = ezCircularService.getCircularList_Config(memberId, loginVO.getTenantId());
 		
-//		if (circularListConfig == null) {
-//			circularListConfig = new CircularConfigVO();
-//			circularListConfig.setIsMailReceive(0);
-//			circularListConfig.setListCnt(10);
-//			circularListConfig.setIsPreview(0);
-//			circularListConfig.setPreviewListValue("50");
-//			circularListConfig.setPreviewContentValue("50");
-//		}
+		if (circularListConfig == null) {
+			circularListConfig = new CircularConfigVO();
+			circularListConfig.setIsMailReceive(0);
+			circularListConfig.setListCnt(10);
+			circularListConfig.setIsPreview(0);
+			circularListConfig.setPreviewListValue("50");
+			circularListConfig.setPreviewContentValue("50");
+		}
 		
 		model.addAttribute("circularListConfig", circularListConfig);
 		
@@ -706,7 +704,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String previewMode = request.getParameter("previewMode");
 		String list = request.getParameter("list");
 		String content = request.getParameter("content");
-System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + list + " / " + content);		
+		
 		ezCircularService.setCircularList_Config2(userID, listCount, previewMode, list, content, userInfo.getTenantId());
 		
 		return "json";
@@ -1372,23 +1370,23 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 			}
 		}
 
-		int hasAttach = 0;
+//		int hasAttach = 0;
 		 //첨부파일 리스트
-		hasAttach = result.getHasFile();
+//		hasAttach = result.getHasFile();
 		StringBuilder strAttach = new StringBuilder();
         //if (hasAttach == 1) {            	
         	//hasAttach = 1;            	
         	
-        	List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
-        	
-        	strAttach.append("<ROOT><NODES>");
-        	
-            for (CircularAttachVO attach : attachList) {
-                strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize()) + "]]></DATA>");
-                strAttach.append("<DATA2><![CDATA[]]></DATA2>");
-                strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
-            }
-            strAttach.append("</NODES></ROOT>");            		
+    	List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
+    	
+    	strAttach.append("<ROOT><NODES>");
+    	
+        for (CircularAttachVO attach : attachList) {
+            strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize()) + "]]></DATA>");
+            strAttach.append("<DATA2><![CDATA[]]></DATA2>");
+            strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
+        }
+        strAttach.append("</NODES></ROOT>");            		
         //} else {
         //	hasAttach = 0;
         //}
@@ -1572,7 +1570,7 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 		String circularFileID = request.getParameter("CircularFileID");
 		String fileName = "";
 		String filePath = "";
-		String realPath = commonUtil.getRealPath(request);
+//		String realPath = commonUtil.getRealPath(request);
 	
 		CircularAttachVO result = ezCircularService.getAttachInfo(circularFileID, userInfo.getTenantId());
 		
@@ -1826,7 +1824,7 @@ System.out.println(userID + " / " + listCount + " / " + previewMode + " / " + li
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
-System.out.println("@@" + keyword + " / " + circularType);		
+		
         int totalCount = ezCircularService.getSearchCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, circularType);
         
 		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, circularType);
