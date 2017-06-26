@@ -334,4 +334,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<CircularCommentVO>) list("EzCircularDAO.getCircularCommentUserList", map);
 	}
 
+	public void deleteCircularComment(Map<String, Object> map) throws Exception {
+		delete("EzCircularDAO.deleteCircularComment", map);
+	}
+
 }

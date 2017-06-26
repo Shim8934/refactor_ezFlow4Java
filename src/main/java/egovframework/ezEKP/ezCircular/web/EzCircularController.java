@@ -2234,7 +2234,7 @@ System.out.println("@@" + keyword + " / " + circularType);
     }
     
     /**
-     * comment 저장
+     * 회람판 댓글 저장
      * 회람판ID, 회람자ID, 댓글작성자ID, 글내용
      * 저장할때 
      */
@@ -2247,6 +2247,22 @@ System.out.println("@@" + keyword + " / " + circularType);
     	ezCircularService.editCircularComment(circularCommentVO, userInfo);
     	
     	logger.debug("editCircularComment ended.");
+    	
+    	return "json";
+    }
+    
+    /**
+     * 회람판 댓글 삭제
+     */
+    @RequestMapping(value = "/ezCircular/deleteCircularComment.do")
+    public String deleteCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
+    	logger.debug("deleteCircularComment started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
+    	ezCircularService.deleteCircularComment(circularCommentVO, userInfo);
+    	
+    	logger.debug("deleteCircularComment ended.");
     	
     	return "json";
     }

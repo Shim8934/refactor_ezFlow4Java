@@ -129,4 +129,6 @@ public interface EzCircularService {
 
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String id, int tenantID) throws Exception;
 
+	public void deleteCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
+
 }
