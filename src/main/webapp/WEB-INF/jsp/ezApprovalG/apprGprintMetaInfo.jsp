@@ -82,13 +82,7 @@
 	</ul>
 </div>
 <div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
-<table style="table-layout:fixed; width:100%; height:450px">
-	<tr> 
-		<td style="height:100%">
-            <div id="content" style="overflow:auto;height:490px"></div>
-		</td>
-	</tr>
-</table>
+            <div id="content"></div>
 <script type="text/javascript">
 	selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	selToggleList(document.getElementById("close"), "ul", "li", "0");

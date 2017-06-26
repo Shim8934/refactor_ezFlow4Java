@@ -195,7 +195,7 @@ function MakeListInfoHTML(ConentObject) {
             }
             
             var XmlRows = SelectNodes(XmlList, "maillist/response");
-            var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);            
+            var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
             var szRangeHeader = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
             GetListInfo_ContentObject.innerHTML = "";
             if (p_ListorderValue != "GROUPSUBLIST") {
@@ -294,6 +294,11 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Subject;
+                            p_Subject = p_Subject.trim();
+                            alert(p_Subject);
+                            if(p_Subject == ""){
+                            	_TDColum.innerHTML = strLang97;
+                            }
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function () { event_listclick(this); };
                             _TDColum.onmouseover = function () { event_listMover(this.parentElement); };
@@ -329,6 +334,14 @@ function MakeListInfoHTML(ConentObject) {
                     _TR.appendChild(_TDColum);
                 }
                 GetListInfo_ContentObject.appendChild(_TR);
+            }
+            if(XmlRows.length == "0"){
+                var _TR = document.createElement("TR");
+            	var _TDColum = document.createElement("TD");
+            	_TDColum.innerHTML = strLangKMS03;
+            	_TDColum.align = "center";
+            	_TR.appendChild(_TDColum);
+            	GetListInfo_ContentObject.appendChild(_TR);
             }
             if (p_ListorderValue != "GROUPSUBLIST")
                 mf_updatePageInfo(szRangeHeader)
