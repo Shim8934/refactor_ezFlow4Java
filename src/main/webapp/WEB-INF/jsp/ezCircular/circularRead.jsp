@@ -146,7 +146,11 @@
 			}
 		</script>
 	</head>
-	
+	<style>
+		.content td{ 
+			width:160px;
+		}
+	</style>
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
 	<body id="mainbodytag" class="popup" style="overflow: hidden">
@@ -178,59 +182,58 @@
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
-					<table class="content">
+					<table class="content" style="width:100%;">
 	                    <tr>
-    	                    <th style="width: 70px;">제목</th>
-        	                <td colspan="3" style="width: 100%">
+    	                    <th style="width: 200px;">제목</th>
+        	                <td colspan="3" style="width: 100%; padding-left: 4px;">
             	                ${result.title}
                 	        </td>
                     	</tr>
                     	<tr>
 	                        <th>중요도</th>
-    	                    <td colspan="3">${result.importance == '0' ? '일반' : '중요'}</td>
-                    	</tr>
-		        		<tr>
+    	                    <td id="Td_Importance" style="padding-left: 4px;">${result.importance == '0' ? '일반' : '중요'}</td>
 		            		<th>옵션</th>
-		            		<td colspan="3" style="width: 100%">
+		            		<td style="width:200px;">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+		                				<span id="AllDay" style="padding-left: 4px;">메일공지 사용</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
-										<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>,  
+										<span id="AllDay">메일공지 사용</span>
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
-										<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+		                				<span id="option" style="padding-left: 4px;">사용안함</span>
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>
+                    	</tr>
+		        		<tr>
+		        			<th>회람상태</th>
+	       					<td>								
+	         					<div id="statusNum" style="padding-left: 4px;">${statusFirst} / ${statusSecond}</div>
+	         				</td>
+	         				<th>상태</th>
+		            		<td>
+		            			<c:choose>
+			            			<c:when test="${result.status eq '0'}">
+			            				<div id="status" style="padding-left: 4px;">진행중</div>
+			            			</c:when>
+			            			<c:when test="${result.status eq '1'}">
+			            				<div id="status" style="padding-left: 4px;">종료</div>
+			            			</c:when>
+			            			<c:otherwise>
+			            				<div id="status" style="padding-left: 4px;">임시</div>
+			            			</c:otherwise>
+		                		</c:choose>
+		            		</td>
 		        		</tr>
 		        		<tr>
 		            		<th>회람자</th>
 		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
-		        		</tr>
-		        		<tr>
-		            		<th>상태</th>
-		            		<td colspan="3">
-		            			<c:choose>
-			            			<c:when test="${result.status eq '0'}">
-			            				<div id="status">진행중</div>
-			            			</c:when>
-			            			<c:when test="${result.status eq '1'}">
-			            				<div id="status">종료</div>
-			            			</c:when>
-			            			<c:otherwise>
-			            				<div id="status">임시</div>
-			            			</c:otherwise>
-		                		</c:choose>
-		            		</td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;">

@@ -1295,6 +1295,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId());
 		
+		int statusFirst = ezCircularService.getConfirmStatusFirst(list.get(0).getCircularID(), userInfo.getTenantId()); 
+		int statusSecond = ezCircularService.getConfirmStatusSecond(list.get(0).getCircularID(), userInfo.getTenantId());
+		
 		String listUser = "";
 		
 		for (int i=0; i<list.size(); i++) {
@@ -1321,8 +1324,10 @@ public class EzCircularController extends EgovFileMngUtil {
         	}
         	model.addAttribute("attachList", aList);
         }  
-		
+
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("statusFirst", statusFirst);
+		model.addAttribute("statusSecond", statusSecond);
 		model.addAttribute("result", result);
 		model.addAttribute("listUser", listUser);
 		
