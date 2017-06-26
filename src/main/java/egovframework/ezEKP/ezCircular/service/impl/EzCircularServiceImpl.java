@@ -46,7 +46,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		if (vo == null) {
 			vo = new CircularConfigVO();
-			vo.setIsMailReceive(0);
 			vo.setListCnt(10);
 			vo.setIsPreview(0);
 			vo.setPreviewListValue("50");
