@@ -21,6 +21,7 @@
 		    var g_SelChargerID="";
 		    var g_InitFlag="0";
 		    var CompanyID = "${userInfo.companyID}";
+		    var approvalFlag = "${approvalFlag}";
 		    window.onload = window_onload;
 		    window.onbeforeunload = window_onunload;
 		    var RetValue;
@@ -224,6 +225,7 @@
 	<body class="popup" leftmargin="0" topmargin="0" LANGUAGE ="javascript">
 		<h1><spring:message code='ezApprovalG.t1090'/></h1>
 		<table class="content" >
+		<c:if test="${approvalFlag eq 'S'}"> 
 		    <tr id="trSelDept"> 
 		        <th><spring:message code='ezApprovalG.t827'/></th>
 		        <td style="vertical-align:middle">
@@ -231,6 +233,7 @@
 		            <a class="imgbtn" ><span onclick="return SelectDept_OnClick()" id="btnSelDept"><spring:message code='ezApprovalG.t105'/></span></a>
 		        </td>
 		    </tr>
+		</c:if>
 		    <tr> 
 		        <th><spring:message code='ezApprovalG.t1092'/></th>
 		        <td>

@@ -1115,7 +1115,8 @@ public class EzApprovalGarchiveController {
 		
 		StringBuilder yearOption = new StringBuilder("");
 		int curYear = Integer.parseInt(EgovDateUtil.getTodayTime().substring(0, 4));
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		yearOption.append("<Option Value=\"\"></Option>");
 		
 		for (int i = curYear; i >= curYear - 5; i--) {
@@ -1124,7 +1125,8 @@ public class EzApprovalGarchiveController {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("yearOption", yearOption.toString());
-		
+		model.addAttribute("approvalFlag", approvalFlag);
+
 		logger.debug("searchCab ended");
 		
 		return "/ezApprovalG/apprGsearchCab";
