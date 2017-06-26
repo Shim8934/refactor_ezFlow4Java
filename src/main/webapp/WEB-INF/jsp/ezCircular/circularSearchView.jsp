@@ -200,11 +200,11 @@
 		      		<th>검색조건</th> 
 		      		<td style="width:100%">
 		      			<select name="search_field" id="search_field" style="WIDTH: 130px"> 
-		          			<option value="circularNew">신규회람판</option> 
-		          			<option value="circularComplete">확인완료회람판</option>
-		          			<option value="circularMy">작성한회람판</option>
-		          			<option value="circularTemp">임시회람판</option>
-		          			<option value="circularFolder">회람문서함</option> 
+		          			<option value="circularNew" ${filter == 'circularNew' ? 'selected' : ''}>신규회람판</option> 
+		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}>확인완료회람판</option>
+		          			<option value="circularMy" ${filter == 'circularMy' ? 'selected' : ''}>작성한회람판</option>
+		          			<option value="circularTemp" ${filter == 'circularTemp' ? 'selected' : ''}>임시회람판</option>
+		          			<option value="circularFolder" ${filter == 'circularFolder' ? 'selected' : ''}>회람문서함</option> 
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()">검색</span></a>
@@ -214,8 +214,8 @@
 		      		<th>검색기간</th>
 		      		<td>
 						<input type="checkbox" value="1" id="usepostdate" style="display:none;"><a class="imgbtn"><span onclick="DateSearch_Click();">검색기간 사용</span></a>
-		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" /> ~
-		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" />
+		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled/> ~
+		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" disabled/>
 			  		</td>
 			  	</tr>
 		  	</table> 

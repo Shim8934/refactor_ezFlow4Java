@@ -538,7 +538,7 @@
 	                }
 	            }
 	            CurPage = "1";
-	            BoardSearchOptionHidden();
+// 	            BoardSearchOptionHidden();
 	            getBoardList();
 	        }
 

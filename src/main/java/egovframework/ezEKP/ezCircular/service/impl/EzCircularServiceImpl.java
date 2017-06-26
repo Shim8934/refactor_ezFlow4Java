@@ -512,7 +512,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword, int circularType) throws Exception {
+	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword, int circularType, int folderID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
@@ -521,13 +521,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantId);
 		map.put("searchKeyword", keyword);
 		map.put("circularType", circularType);
+		map.put("folderID", folderID);
 		
-		if (circularType != 4) {
-			return ezCircularDAO.getSearchCircularList(map);			
-		} else {
-			return ezCircularDAO.getSearchCircularList2(map);
-		}
-		
+		return ezCircularDAO.getSearchCircularList(map);
 	}
 	
 	@Override
@@ -984,7 +980,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType) throws Exception {
+	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType, int folderID) throws Exception {
 		logger.debug("getCircularListCount started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -993,17 +989,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		map.put("searchKeyword", keyword);
 		map.put("circularType", circularType);
+		map.put("folderID", folderID);
 		
 		int result = 0;
 		
-		if (circularType != 4) {
-			result = ezCircularDAO.getSearchCircularListCount(map);
-		} else {
-			result = ezCircularDAO.getSearchCircularListCount2(map);
-		}
+		result = ezCircularDAO.getSearchCircularListCount(map);
 
 		logger.debug("getCircularListCount ended. result = " + result);
-		
+
 		return result;
 	}
 

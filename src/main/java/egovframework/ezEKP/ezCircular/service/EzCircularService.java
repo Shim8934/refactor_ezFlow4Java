@@ -15,7 +15,7 @@ public interface EzCircularService {
 
 	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
-	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword, int circularType) throws Exception;
+	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, int tenantId, String keyword, int circularType, int folderID) throws Exception;
 
 	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
@@ -125,7 +125,7 @@ public interface EzCircularService {
 	
 	public void updateReadStatus(int circularID, String circularUserID, int status, int tenantID) throws Exception;
 
-	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType) throws Exception;
+	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType, int folderID) throws Exception;
 
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String id, int tenantID) throws Exception;
 
