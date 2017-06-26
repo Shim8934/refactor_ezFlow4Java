@@ -378,8 +378,6 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	A.status = '0'
-            AND
             	(B.updatestatus = '0' OR B.updatestatus = '4')
             AND
                 B.memberid = #memberID#
@@ -777,9 +775,9 @@
              AND
                  A.TENANTID = B.TENANTID
              AND
-             	 A.STATUS IN ('0', '1')
+             	 A.STATUS != 2
              AND
-             	 B.UPDATESTATUS IN ('0', '1')	  
+             	 B.UPDATESTATUS != 2
              AND
                  A.MEMBERID = #memberId#
              AND
@@ -802,9 +800,9 @@
              AND
                  A.TENANTID = #tenantId# 
              AND
-             	 A.STATUS IN ('0', '1')
+             	 A.STATUS != 2
              AND
-             	 B.UPDATESTATUS IN ('0', '1')	 
+             	 B.UPDATESTATUS != 2
              GROUP BY
              	 A.CIRCULARID
              ORDER BY
