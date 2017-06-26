@@ -37,9 +37,6 @@
    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<div>
-			<input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a>
-		</div>
 		<table class="mainlist" style="width:100%">
 			<tr>
 				<th style="width: 51.5px;">댓글</th>

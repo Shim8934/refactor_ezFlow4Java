@@ -63,8 +63,6 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	A.status = '0'
-            AND
             	(B.updatestatus = '0' OR B.updatestatus = '4')
             AND
                 B.memberid = #memberID#
@@ -1459,7 +1457,6 @@
 			UPDATE
 				TBL_CIRCULAR_USER
 			SET
-				status = 0,
 				updatestatus = 4,
 				updatedate = #nowDate#
 			WHERE

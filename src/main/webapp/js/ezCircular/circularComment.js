@@ -46,7 +46,7 @@ function getCircularComment() {
 				$("table[circularUserID='" + vo.circularUserID + "']").closest("tr").show();
 			});
 			
-			if (($("#option").prop("checked") != true) || (status == 1)) {
+			if (status == 1) {
 				$("#commentUserList > tbody > tr > td > a").hide();
 			}
 			
@@ -70,8 +70,6 @@ function showEdit(obj) {
 	
 	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html($("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html() + commentEditor);
 	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").closest("tr").show();
-	
-	
 }
 
 //댓글작성
@@ -168,9 +166,9 @@ function DivPopUpPosition(popUpW, popUpH) {
 
 
 function openCircularComment() {
-	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
+	$("#mailPanel").css('height', $('body').prop('Height'));
 	
-	DivPopUpShow(700, 700, "/ezCircular/circularCommentPopup.do?circularID=" + circularID);
+	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID);
 }
 
 function closeCircularComment() {
