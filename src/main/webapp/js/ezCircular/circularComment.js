@@ -46,37 +46,11 @@ function getCircularComment() {
 				$("table[circularUserID='" + vo.circularUserID + "']").closest("tr").show();
 			});
 			
-			if (($("#option").prop("checked") != true) || (status == 1)) {
+			if (status == 1) {
 				$("#commentUserList > tbody > tr > td > a").hide();
 			}
 			
 			$(".deleteComment[memberID != '" + userInfoID + "']").closest("a").hide();
-
-			printUserList = "";
-			list = result.userList;
-			list.forEach(function(vo, index) {
-				printUserList += "<tr circularUserID='" + vo.memberID + "'>";
-				printUserList += "<td>" + vo.memberName + "</td></tr>";
-				printUserList += "<tr style='display:none;'>";
-				printUserList += "<td colspan='2'><table style='width:100%;' printCircularUserID='" + vo.memberID + "'></table></td>";
-				printUserList += "</tr>";
-			});
-			
-			$("#printComment").html("");
-			$("#printComment").append(printUserList);
-			
-			printComment = "";
-			list = result.commentList;
-			list.forEach(function(vo, index) {		
-				printComment = "<tr>";
-				printComment += "<td style='width:70px; border:0px;'>" + vo.memberName + "</td>"
-				printComment += "<td style='border:0px;' printCircularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
-				printComment += "<td style='width:25%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
-				printComment += "</tr>";
-				
-				$("table[printCircularUserID='" + vo.circularUserID + "'").append(printComment);
-				$("table[printCircularUserID='" + vo.circularUserID + "'").closest("tr").show();
-			});
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -96,8 +70,6 @@ function showEdit(obj) {
 	
 	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html($("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html() + commentEditor);
 	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").closest("tr").show();
-	
-	
 }
 
 //댓글작성
@@ -194,9 +166,9 @@ function DivPopUpPosition(popUpW, popUpH) {
 
 
 function openCircularComment() {
-	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
+	$("#mailPanel").css('height', $('body').prop('Height'));
 	
-	DivPopUpShow(700, 700, "/ezCircular/circularCommentPopup.do?circularID=" + circularID);
+	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID);
 }
 
 function closeCircularComment() {
