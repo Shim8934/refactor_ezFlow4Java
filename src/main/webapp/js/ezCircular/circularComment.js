@@ -200,5 +200,5 @@ function openCircularComment() {
 }
 
 function closeCircularComment() {
-	DivPopUpHidden();
+	parent.DivPopUpHidden();
 }
