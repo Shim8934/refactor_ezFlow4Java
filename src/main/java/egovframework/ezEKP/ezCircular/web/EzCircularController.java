@@ -2070,7 +2070,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 이동 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezCircular/circularMove.do")
-	public String mailMoveCopy(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+	public String circularMove(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("circularMove started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
