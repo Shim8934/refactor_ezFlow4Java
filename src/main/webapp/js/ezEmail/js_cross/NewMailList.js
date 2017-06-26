@@ -195,7 +195,7 @@ function MakeListInfoHTML(ConentObject) {
             }
             
             var XmlRows = SelectNodes(XmlList, "maillist/response");
-            var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);            
+            var p_TotalCnt = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
             var szRangeHeader = getNodeText(SelectNodes(XmlList, "maillist/CONTENTRANGE")[0]);
             GetListInfo_ContentObject.innerHTML = "";
             if (p_ListorderValue != "GROUPSUBLIST") {
@@ -329,6 +329,14 @@ function MakeListInfoHTML(ConentObject) {
                     _TR.appendChild(_TDColum);
                 }
                 GetListInfo_ContentObject.appendChild(_TR);
+            }
+            if(XmlRows.length == "0"){
+                var _TR = document.createElement("TR");
+            	var _TDColum = document.createElement("TD");
+            	_TDColum.innerHTML = strLangKMS03;
+            	_TDColum.align = "center";
+            	_TR.appendChild(_TDColum);
+            	GetListInfo_ContentObject.appendChild(_TR);
             }
             if (p_ListorderValue != "GROUPSUBLIST")
                 mf_updatePageInfo(szRangeHeader)

@@ -368,6 +368,7 @@ var strLangLHM15 = ", 현재 크기 : ";
 var strLangLHM16 = "유효하지 않은 수신인이 있습니다. 이메일 주소를 확인해주세요.";
 var strLangKMS01 = "";
 var strLangKMS02 = "첨부파일 총 크기가 ";
+var strLangKMS03 = "메일이 없습니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {
