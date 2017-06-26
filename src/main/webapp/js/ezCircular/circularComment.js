@@ -31,7 +31,7 @@ function getCircularComment() {
 			
 			$("#commentUserList").html("");
 			$("#commentUserList").append(userList);
-			
+
 			commentList = "";
 			list = result.commentList;
 			list.forEach(function(vo, index) {
@@ -51,6 +51,32 @@ function getCircularComment() {
 			}
 			
 			$(".deleteComment[memberID != '" + userInfoID + "']").closest("a").hide();
+
+			printUserList = "";
+			list = result.userList;
+			list.forEach(function(vo, index) {
+				printUserList += "<tr circularUserID='" + vo.memberID + "'>";
+				printUserList += "<td>" + vo.memberName + "</td></tr>";
+				printUserList += "<tr style='display:none;'>";
+				printUserList += "<td colspan='2'><table style='width:100%;' printCircularUserID='" + vo.memberID + "'></table></td>";
+				printUserList += "</tr>";
+			});
+			
+			$("#printComment").html("");
+			$("#printComment").append(printUserList);
+			
+			printComment = "";
+			list = result.commentList;
+			list.forEach(function(vo, index) {		
+				printComment = "<tr>";
+				printComment += "<td style='width:70px; border:0px;'>" + vo.memberName + "</td>"
+				printComment += "<td style='border:0px;' printCircularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
+				printComment += "<td style='width:25%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
+				printComment += "</tr>";
+				
+				$("table[printCircularUserID='" + vo.circularUserID + "'").append(printComment);
+				$("table[printCircularUserID='" + vo.circularUserID + "'").closest("tr").show();
+			});
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
