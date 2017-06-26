@@ -1774,7 +1774,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람판 신규회람판 검색리스트 표출 Method
+	 * 회람판 검색리스트 표출 Method
 	 */
     @RequestMapping(value = "/ezCircular/getSearchCircularList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
@@ -1783,6 +1783,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	userInfo = commonUtil.userInfo(loginCookie);
     	
+    	int folderId = 0;
     	int circularType = 0;
     	String type = request.getParameter("type");
     	
@@ -1796,8 +1797,11 @@ public class EzCircularController extends EgovFileMngUtil {
     		circularType = 4;
     	} else if (type.equals("delete")) {
     		circularType = 5;
+    	} else {
+   			folderId = Integer.parseInt(request.getParameter("folderId"));
+    		circularType = 6;
     	}
-    	
+	
     	BoardVO boardVO = new BoardVO();
     	
     	boardVO.setBoardType("C");
@@ -1825,9 +1829,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getSearchCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, circularType);
+        int totalCount = ezCircularService.getSearchCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, circularType, folderId);
         
-		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, circularType);
+		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, circularType, folderId);
 
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
@@ -1859,7 +1863,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "댓글") + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
