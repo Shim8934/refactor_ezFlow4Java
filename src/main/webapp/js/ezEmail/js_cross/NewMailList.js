@@ -295,7 +295,6 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Subject;
                             p_Subject = p_Subject.trim();
-                            alert(p_Subject);
                             if(p_Subject == ""){
                             	_TDColum.innerHTML = strLang97;
                             }
