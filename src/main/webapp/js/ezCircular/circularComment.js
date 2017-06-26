@@ -168,6 +168,37 @@ function commentSendMail() {
 }
 
 //댓글보기
+function DivPopUpPosition(popUpW, popUpH) {
+    var ReturnValue = new Array();
+    var heigth = document.documentElement.scrollHeight;
+    if (heigth == 0)
+        heigth = document.body.scrollHeight;
+
+    var width = document.documentElement.clientWidth;
+    if (width == 0)
+        width = document.body.clientWidth;
+
+    var left = 0;
+    var top = 0;
+    var pleftpos;
+    pleftpos = parseInt(width) - popUpW;
+    heigth = parseInt(heigth) - popUpH;
+    width = parseInt(width) - pleftpos;
+    if (heigth < (popUpH + 50))
+        ReturnValue[0] = (heigth / 2);
+    else
+        ReturnValue[0] = (heigth / 2) - 50;
+    ReturnValue[1] = pleftpos / 2;
+    return ReturnValue
+}
+
+
 function openCircularComment() {
+	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
 	
+	DivPopUpShow(700, 700, "/ezCircular/circularCommentPopup.do?circularID=" + circularID);
+}
+
+function closeCircularComment() {
+	DivPopUpHidden();
 }

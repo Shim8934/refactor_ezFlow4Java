@@ -2297,4 +2297,22 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	return "json";
     }
+    
+    /**
+     * 회람 댓글보기 화면
+     */
+    @RequestMapping(value = "/ezCircular/circularCommentPopup.do")
+    public String circularCommentPopup(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, Model model) throws Exception {
+    	logger.debug("circularCommentPopup started.");
+    	logger.debug("circularID = " + circularCommentVO.getCircularID());
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
+    	logger.debug("circularCommentPopup ended.");
+    	
+    	model.addAttribute("userInfo", userInfo);
+    	model.addAttribute("vo", circularCommentVO);
+    	
+    	return "/ezCircular/circularCommentPopup";
+    }
 }

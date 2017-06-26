@@ -149,7 +149,7 @@
 	
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
-	<body id="mainbodytag" class="popup">
+	<body id="mainbodytag" class="popup" style="overflow: hidden">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -160,10 +160,10 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
+                        	<li><span onclick="openCircularComment()">댓글상세보기</span></li>
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
                 	    	</c:if>
-                        	
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -292,25 +292,25 @@
                     </table>
                     <br/>
 
-	        		<table class="mainlist" style="width:100%">
-	                    <tr>
-    	                    <th style="width: 51.5px;">댓글목록</th>
-    	                    <th style="text-align:left;"><a class='imgbtn'><span onclick="openCircularComment()">댓글상세보기</span></a></th> 
-    	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a></th>
-    	                    <th style="width: 130px; text-align:right;"><a class='imgbtn'><span onclick="commentSendMail()">확인재촉메일발송</span></a></th>
-						</tr>
-						<tr>
-        	                <td style="width: 100%; border:0px;" colspan='4'>
-            	                <table id="comments" style="width:100%">
-									<tr>
-										<td style="border:0px;">
-											<table id="commentUserList" class="mainlist" style="width:100%"></table>
-										</td>
-									</tr>	
-								</table>
-                	        </td>
-                    	</tr>
-	        		</table>
+<!-- 	        		<table class="mainlist" style="width:100%"> -->
+<!-- 	                    <tr> -->
+<!--     	                    <th style="width: 51.5px;">댓글목록</th> -->
+<!--     	                    <th style="text-align:left;"><a class='imgbtn'><span onclick="openCircularComment()">댓글상세보기</span></a></th>  -->
+<!--     	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a></th> -->
+<!--     	                    <th style="width: 130px; text-align:right;"><a class='imgbtn'><span onclick="commentSendMail()">확인재촉메일발송</span></a></th> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!--         	                <td style="width: 100%; border:0px;" colspan='4'> -->
+<!--             	                <table id="comments" style="width:100%"> -->
+<!-- 									<tr> -->
+<!-- 										<td style="border:0px;"> -->
+<!-- 											<table id="commentUserList" class="mainlist" style="width:100%"></table> -->
+<!-- 										</td> -->
+<!-- 									</tr>	 -->
+<!-- 								</table> -->
+<!--                 	        </td> -->
+<!--                     	</tr> -->
+<!-- 	        		</table> -->
 	        	</td>
         	</tr>
 		</table>
