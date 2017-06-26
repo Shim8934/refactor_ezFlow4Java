@@ -1520,4 +1520,19 @@
 				A.tenantid = #tenantID#
 		]]>
 	</select>
+	
+	<delete id="EzCircularDAO.deleteCircularComment" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CIRCULAR_COMMENT
+			WHERE
+				circularID = #circularID#
+			AND
+				circularcommentID = #circularCommentID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</delete>
 </sqlMap>

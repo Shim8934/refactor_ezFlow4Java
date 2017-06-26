@@ -1015,4 +1015,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return list;
 	}
+
+	@Override
+	public void deleteCircularComment(CircularCommentVO vo, LoginVO userInfo) throws Exception {
+		logger.debug("deleteCircularComment started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", vo.getCircularID());
+		map.put("circularCommentID", vo.getCircularCommentID());
+		map.put("memberID", userInfo.getId());
+		map.put("tenantID", userInfo.getTenantId());
+		
+		ezCircularDAO.deleteCircularComment(map);
+		
+		logger.debug("deleteCircularComment ended.");
+	}
+	
+	
 }
