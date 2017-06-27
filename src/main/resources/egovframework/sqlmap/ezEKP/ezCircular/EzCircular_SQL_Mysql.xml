@@ -1529,10 +1529,21 @@
 			WHERE
 				A.circularid = #circularID#
 			AND
-				A.status = 0
-			AND
 				A.tenantid = #tenantID#
 		]]>
+		
+		<isEqual property="type" compareValue="circularComment">
+			<![CDATA[
+				AND
+					A.memberid = #memberID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="circularUser">
+			<![CDATA[
+				AND
+					A.status = 0
+			]]>
+		</isEqual>
 	</select>
 	
 	<delete id="EzCircularDAO.deleteCircularComment" parameterClass="Map">

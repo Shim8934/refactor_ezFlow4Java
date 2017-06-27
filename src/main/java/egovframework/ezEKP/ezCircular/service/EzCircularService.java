@@ -127,7 +127,7 @@ public interface EzCircularService {
 
 	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType, int folderID) throws Exception;
 
-	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String id, int tenantID) throws Exception;
+	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception;
 
 	public void deleteCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
 

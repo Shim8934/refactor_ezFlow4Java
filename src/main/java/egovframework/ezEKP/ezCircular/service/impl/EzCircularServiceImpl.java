@@ -1002,13 +1002,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String id, int tenantID) throws Exception {
+	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception {
 		logger.debug("getCircularUserList started.");
+		logger.debug("circularID = " + circularID + " || circularUserID = " + circularUserID + " || type = " + type + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
-		map.put("id", id);
+		map.put("memberID", circularUserID);
 		map.put("tenantID", tenantID);
+		map.put("type", type);
 		
 		List<CircularCommentVO> list = ezCircularDAO.getCircularCommentUserList(map);
 		

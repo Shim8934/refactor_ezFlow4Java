@@ -24,11 +24,11 @@
 		
 	</head>
 	<body class="popup">
-		<h1>댓글목록</h1>
+		<h1>의견목록</h1>
 		
 		<div id="close">
 			<ul>
-				<li><span onclick="commentSendMail();">확인재촉메일발송</span></li>
+				<li><span onclick="commentSendMail();">회람확인메일발송</span></li>
 				<li><span onclick="closeCircularComment();"><spring:message code='ezResource.t150' /></span></li>
 			</ul>
 		</div>
@@ -39,7 +39,7 @@
 		
 		<table class="mainlist" style="width:100%">
 			<tr>
-				<th style="width: 51.5px;">댓글</th>
+				<th style="width: 51.5px;">의견</th>
 				<th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a></th>
 			</tr>
 			<tr>

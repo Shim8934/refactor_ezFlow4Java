@@ -2,9 +2,6 @@ package egovframework.ezEKP.ezCircular.web;
 
 import java.io.File;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -27,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -801,14 +796,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		resultXML.append("<COLNAME>HASFILE</COLNAME>");
 		resultXML.append("</HEADER>");
 		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>상태</NAME>");
-		resultXML.append("<WIDTH>80</WIDTH>");
-		resultXML.append("<COLNAME>STATUS</COLNAME>");
+		resultXML.append("<NAME>분류</NAME>");
+		resultXML.append("<WIDTH>30</WIDTH>");
+		resultXML.append("<COLNAME>UPDATESTATUS</COLNAME>");
 		resultXML.append("</HEADER>");
 		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>의견</NAME>");
-		resultXML.append("<WIDTH>60</WIDTH>");
-		resultXML.append("<COLNAME>UPDATESTATUS</COLNAME>");
+		resultXML.append("<NAME>상태</NAME>");
+		resultXML.append("<WIDTH>50</WIDTH>");
+		resultXML.append("<COLNAME>STATUS</COLNAME>");
 		resultXML.append("</HEADER>");
 		resultXML.append("<HEADER>");
 		resultXML.append("<NAME>제목</NAME>");
@@ -844,8 +839,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
@@ -2296,6 +2291,26 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	ezCircularService.editCircularComment(circularCommentVO, userInfo);
     	
+    	CircularListVO circularVO = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getTenantId());
+    	List<CircularCommentVO> list = ezCircularService.getCircularCommentUserList(circularCommentVO.getCircularID(), circularCommentVO.getCircularUserID(), userInfo.getTenantId(), "circularComment");
+    	
+    	String subject = "[신규의견알림] 새로운 의견이 등록되었습니다.";
+    	StringBuilder bodyContent = new StringBuilder("");
+    	bodyContent.append(" 제목 : " + circularVO.getTitle() + "</br>");
+    	bodyContent.append(" 댓글 작성자 : " + userInfo.getDisplayName());
+    	
+    	for (CircularCommentVO vo : list) {
+			InternetAddress from = new InternetAddress();
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			
+			InternetAddress to = new InternetAddress();
+			to.setPersonal(vo.getMemberName(), "UTF-8");
+			to.setAddress(vo.getMemberID());
+			
+			ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+		}
+    	
     	logger.debug("editCircularComment ended.");
     	
     	return "json";
@@ -2318,7 +2333,7 @@ public class EzCircularController extends EgovFileMngUtil {
     }
     
     /**
-     * 회람 댓글 확인재촉메일
+     * 회람 댓글 확인재촉메일 (회람 미확인자)
      */
     @RequestMapping(value = "/ezCircular/commentSendMail.do")
     public String commentSendMail(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
@@ -2327,11 +2342,12 @@ public class EzCircularController extends EgovFileMngUtil {
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	
     	CircularListVO circularVO = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getTenantId());
-    	List<CircularCommentVO> list = ezCircularService.getCircularCommentUserList(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getTenantId());
+    	List<CircularCommentVO> list = ezCircularService.getCircularCommentUserList(circularCommentVO.getCircularID(), circularCommentVO.getCircularUserID(), userInfo.getTenantId(), "circularUser");
     	
-    	String subject = "[의견확인요청] " +  circularVO.getTitle();
+    	String subject = "[회람확인요청] 회람확인요청이 도착했습니다.";
     	StringBuilder bodyContent = new StringBuilder("");
-    	bodyContent.append(circularVO.getContent());
+    	bodyContent.append(" 제목 : " + circularVO.getTitle() + " </br>");
+    	bodyContent.append(" 내용 : " + circularVO.getContent());
     	
 		for (CircularCommentVO vo : list) {
 			InternetAddress from = new InternetAddress();
