@@ -15,7 +15,7 @@ function getCircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='text-align:left;'>" + vo.memberName + "&nbsp;<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글작성</span></a></td>"
+				userList += "<td style='text-align:left;'>" + vo.memberName + "&nbsp;<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>의견작성</span></a></td>"
 				
 				if (vo.status == 1) {
 					userList += "<td style='width:55%; text-align:right; padding-right:10px;' >확인완료</td>"
@@ -67,8 +67,7 @@ function showEdit(obj) {
 	commentEditor += "<td style='width:50px; border:0px; text-align:right;'><a class='imgbtn' style='text-align:right;'><span circularUserID='" + $(obj).attr("circularUserID") + "' onclick='editCircularComment(this)'>저장</span></a></td>";
 	commentEditor += "</tr>";
 	
-	
-	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html($("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html() + commentEditor);
+	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html(commentEditor + $("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html());
 	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").closest("tr").show();
 }
 
@@ -78,7 +77,7 @@ function editCircularComment(obj) {
 	var circularComment = $("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > td > textarea").val();
 	
 	if (circularComment == "") {
-		alert("댓글을 입력해주세요");
+		alert("의견을 입력해주세요");
 		return ;
 	}
 	
@@ -112,7 +111,7 @@ function deleteCircularComment(obj) {
 			circularCommentID : circularCommentID
 		},
 		success : function(result) {
-			alert("댓글을 삭제했습니다.");
+			alert("의견을 삭제했습니다.");
 			getCircularComment();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -168,7 +167,7 @@ function DivPopUpPosition(popUpW, popUpH) {
 function openCircularComment() {
 	$("#mailPanel").css('height', $('body').prop('Height'));
 	
-	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID);
+	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
 }
 
 function closeCircularComment() {

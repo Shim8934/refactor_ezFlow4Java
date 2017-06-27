@@ -2329,7 +2329,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularListVO circularVO = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getTenantId());
     	List<CircularCommentVO> list = ezCircularService.getCircularCommentUserList(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getTenantId());
     	
-    	String subject = "[회람확인요청] " +  circularVO.getTitle();
+    	String subject = "[의견확인요청] " +  circularVO.getTitle();
     	StringBuilder bodyContent = new StringBuilder("");
     	bodyContent.append(circularVO.getContent());
     	

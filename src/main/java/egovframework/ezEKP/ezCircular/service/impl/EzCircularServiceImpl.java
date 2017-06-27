@@ -199,6 +199,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("memberName", memberName);
 		map.put("memberName2", memberName2);
 		map.put("confirmDate", confirmDate);
+		map.put("status", status);
 		map.put("updateStatus", updateStatus);
 		map.put("tenantID", tenantID);
 		
@@ -1011,7 +1012,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		List<CircularCommentVO> list = ezCircularDAO.getCircularCommentUserList(map);
 		
-		logger.debug("getCircularUserList ended.");
+		logger.debug("getCircularUserList ended. listSize = " + list.size());
 		
 		return list;
 	}
