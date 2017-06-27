@@ -572,6 +572,9 @@ function ListView() {
                 if (strColName == "STATUS") {
                     objTd.style.textAlign = "CENTER";
                 }
+                if (strColName == "UPDATESTATUS") {
+                    objTd.style.textAlign = "CENTER";
+                }
                 if (strColName == "CONFIRMSTATUS") {
                     objTd.style.textAlign = "CENTER";
                 }
@@ -775,6 +778,22 @@ function ListView() {
                     }
                     else
                         strValue = "";
+                }
+                
+                //의견상태
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "UPDATESTATUS") {
+                    objTd.style.textAlign = "center";
+                    objTd.style.fontWeight = "bold";
+                    
+                    if (strValue == "4") {
+//                        titleImage = titleImage + "<img src='/images/calendar/i_h.png'>";
+                        strValue = "의";
+                        objTd.style.color = "blue";
+                    } else {
+                        strValue = "신";
+                        objTd.style.color = "red";
+                        
+                    }
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "STATUS") {

@@ -754,13 +754,6 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-    	BoardVO boardVO = new BoardVO();
-    	
-    	boardVO.setBoardType("C");
-    	boardVO.setLang(userInfo.getLang());
-    	boardVO.setTenantID(userInfo.getTenantId());
-    	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
-    	
         int startRow = 1;
         int endRow = 0;
         
@@ -792,13 +785,56 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
-        for (BoardListHeaderVO vo:headerList) {
-        	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
-        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
-        	resultXML.append("</HEADER>");
-        }
+        resultXML.append("<HEADER>");
+		resultXML.append("<NAME>CHECK</NAME>");
+		resultXML.append("<WIDTH>20</WIDTH>");
+		resultXML.append("<COLNAME>ITEMID</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME></NAME>");
+		resultXML.append("<WIDTH>18</WIDTH>");
+		resultXML.append("<COLNAME>IMPORTANCE</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME></NAME>");
+		resultXML.append("<WIDTH>18</WIDTH>");
+		resultXML.append("<COLNAME>HASFILE</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>상태</NAME>");
+		resultXML.append("<WIDTH>80</WIDTH>");
+		resultXML.append("<COLNAME>STATUS</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>의견</NAME>");
+		resultXML.append("<WIDTH>60</WIDTH>");
+		resultXML.append("<COLNAME>UPDATESTATUS</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>제목</NAME>");
+		resultXML.append("<WIDTH>350</WIDTH>");
+		resultXML.append("<COLNAME>TITLE</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>작성자</NAME>");
+		resultXML.append("<WIDTH>120</WIDTH>");
+		resultXML.append("<COLNAME>MEMBERID</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>작성일</NAME>");
+		resultXML.append("<WIDTH>150</WIDTH>");
+		resultXML.append("<COLNAME>REGDATE</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>확인</NAME>");
+		resultXML.append("<WIDTH>50</WIDTH>");
+		resultXML.append("<COLNAME>CONFIRMSTATUS</COLNAME>");
+		resultXML.append("</HEADER>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>확인일</NAME>");
+		resultXML.append("<WIDTH>150</WIDTH>");
+		resultXML.append("<COLNAME>CONFIRMDATE</COLNAME>");
+		resultXML.append("</HEADER>");
         
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
@@ -809,6 +845,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
