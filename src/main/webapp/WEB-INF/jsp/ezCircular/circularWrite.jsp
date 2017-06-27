@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript">
 	    	var uploadPath = "${scheduleFilePath}";
 	    	var msgRtn = "";
@@ -82,12 +83,14 @@
 				
 				//메일공지 사용할때
 				$(':checkbox[id=optionMail]:checked').each(function(){
-					option = 2;	
+					option = 2;
+					circularSendMail();
 				});
 				
 				//댓글기능, 메일공지 둘 다 사용할 때
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
+					circularSendMail();
 				}
 				
 				//파일 첨부된 목록 가져오기

@@ -120,6 +120,26 @@ function deleteCircularComment(obj) {
 	});
 }
 
+//메일공지기능
+function circularSendMail() {
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/circularSendMail.do",
+		dataType : "json",
+		data : {
+			title : document.getElementById("title").value,
+			receiverList : document.getElementById("receiverlist").innerHTML, // 메일 수신자 List
+			receiverID : document.getElementById("receiverID").innerHTML
+		},
+		success : function(result) {
+
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			
+		}
+	});
+}
+
 //확인재촉메일
 function commentSendMail() {
 	$.ajax({
