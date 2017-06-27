@@ -15,9 +15,12 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
-	    	var uploadPath		= "${scheduleFilePath}";
+	    	var uploadPath = "${scheduleFilePath}";
 	    	var msgRtn = "";
 	    	var AttachLimit = 5;
+	    	var userID = "${userID}";
+	    	var userName = "${userName}";
+	    	var userName2 = "${userName2}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -26,7 +29,15 @@
 	    	}
 
 		    window.onload = function () {
+		       document.getElementById("receiverlist").innerHTML = userName;
+		       document.getElementById("receiverlist2").innerHTML = userName2;
+	           document.getElementById("receiverID").innerHTML = userID;
+		    	
 		       g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+
+		       g_attendant["id"][0] = userID.trim();
+	       	   g_attendant["name"][0] = userName.trim();
+	       	   g_attendant["name2"][0] = userName2.trim();
 		    }
 			
 		    window.onresize = function () {

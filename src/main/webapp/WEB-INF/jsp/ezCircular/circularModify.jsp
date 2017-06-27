@@ -34,7 +34,7 @@
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${userName}";
 	        	document.getElementById("receiverID").innerHTML = "${userID}";
-				
+
 	        	//hasFie구분
 	        	setAttachFileInfo("${strAttach}");
 		        

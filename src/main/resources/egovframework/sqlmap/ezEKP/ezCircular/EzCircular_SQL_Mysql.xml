@@ -546,13 +546,13 @@
             SELECT
                 *
             FROM
-				TBL_CIRCULAR_USER
+				TBL_CIRCULAR_USER A
 			JOIN
-				TBL_USERMASTER
+				TBL_USERMASTER B
 			ON
-				TBL_CIRCULAR_USER.memberid = TBL_USERMASTER.cn
+				A.memberid = B.cn
 			AND
-				TBL_CIRCULAR_USER.tenantid = TBL_USERMASTER.tenant_id
+				A.tenantid = B.tenant_id
             WHERE
                 CIRCULARID = #circularID#
             AND
@@ -562,7 +562,7 @@
         <isNotEqual property="searchValue" compareValue="">
 			<![CDATA[
 				AND
-					TBL_USERMASTER.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+					B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			]]>
 		</isNotEqual>
     </select>
@@ -731,7 +731,14 @@
     <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE 
+                A.CIRCULARID, 
+                A.IMPORTANCE, 
+                A.HASFILE, 
+                A.STATUS, 
+                A.TITLE, 
+                A.MEMBERID, 
+                DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE,
+                IFNULL(DATE_ADD(DATE_FORMAT(B.CONFIRMDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS CONFIRMDATE               
             FROM
                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B
             WHERE
@@ -961,6 +968,19 @@
 				MEMBERID = #memberID#
 			AND
 				TENANTID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getUserList" parameterClass="Map" resultClass="CircularListVO">
+		<![CDATA[
+			SELECT 
+				CN AS MEMBERID, DISPLAYNAME AS MEMBERNAME, DISPLAYNAME2 AS MEMBERNAME2
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				CN = #memberID# 
+			AND
+				TENANT_ID = #tenantID#
 		]]>
 	</select>
     

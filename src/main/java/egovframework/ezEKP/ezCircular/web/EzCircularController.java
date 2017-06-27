@@ -949,7 +949,7 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("startRow : "+startRow);
         logger.debug("endRow : "+endRow);
         
-		List<CircularListVO> list = ezCircularService.getCircularTempList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularTempList(userInfo.getId(), startRow, endRow, userInfo.getOffset(), userInfo.getTenantId());
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -1166,8 +1166,23 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circularWrite.do")
 	public String circularWrite(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+
+		List<CircularListVO> list = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
 		
+		String userID = "";
+		String userName = "";
+		String userName2 = "";
+
+		if (list.get(0).getMemberID() != "") {	
+			userID = list.get(0).getMemberID();
+			userName = list.get(0).getMemberName();
+			userName2 = list.get(0).getMemberName2();				
+		}
+
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userID", userID);
+		model.addAttribute("userName", userName);
+		model.addAttribute("userName2", userName2);
 		
 		return "/ezCircular/circularWrite";
 	}
@@ -1374,13 +1389,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 		}
 
-//		int hasAttach = 0;
-		 //첨부파일 리스트
-//		hasAttach = result.getHasFile();
 		StringBuilder strAttach = new StringBuilder();
-        //if (hasAttach == 1) {            	
-        	//hasAttach = 1;            	
-        	
+
     	List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
     	
     	strAttach.append("<ROOT><NODES>");
@@ -1391,10 +1401,7 @@ public class EzCircularController extends EgovFileMngUtil {
             strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
         }
         strAttach.append("</NODES></ROOT>");            		
-        //} else {
-        //	hasAttach = 0;
-        //}
-		
+
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("circularID", circularID);
 		model.addAttribute("result", result);
