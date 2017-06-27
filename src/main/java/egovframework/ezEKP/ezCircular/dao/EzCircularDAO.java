@@ -305,8 +305,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<CircularListVO>) list("EzCircularDAO.getSearchAllCircularList", map);
 	}
 
-	public int getCircularAllListCount(Map<String, Object> map) throws Exception {
-		return (int) select("EzCircularDAO.getCircularAllListCount", map);
+	public int getSearchAllCircularListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getSearchAllCircularListCount", map);
 	}
 
 	public int confirmFolderCheck(Map<String, Object> map) throws Exception {

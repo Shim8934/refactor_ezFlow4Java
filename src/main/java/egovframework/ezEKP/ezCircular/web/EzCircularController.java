@@ -425,7 +425,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
 	        endRow = (personalCount * Integer.parseInt(pageNum));
 
-	        int totalCount = ezCircularService.getCircularAllListCount(userInfo.getId(), userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
+	        int totalCount = ezCircularService.getSearchAllCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
         
 			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
 
@@ -1675,14 +1675,16 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		StringBuffer resultXML = new StringBuffer();
         
-        resultXML.append("<DOCLIST>");
+		resultXML.append("<DOCLIST>");
         resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
         resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
         resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
         resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLISTVALUE>" + config.getPreviewListValue() + "</PREVIEWWLISTVALUE>");
+        resultXML.append("<PREVIEWWCONTENTVALUE>" + config.getPreviewContentValue() + "</PREVIEWWCONTENTVALUE>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
-        
+
         for (CircularListHeaderVO vo : headerList) {
         	resultXML.append("<HEADER>");
     		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
@@ -1693,19 +1695,36 @@ public class EzCircularController extends EgovFileMngUtil {
         
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
-        
-        for (CircularListVO vo : list) {
-    		resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
-			resultXML.append("</ROW>");
+
+        if (type.equals("new")) {
+        	for (CircularListVO vo : list) {
+        		resultXML.append("<ROW>");
+        		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+        		resultXML.append("</ROW>");
+        	}        	
+        } else {
+        	for (CircularListVO vo : list) {
+        		resultXML.append("<ROW>");
+        		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+        		resultXML.append("</ROW>");
+        	}        	
         }
         
         resultXML.append("</ROWS>");
