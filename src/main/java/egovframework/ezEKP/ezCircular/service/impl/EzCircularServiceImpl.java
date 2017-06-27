@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1046,6 +1047,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("getUserList ended.");
 		
 		return ezCircularDAO.getUserList(map);
+	}
+
+	@Override
+	public List<CircularListHeaderVO> getListHeader(CircularListHeaderVO headerVO) throws Exception {
+		logger.debug("getUserList started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("listType", headerVO.getListType());
+		map.put("tenantID", headerVO.getTenantID());
+
+		logger.debug("getUserList ended.");
+
+		return ezCircularDAO.getListHeader(map);
 	}
 	
 	

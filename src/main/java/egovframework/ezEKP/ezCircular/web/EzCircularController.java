@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -749,6 +750,13 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	userInfo = commonUtil.userInfo(loginCookie);
     	
+    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
+    	
+    	headerVO.setListType("C");
+    	headerVO.setTenantID(userInfo.getTenantId());
+    	
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
+    	
         int startRow = 1;
         int endRow = 0;
         
@@ -780,57 +788,14 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
-        resultXML.append("<HEADER>");
-		resultXML.append("<NAME>CHECK</NAME>");
-		resultXML.append("<WIDTH>20</WIDTH>");
-		resultXML.append("<COLNAME>ITEMID</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME></NAME>");
-		resultXML.append("<WIDTH>18</WIDTH>");
-		resultXML.append("<COLNAME>IMPORTANCE</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME></NAME>");
-		resultXML.append("<WIDTH>18</WIDTH>");
-		resultXML.append("<COLNAME>HASFILE</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>분류</NAME>");
-		resultXML.append("<WIDTH>30</WIDTH>");
-		resultXML.append("<COLNAME>UPDATESTATUS</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>상태</NAME>");
-		resultXML.append("<WIDTH>50</WIDTH>");
-		resultXML.append("<COLNAME>STATUS</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>제목</NAME>");
-		resultXML.append("<WIDTH>350</WIDTH>");
-		resultXML.append("<COLNAME>TITLE</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>작성자</NAME>");
-		resultXML.append("<WIDTH>120</WIDTH>");
-		resultXML.append("<COLNAME>MEMBERID</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>작성일</NAME>");
-		resultXML.append("<WIDTH>150</WIDTH>");
-		resultXML.append("<COLNAME>REGDATE</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>확인</NAME>");
-		resultXML.append("<WIDTH>50</WIDTH>");
-		resultXML.append("<COLNAME>CONFIRMSTATUS</COLNAME>");
-		resultXML.append("</HEADER>");
-		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>확인일</NAME>");
-		resultXML.append("<WIDTH>150</WIDTH>");
-		resultXML.append("<COLNAME>CONFIRMDATE</COLNAME>");
-		resultXML.append("</HEADER>");
-        
+        for (CircularListHeaderVO vo : headerList) {
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
+
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
@@ -2345,7 +2310,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	String[] receiveList = request.getParameter("receiverList").split(",");
     	String[] receiveID = request.getParameter("receiverID").split(",");
 
-    	String subject = "[회람확인요청] " + title;
+    	String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
     	StringBuilder bodyContent = new StringBuilder("");
 
     	for (int i=0; i<receiveList.length; i++) {

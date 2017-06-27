@@ -7,6 +7,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
+import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -132,5 +133,7 @@ public interface EzCircularService {
 	public void deleteCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
 
 	public List<CircularListVO> getUserList(String memberID, int tenantID) throws Exception;
+
+	public List<CircularListHeaderVO> getListHeader(CircularListHeaderVO headerVO) throws Exception;
 
 }

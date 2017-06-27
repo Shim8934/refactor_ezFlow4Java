@@ -9,6 +9,7 @@
     <typeAlias alias="CircularMemberVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularMemberVO"/>
     <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
     <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
+    <typeAlias alias="CircularListHeaderVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO"/>
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
@@ -982,6 +983,21 @@
 				CN = #memberID# 
 			AND
 				TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getListHeader" parameterClass="Map" resultClass="CircularListHeaderVO">
+		<![CDATA[
+			SELECT 
+				IFNULL(NAME1, '') AS NAME1,
+				WIDTH,
+				COLNAME
+			FROM 
+				TBL_CIRCULAR_LISTOPTION
+			WHERE
+				LISTTYPE = #listType# 
+			AND
+				TENANTID = #tenantID#
 		]]>
 	</select>
     
