@@ -29,7 +29,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
@@ -1131,7 +1130,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
 		
-		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "circularUserID", "", userInfo.getTenantId());
 		
 		int statusFirst = ezCircularService.getConfirmStatusFirst(list.get(0).getCircularID(), userInfo.getTenantId()); 
 		int statusSecond = ezCircularService.getConfirmStatusSecond(list.get(0).getCircularID(), userInfo.getTenantId());
@@ -1188,7 +1187,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
 				
-		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "circularUserID", "", userInfo.getTenantId());
 		
 		String userID = "";
 		String userName = "";
@@ -2052,9 +2051,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	String searchValue = request.getParameter("searchValue");
+    	String searchType = request.getParameter("searchType");
     	
-    	List<CircularListVO> userList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchValue, userInfo.getTenantId());
-    	List<CircularCommentVO> commentList = ezCircularService.getCircularComment(circularCommentVO, searchValue, userInfo.getOffset(), userInfo.getTenantId());
+    	List<CircularListVO> userList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchType, searchValue, userInfo.getTenantId());
+    	List<CircularCommentVO> commentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getOffset(), userInfo.getTenantId());
     	
     	logger.debug("getCircularComment ended.");
     	
@@ -2128,7 +2128,6 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-    	String title = request.getParameter("title");
     	String[] receiveList = request.getParameter("receiverList").split(",");
     	String[] receiveID = request.getParameter("receiverID").split(",");
 

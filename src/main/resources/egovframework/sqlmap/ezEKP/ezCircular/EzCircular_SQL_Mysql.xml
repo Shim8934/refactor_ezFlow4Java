@@ -552,12 +552,27 @@
                 TENANTID = #tenantID#
         ]]>
         
-        <isNotEqual property="searchValue" compareValue="">
-			<![CDATA[
-				AND
-					B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
-			]]>
-		</isNotEqual>
+        <isEqual property="searchType" compareValue="circularUserID">
+        	<isNotEqual property="searchValue" compareValue="">
+				<![CDATA[
+					AND
+						B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				]]>
+			</isNotEqual>
+        </isEqual>
+        
+        <!-- <isEqual property="searchType" compareValue="circularComment">
+        	<isNotEqual property="searchValue" compareValue="">
+				<![CDATA[
+					AND
+						C.circularuserid = A.memberid
+					AND
+						C.circularComment LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				]]>
+			</isNotEqual>
+        </isEqual> -->
+        
+        
     </select>
     
     <select id="EzCircularDAO.getCircularDeptUserList" resultClass="CircularListVO" >
@@ -1476,6 +1491,13 @@
 			AND
 				tenantid = #tenantID#
 		]]>
+		
+		<isEqual property="searchType" compareValue="circularComment">
+			<![CDATA[
+				AND
+					circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+			]]>
+		</isEqual>
 	</select>
 	
 	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">

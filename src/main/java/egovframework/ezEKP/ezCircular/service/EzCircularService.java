@@ -20,7 +20,7 @@ public interface EzCircularService {
 
 	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
-	public List<CircularListVO> getCircularUserList(int circularID, String searchValue, int tenantID) throws Exception;
+	public List<CircularListVO> getCircularUserList(int circularID, String searchType, String searchValue, int tenantID) throws Exception;
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	
@@ -112,7 +112,7 @@ public interface EzCircularService {
 
 	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
 
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchValue, String offset, int tenantID) throws Exception;
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchType, String searchValue, String offset, int tenantID) throws Exception;
 
 	public void editCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
 
