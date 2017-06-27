@@ -14,10 +14,14 @@
 		<script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript">
-	    	var uploadPath		= "${scheduleFilePath}";
+	    	var uploadPath = "${scheduleFilePath}";
 	    	var msgRtn = "";
 	    	var AttachLimit = 5;
+	    	var userID = "${userID}";
+	    	var userName = "${userName}";
+	    	var userName2 = "${userName2}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -26,7 +30,15 @@
 	    	}
 
 		    window.onload = function () {
+		       document.getElementById("receiverlist").innerHTML = userName;
+		       document.getElementById("receiverlist2").innerHTML = userName2;
+	           document.getElementById("receiverID").innerHTML = userID;
+		    	
 		       g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+
+		       g_attendant["id"][0] = userID.trim();
+	       	   g_attendant["name"][0] = userName.trim();
+	       	   g_attendant["name2"][0] = userName2.trim();
 		    }
 			
 		    window.onresize = function () {
@@ -71,12 +83,14 @@
 				
 				//메일공지 사용할때
 				$(':checkbox[id=optionMail]:checked').each(function(){
-					option = 2;	
+					option = 2;
+					circularSendMail();
 				});
 				
 				//댓글기능, 메일공지 둘 다 사용할 때
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
+					circularSendMail();
 				}
 				
 				//파일 첨부된 목록 가져오기
@@ -243,21 +257,26 @@
           					<th style="width:200px;">제목</th>
           					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
         				</tr>
-						
 	        			<tr>
 	          				<th>중요도</th>
-	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
+	          				<td id="Td_StartDate" style="overflow:hidden; width:200px;">
 	          					<select id="importance" class="select">
 	          						<option value="0" >일반</option>
    									<option value="1" >중요</option>
    								</select>	
 	          				</td>
-	        			</tr>
-				        <tr>
-	       					<th>옵션</th>
-	       					<td style="width:160px" colspan="3">
+	       					<th style="width:40px;">옵션</th>
+	       					<td style="width:200px;">
 								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;댓글기능 사용&nbsp;&nbsp;
 								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;메일공지 사용   									
+	         				</td>
+	        			</tr>
+				        <tr>
+				        	<th>회람상태</th>
+	       					<td>								
+	         				</td>
+	         				<th>상태</th>
+	       					<td>							
 	         				</td>
 			     		</tr>
 						<tr>

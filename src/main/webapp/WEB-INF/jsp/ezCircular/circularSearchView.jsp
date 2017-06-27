@@ -200,11 +200,11 @@
 		      		<th>검색조건</th> 
 		      		<td style="width:100%">
 		      			<select name="search_field" id="search_field" style="WIDTH: 130px"> 
-		          			<option value="circularNew">신규회람판</option> 
-		          			<option value="circularComplete">확인완료회람판</option>
-		          			<option value="circularMy">작성한회람판</option>
-		          			<option value="circularTemp">임시회람판</option>
-		          			<option value="circularFolder">회람문서함</option> 
+		          			<option value="circularNew" ${filter == 'circularNew' ? 'selected' : ''}>신규회람판</option> 
+		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}>확인완료회람판</option>
+		          			<option value="circularMy" ${filter == 'circularMy' ? 'selected' : ''}>작성한회람판</option>
+		          			<option value="circularTemp" ${filter == 'circularTemp' ? 'selected' : ''}>임시회람판</option>
+		          			<option value="circularFolder" ${filter == 'circularFolder' ? 'selected' : ''}>회람문서함</option> 
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()">검색</span></a>
@@ -214,8 +214,8 @@
 		      		<th>검색기간</th>
 		      		<td>
 						<input type="checkbox" value="1" id="usepostdate" style="display:none;"><a class="imgbtn"><span onclick="DateSearch_Click();">검색기간 사용</span></a>
-		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" /> ~
-		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" />
+		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled/> ~
+		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" disabled/>
 			  		</td>
 			  	</tr>
 		  	</table> 
@@ -226,14 +226,14 @@
 		  	<table class="mainlist" style="table-layout:fixed;width:100%">
 		    	<tr> 
 		      		<th style="width:20px; padding: 0px; color: black;padding-left:3px;" nowrap title><input type="checkbox" onClick="open_schedule(this)" id="Checkbox1"></th>
-			        <th style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
-			        <th style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)" porp="attach" orderoption="ASC"><img src="/images/newAttach.gif" border="0"></th>
-					<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)" porp="from" orderoption="ASC">상태</th> 
-					<th style="width:350px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="subject" orderoption="ASC">제목</th> 
-					<th style="width:120px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)" porp="recevdate" orderoption="ASC">작성자</th> 
+			        <th style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
+			        <th style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th>
+					<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th> 
+					<th style="width:350px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">제목</th> 
+					<th style="width:120px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)">작성자</th> 
 					<th style="width:150px;" align="left">작성일</th> 
-					<th style="width:100px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC">확인</th>
-					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC">확인일</th> 
+					<th style="width:100px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)">확인</th>
+					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">확인일</th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${list}" varStatus="status">
 			    	<tr id="searchList${status.count}" style="cursor:pointer;padding:0" onClick="event_click(this)" ondblClick="open_schedule('${item.circularID}')" bgcolor=#ffffff>

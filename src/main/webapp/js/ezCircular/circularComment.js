@@ -15,7 +15,7 @@ function getCircularComment() {
 			list = result.userList;
 			list.forEach(function(vo, index) {
 				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='text-align:left;'>" + vo.memberName + "&nbsp;<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>댓글작성</span></a></td>"
+				userList += "<td style='text-align:left;'>" + vo.memberName + "&nbsp;<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>의견작성</span></a></td>"
 				
 				if (vo.status == 1) {
 					userList += "<td style='width:55%; text-align:right; padding-right:10px;' >확인완료</td>"
@@ -31,26 +31,26 @@ function getCircularComment() {
 			
 			$("#commentUserList").html("");
 			$("#commentUserList").append(userList);
-			
+
 			commentList = "";
 			list = result.commentList;
 			list.forEach(function(vo, index) {
 				commentList = "<tr style='padding:10px; 4px;'>";
 				commentList += "<td style='width:70px; border:0px;'>" + vo.memberName + "</td>";
 				commentList += "<td style='border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
-				commentList += "<td style='width:17%; border:0px; text-align:right;'>" + vo.regDate + "</td>";
-				commentList += "<td style='border:0px;' ><a class='imgbtn' style='vertical-align:middle;'><span class='deleteComment' memberID='" + vo.memberID + "' circularID='" + circularID + "' circularCommentID='" + vo.circularCommentID + "' onclick='deleteComment(this)'>삭제</span></a></td>"
+				commentList += "<td style='width:130px; border:0px; text-align:right;'>" + vo.regDate + "</td>";
+				commentList += "<td style='width:50px; border:0px;' ><a class='imgbtn' style='vertical-align:middle;'><span class='deleteComment' memberID='" + vo.memberID + "' circularID='" + circularID + "' circularCommentID='" + vo.circularCommentID + "' onclick='deleteCircularComment(this)'>삭제</span></a></td>"
 				commentList += "</tr>";
 				
 				$("table[circularUserID='" + vo.circularUserID + "']").append(commentList);
 				$("table[circularUserID='" + vo.circularUserID + "']").closest("tr").show();
 			});
 			
-			if (($("#option").prop("checked") != true) || (status == 1)) {
+			if (status == 1) {
 				$("#commentUserList > tbody > tr > td > a").hide();
 			}
 			
-			$(".deleteComment[memberID != '" + userInfoID + "']").closest("td").hide();
+			$(".deleteComment[memberID != '" + userInfoID + "']").closest("a").hide();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -59,17 +59,16 @@ function getCircularComment() {
 }
 
 function showEdit(obj) {
-	if ($("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").length == 0) {
-		var commentEditor = "";
-		commentEditor += "<tr class='circularComment' circularUserID='" + $(obj).attr("circularUserID") + "' circularID='" + circularID + "' style='display:none;'>";
-		commentEditor += "<td style='border:0px;' colspan='3'><textarea style='width:97%; text-align:left;' /></td>";
-		commentEditor += "<td style='border:0px; text-align: right;'><a class='imgbtn' style='text-align:right;'><span circularUserID='" + $(obj).attr("circularUserID") + "' onclick='editCircularComment(this)'>저장</span></a></td>";
-		commentEditor += "</tr>";
-		
-		$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html($("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html() + commentEditor);
-		$("tr.circularComment").hide();
-		$("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "']").show();
-	}
+	$("tr.circularComment").remove();
+	
+	var commentEditor = "";
+	commentEditor += "<tr class='circularComment' circularUserID='" + $(obj).attr("circularUserID") + "' circularID='" + circularID + "'>";
+	commentEditor += "<td style='border:0px;' colspan='3'><textarea style='width:97%; text-align:left;' /></td>";
+	commentEditor += "<td style='width:50px; border:0px; text-align:right;'><a class='imgbtn' style='text-align:right;'><span circularUserID='" + $(obj).attr("circularUserID") + "' onclick='editCircularComment(this)'>저장</span></a></td>";
+	commentEditor += "</tr>";
+	
+	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html(commentEditor + $("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html());
+	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").closest("tr").show();
 }
 
 //댓글작성
@@ -78,7 +77,7 @@ function editCircularComment(obj) {
 	var circularComment = $("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > td > textarea").val();
 	
 	if (circularComment == "") {
-		alert("댓글을 입력해주세요");
+		alert("의견을 입력해주세요");
 		return ;
 	}
 	
@@ -103,17 +102,37 @@ function editCircularComment(obj) {
 
 function deleteCircularComment(obj) {
 	var circularCommentID = $(obj).attr("circularCommentID");
-alert(circularCommentID);
 	$.ajax({
 		type : "POST",
-		url : "/ezCircular/deleteComment.do",
+		url : "/ezCircular/deleteCircularComment.do",
 		dataType : "json",
 		data : {
 			circularID : circularID, // 회람ID
 			circularCommentID : circularCommentID
 		},
 		success : function(result) {
-			alert("댓글을 삭제했습니다.");
+			alert("의견을 삭제했습니다.");
+			getCircularComment();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			
+		}
+	});
+}
+
+//메일공지기능
+function circularSendMail() {
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/circularSendMail.do",
+		dataType : "json",
+		data : {
+			title : document.getElementById("title").value,
+			receiverList : document.getElementById("receiverlist").innerHTML, // 메일 수신자 List
+			receiverID : document.getElementById("receiverID").innerHTML
+		},
+		success : function(result) {
+
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -140,6 +159,37 @@ function commentSendMail() {
 }
 
 //댓글보기
+function DivPopUpPosition(popUpW, popUpH) {
+    var ReturnValue = new Array();
+    var heigth = document.documentElement.scrollHeight;
+    if (heigth == 0)
+        heigth = document.body.scrollHeight;
+
+    var width = document.documentElement.clientWidth;
+    if (width == 0)
+        width = document.body.clientWidth;
+
+    var left = 0;
+    var top = 0;
+    var pleftpos;
+    pleftpos = parseInt(width) - popUpW;
+    heigth = parseInt(heigth) - popUpH;
+    width = parseInt(width) - pleftpos;
+    if (heigth < (popUpH + 50))
+        ReturnValue[0] = (heigth / 2);
+    else
+        ReturnValue[0] = (heigth / 2) - 50;
+    ReturnValue[1] = pleftpos / 2;
+    return ReturnValue
+}
+
+
 function openCircularComment() {
+	$("#mailPanel").css('height', $('body').prop('Height'));
 	
+	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
+}
+
+function closeCircularComment() {
+	parent.DivPopUpHidden();
 }

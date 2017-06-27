@@ -5,8 +5,6 @@ public class CircularConfigVO {
 	private int circularOptionID;
 	/** 작성자 */
 	private String memberID;
-	/** 메일수신여부 */
-	private int isMailReceive;
 	/** 리스트 개수 */
 	private int listCnt;
 	/** 미리보기 */
@@ -17,6 +15,7 @@ public class CircularConfigVO {
 	private String previewContentValue;
 	/** 테넌트 ID */
 	private int tenantID;
+	
 	public int getCircularOptionID() {
 		return circularOptionID;
 	}
@@ -28,12 +27,6 @@ public class CircularConfigVO {
 	}
 	public void setMemberID(String memberID) {
 		this.memberID = memberID;
-	}
-	public int getIsMailReceive() {
-		return isMailReceive;
-	}
-	public void setIsMailReceive(int isMailReceive) {
-		this.isMailReceive = isMailReceive;
 	}
 	public int getListCnt() {
 		return listCnt;
@@ -65,7 +58,4 @@ public class CircularConfigVO {
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
 	}
-	
-	
-	
 }

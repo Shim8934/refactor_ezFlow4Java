@@ -24,6 +24,7 @@
 			$(document).ready(function(){
 	            document.getElementById('circularUserList').innerHTML = "${listUser}";
 	            
+	            
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
 	            for (var i = 0; i < Bodytd.length; i++) {
@@ -88,9 +89,14 @@
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
 	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
-	            strContent = strContent + "<div style='width:100%'><table id='printScreen' class='layout'>";
+	            strContent = strContent + "<div style='width:100%'>";
+	            strContent = strContent + "<table id='printScreen' class='layout'>";
 	            strContent = strContent + document.getElementById("printScreen").innerHTML;
 	            strContent = strContent + "</table></div>";
+// 	            strContent = strContent + "<div style='width:100%'>";
+// 	            strContent = strContent + "<table id='printComment' class='layout'>";
+// 	            strContent = strContent + document.getElementById("printComment").innerHTML;
+// 	            strContent = strContent + "</table></div>";
 	            strContent = strContent + "</body>";
 	            printWindow.document.write(strContent);
 	            printWindow.document.close();
@@ -140,10 +146,14 @@
 			}
 		</script>
 	</head>
-	
+	<style>
+		.content td{ 
+			width:160px;
+		}
+	</style>
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
-	<body id="mainbodytag" class="popup">
+	<body id="mainbodytag" class="popup" style="overflow: hidden">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -154,10 +164,10 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
+                        	<li><span onclick="openCircularComment()">댓글상세보기</span></li>
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
                 	    	</c:if>
-                        	
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -172,59 +182,58 @@
 		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
-					<table class="content">
+					<table class="content" style="width:100%;">
 	                    <tr>
-    	                    <th style="width: 70px;">제목</th>
-        	                <td colspan="3" style="width: 100%">
+    	                    <th style="width: 200px;">제목</th>
+        	                <td colspan="3" style="width: 100%; padding-left: 4px;">
             	                ${result.title}
                 	        </td>
                     	</tr>
                     	<tr>
 	                        <th>중요도</th>
-    	                    <td colspan="3">${result.importance == '0' ? '일반' : '중요'}</td>
-                    	</tr>
-		        		<tr>
+    	                    <td id="Td_Importance" style="padding-left: 4px;">${result.importance == '0' ? '일반' : '중요'}</td>
 		            		<th>옵션</th>
-		            		<td colspan="3" style="width: 100%">
+		            		<td style="width:200px;">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+		                				<span id="AllDay" style="padding-left: 4px;">메일공지 사용</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
-										<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>,  
+										<span id="AllDay">메일공지 사용</span>
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
-										<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+		                				<span id="option" style="padding-left: 4px;">사용안함</span>
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>
+                    	</tr>
+		        		<tr>
+		        			<th>회람상태</th>
+	       					<td>								
+	         					<div id="statusNum" style="padding-left: 4px;">${statusFirst} / ${statusSecond}</div>
+	         				</td>
+	         				<th>상태</th>
+		            		<td>
+		            			<c:choose>
+			            			<c:when test="${result.status eq '0'}">
+			            				<div id="status" style="padding-left: 4px;">진행중</div>
+			            			</c:when>
+			            			<c:when test="${result.status eq '1'}">
+			            				<div id="status" style="padding-left: 4px;">종료</div>
+			            			</c:when>
+			            			<c:otherwise>
+			            				<div id="status" style="padding-left: 4px;">임시</div>
+			            			</c:otherwise>
+		                		</c:choose>
+		            		</td>
 		        		</tr>
 		        		<tr>
 		            		<th>회람자</th>
 		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
-		        		</tr>
-		        		<tr>
-		            		<th>상태</th>
-		            		<td colspan="3">
-		            			<c:choose>
-			            			<c:when test="${result.status eq '0'}">
-			            				<div id="status">진행중</div>
-			            			</c:when>
-			            			<c:when test="${result.status eq '1'}">
-			            				<div id="status">종료</div>
-			            			</c:when>
-			            			<c:otherwise>
-			            				<div id="status">임시</div>
-			            			</c:otherwise>
-		                		</c:choose>
-		            		</td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;">
@@ -284,27 +293,6 @@
                             </td>
                         </tr>
                     </table>
-                    <br/>
-
-	        		<table class="mainlist" style="width:100%">
-	                    <tr>
-    	                    <th style="width: 51.5px;">댓글목록</th>
-    	                    <th style="text-align:left;"><a class='imgbtn'><span onclick="openCircularComment()">댓글상세보기</span></a></th> 
-    	                    <th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a></th>
-    	                    <th style="width: 130px; text-align:right;"><a class='imgbtn'><span onclick="commentSendMail()">확인재촉메일발송</span></a></th>
-						</tr>
-						<tr>
-        	                <td style="width: 100%; border:0px;" colspan='4'>
-            	                <table id="comments" style="width:100%">
-									<tr>
-										<td style="border:0px;">
-											<table id="commentUserList" class="mainlist" style="width:100%"></table>
-										</td>
-									</tr>	
-								</table>
-                	        </td>
-                    	</tr>
-	        		</table>
 	        	</td>
         	</tr>
 		</table>
@@ -314,24 +302,84 @@
 				<td style="vertical-align:top">
 					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
- 							<td style="padding-left:10px"> <div id="printOwner"></div></td> 
+ 							<th style="padding-left:10px" width="60">제목</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printTitle">
+ 									${result.title}
+ 								</div>
+ 							</td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th> 
- 							<td style="padding-left:10px"> <div id="printImportance"></div></td> 
+ 							<th style="padding-left:10px">중요도</th> 
+ 							<td style="padding-left:4px"> 
+ 								<div id="printImportance">
+ 									${result.importance == '0' ? '일반' : '중요'}
+ 								</div>
+ 							</td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
- 							<td style="padding-left:10px"> <div id="printDate"></div></td> 
+ 							<th style="padding-left:10px">옵션</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printOption">
+ 									<c:choose>
+		                				<c:when test="${result.option eq '1'}">
+			                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+			                				<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+			                			</c:when>
+			                			<c:when test="${result.option eq '2'}">
+			                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+			                				<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+			                			</c:when>
+			                			<c:when test="${result.option eq '3'}">
+			                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
+											<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+			                			</c:when>
+			                			<c:otherwise>
+			                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
+											<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+			                			</c:otherwise>
+		                			</c:choose>
+ 								</div>
+ 							</td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
- 							<td style="padding-left:10px"> <div id="printTitle"></div></td> 
-						</tr> 
+ 							<th style="padding-left:10px">회람자</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printCircularUser">
+ 									${listUser}
+ 								</div>
+ 							</td>
+						</tr>
+						<tr style="height:25px"> 
+ 							<th style="padding-left:10px">상태</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printStatus">
+ 									<c:choose>
+				            			<c:when test="${result.status eq '0'}">
+				            				<div id="status">진행중</div>
+				            			</c:when>
+				            			<c:when test="${result.status eq '1'}">
+				            				<div id="status">종료</div>
+				            			</c:when>
+				            			<c:otherwise>
+				            				<div id="status">임시</div>
+				            			</c:otherwise>
+		                			</c:choose>
+ 								</div>
+ 							</td> 
+						</tr>  
 						<tr> 
  							<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
-						</tr> 
+						</tr>
+						
+					</table>
+					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; margin-top:5px;" class="content2">
+						<tr style="height:25px"> 
+							<th style="padding-left:10px" width="60">댓글</th> 
+							<td style="padding-left:4px">
+								<table id="printComment" style="width:100%"></table>
+							</td>
+						</tr> 					
 					</table>
 				</td>
 			</tr>
