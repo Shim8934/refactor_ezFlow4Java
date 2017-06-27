@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -238,7 +237,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		ezCircularDAO.modifyCircular(map);
 		
-		List<CircularListVO> list = getCircularUserList(circularID, "", tenantID);
+		List<CircularListVO> list = getCircularUserList(circularID, "circularUserID", "", tenantID);
 		
 		logger.debug("receiverLength : " + receiverLength);
 		logger.debug("listSize : " + list.size());
@@ -477,12 +476,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularUserList(int circularID, String searchValue, int tenantID) throws Exception {
+	public List<CircularListVO> getCircularUserList(int circularID, String searchType, String searchValue, int tenantID) throws Exception {
 		logger.debug("getCircularUserList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
+		map.put("searchType", searchType);
 		map.put("searchValue", searchValue);
 		
 		List<CircularListVO> list = ezCircularDAO.getCircularUserList(map);
@@ -851,7 +851,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, String searchValue, String offset, int tenantID) throws Exception {
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, String searchType, String searchValue, String offset, int tenantID) throws Exception {
 		logger.debug("getCircularComment started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -40,7 +40,12 @@
 		<table class="mainlist" style="width:100%">
 			<tr>
 				<th style="width: 51.5px;">의견</th>
-				<th style="text-align:right;"><input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a></th>
+				<th style="text-align:right;">
+					<select id = 'searchType'>
+						<option value = 'circularUserID'>회람자</option>
+						<option value = 'circularComment'>내용</option>
+					</select>
+					<input type='text' id='searchValue' /><a class='imgbtn'><span onclick="getCircularComment()">검색</span></a></th>
 			</tr>
 			<tr>
 				<td style="width: 100%; border:0px;" colspan='2'>

@@ -37,8 +37,6 @@
 	            }
 
 	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
-	            
-	            getCircularComment();
 	        });
 	        
 		    //수정버튼 클릭시
