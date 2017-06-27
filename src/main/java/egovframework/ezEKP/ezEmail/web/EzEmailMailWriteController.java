@@ -2983,11 +2983,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
 	        
 			} catch (Exception e) {
-				e.printStackTrace();
 				
-				//OVERQUOTA / OVERMESSAGESIZE / Invalid Addresses exception이 아니면 retry한다.
-				if (e.getMessage().indexOf("OVERQUOTA") == -1 && e.getMessage().indexOf("OVERMESSAGESIZE") == -1
-						&& e.getMessage().indexOf("Invalid Addresses") == -1) {
+				if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
+					logger.error("mailInterSend : " + e.getMessage());
+					pResult = e.getMessage();
+				} else if (e.getMessage().indexOf("Invalid Addresses") > -1) {
+					pResult = e.getMessage();
+					String cause = e.getCause().toString();
+					
+					String pattern = "Unknown user: ([\\S]+)";
+					Pattern r = Pattern.compile(pattern);
+					Matcher m = r.matcher(cause);
+					pResult = "Invalid Addresses:";
+					
+					int index = 1000;
+					while (m.find()) {
+						// 1000번 이상 반복되면 break한다.
+						--index;
+						if (index < 0) {
+							logger.error("Stop finding invalid addresses, because over 1000 times.");
+							break;
+						}
+						
+						pResult += m.group(1) + "|";
+					}
+					
+					pResult = pResult.substring(0, pResult.length() - 1);
+				} else { // retry
+					e.printStackTrace();
+					
 					retryFlag = true;
 					--retryCount;
 					
@@ -3001,8 +3025,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						//더이상 retry를 하지 않으므로 리턴 메시지를 세팅한다.
 						pResult = e.getMessage();
 					}
-				} else {
-					pResult = e.getMessage();
 				}
 			} finally {
 				if (ia != null) {
