@@ -46,6 +46,7 @@
                 A.importance,
                 A.hasfile,
                 A.status,
+                B.updateStatus,
                 A.title,
                 A.memberid,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
