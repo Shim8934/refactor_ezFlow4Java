@@ -32,7 +32,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-		        
+
 		        $("keyword").text = "";
 		    }
 			
@@ -228,7 +228,13 @@
 		      		<th style="width:20px; padding: 0px; color: black;padding-left:3px;" nowrap title><input type="checkbox" onClick="open_schedule(this)" id="Checkbox1"></th>
 			        <th style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 			        <th style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th>
-					<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th> 
+					<c:if test="${type == 'N'}">
+						<th style="width:30px;cursor:pointer;text-align:center" id="updateStatus" onclick="event_HeaderClick(this)">분류</th> 
+						<th style="width:50px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>
+					</c:if>
+					<c:if test="${type == '' }">
+						<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>					
+					</c:if>
 					<th style="width:350px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">제목</th> 
 					<th style="width:120px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)">작성자</th> 
 					<th style="width:150px;" align="left">작성일</th> 
@@ -243,14 +249,27 @@
 			    			<c:if test="${item.importance == '1'}"><img src='/images/ImgIcon/view-importance.gif'/></c:if>
 			    		</td>
 			    		<td style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center">
-			    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>
-			    			<c:if test="${item.importance == '1'}"><img src='/images/newAttach.gif'/></c:if>
+			    			<c:if test="${item.hasFile == '0'}">&nbsp;</c:if>
+			    			<c:if test="${item.hasFile == '1'}"><img src='/images/newAttach.gif'/></c:if>
 			    		</td>
-			    		<td style="width:80px;cursor:pointer;text-align:center">
-			    			<c:if test="${item.status == '0'}">진행</c:if>
-			    			<c:if test="${item.status == '1'}">종료</c:if>
-			    			<c:if test="${item.status == '2'}">임시</c:if>
-			    		</td>
+			    		<c:if test="${type == 'N'}">
+							<td style="width:30px;cursor:pointer;text-align:center">
+				    			<c:if test="${item.updateStatus == '0'}">의</c:if>
+				    			<c:if test="${item.updateStatus == '4'}">신</c:if>
+				    		</td>
+				    		<td style="width:50px;cursor:pointer;text-align:center">
+				    			<c:if test="${item.status == '0'}">진행</c:if>
+				    			<c:if test="${item.status == '1'}">종료</c:if>
+				    			<c:if test="${item.status == '2'}">임시</c:if>
+				    		</td>
+						</c:if>
+						<c:if test="${type == ''}">
+							<td style="width:80px;cursor:pointer;text-align:center">
+				    			<c:if test="${item.status == '0'}">진행</c:if>
+				    			<c:if test="${item.status == '1'}">종료</c:if>
+				    			<c:if test="${item.status == '2'}">임시</c:if>
+				    		</td>
+						</c:if>
 			    		<td style="width:350px" align="left">${item.title}</td> 
 		          		<td style="width:120px" align="left">${item.memberID}</td>		         
 		            	<td style="width:150px" align="left">${item.regDate}</td>

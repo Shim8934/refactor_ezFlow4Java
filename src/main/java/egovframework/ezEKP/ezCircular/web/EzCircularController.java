@@ -378,6 +378,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 
+		String type = "";
 		String filter = request.getParameter("filter");
 		String keyword = request.getParameter("keyword");
 		String startDate = request.getParameter("sdate");
@@ -391,6 +392,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 			if (filter.equals("circularNew")) {
 				filterVal = 1;
+				type = "N";
 			} else if (filter.equals("circularComplete")) {
 				filterVal = 2;
 			} else if (filter.equals("circularMy")) {
@@ -430,9 +432,10 @@ public class EzCircularController extends EgovFileMngUtil {
 			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
 
 			model.addAttribute("totalCount", totalCount);
-	        model.addAttribute("list", list);
+	        model.addAttribute("list", list);		
 		}
 		
+		model.addAttribute("type", type);
 		model.addAttribute("offSetMin", offSetMin);
 		model.addAttribute("filter", filter);
 		model.addAttribute("keyword", keyword);
