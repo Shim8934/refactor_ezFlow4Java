@@ -952,7 +952,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getCircularAllListCount(String memberID, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception {
+	public int getSearchAllCircularListCount(String memberID, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
@@ -962,7 +962,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 
-		return ezCircularDAO.getCircularAllListCount(map);
+		return ezCircularDAO.getSearchAllCircularListCount(map);
 	}
 
 	@Override

@@ -53,7 +53,6 @@
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
-                B.updatestatus,
                 DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate
                 
             FROM
@@ -94,8 +93,6 @@
             ]]>
 	        <isEqual property="circularType" compareValue="1">
 	        <![CDATA[
-	            	A.STATUS = '0'
-	            AND
 	            	B.UPDATESTATUS IN ('0', '4')
 	            AND
 	                B.MEMBERID = #memberID#	
@@ -171,7 +168,7 @@
         <isNotEqual property="circularType" compareValue="6">
 	        <![CDATA[
 	            SELECT
-	                DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE
+	                DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, B.UPDATESTATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE AS CONFIRMDATE, B.UPDATEDATE
 	            FROM
 	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
 	            WHERE
@@ -179,8 +176,6 @@
 	            ]]>
 		        <isEqual property="circularType" compareValue="1">
 		        <![CDATA[
-			        AND
-		            	A.STATUS = '0'
 		            AND
 		            	B.UPDATESTATUS IN ('0', '4')
 		            AND
@@ -273,8 +268,6 @@
 	            ]]>
 	        <isEqual property="filterVal" compareValue="1">
 	        <![CDATA[
-		        AND
-	            	A.STATUS = '0'
 	            AND
 	            	B.UPDATESTATUS IN ('0', '4')
 	            AND
@@ -388,7 +381,7 @@
         ]]>
     </select>
     
-    <select id="EzCircularDAO.getCircularAllListCount" parameterClass="Map" resultClass="Integer" >
+    <select id="EzCircularDAO.getSearchAllCircularListCount" parameterClass="Map" resultClass="Integer" >
         <isNotEqual property="filterVal" compareValue="5">
 	        <![CDATA[
 	            SELECT
@@ -402,8 +395,6 @@
 	        ]]>
 	        <isEqual property="filterVal" compareValue="1">
 	        <![CDATA[
-	            AND
-	            	A.STATUS = '0'
 	            AND
 	            	B.UPDATESTATUS IN ('0', '4')
 	        ]]>
