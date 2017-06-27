@@ -16,9 +16,15 @@
 			var circularUserID = "${vo.memberID}";
 			var status = "${vo.status}";
 			var userInfoID = "${userInfo.id}";
-		
+			
 			$(document).ready(function(){
 				getCircularComment();
+				
+				$("#searchValue").keypress(function(e) {
+					if (e.keyCode == 13) {
+						getCircularComment();
+					}
+				});
 			});
 		</script>
 		

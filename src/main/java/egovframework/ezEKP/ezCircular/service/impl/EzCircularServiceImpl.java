@@ -856,6 +856,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", vo.getCircularID());
+		map.put("searchType", searchType);
 		map.put("searchValue", searchValue);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", vo.getTenantID());
