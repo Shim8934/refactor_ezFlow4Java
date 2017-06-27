@@ -1,26 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><HTML><HEAD><TITLE></TITLE>
-
-
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<HTML>
+<HEAD>
+<TITLE></TITLE>
 <META content="text/html; charset=utf-8" http-equiv=Content-Type>
 <META content="MSHTML 5.00.2920.0" name=GENERATOR>
 <STYLE>P {MARGIN-BOTTOM: 2px; MARGIN-TOP: 2px}</STYLE>
 </HEAD>
 <BODY bgcolor="#FFFFFF" leftmargin="30" topmargin="10" free kaoni>
 <TABLE border=0  cellPadding=0 cellSpacing=0  width=640  class="FIELD" id="table1" >
-	<TR> <TD align="center" > <b><FONT SIZE=5 ><spring:message code='ezApprovalG.t816'/></FONT></b></TD> </TR>
+	<TR><TD align="center"><b><FONT SIZE=5><spring:message code='ezApprovalG.t816'/></FONT></b></TD></TR>
 </TABLE>
 <table width="420" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td ><b>${STRGet_t825}</b></td>
+    <td><b>${STRGet_t825}</b></td>
   </tr>
 </table>
 <TABLE border=1 borderColorDark=ffffff borderColorLight=#B6B6B6 cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
-  <tr  > 
+  <tr> 
     <td bgcolor="f7f7f7" width="85" height="23"><spring:message code='ezApprovalG.t106'/></td>
-    <td  id="tdTitle" colspan=3 bgcolor="ffffff">&nbsp;${title}</td>
+    <td id="tdTitle" colspan=3 bgcolor="ffffff">&nbsp;${title}</td>
   </tr>
   <tr > 
     <td bgcolor="f7f7f7" height="23"><spring:message code='ezApprovalG.t819'/></td>

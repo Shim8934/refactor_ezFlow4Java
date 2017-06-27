@@ -382,12 +382,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// subject
 					subject = ezEmailUtil.getSubject(message);
 					
-					logger.debug("subject=" + subject);
-					
+					if(subject.trim().equals("")){
+						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+					}
 					if (subject != null) {
 						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
 					}
 					
+					logger.debug("subject=" + subject);
+
 					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
 						isSentItems = true;
 					}
