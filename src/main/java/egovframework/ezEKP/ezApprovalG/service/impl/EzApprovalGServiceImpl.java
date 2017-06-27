@@ -1964,7 +1964,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
-				if (orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
+				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
 					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 					
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 

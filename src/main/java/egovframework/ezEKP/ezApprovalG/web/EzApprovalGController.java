@@ -2014,8 +2014,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
 		}
+		String result="";
 		
-		String result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		try {
+			result = ezApprovalGService.updateAttachFileInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		} catch (Exception e) {
+			result = "File_NonAttach";
+		}
 		
 		logger.debug("aprAttachSave ended");
 		
@@ -2431,7 +2436,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("admin", admin);
 		model.addAttribute("formUrl", formUrl);
 		model.addAttribute("formDocType", formDocType);
-		
+		model.addAttribute("approvalFlag", approvalFlag);
+
 		logger.debug("contDocView ended.");
 		
 		return "ezApprovalG/apprGcontDocView";
@@ -4271,7 +4277,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		//2015-06-26 표준모듈:수정(자기부서 배부 가능여부)
         String USE_SELFDISTRIBUTE = "N";
 		String susinAdmin = "";
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -4299,7 +4306,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("USE_SELFDISTRIBUTE", USE_SELFDISTRIBUTE);
 		model.addAttribute("mode", mode);
-		
+		model.addAttribute("approvalFlag", approvalFlag);
+
 		logger.debug("ezReceiveDistributeUI ended.");
 		
 		return "ezApprovalG/apprGezReceiveDistributeUI";
