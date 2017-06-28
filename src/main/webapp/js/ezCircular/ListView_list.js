@@ -569,6 +569,9 @@ function ListView() {
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
                 }
+                if (strColName == "CONFIRMFLAG") {
+                    objTd.style.textAlign = "center";
+                }
                 if (strColName == "STATUS") {
                     objTd.style.textAlign = "CENTER";
                 }
@@ -786,7 +789,6 @@ function ListView() {
                     objTd.style.fontWeight = "bold";
                     
                     if (strValue == "4") {
-//                        titleImage = titleImage + "<img src='/images/calendar/i_h.png'>";
                         strValue = "의";
                         objTd.style.color = "blue";
                     } else {
@@ -794,6 +796,18 @@ function ListView() {
                         objTd.style.color = "red";
                         
                     }
+                }
+                
+                //본인확인
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMFLAG") {
+                    objTd.style.textAlign = "center";
+                    if (strValue == '0') {
+                    	objTd.style.fontWeight = "bold";
+                    	strValue = '미확인'
+                    } else {
+                    	strValue = '확인'
+                    }
+                    
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "STATUS") {

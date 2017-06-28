@@ -511,7 +511,7 @@
             AND
                 circularid = #circularID#
             AND
-                tenantid = #tenantID#        
+                tenantid = #tenantID#
         ]]>
     </select>
   
@@ -781,50 +781,91 @@
     
     <select id="EzCircularDAO.getMyCircularListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
-             SELECT 
-                 COUNT(DISTINCT A.CIRCULARID) CNT
-             FROM
-                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-             WHERE
-                 A.CIRCULARID = B.CIRCULARID
-             AND
-                 A.TENANTID = B.TENANTID
-             AND
-             	 A.STATUS != 2
-             AND
-             	 B.UPDATESTATUS != 2
-             AND
-                 A.MEMBERID = #memberId#
-             AND
-                 A.TENANTID = #tenantId#
+			SELECT
+				COUNT(DISTINCT A.circularid) cnt
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			WHERE
+				A.status != 2
+			AND
+				B.updatestatus != 2
+			AND
+				A.memberid = #memberID#
+			AND
+				A.tenantid = #tenantID#
          ]]>
     </select>
     
     <select id="EzCircularDAO.getMyCircularList" resultClass="CircularListVO" >
         <![CDATA[
-             SELECT
-                 A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE, B.UPDATESTATUS 
-             FROM
-                 TBL_CIRCULAR A, TBL_CIRCULAR_USER B 
-             WHERE
-                 A.CIRCULARID = B.CIRCULARID 
-             AND
-                 A.TENANTID = B.TENANTID 
-             AND
-                 A.MEMBERID = #memberId# 
-             AND
-                 A.TENANTID = #tenantId# 
-             AND
-             	 A.STATUS != 2
-             AND
-             	 B.UPDATESTATUS != 2
-             GROUP BY
-             	 A.CIRCULARID
-             ORDER BY
-             	 A.REGDATE DESC 
-             LIMIT
-                 #limit#, #rowCount#
-         ]]>
+			SELECT
+				A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				A.regdate,
+				B.status AS confirmstatus,
+				B.confirmdate,
+				B.updatestatus,
+				C.confirmcount,
+				D.confirmtotalcount
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			JOIN
+				(SELECT
+					circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					(updatestatus = 1 or updatestatus = 3)
+				AND
+					tenantid = 0
+				GROUP BY
+					circularid) C
+			ON
+				A.circularid = C.circularid
+			JOIN
+				(SELECT
+					circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					tenantid = 0
+				GROUP BY
+					circularid) D
+			ON
+				A.circularid = D.circularid
+			WHERE
+				A.MEMBERID = #memberID#
+			AND
+				A.TENANTID = #tenantID# 
+			AND
+				A.STATUS != 2
+			AND
+				B.UPDATESTATUS != 2
+			GROUP BY
+				A.CIRCULARID
+			ORDER BY
+				A.REGDATE DESC 
+			LIMIT
+				#limit#, #rowCount#
+		]]>
     </select>
 
     <select id="EzCircularDAO.getFolderInfo" parameterClass="Map" resultClass="String">
@@ -1193,7 +1234,7 @@
 	        AND
 	            MEMBERID = #memberID#
 	        AND
-	            TENANTID = #tenantID#      
+	            TENANTID = #tenantID#
         ]]>
     </update>
   

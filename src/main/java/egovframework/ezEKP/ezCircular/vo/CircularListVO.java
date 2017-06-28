@@ -27,10 +27,14 @@ public class CircularListVO {
 	private String endDate;
 	/** 회람자Id */
 	private String circularUserID;
-	/** 확인상태 */
+	/** 본인확인상태 */
 	private String confirmStatus;
 	/** 확인일 */
 	private String confirmDate;
+	/** 회람자확인상태 카운트 */
+	private String confirmCount;
+	/** 회람자확인상태 카운트*/
+	private String confirmTotalCount;
 	/** 변경상태 */
 	private int updateStatus;
 	/** 변경일 */
@@ -121,6 +125,18 @@ public class CircularListVO {
 	}
 	public void setConfirmStatus(String confirmStatus) {
 		this.confirmStatus = confirmStatus;
+	}
+	public String getConfirmCount() {
+		return confirmCount;
+	}
+	public void setConfirmCount(String confirmCount) {
+		this.confirmCount = confirmCount;
+	}
+	public String getConfirmTotalCount() {
+		return confirmTotalCount;
+	}
+	public void setConfirmTotalCount(String confirmTotalCount) {
+		this.confirmTotalCount = confirmTotalCount;
 	}
 	public String getConfirmDate() {
 		return confirmDate;

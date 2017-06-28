@@ -623,8 +623,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 	public int getMyCircularListCount(String memberID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("memberId", memberID);
-		map.put("tenantId", tenantID);
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
 		
 		return ezCircularDAO.getMyCircularListCount(map);
 	}
@@ -633,10 +633,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("memberId", memberID);
+		map.put("memberID", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
-		map.put("tenantId", tenantID);
+		map.put("tenantID", tenantID);
 		
 		return ezCircularDAO.getMyCircularList(map);
 	}

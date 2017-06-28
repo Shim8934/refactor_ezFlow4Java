@@ -825,13 +825,13 @@ public class EzCircularController extends EgovFileMngUtil {
     @RequestMapping(value = "/ezCircular/getMyCircularList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
     public String getMyCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
-    	logger.debug("getCircularList started");
+    	logger.debug("getMyCircularList started");
 
     	userInfo = commonUtil.userInfo(loginCookie);
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
     	
-    	headerVO.setListType("C");
+    	headerVO.setListType("I");
     	headerVO.setTenantID(userInfo.getTenantId());
     	
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
@@ -882,11 +882,12 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
@@ -896,7 +897,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		resultXML.append("</DOCLIST>");
         
         logger.debug("resultXML : "+resultXML);
-		logger.debug("getCircularList ended");
+		logger.debug("getMyCircularList ended");
         return resultXML.toString();
     }
     
