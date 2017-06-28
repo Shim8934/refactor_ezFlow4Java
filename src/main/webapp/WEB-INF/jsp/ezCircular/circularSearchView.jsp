@@ -183,7 +183,7 @@
 		    }
 		    
 		    function event_click(obj) {
-		    	
+// 		    	alert($(""));
 		    }
 			
 		    function open_schedule(circularID) {
@@ -272,7 +272,7 @@
 		    	</tr>
 		    	<c:forEach var="item" items="${list}" varStatus="status">
 			    	<tr id="searchList${status.count}" style="cursor:pointer;padding:0" onClick="event_click(this)" ondblClick="open_schedule('${item.circularID}')" bgcolor=#ffffff>
-			    		<td style="width:20px"><input type="checkbox"></td>
+			    		<td style="width:20px"><input type="checkbox" id="checkbox${status.count }"></td>
 			    		<td style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center">
 			    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>
 			    			<c:if test="${item.importance == '1'}"><img src='/images/ImgIcon/view-importance.gif'/></c:if>

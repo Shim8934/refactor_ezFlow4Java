@@ -852,7 +852,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
         int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), startRow, endRow,	userInfo.getOffset(), userInfo.getTenantId());
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -989,22 +989,22 @@ public class EzCircularController extends EgovFileMngUtil {
 	public String circularWrite(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		List<CircularListVO> list = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
-		
-		String userID = "";
-		String userName = "";
-		String userName2 = "";
-
-		if (list.get(0).getMemberID() != "") {	
-			userID = list.get(0).getMemberID();
-			userName = list.get(0).getMemberName();
-			userName2 = list.get(0).getMemberName2();				
-		}
+//		List<CircularListVO> list = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
+//		
+//		String userID = "";
+//		String userName = "";
+//		String userName2 = "";
+//
+//		if (list.get(0).getMemberID() != "") {	
+//			userID = list.get(0).getMemberID();
+//			userName = list.get(0).getMemberName();
+//			userName2 = list.get(0).getMemberName2();				
+//		}
 
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("userID", userID);
-		model.addAttribute("userName", userName);
-		model.addAttribute("userName2", userName2);
+//		model.addAttribute("userID", userID);
+//		model.addAttribute("userName", userName);
+//		model.addAttribute("userName2", userName2);
 		
 		return "/ezCircular/circularWrite";
 	}
@@ -1047,6 +1047,10 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
 		String realPath = commonUtil.getRealPath(request);
+		
+		receiverIDs += ", " + userInfo.getId();
+		receiverList += ", " + userInfo.getDisplayName();
+		receiverList2 += ", " + userInfo.getDisplayName2();
 		
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
@@ -1128,7 +1132,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 	 
 		//TODO 회람 상세정보 가져옴
-		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getTenantId());
+		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getOffset(), userInfo.getTenantId());
 		
 		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "circularUserID", "", userInfo.getTenantId());
 		
@@ -1811,7 +1815,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람처 저장 Method
+	 * 회람처 폴더추가 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularFolderAdd.do")
 	@ResponseBody
@@ -1832,7 +1836,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람처 저장 Method
+	 * 회람처 폴더수정 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularFolderModify.do")
 	@ResponseBody
