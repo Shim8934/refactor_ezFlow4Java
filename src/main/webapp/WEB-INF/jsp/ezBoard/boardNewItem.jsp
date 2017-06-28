@@ -210,7 +210,7 @@
 			    	document.getElementById('Makedate').style.display = "none";
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
-			        document.getElementById("txtTitle").value = "<c:out value = '${strTitle}' />";
+			        document.getElementById("txtTitle").value = "<c:out value = '${strTitle}' escapeXml = 'false'  />";
 				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
@@ -381,7 +381,7 @@
 					data : { itemID : strItemID, 
 							 mode   : pMode,
 							 conLocation : strContentLocation,
-							 title  : "<c:out value = '${strTitle}' />"
+							 title  : "<c:out value = '${strTitle}' escapeXml = 'false'/>"
 						   },
 					success: function(result){
 						resText = result;
