@@ -147,7 +147,8 @@
                 pAttachAddFileSize = parseInt(pAttachAddFileSize) + parseInt(f_size);
             }
         }
-        btn_AttachDel.disabled = true;
+        
+        btn_AttachDel.disabled = false;
     }
     function ReplacText(f_size) {
         rep = /'/g;
@@ -240,12 +241,11 @@
             if (Rtnval == "TRUE") {
                 DelAttachFileAtList(pAttachCurSel);
                 DelfileSize(delfileSize);
-            }
-            else {
+            } else {
 	            var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
                         OpenAlertUI(pAlertContent);
-                    }
-                }
+            }
+        }
     }
     function DelfileSize(delfileSize) {
     }
@@ -254,48 +254,56 @@
         listview.LoadFromID("attachList");
         var Listlen = listview.GetDataRows();
         chkFlag = true;
-        if (Listlen.length == 0) {
+		var tr = Listlen[0];
+		
+        if (Listlen.length == 0 || tr.getAttribute("DATA1") == null) {
             CheckHistory(0);
             var RtnVal = AttachRemoveAll();
             if (RtnVal == "FALSE") {
 				var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
                 OpenAlertUI(pAlertContent);
             }
+            
             for (i = 0 ; i < pDeleteFile.length ; i++) {
                 DeleteFileAtServer_true(pDeleteFile[i]);
             }
+            
             parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
             parent.DivPopUpHidden();
-        }
-        else {
+        } else {
             CheckHistory(0);
             var Attachxml = APRAttachXMLParsing(ATTACH, pDocID);
             SaveAttachListInfo(Attachxml);
             for (i = 0 ; i < pDeleteFile.length ; i++) {
                 DeleteFileAtServer_true(pDeleteFile[i]);
             }
+            parent.DivPopUpHidden();
         }
     }
+    
+    function btn_AttachCancle_onclick(){
+    	parent.DivPopUpHidden();
+    }
+    
     function AttachFileInfo(pFileName, pFileSize, pFileLocation) {
         if (pFileName == "Error") {
 	        var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
             OpenAlertUI(pAlertContent);
             btn_AttachAdd.disabled = false;
-        }
-        else {
+        } else {
             Resultxml = AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation)
         }
     }
+    
     function ATTACHonSelChange_onclick() {
         var pCurSelRow = window.event.result;
         var pAttachUserID = pCurSelRow.cells(0).DATA4;
         if (pAttachUserID.toLowerCase() == pUserID.toLowerCase()) {
 //             btn_AttachDel.Enable = "true";
             btn_AttachDel.disabled = false;
-        }
-        else {
+        } else {
 //             btn_AttachDel.Enable = "false";
-            btn_AttachDel.disabled = true;
+            a.disabled = true;
         }
     }
     
@@ -497,6 +505,7 @@
         </a>
         <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
         <a class="imgbtn"><span id="btn_AttachSaveSure" onclick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
+        <a class="imgbtn"><span id="btn_AttachCancle" onclick="return btn_AttachCancle_onclick()"><spring:message code='ezApprovalG.t1761'/></span></a>
         <span id="BtnBodyAttach" style="display:none">
             <a id="btn_AttachBodyAdd" class="imgbtn" onClick="return btn_AttachBodyAdd_onclick()"><span><spring:message code='ezApprovalG.t285'/></span></a>
         </span>

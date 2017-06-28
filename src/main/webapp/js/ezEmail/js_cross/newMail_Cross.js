@@ -999,7 +999,9 @@ function event_SaveonClick() {
                 }
                 //유효하지 않은 메일주소(내부)가 있을 경우
                 else if (pRtnMessage.indexOf("Invalid Addresses") > -1) {
-                	alert(strLangLHM16);
+                	var invalidAddresses = pRtnMessage.split(":")[1];
+                	invalidAddresses = invalidAddresses.split("|").join("\n");
+                	alert(strLangLHM16 + "\n" + invalidAddresses);
                 }
                 // 그 외
                 else {
@@ -1066,7 +1068,9 @@ function event_SaveonClick() {
                 }
                 //유효하지 않은 메일주소(내부)가 있을 경우
                 else if (pRtnMessage.indexOf("Invalid Addresses") > -1) {
-                	alert(strLangLHM16);
+                	var invalidAddresses = pRtnMessage.split(":")[1];
+                	invalidAddresses = invalidAddresses.split("|").join("\n");
+                	alert(strLangLHM16 + "\n" + invalidAddresses);
                 }
                 // 그 외
                 else {
