@@ -16,6 +16,16 @@ $(document).on('pageshow', '#sampleList', function() {
 	});
 });
 
+/*$(document).on('pageshow', '#mainSlide', function() {
+	$(window).on('resize', function() {
+		var bws = $(window).width();
+		$(".listview").css("width", bws);
+		
+		carousel.reload();
+	});
+});*/
+
+
 $(document).on('pageshow', '#main', function(){
 	$(".ui-collapsible-heading-toggle").not(".animateMe1 .ui-collapsible-heading-toggle").on("click", function (e) {
 	    var current = $(this).closest(".ui-collapsible");

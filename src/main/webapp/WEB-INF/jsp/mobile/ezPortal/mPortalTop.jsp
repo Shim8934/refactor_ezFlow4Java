@@ -6,7 +6,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>						
+		<meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0"/>
 		<link rel="stylesheet" type="text/css" href="/css/font-awesome-4.7.0/css/font-awesome.min.css" />
 		
 		<script type="text/javascript">
@@ -36,7 +36,7 @@
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>
 			<div id="topSearchArea">
 				<input name="search-5" id="search-5" type="search" placeholder="직원검색" value="" onKeyPress="if(event.keyCode==13) alert('직원검색!');">
-			</div>		
+			</div>
 		</header>
 		
 		<!-- 왼쪽메뉴 panel -->
@@ -50,6 +50,12 @@
 	                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-file-text-o" style="font-size:15px"></i>&nbsp;&nbsp;새게시물</a></li>
 	                <li data-icon="forward"><a href="javascript:goTest(1);"><i class="fa fa-desktop" style="font-size:15px"></i>&nbsp;&nbsp;자원관리</a></li>
 	                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-users" style="font-size:15px"></i>&nbsp;&nbsp;직원목록</a></li>	                        
+		        </ul>
+		        <ul data-role="listview" style="margin-top:30px">
+		        	<li><a rel="external" class="ui-btn" href="/mobile/ezPortal/portalMain.do?mainOption=F"><i class="fa fa-plane" style="font-size:15px"></i>&nbsp;&nbsp;기본 타입 </a></li>
+		        	<li><a rel="external" class="ui-btn" href="/mobile/ezPortal/portalMain.do"><i class="fa fa-plane" style="font-size:15px"></i>&nbsp;&nbsp;폴더 타입</a></li>
+					<li><a rel="external" class="ui-btn" href="/mobile/ezPortal/portalMain.do?mainOption=S"><i class="fa fa-plane" style="font-size:15px"></i>&nbsp;&nbsp;포탈 타입 </a></li>
+					<li><a rel="external" class="ui-btn" href="/mobile/ezPortal/portalMain.do?mainOption=T"><i class="fa fa-plane" style="font-size:15px"></i>&nbsp;&nbsp;타임라인 타입 </a></li>					
 		        </ul>
 		        <div style="margin-top:10px;padding:1em">	        	
 		        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>
