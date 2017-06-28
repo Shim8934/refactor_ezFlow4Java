@@ -800,47 +800,53 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	}
 		        	
 		        	//set importance
-		        	if (orgMessage.getHeader("X-Priority") != null) {
-		        		String tempImportance = orgMessage.getHeader("X-Priority")[0];
-	        			if (tempImportance.equals("1")) {
-	        				importance = "2";
-	        			} else if (tempImportance.equals("5")) {
-	        				importance = "0";
-	        			} else {
-	        				importance = "1";
-	        			}
-	        		}
-		        	logger.debug("importance=" + importance);
-
-		        	//set isEachMail
-		        	if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
-		        		isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
-	        		}
-		        	//set bodyType
-		        	if (orgMessage.getHeader("Content-Type") != null) {
-		        		String tempBodyType = orgMessage.getHeader("Content-Type")[0];
-		        		if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
-		        			bodyType = "1";
-		        		}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
-		        			bodyType = "0";
+		        	if(_cmd.equals("EDIT")	){
+		        		logger.debug("EDIT MODE : set mail option start");
+		        		if (orgMessage.getHeader("X-Priority") != null) {
+		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+		        			if (tempImportance.equals("1")) {
+		        				importance = "2";
+		        			} else if (tempImportance.equals("5")) {
+		        				importance = "0";
+		        			} else {
+		        				importance = "1";
+		        			}
 		        		}
-	        		}
-		        	if (orgMessage.getHeader("Return-Receipt-To") != null) {
-		        		replySendTime = "1";
-	        		} else {
-	        			replySendTime = "0";
-	        		}
-		        	if (orgMessage.getHeader("Disposition-Notification-To") != null) {
-		        		replyReadTime = "1";
-	        		} else {
-	        			replyReadTime = "0";
-	        		}
+		        		logger.debug("importance=" + importance);
 		        	
-		        	if (orgMessage.getHeader("Delivery-Date") != null) {
-		        		delaySendDate = orgMessage.getHeader("Delivery-Date")[0].trim();
-	        		} else {
-	        			delaySendDate = "";
-	        		}
+		        		//set isEachMail
+		        		if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
+		        			isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
+		        		}
+		        		//set bodyType
+		        		if (orgMessage.getHeader("Content-Type") != null) {
+		        			String tempBodyType = orgMessage.getHeader("Content-Type")[0];
+		        			
+		        			if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
+		        				bodyType = "1";
+		        			}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
+		        				bodyType = "0";
+		        			}
+		        		}
+		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
+		        			replySendTime = "1";
+		        		} else {
+		        			replySendTime = "0";
+		        		}
+		        		if (orgMessage.getHeader("Disposition-Notification-To") != null) {
+		        			replyReadTime = "1";
+		        		} else {
+		        			replyReadTime = "0";
+		        		}
+		        	
+		        		if (orgMessage.getHeader("Delivery-Date") != null) {
+		        			delaySendDate = orgMessage.getHeader("Delivery-Date")[0].trim();
+		        		} else {
+		        			delaySendDate = "";
+		        		}
+		        		
+		        		logger.debug("EDIT MODE : set mail option end");
+		        	}
 				}
 				orgFolder.close(true);
 				
@@ -903,7 +909,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
         String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-        
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
