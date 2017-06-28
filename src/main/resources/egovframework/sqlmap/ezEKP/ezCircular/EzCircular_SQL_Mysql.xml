@@ -845,7 +845,7 @@
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
 				B.updatestatus,
-				IFNULL('0', C.confirmcount),
+				IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount
 			FROM
 				TBL_CIRCULAR A
