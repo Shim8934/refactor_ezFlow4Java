@@ -662,37 +662,65 @@
     
     <select id="EzCircularDAO.getCircularCompleteList" resultClass="CircularListVO" >
         <![CDATA[
-            SELECT
-                A.circularid,
-                A.importance,
-                A.hasfile,
-                A.status,
-                A.title,
-                A.memberid,
-                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
-                B.status AS confirmstatus,
-                DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS confirmdate,
-                B.updatestatus,
-                DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate
-                
-            FROM
-                TBL_CIRCULAR A
-            JOIN
-            	TBL_CIRCULAR_USER B
-            ON
-            	A.circularid = B.circularid
-            AND
-                A.tenantid = B.tenantid
-            WHERE
-            	(B.updatestatus = '1' OR B.updatestatus = '4')
-            AND
-                B.memberid = #memberID#
-            AND
-                A.tenantid = #tenantID#
-            ORDER BY
-            	A.regdate DESC
-            LIMIT
-                #limit#, #rowCount#     
+			SELECT
+				A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+				B.status AS confirmstatus,
+				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+				B.updatestatus,
+                C.confirmcount,
+                D.confirmtotalcount
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			JOIN
+				(SELECT
+					circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					(updatestatus = 1 or updatestatus = 3)
+				AND
+					tenantid = 0
+				GROUP BY
+					circularid) C
+			ON
+				A.circularid = C.circularid
+			JOIN
+				(SELECT
+					circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					tenantid = 0
+				GROUP BY
+					circularid) D
+			ON
+				A.circularid = D.circularid
+			WHERE
+				(B.updatestatus = '1' OR B.updatestatus = '4')
+			AND
+				B.memberid = #memberID#
+			AND
+				A.memberid != #memberID#
+			AND
+				A.tenantid = #tenantID#
+			ORDER BY
+				A.regdate DESC
+			LIMIT
+				#limit#, #rowCount#     
         ]]>
     </select>
     
@@ -712,6 +740,8 @@
             	(B.updatestatus = '1' OR B.updatestatus = '4')
             AND
                 B.memberid = #memberID#
+            AND
+				A.memberid != #memberID#
             AND
                 A.tenantid = #tenantID#
         ]]>
@@ -815,7 +845,7 @@
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
 				B.updatestatus,
-				C.confirmcount,
+				IFNULL('0', C.confirmcount),
 				D.confirmtotalcount
 			FROM
 				TBL_CIRCULAR A
@@ -825,7 +855,7 @@
 				A.circularid = B.circularid
 			AND
 				A.tenantid = B.tenantid
-			JOIN
+			LEFT JOIN
 				(SELECT
 					circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmCount
@@ -839,7 +869,7 @@
 					circularid) C
 			ON
 				A.circularid = C.circularid
-			JOIN
+			LEFT JOIN
 				(SELECT
 					circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount

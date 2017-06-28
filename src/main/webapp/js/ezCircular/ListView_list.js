@@ -794,7 +794,6 @@ function ListView() {
                     } else {
                         strValue = "신";
                         objTd.style.color = "red";
-                        
                     }
                 }
                 
@@ -807,7 +806,6 @@ function ListView() {
                     } else {
                     	strValue = '확인'
                     }
-                    
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "STATUS") {
