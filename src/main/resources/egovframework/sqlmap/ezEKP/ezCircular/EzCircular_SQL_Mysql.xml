@@ -53,7 +53,9 @@
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
-                DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate
+                DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate,
+                IFNULL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount
                 
             FROM
                 TBL_CIRCULAR A
@@ -63,6 +65,32 @@
             	A.circularid = B.circularid
             AND
                 A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					(updatestatus = 1 or updatestatus = 3)
+				AND
+					tenantid = 0
+				GROUP BY
+					circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					tenantid = 0
+				GROUP BY
+					circularid) D
+			ON
+				A.circularid = D.circularid
             WHERE
             	(B.updatestatus = '0' OR B.updatestatus = '4')
             AND
