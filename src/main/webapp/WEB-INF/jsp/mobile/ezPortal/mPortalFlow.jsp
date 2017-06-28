@@ -52,7 +52,7 @@
 								<li class="ui-block-b"><a class="ui-btn" href="javascript:goMail();"><i class="fa fa-users" style="font-size:15px"></i>&nbsp;&nbsp;<span style="font-size:15px">직원목록</span></a></li>																			
 							</ul>
 						</div>	 -->											
-						<ul data-role="listview" data-theme="a" data-divider-theme="a" data-inset="true">						        	
+						<ul data-role="listview" data-theme="a" data-divider-theme="a" data-inset="false">						        	
 				            <li data-role="list-divider" style="background-image: url('/images/mobile/second.jpg')">결재할문서 <span class="ui-li-count">6</span></li>
 				            <li>
 				            	<a href="index.html">

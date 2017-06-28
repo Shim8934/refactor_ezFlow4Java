@@ -5,8 +5,7 @@
 <html>
 	<head>
 		<title>::: ezEKP Java :::</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
 		<link rel="stylesheet" type="text/css" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css" />		
     	<link rel="stylesheet" type="text/css" href="/css/mobile/mobile.css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -51,7 +50,7 @@
 						            <li data-role="list-divider">결재할문서</li>
 						            <li>
 						            	<a href="index.html">
-						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;2017년 6월 9일 장진혁 휴가원
+						            		<i class="fa fa-pencil-square-o" style="font-size:15px"></i>&nbsp;&nbsp;2017년 6월 9일 장진혁 휴가원입니다.휴가예요2017년 6월 9일 장진혁 휴가원입니다.휴가예요2017년 6월 9일 장진혁 휴가원입니다.휴가예요
 						            	</a>
 						            </li>
 						            <li>
@@ -246,103 +245,7 @@
 								        </ul>	
 								    </div>
 								</div>										
-						    </div>
-						    <div data-role="collapsible" class="animateMe" style="background-image: url('/images/mobile/fifth.jpg')" data-iconpos="right">
-						    	<h2>직원조회</h2>
-						        <ul data-role="listview" data-theme="a" data-divider-theme="a" data-inset="true">
-						        	<li>						            	
-						            	<a href="index.html">
-						            		<i class="fa fa-users" style="font-size:15px"></i>
-						            		직원목록						                							                    
-						            	</a>
-						            </li>
-						            <li data-role="list-divider">오픈솔루션팀<span class="ui-li-count">14</span></li>
-						            <li>						            	
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	김경식 [팀장]						                					                    
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	이동호 [수석부장]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	장진혁 [차장]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	박정진 [대리]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	정주호 [대리]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	정지혜 [대리]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	황윤진 [대리]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	이효민 [사원]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	지정석 [사원]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	이효진 [사원]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	정수현 [사원]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	강민석 [사원]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	김유진 [사원]						                	
-						            	</a>
-						            </li>
-						            <li>
-						            	<a href="index.html">
-						            		<i class="fa fa-user" style="font-size:15px"></i>
-						                	박종균 [사원]						                	
-						            	</a>
-						            </li>
-						        </ul>
-						    </div>						    						    					    
+						    </div>						    						    						    					    
 						</div>
 					</div>
 				</form>
