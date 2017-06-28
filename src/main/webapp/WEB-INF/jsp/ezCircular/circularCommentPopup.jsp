@@ -62,9 +62,9 @@
 					<col width="15%" /><col width="67%" /><col width="18%" />
 				</colgroup>
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left"><img src="/images/i_group.gif" align="middle"/>&nbsp;장진혁&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left"><img src="/images/i_group.gif" align="middle"/>&nbsp;장진혁&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;확인완료</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						2017-06-28 16:40&nbsp;&nbsp;확인완료
+						2017-06-28 16:40
 					</th>
 				</tr>
 				<tr style="height:40px;text-align:left;border-top:1px solid #e2e2e2">
@@ -89,16 +89,16 @@
 					</td>
 				</tr>
 				<tr style="height:40px;text-align:left;">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left"><img src="/images/i_group.gif" align="middle"/>&nbsp;김길동&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left"><img src="/images/i_group.gif" align="middle"/>&nbsp;김길동&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;확인완료</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						2017-06-28 20:20&nbsp;&nbsp;확인완료
+						2017-06-28 20:20
 					</th>
 				</tr>
 				<tr style="height:40px;text-align:left;border-top:1px solid #e2e2e2">
 					<td style="padding-left:3px"><img src="/images/i_rep.gif" align="middle"/>&nbsp;&nbsp;장진혁</td>
 					<td style="text-align:left;padding:10px;">안녕하세요. 장진혁입니다. 방갑습니다.&nbsp;<img src="/images/comment_del.gif" align="middle"/></td>
 					<td style="text-align:right;padding-right:8px">
-						2017-06-28 16:40
+						2017-06-28 16:40 
 					</td>
 				</tr>
 				<tr style="height:40px;text-align:left;border-top:1px solid #e2e2e2">
@@ -109,51 +109,51 @@
 					</td>
 				</tr>
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>	
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>	
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;김구라&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>
 				<tr style="height:40px;text-align:left">
-					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/></th>
+					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left""><img src="/images/i_group.gif" align="middle"/>&nbsp;이경국&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;미확인</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
-						미확인
+						
 					</th>
 				</tr>						
 			</table>
