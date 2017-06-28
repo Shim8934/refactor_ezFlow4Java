@@ -44,7 +44,13 @@
 	                treeconfig = xmlHTTP.responseXML;
 	
 	            PostTreeView.config(treeconfig);
-	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");
+	            
+	            if (oldFolderId == "") {
+		            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");	            	
+	            } else {
+	            	PostTreeView.source("<tree><nodes>" + get_childXML_All("", true, true) + "</nodes></tree>");
+	            }
+
 	            PostTreeView.update();
 	        }
 	        
@@ -52,7 +58,7 @@
 	        	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
 	        	var circularIdList = "${circularIdList}";
 	        	var updateStatus = "${updateStatus}";
-	        	
+
 	        	$.ajax ({
 	                type : 'POST',
 	                dataType : 'text',

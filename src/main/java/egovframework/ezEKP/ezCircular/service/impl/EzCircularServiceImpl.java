@@ -207,10 +207,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public CircularListVO getCircular(String circularID, int tenantID) throws Exception {
+	public CircularListVO getCircular(String circularID, String offset, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("circularId", circularID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantID);
 		
 		return ezCircularDAO.getCircular(map);
@@ -630,12 +631,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, int tenantID) throws Exception {
+	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, String offset, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		
 		return ezCircularDAO.getMyCircularList(map);

@@ -229,6 +229,16 @@
 		                		</c:choose>
 		            		</td>
 		        		</tr>
+		        		<tr style="height:25px">
+							<th>작성자</th>
+	       					<td style="padding-left: 4px;">								
+	         					<div id="writer" >${userInfo.displayName }</div>
+	         				</td>
+							<th>작성일</th> 
+ 							<td style="padding-left: 4px">
+ 								<div id="printStatus">${result.regDate }</div>
+ 							</td> 
+						</tr>
 		        		<tr>
 		            		<th>회람자</th>
 		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
@@ -336,9 +346,9 @@
  							</td> 
 						</tr> 
 						<tr style="height:25px">
-							<th>회람상태</th>
-	       					<td>								
-	         					<div id="statusNum" style="padding-left: 4px;">${statusFirst} / ${statusSecond}</div>
+							<th style="padding-left:10px">회람상태</th>
+	       					<td style="padding-left: 4px;">								
+	         					<div id="statusNum">${statusFirst} / ${statusSecond}</div>
 	         				</td>
 							<th style="padding-left:10px">상태</th> 
  							<td style="padding-left:4px">
@@ -355,6 +365,16 @@
 				            			</c:otherwise>
 		                			</c:choose>
  								</div>
+ 							</td> 
+						</tr>
+						<tr style="height:25px">
+							<th style="padding-left: 10px;">작성자</th>
+	       					<td style="padding-left: 4px;">								
+	         					<div id="writer" >${userInfo.displayName }</div>
+	         				</td>
+							<th style="padding-left:10px">작성일</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printStatus">${result.regDate }</div>
  							</td> 
 						</tr> 
 						<tr style="height:25px"> 

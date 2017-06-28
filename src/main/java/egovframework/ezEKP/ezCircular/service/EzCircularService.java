@@ -32,13 +32,13 @@ public interface EzCircularService {
 
 	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception;
 	
-	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, int tenantID) throws Exception;
+	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, String offset, int tenantID) throws Exception;
 
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
-	public CircularListVO getCircular(String circularID, int tenantID) throws Exception;
+	public CircularListVO getCircular(String circularID, String offset, int tenantID) throws Exception;
 	
 	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 	

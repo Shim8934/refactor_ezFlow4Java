@@ -488,7 +488,7 @@
                 status,
                 title,
                 memberid,
-                regdate,
+                DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 option,
                 content
             FROM
@@ -811,9 +811,9 @@
 				A.status,
 				A.title,
 				A.memberid,
-				A.regdate,
+				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 				B.status AS confirmstatus,
-				B.confirmdate,
+				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
 				B.updatestatus,
 				C.confirmcount,
 				D.confirmtotalcount

@@ -30,15 +30,15 @@
 	    	}
 
 		    window.onload = function () {
-		       document.getElementById("receiverlist").innerHTML = userName;
-		       document.getElementById("receiverlist2").innerHTML = userName2;
-	           document.getElementById("receiverID").innerHTML = userID;
+// 		       document.getElementById("receiverlist").innerHTML = userName;
+// 		       document.getElementById("receiverlist2").innerHTML = userName2;
+// 	           document.getElementById("receiverID").innerHTML = userID;
 		    	
-		       g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+// 		       g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 
-		       g_attendant["id"][0] = userID.trim();
-	       	   g_attendant["name"][0] = userName.trim();
-	       	   g_attendant["name2"][0] = userName2.trim();
+// 		       g_attendant["id"][0] = userID.trim();
+// 	       	   g_attendant["name"][0] = userName.trim();
+// 	       	   g_attendant["name2"][0] = userName2.trim();
 		    }
 			
 		    window.onresize = function () {
@@ -62,7 +62,7 @@
 		    }
 
 	    	function btn_Save() {
-	        	//회람저장 눌렀을 시
+	        	//회람작성 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
 				
@@ -270,14 +270,13 @@
 								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;메일공지 사용   									
 	         				</td>
 	        			</tr>
-				        <tr>
-				        	<th>회람상태</th>
-	       					<td>								
-	         				</td>
-	         				<th>상태</th>
-	       					<td>							
-	         				</td>
-			     		</tr>
+<!-- 				        <tr> -->
+<!-- 				        	<th>작성자</th> -->
+<!-- 	       					<td></td> -->
+<!-- 	         				<th>작성일</th> -->
+<!-- 	       					<td>							 -->
+<!-- 	         				</td> -->
+<!-- 			     		</tr> -->
 						<tr>
 	           				<th rowspan="2">
 	           					회람자
