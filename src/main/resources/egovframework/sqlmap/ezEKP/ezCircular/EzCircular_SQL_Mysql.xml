@@ -67,12 +67,12 @@
                 A.tenantid = B.tenantid
 			LEFT JOIN
 				(SELECT
-					circularid,
+					DISTINCT circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmCount
 				FROM
 					TBL_CIRCULAR_USER
 				WHERE
-					(updatestatus = 1 or updatestatus = 3)
+					updatestatus IN (1, 3)
 				AND
 					tenantid = 0
 				GROUP BY
@@ -81,7 +81,7 @@
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					circularid,
+					DISTINCT circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR_USER
@@ -92,7 +92,7 @@
 			ON
 				A.circularid = D.circularid
             WHERE
-            	(B.updatestatus = '0' OR B.updatestatus = '4')
+            	B.updatestatus IN ('0', '4')
             AND
                 B.memberid = #memberID#
             AND
@@ -701,8 +701,8 @@
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
 				B.updatestatus,
-                C.confirmcount,
-                D.confirmtotalcount
+                IFNULL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount
 			FROM
 				TBL_CIRCULAR A
 			JOIN
@@ -711,23 +711,23 @@
 				A.circularid = B.circularid
 			AND
 				A.tenantid = B.tenantid
-			JOIN
+			LEFT JOIN
 				(SELECT
-					circularid,
+					DISTINCT circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmCount
 				FROM
 					TBL_CIRCULAR_USER
 				WHERE
-					(updatestatus = 1 or updatestatus = 3)
+					updatestatus IN (1, 3)
 				AND
 					tenantid = 0
 				GROUP BY
 					circularid) C
 			ON
 				A.circularid = C.circularid
-			JOIN
+			LEFT JOIN
 				(SELECT
-					circularid,
+					DISTINCT circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR_USER
@@ -738,7 +738,7 @@
 			ON
 				A.circularid = D.circularid
 			WHERE
-				(B.updatestatus = '1' OR B.updatestatus = '4')
+				B.updatestatus IN ('0', '1' ,'4')
 			AND
 				B.memberid = #memberID#
 			AND
@@ -765,7 +765,7 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	(B.updatestatus = '1' OR B.updatestatus = '4')
+            	B.updatestatus IN ('0', '1' ,'4')
             AND
                 B.memberid = #memberID#
             AND
@@ -885,12 +885,12 @@
 				A.tenantid = B.tenantid
 			LEFT JOIN
 				(SELECT
-					circularid,
+					DISTINCT circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmCount
 				FROM
 					TBL_CIRCULAR_USER
 				WHERE
-					(updatestatus = 1 or updatestatus = 3)
+					updatestatus IN (1, 3)
 				AND
 					tenantid = 0
 				GROUP BY
@@ -899,7 +899,7 @@
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					circularid,
+					DISTINCT circularid,
 					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
 				FROM
 					TBL_CIRCULAR_USER
@@ -944,23 +944,62 @@
 	<select id="EzCircularDAO.getCircularTDList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE, B.UPDATESTATUS
+                A.circularid,
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                A.regdate,
+                B.status AS confirmstatus,
+                IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+				IFNULL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount,
+                B.updatestatus
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR A
+			JOIN
+                TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					DISTINCT circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					updatestatus IN (1, 3)
+				AND
+					tenantid = 0
+				GROUP BY
+					circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT circularid,
+					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR_USER
+				WHERE
+					tenantid = 0
+				GROUP BY
+					circularid) D
+			ON
+				A.circularid = D.circularid
             WHERE
-                A.CIRCULARID = B.CIRCULARID
+            	B.updatestatus = '2'
             AND
-                A.TENANTID = B.TENANTID
+                A.memberid = #memberID#
             AND
-            	B.UPDATESTATUS = '2'
-            AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                A.tenantid = #tenantID#
             GROUP BY
-				A.CIRCULARID    
+				A.circularid    
             ORDER BY
-            	A.REGDATE DESC
+            	A.regdate DESC
             LIMIT
                 #limit#, #rowCount#        
         ]]>
@@ -971,17 +1010,19 @@
             SELECT
                 COUNT(DISTINCT A.CIRCULARID) CNT
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.CIRCULARID = B.CIRCULARID
+			AND
+				A.TENANTID = B.TENANTID
             WHERE
-                A.CIRCULARID = B.CIRCULARID
-            AND
-                A.TENANTID = B.TENANTID
-            AND
             	B.UPDATESTATUS = '2'
             AND
-                A.MEMBERID = #memberId#
+                A.MEMBERID = #memberID#
             AND
-                A.TENANTID = #tenantId#
+                A.TENANTID = #tenantID#
         ]]>
     </select>
 
