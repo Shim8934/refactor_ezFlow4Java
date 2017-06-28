@@ -368,6 +368,8 @@ var strLangLHM16 = "유효하지 않은 수신인이 있습니다. 이메일 주
 var strLangKMS01 = "";
 var strLangKMS02 = "첨부파일 총 크기가 ";
 var strLangKMS03 = "No mail.";
+var strLangKMS04 = "수신자가 "; 
+var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다. \r\n 개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
 
 function GetLocalTime(Offset , pDateTime)
 {
