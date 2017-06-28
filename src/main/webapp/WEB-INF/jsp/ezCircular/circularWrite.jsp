@@ -90,7 +90,6 @@
 				//댓글기능, 메일공지 둘 다 사용할 때
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
-					circularSendMail();
 				}
 				
 				//파일 첨부된 목록 가져오기

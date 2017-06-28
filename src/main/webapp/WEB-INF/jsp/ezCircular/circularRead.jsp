@@ -300,8 +300,8 @@
 				<td style="vertical-align:top">
 					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px" width="60">제목</th> 
- 							<td style="padding-left:4px">
+ 							<th style="padding-left:10px">제목</th> 
+ 							<td style="padding-left:4px; width:100%" colspan="3">
  								<div id="printTitle">
  									${result.title}
  								</div>
@@ -309,47 +309,38 @@
 						</tr> 
 						<tr style="height:25px"> 
  							<th style="padding-left:10px">중요도</th> 
- 							<td style="padding-left:4px"> 
+ 							<td style="padding-left:4px; width:200px"> 
  								<div id="printImportance">
  									${result.importance == '0' ? '일반' : '중요'}
  								</div>
  							</td> 
-						</tr> 
-						<tr style="height:25px"> 
  							<th style="padding-left:10px">옵션</th> 
- 							<td style="padding-left:4px">
+ 							<td style="padding-left:4px; width:200px">
  								<div id="printOption">
  									<c:choose>
 		                				<c:when test="${result.option eq '1'}">
-			                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
-			                				<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+		                					<span id="option">댓글기능 사용</span>
 			                			</c:when>
 			                			<c:when test="${result.option eq '2'}">
-			                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
-			                				<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+			                				<span id="AllDay">메일공지 사용</span>
 			                			</c:when>
 			                			<c:when test="${result.option eq '3'}">
-			                				<input type="checkbox" id="option" checked onClick="return false;"/>댓글기능 사용
-											<input type="checkbox" id="AllDay" checked onClick="return false;"/>메일공지 사용
+			                				<span id="option">댓글기능 사용</span>,  
+											<span id="AllDay">메일공지 사용</span>
 			                			</c:when>
 			                			<c:otherwise>
-			                				<input type="checkbox" id="option" onClick="return false;"/>댓글기능 사용
-											<input type="checkbox" id="AllDay" onClick="return false;"/>메일공지 사용
+			                				<span id="option">사용안함</span>
 			                			</c:otherwise>
 		                			</c:choose>
  								</div>
  							</td> 
 						</tr> 
-						<tr style="height:25px"> 
- 							<th style="padding-left:10px">회람자</th> 
- 							<td style="padding-left:4px">
- 								<div id="printCircularUser">
- 									${listUser}
- 								</div>
- 							</td>
-						</tr>
-						<tr style="height:25px"> 
- 							<th style="padding-left:10px">상태</th> 
+						<tr style="height:25px">
+							<th>회람상태</th>
+	       					<td>								
+	         					<div id="statusNum" style="padding-left: 4px;">${statusFirst} / ${statusSecond}</div>
+	         				</td>
+							<th style="padding-left:10px">상태</th> 
  							<td style="padding-left:4px">
  								<div id="printStatus">
  									<c:choose>
@@ -365,19 +356,18 @@
 		                			</c:choose>
  								</div>
  							</td> 
-						</tr>  
-						<tr> 
- 							<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
-						</tr>
-						
-					</table>
-					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; margin-top:5px;" class="content2">
+						</tr> 
 						<tr style="height:25px"> 
-							<th style="padding-left:10px" width="60">댓글</th> 
-							<td style="padding-left:4px">
-								<table id="printComment" style="width:100%"></table>
-							</td>
-						</tr> 					
+ 							<th style="padding-left:10px">회람자</th> 
+ 							<td style="padding-left:4px; width:100%" colspan="3">
+ 								<div id="printCircularUser">
+ 									${listUser}
+ 								</div>
+ 							</td>
+						</tr>
+						<tr> 
+ 							<td colspan="4"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
+						</tr>	
 					</table>
 				</td>
 			</tr>

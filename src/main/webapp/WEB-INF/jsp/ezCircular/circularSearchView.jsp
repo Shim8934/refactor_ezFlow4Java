@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 	    <script type="text/javascript">
+	    	var checkval = "f";
 			var startdate = "<c:out value='${startDate}' />";
 			var enddate = "<c:out value='${endDate}' />";
 			var filter = "<c:out value='${filter}' />";
@@ -133,6 +134,34 @@
 
 		        window.location.href = "/ezCircular/circularSearchView.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + keyword;
 		    }
+		    
+		    function check_change(checkbox) {
+// 			    if (checkval == "f") {
+// 			        var Rows = searchList1.childNodes.item(0).childNodes.item(0).childNodes;
+// 			        for (var i = 0; i < Rows.length; i++) {
+// 			            if (!Rows.item(i).childNodes.item(0).childNodes.item(0).disabled) {
+// 			                Rows.item(i).childNodes.item(0).childNodes.item(0).checked = true;
+// 			                for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
+// 			                    Rows.item(i).childNodes.item(RowCnt).style.backgroundColor = m_strColorSelect;
+// 			                }
+// 			                listContentArry[listContentArry.length] = Rows.item(i).getAttribute("id");
+// 			            }
+// 			        }
+// 			        checkval = "t";
+// 			    }
+// 			    else if (checkval == "t") {
+// 			        var Rows = searchList1.childNodes.item(0).childNodes.item(0).childNodes;
+// 			        for (var i = 0; i < Rows.length; i++) {
+// 			            Rows.item(i).childNodes.item(0).childNodes.item(0).checked = false;
+// 			            for (var RowCnt = 0; RowCnt < Rows.item(i).childNodes.length; RowCnt++) {
+// 			                Rows.item(i).childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+// 			            }
+// 			        }
+// 			        listContentArry = new Array();
+// 			        checkval = "f";
+
+// 			    }
+			}
 			
 		    var usepostDate = false;
 		    function DateSearch_Click() {
@@ -225,7 +254,7 @@
 		    </h2>		
 		  	<table class="mainlist" style="table-layout:fixed;width:100%">
 		    	<tr> 
-		      		<th style="width:20px; padding: 0px; color: black;padding-left:3px;" nowrap title><input type="checkbox" onClick="open_schedule(this)" id="Checkbox1"></th>
+		      		<th style="width:20px; padding: 0px; color: black;padding-left:3px;" nowrap title><input type="checkbox" id="Checkbox1" onClick="check_change(this)"></th>
 			        <th style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 			        <th style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th>
 					<c:if test="${type == 'N'}">
@@ -243,7 +272,7 @@
 		    	</tr>
 		    	<c:forEach var="item" items="${list}" varStatus="status">
 			    	<tr id="searchList${status.count}" style="cursor:pointer;padding:0" onClick="event_click(this)" ondblClick="open_schedule('${item.circularID}')" bgcolor=#ffffff>
-			    		<td style="width:20px"><input type="checkbox" onClick="open_schedule('${item.circularID}')"></td>
+			    		<td style="width:20px"><input type="checkbox"></td>
 			    		<td style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center">
 			    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>
 			    			<c:if test="${item.importance == '1'}"><img src='/images/ImgIcon/view-importance.gif'/></c:if>
@@ -253,11 +282,13 @@
 			    			<c:if test="${item.hasFile == '1'}"><img src='/images/newAttach.gif'/></c:if>
 			    		</td>
 			    		<c:if test="${type == 'N'}">
-							<td style="width:30px;cursor:pointer;text-align:center">
-				    			<c:if test="${item.updateStatus == '0'}">의</c:if>
-				    			<c:if test="${item.updateStatus == '4'}">신</c:if>
-				    		</td>
-				    		<td style="width:50px;cursor:pointer;text-align:center">
+			    			<c:if test="${item.updateStatus == '0'}">
+								<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;color:blue;">의</td>
+							</c:if>
+				    		<c:if test="${item.updateStatus == '4'}">
+				    			<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;color:red;">신</td>
+				    		</c:if>
+				    		<td style="width:50px;cursor:pointer;text-align:center;">
 				    			<c:if test="${item.status == '0'}">진행</c:if>
 				    			<c:if test="${item.status == '1'}">종료</c:if>
 				    			<c:if test="${item.status == '2'}">임시</c:if>

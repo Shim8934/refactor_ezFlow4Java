@@ -487,26 +487,26 @@
                 
 	        }
 		
-		    function event_HeaderCheckBoxClick(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                SelList.GetDataRows()[i].setAttribute("selected", true);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                SelList.GetDataRows()[i].setAttribute("selected", false);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-		                strListInfo = "";
-		            }
-		        }
-		    }
+// 		    function event_HeaderCheckBoxClick(obj) {
+// 		        var SelList = new ListView();
+// 		        SelList.LoadFromID("BoardList");
+// 		        if (obj.checked) {
+// 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
+// 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+// 		                SelList.GetDataRows()[i].setAttribute("selected", true);
+// 		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
+// 		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+// 		            }
+// 		        }
+// 		        else {
+// 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
+// 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+// 		                SelList.GetDataRows()[i].setAttribute("selected", false);
+// 		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+// 		                strListInfo = "";
+// 		            }
+// 		        }
+// 		    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
@@ -518,12 +518,12 @@
 		    	window.location.href = "/ezcircular/newCircular.do";
 		    }
 		
-		    function MemberInfo_onclick(pUserID) {
-		        if (gubun == "2") return;
-		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
-		        feature = feature + GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
-		    }
+// 		    function MemberInfo_onclick(pUserID) {
+// 		        if (gubun == "2") return;
+// 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+// 		        feature = feature + GetOpenPosition(420, 450);
+// 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
+// 		    }
 		
 		    function window_reload() {
 		        window.location.href = window.location.href;
@@ -585,7 +585,7 @@
 	            }
 	        }
 	
-	        var writeboardselect_modal_dialogArguments = new Array();
+// 	        var writeboardselect_modal_dialogArguments = new Array();
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
 	        	url = "/ezCircular/circularWrite.do";
