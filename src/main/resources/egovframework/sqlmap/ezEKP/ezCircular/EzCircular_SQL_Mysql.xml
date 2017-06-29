@@ -529,6 +529,8 @@
                 circularid = #circularID#
             AND
                 tenantid = #tenantID#
+            GROUP BY
+            	circularid
         ]]>
     </select>
   

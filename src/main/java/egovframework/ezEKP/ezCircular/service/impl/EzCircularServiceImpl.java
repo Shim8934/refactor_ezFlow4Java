@@ -218,7 +218,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
-		map.put("memberID", memberID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		

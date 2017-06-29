@@ -55,7 +55,7 @@ function getCircularComment() {
 //				circularCommentList  += "<td style='width:50px; border:0px;' ><a class='imgbtn' style='vertical-align:middle;'><span class='deleteComment' memberID='" + vo.memberID + "' circularID='" + circularID + "' circularCommentID='" + vo.circularCommentID + "' onclick='deleteCircularComment(this)'>삭제</span></a></td>"
 //				circularCommentList  += "</tr>";
 				
-				$(".circularComment tr[circularUserID='" + vo.circularUserID + "']").length
+				alert($(".circularComment tr[circularUserID='" + vo.circularUserID + "']").length);
 				
 				if ($(".circularComment tr[circularUserID='" + vo.circularUserID + "']").length) {
 //					$("#circularUserList tr[circularUserID='" + vo.circularUserID + "']")
