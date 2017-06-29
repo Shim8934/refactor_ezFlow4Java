@@ -162,7 +162,10 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                        	<li><span onclick="openCircularComment()">댓글상세보기</span></li>
+                	    	<c:if test="${result.option == 1 || result.option == 3 }">
+                	    		<li><span onclick="openCircularComment()">댓글상세보기</span></li>
+                	    	</c:if>
+                        	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
                 	    	</c:if>
