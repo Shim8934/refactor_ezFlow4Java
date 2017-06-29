@@ -1097,7 +1097,9 @@ public class EzCircularController extends EgovFileMngUtil {
 			ezCircularService.circularDeleteItem(oldCircularId, userInfo.getTenantId());
 		}
 
-		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2, realPath);
+		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
+										 circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
+										 receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, realPath, userInfo, loginCookie);
 
 		logger.debug("saveCircular ended");
 	}
@@ -1141,7 +1143,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String regDate = commonUtil.getTodayUTCTime("");
 
-		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), regDate, circularListVO.getEndDate(),userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId,receiverName,fileList,receiverName2, realPath);
+		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
+										 circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
+										 receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, realPath, userInfo, loginCookie);
 
 		logger.debug("saveCircular ended");
 	}
@@ -2154,39 +2158,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	return "json";
     }
-    
-    /**
-     * 회람 메일공지 기능
-     */
-    @RequestMapping(value = "/ezCircular/circularSendMail.do")
-    public String circularSendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-    	logger.debug("circularSendMail started.");
-    	
-    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-    	String[] receiveList = request.getParameter("receiverList").split(",");
-    	String[] receiveID = request.getParameter("receiverID").split(",");
-
-    	String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
-    	StringBuilder bodyContent = new StringBuilder("");
-
-    	for (int i=0; i<receiveList.length; i++) {
-    		InternetAddress from = new InternetAddress();
-			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-			from.setAddress(userInfo.getEmail());
-
-			InternetAddress to = new InternetAddress();
-			to.setPersonal(receiveList[i].trim(), "UTF-8");
-			to.setAddress(receiveID[i].trim());
-
-			ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
-    	}
-
-    	logger.debug("circularSendMail ended.");
-
-    	return "json";
-    }
-    
     /**
      * 회람 댓글 확인재촉메일 (회람 미확인자)
      */
