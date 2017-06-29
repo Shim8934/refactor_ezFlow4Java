@@ -38,7 +38,7 @@ public interface EzCircularService {
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
-	public CircularListVO getCircular(String circularID, String offset, int tenantID) throws Exception;
+	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type) throws Exception;
 	
 	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 	

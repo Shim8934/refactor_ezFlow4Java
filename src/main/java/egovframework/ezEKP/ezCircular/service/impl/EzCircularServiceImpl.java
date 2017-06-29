@@ -207,14 +207,28 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public CircularListVO getCircular(String circularID, String offset, int tenantID) throws Exception {
+	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type) throws Exception {
+		logger.debug("getCircular started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("circularId", circularID);
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("tenantId", tenantID);
+		map.put("tenantID", tenantID);
 		
-		return ezCircularDAO.getCircular(map);
+		CircularListVO vo = ezCircularDAO.getCircular(map);
+		
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		if (type.equals("read")) {
+			ezCircularDAO.confirmStatus(map);
+			updateReadStatus(Integer.parseInt(circularID), memberID, 1, nowDate, tenantID);
+			updateCircularCommentStatus(circularID, memberID, 0, nowDate, tenantID);
+		}
+		
+		logger.debug("getCircular ended.");
+		
+		return vo;
 	}
 
 	@Override
@@ -940,7 +954,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	private void updateReadStatus(int circularID, String circularUserID, int status, String confirmDate, int tenantID) throws Exception {
-		logger.debug("readComment started.");
+		logger.debug("updateReadStatus started.");
 		logger.debug("circularID = " + circularID + " || circularUserID = " + circularUserID + " || status = " + status + " || confirmDate = " + confirmDate + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -952,7 +966,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		ezCircularDAO.updateReadStatus(map);
 		
-		logger.debug("readComment ended.");
+		logger.debug("updateReadStatus ended.");
 	}
 
 	@Override
