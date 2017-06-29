@@ -6769,7 +6769,7 @@ DROP TABLE IF EXISTS `tbl_tmpapropinioninfo`;
 CREATE TABLE `tbl_tmpapropinioninfo` (
   `OWNERID` varchar(255) NOT NULL,
   `SN` bigint(10) NOT NULL,
-  `USERID` varchar(400) DEFAULT NULL,
+  `USERID` varchar(100)  NOT NULL,
   `OPINIONGB` varchar(12) DEFAULT NULL,
   `CONTENT` longtext,
   `USERNAME` varchar(200) DEFAULT NULL,
@@ -6782,7 +6782,7 @@ CREATE TABLE `tbl_tmpapropinioninfo` (
   `USERDEPTNAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`OPINIONSN`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`, `USERID`, `OPINIONSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7196,6 +7196,18 @@ CREATE TABLE `tbl_userstartpage_item` (
   PRIMARY KEY (`TENANT_ID`,`UID_`,`ACCESSID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `tbl_deletecabinetinfo`;
+
+CREATE TABLE `tbl_deletecabinetinfo` (
+  `CabinetID` varchar(28) NOT NULL,
+  `DelUserID` varchar(50) DEFAULT NULL,
+  `IPAddress` varchar(50) DEFAULT NULL,
+  `companyID` varchar(45) NOT NULL,
+  `tenantID` varchar(6) NOT NULL,
+  PRIMARY KEY (`CabinetID`,`tenantID`,`companyID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 --
 -- Temporary view structure for view `vaprdoingdoclist`

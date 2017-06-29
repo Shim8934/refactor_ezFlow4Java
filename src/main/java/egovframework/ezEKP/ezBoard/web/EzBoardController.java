@@ -2982,7 +2982,8 @@ public class EzBoardController extends EgovFileMngUtil{
         			boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));
         			boardListVO.setABSTRACT("");
         		}
-        		strTitle = boardListVO.getTitle();
+        		//제목에 "가 들어가 있는 경우 ASCII코드로 치환 후 JSP에서 unescape() 함수로 원복
+        		strTitle = boardListVO.getTitle().replaceAll("\"", "%22");
         		boardListVO.setTitle(boardListVO.getTitle());
         		boardListVO.setABSTRACT(boardListVO.getABSTRACT());
         		

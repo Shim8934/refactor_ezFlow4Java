@@ -1893,9 +1893,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	/**
 	 * 전자결재G 기안 첨부명,쪽수 호출 Method
+	 * @throws Exception s
 	 */
 	@RequestMapping(value = "/ezApprovalG/aprAttachName.do")
-	public String aprAttachName(){
+	public String aprAttachName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		model.addAttribute("approvalFlag", approvalFlag);
 		return "ezApprovalG/apprGaprAttachName";
 	}
 	
