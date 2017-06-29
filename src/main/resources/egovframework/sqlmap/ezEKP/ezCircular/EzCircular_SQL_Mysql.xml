@@ -92,7 +92,9 @@
 			ON
 				A.circularid = D.circularid
             WHERE
-            	B.updatestatus IN ('0', '4')
+            	B.updatestatus = 0
+            AND
+            	B.commentstatus = 1
             AND
                 B.memberid = #memberID#
             AND
@@ -121,7 +123,7 @@
             ]]>
 	        <isEqual property="circularType" compareValue="1">
 	        <![CDATA[
-	            	B.UPDATESTATUS IN ('0', '4')
+	            	B.UPDATESTATUS = 0
 	            AND
 	                B.MEMBERID = #memberID#	
 	        ]]> 
@@ -130,7 +132,7 @@
 			<![CDATA[
 	            	A.STATUS IN ('0', '1')
 	            AND
-	            	B.UPDATESTATUS IN ('1', '4')
+	            	B.UPDATESTATUS = 1
 	            AND
 	                B.MEMBERID = #memberID#	
 			]]>
@@ -139,7 +141,7 @@
 			<![CDATA[
 	            	A.STATUS IN ('0', '1')
 	            AND
-	            	B.UPDATESTATUS IN ('0', '1', '4')
+	            	B.UPDATESTATUS IN ('0', '1')
             	AND
 	            	A.MEMBERID = B.MEMBERID
 	            AND
@@ -205,7 +207,7 @@
 		        <isEqual property="circularType" compareValue="1">
 		        <![CDATA[
 		            AND
-		            	B.UPDATESTATUS IN ('0', '4')
+		            	B.UPDATESTATUS = 0
 		            AND
 		                B.MEMBERID = #memberID#
 		        ]]> 
@@ -215,7 +217,7 @@
 		            AND
 		            	A.STATUS IN ('0', '1')
 		            AND
-		            	B.UPDATESTATUS IN ('1', '4')
+		            	B.UPDATESTATUS = 1
 		            AND
 		                B.MEMBERID = #memberID#
 				]]>
@@ -225,7 +227,7 @@
 		            AND
 		            	A.STATUS IN ('0', '1')
 		            AND
-		            	B.UPDATESTATUS IN ('0', '1', '4')
+		            	B.UPDATESTATUS IN ('0', '1')
 		            AND
 		            	A.MEMBERID = B.MEMBERID
 		            AND
@@ -297,7 +299,7 @@
 	        <isEqual property="filterVal" compareValue="1">
 	        <![CDATA[
 	            AND
-	            	B.UPDATESTATUS IN ('0', '4')
+	            	B.UPDATESTATUS = 0
 	            AND
 	                B.MEMBERID = #memberID#	
 	        ]]> 
@@ -307,7 +309,7 @@
 	            AND
 	            	A.STATUS IN ('0', '1')
 	            AND
-	            	B.UPDATESTATUS IN ('1', '4')
+	            	B.UPDATESTATUS = 1
 	            AND
 	                B.MEMBERID = #memberID#	
 			]]>
@@ -317,7 +319,7 @@
 	            AND
 	            	A.STATUS IN ('0', '1')
 	            AND
-	            	B.UPDATESTATUS IN ('0', '1', '4')
+	            	B.UPDATESTATUS IN ('0', '1')
 				AND
 	            	A.MEMBERID = B.MEMBERID
 	            AND
@@ -401,7 +403,7 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	(B.updatestatus = '0' OR B.updatestatus = '4')
+            	B.updatestatus = 0
             AND
                 B.memberid = #memberID#
             AND
@@ -424,7 +426,7 @@
 	        <isEqual property="filterVal" compareValue="1">
 	        <![CDATA[
 	            AND
-	            	B.UPDATESTATUS IN ('0', '4')
+	            	B.UPDATESTATUS = 0
 	        ]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="2">
@@ -432,7 +434,7 @@
 	            AND
 	            	A.STATUS IN ('0', '1')
 	            AND
-	            	B.UPDATESTATUS IN ('1', '4')
+	            	B.UPDATESTATUS = 1
 			]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="3">
@@ -440,7 +442,7 @@
 	            AND
 	            	A.STATUS IN ('0', '1')
 	            AND
-	            	B.UPDATESTATUS IN ('0', '1', '4')
+	            	B.UPDATESTATUS IN ('0', '1')
 	            AND
 	            	A.MEMBERID = B.MEMBERID
 			]]>
@@ -527,9 +529,9 @@
             ON
             	A.MEMBERID = B.CN
             WHERE
-                circularid = #circularId#
+                circularid = #circularID#
             AND
-                tenantid = #tenantId#    
+                tenantid = #tenantID#
         ]]>
     </select>
   
@@ -743,7 +745,7 @@
 			ON
 				A.circularid = D.circularid
 			WHERE
-				B.updatestatus IN ('0', '1' ,'4')
+				B.updatestatus IN ('0', '1')
 			AND
 				B.memberid = #memberID#
 			AND
@@ -770,7 +772,7 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	B.updatestatus IN ('0', '1' ,'4')
+            	B.updatestatus IN ('0', '1')
             AND
                 B.memberid = #memberID#
             AND
@@ -857,7 +859,7 @@
 			WHERE
 				A.status != 2
 			AND
-				B.UPDATESTATUS IN ('0', '1', '4')
+				B.UPDATESTATUS IN ('0', '1')
 			AND
 				A.memberid = #memberID#
 			AND
@@ -921,7 +923,7 @@
 			AND
 				A.STATUS != 2
 			AND
-				B.UPDATESTATUS IN ('0', '1', '4')
+				B.UPDATESTATUS IN ('0', '1')
 			GROUP BY
 				A.CIRCULARID
 			ORDER BY
@@ -1347,8 +1349,7 @@
             UPDATE
                 TBL_CIRCULAR_USER
             SET
-                status = #status#
-            AND
+                status = #status#,
             	confirmdate = #confirmDate#
             WHERE 
                 circularid = #circularID#

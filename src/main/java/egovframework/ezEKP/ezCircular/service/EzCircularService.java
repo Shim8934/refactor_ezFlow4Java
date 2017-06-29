@@ -38,7 +38,7 @@ public interface EzCircularService {
 
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
-	public CircularListVO getCircular(String circularID, String offset, int tenantID) throws Exception;
+	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type) throws Exception;
 	
 	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 	
@@ -71,8 +71,6 @@ public interface EzCircularService {
 	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID,  int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate,  String content, String fileList, String[] receiverName, String[] receiverName2) throws Exception;
 	
 	public void updateStatus(int status, int circularID, int tenantID) throws Exception;
-	
-	public void confirmStatus(int circularID, String memberID, int tenantID) throws Exception;
 	
 	public void circularDeleteItem(String circularIDList,int tenantID) throws Exception;
 	
