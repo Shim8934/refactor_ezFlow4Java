@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.web.EzBoardController;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
@@ -38,9 +37,6 @@ public class MBoardController {
 	
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
-	
-	@Resource(name = "EzBoardController")
-	private EzBoardController ezBoardController;
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
