@@ -92,9 +92,7 @@
 			ON
 				A.circularid = D.circularid
             WHERE
-            	B.updatestatus = 0
-            AND
-            	B.commentstatus = 1
+            	(B.updatestatus = 0 OR B.commentstatus = 1)
             AND
                 B.memberid = #memberID#
             AND
@@ -403,7 +401,7 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	B.updatestatus = 0
+            	(B.updatestatus = 0 OR B.commentstatus = 1) 
             AND
                 B.memberid = #memberID#
             AND

@@ -163,7 +163,7 @@
             	    <div id="menu">
                 	    <ul>
                 	    	<c:if test="${result.option == 1 || result.option == 3 }">
-                	    		<li><span onclick="openCircularComment()">댓글상세보기</span></li>
+                	    		<li><span onclick="openCircularComment()">의견목록</span></li>
                 	    	</c:if>
                         	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
