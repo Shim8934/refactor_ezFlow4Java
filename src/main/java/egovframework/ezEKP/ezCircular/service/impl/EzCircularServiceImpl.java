@@ -734,7 +734,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, int tenantId) throws Exception {
+	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, String originLoc, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String[] circularIdArr = circularIdList.split(";");
@@ -745,10 +745,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 				map.put("circularId", circularIdArr[i]);
 				map.put("memberId", memberId);
 				map.put("updateStatus", updateStatus);
+				map.put("originLoc", originLoc);
 				map.put("tenantId", tenantId);
 				
-				ezCircularDAO.moveCircular(map);
-				ezCircularDAO.moveCircular2(map);
+				ezCircularDAO.moveCircular(map); // updateStatus 값 변경
+				ezCircularDAO.moveCircular2(map); // Link 테이블에 Insert
 			}
 		} else {
 			for (int i=0; i<circularIdArr.length; i++) {
@@ -758,8 +759,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 				map.put("updateStatus", updateStatus);
 				map.put("tenantId", tenantId);
 				
-				ezCircularDAO.moveCircular(map);
-				ezCircularDAO.moveCircular3(map);
+				ezCircularDAO.moveCircular(map); // updateStatus 값 변경
+				ezCircularDAO.moveCircular3(map); // 기존 폴더에 있는 회람문서 삭제
 			}
 		}
 	}
@@ -906,7 +907,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public String getUpdateStatus(String circularIdList, String memberID, int tenantID) throws Exception {
+	public String getCircularStatus(String circularIdList, String memberID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String rtnValue = "";
@@ -917,7 +918,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("memberID", memberID);
 			map.put("tenantID", tenantID);
 			
-			rtnValue += ezCircularDAO.getUpdateStatus(map) + ";";
+			rtnValue += ezCircularDAO.getCircularStatus(map) + ";";
 		}
 		
 		return rtnValue;
@@ -1049,6 +1050,38 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("getUserList ended.");
 
 		return ezCircularDAO.getListHeader(map);
+	}
+
+	@Override
+	public void circularReturn(String circularIdList, String folderID, String memberID, int tenantID) throws Exception {
+		logger.debug("circularReturn started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		String status = "";
+		String[] circularArr = circularIdList.split(";");
+
+		// 회람문서 원래 상태값을 가져옴
+		for (int i=0; i<circularArr.length; i++) {
+			map.put("circularID", circularArr[i]);
+			map.put("tenantID", tenantID);
+			
+			status += ezCircularDAO.getCircularStatus(map) + ";";
+		}
+		
+		String[] statusArr = status.split(";");
+		
+		// 회람문서의 updateStatus 값을 변경
+		for (int i=0; i<statusArr.length; i++) {
+			map.put("circularID", circularArr[i]);
+			map.put("status", statusArr[i]);
+			map.put("memberID", memberID);
+			map.put("tenantID", tenantID);
+			
+			ezCircularDAO.updateCircularStatus(map);
+		}
+
+		logger.debug("circularReturn ended.");
 	}
 	
 	

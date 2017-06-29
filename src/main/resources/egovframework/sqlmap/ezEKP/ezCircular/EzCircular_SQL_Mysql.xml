@@ -852,7 +852,7 @@
 			WHERE
 				A.status != 2
 			AND
-				B.updatestatus != 2
+				B.UPDATESTATUS IN ('0', '1', '4')
 			AND
 				A.memberid = #memberID#
 			AND
@@ -916,7 +916,7 @@
 			AND
 				A.STATUS != 2
 			AND
-				B.UPDATESTATUS != 2
+				B.UPDATESTATUS IN ('0', '1', '4')
 			GROUP BY
 				A.CIRCULARID
 			ORDER BY
@@ -1104,16 +1104,14 @@
 		]]>
 	</select>
 	
-	<select id="EzCircularDAO.getUpdateStatus" parameterClass="Map" resultClass="String">
+	<select id="EzCircularDAO.getCircularStatus" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				UPDATESTATUS
+				STATUS
 			FROM
-				TBL_CIRCULAR_USER
+				TBL_CIRCULAR
 			WHERE
 				CIRCULARID = #circularID#
-			AND
-				MEMBERID = #memberID#
 			AND
 				TENANTID = #tenantID#
 		]]>
@@ -1505,6 +1503,21 @@
               CIRCULARID = #circularId#
           AND
               TENANTID = #tenantId#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateCircularStatus" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_USER
+          SET
+              UPDATESTATUS = #status#
+          WHERE 
+              CIRCULARID = #circularID#
+          AND
+          	  MEMBERID = #memberID#
+          AND
+              TENANTID = #tenantID#
         ]]>
     </update>
   

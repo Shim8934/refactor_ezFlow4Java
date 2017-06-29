@@ -100,7 +100,7 @@ public interface EzCircularService {
 
 	public void circularDeleteTemp(String circularIDList, String memberId, int tenantId) throws Exception;
 
-	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, int tenantId) throws Exception;
+	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, String originLoc, int tenantId) throws Exception;
 
 	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception;
 
@@ -116,7 +116,7 @@ public interface EzCircularService {
 
 	public CircularAttachVO getAttachInfo(String circularFileID, int tenantId) throws Exception;
 
-	public String getUpdateStatus(String circularIdList, String memberID, int tenantID) throws Exception;
+	public String getCircularStatus(String circularIdList, String memberID, int tenantID) throws Exception;
 
 	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
 
@@ -131,5 +131,7 @@ public interface EzCircularService {
 	public List<CircularListVO> getUserList(String memberID, int tenantID) throws Exception;
 
 	public List<CircularListHeaderVO> getListHeader(CircularListHeaderVO headerVO) throws Exception;
+
+	public void circularReturn(String circularIdList, String folderID, String memberID, int tenantID) throws Exception;
 
 }
