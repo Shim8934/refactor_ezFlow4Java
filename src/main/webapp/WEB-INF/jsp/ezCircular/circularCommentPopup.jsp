@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -18,6 +19,8 @@
 			var userInfoID = "${userInfo.id}";
 			
 			$(document).ready(function(){
+				alert(circularUserID);
+				alert(userInfoID);
 				getCircularComment();
 				
 				$("#searchValue").keypress(function(e) {
@@ -34,7 +37,9 @@
 		
 		<div id="close">
 			<ul>
-				<li><span onclick="commentSendMail();">회람확인메일발송</span></li>
+				<c:if test="${vo.memberID == userInfo.id}">
+					<li><span onclick="commentSendMail();">회람확인메일발송</span></li>
+				</c:if>
 				<li><span onclick="closeCircularComment();"><spring:message code='ezResource.t150' /></span></li>
 			</ul>
 		</div>
