@@ -41,8 +41,6 @@ function getCircularComment() {
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
-				//없을땐 circular클래스 circularUserID 찾아서 그밑에 after
-				//있을땐 circularComment클래스 circularUserID 찾아서 그밑에 after
 				circularCommentList += "<td style='padding-left:3px'><img src='/images/i_rep.gif' align='middle'/>" + vo.memberName + "</td>";
 				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment +  "&nbsp;(" + vo.regDate + ")&nbsp;<img src='/images/comment_del.gif' align='middle'/></td>";
 				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate + "</td>";
@@ -57,9 +55,13 @@ function getCircularComment() {
 				
 				alert($(".circularComment tr[circularUserID='" + vo.circularUserID + "']").length);
 				
-				if ($(".circularComment tr[circularUserID='" + vo.circularUserID + "']").length) {
+				if ($(".circularComment tr[circularUserID='" + vo.circularUserID + "']").length == 0) {
+//					없을땐 circular클래스 circularUserID 찾아서 그밑에 after
 //					$("#circularUserList tr[circularUserID='" + vo.circularUserID + "']")
+				} else {
+//					있을땐 circularComment클래스 circularUserID 찾아서 그밑에 after
 				}
+				
 				$("table[circularUserID='" + vo.circularUserID + "']").append(commentList);
 				$("table[circularUserID='" + vo.circularUserID + "']").closest("tr").show();
 			});

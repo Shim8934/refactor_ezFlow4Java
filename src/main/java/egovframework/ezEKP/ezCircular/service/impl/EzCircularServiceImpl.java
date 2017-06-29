@@ -202,12 +202,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 			InternetAddress to = new InternetAddress();
 			
-			if (!receiverName[i].trim().equals(userInfo.getDisplayName())) {
+			if (!receiverID[i].trim().equals(userInfo.getId())) {
 				to.setPersonal(receiverName[i].trim(), "UTF-8");
-				to.setAddress(receiverID[i].trim());				
+				to.setAddress(receiverID[i].trim());
+				
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
 			}
-
-			ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
     	}
 
 		logger.debug("insertCircular ended.");
