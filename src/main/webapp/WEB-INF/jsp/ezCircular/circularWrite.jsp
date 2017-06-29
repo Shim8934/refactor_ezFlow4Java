@@ -84,7 +84,6 @@
 				//메일공지 사용할때
 				$(':checkbox[id=optionMail]:checked').each(function(){
 					option = 2;
-					circularSendMail();
 				});
 				
 				//댓글기능, 메일공지 둘 다 사용할 때

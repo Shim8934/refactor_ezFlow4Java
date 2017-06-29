@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -32,6 +34,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Autowired
 	private CommonUtil commonUtil;
 	
+	@Autowired
+	private EzEmailService ezEmailService;
+
 	@Resource(name="EzCircularDAO")
 	private EzCircularDAO ezCircularDAO;
 	
@@ -126,7 +131,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String memberID, String memberName, String memberName2, String regDate, String endDate, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String realPath) throws Exception {
+	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String regDate,
+							   String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName,
+							   String fileList, String[] receiverName2, String realPath, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("insertCircular started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -143,12 +150,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("content", content);
 		map.put("hasFile", hasFile);
 		map.put("status", status);
-		map.put("memberID", memberID);
-		map.put("memberName", memberName);
-		map.put("memberName2", memberName2);
+		map.put("memberID", userInfo.getId());
+		map.put("memberName", userInfo.getDisplayName1());
+		map.put("memberName2", userInfo.getDisplayName2());
 		map.put("regDate", regDate);
 		map.put("endDate", endDate);
-		map.put("tenantID", tenantID);
+		map.put("tenantID", userInfo.getTenantId());
 		
 		ezCircularDAO.insertCircular(map);
 		
@@ -156,7 +163,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		int lastID = ezCircularDAO.getLastID();
 		
 		for (int i=0; i<receiverLength; i++) {
-			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
+			insertCircularUser(circularUserId, lastID, receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, userInfo.getTenantId());
 		}
 		
 		//첨부파일 저장
@@ -171,23 +178,38 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
-				
-//				String uploadFilePath = realPath + commonUtil.getUploadPath("upload_circular.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 
-//				filePath = uploadFilePath + commonUtil.separator + filePath;
-		
 				attachMap.put("circularID", lastID);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", filePath);
-				attachMap.put("tenantID", tenantID);
+				attachMap.put("tenantID", userInfo.getTenantId());
 				
 				ezCircularDAO.insertCircularAttach(attachMap);
 			}
 		}
 		
-		confirmStatus(lastID, memberID, tenantID);
-		
+		confirmStatus(lastID, userInfo.getId(), userInfo.getTenantId());
+
+		// 회람자에게 메일 발송
+    	String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
+    	StringBuilder bodyContent = new StringBuilder("");
+
+    	for (int i=0; i<receiverLength; i++) {
+    		InternetAddress from = new InternetAddress();
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+
+			InternetAddress to = new InternetAddress();
+			
+			if (!receiverName[i].trim().equals(userInfo.getDisplayName())) {
+				to.setPersonal(receiverName[i].trim(), "UTF-8");
+				to.setAddress(receiverID[i].trim());				
+			}
+
+			ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+    	}
+
 		logger.debug("insertCircular ended.");
 	}
 
