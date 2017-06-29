@@ -57,17 +57,17 @@
 		</table>
 		
 		<div style="height:500px;overflow-y: auto;">			
-			<table style="width:100%;margin-top:15px;table-layout: fixed">
+			<table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed">
 				<colgroup>
 					<col width="15%" /><col width="72%" /><col width="13%" />
 				</colgroup>
-				<tr style="height:40px;text-align:left">
+				<tr class="circularUser" style="height:40px;text-align:left">
 					<th style="border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left"><img src="/images/i_group.gif" align="middle"/>&nbsp;장진혁&nbsp;<img src="/images/modify2.gif" align="middle"/>&nbsp;&nbsp;&nbsp;&nbsp;2017-06-28 16:40</th>
 					<th style="border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2" colspan="2">
 						확인완료
 					</th>
 				</tr>
-				<tr style="height:40px;text-align:left;border-top:1px solid #e2e2e2">
+				<tr class="circularComment" style="height:40px;text-align:left;border-top:1px solid #e2e2e2">
 					<td style="padding-left:3px"><img src="/images/i_rep.gif" align="middle"/>&nbsp;&nbsp;장진혁</td>
 					<td style="text-align:left;padding:10px;">안녕하세요. 장진혁입니다. 방갑습니다.&nbsp;(18:30)&nbsp;<img src="/images/comment_del.gif" align="middle"/></td>
 					<td style="text-align:right;padding-right:8px">

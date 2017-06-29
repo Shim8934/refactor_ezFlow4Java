@@ -2093,20 +2093,20 @@ public class EzCircularController extends EgovFileMngUtil {
     	String searchValue = request.getParameter("searchValue");
     	String searchType = request.getParameter("searchType");
     	
-    	List<CircularListVO> userList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchType, searchValue, userInfo.getTenantId());
-    	List<CircularCommentVO> commentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getOffset(), userInfo.getTenantId());
+    	List<CircularListVO> circularUserList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchType, searchValue, userInfo.getTenantId());
+    	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getOffset(), userInfo.getTenantId());
     	
     	logger.debug("getCircularComment ended.");
     	
-    	model.addAttribute("userList", userList);
-    	model.addAttribute("commentList", commentList);
+    	model.addAttribute("circularUserList", circularUserList);
+    	model.addAttribute("circularCommentList", circularCommentList);
     	model.addAttribute("userInfo", userInfo);
     	
     	return "json";
     }
     
     /**
-     * 회람판 댓글 저장
+     * 회람판 의견 저장
      * 회람판ID, 회람자ID, 댓글작성자ID, 글내용
      * 저장할때 
      */
@@ -2124,7 +2124,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	String subject = "[신규의견알림] 새로운 의견이 등록되었습니다.";
     	StringBuilder bodyContent = new StringBuilder("");
     	bodyContent.append(" 제목 : " + circularVO.getTitle() + "</br>");
-    	bodyContent.append(" 댓글 작성자 : " + userInfo.getDisplayName());
+    	bodyContent.append(" 의견 작성자 : " + userInfo.getDisplayName());
     	
     	for (CircularCommentVO vo : list) {
 			InternetAddress from = new InternetAddress();
@@ -2144,7 +2144,7 @@ public class EzCircularController extends EgovFileMngUtil {
     }
     
     /**
-     * 회람판 댓글 삭제
+     * 회람판 의견 삭제
      */
     @RequestMapping(value = "/ezCircular/deleteCircularComment.do")
     public String deleteCircularComment(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
@@ -2160,7 +2160,7 @@ public class EzCircularController extends EgovFileMngUtil {
     }
 
     /**
-     * 회람 댓글 확인재촉메일 (회람 미확인자)
+     * 회람 확인요청메일 (회람 미확인자)
      */
     @RequestMapping(value = "/ezCircular/commentSendMail.do")
     public String commentSendMail(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO) throws Exception {
@@ -2194,7 +2194,7 @@ public class EzCircularController extends EgovFileMngUtil {
     }
     
     /**
-     * 회람 댓글보기 화면
+     * 회람 의견목록 팝업화면조회
      */
     @RequestMapping(value = "/ezCircular/circularCommentPopup.do")
     public String circularCommentPopup(@CookieValue("loginCookie") String loginCookie, CircularCommentVO circularCommentVO, Model model) throws Exception {
