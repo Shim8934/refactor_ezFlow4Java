@@ -510,17 +510,22 @@
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                circularid,
-                importance,
-                hasfile,
-                status,
-                title,
-                memberid,
-                DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
-                option,
-                content
+                A.circularid,
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                A.option,
+                A.content,
+                B.DISPLAYNAME AS memberName
             FROM
-                TBL_CIRCULAR
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_USERMASTER B
+            ON
+            	A.MEMBERID = B.CN
             WHERE
                 circularid = #circularId#
             AND

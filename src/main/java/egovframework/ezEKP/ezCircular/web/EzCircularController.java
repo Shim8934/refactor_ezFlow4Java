@@ -1025,22 +1025,22 @@ public class EzCircularController extends EgovFileMngUtil {
 	public String circularWrite(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 
-//		List<CircularListVO> list = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
-//		
-//		String userID = "";
-//		String userName = "";
-//		String userName2 = "";
-//
-//		if (list.get(0).getMemberID() != "") {	
-//			userID = list.get(0).getMemberID();
-//			userName = list.get(0).getMemberName();
-//			userName2 = list.get(0).getMemberName2();				
-//		}
+		List<CircularListVO> list = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
+		
+		String userID = "";
+		String userName = "";
+		String userName2 = "";
+
+		if (list.get(0).getMemberID() != "") {	
+			userID = list.get(0).getMemberID();
+			userName = list.get(0).getMemberName();
+			userName2 = list.get(0).getMemberName2();				
+		}
 
 		model.addAttribute("userInfo", userInfo);
-//		model.addAttribute("userID", userID);
-//		model.addAttribute("userName", userName);
-//		model.addAttribute("userName2", userName2);
+		model.addAttribute("userID", userID);
+		model.addAttribute("userName", userName);
+		model.addAttribute("userName2", userName2);
 		
 		return "/ezCircular/circularWrite";
 	}
@@ -1083,11 +1083,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
 		String realPath = commonUtil.getRealPath(request);
-		
-		receiverIDs += ", " + userInfo.getId();
-		receiverList += ", " + userInfo.getDisplayName();
-		receiverList2 += ", " + userInfo.getDisplayName2();
-		
+
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
 		logger.debug("receiverList2 : " + receiverList2);
@@ -1178,12 +1174,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		String listUser = "";
 		
 		for (int i=0; i<list.size(); i++) {
-			if (list.size() == 1) {
-				listUser = list.get(i).getMemberName();
-			} else if (i !=list.size()-1){
-				listUser += list.get(i).getMemberName() + ", ";
-			} else {
-				listUser += list.get(i).getMemberName();
+			if (!list.get(i).getMemberID().equals(result.getMemberID())) {
+				if (list.size()-1 == 1) {
+					listUser = list.get(i).getMemberName();
+				} else if (i != list.size()-1){
+					listUser += list.get(i).getMemberName() + ", ";
+				} else {
+					listUser += list.get(i).getMemberName();
+				}				
 			}
 		}
 		

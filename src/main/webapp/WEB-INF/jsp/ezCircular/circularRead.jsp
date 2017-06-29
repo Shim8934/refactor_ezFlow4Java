@@ -232,7 +232,7 @@
 		        		<tr style="height:25px">
 							<th>작성자</th>
 	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${userInfo.displayName }</div>
+	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
 							<th>작성일</th> 
  							<td style="padding-left: 4px">
