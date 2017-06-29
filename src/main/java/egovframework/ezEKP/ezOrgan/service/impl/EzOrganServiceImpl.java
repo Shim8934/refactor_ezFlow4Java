@@ -587,6 +587,8 @@ public class EzOrganServiceImpl implements EzOrganService {
             searchList = pSearchList.split("##");
             searchParemeta = new String[searchList.length];
             
+            logger.debug("searchList.length=" + searchList.length);
+            
             for (i = 0; i < searchList.length; i++){      	
                 searchInfo = searchList[i].split("@@");
 
@@ -596,7 +598,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 	
                 	//수정(2017-01-23)
                 	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
-                	searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]");
+                	searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
                 	
                     if (checkSearchField(searchInfo[0])){
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
@@ -618,7 +620,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 }else{
                     // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                    searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+                    searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
                     
                     if (checkSearchField(searchInfo[0])){
                         strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";
@@ -710,6 +712,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
     @Override
     public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception {
+    	logger.debug("getSearchListPagination started");
+    	
         String strSQL="";
         int i=0;
         String[] SearchList;
@@ -736,12 +740,14 @@ public class EzOrganServiceImpl implements EzOrganService {
                
                SearchParemeta = new String[SearchList.length];
                
+               logger.debug("searchList.length=" + SearchList.length);
+               
                for(i = 0; i < SearchList.length; i++){
                    SearchInfo = SearchList[i].split("@@");
                    
                    if(i == 0){
                        // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                       SearchParemeta[i] = SearchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]").toLowerCase();
+                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
                        if (checkSearchField(SearchInfo[0])){
                            if (SearchInfo[0].toUpperCase().equals("DISPLAYNAME") && SearchParemeta[0].toString().equals(":")){
                                strSQL = strSQL + " WHERE (" + SearchInfo[0].toLowerCase() + " = UPPER('" + SearchParemeta[i] + "') OR " + SearchInfo[0].toLowerCase() + "2 = UPPER('" + SearchParemeta[i] + "'))";
@@ -764,7 +770,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                }
                    else{
                        // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                       SearchParemeta[i] = SearchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]").toLowerCase();
+                       SearchParemeta[i] = SearchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").toLowerCase();
                        if (checkSearchField(SearchInfo[0]))
                        {
                            strSQL = strSQL + " AND (" + SearchInfo[0].toLowerCase() + " LIKE  '%" + SearchParemeta[i] + "%' OR " + SearchInfo[0].toLowerCase() + "2 LIKE '%" + SearchParemeta[i] + "%')";
@@ -868,7 +874,9 @@ public class EzOrganServiceImpl implements EzOrganService {
             }           
         }
         memberlist2.append("</ROWS></LISTVIEWDATA>");
-         
+        
+        logger.debug("getSearchListPagination ended");
+        
         return memberlist2.toString();
     }
 	
