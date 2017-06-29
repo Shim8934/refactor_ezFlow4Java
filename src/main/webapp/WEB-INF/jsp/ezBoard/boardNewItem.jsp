@@ -118,7 +118,8 @@
 		    var pUseBackGround = "${useBackGround}";
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
-		    window.onload = function () {
+		    var strTitle = "${fn:replace(strTitle, '\"', '\\\"' )}";
+		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
 		            GetBackGroundImage();
@@ -210,7 +211,7 @@
 			    	document.getElementById('Makedate').style.display = "none";
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
-			        document.getElementById("txtTitle").value = unescape("${strTitle}");
+			        document.getElementById("txtTitle").value = strTitle;
 				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
@@ -220,7 +221,7 @@
 			        }
 			    }
 			    if (pMode == "reply") {
-			        document.getElementById("txtTitle").value = unescape("${strTitle}");
+			    	document.getElementById("txtTitle").value = strTitle;
 				}
 			    if (pReservedItem != "true") {
 			        //var nowDate = new Date();
@@ -381,7 +382,7 @@
 					data : { itemID : strItemID, 
 							 mode   : pMode,
 							 conLocation : strContentLocation,
-							 title : unescape('${strTitle}')
+							 title : strTitle
 						   },
 					success: function(result){
 						resText = result;
