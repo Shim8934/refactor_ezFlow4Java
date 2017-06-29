@@ -782,13 +782,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception {
+	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, String offset, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("folderId", folderId);
 		map.put("memberId", memberId);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		
 		return ezCircularDAO.getFolderCircularList(map);

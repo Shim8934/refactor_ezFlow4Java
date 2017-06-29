@@ -215,7 +215,7 @@
 		        		<tr>
 		        			<th>회람상태</th>
 	       					<td>								
-	         					<div id="statusNum" style="padding-left: 4px;">${statusFirst} / ${statusSecond}</div>
+	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
 	         				<th>상태</th>
 		            		<td>

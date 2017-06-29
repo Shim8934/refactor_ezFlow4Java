@@ -102,7 +102,7 @@ public interface EzCircularService {
 
 	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception;
 
-	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, int tenantId) throws Exception;
+	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, String offset, int tenantId) throws Exception;
 
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
