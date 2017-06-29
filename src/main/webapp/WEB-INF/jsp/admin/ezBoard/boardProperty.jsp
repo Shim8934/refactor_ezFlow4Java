@@ -495,6 +495,34 @@
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:750px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
 		        }
 		    }
+		    
+		    //파일첨부크기 넘버값만 입력받기
+		    function onlyNumber(event) {
+		    	event = event || window.event;
+				var keyID = (event.which) ? event.which : event.keyCode;
+				
+				if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
+					return;
+				else
+					return false;
+		    }
+		    
+		    function removeChar(event) {
+				event = event || window.event;
+				var keyID = (event.which) ? event.which : event.keyCode;
+				
+				if ( keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 ) 
+					return;
+				else
+					event.target.value = event.target.value.replace(/[^0-9]/g, "");
+				
+				var v_AttachSize = $("#txtAttachLimit").val();
+		    	
+		    	if (v_AttachSize > 4096) {
+		    		alert("<spring:message code='ezBoard.hyj10'/>");
+		    		$("#txtAttachLimit").val(4096);
+		    	}
+			}
 	    </script>
 	</head>	
 	<c:if test="${adminType != 'y'}">
@@ -699,7 +727,7 @@
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
-	                <input type="text" id="txtAttachLimit" style="width: 25px" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="3"/>&nbsp;MB
+	                <input type="text" id="txtAttachLimit" style="width: 30px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
 	            </td>
 	        </tr>
 	        <tr style="${style}">

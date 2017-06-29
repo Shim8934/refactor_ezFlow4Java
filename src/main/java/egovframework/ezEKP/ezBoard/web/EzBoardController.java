@@ -757,40 +757,46 @@ public class EzBoardController extends EgovFileMngUtil{
     @RequestMapping(value = "/ezBoard/getBoardList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
     public String getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO) throws Exception{
+    	logger.debug("getBoardList started");
+    	logger.debug("boardID : " + boardVO.getBoardId());
+    	logger.debug("boardType : " + boardVO.getBoardType());
+
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-        String boardID = boardVO.getBoardId();
-        String boardType = boardVO.getBoardType();
-        String mode = boardVO.getMode();
-        String type = "1";
-        String resultXML = "";
-        
-        if (boardVO.getType() != null && !boardVO.getType().equals("")) {
-        	type = boardVO.getType();
-        }
-        
-        BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-        
-        boardVO.setType(type);
-        boardVO.setLang(userInfo.getLang());
-        boardVO.setTenantID(userInfo.getTenantId());
-        
-        if (boardType.equals("4")) { // 썸네일 
-        	resultXML = getThumbList(boardVO, userInfo, type);
-        } else if (boardType.equals("5")) { //Q&A
-            resultXML = getQnAListItem(boardVO, userInfo, type, boardInfo.getBoardAdmin_FG());
-        } else if (boardType.equals("M")) { //마이게시판
-        	resultXML = getMyboardList(boardVO, userInfo, mode);
-        } else if (boardType.equals("A")) { //게시판승인
-        	resultXML = getApprboardList(boardVO, userInfo, mode, type);
-        } else {
-            if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-            	boardVO.setBoardType("N");
-            	resultXML = getNewItemList(boardVO, userInfo);
-            } else {
-            	resultXML = getBoardListItem(boardVO, userInfo, type);
-            }
-        }
+    	String boardID = boardVO.getBoardId();
+    	String boardType = boardVO.getBoardType();
+    	String mode = boardVO.getMode();
+    	String type = "1";
+    	String resultXML = "";
+    	
+    	if (boardVO.getType() != null && !boardVO.getType().equals("")) {
+    		type = boardVO.getType();
+    	}
+    	
+    	BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+    	
+    	boardVO.setType(type);
+    	boardVO.setLang(userInfo.getLang());
+    	boardVO.setTenantID(userInfo.getTenantId());
+    	
+    	if (boardType.equals("4")) { // 썸네일 
+    		resultXML = getThumbList(boardVO, userInfo, type);
+    	} else if (boardType.equals("5")) { //Q&A
+    		resultXML = getQnAListItem(boardVO, userInfo, type, boardInfo.getBoardAdmin_FG());
+    	} else if (boardType.equals("M")) { //마이게시판
+    		resultXML = getMyboardList(boardVO, userInfo, mode);
+    	} else if (boardType.equals("A")) { //게시판승인
+    		resultXML = getApprboardList(boardVO, userInfo, mode, type);
+    	} else {
+    		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+    			boardVO.setBoardType("N");
+    			resultXML = getNewItemList(boardVO, userInfo);
+    		} else {
+    			resultXML = getBoardListItem(boardVO, userInfo, type);
+    		}
+    	}
+
+		logger.debug("getBoardList ended");
 
         return resultXML.toString();
     }
