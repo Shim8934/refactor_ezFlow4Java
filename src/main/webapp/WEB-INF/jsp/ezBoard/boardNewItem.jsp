@@ -220,7 +220,7 @@
 			        }
 			    }
 			    if (pMode == "reply") {
-			        document.getElementById("txtTitle").value = "<c:out value = '${strTitle}' />";
+			        document.getElementById("txtTitle").value = unescape("${strTitle}");
 				}
 			    if (pReservedItem != "true") {
 			        //var nowDate = new Date();
@@ -381,7 +381,7 @@
 					data : { itemID : strItemID, 
 							 mode   : pMode,
 							 conLocation : strContentLocation,
-							 title  : "<c:out value = '${strTitle}' escapeXml = 'false'/>"
+							 title : unescape('${strTitle}')
 						   },
 					success: function(result){
 						resText = result;
