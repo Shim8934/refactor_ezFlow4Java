@@ -2152,11 +2152,12 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("circularID = " + circularCommentVO.getCircularID());
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	CircularListVO vo = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
     	
     	logger.debug("circularCommentPopup ended.");
     	
     	model.addAttribute("userInfo", userInfo);
-    	model.addAttribute("vo", circularCommentVO);
+    	model.addAttribute("vo", vo);
     	
     	return "/ezCircular/circularCommentPopup";
     }
