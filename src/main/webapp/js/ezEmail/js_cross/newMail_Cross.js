@@ -711,7 +711,7 @@ function Send_onClick_Complete(ReturnValue) {
             } catch (e) {}
             
             if ((MsgToGot.childNodes.length + MsgCCGot.childNodes.length + MsgBCCGot.childNodes.length) > individualmailuserNum && iseachMail == "true") {
-                if (confirm(strLangKMS04+individualmailuserNum+strLangKMS05)) {
+                if (confirm(strLangKMS04 + individualmailuserNum + strLangKMS05)) {
                     iseachMail = "false";
                 }
                 else {

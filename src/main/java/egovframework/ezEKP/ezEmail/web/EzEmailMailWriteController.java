@@ -800,7 +800,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	}
 		        	
 		        	//set importance
-		        	if(_cmd.equals("EDIT")	){
+		        	if(_cmd.equals("EDIT")) {
 		        		logger.debug("EDIT MODE : set mail option start");
 		        		if (orgMessage.getHeader("X-Priority") != null) {
 		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
