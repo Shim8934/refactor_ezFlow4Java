@@ -244,20 +244,17 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/getPreviewItem.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getPreviewItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("getPreviewItem started.");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String pcircularId = "";
-		String pmemberId = "";
- 		
-		pcircularId = request.getParameter("pcircularId"); 		
-		pmemberId = request.getParameter("pmemberId"); 		
+		String circularID = request.getParameter("pcircularId"); 		
+		String memberID = request.getParameter("pmemberId"); 		
 
-		String retXML = "";
+		String retXML = ezCircularService.getItemXML(circularID, memberID, userInfo.getOffset(), userInfo.getTenantId());
 		
-		ezCircularService.confirmStatus(Integer.parseInt(pcircularId), userInfo.getId(), userInfo.getTenantId());
+		logger.debug("getPreviewItem ended.");
 		
-		retXML = ezCircularService.getItemXML(pcircularId, pmemberId, userInfo.getOffset(), userInfo.getTenantId());
-	
 		return retXML;	
 	}
 	
@@ -1058,7 +1055,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람판 신규 회람판 등록 실행 Method
+	 * 회람판 회람판 등록 실행 Method
 	 */
 	@RequestMapping(value = "/ezCircular/saveCircular.do", method = RequestMethod.POST)
 	@ResponseBody
