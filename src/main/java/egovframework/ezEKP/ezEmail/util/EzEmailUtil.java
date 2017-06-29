@@ -639,66 +639,68 @@ public class EzEmailUtil {
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
-            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.			
-			if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
-				InputStream is = getContentInputStream(part);
+			String[] headers = part.getHeader("Content-Type");
+			String rawContentType = "";
+			
+			if (headers != null) {
+				rawContentType = headers[0];
+			}
+			
+			boolean isCharSet = rawContentType.toLowerCase().contains("charset");
+			
+			try {
+				strContent = part.getContent().toString();
+								
+				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
+		            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+		            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+					if (strContent.contains("�")) {
+						InputStream is = getContentInputStream(part);
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							logger.debug("text/html changed ks_c_5601-1987 to ms949.");
+							
+							strContent = new String(buf, "ms949");
+						}											
+					}
+				}
 				
+				// Content-Type 헤더에 charset 속성이 없는 경우엔 US-ASCII로만 구성되어야 한다.
+				// Content-Type: text/html 과 같이 charset이 없지만 본문이 euc-kr로 작성된 메일이 발견되어 추가함.
+				if (!isCharSet) {
+					logger.debug("rawContentType=" + rawContentType);
+					logger.debug("no charset attribute");
+					
+					// US-ASCII로만 되어 있지 않은 경우 직접 디코딩을 수행한다.
+					if (!isPureAscii(strContent)) {
+						logger.debug("content isn't ascii only");
+						
+						InputStream is = getContentInputStream(part); 
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							strContent = decodeNonAsciiBytes(buf);						
+						}							
+					}
+				}
+				
+			// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+			// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				InputStream is = getContentInputStream(part); 
+										
 				if (is.available() > 0) {
 					byte[] buf = new byte[is.available()];
 					is.read(buf);
 					
-					logger.debug("text/html changed ks_c_5601-1987 to ms949.");
-					
-					strContent = new String(buf, "ms949");
-				}				
-			} else {							
-				String[] headers = part.getHeader("Content-Type");
-				String rawContentType = "";
-				
-				if (headers != null) {
-					rawContentType = headers[0];
-				}
-				
-				boolean isCharSet = rawContentType.toLowerCase().contains("charset");
-				
-				try {
-					strContent = part.getContent().toString();
-					
-					// Content-Type 헤더에 charset 속성이 없는 경우엔 US-ASCII로만 구성되어야 한다.
-					// Content-Type: text/html 과 같이 charset이 없지만 본문이 euc-kr로 작성된 메일이 발견되어 추가함.
-					if (!isCharSet) {
-						logger.debug("rawContentType=" + rawContentType);
-						logger.debug("no charset attribute");
-						
-						// US-ASCII로만 되어 있지 않은 경우 직접 디코딩을 수행한다.
-						if (!isPureAscii(strContent)) {
-							logger.debug("content isn't ascii only");
-							
-							InputStream is = getContentInputStream(part); 
-							
-							if (is.available() > 0) {
-								byte[] buf = new byte[is.available()];
-								is.read(buf);
-								
-								strContent = decodeNonAsciiBytes(buf);						
-							}							
-						}
-					}
-					
-				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
-				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
-				} catch (Exception e) {
-					e.printStackTrace();
-					
-					InputStream is = getContentInputStream(part); 
-											
-					if (is.available() > 0) {
-						byte[] buf = new byte[is.available()];
-						is.read(buf);
-						
-						strContent = decodeNonAsciiBytes(buf);						
-					}
+					strContent = decodeNonAsciiBytes(buf);						
 				}
 			}
 			
@@ -768,35 +770,38 @@ public class EzEmailUtil {
 			else {
 				String contentType = part.getContentType();
 				
-                // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-                // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.				
-				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
-					InputStream is = getContentInputStream(part);
+				try {
+					strContent = part.getContent().toString();
 					
+					if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
+			            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+			            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
+								
+								strContent = new String(buf, "ms949");
+							}											
+						}
+					}
+					
+				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					InputStream is = getContentInputStream(part); 
+											
 					if (is.available() > 0) {
 						byte[] buf = new byte[is.available()];
 						is.read(buf);
 						
-						logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
-						
-						strContent = new String(buf, "ms949");
-					}				
-				} else {							
-					try {
-						strContent = part.getContent().toString();
-					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
-					// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
-					} catch (Exception e) {
-						e.printStackTrace();
-						
-						InputStream is = getContentInputStream(part); 
-												
-						if (is.available() > 0) {
-							byte[] buf = new byte[is.available()];
-							is.read(buf);
-							
-							strContent = decodeNonAsciiBytes(buf);						
-						}
+						strContent = decodeNonAsciiBytes(buf);						
 					}
 				}				
 			}
