@@ -56,7 +56,6 @@
                 DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount
-                
             FROM
                 TBL_CIRCULAR A
             JOIN
@@ -1116,9 +1115,11 @@
 			SELECT
 				STATUS
 			FROM
-				TBL_CIRCULAR
+				TBL_CIRCULAR_USER
 			WHERE
 				CIRCULARID = #circularID#
+			AND
+				MEMBERID = #memberID#	
 			AND
 				TENANTID = #tenantID#
 		]]>
