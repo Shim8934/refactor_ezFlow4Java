@@ -284,8 +284,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (CircularAttachVO) select("EzCircularDAO.getAttachInfo", map);
 	}
 
-	public String getUpdateStatus(Map<String, Object> map) throws Exception {
-		return (String) select("EzCircularDAO.getUpdateStatus", map);
+	public String getCircularStatus(Map<String, Object> map) throws Exception {
+		return (String) select("EzCircularDAO.getCircularStatus", map);
 	}
 
 	public void moveCircular3(Map<String, Object> map) throws Exception {
@@ -328,8 +328,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CircularListHeaderVO> getListHeader(Map<String, Object> map) {
+	public List<CircularListHeaderVO> getListHeader(Map<String, Object> map) throws Exception {
 		return (List<CircularListHeaderVO>) list("EzCircularDAO.getListHeader", map);
+	}
+
+	public void updateCircularStatus(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircularStatus", map);
 	}
 
 }

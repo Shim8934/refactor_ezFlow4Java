@@ -469,7 +469,7 @@
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
-				
+
 	        	var arrList = new Array();
 		        var circularIDList = "";
 		        var i = 0;

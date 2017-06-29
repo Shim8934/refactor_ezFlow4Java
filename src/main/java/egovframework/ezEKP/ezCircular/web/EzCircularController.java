@@ -166,6 +166,34 @@ public class EzCircularController extends EgovFileMngUtil {
 		StringBuilder subFolderXML = new StringBuilder();
 		
 		for (int i=0; i<list.size(); i++) {
+			subFolderXML.append("<node imgidx='1'");
+			subFolderXML.append(" caption='" + list.get(i).getCircularFolderName() + "'");
+			subFolderXML.append(" foldername='" + list.get(i).getCircularFolderName() + "'");
+			subFolderXML.append(" fullcaption='_NONE'");
+			subFolderXML.append(" href='" + list.get(i).getCircularFolderID() + "'");
+			subFolderXML.append("></node>");			
+		}
+
+		logger.debug("getCircularFolderList ended.");
+		
+		return subFolderXML.toString();
+	}
+	
+//	/**
+//	 * 회람문서함폴더의 되돌리기 기능 호출 함수
+//	 */
+//	@RequestMapping(value = "/ezCircular/getCircularReturn.do", produces="text/xml; charset=utf-8")
+//	@ResponseBody
+//	public String getCircularReturn(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+//		logger.debug("getCircularReturn started");
+//		
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		
+//		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId());
+//
+//		StringBuilder subFolderXML = new StringBuilder();
+//		
+//		for (int i=0; i<list.size(); i++) {
 //			if (i == 0) {
 //				subFolderXML.append("<node imgidx='1'");
 //				subFolderXML.append(" caption='" + "확인완료회람판" + "'");
@@ -180,63 +208,19 @@ public class EzCircularController extends EgovFileMngUtil {
 //				subFolderXML.append(" href='" + "M" + "'");
 //				subFolderXML.append("></node>");
 //			}
-			
-			subFolderXML.append("<node imgidx='1'");
-			subFolderXML.append(" caption='" + list.get(i).getCircularFolderName() + "'");
-			subFolderXML.append(" foldername='" + list.get(i).getCircularFolderName() + "'");
-			subFolderXML.append(" fullcaption='_NONE'");
-			subFolderXML.append(" href='" + list.get(i).getCircularFolderID() + "'");
-			subFolderXML.append("></node>");			
-		}
-
-		logger.debug("getCircularFolderList ended.");
-		
-		return subFolderXML.toString();
-	}
-	
-	/**
-	 * 회람문서함폴더에서 이동 호출 함수
-	 */
-	@RequestMapping(value = "/ezCircular/getCircularFolderAllList.do", produces="text/xml; charset=utf-8")
-	@ResponseBody
-	public String getCircularFolderAllList(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		
-		logger.debug("getCircularFolderAllList started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId());
-
-		StringBuilder subFolderXML = new StringBuilder();
-		
-		for (int i=0; i<list.size(); i++) {
-			if (i == 0) {
-				subFolderXML.append("<node imgidx='1'");
-				subFolderXML.append(" caption='" + "확인완료회람판" + "'");
-				subFolderXML.append(" foldername='" + "확인완료회람판" + "'");
-				subFolderXML.append(" fullcaption='_NONE'");
-				subFolderXML.append(" href='" + "C" + "'");
-				subFolderXML.append("></node>");
-				subFolderXML.append("<node imgidx='1'");
-				subFolderXML.append(" caption='" + "작성한회람판" + "'");
-				subFolderXML.append(" foldername='" + "작성한회람판" + "'");
-				subFolderXML.append(" fullcaption='_NONE'");
-				subFolderXML.append(" href='" + "M" + "'");
-				subFolderXML.append("></node>");
-			}
-			
-			subFolderXML.append("<node imgidx='1'");
-			subFolderXML.append(" caption='" + list.get(i).getCircularFolderName() + "'");
-			subFolderXML.append(" foldername='" + list.get(i).getCircularFolderName() + "'");
-			subFolderXML.append(" fullcaption='_NONE'");
-			subFolderXML.append(" href='" + list.get(i).getCircularFolderID() + "'");
-			subFolderXML.append("></node>");			
-		}
-
-		logger.debug("getCircularFolderAllList ended.");
-		
-		return subFolderXML.toString();
-	}
+//			
+//			subFolderXML.append("<node imgidx='1'");
+//			subFolderXML.append(" caption='" + list.get(i).getCircularFolderName() + "'");
+//			subFolderXML.append(" foldername='" + list.get(i).getCircularFolderName() + "'");
+//			subFolderXML.append(" fullcaption='_NONE'");
+//			subFolderXML.append(" href='" + list.get(i).getCircularFolderID() + "'");
+//			subFolderXML.append("></node>");			
+//		}
+//
+//		logger.debug("getCircularReturn ended.");
+//		
+//		return subFolderXML.toString();
+//	}
 	
 	/**
 	 * 신규회람판 호출 Method
@@ -359,7 +343,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularComplete started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-
+		
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularComplete ended");
@@ -768,7 +752,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
+			resultXML.append("<CELL><STATUS>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</STATUS></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
@@ -1963,11 +1947,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
 
-		if (folderId != null) {
-			String updateStatus = ezCircularService.getUpdateStatus(circularIdList, userInfo.getId(), userInfo.getTenantId());
-			
+		if (folderId != null) {	
 			model.addAttribute("folderId", folderId);
-			model.addAttribute("updateStatus", updateStatus);
 		}
 
 		model.addAttribute("circularIdList", circularIdList);
@@ -1975,6 +1956,24 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularMove ended");
 		
 		return "/ezCircular/circularMove";
+	}
+	
+	/**
+	 * 회람문서 되돌리기 호출 함수
+	 */
+	@RequestMapping(value = "/ezCircular/circularReturn.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void circularReturn(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("circularReturn started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String circularIdList = request.getParameter("circularIDList");
+		String folderId = request.getParameter("folderId");
+
+		ezCircularService.circularReturn(circularIdList, folderId, userInfo.getId(), userInfo.getTenantId());
+
+		logger.debug("circularReturn ended");
 	}
 	
 	/**
@@ -1988,26 +1987,27 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 
+		String updateStatus = "";
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
 		String oldFolderId = request.getParameter("oldFolderId");
-		String updateStatus = request.getParameter("updateStatus");
+		String originLoc = request.getParameter("originLoc");
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
 
 		if (oldFolderId.equals("")) { // 확인완료 및 작성한 회람판에서 폴더로 이동 시
 			updateStatus = "3";
-			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);
+			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, originLoc, tenantId);
 		}
 		
 		if (oldFolderId != null && folderId != "") { // 폴더에서 폴더로 이동 시
 			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
 		}
 		
-		if (oldFolderId != null && folderId == "") { // 폴더에서 확인완료 회람판으로 이동 시
-			updateStatus = "1";
-			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);
-		}
+//		if (oldFolderId != null && folderId == "") { // 폴더에서 확인완료 회람판으로 이동 시
+//			updateStatus = "1";
+//			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);
+//		}
 
 		logger.debug("moveCircular ended");
 	}

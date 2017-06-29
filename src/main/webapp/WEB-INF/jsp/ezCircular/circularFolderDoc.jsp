@@ -650,6 +650,43 @@
 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
+	        
+	        function CircularReturn_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+
+	        	if (confirm("기존 회람판으로 되돌리시겠습니까?")) {
+		        	var arrList = new Array();
+			        var circularIDList = "";
+			        var i = 0;
+			        
+			        arrList = strListInfo.split(";");
+			        
+			        for (i = 0; i < arrList.length - 1; i++) {
+			        	circularIDList += arrList[i].split(",")[1] + ";";
+			        }
+	
+			        arrList = null;
+
+		        	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularReturn.do",
+						data : { circularIDList : circularIDList,
+								 folderId		: folderId
+								},
+						success: function() {
+							location.reload();
+						},
+						error: function() {
+							alert("되돌리기실패");
+						}
+					});
+		        }		
+	        }
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
@@ -666,9 +703,9 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-<%-- 	            <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li> --%>
 	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t58'/></span></li>
 	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
+	            <li><span onClick="CircularReturn_onclick()">되돌리기</span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>
