@@ -324,25 +324,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void confirmStatus(int circularID, String memberID, int tenantID) throws Exception {
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		String confirmDate = commonUtil.getTodayUTCTime("");
-		
-		//status업데이트되는부분 임시 주석
-		updateReadStatus(circularID, memberID, 1, tenantID);
-		updateStatusUser(circularID, confirmDate, tenantID);
-		
 		map.put("circularID", circularID);
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
 		
-		int folderCheck = ezCircularDAO.confirmFolderCheck(map);
-		
-		//0 문서함에 없고 완료문서함이 있는것, else 문서함에 저장된 문서
-		logger.debug("folderCheck = " + folderCheck);
-		map.put("updateStatus", folderCheck == 0 ? 1 : 3);
-		
 		ezCircularDAO.confirmStatus(map);
+		updateReadStatus(circularID, memberID, 1, nowDate, tenantID);
+		updateCircularCommentStatus(Integer.toString(circularID), memberID, 0, nowDate, tenantID);
 	}
 
 	@Override
@@ -374,20 +365,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		
 		ezCircularDAO.updateStatus(map);
-	}
-
-	private void updateStatusUser(int circularID, String confirmDate, int tenantID) throws Exception {
-		logger.debug("updateStatusUser started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("circularID", circularID);
-		map.put("tenantID", tenantID);
-		map.put("confirmDate", confirmDate);
-		
-		logger.debug("confirmDate = " + confirmDate);
-		logger.debug("updateStatusUser ended.");
-		
-		ezCircularDAO.updateStatusUser(map);
 	}
 
 	@Override
@@ -547,27 +524,25 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void circularConfirmStatus(String[] circularIDList, String memberID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+		logger.debug("circularConfirmStatus started.");
 		
-		for (int i=0; i<circularIDList.length; i++) {
-			int circularID = Integer.parseInt(circularIDList[i]);
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantID);
+		
+		for (String circularID : circularIDList) {
+			logger.debug("circularID = " + circularID + " || memberID = " + memberID);
 			
 			map.put("circularID", circularID);
 			map.put("memberID", memberID);
-			map.put("tenantID", tenantID);
 			
-			String confirmDate = commonUtil.getTodayUTCTime("");
-			
-			int checkUpdateStatus = checkUpdateStatus(circularID, memberID, tenantID);
-			
-			logger.debug("checkUpdateStatus : " + checkUpdateStatus);
-			
-			if (checkUpdateStatus != 1) {
-				updateStatusUser(circularID, confirmDate, tenantID);
-			}
-			
-			ezCircularDAO.confirmStatus(map);			
+			ezCircularDAO.confirmStatus(map);
+			updateReadStatus(Integer.parseInt(circularID), memberID, 1, nowDate, tenantID);
+			updateCircularCommentStatus(circularID, memberID, 0, nowDate, tenantID);
 		}
+		
+		logger.debug("circularConfirmStatus ended.");
 	}
 
 	@Override
@@ -882,7 +857,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("nowDate", nowDate);
 		map.put("tenantID", userInfo.getTenantId());
 		
-		updateCircularUser(vo.getCircularID(), vo.getCircularUserID(), nowDate, userInfo.getTenantId());
+		updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 0, nowDate, userInfo.getTenantId());
 		ezCircularDAO.insertComment(map);
 		
 		logger.debug("editCircularComment ended.");
@@ -898,19 +873,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getAttachInfo(map);
 	}
 	
-	private void updateCircularUser(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
+	//tbl_circularUser commentStatus 수정
+	//의견작성시 1 읽을때 0
+	private void updateCircularCommentStatus(String circularID, String memberID, int commentStatus, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateCircularUser started.");
-		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || commentStatus = " + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("memberID", memberID);
-		//4 일때 댓글 -> 확인완료는 그대로 두고, 신규에서 위에 출력
-		map.put("updateStatus", 4);
+		map.put("commentStatus", commentStatus);
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
 				
-		ezCircularDAO.updateCircularUser(map);
+		ezCircularDAO.updateCircularCommentStatus(map);
 		
 		logger.debug("updateCircularUser ended.");
 	}
@@ -963,15 +939,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getSearchAllCircularListCount(map);
 	}
 
-	@Override
-	public void updateReadStatus(int circularID, String circularUserID, int status, int tenantID) throws Exception {
+	private void updateReadStatus(int circularID, String circularUserID, int status, String confirmDate, int tenantID) throws Exception {
 		logger.debug("readComment started.");
-		logger.debug("circularID = " + circularID + " || circularUserID = " + circularUserID + " || status = " + status + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + circularID + " || circularUserID = " + circularUserID + " || status = " + status + " || confirmDate = " + confirmDate + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("memberID", circularUserID);
 		map.put("status", status);
+		map.put("confirmDate", confirmDate);
 		map.put("tenantID", tenantID);
 		
 		ezCircularDAO.updateReadStatus(map);

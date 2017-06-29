@@ -1327,54 +1327,32 @@
             UPDATE
 	            TBL_CIRCULAR_USER
 	        SET
-	            UPDATESTATUS = #updateStatus#
+	            updatestatus = 1
 	        WHERE 
-	            CIRCULARID = #circularID#
+	            circularid = #circularID#
 	        AND
-	            MEMBERID = #memberID#
+	        	updatestatus = 0
 	        AND
-	            TENANTID = #tenantID#
+	            memberid = #memberID#
+	        AND
+	            tenantid = #tenantID#
         ]]>
     </update>
   
-    <update id="EzCircularDAO.updateStatus" parameterClass="Map">
-        <![CDATA[
-            UPDATE
-                TBL_CIRCULAR
-            SET
-                status = #status#
-            WHERE 
-                circularid = #circularID#
-            AND
-                tenantid = #tenantID#
-        ]]>
-    </update>
-    
     <update id="EzCircularDAO.updateReadStatus" parameterClass="Map">
         <![CDATA[
             UPDATE
                 TBL_CIRCULAR_USER
             SET
                 status = #status#
+            AND
+            	confirmdate = #confirmDate#
             WHERE 
                 circularid = #circularID#
             AND
             	memberid = #memberID#
             AND
                 tenantid = #tenantID#
-        ]]>
-    </update>
-  
-    <update id="EzCircularDAO.updateStatusUser" parameterClass="Map">
-        <![CDATA[
-            UPDATE
-                TBL_CIRCULAR_USER
-            SET
-                CONFIRMDATE = #confirmDate#
-            WHERE 
-                CIRCULARID = #circularID#
-            AND
-                TENANTID = #tenantID#      
         ]]>
     </update>
   
@@ -1640,13 +1618,21 @@
 		</isEqual>
 	</select>
 	
-	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">
+	<update id="EzCircularDAO.updateCircularCommentStatus" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				TBL_CIRCULAR_USER
 			SET
-				updatestatus = 4,
+				commentStatus = #commentStatus#
+		]]>
+		
+		<isEqual property="commentStatus" compareValue="1" prepend=",">
+			<![CDATA[
 				updatedate = #nowDate#
+			]]>
+		</isEqual>
+		
+		<![CDATA[
 			WHERE
 				circularid = #circularID#
 			AND
