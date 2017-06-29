@@ -1062,6 +1062,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		// 회람문서 원래 상태값을 가져옴
 		for (int i=0; i<circularArr.length; i++) {
 			map.put("circularID", circularArr[i]);
+			map.put("memberID", memberID);
 			map.put("tenantID", tenantID);
 			
 			status += ezCircularDAO.getCircularStatus(map) + ";";
