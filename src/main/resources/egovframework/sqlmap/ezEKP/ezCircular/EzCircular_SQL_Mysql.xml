@@ -522,9 +522,9 @@
             FROM
                 TBL_CIRCULAR
             WHERE
-                circularid = #circularId#
+                circularid = #circularID#
             AND
-                tenantid = #tenantId#    
+                tenantid = #tenantID#
         ]]>
     </select>
   
@@ -1342,8 +1342,7 @@
             UPDATE
                 TBL_CIRCULAR_USER
             SET
-                status = #status#
-            AND
+                status = #status#,
             	confirmdate = #confirmDate#
             WHERE 
                 circularid = #circularID#

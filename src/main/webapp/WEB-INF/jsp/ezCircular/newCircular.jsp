@@ -468,23 +468,6 @@
 	            	var feature = GetOpenPosition(790, 900);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
-                
-                //클릭했을때 그아이디에 해당하는 
-                $.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCircular/confirmStatus.do",
-					data : { circularID 	: circularID 
-							},
-					success: function(xml){
-						
-					},
-					error: function() {
-						alert("에러발생");
-					}
-				});
-                
 	        }
 		
 // 		    function event_HeaderCheckBoxClick(obj) {
