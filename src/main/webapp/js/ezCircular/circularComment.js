@@ -11,7 +11,6 @@ function getCircularComment() {
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
-			alert(1);
 			circularUserList = "<colgroup><col width='15%' /><col width='72%' /><col width='13%' /></colgroup>";
 			
 			list = result.circularUserList;
@@ -42,7 +41,7 @@ function getCircularComment() {
 			circularCommentList = "";
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
-				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
+				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
 				circularCommentList += "<td style='padding-left:3px'><img src='/images/i_rep.gif' align='middle'/>" + vo.memberName + "</td>";
 				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment +  "&nbsp;(" + vo.regDate.substring(11, 19) + ")&nbsp;";
 				
@@ -53,31 +52,22 @@ function getCircularComment() {
 				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 10) + "</td>";
 				circularCommentList  += "</tr>";
 				
-//				circularCommentList  += "<td style='width:70px; border:0px;'>" + vo.memberName + "</td>";
-//				circularCommentList  += "<td style='border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
-//				circularCommentList  += "<td style='width:130px; border:0px; text-align:right;'>" + vo.regDate + "</td>";
-//				circularCommentList  += "<td style='width:50px; border:0px;' ><a class='imgbtn' style='vertical-align:middle;'><span class='deleteComment' memberID='" + vo.memberID + "' circularID='" + circularID + "' circularCommentID='" + vo.circularCommentID + "' onclick='deleteCircularComment(this)'>삭제</span></a></td>"
-//				circularCommentList  += "</tr>";
-				
-				alert(vo.circularUserID);
-				if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
-//					없을땐 circular클래스 circularUserID 찾아서 그밑에 after
-//					alert($(".circularUser tr[circularUserID='" + vo.circularUserID + "']").length);
-//					alert(222);
-					$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
-				} else {
-//					있을땐 circularComment클래스 circularUserID 찾아서 그밑에 after
+				if (vo.status == 0) {//공개
+					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+					} else {
+						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+					}
+				} else {//비공개
+					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
+						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+						} else {
+							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+						}
+					}
 				}
-				
-//				$("table[circularUserID='" + vo.circularUserID + "']").append(circularCommentList);
-//				$("table[circularUserID='" + vo.circularUserID + "']").closest("tr").show();
 			});
-			
-			if (status == 1) {
-				$("#commentUserList > tbody > tr > td > a").hide();
-			}
-			
-			$(".deleteComment[memberID != '" + userInfoID + "']").closest("a").hide();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
