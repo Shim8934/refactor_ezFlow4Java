@@ -678,7 +678,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			position = "";
 			jikGub = "";
 			gender = "";
-			age = "";
+			age = "29";
 			userName2 = "";
 			depart2 = "";
 			position2 = "";
