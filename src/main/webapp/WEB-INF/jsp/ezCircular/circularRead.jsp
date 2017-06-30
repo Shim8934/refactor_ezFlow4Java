@@ -195,14 +195,14 @@
 		            		<td style="width:200px;">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>
+		                				<span id="option" style="padding-left: 4px;">의견</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<span id="AllDay" style="padding-left: 4px;">메일공지 사용</span>
+		                				<span id="AllDay" style="padding-left: 4px;">공지메일발송</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>,  
-										<span id="AllDay">메일공지 사용</span>
+		                				<span id="option" style="padding-left: 4px;">의견</span>,  
+										<span id="AllDay">공지메일발송</span>
 		                			</c:when>
 		                			<c:otherwise>
 		                				<span id="option" style="padding-left: 4px;">사용안함</span>

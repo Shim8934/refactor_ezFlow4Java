@@ -76,17 +76,17 @@
 	    			return;
 	    		}
 				
-				//댓글기능 사용할때
+				//의견
 				$(':checkbox[id=optionRefly]:checked').each(function(){
 					option = 1;	
 				});
 				
-				//메일공지 사용할때
+				//공지메일발송
 				$(':checkbox[id=optionMail]:checked').each(function(){
 					option = 2;
 				});
 				
-				//댓글기능, 메일공지 둘 다 사용할 때
+				//의견, 공지메일발송
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
 				}
@@ -136,22 +136,19 @@
 	    	}
 	    	
 	    	function btn_TempSave() {
+	    		//임시저장
 	    		if (confirm("<spring:message code='ezCircular.t72'/>")) {
-		    		//회람저장 눌렀을 시
 		        	var content = message.GetEditorContent();
 					var option = 0;
 					
-					//댓글기능 사용할때
 					$(':checkbox[id=optionRefly]:checked').each(function(){
 						option = 1;	
 					});
 					
-					//메일공지 사용할때
 					$(':checkbox[id=optionMail]:checked').each(function(){
 						option = 2;	
 					});
 					
-					//댓글기능, 메일공지 둘 다 사용할 때
 					if ($(':checkbox[name=chkList]:checked').length == 2) {
 						option = 3;
 					}
@@ -249,15 +246,13 @@
     			<td style="height:20px">
       				<div id="menu">      
         				<ul>
-							<div id="menuTable1" >
-	          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
-	          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
-	          				</div>          
+          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
+          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
         				</ul>
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"> <spring:message code="ezResource.t150"/></span></li>
+          					<li><span onClick="window.close();"><spring:message code="ezResource.t150"/></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
@@ -279,17 +274,8 @@
 								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;메일공지 사용   									
 	         				</td>
 	        			</tr>
-<!-- 				        <tr> -->
-<!-- 				        	<th>작성자</th> -->
-<!-- 	       					<td></td> -->
-<!-- 	         				<th>작성일</th> -->
-<!-- 	       					<td>							 -->
-<!-- 	         				</td> -->
-<!-- 			     		</tr> -->
 						<tr>
-	           				<th rowspan="2">
-	           					회람자
-	           				</th>
+	           				<th rowspan="2">회람자</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
 	           				</td>
@@ -316,8 +302,7 @@
   				</td>
   			</tr>
 		</table>
-		<div id="baseColor" style="background-color: #fff9e5; border-bottom: gray 1px inset; border-left: gray 1px inset; border-right: gray 1px inset; border-top: gray 1px inset;
-		display: none; position: absolute">
+		<div id="baseColor" style="background-color: #fff9e5; border-bottom: gray 1px inset; border-left: gray 1px inset; border-right: gray 1px inset; border-top: gray 1px inset; display: none; position: absolute">
   			<table style="height:0px; width:190px; border:0; border-collapse:collapse; border-spacing:0; padding:0px" >
     			<tr>
       				<td style="width:190px">

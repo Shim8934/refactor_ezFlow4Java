@@ -242,15 +242,13 @@
     			<td style="height:20px">
       				<div id="menu">      
         				<ul>
-							<div id="menuTable1" >
-	          					<li><span onClick="btn_Save()"> 회람판 등록</span></li>
-	          					<li><span onClick="btn_Modify()"> 수정</span></li>
-	          				</div>          
+          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
+          					<li><span onClick="btn_Modify()"><spring:message code="ezCircular.t71"/></span></li>
         				</ul>
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"> <spring:message code="ezResource.t150"/></span></li>
+          					<li><span onClick="window.close();"><spring:message code="ezResource.t150"/></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
@@ -260,41 +258,38 @@
         				</tr>
 						
 	        			<tr>
-	          				<th> 중요도</th>
-	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
+	          				<th>중요도</th>
+	          				<td id="Td_StartDate" style="overflow:hidden; width:200px;">
 	          					<select id="importance" class="select">
 	          						<option value="0" <c:if test="${result.importance eq '0'}">selected</c:if>>일반</option>
    									<option value="1" <c:if test="${result.importance eq '1'}">selected</c:if>>중요</option>
    								</select>	
 	          				</td>
-	        			</tr>
-				        <tr>
-	       					<th> 옵션</th>
-	       					<td style="width:160px" colspan="3">
+	       					<th style="width:40px;">옵션</th>
+	       					<td style="width:200px;">
 								<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" name="chkList"/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList" checked/>의견
+		                				<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" name="chkList"/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" name="chkList" checked/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList"/>의견
+		                				<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/>댓글기능 사용
-										<input type="checkbox" id="AllDay" name="chkList" checked/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList" checked/>의견
+										<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" name="chkList"/>댓글기능 사용
-										<input type="checkbox" id="AllDay" name="chkList"/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList"/>의견
+										<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
 		                			</c:otherwise>
-		                		</c:choose>   									
+		                		</c:choose>					
 	         				</td>
-			     		</tr>
+	        			</tr>
+				        
 						<tr>
-	           				<th rowspan="2">
-	           					회람자
-	           				</th>
+	           				<th rowspan="2">회람자</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
 	           				</td>
