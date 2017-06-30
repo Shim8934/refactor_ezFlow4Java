@@ -788,12 +788,12 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     objTd.style.fontWeight = "bold";
                     
-                    if (strValue == "4") {
-                        strValue = "의";
-                        objTd.style.color = "blue";
-                    } else {
+                    if (strValue == "0") {
                         strValue = "신";
                         objTd.style.color = "red";
+                    } else {
+                        strValue = "의";
+                        objTd.style.color = "blue";
                     }
                 }
                 

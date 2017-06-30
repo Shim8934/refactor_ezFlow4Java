@@ -19,8 +19,6 @@
 			var userInfoID = "${userInfo.id}";
 			
 			$(document).ready(function(){
-				alert(circularUserID);
-				alert(userInfoID);
 				getCircularComment();
 				
 				$("#searchValue").keypress(function(e) {

@@ -211,7 +211,7 @@
 							</td>
                     	</tr>
 		        		<tr>
-		        			<th>회람상태</th>
+		        			<th>회람자확인</th>
 	       					<td>								
 	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
@@ -347,9 +347,9 @@
  							</td> 
 						</tr> 
 						<tr style="height:25px">
-							<th style="padding-left:10px">회람상태</th>
+							<th style="padding-left:10px">회람자확인</th>
 	       					<td style="padding-left: 4px;">								
-	         					<div id="statusNum">${statusFirst} / ${statusSecond}</div>
+	         					<div id="statusNum">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
 							<th style="padding-left:10px">상태</th> 
  							<td style="padding-left:4px">
