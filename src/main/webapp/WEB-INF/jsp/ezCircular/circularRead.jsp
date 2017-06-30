@@ -19,13 +19,11 @@
 			var circularUserID = "${result.memberID}";
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
-			
-			
+
 			$(document).ready(function(){
-	            document.getElementById('circularUserList').innerHTML = "${listUser}";
-	            
-	            
+	            document.getElementById('circularUserList').innerHTML = "${listUser}";        
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
+	            
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
 	            for (var i = 0; i < Bodytd.length; i++) {
 	                if (Bodytd[i].width != "") {

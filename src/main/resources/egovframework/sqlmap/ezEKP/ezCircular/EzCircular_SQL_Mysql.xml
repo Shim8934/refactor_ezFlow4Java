@@ -831,7 +831,7 @@
     <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, 
+                DISTINCT A.CIRCULARID, 
                 A.IMPORTANCE, 
                 A.HASFILE, 
                 A.STATUS, 

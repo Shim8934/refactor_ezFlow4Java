@@ -706,7 +706,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><STATUS>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</STATUS></CELL>");
+			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
@@ -1181,22 +1181,18 @@ public class EzCircularController extends EgovFileMngUtil {
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "modify");
 		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "circularUserID", "", userInfo.getTenantId());
-		
-		for (int i=0; i<list.size(); i++) {	
-			if (list.get(i).getMemberID() != "") {
-				if (list.size() == 1) {
-					userID = list.get(i).getMemberID();
-					userName = list.get(i).getMemberName();
-					userName2 = list.get(i).getMemberName2();
-				} else if (i != list.size()-1) {
-					userID += list.get(i).getMemberID() + ", ";
-					userName += list.get(i).getMemberName() + ", ";
-					userName2 += list.get(i).getMemberName2() + ", ";
+
+		for (CircularListVO vo : list) {
+			if (!vo.getMemberID().equals(result.getMemberID())) {
+				if (list.indexOf(vo) < list.size() - 1) {
+					userID += vo.getMemberID() + ", ";
+					userName += vo.getMemberName() + ", ";
+					userName2 += vo.getMemberName2() + ", ";
 				} else {
-					userID += list.get(i).getMemberID();
-					userName += list.get(i).getMemberName();
-					userName2 += list.get(i).getMemberName2();
-				}				
+					userID += vo.getMemberID();
+					userName += vo.getMemberName();
+					userName2 += vo.getMemberName2();
+				}
 			}
 		}
 
