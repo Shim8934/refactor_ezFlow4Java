@@ -55,7 +55,8 @@
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
                 DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
-				D.confirmtotalcount
+				D.confirmtotalcount,
+				B.commentStatus
             FROM
                 TBL_CIRCULAR A
             JOIN
