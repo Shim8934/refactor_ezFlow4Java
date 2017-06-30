@@ -2124,16 +2124,18 @@ public class EzCircularController extends EgovFileMngUtil {
     	bodyContent.append(" 제목 : " + circularVO.getTitle() + " </br>");
     	bodyContent.append(" 내용 : " + circularVO.getContent());
     	
+    	InternetAddress from = new InternetAddress();
+    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+    	from.setAddress(userInfo.getEmail());
+    	
 		for (CircularCommentVO vo : list) {
-			InternetAddress from = new InternetAddress();
-			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-			from.setAddress(userInfo.getEmail());
-			
-			InternetAddress to = new InternetAddress();
-			to.setPersonal(vo.getMemberName(), "UTF-8");
-			to.setAddress(vo.getMemberID());
-			
-			ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			if (!vo.getMemberID().equals(userInfo.getId())) {				
+				InternetAddress to = new InternetAddress();
+				to.setPersonal(vo.getMemberName(), "UTF-8");
+				to.setAddress(vo.getMemberID());
+				
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			}
 		}
 		
     	logger.debug("commentSendMail ended.");
