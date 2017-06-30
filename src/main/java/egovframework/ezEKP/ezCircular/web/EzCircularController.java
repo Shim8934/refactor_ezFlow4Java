@@ -1131,13 +1131,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		for (CircularListVO vo : list) {
 			if (!vo.getMemberID().equals(result.getMemberID())) {
-				if (list.indexOf(vo) < list.size() - 1) {
-					listUser += vo.getMemberName() + ", ";
-				} else {
-					listUser += vo.getMemberName();
-				}
+				listUser += vo.getMemberName() + ", ";
 			}
 		}
+		
+		listUser = listUser.substring(0, listUser.length() - 2);
 
 	    //첨부파일 정보  hasFile이 Y일때
         if (result.getHasFile() == 1) {        
