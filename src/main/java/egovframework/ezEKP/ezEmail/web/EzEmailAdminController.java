@@ -458,6 +458,98 @@ public class EzEmailAdminController {
 		return returnData;
 	}
 	
+	@RequestMapping(value="/admin/ezEmail/mailViewUsersDistributionList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mailViewUsersDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
+		logger.debug("mailViewUserDistributionList started.");
+		
+		String returnData = "";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		
+		Document doc = commonUtil.convertStringToDocument(bodyData);
+		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+		
+		try {
+			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
+							   + "&domain=" + URLEncoder.encode(domain, "UTF-8");
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUsersDistribution";
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			logger.debug("response=" + response);
+			
+			JSONArray resultArray = null;
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					resultArray = (JSONArray)responseObj.get("result");
+				}
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+			
+			for (int i=0; i<resultArray.size(); i++) {
+				JSONObject distribution = (JSONObject)resultArray.get(i);
+				String distributionName = (String)distribution.get("distributionName");
+//				pCn = pCn.substring(0, pCn.indexOf("@"));
+//				String pClass = (String)address.get("class");
+				
+				logger.debug("distributionName=" + distributionName);
+				
+//				if(pClass.equals("group")) {
+//					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+//					if (dept != null) {
+//						sb.append("<ROW>");
+//						sb.append("<CLASS>" + pClass + "</CLASS>");
+//						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+//						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(dept.getDisplayName()) + "</DISPLAYNAME>");
+//						sb.append("<MAIL>" + commonUtil.cleanValue(dept.getMail()) + "</MAIL>");
+//						sb.append("<COMPANY>" + commonUtil.cleanValue(dept.getExtensionAttribute3()) + "</COMPANY>");
+//						sb.append("<DEPT>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</DEPT>");
+//						sb.append("<TITLE>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</TITLE>");
+//						sb.append("</ROW>");
+//					}
+//				
+//				} else {
+//					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
+//					if (user != null) {
+//						sb.append("<ROW>");
+//						sb.append("<CLASS>" + pClass + "</CLASS>");
+//						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+//						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(user.getDisplayName()) + "</DISPLAYNAME>");
+//						sb.append("<MAIL>" + commonUtil.cleanValue(user.getMail()) + "</MAIL>");
+//						sb.append("<COMPANY>" + commonUtil.cleanValue(user.getCompany()) + "</COMPANY>");
+//						sb.append("<DEPT>" + commonUtil.cleanValue(user.getDescription()) + "</DEPT>");
+//						sb.append("<TITLE>" + commonUtil.cleanValue(user.getTitle()) + "</TITLE>");
+//						sb.append("</ROW>");
+//					}
+//				}
+				
+			}
+			
+//			sb.append("</DATA>");
+//			
+//			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("mailViewUserDistributionList ended.");
+		
+		return returnData;
+	}
+	
 	/**
 	 * 공용배포그룹 삭제 실행 함수
 	 */
