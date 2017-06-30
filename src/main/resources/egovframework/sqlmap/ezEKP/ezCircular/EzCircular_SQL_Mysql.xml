@@ -132,7 +132,7 @@
 	        </isEqual>
 	        <isEqual property="circularType" compareValue="2">
 			<![CDATA[
-	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
+	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
 	            AND
 	                B.MEMBERID = #memberID#	
 			]]>
@@ -260,9 +260,11 @@
 				<![CDATA[
 						A.STATUS != '2'
 					AND
-		            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
+		            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
 		            AND
 		                B.MEMBERID = #memberID#
+	                AND
+						A.MEMBERID != #memberID#
 				]]>
 		        </isEqual>
 		        <isEqual property="circularType" compareValue="3">

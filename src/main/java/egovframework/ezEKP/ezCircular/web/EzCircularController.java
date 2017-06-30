@@ -1594,7 +1594,9 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	if (type.equals("new")) {
     		headerVO.setListType("N");    		
-    	} else {
+    	} else if (type.equals("complete")) {
+    		headerVO.setListType("I");
+    	} else {    		
     		headerVO.setListType("C");
     	}
     	
@@ -1664,7 +1666,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
         }
-        
+
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
 
