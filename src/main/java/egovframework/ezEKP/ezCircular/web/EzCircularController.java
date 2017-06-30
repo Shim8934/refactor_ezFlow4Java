@@ -791,7 +791,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "임시") + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + "임시" + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
@@ -1670,36 +1670,30 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
 
-        if (type.equals("new") || type.equals("complete")) {
-        	for (CircularListVO vo : list) {
-        		resultXML.append("<ROW>");
-        		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
-        		resultXML.append("</ROW>");
-        	}        	
-        } else {
-        	for (CircularListVO vo : list) {
-        		resultXML.append("<ROW>");
-        		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
-        		resultXML.append("</ROW>");
-        	}        	
-        }
+        
+    	for (CircularListVO vo : list) {
+    		resultXML.append("<ROW>");
+    		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    		resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
+    		resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
+
+    		if (type.equals("new") || type.equals("complete")) {
+    			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
+    		}
+
+    		if (type.equals("temp")) {
+    			resultXML.append("<CELL><VALUE>" + "임시" + "</VALUE></CELL>");
+    		} else {
+    			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
+    		}
+
+    		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
+    		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+    		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
+    		resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
+    		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+    		resultXML.append("</ROW>");
+    	}
         
         resultXML.append("</ROWS>");
         resultXML.append("</LISTVIEWDATA>");
