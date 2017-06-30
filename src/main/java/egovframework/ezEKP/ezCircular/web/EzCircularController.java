@@ -1138,7 +1138,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				}
 			}
 		}
-		
+
 	    //첨부파일 정보  hasFile이 Y일때
         if (result.getHasFile() == 1) {        
         	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
@@ -1639,7 +1639,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
         int totalCount = ezCircularService.getSearchCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, circularType, folderId);
         
-		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, circularType, folderId);
+		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getOffset(), userInfo.getTenantId(), keyword, circularType, folderId);
 
 		for (CircularListVO result : list) {
 			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
@@ -1668,7 +1668,7 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
 
-        if (type.equals("new")) {
+        if (type.equals("new") || type.equals("complete")) {
         	for (CircularListVO vo : list) {
         		resultXML.append("<ROW>");
         		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
@@ -1679,7 +1679,7 @@ public class EzCircularController extends EgovFileMngUtil {
         		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
         		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
         		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
         		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
         		resultXML.append("</ROW>");
         	}        	
@@ -1693,7 +1693,7 @@ public class EzCircularController extends EgovFileMngUtil {
         		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
         		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
         		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-        		resultXML.append("<CELL><VALUE>" + ezCircularService.getConfirmStatusFirst(vo.getCircularID(), userInfo.getTenantId()) + "/" + ezCircularService.getConfirmStatusSecond(vo.getCircularID(), userInfo.getTenantId()) + "</VALUE></CELL>");
+        		resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
         		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
         		resultXML.append("</ROW>");
         	}        	
