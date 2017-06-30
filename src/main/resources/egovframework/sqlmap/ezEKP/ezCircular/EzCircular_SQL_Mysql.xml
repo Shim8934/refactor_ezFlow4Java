@@ -76,7 +76,7 @@
 				ON
 					AA.circularid = BB.circularid
 				AND
-					AA.tenantid = BB.circularid
+					AA.tenantid = BB.tenantid
 				WHERE
 					BB.status = 1
 				AND
