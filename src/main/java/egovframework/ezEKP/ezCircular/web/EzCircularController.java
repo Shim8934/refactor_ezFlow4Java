@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
@@ -40,10 +39,7 @@ import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
-import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -60,28 +56,16 @@ public class EzCircularController extends EgovFileMngUtil {
 	private Properties config;
 	
 	@Autowired
-	private EzAddressService ezAddressService;
-	
-	@Autowired
 	private EzCircularService ezCircularService;
 	
 	@Autowired
 	private EzEmailService ezEmailService;
 	
-	@Autowired
-	private EzResourceService ezResourceService;
-	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
 	
-	@Autowired
-	private LoginService loginService;
-	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
-	
-	@Autowired
-	private EzOrganService ezOrganService;
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;

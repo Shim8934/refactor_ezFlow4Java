@@ -270,9 +270,9 @@
 	          				</td>
 	       					<th style="width:40px;">옵션</th>
 	       					<td style="width:200px;">
-								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;댓글기능 사용&nbsp;&nbsp;
-								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;메일공지 사용   									
-	         				</td>
+								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;의견&nbsp;&nbsp;
+								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;공지메일발송
+							</td>
 	        			</tr>
 						<tr>
 	           				<th rowspan="2">회람자</th>
