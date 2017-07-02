@@ -1024,7 +1024,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
-		logger.debug("receiverList2 : " + receiverList2);
+		logger.debug("@@receiverList2 : " + receiverList2);
+		logger.debug("option : " + circularListVO.getOption());
 		
 		int receiverLength = receiverIDs.split(",").length;
 		String[] receiverID = receiverIDs.split(",");

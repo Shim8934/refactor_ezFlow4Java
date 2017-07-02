@@ -138,7 +138,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String regDate,
+	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String regDate,
 							   String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName,
 							   String fileList, String[] receiverName2, String realPath, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("insertCircular started.");
@@ -203,23 +203,28 @@ public class EzCircularServiceImpl implements EzCircularService {
 		confirmStatus(lastID, userInfo.getId(), userInfo.getTenantId());
 
 		// 회람자에게 메일 발송
-    	String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
-    	StringBuilder bodyContent = new StringBuilder("");
-
-    	for (int i=0; i<receiverLength; i++) {
-    		InternetAddress from = new InternetAddress();
-			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-			from.setAddress(userInfo.getEmail());
-
-			InternetAddress to = new InternetAddress();
-			
-			if (!receiverID[i].trim().equals(userInfo.getId())) {
-				to.setPersonal(receiverName[i].trim(), "UTF-8");
-				to.setAddress(receiverID[i].trim());
+		if (option == 2 || option == 3) {
+			//임시저장 시 미발송
+			if (status != 2) {
+				String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
+				StringBuilder bodyContent = new StringBuilder("");
 				
-				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+				for (int i=0; i<receiverLength; i++) {
+					InternetAddress from = new InternetAddress();
+					from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+					from.setAddress(userInfo.getEmail());
+					
+					InternetAddress to = new InternetAddress();
+					
+					if (!receiverID[i].trim().equals(userInfo.getId())) {
+						to.setPersonal(receiverName[i].trim(), "UTF-8");
+						to.setAddress(receiverID[i].trim());
+						
+						ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+					}
+				}	
 			}
-    	}
+		}
 
 		logger.debug("insertCircular ended.");
 	}

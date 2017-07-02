@@ -79,21 +79,21 @@
 	    			return;
 	    		}
 				
-				//댓글기능 사용할때
+				//의견
 				$(':checkbox[id=option]:checked').each(function(){
 					option = 1;	
 				});
 				
-				//메일공지 사용할때
+				//공지메일발송
 				$(':checkbox[id=AllDay]:checked').each(function(){
 					option = 2;	
 				});
 				
-				//댓글기능, 메일공지 둘 다 사용할 때
+				//의견, 공지메일발송
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
 				}
-				
+
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
@@ -105,7 +105,17 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-				
+
+				var receiverList = document.getElementById("receiverlist").innerHTML;
+				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
+				var receiverID = document.getElementById("receiverID").innerHTML;
+
+				if (receiverList.indexOf(userName) == -1) {
+					receiverList += ", " + userName;
+					receiverList2 += ", " + userName2;
+					receiverID += ", " + userID;
+				}
+
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	                type : 'POST',
@@ -113,9 +123,9 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			receiverList : document.getElementById("receiverlist").innerHTML,
-	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
-	                			receiverID : document.getElementById("receiverID").innerHTML,
+	                			receiverList : receiverList,
+	                			receiverList2 : receiverList2,
+	                			receiverID : receiverID,
 	                			content : content,
 	                			fileList : fileList,
 	                			oldCircularId : oldCircularId
