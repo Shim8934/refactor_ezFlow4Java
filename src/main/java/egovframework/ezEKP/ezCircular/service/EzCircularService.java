@@ -114,7 +114,7 @@ public interface EzCircularService {
 
 	public String getCircularStatus(String circularIdList, String memberID, int tenantID) throws Exception;
 
-	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
+	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword, String offset, int filterVal, String startDate, String endDate) throws Exception;
 
 	public int getSearchAllCircularListCount(String memberID, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
 

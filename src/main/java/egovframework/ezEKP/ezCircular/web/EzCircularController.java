@@ -400,7 +400,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 	        int totalCount = ezCircularService.getSearchAllCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
         
-			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
+			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), keyword, filterVal, startDate, endDate);
 
 			model.addAttribute("totalCount", totalCount);
 	        model.addAttribute("list", list);		
@@ -1160,6 +1160,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userID = "";
 		String userName = "";
 		String userName2 = "";
+		String userMyID = "";
+		String userMyName = "";
+		String userMyName2 = "";
 		
 		if (req.getParameter("circularID") != null && !req.getParameter("circularID").equals("")) {
 			circularID = req.getParameter("circularID");
@@ -1187,9 +1190,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		if (userID.equals("")) {
 			List<CircularListVO> user = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
 			
-			userID = user.get(0).getMemberID();
-			userName = user.get(0).getMemberName();
-			userName2 = user.get(0).getMemberName2();
+			userMyID = user.get(0).getMemberID();
+			userMyName = user.get(0).getMemberName();
+			userMyName2 = user.get(0).getMemberName2();
 		}
 
 		List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
@@ -1211,6 +1214,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userID", userID);
 		model.addAttribute("userName", userName);
 		model.addAttribute("userName2", userName2);
+		model.addAttribute("userMyID", userMyID);
+		model.addAttribute("userMyName", userMyName);
+		model.addAttribute("userMyName2", userMyName2);
 		model.addAttribute("listSize", list.size());
 		model.addAttribute("strAttach", strAttach.toString());
 		

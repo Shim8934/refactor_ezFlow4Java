@@ -961,13 +961,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception {
+	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String offset, String keyword, int filterVal, String startDate, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("memberID", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		map.put("searchKeyword", keyword);
 		map.put("filterVal", filterVal);
 		map.put("startDate", startDate);
