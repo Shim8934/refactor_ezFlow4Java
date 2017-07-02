@@ -360,13 +360,11 @@
    				</td>
   			</tr>
 		</table>
-		<xmp id="xmpEntryEmailList" style="display: none;"> ${entryList}</xmp>
+		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
+			document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
 		</script>
-    	<script type="text/javascript">
-	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
-    	</script>
 	</body>
 </html>

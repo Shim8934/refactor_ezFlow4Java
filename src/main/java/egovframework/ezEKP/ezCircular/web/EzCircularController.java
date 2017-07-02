@@ -779,8 +779,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + "0/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
         
@@ -1119,7 +1119,9 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 		}
 		
-		listUser = listUser.substring(0, listUser.length() - 2);
+		if (list.size() != 1) {
+			listUser = listUser.substring(0, listUser.length() - 2);
+		}
 
 	    //첨부파일 정보  hasFile이 Y일때
         if (result.getHasFile() == 1) {        
@@ -1673,7 +1675,7 @@ public class EzCircularController extends EgovFileMngUtil {
     		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
     		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
     		resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-    		resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+    		resultXML.append("<CELL><VALUE>" + (circularType == 4 ? "" : vo.getConfirmDate()) + "</VALUE></CELL>");
     		resultXML.append("</ROW>");
     	}
         

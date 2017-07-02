@@ -312,7 +312,7 @@
   			</tr>
   			<tr>
   				<td>
-  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezSchedule/scheduleDragAndDrop.do"></iframe>
+  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do"></iframe>
   				</td>
   			</tr>
 		</table>
@@ -375,14 +375,11 @@
    				</td>
   			</tr>
 		</table>
-		<xmp id="xmpEntryEmailList" style="display: none;"> ${entryList}</xmp>
+		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-    	<script type="text/javascript">
-	       	//document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
-    	</script>
+		</script>
 	</body>
 </html>

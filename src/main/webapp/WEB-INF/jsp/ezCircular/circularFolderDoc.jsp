@@ -454,14 +454,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				var circularId = obj.getAttribute("CIRCULARID");
-		
-				if (CrossYN()) {
-		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	        	var circularID = obj.getAttribute("CIRCULARID");
+
+                if (CrossYN()) {
+		            var feature = GetOpenPosition(820, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
-	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	var feature = GetOpenPosition(790, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 	        }
 		

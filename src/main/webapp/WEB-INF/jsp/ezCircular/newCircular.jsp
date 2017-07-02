@@ -461,7 +461,7 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				circularID = obj.getAttribute("CIRCULARID");
+				var circularID = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
