@@ -266,7 +266,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			fileName = filePath; 
 		}
 		
-		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.separator + filePath;
+		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + commonUtil.separator + filePath;
 
 		downFile(request, response, fullFilePath, fileName);
 		
@@ -778,7 +778,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + "0/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
