@@ -775,7 +775,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
-		List<CircularListVO> list = ezCircularDAO.getCircularTDList(map);;
+		List<CircularListVO> list = ezCircularDAO.getCircularTDList(map);
 		
 		logger.debug("getCircularTDList ended.");
 		

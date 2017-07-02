@@ -1225,7 +1225,7 @@
                 A.title,
                 A.memberid,
                 A.membername,
-                A.regdate,
+                IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
 				IFNULL(C.confirmcount, '0') AS confirmcount,
@@ -1341,16 +1341,17 @@
     <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
         <![CDATA[
 			SELECT
-				distinct a.circularid,
-				a.importance,
-				a.hasfile,
-				a.status,
-				a.title,
-				a.memberid,
-				a.regdate,
+				distinct A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				A.membername,
+				IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
 				d.status as confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(D.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
-				d.updatestatus,
+				D.updatestatus,
 				IFNULL(E.confirmcount, '0') AS confirmcount,
 				F.confirmtotalcount 
 			FROM

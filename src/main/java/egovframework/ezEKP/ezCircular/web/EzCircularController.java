@@ -1119,7 +1119,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 		}
 		
-		if (list.size() != 1) {
+		if (list.size() > 0 && list.size() != 1) {
 			listUser = listUser.substring(0, listUser.length() - 2);
 		}
 
