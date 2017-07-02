@@ -1004,8 +1004,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.getSearchAllCircularListCount(map);
 	}
 	
-	//tbl_circularUser commentStatus 수정
-	//의견작성시 1 읽을때 0
 	private void updateCircularCommentStatus(String circularID, String memberID, int commentStatus, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateCircularUser started.");
 		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || commentStatus = " + " || tenantID = " + tenantID);
@@ -1044,9 +1042,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("memberID", memberID);
+		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
 		
 		ezCircularDAO.confirmStatus(map);
+		ezCircularDAO.confirmUpdateDate(map);
 		updateReadStatus(circularID, memberID, 1, nowDate, tenantID);
 		updateCircularCommentStatus(Integer.toString(circularID), memberID, 0, nowDate, tenantID);
 	}

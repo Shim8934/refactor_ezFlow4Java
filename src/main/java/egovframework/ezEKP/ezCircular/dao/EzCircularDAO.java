@@ -308,6 +308,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void updateReadStatus(Map<String, Object> map) throws Exception {
 		update("EzCircularDAO.updateReadStatus", map);
 	}
+	
+	public void confirmUpdateDate(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.confirmUpdateDate", map);
+	}
 
 	public int getSearchCircularListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getSearchCircularListCount", map);
