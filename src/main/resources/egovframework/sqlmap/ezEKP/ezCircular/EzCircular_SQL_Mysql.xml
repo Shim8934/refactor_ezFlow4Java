@@ -748,30 +748,42 @@
             	A.MEMBERID = B.CN
             LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
 				FROM
-					TBL_CIRCULAR_USER
-				WHERE
-					status = 1
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
 				AND
-					tenantid = 0
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
 				GROUP BY
-					circularid) C
+					BB.circularid) C
 			ON
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
 				FROM
-					TBL_CIRCULAR_USER
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
 				WHERE
-					tenantid = 0
+					BB.tenantid = 0
 				GROUP BY
-					circularid) D
+					BB.circularid) D
 			ON
-				A.circularid = D.circularid	
+				A.circularid = D.circularid
             WHERE
                 A.circularid = #circularID#
             AND
@@ -1340,28 +1352,40 @@
 				A.tenantid = B.tenantid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
 				FROM
-					TBL_CIRCULAR_USER
-				WHERE
-					status = 1
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
 				AND
-					tenantid = 0
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
 				GROUP BY
-					circularid) C
+					BB.circularid) C
 			ON
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
 				FROM
-					TBL_CIRCULAR_USER
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
 				WHERE
-					tenantid = 0
+					BB.tenantid = 0
 				GROUP BY
-					circularid) D
+					BB.circularid) D
 			ON
 				A.circularid = D.circularid
             WHERE
@@ -1479,30 +1503,42 @@
 				A.CIRCULARID = D.CIRCULARID
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
 				FROM
-					TBL_CIRCULAR_USER
-				WHERE
-					status = 1
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
 				AND
-					tenantid = 0
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
 				GROUP BY
-					circularid) E
+					BB.circularid) E
 			ON
 				A.circularid = E.circularid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
 				FROM
-					TBL_CIRCULAR_USER
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
 				WHERE
-					tenantid = 0
+					BB.tenantid = 0
 				GROUP BY
-					circularid) F
+					BB.circularid) F
 			ON
-				A.circularid = F.circularid	
+				A.circularid = F.circularid
 			WHERE
 				B.circularfolderid = #folderId#
 		]]> 
