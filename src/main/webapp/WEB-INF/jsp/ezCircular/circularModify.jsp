@@ -32,23 +32,23 @@
 
 		    window.onload = function () {
 	        	document.getElementById("title").value = "${result.title}";
-	        	document.getElementById("receiverlist").innerHTML = "${userName}";
-	        	document.getElementById("receiverID").innerHTML = "${userID}";
+// 	        	document.getElementById("receiverlist").innerHTML = "${userName}";
+// 	        	document.getElementById("receiverID").innerHTML = "${userID}";
 
 	        	//hasFie구분
 	        	setAttachFileInfo("${strAttach}");
 		        
-	        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+// 	        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 	        	
-	        	var list = userID.split(",");
-	        	var nameList = userName.split(",");
-	        	var nameList2 = userName2.split(",");
+// 	        	var list = userID.split(",");
+// 	        	var nameList = userName.split(",");
+// 	        	var nameList2 = userName2.split(",");
 	        	
-	        	for (var i = 0; i < listSize; i++) {
-	            	g_attendant["id"][i] = list[i].trim();
-	        		g_attendant["name"][i] = nameList[i].trim();
-	        		g_attendant["name2"][i] = nameList2[i].trim();
-	        	}
+// 	        	for (var i = 0; i < listSize; i++) {
+// 	            	g_attendant["id"][i] = list[i].trim();
+// 	        		g_attendant["name"][i] = nameList[i].trim();
+// 	        		g_attendant["name2"][i] = nameList2[i].trim();
+// 	        	}
 		    }
 			
 		    window.onresize = function () {

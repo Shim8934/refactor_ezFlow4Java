@@ -976,7 +976,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		if (list.get(0).getMemberID() != "") {	
 			userID = list.get(0).getMemberID();
 			userName = list.get(0).getMemberName();
-			userName2 = list.get(0).getMemberName2();				
+			userName2 = list.get(0).getMemberName2();
 		}
 
 		model.addAttribute("userInfo", userInfo);
@@ -1028,8 +1028,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
-		logger.debug("@@receiverList2 : " + receiverList2);
-		logger.debug("option : " + circularListVO.getOption());
+		logger.debug("receiverList2 : " + receiverList2);
 		
 		int receiverLength = receiverIDs.split(",").length;
 		String[] receiverID = receiverIDs.split(",");
@@ -1183,6 +1182,14 @@ public class EzCircularController extends EgovFileMngUtil {
 					userName2 += vo.getMemberName2();
 				}
 			}
+		}
+		
+		if (userID.equals("")) {
+			List<CircularListVO> user = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
+			
+			userID = user.get(0).getMemberID();
+			userName = user.get(0).getMemberName();
+			userName2 = user.get(0).getMemberName2();
 		}
 
 		List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
