@@ -1912,11 +1912,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		if (oldFolderId != null && folderId != "") { // 폴더에서 폴더로 이동 시
 			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
 		}
-		
-//		if (oldFolderId != null && folderId == "") { // 폴더에서 확인완료 회람판으로 이동 시
-//			updateStatus = "1";
-//			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, tenantId);
-//		}
 
 		logger.debug("moveCircular ended");
 	}

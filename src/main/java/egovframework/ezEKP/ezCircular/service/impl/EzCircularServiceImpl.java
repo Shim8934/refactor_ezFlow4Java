@@ -185,6 +185,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
+				
+				String uploadFilePath = commonUtil.separator + "uploadFile";
+
+				filePath = uploadFilePath + commonUtil.separator + filePath;
 
 				attachMap.put("circularID", lastID);
 				attachMap.put("fileName", fileName);
@@ -790,30 +794,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String[] circularIdArr = circularIdList.split(";");
-		
-		if (updateStatus.equals("3")) {
-			for (int i=0; i<circularIdArr.length; i++) {
-				map.put("folderId", folderId);
-				map.put("circularId", circularIdArr[i]);
-				map.put("memberId", memberId);
-				map.put("updateStatus", updateStatus);
-				map.put("originLoc", originLoc);
-				map.put("tenantId", tenantId);
-				
-				ezCircularDAO.moveCircular(map); // updateStatus 값 변경
-				ezCircularDAO.moveCircular2(map); // Link 테이블에 Insert
-			}
-		} else {
-			for (int i=0; i<circularIdArr.length; i++) {
-				map.put("folderId", folderId);
-				map.put("circularId", circularIdArr[i]);
-				map.put("memberId", memberId);
-				map.put("updateStatus", updateStatus);
-				map.put("tenantId", tenantId);
-				
-				ezCircularDAO.moveCircular(map); // updateStatus 값 변경
-				ezCircularDAO.moveCircular3(map); // 기존 폴더에 있는 회람문서 삭제
-			}
+
+		for (int i=0; i<circularIdArr.length; i++) {
+			map.put("folderId", folderId);
+			map.put("circularId", circularIdArr[i]);
+			map.put("memberId", memberId);
+			map.put("updateStatus", updateStatus);
+			map.put("originLoc", originLoc);
+			map.put("tenantId", tenantId);
+
+			ezCircularDAO.moveCircular(map); // updateStatus 값 변경
+			ezCircularDAO.moveCircular2(map); // Link 테이블에 Insert
 		}
 	}
 
@@ -1145,6 +1136,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("tenantID", tenantID);
 			
 			ezCircularDAO.updateCircularStatus(map);
+			ezCircularDAO.moveCircular3(map); // LINK 테이블에서 제거
 		}
 
 		logger.debug("circularReturn ended.");

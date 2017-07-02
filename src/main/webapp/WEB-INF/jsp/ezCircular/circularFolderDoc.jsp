@@ -584,7 +584,14 @@
 		        	location.href = location.href;
 	        	}
 	        }
-	        
+
+	        function CircularWrite_onclick() {
+	        	var feature = GetOpenPosition(820, 700);
+	        	url = "/ezCircular/circularWrite.do";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
+                OpenWin.focus();     
+	        }
+
 	        function CircularDelete_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
