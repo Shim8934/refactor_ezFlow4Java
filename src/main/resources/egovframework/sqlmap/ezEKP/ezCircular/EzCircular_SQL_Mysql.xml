@@ -1660,7 +1660,7 @@
         ]]>
     </update>
     
-    <update id="EzCircularDAO.confirmUpdateDate" parameterClass="Map">
+    <!-- <update id="EzCircularDAO.confirmUpdateDate" parameterClass="Map">
         <![CDATA[
             UPDATE
 	            TBL_CIRCULAR A
@@ -1677,7 +1677,7 @@
 	        AND
 	            A.tenantid = #tenantID#
         ]]>
-    </update>
+    </update> -->
   
     <update id="EzCircularDAO.updateReadStatus" parameterClass="Map">
         <![CDATA[
@@ -1999,21 +1999,6 @@
                 (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #nowDate#, #status#, #tenantID#)
 		]]>
 	</insert>
-	
-	<update id="EzCircularDAO.updateComment" parameterClass="CircularCommentVO">
-		<![CDATA[
-			UPDATE
-				TBL_CIRCULAR_COMMENT
-			SET
-				confirmDate = #confirmDate#
-			WHERE
-				circularid = #circularID#
-			AND
-				circularuserid= #circularUserID#
-			AND
-				tenantid = #tenantID#
-		]]>
-	</update>
 	
 	<select id="EzCircularDAO.getCircularCommentUserList" parameterClass="Map" resultClass="CircularCommentVO">
 		<![CDATA[

@@ -1046,7 +1046,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		
 		ezCircularDAO.confirmStatus(map);
-		ezCircularDAO.confirmUpdateDate(map);
+//		ezCircularDAO.confirmUpdateDate(map);
 		updateReadStatus(circularID, memberID, 1, nowDate, tenantID);
 		updateCircularCommentStatus(Integer.toString(circularID), memberID, 0, nowDate, tenantID);
 	}
