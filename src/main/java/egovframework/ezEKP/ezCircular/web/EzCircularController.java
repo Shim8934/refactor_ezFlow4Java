@@ -400,7 +400,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 	        int totalCount = ezCircularService.getSearchAllCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
         
-			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), keyword, filterVal, startDate, endDate);
+			List<CircularListVO> list = ezCircularService.getSearchAllCircularList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), keyword, filterVal, startDate, endDate);
 
 			model.addAttribute("totalCount", totalCount);
 	        model.addAttribute("list", list);		

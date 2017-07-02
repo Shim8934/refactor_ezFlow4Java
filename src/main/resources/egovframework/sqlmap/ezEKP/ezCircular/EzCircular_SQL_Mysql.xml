@@ -463,29 +463,33 @@
 	            ]]>
 	        <isEqual property="filterVal" compareValue="1">
 	        <![CDATA[
-	            	B.UPDATESTATUS = 0
+	        		A.STATUS != '2'
+	        	AND
+	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
 	            AND
 	                B.MEMBERID = #memberID#	
 	        ]]> 
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="2">
 			<![CDATA[
-	            	A.STATUS IN ('0', '1')
+	            	A.STATUS != '2'
 	            AND
-	            	B.UPDATESTATUS = 1
+	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
 	            AND
-	                B.MEMBERID = #memberID#	
+	                B.MEMBERID = #memberID#
+	            AND
+	            	A.MEMBERID != #memberID#	
 			]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="3">
 			<![CDATA[
-	            	A.STATUS IN ('0', '1')
+	            	A.STATUS != '2'
 	            AND
 	            	B.UPDATESTATUS IN ('0', '1')
 				AND
 	            	A.MEMBERID = B.MEMBERID
 	            AND
-	                B.MEMBERID = #memberID#	
+	                A.MEMBERID = #memberID#	
 			]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="4">
@@ -573,9 +577,7 @@
  						circularid) F 
  				ON 
  					A.circularid = F.circularid  
- 				WHERE 
- 					B.CIRCULARFOLDERID = #folderID# 
- 				AND 
+ 				WHERE
  					C.UPDATESTATUS = '3'   
  				AND 
  					A.TENANTID = #tenantID# 
@@ -633,52 +635,55 @@
 	            SELECT
 	                COUNT(DISTINCT A.CIRCULARID) CNT
 	            FROM
-	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.CIRCULARID = B.CIRCULARID
+				AND
+					A.TENANTID = B.TENANTID
 	            WHERE
-	                A.CIRCULARID = B.CIRCULARID
-	            AND
-	                A.TENANTID = B.TENANTID
 	        ]]>
 	        <isEqual property="filterVal" compareValue="1">
 		        <![CDATA[
-		            AND
-		            	B.UPDATESTATUS = 0
+		            A.STATUS != '2'
+	        	AND
+	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
+	            AND
+	                B.MEMBERID = #memberID#
 		        ]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="2">
 				<![CDATA[
-		            AND
-		            	A.STATUS IN ('0', '1')
-		            AND
-		            	B.UPDATESTATUS = 1
+		            A.STATUS != '2'
+	            AND
+	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
+	            AND
+	                B.MEMBERID = #memberID#
+	            AND
+	            	A.MEMBERID != #memberID#
 				]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="3">
 				<![CDATA[
-		            AND
-		            	A.STATUS IN ('0', '1')
-		            AND
-		            	B.UPDATESTATUS IN ('0', '1')
-		            AND
-		            	A.MEMBERID = B.MEMBERID
+		            A.STATUS != '2'
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+				AND
+	            	A.MEMBERID = B.MEMBERID
+	            AND
+	                A.MEMBERID = #memberID#	
 				]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="4">
 				<![CDATA[
-		            AND
-		            	A.STATUS = '2'
-		            AND
-		            	B.UPDATESTATUS IN ('0', '1')
+		            A.STATUS = '2'
+	            AND
+	            	B.UPDATESTATUS IN ('0', '1')
+	            AND
+	                A.MEMBERID = #memberID#
 				]]>
 	        </isEqual>
-	        <isEqual property="filterVal" compareValue="4">
-	            AND
-	                A.MEMBERID = #memberID#	        
-	        </isEqual>
-	        <isNotEqual property="filterVal" compareValue="4">
-	            AND
-	                B.MEMBERID = #memberID#	        
-	        </isNotEqual>        
         	<isNotEmpty property="startDate">
 		        <![CDATA[
 		            AND
@@ -698,15 +703,23 @@
         	<![CDATA[
 				SELECT
 					COUNT(DISTINCT A.CIRCULARID) CNT
-				FROM
-					TBL_CIRCULAR A
-				JOIN
-					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
-					ON A.CIRCULARID = B.CIRCULARID
-				JOIN TBL_CIRCULAR_USER D
-					ON A.CIRCULARID = D.CIRCULARID
+				FROM 
+ 					TBL_CIRCULAR A 
+ 				JOIN 
+ 					(SELECT  
+ 						*  
+ 					 FROM  
+ 					 	TBL_CIRCULAR_LINK  
+ 					 WHERE  
+ 					 	MEMBERID = #memberID#) B 
+ 					 ON  
+ 					 	A.CIRCULARID = B.CIRCULARID 
+ 				JOIN  
+ 					TBL_CIRCULAR_USER C 
+ 				ON  
+ 					A.CIRCULARID = C.CIRCULARID
 				WHERE
-					D.UPDATESTATUS = '3'  
+					C.UPDATESTATUS = '3'  
 				AND
 					A.TENANTID = #tenantID#
 		    ]]>
