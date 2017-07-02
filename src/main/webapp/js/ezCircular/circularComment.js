@@ -1,5 +1,4 @@
 /** 이효진 작성*/
-//댓글목록조회
 function getCircularComment() {
 	$.ajax({
 		type : "POST",
@@ -97,7 +96,6 @@ function showEdit(obj) {
 	}
 }
 
-//댓글작성
 function editCircularComment(obj) {
 	var circularUserID = $(obj).closest("tr").attr("circularUserID");
 	var circularComment = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > textarea").val();
@@ -149,7 +147,6 @@ function deleteCircularComment(obj) {
 	});
 }
 
-//확인재촉메일
 function commentSendMail() {
 	$.ajax({
 		type : "POST",

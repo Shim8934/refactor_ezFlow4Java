@@ -545,36 +545,36 @@
 	                A.TENANTID = B.TENANTID
 	        ]]>
 	        <isEqual property="filterVal" compareValue="1">
-	        <![CDATA[
-	            AND
-	            	B.UPDATESTATUS = 0
-	        ]]>
+		        <![CDATA[
+		            AND
+		            	B.UPDATESTATUS = 0
+		        ]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="2">
-			<![CDATA[
-	            AND
-	            	A.STATUS IN ('0', '1')
-	            AND
-	            	B.UPDATESTATUS = 1
-			]]>
+				<![CDATA[
+		            AND
+		            	A.STATUS IN ('0', '1')
+		            AND
+		            	B.UPDATESTATUS = 1
+				]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="3">
-			<![CDATA[
-	            AND
-	            	A.STATUS IN ('0', '1')
-	            AND
-	            	B.UPDATESTATUS IN ('0', '1')
-	            AND
-	            	A.MEMBERID = B.MEMBERID
-			]]>
+				<![CDATA[
+		            AND
+		            	A.STATUS IN ('0', '1')
+		            AND
+		            	B.UPDATESTATUS IN ('0', '1')
+		            AND
+		            	A.MEMBERID = B.MEMBERID
+				]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="4">
-			<![CDATA[
-	            AND
-	            	A.STATUS = '2'
-	            AND
-	            	B.UPDATESTATUS IN ('0', '1')
-			]]>
+				<![CDATA[
+		            AND
+		            	A.STATUS = '2'
+		            AND
+		            	B.UPDATESTATUS IN ('0', '1')
+				]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="4">
 	            AND
@@ -585,12 +585,12 @@
 	                B.MEMBERID = #memberID#	        
 	        </isNotEqual>        
         	<isNotEmpty property="startDate">
-	        <![CDATA[
-	            AND
-	            	#startDate# <= A.REGDATE
-	            AND
-	            	#endDate# > A.REGDATE	        
-	        ]]>
+		        <![CDATA[
+		            AND
+		            	#startDate# <= A.REGDATE
+		            AND
+		            	#endDate# > A.REGDATE	        
+		        ]]>
         	</isNotEmpty>
 	        <![CDATA[        
 	            AND
@@ -598,7 +598,7 @@
 	            AND
 	                A.TENANTID = #tenantID#
 			]]>
-        	</isNotEqual>        
+       	</isNotEqual>        
 		<isEqual property="filterVal" compareValue="5">
         	<![CDATA[
 				SELECT
@@ -615,14 +615,14 @@
 				AND
 					A.TENANTID = #tenantID#
 		    ]]>
-        	<isNotEmpty property="startDate">
+       	<isNotEmpty property="startDate">
 	        <![CDATA[
 	            AND
 	            	#startDate# <= A.REGDATE
 	            AND
 	            	#endDate# > A.REGDATE	        
 	        ]]>
-        	</isNotEmpty>
+       	</isNotEmpty>
 	        <![CDATA[    
 				AND
 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
@@ -903,6 +903,16 @@
 				A.memberid != #memberID#
 			AND
 				A.tenantid = #tenantID#
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+        
+		<![CDATA[
 			ORDER BY
 				A.regdate DESC
 			LIMIT
@@ -931,6 +941,12 @@
             AND
                 A.tenantid = #tenantID#
         ]]>
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
     </select>
     
     <select id="EzCircularDAO.getCircularTempListCount" parameterClass="Map" resultClass="Integer" >

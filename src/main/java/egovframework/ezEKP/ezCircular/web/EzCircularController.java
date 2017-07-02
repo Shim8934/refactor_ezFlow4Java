@@ -631,6 +631,16 @@ public class EzCircularController extends EgovFileMngUtil {
     public String getCircularCompleteList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getCircularCompleteList started");
 
+    	int startRow = 1;
+    	int endRow = 0;
+    	String pageNum = "1";
+    	
+    	if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
+    		pageNum = req.getParameter("pageNum"); 
+    	}
+    	
+    	String searchValue = req.getParameter("searchValue");
+    	
     	userInfo = commonUtil.userInfo(loginCookie);
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
@@ -639,14 +649,6 @@ public class EzCircularController extends EgovFileMngUtil {
     	headerVO.setTenantID(userInfo.getTenantId());
     	
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-
-        int startRow = 1;
-        int endRow = 0;
-        
-        String pageNum = "1";
-        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
-        	pageNum = req.getParameter("pageNum"); 
-        }
     	
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
@@ -654,12 +656,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), userInfo.getTenantId());
+        int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), searchValue, userInfo.getTenantId());
         
-        logger.debug("startRow : "+startRow);
-        logger.debug("endRow : "+endRow);
-        
-		List<CircularListVO> list = ezCircularService.getCircularCompleteList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), userInfo.getOffset());
+		List<CircularListVO> list = ezCircularService.getCircularCompleteList(userInfo.getId(), searchValue, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset());
 		
 		StringBuffer resultXML = new StringBuffer();
         

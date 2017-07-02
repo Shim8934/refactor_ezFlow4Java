@@ -130,9 +130,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
-		logger.debug("getCircularList ended.");
+		List<CircularListVO> list = ezCircularDAO.getCircularList(map);
 		
-		return ezCircularDAO.getCircularList(map);
+		logger.debug("getCircularList ended. listSize = " + list.size());
+		
+		return list;
 	}
 
 	@Override
@@ -571,26 +573,40 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getCircularCompleteList(String memberID, int startRow, int endRow, int tenantID, String offset) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, int startRow, int endRow, int tenantID, String offset) throws Exception {
+		logger.debug("getCircularCompleteList started.");
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || startRow = " + startRow + " || endRow = " + endRow + " || tenantID = " + tenantID);
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
+		map.put("searchValue", searchValue);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		
-		return ezCircularDAO.getCircularCompleteList(map);
+		List<CircularListVO> list = ezCircularDAO.getCircularCompleteList(map);
+		
+		logger.debug("getCircularCompleteList ended. listSize = " + list.size());
+		
+		return list;
 	}
 
 	@Override
-	public int getCircularCompleteListCount(String memberID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public int getCircularCompleteListCount(String memberID, String searchValue, int tenantID) throws Exception {
+		logger.debug("getCircularCompleteListCount started.");
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || tenantID = " + tenantID);
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
+		map.put("searchValue", searchValue);
 		map.put("tenantID", tenantID);
 		
-		return ezCircularDAO.getCircularCompleteListCount(map);
+		int result = ezCircularDAO.getCircularCompleteListCount(map);
+		
+		logger.debug("getCircularCompleteListCount ended. result = " + result);
+		
+		return result;
 	}
 
 	@Override
@@ -1000,7 +1016,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("getCircularListCount started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
 		map.put("searchKeyword", keyword);

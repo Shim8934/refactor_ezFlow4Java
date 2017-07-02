@@ -176,26 +176,22 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {	       
-	        	var keyword = document.getElementById("txt_keyword").value;
+	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
-		        if (keyword != ""){
-		        	url = "/ezCircular/getSearchCircularList.do?type=complete";
-		        }
-		        else{
-		        	url = "/ezCircular/getCircularCompleteList.do";
-		        }
+				url = "/ezCircular/getCircularCompleteList.do";
+				
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
 					url : url,
-					data : { boardType   : "M", 
-							 pageNum 	 : CurPage, 
-							 orderCell 	 : OrderCell, 
+					data : { boardType : "M", 
+							 pageNum : CurPage, 
+							 orderCell : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 keyword	 : keyword
+							 searchValue : searchValue
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
