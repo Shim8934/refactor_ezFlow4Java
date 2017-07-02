@@ -23,6 +23,9 @@
 	    	var userID = "${userID}";
 	    	var userName = "${userName}";
 	    	var userName2 = "${userName2}";
+	    	var userMyID = "${userMyID}";
+	    	var userMyName = "${userMyName}";
+	    	var userMyName2 = "${userMyName2}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -111,10 +114,10 @@
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
 
-				if (receiverList.indexOf(userName) == -1) {
-					receiverList += ", " + userName;
-					receiverList2 += ", " + userName2;
-					receiverID += ", " + userID;
+				if (receiverList.indexOf(userMyName) == -1) {
+					receiverList += ", " + userMyName;
+					receiverList2 += ", " + userMyName2;
+					receiverID += ", " + userMyID;
 				}
 
 	    		$.ajax ({
