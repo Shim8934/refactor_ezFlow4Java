@@ -119,13 +119,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public List<CircularListVO> getCircularList(String memberID, int startRow, int endRow, int tenantID, String offset) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+		logger.debug("getCircularList started.");
+		logger.debug("memberID = " + memberID + " || startRow = " + startRow + " || endRow = " + endRow + " || tenantID = " + tenantID);
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
+		logger.debug("getCircularList ended.");
 		
 		return ezCircularDAO.getCircularList(map);
 	}
@@ -517,7 +521,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("memberID", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantId);
 		map.put("searchKeyword", keyword);
 		map.put("circularType", circularType);
@@ -829,7 +833,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			sb.append("<Status>" + itemInfo.getStatus() + "</Status>");
 			sb.append("<Title>" + itemInfo.getTitle() + "</Title>");
 			sb.append("<MemberId>" + itemInfo.getMemberID() + "</MemberId>");
-			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(itemInfo.getRegDate(), offset, false) + "</RegDate>");
+			sb.append("<RegDate>" + itemInfo.getRegDate() + "</RegDate>");
 			sb.append("<Option>" + itemInfo.getOption() + "</Option>");
 			sb.append("<Content>" + commonUtil.cleanValue(itemInfo.getContent()) + "</Content>");
 			sb.append("</NODE>");

@@ -167,7 +167,6 @@
 	            }
 	        }
 	
-	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
 	        	var keyword = document.getElementById("txt_keyword").value;
 	        	
@@ -198,104 +197,103 @@
 	
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
-	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-	                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
-	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
-	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
+                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 
-	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
-		            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
-		            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
-		            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
-		            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
+                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+	            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+	            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+	            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+	            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
 
-	                switch (pPreviewShow_HOW) {
-					case 0:
-						pPreviewShow_HOW = "OFF";
-						break;
-					case 1:
-						pPreviewShow_HOW = "H";
-						break;
-					case 2:
-						pPreviewShow_HOW = "W";
-						break;
-					}
-	                
-	                if (listNode == null) return;
-	            	
-	                var lstCnt = getNodeText(cntNode);
-	                var pageCnt = getNodeText(pageNode);
-	                var perCnt = getNodeText(perNode);
-  
-	                listcount.value = perCnt;
-	                totalPage = Math.ceil(new Number(pageCnt / perCnt));
-	                pTotalCnt = lstCnt;
-	                makePageSelPage();
-	
-	                var xmlDoc;
-	                if (CrossYN()) {
-	                    var xmlLIST = createXmlDom();
-	                    var nodeToImport = xmlLIST.importNode(listNode, true);
-	                    xmlLIST.appendChild(nodeToImport);
-	                    xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-	                }
-	                else {
-	                    xmlDoc = createXmlDom();
-	                    xmlDoc.appendChild(listNode);
-	                }
-	                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
-	
-	                var DocList = new ListView();
-	                DocList.SetID("BoardList");
-	                DocList.SetHeaderOnClick("SortPage");
-	                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
-	                DocList.SetRowOnClick("ItemPreviewRead_click");
-	                DocList.SetTitleIdx(0);
-	                DocList.SetSelectFlag(false);
-	                DocList.DataSource(xmlDoc);
-	                DocList.DataBind("lvBoardList");
-	                DocList = null;
-					
-	                strListInfo = "";
-	                
-	                var tempno = 0;
-	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-	                    if (CrossYN()) {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                    else {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                } */
-	                tempno = tempno + "";
-	                
-	                if (tempno.length > 10) {
-	                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
-	                }
-	
-	                if (!firstFlag) {
-	                    PreviewRayerChange(pPreviewShow_HOW);
-	                    if (CrossYN()) {
-	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-	                    } else {
-	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
-	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
-	                    }
-	                    firstFlag = true;
-	                }
-	                endtime = new Date().getTime();
-	                strListInfo = "";
-	            }
-	        
+                switch (pPreviewShow_HOW) {
+				case 0:
+					pPreviewShow_HOW = "OFF";
+					break;
+				case 1:
+					pPreviewShow_HOW = "H";
+					break;
+				case 2:
+					pPreviewShow_HOW = "W";
+					break;
+				}
+                
+                if (listNode == null) return;
+            	
+                var lstCnt = getNodeText(cntNode);
+                var pageCnt = getNodeText(pageNode);
+                var perCnt = getNodeText(perNode);
+ 
+                listcount.value = perCnt;
+                totalPage = Math.ceil(new Number(pageCnt / perCnt));
+                pTotalCnt = lstCnt;
+                makePageSelPage();
+
+                var xmlDoc;
+                if (CrossYN()) {
+                    var xmlLIST = createXmlDom();
+                    var nodeToImport = xmlLIST.importNode(listNode, true);
+                    xmlLIST.appendChild(nodeToImport);
+                    xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+                }
+                else {
+                    xmlDoc = createXmlDom();
+                    xmlDoc.appendChild(listNode);
+                }
+                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
+
+                var DocList = new ListView();
+                DocList.SetID("BoardList");
+                DocList.SetHeaderOnClick("SortPage");
+                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
+                DocList.SetRowOnClick("ItemPreviewRead_click");
+                DocList.SetTitleIdx(0);
+                DocList.SetSelectFlag(false);
+                DocList.DataSource(xmlDoc);
+                DocList.DataBind("lvBoardList");
+                DocList = null;
+				
+                strListInfo = "";
+                
+                var tempno = 0;
+            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
+                    if (CrossYN()) {
+                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
+                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
+                        }
+                    }
+                    else {
+                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
+                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
+                        }
+                    }
+                } */
+                tempno = tempno + "";
+                
+                if (tempno.length > 10) {
+                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
+                }
+
+                if (!firstFlag) {
+                    PreviewRayerChange(pPreviewShow_HOW);
+                    if (CrossYN()) {
+                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+                    } else {
+                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+                    }
+                    firstFlag = true;
+                }
+                endtime = new Date().getTime();
+                strListInfo = "";
+            }
 	
 	        var BlockSize = 10;
 	        function td_Create1(strtext) {
@@ -319,26 +317,25 @@
 	            /* document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]"; */
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
+	            
 	            var pageNum = CurPage;
 	            if (totalPage > 1 && pageNum != 1) {
 	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
-	            }
-	            else {
+	            } else {
 	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
+	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
 	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 	                    PagingHTML += strtext;
-	                }
-	                else {
+	                } else {
 	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 	                    PagingHTML += strtext;
 	                }
-	            }
-	            else {
+	            } else {
 	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 	                PagingHTML += strtext;
 	            }
@@ -347,45 +344,44 @@
 	            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
 	            if (totalPage >= (startNum + parseInt(BlockSize))) {
 	                MaxNum = (startNum + parseInt(BlockSize)) - 1;
-	            }
-	            else {
+	            } else {
 	                MaxNum = totalPage;
 	            }
+	            
 	            for (i = startNum; i <= MaxNum; i++) {
 	                if (i == pageNum) {
 	                    strtext = "<span class='on'>" + i + "</span>";
 	                    PagingHTML += strtext;
-	                }
-	                else {
+	                } else {
 	                    strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
 	                    PagingHTML += strtext;
 	                }
 	            }
+	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
-	                }
-	                else {
+	                } else {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                }
-	            }
-	            else {
+	            } else {
 	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
+	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
-	            }
-	            else {
+	            } else {
 	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
+	            
 	            PagingHTML += "</div>";
 	            td_Create1(PagingHTML);
 	        }
@@ -395,11 +391,13 @@
 	            makePageSelPage();
 	            movePage(CurPage);
 	        }
+	        
 	        function selbeforeBlock() {
 	            var pageNum = parseInt(CurPage);
 	            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
 	            goToPageByNum(pageNum);
 	        }
+	        
 	        function selbeforeBlock_one() {
 	            var pageNum = parseInt(CurPage);
 	            if (parseInt(pageNum - 1) > 0)
@@ -407,11 +405,13 @@
 	            else
 	                return;
 	        }
+	        
 	        function selafterBlock() {
 	            var pageNum = parseInt(CurPage);
 	            pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
 	            goToPageByNum(pageNum);
 	        }
+	        
 	        function selafterBlock_one() {
 	            var pageNum = parseInt(CurPage);
 	            if (parseInt(pageNum + 1) <= totalPage)
@@ -533,8 +533,8 @@
 		    }
 		
 	        function search(type) {
+	        	alert(1);
 	            if (type == "basic") {
-	
 	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
 	                    alert("<spring:message code='ezBoard.t192'/>");
 	                    return;
@@ -552,13 +552,13 @@
 	                    alert("<spring:message code='ezBoard.t191'/>");
 	                    return;
 	                }
-	            }
-	            else if (type == "quick") {
+	            } else if (type == "quick") {
 	                if (document.getElementById("txt_keyword").value == "") {
 	                    alert("<spring:message code='ezBoard.t192'/>");
 	                    return;
 	                }
 	            }
+	            
 	            CurPage = "1";
 	            //BoardSearchOptionHidden();
 	            getBoardList();
@@ -655,11 +655,13 @@
 	                        <td>
 	                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-	                            <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')"></td>
+	                            <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
+	                        </td>
 	                    </tr>
 	                </table>
 	            </div>
 	        </div>
+	        
 	        <div class="shadow">
 	        </div>
 	    </div>
