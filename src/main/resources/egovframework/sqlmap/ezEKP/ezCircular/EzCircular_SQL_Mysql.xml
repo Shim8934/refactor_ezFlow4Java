@@ -383,8 +383,6 @@
 				ON
 					A.circularid = F.circularid 
 				WHERE
-					A.MEMBERID = C.MEMBERID
-				AND
 					B.CIRCULARFOLDERID = #folderID#
 				AND
 					C.UPDATESTATUS = '3'  
@@ -1940,11 +1938,11 @@
 		  DELETE FROM
 			  TBL_CIRCULAR_LINK
 		  WHERE
-			  CIRCULARID = #circularId#
+			  CIRCULARID = #circularID#
 		  AND
-			  MEMBERID = #memberId#
+			  MEMBERID = #memberID#
 		  AND
-		  	  TENANTID = #tenantId#
+		  	  TENANTID = #tenantID#
 		]]>
 	</delete>
 	

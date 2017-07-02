@@ -30,26 +30,12 @@
 	    	}
 
 		    window.onload = function () {
-// 		       document.getElementById("receiverlist").innerHTML = userName;
-// 		       document.getElementById("receiverlist2").innerHTML = userName2;
-// 	           document.getElementById("receiverID").innerHTML = userID;
-		    	
-// 		       g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
-
-// 		       g_attendant["id"][0] = userID.trim();
-// 	       	   g_attendant["name"][0] = userName.trim();
-// 	       	   g_attendant["name2"][0] = userName2.trim();
+	
 		    }
 			
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	    	}
-		    
-// 		    function DocumentComplete() {
-// 	            if (msgRtn != "") {
-// 	                message.SetEditorContent(msgRtn);
-//     	        }
-// 	    	}
 
 	    	function FieldsAvailable() {
 	    	}
@@ -95,6 +81,7 @@
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
 				var fileList = "";
+
 				for (var i = 0; i < filelist.length - 1; i++) {	    
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -157,10 +144,7 @@
 					var listtable = dadiframe.document.getElementById("filelist");
 					var filelist = GetChildNodes(listtable);
 					var fileList = "";
-					var receiverList = "";
-					var receiverList2 = "";
-					var receiverID = "";
-					
+
 					for (var i = 0; i < filelist.length - 1; i++) {	    
 						if (i == 0) {
 							fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -168,7 +152,7 @@
 							fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
 	            		}
 					}
-					
+
 		    		$.ajax ({
 		 			   	url : '/ezCircular/circularSaveTemp.do',
 		                type : 'POST',

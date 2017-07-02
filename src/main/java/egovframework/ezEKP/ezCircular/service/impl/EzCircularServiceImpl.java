@@ -138,7 +138,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void insertCircular(int circularID, String title, int importance,int option, String content, int hasFile, int status, String regDate,
+	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String regDate,
 							   String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName,
 							   String fileList, String[] receiverName2, String realPath, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("insertCircular started.");
@@ -185,6 +185,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
+				
+				String uploadFilePath = commonUtil.separator + "uploadFile";
+
+				filePath = uploadFilePath + commonUtil.separator + filePath;
 
 				attachMap.put("circularID", lastID);
 				attachMap.put("fileName", fileName);
@@ -199,23 +203,28 @@ public class EzCircularServiceImpl implements EzCircularService {
 		confirmStatus(lastID, userInfo.getId(), userInfo.getTenantId());
 
 		// 회람자에게 메일 발송
-    	String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
-    	StringBuilder bodyContent = new StringBuilder("");
-
-    	for (int i=0; i<receiverLength; i++) {
-    		InternetAddress from = new InternetAddress();
-			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-			from.setAddress(userInfo.getEmail());
-
-			InternetAddress to = new InternetAddress();
-			
-			if (!receiverID[i].trim().equals(userInfo.getId())) {
-				to.setPersonal(receiverName[i].trim(), "UTF-8");
-				to.setAddress(receiverID[i].trim());
+		if (option == 2 || option == 3) {
+			//임시저장 시 미발송
+			if (status != 2) {
+				String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
+				StringBuilder bodyContent = new StringBuilder("");
 				
-				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+				for (int i=0; i<receiverLength; i++) {
+					InternetAddress from = new InternetAddress();
+					from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+					from.setAddress(userInfo.getEmail());
+					
+					InternetAddress to = new InternetAddress();
+					
+					if (!receiverID[i].trim().equals(userInfo.getId())) {
+						to.setPersonal(receiverName[i].trim(), "UTF-8");
+						to.setAddress(receiverID[i].trim());
+						
+						ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+					}
+				}	
 			}
-    	}
+		}
 
 		logger.debug("insertCircular ended.");
 	}
@@ -809,30 +818,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String[] circularIdArr = circularIdList.split(";");
-		
-		if (updateStatus.equals("3")) {
-			for (int i=0; i<circularIdArr.length; i++) {
-				map.put("folderId", folderId);
-				map.put("circularId", circularIdArr[i]);
-				map.put("memberId", memberId);
-				map.put("updateStatus", updateStatus);
-				map.put("originLoc", originLoc);
-				map.put("tenantId", tenantId);
-				
-				ezCircularDAO.moveCircular(map); // updateStatus 값 변경
-				ezCircularDAO.moveCircular2(map); // Link 테이블에 Insert
-			}
-		} else {
-			for (int i=0; i<circularIdArr.length; i++) {
-				map.put("folderId", folderId);
-				map.put("circularId", circularIdArr[i]);
-				map.put("memberId", memberId);
-				map.put("updateStatus", updateStatus);
-				map.put("tenantId", tenantId);
-				
-				ezCircularDAO.moveCircular(map); // updateStatus 값 변경
-				ezCircularDAO.moveCircular3(map); // 기존 폴더에 있는 회람문서 삭제
-			}
+
+		for (int i=0; i<circularIdArr.length; i++) {
+			map.put("folderId", folderId);
+			map.put("circularId", circularIdArr[i]);
+			map.put("memberId", memberId);
+			map.put("updateStatus", updateStatus);
+			map.put("originLoc", originLoc);
+			map.put("tenantId", tenantId);
+
+			ezCircularDAO.moveCircular(map); // updateStatus 값 변경
+			ezCircularDAO.moveCircular2(map); // Link 테이블에 Insert
 		}
 	}
 
@@ -1164,6 +1160,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("tenantID", tenantID);
 			
 			ezCircularDAO.updateCircularStatus(map);
+			ezCircularDAO.moveCircular3(map); // LINK 테이블에서 제거
 		}
 
 		logger.debug("circularReturn ended.");
