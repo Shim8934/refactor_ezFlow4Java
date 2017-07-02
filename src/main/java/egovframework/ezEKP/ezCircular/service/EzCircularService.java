@@ -24,7 +24,7 @@ public interface EzCircularService {
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	
-	public List<CircularListVO> getCircularTempList(String memberID, int startRow, int endRow, String offset, int tenantId) throws Exception;
+	public List<CircularListVO> getCircularTempList(String memberID, String searchValue, int startRow, int endRow, String offset, int tenantId) throws Exception;
 
 	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception;
 	
@@ -32,7 +32,7 @@ public interface EzCircularService {
 
 	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception;
 	
-	public List<CircularListVO> getMyCircularList(String memberID, int startRow, int endRow, String offset, int tenantID) throws Exception;
+	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, int startRow, int endRow, String offset, int tenantID) throws Exception;
 
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
 
@@ -56,9 +56,9 @@ public interface EzCircularService {
 	
 	public int getCircularCompleteListCount(String memberID, String searchValue, int tenantID) throws Exception;
 	
-	public int getCircularTempListCount(String memberID, int tenantId) throws Exception;
+	public int getCircularTempListCount(String memberID, String searchValue, int tenantId) throws Exception;
 	
-	public int getMyCircularListCount(String memberID, int tenantId) throws Exception;
+	public int getMyCircularListCount(String memberID, String searchValue, int tenantId) throws Exception;
 	
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	

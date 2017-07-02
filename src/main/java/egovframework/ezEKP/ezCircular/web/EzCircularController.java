@@ -715,8 +715,17 @@ public class EzCircularController extends EgovFileMngUtil {
     @ResponseBody
     public String getCircularTempList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception{
     	logger.debug("getCircularList started");
-
+    	
     	userInfo = commonUtil.userInfo(loginCookie);
+    	int startRow = 1;
+    	int endRow = 0;
+    	String pageNum = "1";
+    	
+    	String searchValue = req.getParameter("searchValue");
+    	
+    	if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
+    		pageNum = req.getParameter("pageNum"); 
+    	}
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
 
@@ -724,14 +733,6 @@ public class EzCircularController extends EgovFileMngUtil {
     	headerVO.setTenantID(userInfo.getTenantId());
 
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-
-        int startRow = 1;
-        int endRow = 0;
-        
-        String pageNum = "1";
-        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
-        	pageNum = req.getParameter("pageNum"); 
-        }
     	
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
@@ -739,12 +740,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getCircularTempListCount(userInfo.getId(), userInfo.getTenantId());
+        int totalCount = ezCircularService.getCircularTempListCount(userInfo.getId(), searchValue, userInfo.getTenantId());
         
-        logger.debug("startRow : "+startRow);
-        logger.debug("endRow : "+endRow);
-        
-		List<CircularListVO> list = ezCircularService.getCircularTempList(userInfo.getId(), startRow, endRow, userInfo.getOffset(), userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getCircularTempList(userInfo.getId(), searchValue, startRow, endRow, userInfo.getOffset(), userInfo.getTenantId());
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -776,7 +774,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + "임시" + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + "0/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");
@@ -801,21 +799,22 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getMyCircularList started");
 
     	userInfo = commonUtil.userInfo(loginCookie);
-
+    	int startRow = 1;
+        int endRow = 0;
+        
+        String pageNum = "1";
+        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
+        	pageNum = req.getParameter("pageNum"); 
+    	}
+        
+        String searchValue = req.getParameter("searchValue");
+        
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
     	
     	headerVO.setListType("C");
     	headerVO.setTenantID(userInfo.getTenantId());
     	
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-
-        int startRow = 1;
-        int endRow = 0;
-        
-        String pageNum = "1";
-        if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
-        	pageNum = req.getParameter("pageNum"); 
-        }
     	
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
@@ -823,9 +822,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), userInfo.getTenantId());
+        int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), searchValue, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), startRow, endRow,	userInfo.getOffset(), userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), searchValue, startRow, endRow,	userInfo.getOffset(), userInfo.getTenantId());
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -857,7 +856,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
@@ -870,6 +869,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         logger.debug("resultXML : "+resultXML);
 		logger.debug("getMyCircularList ended");
+		
         return resultXML.toString();
     }
     
