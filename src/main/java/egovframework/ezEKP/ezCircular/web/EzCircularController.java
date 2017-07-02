@@ -1571,135 +1571,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		logger.debug("circularDeleteTemp ended");
 	}
-	
-	/**
-	 * 회람판 검색리스트 표출 Method
-	 */
-    @RequestMapping(value = "/ezCircular/getSearchCircularList.do", produces = "text/xml; charset=utf-8")
-    @ResponseBody
-    public String getSearchCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
-    	logger.debug("getSearchCircularList started");
 
-    	userInfo = commonUtil.userInfo(loginCookie);
-    	
-    	int folderId = 0;
-    	int circularType = 0;
-    	String type = request.getParameter("type");
-    	
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
-
-    	if (type.equals("new")) {
-    		headerVO.setListType("N");    		
-    	} else if (type.equals("complete")) {
-    		headerVO.setListType("I");
-    	} else {    		
-    		headerVO.setListType("C");
-    	}
-    	
-    	headerVO.setTenantID(userInfo.getTenantId());
-    	
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-
-    	if (type.equals("new")) {
-    		circularType = 1;
-    	} else if (type.equals("complete")) {
-    		circularType = 2;
-    	} else if (type.equals("my")) {
-    		circularType = 3;
-    	} else if (type.equals("temp")) {
-    		circularType = 4;
-    	} else if (type.equals("delete")) {
-    		circularType = 5;
-    	} else {
-   			folderId = Integer.parseInt(request.getParameter("folderId"));
-    		circularType = 6;
-    	}
-
-        int startRow = 1;
-        int endRow = 0;
-        
-        String pageNum = "1";
-        
-        if (request.getParameter("pageNum") != null && !request.getParameter("pageNum").equals("")) {
-        	pageNum = request.getParameter("pageNum"); 
-        }
-        
-        String keyword = "";
-        if (request.getParameter("keyword") != null && !request.getParameter("keyword").equals("")) {
-        	keyword = request.getParameter("keyword"); 
-        }
-    	
-    	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
-		
-		int personalCount = config.getListCnt();
-		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
-        endRow = (personalCount * Integer.parseInt(pageNum));
-		
-        int totalCount = ezCircularService.getSearchCircularListCount(userInfo.getId(), userInfo.getTenantId(), keyword, circularType, folderId);
-        
-		List<CircularListVO> list = ezCircularService.getSearchCircularList(userInfo.getId(), startRow, endRow, userInfo.getOffset(), userInfo.getTenantId(), keyword, circularType, folderId);
-
-		for (CircularListVO result : list) {
-			result.setRegDate(commonUtil.getDateStringInUTC(result.getRegDate(), userInfo.getOffset(), false));
-		}
-		
-		StringBuffer resultXML = new StringBuffer();
-        
-		resultXML.append("<DOCLIST>");
-        resultXML.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
-        resultXML.append("<PAGECNT>" + totalCount + "</PAGECNT>");
-        resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
-        resultXML.append("<PREVIEWTYPE>" + config.getIsPreview() + "</PREVIEWTYPE>");
-        resultXML.append("<PREVIEWWLISTVALUE>" + config.getPreviewListValue() + "</PREVIEWWLISTVALUE>");
-        resultXML.append("<PREVIEWWCONTENTVALUE>" + config.getPreviewContentValue() + "</PREVIEWWCONTENTVALUE>");
-        resultXML.append("<LISTVIEWDATA>");
-        resultXML.append("<HEADERS>");
-
-        for (CircularListHeaderVO vo : headerList) {
-        	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
-        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
-        	resultXML.append("</HEADER>");
-        }
-
-        resultXML.append("</HEADERS>");
-        resultXML.append("<ROWS>");
-
-        
-    	for (CircularListVO vo : list) {
-    		resultXML.append("<ROW>");
-    		resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-    		resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-    		resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-
-    		if (type.equals("new") || type.equals("complete")) {
-    			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
-    		}
-
-    		if (type.equals("temp")) {
-    			resultXML.append("<CELL><VALUE>" + "임시" + "</VALUE></CELL>");
-    		} else {
-    			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
-    		}
-
-    		resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-    		resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
-    		resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-    		resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-    		resultXML.append("<CELL><VALUE>" + (circularType == 4 ? "" : vo.getConfirmDate()) + "</VALUE></CELL>");
-    		resultXML.append("</ROW>");
-    	}
-        
-        resultXML.append("</ROWS>");
-        resultXML.append("</LISTVIEWDATA>");
-        resultXML.append("</DOCLIST>");
-
-        logger.debug("resultXML : "+resultXML);
-		logger.debug("getSearchCircularList ended");
-        return resultXML.toString();
-    }
-    
     /**
 	 * 회람처 설정 이름 확인 Method
 	 **/
@@ -1943,7 +1815,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	headerVO.setListType("C");
     	headerVO.setTenantID(userInfo.getTenantId());
-
+    	String searchValue = req.getParameter("searchValue");
+    	
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
 
         int startRow = 1;
@@ -1962,9 +1835,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getFolderCircularListCount(folderId, userInfo.getId(), userInfo.getTenantId());
+        int totalCount = ezCircularService.getFolderCircularListCount(folderId, userInfo.getId(), searchValue, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getFolderCircularList(folderId, userInfo.getId(), startRow, endRow, userInfo.getOffset(), userInfo.getTenantId());
+		List<CircularListVO> list = ezCircularService.getFolderCircularList(folderId, userInfo.getId(), startRow, endRow, searchValue, userInfo.getOffset(), userInfo.getTenantId());
 		
 		StringBuffer resultXML = new StringBuffer();
 
