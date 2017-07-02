@@ -304,7 +304,7 @@
 			    		<td style="width:350px" align="left">${item.title}</td> 
 		          		<td style="width:120px" align="left">${item.memberID}</td>		         
 		            	<td style="width:150px" align="left">${item.regDate}</td>
-		            	<td style="width:100px;cursor:pointer;text-align:center">${item.confirmStatus}</td>
+		            	<td style="width:100px;cursor:pointer;text-align:center">${item.confirmCount} / ${item.confirmTotalCount}</td>
 		            	<td style="width:150px;cursor:pointer" align="left">${item.confirmDate}</td>
 			    	</tr>
 		    	</c:forEach>		    	

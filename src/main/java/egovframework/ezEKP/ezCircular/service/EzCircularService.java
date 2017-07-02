@@ -15,8 +15,6 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzCircularService {
 
 	public List<CircularListVO> getCircularList(String memberID, String searchValue, int startRow, int endRow, int tenantId, String offset) throws Exception;
-	
-	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, String offset, int tenantId, String keyword, int circularType, int folderID) throws Exception;
 
 	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
@@ -100,9 +98,9 @@ public interface EzCircularService {
 
 	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, String originLoc, int tenantId) throws Exception;
 
-	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception;
+	public int getFolderCircularListCount(int folderId, String memberId, String searchValue, int tenantId) throws Exception;
 
-	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, String offset, int tenantId) throws Exception;
+	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, String offset, String searchValue, int tenantId) throws Exception;
 
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
@@ -119,8 +117,6 @@ public interface EzCircularService {
 	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
 
 	public int getSearchAllCircularListCount(String memberID, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
-	
-	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType, int folderID) throws Exception;
 
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception;
 

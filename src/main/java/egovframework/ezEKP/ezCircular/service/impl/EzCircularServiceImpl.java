@@ -534,22 +534,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getSearchCircularList(String memberID, int startRow, int endRow, String offset, int tenantId, String keyword, int circularType, int folderID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("memberID", memberID);
-		map.put("limit", startRow-1);
-		map.put("rowCount", endRow-(startRow-1));
-		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("tenantID", tenantId);
-		map.put("searchKeyword", keyword);
-		map.put("circularType", circularType);
-		map.put("folderID", folderID);
-		
-		return ezCircularDAO.getSearchCircularList(map);
-	}
-	
-	@Override
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -833,24 +817,26 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getFolderCircularListCount(int folderId, String memberId, int tenantId) throws Exception {
+	public int getFolderCircularListCount(int folderId, String memberId, String searchValue, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("folderId", folderId);
 		map.put("memberId", memberId);
+		map.put("searchValue", searchValue);
 		map.put("tenantId", tenantId);
 		
 		return ezCircularDAO.getFolderCircularListCount(map);
 	}
 
 	@Override
-	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, String offset, int tenantId) throws Exception {
+	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, String searchValue, String offset, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("folderId", folderId);
 		map.put("memberId", memberId);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
+		map.put("searchValue", searchValue);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantId", tenantId);
 		
@@ -1049,26 +1035,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 //		ezCircularDAO.confirmUpdateDate(map);
 		updateReadStatus(circularID, memberID, 1, nowDate, tenantID);
 		updateCircularCommentStatus(Integer.toString(circularID), memberID, 0, nowDate, tenantID);
-	}
-
-	@Override
-	public int getSearchCircularListCount(String memberID, int tenantID, String keyword, int circularType, int folderID) throws Exception {
-		logger.debug("getCircularListCount started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("memberID", memberID);
-		map.put("tenantID", tenantID);
-		map.put("searchKeyword", keyword);
-		map.put("circularType", circularType);
-		map.put("folderID", folderID);
-		
-		int result = 0;
-		
-		result = ezCircularDAO.getSearchCircularListCount(map);
-
-		logger.debug("getCircularListCount ended. result = " + result);
-
-		return result;
 	}
 
 	@Override

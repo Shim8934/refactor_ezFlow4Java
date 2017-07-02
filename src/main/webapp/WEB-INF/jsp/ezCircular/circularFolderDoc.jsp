@@ -172,15 +172,11 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
-	        	var keyword = document.getElementById("txt_keyword").value;
+	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
-		        if (keyword != ""){
-		        	url = "/ezCircular/getSearchCircularList.do?type=folder";
-		        }
-		        else{
-		        	url = "/ezCircular/getFolderCircularList.do";
-		        }
+		        url = "/ezCircular/getFolderCircularList.do";
+		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -192,7 +188,7 @@
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
 							 folderId 	 : folderId,
-							 keyword	 : keyword
+							 searchValue : searchValue
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
