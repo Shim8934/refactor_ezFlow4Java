@@ -183,18 +183,18 @@
 		    }
 		    
 		    function event_click(obj) {
-// 		    	alert($(""));
+		    	
 		    }
 			
-		    function open_schedule(circularID) {
+		    function ItemRead_onclick(circularID) {
 		        var circularID = circularID;
 
 		        if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 		    }
 			
@@ -230,7 +230,7 @@
 		      		<td style="width:100%">
 		      			<select name="search_field" id="search_field" style="WIDTH: 130px"> 
 		          			<option value="circularNew" ${filter == 'circularNew' ? 'selected' : ''}>신규회람판</option> 
-		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}>확인완료회람판</option>
+		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}>받은회람판</option>
 		          			<option value="circularMy" ${filter == 'circularMy' ? 'selected' : ''}>작성한회람판</option>
 		          			<option value="circularTemp" ${filter == 'circularTemp' ? 'selected' : ''}>임시회람판</option>
 		          			<option value="circularFolder" ${filter == 'circularFolder' ? 'selected' : ''}>회람문서함</option> 
@@ -271,7 +271,7 @@
 					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">확인일</th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${list}" varStatus="status">
-			    	<tr id="searchList${status.count}" style="cursor:pointer;padding:0" onClick="event_click(this)" ondblClick="open_schedule('${item.circularID}')" bgcolor=#ffffff>
+			    	<tr id="searchList${status.count}" style="cursor:pointer;padding:0" onClick="event_click(this)" ondblClick="ItemRead_onclick('${item.circularID}')" bgcolor=#ffffff>
 			    		<td style="width:20px"><input type="checkbox" id="checkbox${status.count }"></td>
 			    		<td style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center">
 			    			<c:if test="${item.importance == '0'}">&nbsp;</c:if>

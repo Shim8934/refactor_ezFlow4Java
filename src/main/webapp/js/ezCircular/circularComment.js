@@ -23,7 +23,7 @@ function getCircularComment() {
 					circularUserList += "&nbsp;"
 				}
 				
-				circularUserList += "&nbsp;&nbsp;&nbsp;" + vo.confirmDate;
+				circularUserList += "&nbsp;&nbsp;&nbsp;" + vo.confirmDate.substring(0, 16);
 				circularUserList += "</th>";
 				
 				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
@@ -46,7 +46,7 @@ function getCircularComment() {
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
 				circularCommentList += "<td style='padding-left:3px'><img src='/images/ellipsis.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
-				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment +  "&nbsp;(" + vo.regDate.substring(11, 19) + ")&nbsp;";
+				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment +  "&nbsp;(" + vo.regDate.substring(11, 16) + ")&nbsp;";
 				
 				if (vo.memberID == userInfoID) {
 					circularCommentList += "<img src='/images/comment_del.gif' style='cursor:pointer;vertical-align:middle;' onclick='deleteCircularComment(this)'/>";
