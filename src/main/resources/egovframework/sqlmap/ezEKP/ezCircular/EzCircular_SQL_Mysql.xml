@@ -773,13 +773,13 @@
         ]]>     
     </select>
   
-    <select id="EzCircularDAO.getcircularDeptList" parameterClass="CircularDeptVO" resultClass="CircularDeptVO">
+    <select id="EzCircularDAO.getcircularDeptList" parameterClass="Map" resultClass="CircularDeptVO">
         <![CDATA[
             SELECT
-                A.CIRCULARBMID,
-                A.TITLE,
-                A.REGDATE,
-                concat ((select membername FROM tbl_circular_bmuser where circularBMId = A.CIRCULARBMID ORDER BY circularBMUserId limit 1),'/',
+                A.circularbmid,
+                A.title,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                CONCAT((select membername FROM tbl_circular_bmuser where circularBMId = A.CIRCULARBMID ORDER BY circularBMUserId limit 1),'/',
                 (select count(*) - 1 from tbl_circular_bmuser where circularBMId = A.CIRCULARBMID )) memberName
             FROM
                 TBL_CIRCULAR_BM A
@@ -1178,6 +1178,7 @@
 			AND
 				A.STATUS != 2
 		]]>
+		
 		<isNotEqual property="searchValue" compareValue="">
         	<![CDATA[
         		AND
@@ -1221,7 +1222,8 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.regdate,
+                A.membername,
+                IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
 				IFNULL(C.confirmcount, '0') AS confirmcount,
@@ -1267,8 +1269,16 @@
                 A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+		]]>
+		<isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+        <![CDATA[
             GROUP BY
-				A.circularid    
+				A.circularid
             ORDER BY
             	A.regdate DESC
             LIMIT
@@ -1295,6 +1305,13 @@
             AND
                 A.TENANTID = #tenantID#
         ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
     </select>
 
     <select id="EzCircularDAO.getFolderCircularListCount" parameterClass="Map" resultClass="Integer" >
@@ -1322,16 +1339,17 @@
     <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
         <![CDATA[
 			SELECT
-				distinct a.circularid,
-				a.importance,
-				a.hasfile,
-				a.status,
-				a.title,
-				a.memberid,
-				a.regdate,
+				distinct A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				A.membername,
+				IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
 				d.status as confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(D.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
-				d.updatestatus,
+				D.updatestatus,
 				IFNULL(E.confirmcount, '0') AS confirmcount,
 				F.confirmtotalcount 
 			FROM

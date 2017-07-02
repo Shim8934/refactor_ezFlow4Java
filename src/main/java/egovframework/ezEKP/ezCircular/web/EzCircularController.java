@@ -882,21 +882,22 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getTDCircularList started");
 
     	userInfo = commonUtil.userInfo(loginCookie);
-
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
-
-    	headerVO.setListType("C");
-    	headerVO.setTenantID(userInfo.getTenantId());
-
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-
-        int startRow = 1;
+    	int startRow = 1;
         int endRow = 0;
         
         String pageNum = "1";
         if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
         	pageNum = req.getParameter("pageNum"); 
         }
+
+        String searchValue = req.getParameter("searchValue");
+        
+    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
+
+    	headerVO.setListType("C");
+    	headerVO.setTenantID(userInfo.getTenantId());
+
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
     	
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
@@ -904,9 +905,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getCircularTDListCount(userInfo.getId(), userInfo.getTenantId());
+        int totalCount = ezCircularService.getCircularTDListCount(userInfo.getId(), searchValue, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getCircularTDList(userInfo.getId(), startRow, endRow, userInfo.getTenantId(), userInfo.getOffset());
+		List<CircularListVO> list = ezCircularService.getCircularTDList(userInfo.getId(), searchValue, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset());
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -938,7 +939,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + (vo.getStatus() == 0 ? "진행중" : "종료") + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberID() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
@@ -1118,7 +1119,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 		}
 		
-		if (list.size() != 1) {
+		if (list.size() > 0 && list.size() != 1) {
 			listUser = listUser.substring(0, listUser.length() - 2);
 		}
 

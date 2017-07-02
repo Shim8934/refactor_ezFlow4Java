@@ -92,9 +92,9 @@ public interface EzCircularService {
 
 	public void circularFolderModify(String folderId, String folderName, String memberId, String regDate, int tenantId) throws Exception;
 
-	public int getCircularTDListCount(String memberID, int tenantID) throws Exception;
+	public int getCircularTDListCount(String memberID, String searchValue, int tenantID) throws Exception;
 
-	public List<CircularListVO> getCircularTDList(String memberId, int startRow, int endRow, int tenantID, String offset) throws Exception;
+	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, int startRow, int endRow, int tenantID, String offset) throws Exception;
 
 	public void circularDeleteTemp(String circularIDList, String memberId, int tenantId) throws Exception;
 

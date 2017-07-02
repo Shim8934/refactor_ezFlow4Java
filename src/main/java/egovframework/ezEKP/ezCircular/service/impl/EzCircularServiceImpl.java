@@ -424,16 +424,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
-		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(circularDeptVO);
+		logger.debug("getcircularDeptList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberID", circularDeptVO.getMemberID());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
+		
+		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(map);
 		
 		StringBuilder sb = new StringBuilder("<DATA>");
 		
-		for (int i=0; i<list.size(); i++) {
-			list.get(i).setRegDate(commonUtil.getDateStringInUTC(list.get(i).getRegDate(), userInfo.getOffset(), false));
-			CircularDeptVO vo = list.get(i);
+		for (CircularDeptVO vo : list) {
 			sb.append(commonUtil.getQueryResult(vo));
 		}
 		sb.append("</DATA>");
+		
+		logger.debug("getcircularDeptList ended.");
 		
 		return sb.toString();
 	}
@@ -698,8 +705,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 	public void circularClose(String[] circularIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		for (int i=0; i<circularIDList.length; i++) {
-			map.put("circularID", circularIDList[i]);
+		for (String circularID : circularIDList) {
+			map.put("circularID", circularID);
 			map.put("tenantID", tenantID);
 
 			ezCircularDAO.circularClose(map);
@@ -709,7 +716,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void circularFolderAdd(String folderName, String memberId, String regDate, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("folderName", folderName);
 		map.put("memberId", memberId);
 		map.put("regDate", regDate);
@@ -721,7 +727,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void circularFolderModify(String folderId, String folderName, String memberId, String regDate, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("folderId", folderId);
 		map.put("folderName", folderName);
 		map.put("memberId", memberId);
@@ -734,7 +739,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void circularDeleteFolder(String deleteFolderId, String memberId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("deleteFolderId", deleteFolderId);
 		map.put("memberId", memberId);
 		map.put("tenantId", tenantId);
@@ -745,7 +749,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public String getFolderInfo(int folderId, String memberId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("folderId", folderId);
 		map.put("memberId", memberId);
 		map.put("tenantId", tenantId);
@@ -754,24 +757,40 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getCircularTDListCount(String memberID, int tenantID) throws Exception {
+	public int getCircularTDListCount(String memberID, String searchValue, int tenantID) throws Exception {
+		logger.debug("getCircularTDListCount started.");
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || tenantID = " + tenantID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
+		map.put("searchValue", searchValue);
 		map.put("tenantID", tenantID);
 		
-		return ezCircularDAO.getCircularTDListCount(map);
+		int result = ezCircularDAO.getCircularTDListCount(map);
+		
+		logger.debug("getCircularTDListCount ended. result = " + result);
+		
+		return result;
 	}
 
 	@Override
-	public List<CircularListVO> getCircularTDList(String memberId, int startRow, int endRow, int tenantID, String offset) throws Exception {
+	public List<CircularListVO> getCircularTDList(String memberID, String searchValue, int startRow, int endRow, int tenantID, String offset) throws Exception {
+		logger.debug("getCircularTDList started.");
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || startRow = " + startRow + " || endRow = " + endRow + " || tenantID = " + tenantID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("memberID", memberId);
+		map.put("memberID", memberID);
+		map.put("searchValue", searchValue);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
-		return ezCircularDAO.getCircularTDList(map);
+		List<CircularListVO> list = ezCircularDAO.getCircularTDList(map);
+		
+		logger.debug("getCircularTDList ended.");
+		
+		return list;
 	}
 
 	@Override
