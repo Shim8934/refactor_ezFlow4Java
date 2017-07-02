@@ -7,7 +7,6 @@ function getCircularComment() {
 		dataType : "json",
 		data : {
 			circularID : circularID,
-			searchType : $("#searchType").val(),
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
@@ -19,7 +18,7 @@ function getCircularComment() {
 				circularUserList += "<th style='border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
 				circularUserList += "<img src='/images/i_group.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				
-				if (status == 0) {
+				if (status == 0 && (option == 1 || option == 3)) {
 					circularUserList += "<img src='/images/modify2.gif' style='cursor:pointer;vertical-align:middle;'  onclick='showEdit(this)'/>&nbsp;";
 				} else {
 					circularUserList += "&nbsp;"
@@ -47,7 +46,7 @@ function getCircularComment() {
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
-				circularCommentList += "<td style='padding-left:3px'><img src='/images/i_rep.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+				circularCommentList += "<td style='padding-left:3px'><img src='/images/ellipsis.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
 				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment +  "&nbsp;(" + vo.regDate.substring(11, 19) + ")&nbsp;";
 				
 				if (vo.memberID == userInfoID) {
@@ -91,7 +90,7 @@ function showEdit(obj) {
 		
 		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='height:70px;border:1px solid #e2e2e2'>";
 		circularEdit += "<td colspan='2'><textarea style='width:97%;height:50px;border:0px;resize:none;outline:none;overflow:auto;'></textarea></td>";
-		circularEdit += "<td><a class='imgbtn'><span onclick='editCircularComment(this)';>의견작성</span>&nbsp;</a><br/><input type='checkbox' id='commentStatus'>비공개</input></td>";
+		circularEdit += "<td><a class='imgbtn'><span onclick='editCircularComment(this)';>의견작성</span>&nbsp;</a><br/><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>비공개</input></td>";
 		circularEdit += "</tr>";
 		
 		$(obj).closest("tr").after(circularEdit);

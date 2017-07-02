@@ -19,6 +19,7 @@
 			var circularUserID = "${result.memberID}";
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
+			var option = "${result.option}";
 
 			$(document).ready(function(){
 	            document.getElementById('circularUserList').innerHTML = "${listUser}";        
@@ -160,13 +161,12 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    	<c:if test="${result.option == 1 || result.option == 3 }">
-                	    		<li><span onclick="openCircularComment()">의견목록</span></li>
-                	    	</c:if>
+							<li><span onclick="openCircularComment()">의견 및 확인상태</span></li>
                         	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
                 	    	</c:if>
+                	    	
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
