@@ -451,7 +451,7 @@ function ListView() {
         var objTr = document.createElement("TR");
         objTr.id = _thisID + "_TH";
 
-        var oHeaders = _dataSource.getElementsByTagName("HEADER");        
+        var oHeaders = _dataSource.getElementsByTagName("HEADER");
         
 
         var Chkbox = false;
@@ -529,6 +529,7 @@ function ListView() {
                 
                 if (strColName == "WRITEDATE") {
                 	objTd.width = "120px";
+                	objTd.style.textAlign = "CENTER";
                 }
                 
                 if (strColName == "ITEMID") {
@@ -582,18 +583,36 @@ function ListView() {
                 }
                 if (strColName == "STATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
-                    _HeaderSpanimg.setAttribute("src", "/images/circular_icon_up.gif");
+//                    _HeaderSpanimg.setAttribute("src", "/images/circular_icon_up.gif");
+//                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/icon_displaypaper.gif");
+//                    _HeaderSpanimg.setAttribute("src", "/images/sub/btn_next.gif");
+//                    _HeaderSpanimg.setAttribute("src", "/images/KakaoTalk_20170703_161711154.png");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/icon-flag.gif");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
                 }
+                
                 if (strColName == "UPDATESTATUS") {
-                    objTd.style.textAlign = "CENTER";
+        			var _HeaderSpanimg = document.createElement("IMG");
+//        			_HeaderSpanimg.setAttribute("src", "/images/mobile/new2.png");
+        			_HeaderSpanimg.setAttribute("src", "/images/circular_new.png");
+        			
+        			_HeaderSpanimg.border = "0";
+    				objTd.style.textAlign = "CENTER";
+                  
+					_HeaderSpanimg.setAttribute("align", "absmiddle");
+					objTd.appendChild(_HeaderSpanimg);
                 }
-                if (strColName == "CONFIRMSTATUS") {
-                    objTd.style.textAlign = "CENTER";
+                
+                if (strColName == "CONFIRMDATE") {
+                	objTd.style.textAlign = "CENTER";
+                }
+                
+                if (strColName == "REGDATE") {
+                	objTd.style.textAlign = "CENTER";
                 }
 
                 var oText = document.createTextNode(strName);
@@ -724,7 +743,7 @@ function ListView() {
                     objTd.style.color = "RED";
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
-                    objTd.style.padding = "0";
+                    objTd.style.padding = "8px 4px";
                     objTd.style.margin = "0";
                     objTd.style.width = "80%";
                     objTd.style.overflow = "hidden";
@@ -803,14 +822,11 @@ function ListView() {
                     objTd.style.fontWeight = "bold";
                     
                     if (strValue == "0") {
-                        /*strValue = "신";
-                        objTd.style.color = "red";*/
                     	titleImage = '<img src="/images/circular_new.png"/>';
+//                    	titleImage = '<img src="/images/mobile/new2.png"/>';
                     	strValue = "";
                     } else {
-                        /*strValue = "의";
-                        objTd.style.color = "blue";*/
-                    	titleImage = '<img src="/images/circular_opinion.png" />';
+                    	titleImage = '<img src="/images/circular_opinion.png"/>';
                     	strValue = "";
                     }
                 }
@@ -836,14 +852,19 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     
                     if (strValue == "0") {
-                    	titleImage = '<img src="/images/circular_icon_up.gif" />';
+//                    	titleImage = '<img src="/images/ImgIcon/icon_displaypaper.gif" />';
+//                    	titleImage = '<img src="/images/KakaoTalk_20170703_161711154.png" />';
+                    	titleImage = '<img src="/images/ImgIcon/icon-flag.gif" />';
+                    	
                     	strValue = "";
                     } else if (strValue == "1") {
-                    	titleImage = '<img src="/images/circular_icon_ok.gif" />';
+//                    	titleImage = '<img src="/images/ImgIcon/icon_enddisplaypaper.gif" />';
+//                    	titleImage = '<img src="/images/KakaoTalk_20170703_161711650.png" />';
+                    	titleImage = '<img src="/images/ImgIcon/view-flag.gif" />';
                     	strValue = "";
                     } else {
-//                    	임시 아이콘 변경필요
-                    	titleImage = '<img src="/images/circular_icon_up.gif" />';
+//                    	titleImage = '<img src="/images/ImgIcon/icon_extraappr.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/icon-flag.gif" />';
                     	strValue = "";
                     }
                 }
