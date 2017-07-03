@@ -570,10 +570,24 @@ function ListView() {
                     objTd.appendChild(_HeaderSpanimg);
                 }
                 if (strColName == "CONFIRMFLAG") {
+                	var _HeaderSpanimg = document.createElement("IMG");
+                    _HeaderSpanimg.setAttribute("src", "/images/circular_unread.gif");
+                    _HeaderSpanimg.border = "0";
+                   	objTd.style.textAlign = "CENTER";
+                    
+                    _HeaderSpanimg.setAttribute("align", "absmiddle");
+                    objTd.appendChild(_HeaderSpanimg);
+                    
                     objTd.style.textAlign = "center";
                 }
                 if (strColName == "STATUS") {
-                    objTd.style.textAlign = "CENTER";
+                	var _HeaderSpanimg = document.createElement("IMG");
+                    _HeaderSpanimg.setAttribute("src", "/images/circular_icon_up.gif");
+                    _HeaderSpanimg.border = "0";
+                   	objTd.style.textAlign = "CENTER";
+                    
+                    _HeaderSpanimg.setAttribute("align", "absmiddle");
+                    objTd.appendChild(_HeaderSpanimg);
                 }
                 if (strColName == "UPDATESTATUS") {
                     objTd.style.textAlign = "CENTER";
@@ -820,6 +834,18 @@ function ListView() {
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "STATUS") {
                     objTd.style.textAlign = "center";
+                    
+                    if (strValue == "0") {
+                    	titleImage = '<img src="/images/circular_icon_up.gif" />';
+                    	strValue = "";
+                    } else if (strValue == "1") {
+                    	titleImage = '<img src="/images/circular_icon_ok.gif" />';
+                    	strValue = "";
+                    } else {
+//                    	임시 아이콘 변경필요
+                    	titleImage = '<img src="/images/circular_icon_ok.gif" />';
+                    	strValue = "";
+                    }
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMSTATUS") {
