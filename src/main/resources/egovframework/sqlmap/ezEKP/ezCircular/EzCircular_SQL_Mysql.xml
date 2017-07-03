@@ -938,7 +938,7 @@
             SELECT
                 A.circularbmid,
                 A.title,
-                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                A.regdate,
                 CONCAT((select membername FROM tbl_circular_bmuser where circularBMId = A.CIRCULARBMID ORDER BY circularBMUserId limit 1),'/',
                 (select count(*) - 1 from tbl_circular_bmuser where circularBMId = A.CIRCULARBMID )) memberName
             FROM
