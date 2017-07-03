@@ -209,8 +209,11 @@ function GetSCListXml() {
             }
         }
         return getXmlString(oList);
-    }
-    else {
-        return "";
+    } else {
+    	var szSCListHeader = GetSCHearderXml();
+
+        oList = createXmlDom();
+        oList = loadXMLString(szSCListHeader);
+        return getXmlString(oList);
     }
 }
