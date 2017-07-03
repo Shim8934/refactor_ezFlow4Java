@@ -1954,7 +1954,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (apprGDocListVO != null) {
 			orgDocNumCode = apprGDocListVO.getOrgDocNumCode();
-			sn = getCabinetNum(deptID, "", companyID, tenantID);
+			sn = getCabinetNum(deptID, "", companyID, tenantID, offSet);
 			sn = sn.replace("<REGNUM>", "").replace("</REGNUM>", "");
 			sn = sn.replace("<RESULT>", "").replace("</RESULT>", "");
 			
@@ -5616,7 +5616,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					return "Link ERROR";
 				}
 				
-				String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId());
+				String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset());
 				
 				logger.debug("serialNum = " + ret);
 				
@@ -8812,27 +8812,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID) throws Exception {
+	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID, String offsetMin) throws Exception {
 		String strXML = "";
 		
 		strXML = "<PARAMETERS><TYPE1>002</TYPE1><TYPE2>" + deptID.trim() +
                 "</TYPE2><TYPE3>" + subID.trim() + "</TYPE3><COMPANYID>" +
                 companyID.trim() + "</COMPANYID><DOCID>" + docID + "</DOCID><LANGTYPE>" + lang + "</LANGTYPE></PARAMETERS>";
 		
-		String rtnVal = getRegSN(strXML, tenantID);
+		String rtnVal = getRegSN(strXML, tenantID, offsetMin);
 		
 		return "<REGNUM>" + rtnVal + "</REGNUM>";
 	}
 	
 	
-	public String getCabinetNum(String deptID, String subID, String companyID, int tenantID) throws Exception {
+	public String getCabinetNum(String deptID, String subID, String companyID, int tenantID, String offsetMin) throws Exception {
 		String strXML = "";
 		
 		strXML = "<PARAMETERS><TYPE1>002</TYPE1><TYPE2>" + deptID.trim() +
 				"</TYPE2><TYPE3>" + subID.trim() + "</TYPE3><COMPANYID>" +
 				companyID.trim() + "</COMPANYID></PARAMETERS>";
 		
-		String rtnVal = getRegSN(strXML, tenantID);
+		String rtnVal = getRegSN(strXML, tenantID, offsetMin);
 		
 		return "<REGNUM>" + rtnVal + "</REGNUM>";
 	}
@@ -10341,7 +10341,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return "TRUE";
 	}
 
-	public String getRegSN(String strXML, int tenantID) throws Exception{
+	public String getRegSN(String strXML, int tenantID, String offsetMin) throws Exception{
 		Document objParam = commonUtil.convertStringToDocument(strXML);
 		
 		String type1 = objParam.getElementsByTagName("TYPE1").item(0).getTextContent();
@@ -10359,11 +10359,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			langType = objParam.getElementsByTagName("LANGTYPE").item(0).getTextContent();
 		}
 		
-		return "<RESULT>" + getSerialNum(type1, type2, type3, companyID, docID, langType, tenantID) + "</RESULT>";
+		return "<RESULT>" + getSerialNum(type1, type2, type3, companyID, docID, langType, tenantID, offsetMin) + "</RESULT>";
 	}
 
-	public String getSerialNum(String type1, String type2, String type3, String companyID, String docID, String langType, int tenantID) throws Exception{
+	public String getSerialNum(String type1, String type2, String type3, String companyID, String docID, String langType, int tenantID, String offsetMin) throws Exception{
 		String accountYear = "";
+		String daliyDocNumYN = ezCommonService.getTenantConfig("daliyDocNumYN", tenantID);
+		String lastDocDate = null;
 		
 		if (!docID.trim().equals("")) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -10393,6 +10395,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
+		
 		if (result == null) {
 			map.put("v_CurSN", "1");
 			ezApprovalGDAO.insertSerialNo(map);
@@ -10400,6 +10403,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		int rollBackFlag =  ezApprovalGDAO.rollBackFlag(map);
+		
+		if (daliyDocNumYN.equals("YES")) {
+			map.put("offsetMin", commonUtil.getMinuteUTC(offsetMin));
+			lastDocDate = ezApprovalGDAO.getLastDocDate(map);
+			
+			String sysdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offsetMin, false);
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date day1 = format.parse(sysdate);
+			Date day2 = format.parse(lastDocDate.substring(0,10));
+			
+			if (day1.compareTo(day2) > 0) {
+				ezApprovalGDAO.resetSerialNo(map);
+				result = ezApprovalGDAO.spGetSerialNo(map);
+				map.put("v_CurSN", result);
+			}
+		}
 		
 		if (rollBackFlag == 1) {
 			 ezApprovalGDAO.deleteSerialNo(map);

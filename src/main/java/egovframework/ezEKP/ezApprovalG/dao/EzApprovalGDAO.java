@@ -49,7 +49,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	// 캐비닛 문서 정보 삭제
 	public void deleteCabInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.deleteCabInfo", map);
-	};
+	}
 	
 	// 캐비닛 문서 정보 삭제 후 로그 추가
 	public void insertDelCabInfo(Map<String, Object> map) {
@@ -2654,5 +2654,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public String getCircularDocID(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getCircularDocID", map);
+	}
+
+	public String getLastDocDate(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getLastDocDate", map);
+	}
+	
+	public void resetSerialNo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.resetSerialNo", map);
 	}
 }

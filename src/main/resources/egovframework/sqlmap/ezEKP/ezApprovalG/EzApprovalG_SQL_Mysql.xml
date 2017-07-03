@@ -22180,10 +22180,125 @@
 	</insert>
 	
 	<select id="EzApprovalG.selectExpCabDocInfo" parameterClass="map" resultClass="String">
-		SELECT SUM(CNT) AS CNT_RESULT FROM (
-			SELECT COUNT(CABINETID) AS CNT FROM tbl_expendaprdocinfo WHERE CABINETID=#v_CABINETID# 
-			UNION 
-			SELECT COUNT(CABINETID) FROM tbl_expaprdocinfo WHERE CABINETID=#v_CABINETID#) cnt ;
+		SELECT 
+			SUM(CNT) AS CNT_RESULT 
+		FROM (
+				SELECT 
+					COUNT(CABINETID) AS CNT 
+				FROM 
+					TBL_EXPENDAPRDOCINFO 
+				WHERE 
+					CABINETID = #v_CABINETID# 
+		UNION 
+			
+		SELECT 
+			COUNT(CABINETID) 
+		FROM 
+			TBL_EXPAPRDOCINFO 
+		WHERE 
+			CABINETID = #v_CABINETID#) cnt 
 	</select>
+	
+	<select id="EzApprovalG.getLastDocDate" parameterClass="map" resultClass="String">
+		SELECT 
+			DATE_ADD(DATE_FORMAT(ENDDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE)  AS ENDDATE
+		FROM 
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			TENANT_ID = #v_TENANTID#
+		AND 	
+			COMPANYID = #companyID#
+		ORDER BY 
+			ENDDATE DESC
+		LIMIT 1
+	</select>
+	
+	<update id="EzApprovalG.resetSerialNo" parameterClass="map">
+	 	 UPDATE 
+		 		TBL_SERIALNUMGEN
+	     SET 
+	     		RegSerialNo = '1'
+	     WHERE  
+	     		Type1 = (
+    					SELECT 
+    						CASE WHEN ISUsed ='0' THEN '0' 
+          					ELSE #iv_Type1# 
+          					END
+     					FROM (
+     							SELECT 
+     								Code ,
+           							ISUsed 
+   	  							FROM 
+   	  								TBL_CABINETCODELIST 
+   								WHERE  
+   									CodeType = '007' 
+   								AND
+   									TENANT_ID = #v_TENANTID#
+   								AND
+   									COMPANYID = #companyID#) A
+    					WHERE  Code = '1')
+	     AND 
+	     		Type2 = (SELECT 
+     		 			  	  CASE WHEN ISUsed ='0' THEN '0' 
+          					  ELSE #iv_Type2# 
+          					  END
+					      FROM (
+					      			SELECT 
+					      				Code ,
+					           			ISUsed 
+					   	  			FROM 
+					   	  				TBL_CABINETCODELIST 
+					   	 			WHERE  
+					   	 				CodeType = '007' 
+					   	 			AND
+   										TENANT_ID = #v_TENANTID#
+   									AND
+   										COMPANYID = #companyID#)B
+					       WHERE  Code = '2')
+	     AND 
+   				Type3 = (
+	  		 			   SELECT 
+	  		 			   		CASE WHEN ISUsed ='0' THEN '0' 
+	       						ELSE #iv_Type3# 
+	      					 	END
+	  						FROM (
+  								    SELECT 
+  										Code ,
+       							 		ISUsed 
+	  								FROM 
+	  									TBL_CABINETCODELIST 
+	 								WHERE  
+	 									CodeType = '007' 
+	 								AND
+										TENANT_ID = #v_TENANTID#
+									AND
+										COMPANYID = #companyID#)C
+	 						 WHERE  
+	 						 		Code = '3')
+	     AND 
+	     		TimeSep = (
+  							SELECT 
+  								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
+        								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
+ 							FROM (
+ 									SELECT 
+ 										Code ,
+       									ISUsed 
+  									FROM 
+  										TBL_CABINETCODELIST 
+ 									WHERE  
+ 										CodeType = '007'
+ 									AND
+										TENANT_ID = #v_TENANTID#
+									AND
+										COMPANYID = #companyID# )D
+	 						WHERE  Code = '4')
+	     AND 
+	     		RegSerialNo = #v_CurSN#
+	     AND
+	     		TENANT_ID = #v_TENANTID#
+	     AND
+	     		COMPANYID = #companyID#
+	</update>
 		
 </sqlMap>
