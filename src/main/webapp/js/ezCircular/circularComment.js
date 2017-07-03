@@ -58,7 +58,7 @@ function getCircularComment() {
 				}
 				
 				circularCommentList += "</td>";
-				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate + "</td>";
+				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 16) + "</td>";
 				circularCommentList += "</tr>";
 				
 				if (vo.status == 0) {//공개
