@@ -843,7 +843,7 @@ function ListView() {
                     	strValue = "";
                     } else {
 //                    	임시 아이콘 변경필요
-                    	titleImage = '<img src="/images/circular_icon_ok.gif" />';
+                    	titleImage = '<img src="/images/circular_icon_up.gif" />';
                     	strValue = "";
                     }
                 }

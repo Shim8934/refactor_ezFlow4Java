@@ -605,16 +605,16 @@ public class EzCircularController extends EgovFileMngUtil {
         for (CircularListVO vo : list) {
     		resultXML.append("<ROW>");
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
+//			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 //			resultXML.append("<CELL><VALUE>" + vo.getUpdateDate() + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
@@ -651,7 +651,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
     	
-    	headerVO.setListType("N");
+    	headerVO.setListType("T");
     	headerVO.setTenantID(userInfo.getTenantId());
     	
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
@@ -692,16 +692,15 @@ public class EzCircularController extends EgovFileMngUtil {
         for (CircularListVO vo : list) {
         	resultXML.append("<ROW>");
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 //			resultXML.append("<CELL><VALUE>" + vo.getUpdateDate() + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
@@ -737,7 +736,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
 
-    	headerVO.setListType("N");
+    	headerVO.setListType("T");
     	headerVO.setTenantID(userInfo.getTenantId());
 
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
@@ -776,28 +775,17 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<ROWS>");
         
         for (CircularListVO vo : list) {
-    		/*resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + "임시" + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");*/
         	resultXML.append("<ROW>");
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + "" + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
         
@@ -831,7 +819,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
     	
-    	headerVO.setListType("N");
+    	headerVO.setListType("T");
     	headerVO.setTenantID(userInfo.getTenantId());
     	
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
@@ -870,29 +858,17 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<ROWS>");
         
         for (CircularListVO vo : list) {
-    		/*resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");*/
-//			resultXML.append("<CELL><VALUE>" + vo.getUpdateDate() + "</VALUE></CELL>");
         	resultXML.append("<ROW>");
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
         
@@ -927,7 +903,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
 
-    	headerVO.setListType("N");
+    	headerVO.setListType("T");
     	headerVO.setTenantID(userInfo.getTenantId());
 
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
@@ -966,29 +942,17 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<ROWS>");
         
         for (CircularListVO vo : list) {
-    		/*resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");*/
         	resultXML.append("<ROW>");
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
-//			resultXML.append("<CELL><VALUE>" + vo.getUpdateDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
         
@@ -1870,7 +1834,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
 
-    	headerVO.setListType("N");
+    	headerVO.setListType("T");
     	headerVO.setTenantID(userInfo.getTenantId());
     	String searchValue = req.getParameter("searchValue");
     	
@@ -1920,29 +1884,17 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("<ROWS>");
         
         for (CircularListVO vo : list) {
-    		/*resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");*/
         	resultXML.append("<ROW>");
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmDate() + "</VALUE></CELL>");
-//			resultXML.append("<CELL><VALUE>" + vo.getUpdateDate() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
         

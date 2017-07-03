@@ -18,10 +18,10 @@ function getCircularComment() {
 				
 				if (vo.status == 1) {
 					//확인 이미지
-					circularUserList += "<img src='/images/i_group.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+					circularUserList += "<img src='/images/circular_read.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				} else {
 					//미확인 이미지
-					circularUserList += "<img src='/images/i_group.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+					circularUserList += "<img src='/images/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				}
 				
 				if (status == 0 && (option == 1 || option == 3)) {
