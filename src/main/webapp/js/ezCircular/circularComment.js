@@ -156,7 +156,7 @@ function commentSendMail() {
 			circularID : circularID // 회람ID
 		},
 		success : function(result) {
-			alert("mail send");
+			alert("공지 메일을 발송했습니다.");
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
