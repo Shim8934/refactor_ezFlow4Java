@@ -27,6 +27,10 @@
 	    	var userMyName = "${userMyName}";
 	    	var userMyName2 = "${userMyName2}";
 	    	
+	    	window.onunload = function() {
+				window.opener.location.reload();
+			}
+	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -167,7 +171,7 @@
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
 				}
-				
+
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
@@ -180,7 +184,7 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-				
+
 				var receiverList = document.getElementById("receiverlist").innerHTML;
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
@@ -220,9 +224,6 @@
 	 			});
 	    	}
 
-	    	function window_onUnload() {
-	    	}
-	    	
 	    	//파일업로드
     	    function returnvalue(strXML) {
 		        var pAttachXml = loadXMLString(strXML);
