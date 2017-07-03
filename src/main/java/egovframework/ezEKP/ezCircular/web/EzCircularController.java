@@ -609,8 +609,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 //			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
