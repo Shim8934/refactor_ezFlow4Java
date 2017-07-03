@@ -518,9 +518,9 @@
 				
 				var v_AttachSize = $("#txtAttachLimit").val();
 		    	
-		    	if (v_AttachSize > 4096) {
+		    	if (v_AttachSize > 2048) {
 		    		alert("<spring:message code='ezBoard.hyj10'/>");
-		    		$("#txtAttachLimit").val(4096);
+		    		$("#txtAttachLimit").val(2048);
 		    	}
 			}
 	    </script>
