@@ -1201,7 +1201,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		if (list.size() > 0 && list.size() != 1) {
 			userID = userID.substring(0, userID.length() - 2);
 			userName = userName.substring(0, userName.length() - 2);
-			userName2 = userID.substring(0, userName2.length() - 2);
+			userName2 = userName2.substring(0, userName2.length() - 2);
 		}
 
 		List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
