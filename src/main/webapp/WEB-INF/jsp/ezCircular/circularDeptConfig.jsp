@@ -84,11 +84,11 @@
 		                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
 		                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox" + i + "' name='myCheckbox' value='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
 	                            	      + "'type='checkbox' onclick='event_statuschange(this);'></td>";
-		                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].text + "</td>";
-	                                _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].text + "</td>";
+		                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent + "</td>";
+	                                _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>";
 	                        
                                 if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] != "0") {
-	                                _html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].text.split("/")[0]
+	                                _html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0]
     	                            + "&nbsp<spring:message code='ezCircular.t50' />&nbsp" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] + "<spring:message code='ezCircular.t51' />" + "</td>";
                                 } else {
                                 	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
