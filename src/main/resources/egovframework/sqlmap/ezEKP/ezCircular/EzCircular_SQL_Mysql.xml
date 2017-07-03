@@ -964,7 +964,10 @@
             TBL_CIRCULAR_BMUSER A
           JOIN
             TBL_USERMASTER B
-          ON A.MEMBERID = B.CN
+          ON 
+          	A.MEMBERID = B.CN
+          AND
+          	A.TENANTID = B.TENANT_ID
           WHERE
             CIRCULARBMID = #v_CIRCULARBMID#
           AND
