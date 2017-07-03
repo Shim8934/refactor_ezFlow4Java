@@ -150,7 +150,7 @@
 	</style>
  	<xmp id="sigBody" style="display: none;">${result.content}</xmp>
  	
-	<body id="mainbodytag" class="popup" style="overflow: hidden">
+	<body id="mainbodytag" class="popup">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -191,7 +191,7 @@
                     	<tr>
 	                        <th>중요도</th>
     	                    <td id="Td_Importance" style="padding-left: 4px;">${result.importance == '0' ? '일반' : '중요'}</td>
-		            		<th>옵션</th>
+		            		<th style="width:20px;">옵션</th>
 		            		<td style="width:200px;">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
@@ -371,7 +371,7 @@
 						<tr style="height:25px">
 							<th style="padding-left: 10px;">작성자</th>
 	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${userInfo.displayName }</div>
+	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
 							<th style="padding-left:10px">작성일</th> 
  							<td style="padding-left:4px">
