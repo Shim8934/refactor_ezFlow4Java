@@ -1,3 +1,9 @@
+-- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
+--
+-- Host: 10.0.102.8    Database: jmocha
+-- ------------------------------------------------------
+-- Server version	5.5.51-MariaDB-wsrep
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -2888,6 +2894,27 @@ CREATE TABLE `tbl_circular_link` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_circular_listoption`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_listoption`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_listoption` (
+  `LISTTYPE` varchar(4) NOT NULL,
+  `SN` bigint(10) NOT NULL,
+  `NAME1` varchar(200) DEFAULT NULL,
+  `NAME2` varchar(200) DEFAULT NULL,
+  `NAME3` varchar(200) DEFAULT NULL,
+  `NAME4` varchar(200) DEFAULT NULL,
+  `COLNAME` varchar(200) NOT NULL,
+  `WIDTH` bigint(10) NOT NULL,
+  `TENANTID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANTID`,`LISTTYPE`,`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_circular_option`
 --
 
@@ -2920,10 +2947,11 @@ CREATE TABLE `tbl_circular_user` (
   `memberId` varchar(100) DEFAULT NULL,
   `memberName` varchar(100) DEFAULT NULL,
   `memberName2` varchar(100) DEFAULT NULL,
-  `status` mediumint(5) DEFAULT NULL,
+  `status` mediumint(5) DEFAULT '0',
   `confirmDate` varchar(40) DEFAULT NULL,
   `updateStatus` mediumint(5) DEFAULT NULL,
   `updateDate` varchar(40) DEFAULT NULL,
+  `commentStatus` mediumint(5) DEFAULT '0',
   `tenantId` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
@@ -6841,7 +6869,7 @@ DROP TABLE IF EXISTS `tbl_tmpapropinioninfo`;
 CREATE TABLE `tbl_tmpapropinioninfo` (
   `OWNERID` varchar(255) NOT NULL,
   `SN` bigint(10) NOT NULL,
-  `USERID` varchar(400) DEFAULT NULL,
+  `USERID` varchar(100) NOT NULL,
   `OPINIONGB` varchar(12) DEFAULT NULL,
   `CONTENT` longtext,
   `USERNAME` varchar(200) DEFAULT NULL,
@@ -6854,7 +6882,7 @@ CREATE TABLE `tbl_tmpapropinioninfo` (
   `USERDEPTNAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`OPINIONSN`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`USERID`,`OPINIONSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7487,3 +7515,5 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-07-03 18:50:32
