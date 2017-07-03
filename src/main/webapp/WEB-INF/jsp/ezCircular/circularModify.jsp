@@ -23,6 +23,9 @@
 	    	var userID = "${userID}";
 	    	var userName = "${userName}";
 	    	var userName2 = "${userName2}";
+	    	var userMyID = "${userMyID}";
+	    	var userMyName = "${userMyName}";
+	    	var userMyName2 = "${userMyName2}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -33,6 +36,7 @@
 		    window.onload = function () {
 	        	document.getElementById("title").value = "${result.title}";
 	        	document.getElementById("receiverlist").innerHTML = "${userName}";
+	        	document.getElementById("receiverlist2").innerHTML = "${userName2}";
 	        	document.getElementById("receiverID").innerHTML = "${userID}";
 
 	        	//hasFie구분
@@ -79,21 +83,21 @@
 	    			return;
 	    		}
 				
-				//댓글기능 사용할때
+				//의견
 				$(':checkbox[id=option]:checked').each(function(){
 					option = 1;	
 				});
 				
-				//메일공지 사용할때
+				//공지메일발송
 				$(':checkbox[id=AllDay]:checked').each(function(){
 					option = 2;	
 				});
 				
-				//댓글기능, 메일공지 둘 다 사용할 때
+				//의견, 공지메일발송
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
 				}
-				
+
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
@@ -105,7 +109,17 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
-				
+
+				var receiverList = document.getElementById("receiverlist").innerHTML;
+				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
+				var receiverID = document.getElementById("receiverID").innerHTML;
+
+				if (receiverList.indexOf(userMyName) == -1) {
+					receiverList += ", " + userMyName;
+					receiverList2 += ", " + userMyName2;
+					receiverID += ", " + userMyID;
+				}
+
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	                type : 'POST',
@@ -113,9 +127,9 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			receiverList : document.getElementById("receiverlist").innerHTML,
-	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
-	                			receiverID : document.getElementById("receiverID").innerHTML,
+	                			receiverList : receiverList,
+	                			receiverList2 : receiverList2,
+	                			receiverID : receiverID,
 	                			content : content,
 	                			fileList : fileList,
 	                			oldCircularId : oldCircularId
@@ -242,15 +256,13 @@
     			<td style="height:20px">
       				<div id="menu">      
         				<ul>
-							<div id="menuTable1" >
-	          					<li><span onClick="btn_Save()"> 회람판 등록</span></li>
-	          					<li><span onClick="btn_Modify()"> 수정</span></li>
-	          				</div>          
+          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
+          					<li><span onClick="btn_Modify()"><spring:message code="ezCircular.t71"/></span></li>
         				</ul>
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"> <spring:message code="ezResource.t150"/></span></li>
+          					<li><span onClick="window.close();"><spring:message code="ezResource.t150"/></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
@@ -260,41 +272,38 @@
         				</tr>
 						
 	        			<tr>
-	          				<th> 중요도</th>
-	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
+	          				<th>중요도</th>
+	          				<td id="Td_StartDate" style="overflow:hidden; width:200px;">
 	          					<select id="importance" class="select">
 	          						<option value="0" <c:if test="${result.importance eq '0'}">selected</c:if>>일반</option>
    									<option value="1" <c:if test="${result.importance eq '1'}">selected</c:if>>중요</option>
    								</select>	
 	          				</td>
-	        			</tr>
-				        <tr>
-	       					<th> 옵션</th>
-	       					<td style="width:160px" colspan="3">
+	       					<th style="width:40px;">옵션</th>
+	       					<td style="width:200px;">
 								<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" name="chkList"/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList" checked/>의견
+		                				<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" name="chkList"/>댓글기능 사용
-		                				<input type="checkbox" id="AllDay" name="chkList" checked/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList"/>의견
+		                				<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/>댓글기능 사용
-										<input type="checkbox" id="AllDay" name="chkList" checked/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList" checked/>의견
+										<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" name="chkList"/>댓글기능 사용
-										<input type="checkbox" id="AllDay" name="chkList"/>메일공지 사용
+		                				<input type="checkbox" id="option" name="chkList"/>의견
+										<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
 		                			</c:otherwise>
-		                		</c:choose>   									
+		                		</c:choose>					
 	         				</td>
-			     		</tr>
+	        			</tr>
+				        
 						<tr>
-	           				<th rowspan="2">
-	           					회람자
-	           				</th>
+	           				<th rowspan="2">회람자</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
 	           				</td>
@@ -317,7 +326,7 @@
   			</tr>
   			<tr>
   				<td>
-  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezSchedule/scheduleDragAndDrop.do"></iframe>
+  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do"></iframe>
   				</td>
   			</tr>
 		</table>
@@ -380,14 +389,11 @@
    				</td>
   			</tr>
 		</table>
-		<xmp id="xmpEntryEmailList" style="display: none;"> ${entryList}</xmp>
+		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-    	<script type="text/javascript">
-	       	//document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
-    	</script>
+		</script>
 	</body>
 </html>

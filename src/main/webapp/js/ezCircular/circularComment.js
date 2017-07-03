@@ -1,5 +1,4 @@
 /** 이효진 작성*/
-//댓글목록조회
 function getCircularComment() {
 	$.ajax({
 		type : "POST",
@@ -7,51 +6,72 @@ function getCircularComment() {
 		dataType : "json",
 		data : {
 			circularID : circularID,
-			searchType : $("#searchType").val(),
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
-			//회람자 목록
-			userList = "";
-			list = result.userList;
+			circularUserList = "<colgroup><col width='15%' /><col width='72%' /><col width='13%' /></colgroup>";
+			
+			list = result.circularUserList;
 			list.forEach(function(vo, index) {
-				userList += "<tr circularUserID='" + vo.memberID + "'>";
-				userList += "<td style='text-align:left;'>" + vo.memberName + "&nbsp;<a class='imgbtn' style='vertical-align:middle;'><span circularUserID='" + vo.memberID + "' onclick='showEdit(this)'>의견작성</span></a></td>"
+				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+				circularUserList += "<th style='border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
+				circularUserList += "<img src='/images/i_group.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				
-				if (vo.status == 1) {
-					userList += "<td style='width:55%; text-align:right; padding-right:10px;' >확인완료</td>"
+				if (status == 0 && (option == 1 || option == 3)) {
+					circularUserList += "<img src='/images/modify2.gif' style='cursor:pointer;vertical-align:middle;'  onclick='showEdit(this)'/>&nbsp;";
 				} else {
-					userList += "<td style='width:55%; text-align:right; padding-right:10px;' >미확인</td>";
+					circularUserList += "&nbsp;"
 				}
 				
-				userList += "</tr>";
-				userList += "<tr style='display:none;'>";
-				userList += "<td style='padding:5px 2px;' colspan='2'><table style='width:100%;' circularUserID='" + vo.memberID + "'></table></td>";
-				userList += "</tr>";
-			});
-			
-			$("#commentUserList").html("");
-			$("#commentUserList").append(userList);
-
-			commentList = "";
-			list = result.commentList;
-			list.forEach(function(vo, index) {
-				commentList = "<tr style='padding:10px; 4px;'>";
-				commentList += "<td style='width:70px; border:0px;'>" + vo.memberName + "</td>";
-				commentList += "<td style='border:0px;' circularCommentID='" + vo.circularCommentID + "'>" + vo.circularComment + "</td>";
-				commentList += "<td style='width:130px; border:0px; text-align:right;'>" + vo.regDate + "</td>";
-				commentList += "<td style='width:50px; border:0px;' ><a class='imgbtn' style='vertical-align:middle;'><span class='deleteComment' memberID='" + vo.memberID + "' circularID='" + circularID + "' circularCommentID='" + vo.circularCommentID + "' onclick='deleteCircularComment(this)'>삭제</span></a></td>"
-				commentList += "</tr>";
+				circularUserList += "&nbsp;&nbsp;&nbsp;" + vo.confirmDate.substring(0, 16);
+				circularUserList += "</th>";
 				
-				$("table[circularUserID='" + vo.circularUserID + "']").append(commentList);
-				$("table[circularUserID='" + vo.circularUserID + "']").closest("tr").show();
+				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
+				
+				if (vo.status == 1) {
+					circularUserList += "확인완료"
+				} else {
+					circularUserList += "미확인";
+				}
+				
+				circularUserList += "</th>";
+				circularUserList += "</tr>";
 			});
 			
-			if (status == 1) {
-				$("#commentUserList > tbody > tr > td > a").hide();
-			}
-			
-			$(".deleteComment[memberID != '" + userInfoID + "']").closest("a").hide();
+			$("#circularUserList").html("");
+			$("#circularUserList").append(circularUserList);
+
+			circularCommentList = "";
+			list = result.circularCommentList ;
+			list.forEach(function(vo, index) {
+				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
+				circularCommentList += "<td style='padding-left:3px'><img src='/images/ellipsis.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment +  "&nbsp;(" + vo.regDate.substring(11, 16) + ")&nbsp;";
+				
+				if (vo.memberID == userInfoID) {
+					circularCommentList += "<img src='/images/comment_del.gif' style='cursor:pointer;vertical-align:middle;' onclick='deleteCircularComment(this)'/>";
+				}
+				
+				circularCommentList += "</td>";
+				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 10) + "</td>";
+				circularCommentList += "</tr>";
+				
+				if (vo.status == 0) {//공개
+					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+					} else {
+						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+					}
+				} else {//비공개
+					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
+						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+						} else {
+							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+						}
+					}
+				}
+			});
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -60,23 +80,27 @@ function getCircularComment() {
 }
 
 function showEdit(obj) {
-	$("tr.circularComment").remove();
+	var circularUserID = $(obj).closest("tr").attr("circularUserID");
 	
-	var commentEditor = "";
-	commentEditor += "<tr class='circularComment' circularUserID='" + $(obj).attr("circularUserID") + "' circularID='" + circularID + "'>";
-	commentEditor += "<td style='border:0px;' colspan='3'><textarea style='width:97%; text-align:left;' /></td>";
-	commentEditor += "<td style='width:50px; border:0px; text-align:right;'><a class='imgbtn' style='text-align:right;'><span circularUserID='" + $(obj).attr("circularUserID") + "' onclick='editCircularComment(this)'>저장</span></a></td>";
-	commentEditor += "</tr>";
-	
-	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").html(commentEditor + $("table[circularUserID='" + $(obj).attr("circularUserID") + "'] tbody").html());
-	$("table[circularUserID='" + $(obj).attr("circularUserID") + "']").closest("tr").show();
+	if ($(".circularCommentEdit[circularUserID='" + circularUserID + "'").length != 0) {
+		$(".circularCommentEdit[circularUserID='" + circularUserID + "'").remove();
+	} else {
+		$(".circularCommentEdit").remove();
+		
+		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='height:70px;border:1px solid #e2e2e2'>";
+		circularEdit += "<td colspan='2'><textarea style='width:97%;height:50px;border:0px;resize:none;outline:none;overflow:auto;'></textarea></td>";
+		circularEdit += "<td><a class='imgbtn'><span onclick='editCircularComment(this)';>의견작성</span>&nbsp;</a><br/><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>비공개</input></td>";
+		circularEdit += "</tr>";
+		
+		$(obj).closest("tr").after(circularEdit);
+	}
 }
 
-//댓글작성
 function editCircularComment(obj) {
-	var circularUserID = $(obj).attr("circularUserID");
-	var circularComment = $("tr.circularComment[circularUserID='" + $(obj).attr("circularUserID") + "'] > td > textarea").val();
-	
+	var circularUserID = $(obj).closest("tr").attr("circularUserID");
+	var circularComment = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > textarea").val();
+	var circularCommentStatus = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > input:checked").length;
+
 	if (circularComment == "") {
 		alert("의견을 입력해주세요");
 		return ;
@@ -90,6 +114,7 @@ function editCircularComment(obj) {
 			circularID : circularID, // 회람ID
 			circularUserID : circularUserID, // 회람자ID
 			circularComment : circularComment, //회람 코멘트 본문
+			status : circularCommentStatus
 		},
 		success : function(result) {
 			$("#searchValue").val("");
@@ -102,7 +127,8 @@ function editCircularComment(obj) {
 }
 
 function deleteCircularComment(obj) {
-	var circularCommentID = $(obj).attr("circularCommentID");
+	var circularCommentID = $(obj).closest("tr").attr("circularCommentID");
+	
 	$.ajax({
 		type : "POST",
 		url : "/ezCircular/deleteCircularComment.do",
@@ -121,27 +147,6 @@ function deleteCircularComment(obj) {
 	});
 }
 
-//메일공지기능
-function circularSendMail() {
-	$.ajax({
-		type : "POST",
-		url : "/ezCircular/circularSendMail.do",
-		dataType : "json",
-		data : {
-			title : document.getElementById("title").value,
-			receiverList : document.getElementById("receiverlist").innerHTML, // 메일 수신자 List
-			receiverID : document.getElementById("receiverID").innerHTML
-		},
-		success : function(result) {
-
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			
-		}
-	});
-}
-
-//확인재촉메일
 function commentSendMail() {
 	$.ajax({
 		type : "POST",
@@ -151,7 +156,7 @@ function commentSendMail() {
 			circularID : circularID // 회람ID
 		},
 		success : function(result) {
-			alert("mail send");
+			alert("공지 메일을 발송했습니다.");
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -159,7 +164,6 @@ function commentSendMail() {
 	});
 }
 
-//댓글보기
 function DivPopUpPosition(popUpW, popUpH) {
     var ReturnValue = new Array();
     var heigth = document.documentElement.scrollHeight;

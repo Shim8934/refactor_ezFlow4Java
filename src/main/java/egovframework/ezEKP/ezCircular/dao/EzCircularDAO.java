@@ -22,11 +22,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public List<CircularListVO> getCircularList(Map<String, Object> map) throws Exception {
 		return (List<CircularListVO>) list("EzCircularDAO.getCircularList", map);
 	}
-	
-	@SuppressWarnings("unchecked")
-	public List<CircularListVO> getSearchCircularList(Map<String, Object> map) throws Exception {
-		return (List<CircularListVO>) list("EzCircularDAO.getSearchCircularList", map);
-	}
 
 	@SuppressWarnings("unchecked")
 	public List<CircularListVO> getCircularUserList(Map<String, Object> map) throws Exception {
@@ -44,8 +39,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO) throws Exception {
-		return (List<CircularDeptVO>) list("EzCircularDAO.getcircularDeptList", circularDeptVO);
+	public List<CircularDeptVO> getcircularDeptList(Map<String, Object> map) throws Exception {
+		return (List<CircularDeptVO>) list("EzCircularDAO.getcircularDeptList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -193,10 +188,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.updateStatus", map);
 	}
 	
-	public void updateStatusUser(Map<String, Object> map) throws Exception{
-		update("EzCircularDAO.updateStatusUser", map);
-	}
-	
 	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {
 		update("EzCircularDAO.update_circularDept", circularDeptVO);
 	}
@@ -232,9 +223,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void circularDeleteFolder(Map<String, Object> map) throws Exception {
 		delete("EzCircularDAO.circularDeleteFolder", map);
 	}
-	
-	
-	
 
 	public int getCircularTDListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getCircularTDListCount", map);
@@ -275,24 +263,20 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (List<CircularCommentVO>) list("EzCircularDAO.getCircularComment", map);
 	}
 
-	public void updateCircularUser(Map<String, Object> map) throws Exception {
-		update("EzCircularDAO.updateCircularUser", map);
+	public void updateCircularCommentStatus(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircularCommentStatus", map);
 	}
 
 	public void insertComment(Map<String, Object> map) throws Exception {
 		insert("EzCircularDAO.insertComment", map);
-	}
-	
-	public void updateComment(CircularCommentVO vo) throws Exception {
-		insert("EzCircularDAO.updateComment", vo);
 	}
 
 	public CircularAttachVO getAttachInfo(Map<String, Object> map) throws Exception {
 		return (CircularAttachVO) select("EzCircularDAO.getAttachInfo", map);
 	}
 
-	public String getUpdateStatus(Map<String, Object> map) throws Exception {
-		return (String) select("EzCircularDAO.getUpdateStatus", map);
+	public String getCircularStatus(Map<String, Object> map) throws Exception {
+		return (String) select("EzCircularDAO.getCircularStatus", map);
 	}
 
 	public void moveCircular3(Map<String, Object> map) throws Exception {
@@ -315,10 +299,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void updateReadStatus(Map<String, Object> map) throws Exception {
 		update("EzCircularDAO.updateReadStatus", map);
 	}
-
-	public int getSearchCircularListCount(Map<String, Object> map) throws Exception {
-		return (int) select("EzCircularDAO.getSearchCircularListCount", map);
-	}
+	
+	/*public void confirmUpdateDate(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.confirmUpdateDate", map);
+	}*/
 
 	@SuppressWarnings("unchecked")
 	public List<CircularCommentVO> getCircularCommentUserList(Map<String, Object> map) throws Exception {
@@ -335,8 +319,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CircularListHeaderVO> getListHeader(Map<String, Object> map) {
+	public List<CircularListHeaderVO> getListHeader(Map<String, Object> map) throws Exception {
 		return (List<CircularListHeaderVO>) list("EzCircularDAO.getListHeader", map);
+	}
+
+	public void updateCircularStatus(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircularStatus", map);
 	}
 
 }

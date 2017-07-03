@@ -15,6 +15,8 @@
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
+		
 		<style>
 		#layer_Viewpopup { 
 			z-index:1000; 
@@ -169,27 +171,24 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
-	        	var keyword = document.getElementById("txt_keyword").value;
+	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
-		        if (keyword != ""){
-		        	url = "/ezCircular/getSearchCircularList.do?type=temp";
-		        }
-		        else{
-		        	url = "/ezCircular/getCircularTempList.do";
-		        }
+				url = "/ezCircular/getCircularTempList.do";
+				
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
 					url : url,
-					data : { boardType   : "M", 
-							 pageNum 	 : CurPage, 
-							 orderCell 	 : OrderCell, 
-							 orderOption : OrderOption,
-							 searchQuery : SQLPARADATA,
-							 keyword	 : keyword
-							},
+					data : {
+						boardType : "M", 
+						pageNum : CurPage, 
+						orderCell : OrderCell, 
+						orderOption : OrderOption,
+						searchQuery : SQLPARADATA,
+						searchValue : searchValue
+					},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
 					}     			
@@ -454,14 +453,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				var circularId = obj.getAttribute("CIRCULARID");
+				circularID = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
-		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularModify.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            var feature = GetOpenPosition(820, 900);
+	            	window.open("/ezCircular/circularModify.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
-	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularModify.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	var feature = GetOpenPosition(790, 900);
+	            	window.open("/ezCircular/circularModify.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 	        }
 		
@@ -560,14 +559,6 @@
 	            if (evt.keyCode == "13") {
 	                search("quick");
 	            }
-	        }
-	
-	        var writeboardselect_modal_dialogArguments = new Array();
-	        function CircularWrite_onclick() {
-	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
-                OpenWin.focus();     
 	        }
 	
 	        function keyword_Clear() {

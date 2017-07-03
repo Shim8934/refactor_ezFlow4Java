@@ -44,20 +44,14 @@
 	                treeconfig = xmlHTTP.responseXML;
 	
 	            PostTreeView.config(treeconfig);
-	            
-	            if (oldFolderId == "") {
-		            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");	            	
-	            } else {
-	            	PostTreeView.source("<tree><nodes>" + get_childXML_All("", true, true) + "</nodes></tree>");
-	            }
-
-	            PostTreeView.update();
+	            PostTreeView.source("<tree><nodes>" + get_childXML("", true, true) + "</nodes></tree>");	            	
+				PostTreeView.update();
 	        }
 	        
 	        function btn_Move_onclick() {
 	        	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
 	        	var circularIdList = "${circularIdList}";
-	        	var updateStatus = "${updateStatus}";
+				var originLoc = "${originLoc}";
 
 	        	$.ajax ({
 	                type : 'POST',
@@ -65,10 +59,10 @@
 	                cache: false,
 	 			   	url : '/ezCircular/moveCircular.do',
 	                data : {	
-	                		folderId : folderId,
-	                		circularIdList : circularIdList,
-	                		oldFolderId : oldFolderId,
-	                		updateStatus : updateStatus
+	                		folderId 		: 	folderId,
+	                		circularIdList  : 	circularIdList,
+	                		oldFolderId 	: 	oldFolderId,
+	                		originLoc		:	originLoc,
 	                },  
 	                success : function(data) {	
 	                  alert("이동하였습니다.");

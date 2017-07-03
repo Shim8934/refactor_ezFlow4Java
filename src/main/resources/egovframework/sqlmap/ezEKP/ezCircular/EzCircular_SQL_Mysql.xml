@@ -50,13 +50,14 @@
                 B.updateStatus,
                 A.title,
                 A.memberid,
+                A.membername,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
-                DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS updatedate,
+                IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
-				D.confirmtotalcount
-                
+				D.confirmtotalcount,
+				B.commentStatus
             FROM
                 TBL_CIRCULAR A
             JOIN
@@ -67,32 +68,57 @@
                 A.tenantid = B.tenantid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
 				FROM
-					TBL_CIRCULAR_USER
-				WHERE
-					updatestatus IN (1, 3)
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
 				AND
-					tenantid = 0
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
 				GROUP BY
-					circularid) C
+					BB.circularid) C
 			ON
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
 				FROM
-					TBL_CIRCULAR_USER
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
 				WHERE
-					tenantid = 0
+					BB.tenantid = 0
 				GROUP BY
-					circularid) D
+					BB.circularid) D
 			ON
 				A.circularid = D.circularid
             WHERE
-            	B.updatestatus IN ('0', '4')
+            	(B.updatestatus = 0 OR B.commentstatus = 1)
+            AND
+            	A.status != '2'
+            	
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+		
+		<![CDATA[
             AND
                 B.memberid = #memberID#
             AND
@@ -106,227 +132,368 @@
         ]]>
     </select>
     
-    <select id="EzCircularDAO.getSearchCircularListCount" parameterClass="Map" resultClass="Integer" >
-        <isNotEqual property="circularType" compareValue="6">
-	        <![CDATA[
-	        	SELECT
-	                COUNT(DISTINCT A.CIRCULARID) CNT
-	            FROM
-	                TBL_CIRCULAR A
-	            JOIN
-	            	TBL_CIRCULAR_USER B
-	            ON
-	            	A.CIRCULARID = B.CIRCULARID
-	            WHERE
-            ]]>
-	        <isEqual property="circularType" compareValue="1">
-	        <![CDATA[
-	            	B.UPDATESTATUS IN ('0', '4')
-	            AND
-	                B.MEMBERID = #memberID#	
-	        ]]> 
-	        </isEqual>
-	        <isEqual property="circularType" compareValue="2">
-			<![CDATA[
-	            	A.STATUS IN ('0', '1')
-	            AND
-	            	B.UPDATESTATUS IN ('1', '4')
-	            AND
-	                B.MEMBERID = #memberID#	
-			]]>
-	        </isEqual>
-	        <isEqual property="circularType" compareValue="3">
-			<![CDATA[
-	            	A.STATUS IN ('0', '1')
-	            AND
-	            	B.UPDATESTATUS IN ('0', '1', '4')
-            	AND
-	            	A.MEMBERID = B.MEMBERID
-	            AND
-	                B.MEMBERID = #memberID#	
-			]]>
-	        </isEqual>
-	        <isEqual property="circularType" compareValue="4">
-			<![CDATA[
-	            	A.STATUS = '2'
-	            AND
-	            	B.UPDATESTATUS IN ('0', '1')
-				AND
-	                A.MEMBERID = #memberID#
-			]]>	
-	        </isEqual>
-	        <isEqual property="circularType" compareValue="5">
-			<![CDATA[
-	            	B.UPDATESTATUS = '2'
-	            AND
-	                A.MEMBERID = #memberID#
-			]]>	
-	        </isEqual>
-	        <![CDATA[
-				AND
-	                A.TENANTID = B.TENANTID
-	            AND
-	                A.TENANTID = #tenantID#
-	            AND
-	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
-	        ]]>
-		</isNotEqual>
-		<isEqual property="circularType" compareValue="6">
-				SELECT
-					COUNT(A.CIRCULARID) CNT 
-				FROM
-					TBL_CIRCULAR A
-				JOIN
-					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
-					ON A.CIRCULARID = B.CIRCULARID
-				JOIN TBL_CIRCULAR_USER D
-					ON A.CIRCULARID = D.CIRCULARID
-				WHERE
-					B.CIRCULARFOLDERID = #folderID#
-				AND
-					D.UPDATESTATUS = '3'  
-				AND
-					A.TENANTID = #tenantID#
-				AND
-	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
-		</isEqual>        
-    </select>
+<!--     <select id="EzCircularDAO.getSearchCircularListCount" parameterClass="Map" resultClass="Integer" > -->
+<!--         <isNotEqual property="circularType" compareValue="6"> -->
+<!-- 	        <![CDATA[ -->
+<!-- 	        	SELECT -->
+<!-- 	                COUNT(DISTINCT A.CIRCULARID) CNT -->
+<!-- 	            FROM -->
+<!-- 	                TBL_CIRCULAR A -->
+<!-- 	            JOIN -->
+<!-- 	            	TBL_CIRCULAR_USER B -->
+<!-- 	            ON -->
+<!-- 	            	A.CIRCULARID = B.CIRCULARID -->
+<!-- 	            WHERE -->
+<!--             ]]> -->
+<!-- 	        <isEqual property="circularType" compareValue="1"> -->
+<!-- 	        <![CDATA[ -->
+<!-- 	            	A.STATUS != '2' -->
+<!-- 	        	AND -->
+<!-- 	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1) -->
+<!-- 	            AND -->
+<!-- 	                B.MEMBERID = #memberID#	 -->
+<!-- 	        ]]>  -->
+<!-- 	        </isEqual> -->
+<!-- 	        <isEqual property="circularType" compareValue="2"> -->
+<!-- 			<![CDATA[ -->
+<!-- 	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1) -->
+<!-- 	            AND -->
+<!-- 	                B.MEMBERID = #memberID#	 -->
+<!-- 			]]> -->
+<!-- 	        </isEqual> -->
+<!-- 	        <isEqual property="circularType" compareValue="3"> -->
+<!-- 			<![CDATA[ -->
+<!-- 	            	A.STATUS != 2 -->
+<!-- 	            AND -->
+<!-- 	            	B.UPDATESTATUS IN ('0', '1') -->
+<!-- 	            AND -->
+<!-- 	                A.MEMBERID = #memberID# -->
+<!-- 			]]> -->
+<!-- 	        </isEqual> -->
+<!-- 	        <isEqual property="circularType" compareValue="4"> -->
+<!-- 			<![CDATA[ -->
+<!-- 	            	A.STATUS = '2' -->
+<!-- 	            AND -->
+<!-- 	            	B.UPDATESTATUS IN ('0', '1') -->
+<!-- 				AND -->
+<!-- 	                A.MEMBERID = #memberID# -->
+<!-- 			]]>	 -->
+<!-- 	        </isEqual> -->
+<!-- 	        <isEqual property="circularType" compareValue="5"> -->
+<!-- 			<![CDATA[ -->
+<!-- 	            	B.UPDATESTATUS = '2' -->
+<!-- 	            AND -->
+<!-- 	                A.MEMBERID = #memberID# -->
+<!-- 			]]>	 -->
+<!-- 	        </isEqual> -->
+<!-- 	        <![CDATA[ -->
+<!-- 				AND -->
+<!-- 	                A.TENANTID = B.TENANTID -->
+<!-- 	            AND -->
+<!-- 	                A.TENANTID = #tenantID# -->
+<!-- 	            AND -->
+<!-- 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%') -->
+<!-- 	        ]]> -->
+<!-- 		</isNotEqual> -->
+<!-- 		<isEqual property="circularType" compareValue="6"> -->
+<!-- 				SELECT -->
+<!-- 					COUNT(A.CIRCULARID) CNT  -->
+<!-- 				FROM -->
+<!-- 					TBL_CIRCULAR A -->
+<!-- 				JOIN -->
+<!-- 					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B -->
+<!-- 					ON A.CIRCULARID = B.CIRCULARID -->
+<!-- 				JOIN TBL_CIRCULAR_USER D -->
+<!-- 					ON A.CIRCULARID = D.CIRCULARID -->
+<!-- 				WHERE -->
+<!-- 					B.CIRCULARFOLDERID = #folderID# -->
+<!-- 				AND -->
+<!-- 					D.UPDATESTATUS = '3'   -->
+<!-- 				AND -->
+<!-- 					A.TENANTID = #tenantID# -->
+<!-- 				AND -->
+<!-- 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%') -->
+<!-- 		</isEqual>         -->
+<!--     </select> -->
 
-    <select id="EzCircularDAO.getSearchCircularList" resultClass="CircularListVO" >
-        <isNotEqual property="circularType" compareValue="6">
-	        <![CDATA[
-	            SELECT
-	                DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, B.UPDATESTATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE AS CONFIRMDATE, B.UPDATEDATE
-	            FROM
-	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
-	            WHERE
-	                A.CIRCULARID = B.CIRCULARID
-	            ]]>
-		        <isEqual property="circularType" compareValue="1">
-		        <![CDATA[
-		            AND
-		            	B.UPDATESTATUS IN ('0', '4')
-		            AND
-		                B.MEMBERID = #memberID#
-		        ]]> 
-		        </isEqual>
-		        <isEqual property="circularType" compareValue="2">
-				<![CDATA[
-		            AND
-		            	A.STATUS IN ('0', '1')
-		            AND
-		            	B.UPDATESTATUS IN ('1', '4')
-		            AND
-		                B.MEMBERID = #memberID#
-				]]>
-		        </isEqual>
-		        <isEqual property="circularType" compareValue="3">
-				<![CDATA[
-		            AND
-		            	A.STATUS IN ('0', '1')
-		            AND
-		            	B.UPDATESTATUS IN ('0', '1', '4')
-		            AND
-		            	A.MEMBERID = B.MEMBERID
-		            AND
-		                B.MEMBERID = #memberID#
-				]]>
-		        </isEqual>
-		        <isEqual property="circularType" compareValue="4">
-				<![CDATA[
-		            AND
-		            	A.STATUS = '2'
-		            AND
-		            	B.UPDATESTATUS IN ('0', '1')
-					AND
-		                A.MEMBERID = #memberID#
-				]]>	
-		        </isEqual>
-		        <isEqual property="circularType" compareValue="5">
-				<![CDATA[
-		            AND
-		            	B.UPDATESTATUS = '2'
-		            AND
-		                A.MEMBERID = #memberID#
-				]]>	
-		        </isEqual>
-		        <![CDATA[
-		        	AND
-		                A.TENANTID = B.TENANTID
-		            AND
-		                A.TENANTID = #tenantID#
-		            AND
-		                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
-		            LIMIT
-		                #limit#, #rowCount#
-		        ]]>
-		</isNotEqual>
-		<isEqual property="circularType" compareValue="6">
-				SELECT
-					DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE, D.UPDATESTATUS 
-				FROM
-					TBL_CIRCULAR A
-				JOIN
-					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
-					ON A.CIRCULARID = B.CIRCULARID
-				JOIN TBL_CIRCULAR_USER D
-					ON A.CIRCULARID = D.CIRCULARID
-				WHERE
-					B.CIRCULARFOLDERID = #folderID#
-				AND
-					D.UPDATESTATUS = '3'  
-				AND
-					A.TENANTID = #tenantID#
-				AND
-	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
-                LIMIT
-	                #limit#, #rowCount#
-		</isEqual>       
-    </select>
+<!--     <select id="EzCircularDAO.getSearchCircularList" resultClass="CircularListVO" > -->
+<!--         <isNotEqual property="circularType" compareValue="6"> -->
+<!-- 	        <![CDATA[ -->
+<!-- 	            SELECT -->
+<!-- 	                DISTINCT A.CIRCULARID, -->
+<!-- 	                A.IMPORTANCE, -->
+<!-- 	                A.HASFILE, -->
+<!-- 	                A.STATUS, -->
+<!-- 	                B.UPDATESTATUS, -->
+<!-- 	                A.TITLE, -->
+<!-- 	                A.MEMBERID, -->
+<!-- 	                DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE, -->
+<!-- 	                B.STATUS AS CONFIRMSTATUS, -->
+<!-- 	                IFNULL(DATE_ADD(DATE_FORMAT(B.CONFIRMDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS CONFIRMDATE, -->
+<!-- 	                IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate, -->
+<!-- 	                IFNULL(C.CONFIRMCOUNT, '0') AS CONFIRMCOUNT, -->
+<!-- 					D.CONFIRMTOTALCOUNT -->
+<!-- 	            FROM -->
+<!-- 	                TBL_CIRCULAR A -->
+<!-- 	            JOIN -->
+<!-- 	            	TBL_CIRCULAR_USER B -->
+<!-- 	            ON -->
+<!-- 	            	A.CIRCULARID = B.CIRCULARID -->
+<!-- 	            AND -->
+<!-- 	                A.TENANTID = B.TENANTID -->
+<!-- 	            LEFT JOIN -->
+<!-- 					(SELECT -->
+<!-- 						DISTINCT circularid, -->
+<!-- 						CAST(COUNT(circularid) AS char(10)) AS confirmCount -->
+<!-- 					FROM -->
+<!-- 						TBL_CIRCULAR_USER -->
+<!-- 					WHERE -->
+<!-- 						status = 1 -->
+<!-- 					AND -->
+<!-- 						tenantid = 0 -->
+<!-- 					GROUP BY -->
+<!-- 						circularid) C -->
+<!-- 				ON -->
+<!-- 					A.circularid = C.circularid -->
+<!-- 				LEFT JOIN -->
+<!-- 					(SELECT -->
+<!-- 						DISTINCT circularid, -->
+<!-- 						CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount -->
+<!-- 					FROM -->
+<!-- 						TBL_CIRCULAR_USER -->
+<!-- 					WHERE -->
+<!-- 						tenantid = 0 -->
+<!-- 					GROUP BY -->
+<!-- 						circularid) D -->
+<!-- 				ON -->
+<!-- 					A.circularid = D.circularid  -->
+<!-- 				WHERE	   -->
+<!-- 	            ]]> -->
+<!-- 		        <isEqual property="circularType" compareValue="1"> -->
+<!-- 		        <![CDATA[ -->
+<!-- 		        		A.STATUS != '2' -->
+<!-- 		        	AND -->
+<!-- 		            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1) -->
+<!-- 		            AND -->
+<!-- 		                B.MEMBERID = #memberID# -->
+<!-- 		        ]]>  -->
+<!-- 		        </isEqual> -->
+<!-- 		        <isEqual property="circularType" compareValue="2"> -->
+<!-- 				<![CDATA[ -->
+<!-- 						A.STATUS != '2' -->
+<!-- 					AND -->
+<!-- 		            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1) -->
+<!-- 		            AND -->
+<!-- 		                B.MEMBERID = #memberID# -->
+<!-- 	                AND -->
+<!-- 						A.MEMBERID != #memberID# -->
+<!-- 				]]> -->
+<!-- 		        </isEqual> -->
+<!-- 		        <isEqual property="circularType" compareValue="3"> -->
+<!-- 				<![CDATA[ -->
+<!-- 		            	A.STATUS != 2 -->
+<!-- 		            AND -->
+<!-- 		            	B.UPDATESTATUS IN ('0', '1') -->
+<!-- 		            AND -->
+<!-- 		                A.MEMBERID = #memberID# -->
+<!-- 		            AND -->
+<!-- 		            	A.MEMBERID = B.MEMBERID -->
+<!-- 				]]> -->
+<!-- 		        </isEqual> -->
+<!-- 		        <isEqual property="circularType" compareValue="4"> -->
+<!-- 				<![CDATA[ -->
+<!-- 		            	A.STATUS = '2' -->
+<!-- 		            AND -->
+<!-- 		            	B.UPDATESTATUS IN ('0', '1') -->
+<!-- 					AND -->
+<!-- 		                B.MEMBERID = #memberID# -->
+<!-- 				]]>	 -->
+<!-- 		        </isEqual> -->
+<!-- 		        <isEqual property="circularType" compareValue="5"> -->
+<!-- 				<![CDATA[ -->
+<!-- 		            	B.UPDATESTATUS = '2' -->
+<!-- 		            AND -->
+<!-- 		                A.MEMBERID = #memberID# -->
+<!-- 				]]>	 -->
+<!-- 		        </isEqual> -->
+<!-- 		        <![CDATA[ -->
+<!-- 		            AND -->
+<!-- 		                A.TENANTID = #tenantID# -->
+<!-- 		            AND -->
+<!-- 		                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%') -->
+<!-- 		            LIMIT -->
+<!-- 		                #limit#, #rowCount# -->
+<!-- 		        ]]> -->
+<!-- 		</isNotEqual> -->
+<!-- 		<isEqual property="circularType" compareValue="6"> -->
+<!-- 				<![CDATA[ -->
+<!-- 				SELECT -->
+<!-- 					DISTINCT A.CIRCULARID, -->
+<!-- 					A.IMPORTANCE, -->
+<!-- 					A.HASFILE, -->
+<!-- 					A.STATUS, -->
+<!-- 					A.TITLE, -->
+<!-- 					C.UPDATESTATUS, -->
+<!-- 					A.MEMBERID, -->
+<!-- 					DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE, -->
+<!-- 					C.STATUS AS CONFIRMSTATUS, -->
+<!-- 					IFNULL(DATE_ADD(DATE_FORMAT(C.CONFIRMDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS CONFIRMDATE, -->
+<!-- 	                DATE_ADD(DATE_FORMAT(C.UPDATEDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS UPDATEDATE, -->
+<!-- 					IFNULL(E.CONFIRMCOUNT, '0') AS CONFIRMCOUNT, -->
+<!-- 					F.CONFIRMTOTALCOUNT  -->
+<!-- 				FROM -->
+<!-- 					TBL_CIRCULAR A -->
+<!-- 				JOIN -->
+<!-- 					(SELECT  -->
+<!-- 						*  -->
+<!-- 					 FROM  -->
+<!-- 					 	TBL_CIRCULAR_LINK  -->
+<!-- 					 WHERE  -->
+<!-- 					 	MEMBERID = #memberID#) B -->
+<!-- 					 ON  -->
+<!-- 					 	A.CIRCULARID = B.CIRCULARID -->
+<!-- 				JOIN  -->
+<!-- 					TBL_CIRCULAR_USER C -->
+<!-- 				ON  -->
+<!-- 					A.CIRCULARID = C.CIRCULARID -->
+<!-- 				LEFT JOIN -->
+<!-- 					(SELECT -->
+<!-- 						DISTINCT circularid, -->
+<!-- 						CAST(COUNT(circularid) AS char(10)) AS confirmCount -->
+<!-- 					FROM -->
+<!-- 						TBL_CIRCULAR_USER -->
+<!-- 					WHERE -->
+<!-- 						status = 1 -->
+<!-- 					AND -->
+<!-- 						tenantid = 0 -->
+<!-- 					GROUP BY -->
+<!-- 						circularid) E -->
+<!-- 				ON -->
+<!-- 					A.circularid = E.circularid -->
+<!-- 				LEFT JOIN -->
+<!-- 					(SELECT -->
+<!-- 						DISTINCT circularid, -->
+<!-- 						CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount -->
+<!-- 					FROM -->
+<!-- 						TBL_CIRCULAR_USER -->
+<!-- 					WHERE -->
+<!-- 						tenantid = 0 -->
+<!-- 					GROUP BY -->
+<!-- 						circularid) F -->
+<!-- 				ON -->
+<!-- 					A.circularid = F.circularid  -->
+<!-- 				WHERE -->
+<!-- 					B.CIRCULARFOLDERID = #folderID# -->
+<!-- 				AND -->
+<!-- 					C.UPDATESTATUS = '3'   -->
+<!-- 				AND -->
+<!-- 					A.TENANTID = #tenantID# -->
+<!-- 				AND -->
+<!-- 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%') -->
+<!--                 LIMIT -->
+<!-- 	                #limit#, #rowCount# -->
+<!-- 	            ]]> -->
+<!-- 		</isEqual>        -->
+<!--     </select> -->
 
     <select id="EzCircularDAO.getSearchAllCircularList" resultClass="CircularListVO" >
         <isNotEqual property="filterVal" compareValue="5">
 	        <![CDATA[
 	            SELECT
-	                DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, B.UPDATESTATUS, A.TITLE, A.MEMBERID, A.REGDATE, B.STATUS AS CONFIRMSTATUS, B.CONFIRMDATE AS CONFIRMDATE, B.UPDATEDATE
+	                DISTINCT A.CIRCULARID,
+	                A.IMPORTANCE,
+	                A.HASFILE,
+	                A.STATUS,
+	                B.UPDATESTATUS,
+	                A.TITLE,
+	                A.MEMBERID,
+	                DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE,
+	                B.STATUS AS CONFIRMSTATUS,
+	                IFNULL(DATE_ADD(DATE_FORMAT(B.CONFIRMDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS CONFIRMDATE,
+					IFNULL(DATE_ADD(DATE_FORMAT(B.UPDATEDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS UPDATEDATE,
+					IFNULL(C.CONFIRMCOUNT, '0') AS CONFIRMCOUNT,
+					D.CONFIRMTOTALCOUNT
 	            FROM
-	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				LEFT JOIN
+					(SELECT
+						DISTINCT BB.circularid,
+						CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
+					FROM
+						TBL_CIRCULAR AA
+					JOIN
+						TBL_CIRCULAR_USER BB
+					ON
+						AA.circularid = BB.circularid
+					AND
+						AA.tenantid = BB.tenantid
+					WHERE
+						BB.status = 1
+					AND
+						BB.tenantid = 0
+					GROUP BY
+						BB.circularid) C
+				ON
+					A.circularid = C.circularid
+				LEFT JOIN
+					(SELECT
+						DISTINCT BB.circularid,
+						CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
+					FROM
+						TBL_CIRCULAR AA
+					JOIN
+						TBL_CIRCULAR_USER BB
+					ON
+						AA.circularid = BB.circularid
+					AND
+						AA.tenantid = BB.tenantid
+					WHERE
+						BB.tenantid = 0
+					GROUP BY
+						BB.circularid) D
+				ON
+					A.circularid = D.circularid
 	            WHERE
-	                A.CIRCULARID = B.CIRCULARID
 	            ]]>
 	        <isEqual property="filterVal" compareValue="1">
 	        <![CDATA[
-	            AND
-	            	B.UPDATESTATUS IN ('0', '4')
+	        		A.STATUS != '2'
+	        	AND
+	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
 	            AND
 	                B.MEMBERID = #memberID#	
 	        ]]> 
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="2">
 			<![CDATA[
+	            	A.STATUS != '2'
 	            AND
-	            	A.STATUS IN ('0', '1')
+	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
 	            AND
-	            	B.UPDATESTATUS IN ('1', '4')
+	                B.MEMBERID = #memberID#
 	            AND
-	                B.MEMBERID = #memberID#	
+	            	A.MEMBERID != #memberID#	
 			]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="3">
 			<![CDATA[
+	            	A.STATUS != '2'
 	            AND
-	            	A.STATUS IN ('0', '1')
-	            AND
-	            	B.UPDATESTATUS IN ('0', '1', '4')
+	            	B.UPDATESTATUS IN ('0', '1')
 				AND
 	            	A.MEMBERID = B.MEMBERID
 	            AND
-	                B.MEMBERID = #memberID#	
+	                A.MEMBERID = #memberID#	
 			]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="4">
 			<![CDATA[
-	            AND
 	            	A.STATUS = '2'
 	            AND
 	            	B.UPDATESTATUS IN ('0', '1')
@@ -335,8 +502,6 @@
 			]]>	
 	        </isEqual>
 			<![CDATA[
-	            AND
-	                A.TENANTID = B.TENANTID
 	            AND
 	                A.TENANTID = #tenantID#
 	            AND
@@ -357,22 +522,80 @@
         	</isNotEqual>
         <isEqual property="filterVal" compareValue="5">
         	<![CDATA[
-				SELECT
-					DISTINCT A.CIRCULARID, A.IMPORTANCE, A.HASFILE, A.STATUS, A.TITLE, A.MEMBERID, A.REGDATE, D.STATUS AS CONFIRMSTATUS, D.CONFIRMDATE, D.UPDATESTATUS 
-				FROM
-					TBL_CIRCULAR A
-				JOIN
-					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
-					ON A.CIRCULARID = B.CIRCULARID
-				JOIN TBL_CIRCULAR_USER D
-					ON A.CIRCULARID = D.CIRCULARID
-				WHERE
-					D.UPDATESTATUS = '3'  
-				AND
-					A.TENANTID = #tenantID#
-				AND
-	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
-	        ]]>
+				SELECT 
+ 					DISTINCT A.CIRCULARID, 
+ 					A.IMPORTANCE, 
+ 					A.HASFILE, 
+ 					A.STATUS, 
+ 					A.TITLE, 
+ 					C.UPDATESTATUS, 
+ 					A.MEMBERID, 
+ 					DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE, 
+ 					C.STATUS AS CONFIRMSTATUS, 
+ 					IFNULL(DATE_ADD(DATE_FORMAT(C.CONFIRMDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS CONFIRMDATE, 
+ 	                DATE_ADD(DATE_FORMAT(C.UPDATEDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS UPDATEDATE, 
+ 					IFNULL(E.CONFIRMCOUNT, '0') AS CONFIRMCOUNT, 
+ 					F.CONFIRMTOTALCOUNT  
+ 				FROM 
+ 					TBL_CIRCULAR A 
+ 				JOIN 
+ 					(SELECT  
+ 						*  
+ 					 FROM  
+ 					 	TBL_CIRCULAR_LINK  
+ 					 WHERE  
+ 					 	MEMBERID = #memberID#) B 
+ 					 ON  
+ 					 	A.CIRCULARID = B.CIRCULARID 
+ 				JOIN  
+ 					TBL_CIRCULAR_USER C 
+ 				ON  
+ 					A.CIRCULARID = C.CIRCULARID 
+ 				LEFT JOIN 
+ 					(SELECT
+						DISTINCT BB.circularid,
+						CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
+					FROM
+						TBL_CIRCULAR AA
+					JOIN
+						TBL_CIRCULAR_USER BB
+					ON
+						AA.circularid = BB.circularid
+					AND
+						AA.tenantid = BB.tenantid
+					WHERE
+						BB.status = 1
+					AND
+						BB.tenantid = 0
+					GROUP BY
+						BB.circularid) E 
+ 				ON 
+ 					A.circularid = E.circularid 
+ 				LEFT JOIN 
+ 					(SELECT
+						DISTINCT BB.circularid,
+						CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
+					FROM
+						TBL_CIRCULAR AA
+					JOIN
+						TBL_CIRCULAR_USER BB
+					ON
+						AA.circularid = BB.circularid
+					AND
+						AA.tenantid = BB.tenantid
+					WHERE
+						BB.tenantid = 0
+					GROUP BY
+						BB.circularid) F 
+ 				ON 
+ 					A.circularid = F.circularid  
+ 				WHERE
+ 					C.UPDATESTATUS = '3'   
+ 				AND 
+ 					A.TENANTID = #tenantID# 
+ 				AND 
+ 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%') 
+			]]>
         <isNotEmpty property="startDate">
 	        <![CDATA[
 	            AND
@@ -384,7 +607,7 @@
 	        <![CDATA[
 	            LIMIT
 	                #limit#, #rowCount#	
-        	]]>
+        	]]>	
         </isEqual>
     </select>
 
@@ -401,12 +624,21 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	(B.updatestatus = '0' OR B.updatestatus = '4')
+            	(B.updatestatus = 0 OR B.commentstatus = 1)
+            AND
+            	A.status != 2
             AND
                 B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
         ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
     </select>
     
     <select id="EzCircularDAO.getSearchAllCircularListCount" parameterClass="Map" resultClass="Integer" >
@@ -415,59 +647,62 @@
 	            SELECT
 	                COUNT(DISTINCT A.CIRCULARID) CNT
 	            FROM
-	                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.CIRCULARID = B.CIRCULARID
+				AND
+					A.TENANTID = B.TENANTID
 	            WHERE
-	                A.CIRCULARID = B.CIRCULARID
-	            AND
-	                A.TENANTID = B.TENANTID
 	        ]]>
 	        <isEqual property="filterVal" compareValue="1">
-	        <![CDATA[
+		        <![CDATA[
+		            A.STATUS != '2'
+	        	AND
+	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
 	            AND
-	            	B.UPDATESTATUS IN ('0', '4')
-	        ]]>
+	                B.MEMBERID = #memberID#
+		        ]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="2">
-			<![CDATA[
+				<![CDATA[
+		            A.STATUS != '2'
 	            AND
-	            	A.STATUS IN ('0', '1')
+	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
 	            AND
-	            	B.UPDATESTATUS IN ('1', '4')
-			]]>
+	                B.MEMBERID = #memberID#
+	            AND
+	            	A.MEMBERID != #memberID#
+				]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="3">
-			<![CDATA[
-	            AND
-	            	A.STATUS IN ('0', '1')
-	            AND
-	            	B.UPDATESTATUS IN ('0', '1', '4')
-	            AND
-	            	A.MEMBERID = B.MEMBERID
-			]]>
-	        </isEqual>
-	        <isEqual property="filterVal" compareValue="4">
-			<![CDATA[
-	            AND
-	            	A.STATUS = '2'
+				<![CDATA[
+		            A.STATUS != '2'
 	            AND
 	            	B.UPDATESTATUS IN ('0', '1')
-			]]>
+				AND
+	            	A.MEMBERID = B.MEMBERID
+	            AND
+	                A.MEMBERID = #memberID#	
+				]]>
 	        </isEqual>
 	        <isEqual property="filterVal" compareValue="4">
+				<![CDATA[
+		            A.STATUS = '2'
 	            AND
-	                A.MEMBERID = #memberID#	        
+	            	B.UPDATESTATUS IN ('0', '1')
+	            AND
+	                A.MEMBERID = #memberID#
+				]]>
 	        </isEqual>
-	        <isNotEqual property="filterVal" compareValue="4">
-	            AND
-	                B.MEMBERID = #memberID#	        
-	        </isNotEqual>        
         	<isNotEmpty property="startDate">
-	        <![CDATA[
-	            AND
-	            	#startDate# <= A.REGDATE
-	            AND
-	            	#endDate# > A.REGDATE	        
-	        ]]>
+		        <![CDATA[
+		            AND
+		            	#startDate# <= A.REGDATE
+		            AND
+		            	#endDate# > A.REGDATE	        
+		        ]]>
         	</isNotEmpty>
 	        <![CDATA[        
 	            AND
@@ -475,31 +710,39 @@
 	            AND
 	                A.TENANTID = #tenantID#
 			]]>
-        	</isNotEqual>        
+       	</isNotEqual>        
 		<isEqual property="filterVal" compareValue="5">
         	<![CDATA[
 				SELECT
 					COUNT(DISTINCT A.CIRCULARID) CNT
-				FROM
-					TBL_CIRCULAR A
-				JOIN
-					(SELECT * FROM TBL_CIRCULAR_LINK WHERE MEMBERID = #memberID#) B
-					ON A.CIRCULARID = B.CIRCULARID
-				JOIN TBL_CIRCULAR_USER D
-					ON A.CIRCULARID = D.CIRCULARID
+				FROM 
+ 					TBL_CIRCULAR A 
+ 				JOIN 
+ 					(SELECT  
+ 						*  
+ 					 FROM  
+ 					 	TBL_CIRCULAR_LINK  
+ 					 WHERE  
+ 					 	MEMBERID = #memberID#) B 
+ 					 ON  
+ 					 	A.CIRCULARID = B.CIRCULARID 
+ 				JOIN  
+ 					TBL_CIRCULAR_USER C 
+ 				ON  
+ 					A.CIRCULARID = C.CIRCULARID
 				WHERE
-					D.UPDATESTATUS = '3'  
+					C.UPDATESTATUS = '3'  
 				AND
 					A.TENANTID = #tenantID#
 		    ]]>
-        	<isNotEmpty property="startDate">
+       	<isNotEmpty property="startDate">
 	        <![CDATA[
 	            AND
 	            	#startDate# <= A.REGDATE
 	            AND
 	            	#endDate# > A.REGDATE	        
 	        ]]>
-        	</isNotEmpty>
+       	</isNotEmpty>
 	        <![CDATA[    
 				AND
 	                A.TITLE LIKE CONCAT('%', #searchKeyword#, '%')
@@ -510,21 +753,68 @@
     <select id="EzCircularDAO.getCircular" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                circularid,
-                importance,
-                hasfile,
-                status,
-                title,
-                memberid,
-                DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
-                option,
-                content
+                A.circularid,
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                A.option,
+                A.content,
+                B.DISPLAYNAME AS memberName,
+                IFNULL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount
             FROM
-                TBL_CIRCULAR
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_USERMASTER B
+            ON
+            	A.MEMBERID = B.CN
+            LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = 0
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
             WHERE
-                circularid = #circularId#
+                A.circularid = #circularID#
             AND
-                tenantid = #tenantId#    
+                A.tenantid = #tenantID#
+            GROUP BY
+            	A.circularid
         ]]>
     </select>
   
@@ -580,27 +870,12 @@
                 TENANTID = #tenantID#
         ]]>
         
-        <isEqual property="searchType" compareValue="circularUserID">
-        	<isNotEqual property="searchValue" compareValue="">
-				<![CDATA[
-					AND
-						B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
-				]]>
-			</isNotEqual>
-        </isEqual>
-        
-        <!-- <isEqual property="searchType" compareValue="circularComment">
-        	<isNotEqual property="searchValue" compareValue="">
-				<![CDATA[
-					AND
-						C.circularuserid = A.memberid
-					AND
-						C.circularComment LIKE CONCAT(CONCAT('%', #searchValue#),'%')
-				]]>
-			</isNotEqual>
-        </isEqual> -->
-        
-        
+       	<isNotEqual property="searchValue" compareValue="">
+			<![CDATA[
+				AND
+					B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+			]]>
+		</isNotEqual>
     </select>
     
     <select id="EzCircularDAO.getCircularDeptUserList" resultClass="CircularListVO" >
@@ -632,13 +907,13 @@
         ]]>     
     </select>
   
-    <select id="EzCircularDAO.getcircularDeptList" parameterClass="CircularDeptVO" resultClass="CircularDeptVO">
+    <select id="EzCircularDAO.getcircularDeptList" parameterClass="Map" resultClass="CircularDeptVO">
         <![CDATA[
             SELECT
-                A.CIRCULARBMID,
-                A.TITLE,
-                A.REGDATE,
-                concat ((select membername FROM tbl_circular_bmuser where circularBMId = A.CIRCULARBMID ORDER BY circularBMUserId limit 1),'/',
+                A.circularbmid,
+                A.title,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                CONCAT((select membername FROM tbl_circular_bmuser where circularBMId = A.CIRCULARBMID ORDER BY circularBMUserId limit 1),'/',
                 (select count(*) - 1 from tbl_circular_bmuser where circularBMId = A.CIRCULARBMID )) memberName
             FROM
                 TBL_CIRCULAR_BM A
@@ -697,9 +972,11 @@
 				A.status,
 				A.title,
 				A.memberid,
+				A.membername,
 				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+				IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,
 				B.updatestatus,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount
@@ -713,38 +990,62 @@
 				A.tenantid = B.tenantid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
 				FROM
-					TBL_CIRCULAR_USER
-				WHERE
-					updatestatus IN (1, 3)
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
 				AND
-					tenantid = 0
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
 				GROUP BY
-					circularid) C
+					BB.circularid) C
 			ON
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
 				FROM
-					TBL_CIRCULAR_USER
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
 				WHERE
-					tenantid = 0
+					BB.tenantid = 0
 				GROUP BY
-					circularid) D
+					BB.circularid) D
 			ON
 				A.circularid = D.circularid
 			WHERE
-				B.updatestatus IN ('0', '1' ,'4')
+				A.STATUS != '2'
+			AND
+				B.updatestatus IN ('0', '1')
 			AND
 				B.memberid = #memberID#
 			AND
 				A.memberid != #memberID#
 			AND
 				A.tenantid = #tenantID#
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+        
+		<![CDATA[
 			ORDER BY
 				A.regdate DESC
 			LIMIT
@@ -765,7 +1066,7 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	B.updatestatus IN ('0', '1' ,'4')
+            	B.updatestatus IN (0, 1)
             AND
                 B.memberid = #memberID#
             AND
@@ -773,52 +1074,127 @@
             AND
                 A.tenantid = #tenantID#
         ]]>
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
     </select>
     
     <select id="EzCircularDAO.getCircularTempListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
             SELECT
-                COUNT(DISTINCT A.CIRCULARID) CNT
+                IFNULL(COUNT(DISTINCT A.circularid), 0) cnt
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR A
+			JOIN
+                TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+            	A.tenantid = B.tenantid
             WHERE
-            	A.STATUS = '2'
+            	A.status = 2
             AND
-            	A.CIRCULARID = B.CIRCULARID
+             	B.updatestatus IN (0, 1)
             AND
-             	B.UPDATESTATUS IN ('0', '1')	
+                A.memberid = #memberID#
             AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                A.tenantid = #tenantID#
         ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
     </select>
     
     <select id="EzCircularDAO.getCircularTempList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                A.CIRCULARID, 
-                A.IMPORTANCE, 
-                A.HASFILE, 
-                A.STATUS, 
-                A.TITLE, 
-                A.MEMBERID, 
-                DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE,
-                IFNULL(DATE_ADD(DATE_FORMAT(B.CONFIRMDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS CONFIRMDATE               
+                DISTINCT A.circularid, 
+                A.importance,
+                A.hasfile,
+                A.status,
+                A.title,
+                A.memberid,
+                A.membername,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+                IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+                IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,
+                IFNULL(C.confirmcount, '0') AS confirmcount,
+				D.confirmtotalcount
             FROM
-                TBL_CIRCULAR A, TBL_CIRCULAR_USER B
+                TBL_CIRCULAR A
+            JOIN
+            	TBL_CIRCULAR_USER B
+            ON
+            	A.circularid = B.circularid
+            AND
+                A.tenantid = B.tenantid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
+				GROUP BY
+					BB.circularid) C
+			ON
+				A.circularid = C.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = 0
+				GROUP BY
+					BB.circularid) D
+			ON
+				A.circularid = D.circularid
             WHERE
-            	A.STATUS = '2'
+            	A.status = 2
             AND
-            	A.CIRCULARID = B.CIRCULARID
+             	B.updatestatus IN (0, 1)
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+        
+		<![CDATA[
             AND
-             	B.UPDATESTATUS IN ('0', '1')	
+                A.memberid = #memberID#
             AND
-                A.MEMBERID = #memberId#
-            AND
-                A.TENANTID = #tenantId#
+                A.tenantid = #tenantID#
+            GROUP BY
+            	A.circularID
             ORDER BY
-            	A.REGDATE DESC
+            	A.regdate DESC
             LIMIT
                 #limit#, #rowCount#
         ]]>
@@ -852,12 +1228,19 @@
 			WHERE
 				A.status != 2
 			AND
-				B.updatestatus != 2
+				B.UPDATESTATUS IN ('0', '1')
 			AND
 				A.memberid = #memberID#
 			AND
 				A.tenantid = #tenantID#
          ]]>
+         
+         <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
     </select>
     
     <select id="EzCircularDAO.getMyCircularList" resultClass="CircularListVO" >
@@ -869,9 +1252,11 @@
 				A.status,
 				A.title,
 				A.memberid,
+				A.membername,
 				DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 				B.status AS confirmstatus,
 				IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+				IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,
 				B.updatestatus,
 				IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount
@@ -885,38 +1270,62 @@
 				A.tenantid = B.tenantid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
 				FROM
-					TBL_CIRCULAR_USER
-				WHERE
-					updatestatus IN (1, 3)
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
 				AND
-					tenantid = 0
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
 				GROUP BY
-					circularid) C
+					BB.circularid) C
 			ON
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
 				FROM
-					TBL_CIRCULAR_USER
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
 				WHERE
-					tenantid = 0
+					BB.tenantid = 0
 				GROUP BY
-					circularid) D
+					BB.circularid) D
 			ON
 				A.circularid = D.circularid
 			WHERE
 				A.MEMBERID = #memberID#
 			AND
+				A.MEMBERID = B.MEMBERID	
+			AND
 				A.TENANTID = #tenantID# 
 			AND
 				A.STATUS != 2
+		]]>
+		
+		<isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+        
+		<![CDATA[
 			AND
-				B.UPDATESTATUS != 2
+				B.UPDATESTATUS IN ('0', '1')
 			GROUP BY
 				A.CIRCULARID
 			ORDER BY
@@ -950,9 +1359,11 @@
                 A.status,
                 A.title,
                 A.memberid,
-                A.regdate,
+                A.membername,
+                IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
                 B.status AS confirmstatus,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+                IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,
 				IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
                 B.updatestatus
@@ -966,28 +1377,40 @@
 				A.tenantid = B.tenantid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmCount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
 				FROM
-					TBL_CIRCULAR_USER
-				WHERE
-					updatestatus IN (1, 3)
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
 				AND
-					tenantid = 0
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
 				GROUP BY
-					circularid) C
+					BB.circularid) C
 			ON
 				A.circularid = C.circularid
 			LEFT JOIN
 				(SELECT
-					DISTINCT circularid,
-					CAST(COUNT(circularid) AS char(10)) AS confirmtotalcount
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
 				FROM
-					TBL_CIRCULAR_USER
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
 				WHERE
-					tenantid = 0
+					BB.tenantid = 0
 				GROUP BY
-					circularid) D
+					BB.circularid) D
 			ON
 				A.circularid = D.circularid
             WHERE
@@ -996,8 +1419,16 @@
                 A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
+		]]>
+		<isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+        <![CDATA[
             GROUP BY
-				A.circularid    
+				A.circularid
             ORDER BY
             	A.regdate DESC
             LIMIT
@@ -1024,6 +1455,13 @@
             AND
                 A.TENANTID = #tenantID#
         ]]>
+        
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
     </select>
 
     <select id="EzCircularDAO.getFolderCircularListCount" parameterClass="Map" resultClass="Integer" >
@@ -1040,27 +1478,40 @@
              JOIN TBL_CIRCULAR_USER D
              	ON A.CIRCULARID = D.CIRCULARID
              WHERE
-             	 B.CIRCULARFOLDERID = #folderId#	
+             	 B.CIRCULARFOLDERID = #folderId#
+		]]> 
+		
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+        
+        <![CDATA[
              AND
                  D.UPDATESTATUS = '3'  
              AND
                  A.TENANTID = #tenantId#
-         ]]>
+		]]>
     </select>
     
     <select id="EzCircularDAO.getFolderCircularList" resultClass="CircularListVO" >
         <![CDATA[
 			SELECT
-				distinct a.circularid,
-				a.importance,
-				a.hasfile,
-				a.status,
-				a.title,
-				a.memberid,
-				a.regdate,
+				distinct A.circularid,
+				A.importance,
+				A.hasfile,
+				A.status,
+				A.title,
+				A.memberid,
+				A.membername,
+				IFNULL(DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS regdate,
 				d.status as confirmstatus,
-				d.confirmdate,
-				d.updatestatus 
+				IFNULL(DATE_ADD(DATE_FORMAT(D.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+				D.updatestatus,
+				IFNULL(E.confirmcount, '0') AS confirmcount,
+				F.confirmtotalcount 
 			FROM
 				TBL_CIRCULAR A
 			JOIN
@@ -1075,8 +1526,56 @@
 				TBL_CIRCULAR_USER D
 			ON
 				A.CIRCULARID = D.CIRCULARID
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmCount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.status = 1
+				AND
+					BB.tenantid = 0
+				GROUP BY
+					BB.circularid) E
+			ON
+				A.circularid = E.circularid
+			LEFT JOIN
+				(SELECT
+					DISTINCT BB.circularid,
+					CAST(COUNT(if(AA.memberID != BB.memberID, BB.circularid, NULL)) AS char(10)) AS confirmtotalcount
+				FROM
+					TBL_CIRCULAR AA
+				JOIN
+					TBL_CIRCULAR_USER BB
+				ON
+					AA.circularid = BB.circularid
+				AND
+					AA.tenantid = BB.tenantid
+				WHERE
+					BB.tenantid = 0
+				GROUP BY
+					BB.circularid) F
+			ON
+				A.circularid = F.circularid
 			WHERE
 				B.circularfolderid = #folderId#
+		]]> 
+		
+        <isNotEqual property="searchValue" compareValue="">
+        	<![CDATA[
+        		AND
+        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	]]>
+        </isNotEqual>
+
+        <![CDATA[
 			AND
 				D.memberid = #memberId#
 			AND
@@ -1104,16 +1603,16 @@
 		]]>
 	</select>
 	
-	<select id="EzCircularDAO.getUpdateStatus" parameterClass="Map" resultClass="String">
+	<select id="EzCircularDAO.getCircularStatus" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				UPDATESTATUS
+				STATUS
 			FROM
 				TBL_CIRCULAR_USER
 			WHERE
 				CIRCULARID = #circularID#
 			AND
-				MEMBERID = #memberID#
+				MEMBERID = #memberID#	
 			AND
 				TENANTID = #tenantID#
 		]]>
@@ -1327,54 +1826,50 @@
             UPDATE
 	            TBL_CIRCULAR_USER
 	        SET
-	            UPDATESTATUS = #updateStatus#
+	            updatestatus = 1
 	        WHERE 
-	            CIRCULARID = #circularID#
+	            circularid = #circularID#
 	        AND
-	            MEMBERID = #memberID#
+	        	updatestatus = 0
 	        AND
-	            TENANTID = #tenantID#
-        ]]>
-    </update>
-  
-    <update id="EzCircularDAO.updateStatus" parameterClass="Map">
-        <![CDATA[
-            UPDATE
-                TBL_CIRCULAR
-            SET
-                status = #status#
-            WHERE 
-                circularid = #circularID#
-            AND
-                tenantid = #tenantID#
+	            memberid = #memberID#
+	        AND
+	            tenantid = #tenantID#
         ]]>
     </update>
     
+    <!-- <update id="EzCircularDAO.confirmUpdateDate" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR A
+	        JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid 
+	        SET
+	            B.updateDate = #nowDate#
+	        WHERE
+				A.memberid != #memberID#
+			AND 
+	            A.circularid = #circularID#
+	        AND
+	            A.tenantid = #tenantID#
+        ]]>
+    </update> -->
+  
     <update id="EzCircularDAO.updateReadStatus" parameterClass="Map">
         <![CDATA[
             UPDATE
                 TBL_CIRCULAR_USER
             SET
-                status = #status#
+                status = #status#,
+            	confirmdate = #confirmDate#
             WHERE 
                 circularid = #circularID#
             AND
             	memberid = #memberID#
             AND
                 tenantid = #tenantID#
-        ]]>
-    </update>
-  
-    <update id="EzCircularDAO.updateStatusUser" parameterClass="Map">
-        <![CDATA[
-            UPDATE
-                TBL_CIRCULAR_USER
-            SET
-                CONFIRMDATE = #confirmDate#
-            WHERE 
-                CIRCULARID = #circularID#
-            AND
-                TENANTID = #tenantID#      
         ]]>
     </update>
   
@@ -1512,7 +2007,9 @@
           SET
               UPDATESTATUS = #updateStatus#
           WHERE 
-              CIRCULARID = #circularId# 
+              CIRCULARID = #circularId#
+          AND
+          	  MEMBERID = #memberId# 
           AND
               TENANTID = #tenantId#
         ]]>
@@ -1528,6 +2025,21 @@
               CIRCULARID = #circularId#
           AND
               TENANTID = #tenantId#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateCircularStatus" parameterClass="Map">
+        <![CDATA[
+          UPDATE
+              TBL_CIRCULAR_USER
+          SET
+              UPDATESTATUS = #status#
+          WHERE 
+              CIRCULARID = #circularID#
+          AND
+          	  MEMBERID = #memberID#
+          AND
+              TENANTID = #tenantID#
         ]]>
     </update>
   
@@ -1604,11 +2116,11 @@
 		  DELETE FROM
 			  TBL_CIRCULAR_LINK
 		  WHERE
-			  CIRCULARID = #circularId#
+			  CIRCULARID = #circularID#
 		  AND
-			  MEMBERID = #memberId#
+			  MEMBERID = #memberID#
 		  AND
-		  	  TENANTID = #tenantId#
+		  	  TENANTID = #tenantID#
 		]]>
 	</delete>
 	
@@ -1631,22 +2143,23 @@
 			AND
 				tenantid = #tenantID#
 		]]>
-		
-		<isEqual property="searchType" compareValue="circularComment">
-			<![CDATA[
-				AND
-					circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-			]]>
-		</isEqual>
 	</select>
 	
-	<update id="EzCircularDAO.updateCircularUser" parameterClass="Map">
+	<update id="EzCircularDAO.updateCircularCommentStatus" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				TBL_CIRCULAR_USER
 			SET
-				updatestatus = 4,
+				commentStatus = #commentStatus#
+		]]>
+		
+		<isEqual property="commentStatus" compareValue="1" prepend=",">
+			<![CDATA[
 				updatedate = #nowDate#
+			]]>
+		</isEqual>
+		
+		<![CDATA[
 			WHERE
 				circularid = #circularID#
 			AND
@@ -1664,21 +2177,6 @@
                 (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #nowDate#, #status#, #tenantID#)
 		]]>
 	</insert>
-	
-	<update id="EzCircularDAO.updateComment" parameterClass="CircularCommentVO">
-		<![CDATA[
-			UPDATE
-				TBL_CIRCULAR_COMMENT
-			SET
-				confirmDate = #confirmDate#
-			WHERE
-				circularid = #circularID#
-			AND
-				circularuserid= #circularUserID#
-			AND
-				tenantid = #tenantID#
-		]]>
-	</update>
 	
 	<select id="EzCircularDAO.getCircularCommentUserList" parameterClass="Map" resultClass="CircularCommentVO">
 		<![CDATA[

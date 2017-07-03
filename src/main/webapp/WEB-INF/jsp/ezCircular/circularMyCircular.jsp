@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
 		<style>
 		#layer_Viewpopup { 
 			z-index:1000; 
@@ -171,15 +172,11 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
-	        	var keyword = document.getElementById("txt_keyword").value;
+	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
-		        if (keyword != ""){
-		        	url = "/ezCircular/getSearchCircularList.do?type=my";
-		        }
-		        else{
-		        	url = "/ezCircular/getMyCircularList.do";
-		        }
+	        	url = "/ezCircular/getMyCircularList.do";
+	        	
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -190,7 +187,7 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 keyword	 : keyword
+							 searchValue	 : searchValue
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -454,14 +451,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				var circularId = obj.getAttribute("CIRCULARID");
+	        	var circularID = obj.getAttribute("CIRCULARID");
 
-				if (CrossYN()) {
-		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+                if (CrossYN()) {
+		            var feature = GetOpenPosition(820, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
-	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	var feature = GetOpenPosition(790, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 	        }
 		
@@ -540,7 +537,6 @@
 	                }
 	            }
 	            CurPage = "1";
-// 	            BoardSearchOptionHidden();
 	            getBoardList();
 	        }
 
@@ -548,13 +544,6 @@
 	            if (evt.keyCode == "13") {
 	                search("quick");
 	            }
-	        }
-
-	        function CircularWrite_onclick() {
-	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
-                OpenWin.focus();
 	        }
 	        
 	        function CircularClose_onclick() {
@@ -635,7 +624,7 @@
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
-				
+
 	        	var arrList = new Array();
 		        var circularIDList = "";
 		        var i = 0;
@@ -649,61 +638,10 @@
 		        arrList = null;
 	        	
 	        	var feature = GetOpenPosition(820, 700);
-// 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&updateStatus=" + updateStatus;
 				url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
-	        
-// 		    function move_onclick_Complete(moveUrl) {
-// 		        DivPopUpHidden();
-// 		        if (typeof (moveUrl) == "undefined") {
-// 		            return;
-// 		        }
 
-// 		        var oldUrl = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-// 		        var szURL = moveUrl["url"];
-
-// 		        if (moveUrl["url"] == oldUrl) {
-// 		            alert("<spring:message code='ezEmail.t466' />");
-// 		            return;
-// 		        }
-
-// 		        if (szURL.indexOf(oldUrl) == 0) {
-// 		            alert("<spring:message code='ezEmail.t467' />");
-// 		            return;
-// 		        }
-		        
-// 		        if (moveUrl["cmd"] == "MOVE") {
-// 		            var result = mail_make_folder("MOVE", oldUrl, szURL, "");
-		            
-// 		            if (result != "OK") {
-// 		            	if (result == "ALREADY_EXISTS") {
-// 		            		alert("<spring:message code='ezEmail.lhm03' />");
-// 		            	} else {
-// 		            		alert("<spring:message code='ezEmail.t468' />");
-// 		            	}
-// 		                return;
-// 		            }
-// 		        }
-// 		        else if (moveUrl["cmd"] == "COPY") {
-// 		            var result = mail_make_folder("COPY", oldUrl, szURL, "");
-		            
-// 		            if (result != "OK") {
-// 		            	if (result == "ALREADY_EXISTS") {
-// 		            		alert("<spring:message code='ezEmail.lhm03' />");
-// 		            	} else if (result.indexOf("NO COPY processing failed.") > -1) {
-// 		            		alert(strLang241);
-// 		            	} else {
-// 		            		alert("<spring:message code='ezEmail.t469' />");
-// 		            	}
-// 		            	return;
-// 		            }
-// 		        }
-		        
-// 		        LoadAddressTree(moveUrl["idx"]);
-// 		        EventCheck = true;
-// 		    }
-	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
 	        } 

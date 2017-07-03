@@ -19,13 +19,12 @@
 			var circularUserID = "${result.memberID}";
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
-			
-			
+			var option = "${result.option}";
+
 			$(document).ready(function(){
-	            document.getElementById('circularUserList').innerHTML = "${listUser}";
-	            
-	            
+	            document.getElementById('circularUserList').innerHTML = "${listUser}";        
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
+	            
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
 	            for (var i = 0; i < Bodytd.length; i++) {
 	                if (Bodytd[i].width != "") {
@@ -162,10 +161,12 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                        	<li><span onclick="openCircularComment()">댓글상세보기</span></li>
+							<li><span onclick="openCircularComment()">의견 및 확인상태</span></li>
+                        	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
                 	    	</c:if>
+                	    	
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -194,14 +195,14 @@
 		            		<td style="width:200px;">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>
+		                				<span id="option" style="padding-left: 4px;">의견</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<span id="AllDay" style="padding-left: 4px;">메일공지 사용</span>
+		                				<span id="AllDay" style="padding-left: 4px;">공지메일발송</span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<span id="option" style="padding-left: 4px;">댓글기능 사용</span>,  
-										<span id="AllDay">메일공지 사용</span>
+		                				<span id="option" style="padding-left: 4px;">의견</span>,  
+										<span id="AllDay">공지메일발송</span>
 		                			</c:when>
 		                			<c:otherwise>
 		                				<span id="option" style="padding-left: 4px;">사용안함</span>
@@ -210,9 +211,9 @@
 							</td>
                     	</tr>
 		        		<tr>
-		        			<th>회람상태</th>
+		        			<th>회람자확인</th>
 	       					<td>								
-	         					<div id="statusNum" style="padding-left: 4px;">${statusFirst} / ${statusSecond}</div>
+	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
 	         				<th>상태</th>
 		            		<td>
@@ -232,7 +233,7 @@
 		        		<tr style="height:25px">
 							<th>작성자</th>
 	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${userInfo.displayName }</div>
+	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
 							<th>작성일</th> 
  							<td style="padding-left: 4px">
@@ -346,9 +347,9 @@
  							</td> 
 						</tr> 
 						<tr style="height:25px">
-							<th style="padding-left:10px">회람상태</th>
+							<th style="padding-left:10px">회람자확인</th>
 	       					<td style="padding-left: 4px;">								
-	         					<div id="statusNum">${statusFirst} / ${statusSecond}</div>
+	         					<div id="statusNum">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
 							<th style="padding-left:10px">상태</th> 
  							<td style="padding-left:4px">

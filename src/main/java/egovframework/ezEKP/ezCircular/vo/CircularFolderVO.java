@@ -10,6 +10,8 @@ public class CircularFolderVO {
 	
 	private String regDate;
 	
+	private String originLocation;
+
 	private int tenantID;
 
 	public int getCircularFolderID() {
@@ -52,5 +54,11 @@ public class CircularFolderVO {
 		this.tenantID = tenantID;
 	}
 	
-	
+	public String getOriginLocation() {
+		return originLocation;
+	}
+
+	public void setOriginLocation(String originLocation) {
+		this.originLocation = originLocation;
+	}
 }

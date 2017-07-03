@@ -15,6 +15,8 @@
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
+		
 		<style>
 		#layer_Viewpopup { 
 			z-index:1000; 
@@ -170,15 +172,11 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
-	        	var keyword = document.getElementById("txt_keyword").value;
+	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
-		        if (keyword != ""){
-		        	url = "/ezCircular/getSearchCircularList.do?type=folder";
-		        }
-		        else{
-		        	url = "/ezCircular/getFolderCircularList.do";
-		        }
+		        url = "/ezCircular/getFolderCircularList.do";
+		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -190,7 +188,7 @@
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
 							 folderId 	 : folderId,
-							 keyword	 : keyword
+							 searchValue : searchValue
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -452,14 +450,14 @@
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				var circularId = obj.getAttribute("CIRCULARID");
-		
-				if (CrossYN()) {
-		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	        	var circularID = obj.getAttribute("CIRCULARID");
+
+                if (CrossYN()) {
+		            var feature = GetOpenPosition(820, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
-	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	var feature = GetOpenPosition(790, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 	        }
 		
@@ -548,13 +546,6 @@
 	            }
 	        }
 
-	        function CircularWrite_onclick() {
-	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularWrite.do";
-	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
-                OpenWin.focus();     
-	        }
-	        
 	        function CircularClose_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
@@ -589,7 +580,14 @@
 		        	location.href = location.href;
 	        	}
 	        }
-	        
+
+	        function CircularWrite_onclick() {
+	        	var feature = GetOpenPosition(820, 700);
+	        	url = "/ezCircular/circularWrite.do";
+	        	var OpenWin = window.open(url, "", "width=800, height=800, status=no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
+                OpenWin.focus();     
+	        }
+
 	        function CircularDelete_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
@@ -650,6 +648,43 @@
 	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
+	        
+	        function CircularReturn_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+
+	        	if (confirm("기존 회람판으로 되돌리시겠습니까?")) {
+		        	var arrList = new Array();
+			        var circularIDList = "";
+			        var i = 0;
+			        
+			        arrList = strListInfo.split(";");
+			        
+			        for (i = 0; i < arrList.length - 1; i++) {
+			        	circularIDList += arrList[i].split(",")[1] + ";";
+			        }
+	
+			        arrList = null;
+
+		        	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/circularReturn.do",
+						data : { circularIDList : circularIDList,
+								 folderId		: folderId
+								},
+						success: function() {
+							location.reload();
+						},
+						error: function() {
+							alert("되돌리기실패");
+						}
+					});
+		        }		
+	        }
 	
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
@@ -666,9 +701,9 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-<%-- 	            <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li> --%>
 	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t58'/></span></li>
 	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
+	            <li><span onClick="CircularReturn_onclick()">되돌리기</span></li>
 	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>

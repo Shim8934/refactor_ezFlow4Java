@@ -30,26 +30,12 @@
 	    	}
 
 		    window.onload = function () {
-// 		       document.getElementById("receiverlist").innerHTML = userName;
-// 		       document.getElementById("receiverlist2").innerHTML = userName2;
-// 	           document.getElementById("receiverID").innerHTML = userID;
-		    	
-// 		       g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
-
-// 		       g_attendant["id"][0] = userID.trim();
-// 	       	   g_attendant["name"][0] = userName.trim();
-// 	       	   g_attendant["name2"][0] = userName2.trim();
+	
 		    }
 			
 		    window.onresize = function () {
 		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	    	}
-		    
-// 		    function DocumentComplete() {
-// 	            if (msgRtn != "") {
-// 	                message.SetEditorContent(msgRtn);
-//     	        }
-// 	    	}
 
 	    	function FieldsAvailable() {
 	    	}
@@ -76,18 +62,17 @@
 	    			return;
 	    		}
 				
-				//댓글기능 사용할때
+				//의견
 				$(':checkbox[id=optionRefly]:checked').each(function(){
 					option = 1;	
 				});
 				
-				//메일공지 사용할때
+				//공지메일발송
 				$(':checkbox[id=optionMail]:checked').each(function(){
 					option = 2;
-					circularSendMail();
 				});
 				
-				//댓글기능, 메일공지 둘 다 사용할 때
+				//의견, 공지메일발송
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
 				}
@@ -96,6 +81,7 @@
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
 				var fileList = "";
+
 				for (var i = 0; i < filelist.length - 1; i++) {	    
 					if (i == 0) {
 						fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -104,6 +90,16 @@
             		}
 				}
 				
+				var receiverList = document.getElementById("receiverlist").innerHTML;
+				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
+				var receiverID = document.getElementById("receiverID").innerHTML;
+
+				if (receiverList.indexOf(userName) == -1) {
+					receiverList += ", " + userName;
+					receiverList2 += ", " + userName2;
+					receiverID += ", " + userID;
+				}
+
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	                type : 'POST',
@@ -111,9 +107,9 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			receiverList : document.getElementById("receiverlist").innerHTML,
-	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
-	                			receiverID : document.getElementById("receiverID").innerHTML,
+	                			receiverList : receiverList,
+	                			receiverList2 : receiverList2,
+	                			receiverID : receiverID,
 	                			content : content,
 	                			fileList : fileList
 	                },  
@@ -127,22 +123,19 @@
 	    	}
 	    	
 	    	function btn_TempSave() {
+	    		//임시저장
 	    		if (confirm("<spring:message code='ezCircular.t72'/>")) {
-		    		//회람저장 눌렀을 시
 		        	var content = message.GetEditorContent();
 					var option = 0;
 					
-					//댓글기능 사용할때
 					$(':checkbox[id=optionRefly]:checked').each(function(){
 						option = 1;	
 					});
 					
-					//메일공지 사용할때
 					$(':checkbox[id=optionMail]:checked').each(function(){
 						option = 2;	
 					});
 					
-					//댓글기능, 메일공지 둘 다 사용할 때
 					if ($(':checkbox[name=chkList]:checked').length == 2) {
 						option = 3;
 					}
@@ -151,10 +144,7 @@
 					var listtable = dadiframe.document.getElementById("filelist");
 					var filelist = GetChildNodes(listtable);
 					var fileList = "";
-					var receiverList = "";
-					var receiverList2 = "";
-					var receiverID = "";
-					
+
 					for (var i = 0; i < filelist.length - 1; i++) {	    
 						if (i == 0) {
 							fileList = GetAttribute(filelist[i + 1], "fileinfo");
@@ -162,7 +152,7 @@
 							fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
 	            		}
 					}
-					
+
 		    		$.ajax ({
 		 			   	url : '/ezCircular/circularSaveTemp.do',
 		                type : 'POST',
@@ -240,15 +230,13 @@
     			<td style="height:20px">
       				<div id="menu">      
         				<ul>
-							<div id="menuTable1" >
-	          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
-	          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
-	          				</div>          
+          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
+          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
         				</ul>
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"> <spring:message code="ezResource.t150"/></span></li>
+          					<li><span onClick="window.close();"><spring:message code="ezResource.t150"/></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
@@ -266,21 +254,12 @@
 	          				</td>
 	       					<th style="width:40px;">옵션</th>
 	       					<td style="width:200px;">
-								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;댓글기능 사용&nbsp;&nbsp;
-								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;메일공지 사용   									
-	         				</td>
+								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;의견&nbsp;&nbsp;
+								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;공지메일발송
+							</td>
 	        			</tr>
-<!-- 				        <tr> -->
-<!-- 				        	<th>작성자</th> -->
-<!-- 	       					<td></td> -->
-<!-- 	         				<th>작성일</th> -->
-<!-- 	       					<td>							 -->
-<!-- 	         				</td> -->
-<!-- 			     		</tr> -->
 						<tr>
-	           				<th rowspan="2">
-	           					회람자
-	           				</th>
+	           				<th rowspan="2">회람자</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
 	           				</td>
@@ -307,8 +286,7 @@
   				</td>
   			</tr>
 		</table>
-		<div id="baseColor" style="background-color: #fff9e5; border-bottom: gray 1px inset; border-left: gray 1px inset; border-right: gray 1px inset; border-top: gray 1px inset;
-		display: none; position: absolute">
+		<div id="baseColor" style="background-color: #fff9e5; border-bottom: gray 1px inset; border-left: gray 1px inset; border-right: gray 1px inset; border-top: gray 1px inset; display: none; position: absolute">
   			<table style="height:0px; width:190px; border:0; border-collapse:collapse; border-spacing:0; padding:0px" >
     			<tr>
       				<td style="width:190px">
@@ -366,13 +344,11 @@
    				</td>
   			</tr>
 		</table>
-		<xmp id="xmpEntryEmailList" style="display: none;"> ${entryList}</xmp>
+		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
+			document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
 		</script>
-    	<script type="text/javascript">
-	       	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
-    	</script>
 	</body>
 </html>
