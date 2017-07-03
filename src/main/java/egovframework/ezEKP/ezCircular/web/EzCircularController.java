@@ -1169,6 +1169,13 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+
+		List<CircularListVO> user = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
+
+		userMyID = user.get(0).getMemberID();
+		userMyName = user.get(0).getMemberName();
+		userMyName2 = user.get(0).getMemberName2();
+
 		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "modify");
 		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId());
@@ -1185,14 +1192,6 @@ public class EzCircularController extends EgovFileMngUtil {
 					userName2 += vo.getMemberName2();
 				}
 			}
-		}
-		
-		if (userID.equals("")) {
-			List<CircularListVO> user = ezCircularService.getUserList(userInfo.getId(), userInfo.getTenantId());
-			
-			userMyID = user.get(0).getMemberID();
-			userMyName = user.get(0).getMemberName();
-			userMyName2 = user.get(0).getMemberName2();
 		}
 
 		List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
