@@ -3217,8 +3217,9 @@ public class EzBoardController extends EgovFileMngUtil{
                         if (!file.exists()) {
                         	fTemp.mkdirs();
                         }
-//                        writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
-                        multiFile.get(i).transferTo(fTemp);
+                        
+                        writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        
                         fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
                         resultUpload[i] = "true";
                     }
