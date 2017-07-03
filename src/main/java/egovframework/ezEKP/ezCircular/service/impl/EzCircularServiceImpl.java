@@ -970,7 +970,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("searchKeyword", keyword);
 		map.put("filterVal", filterVal);
 		map.put("startDate", startDate);

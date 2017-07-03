@@ -366,12 +366,16 @@ public class EzCircularController extends EgovFileMngUtil {
 				type = "N";
 			} else if (filter.equals("circularComplete")) {
 				filterVal = 2;
+				type = "C";
 			} else if (filter.equals("circularMy")) {
 				filterVal = 3;
+				type = "M";
 			} else if (filter.equals("circularTemp")) {
 				filterVal = 4;
+				type = "T";
 			} else {
 				filterVal = 5;
+				type = "F";
 			}
 			
 			if (keyword == null) keyword = "";
