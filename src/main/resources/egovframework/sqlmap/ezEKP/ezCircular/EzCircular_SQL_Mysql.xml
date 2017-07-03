@@ -53,7 +53,7 @@
                 A.membername,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 B.status AS confirmstatus,
-                IFNULL(DATE_ADD(DATE_FORMAT(E.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+                IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
@@ -104,29 +104,6 @@
 					BB.circularid) D
 			ON
 				A.circularid = D.circularid
-			LEFT JOIN
-				(SELECT
-					DISTINCT BB.circularid,
-					confirmdate
-				FROM
-					TBL_CIRCULAR AA
-				JOIN
-					TBL_CIRCULAR_USER BB
-				ON
-					AA.circularid = BB.circularid
-				AND
-					AA.tenantid = BB.tenantid
-				WHERE
-					AA.memberid != #memberID#
-				AND
-					BB.tenantid = 0
-				GROUP BY
-					BB.circularid
-				ORDER BY
-					BB.confirmDate DESC
-				) E
-			ON
-				A.circularid = E.circularid
             WHERE
             	(B.updatestatus = 0 OR B.commentstatus = 1)
             AND
