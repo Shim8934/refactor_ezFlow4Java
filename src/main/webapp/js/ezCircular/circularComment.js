@@ -51,7 +51,7 @@ function getCircularComment() {
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
 				circularCommentList += "<td style='padding-left:3px'><img src='/images/ellipsis.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
-				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment;
+				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment + "&nbsp;";
 				
 				if (vo.memberID == userInfoID) {
 					circularCommentList += "<img src='/images/comment_del.gif' style='cursor:pointer;vertical-align:middle;' onclick='deleteCircularComment(this)'/>";
