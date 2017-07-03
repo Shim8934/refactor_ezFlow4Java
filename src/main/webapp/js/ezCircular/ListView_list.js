@@ -611,6 +611,10 @@ function ListView() {
                 	objTd.style.textAlign = "CENTER";
                 }
                 
+                if (strColName == "CONFIRMSTATUS") {
+                	objTd.style.textAlign = "CENTER";
+                }
+                
                 if (strColName == "REGDATE") {
                 	objTd.style.textAlign = "CENTER";
                 }
@@ -869,8 +873,16 @@ function ListView() {
                     }
                 }
                 
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "REGDATE") {
+                	objTd.style.textAlign = "center";
+                }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMSTATUS") {
                     objTd.style.textAlign = "center";
+                }
+                
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMDATE") {
+                	objTd.style.textAlign = "center";
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "APPRFLAG") {
