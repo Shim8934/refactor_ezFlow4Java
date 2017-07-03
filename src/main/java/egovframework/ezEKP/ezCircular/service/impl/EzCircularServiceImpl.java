@@ -208,6 +208,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 			if (status != 2) {
 				String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
 				StringBuilder bodyContent = new StringBuilder("");
+				bodyContent.append(" 제목 : " + title + " </br>");
+		    	bodyContent.append(" 내용 : " + content);
 				
 				for (int i=0; i<receiverLength; i++) {
 					InternetAddress from = new InternetAddress();
