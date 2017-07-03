@@ -152,6 +152,22 @@
 							fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
 	            		}
 					}
+					
+					var receiverList = document.getElementById("receiverlist").innerHTML;
+					var receiverList2 = document.getElementById("receiverlist2").innerHTML;
+					var receiverID = document.getElementById("receiverID").innerHTML;
+
+					if (receiverList == "") {
+						receiverList = userName;
+						receiverList2 = userName2;
+						receiverID = userID;
+					}
+
+					if (receiverList.indexOf(userName) == -1) {
+						receiverList += ", " + userName;
+						receiverList2 += ", " + userName2;
+						receiverID += ", " + userID;
+					}
 
 		    		$.ajax ({
 		 			   	url : '/ezCircular/circularSaveTemp.do',
@@ -160,9 +176,9 @@
 		                data : {	title : document.getElementById("title").value,
 		                			importance : document.getElementById("importance").value,
 		                			option : option,
-		                			receiverList : document.getElementById("receiverlist").innerHTML,
-		                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
-		                			receiverID : document.getElementById("receiverID").innerHTML,
+		                			receiverList : receiverList,
+		                			receiverList2 : receiverList2,
+		                			receiverID : receiverID,
 		                			content : content,
 		                			fileList : fileList
 		                },  

@@ -53,6 +53,11 @@
 	        	var circularIdList = "${circularIdList}";
 				var originLoc = "${originLoc}";
 
+				if (folderId == oldFolderId) {
+					alert("같은 문서함으로 이동할 수 없습니다.");
+					return;
+				}
+
 	        	$.ajax ({
 	                type : 'POST',
 	                dataType : 'text',

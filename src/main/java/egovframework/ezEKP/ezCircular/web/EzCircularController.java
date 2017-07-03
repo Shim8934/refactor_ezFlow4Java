@@ -366,12 +366,16 @@ public class EzCircularController extends EgovFileMngUtil {
 				type = "N";
 			} else if (filter.equals("circularComplete")) {
 				filterVal = 2;
+				type = "C";
 			} else if (filter.equals("circularMy")) {
 				filterVal = 3;
+				type = "M";
 			} else if (filter.equals("circularTemp")) {
 				filterVal = 4;
+				type = "T";
 			} else {
 				filterVal = 5;
+				type = "F";
 			}
 			
 			if (keyword == null) keyword = "";
@@ -1118,12 +1122,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
 		logger.debug("receiverList2 : " + receiverList2);
-		
+
 		receiverLength = receiverList.split(",").length;
 		String[] receiverID = receiverIDs.split(", ");
 		String[] receiverName = receiverList.split(", ");
 		String[] receiverName2 = receiverList2.split(", ");
-		
+
 		String regDate = commonUtil.getTodayUTCTime("");
 
 		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
@@ -1231,6 +1235,12 @@ public class EzCircularController extends EgovFileMngUtil {
 				}
 			}
 		}
+		
+		if (list.size() > 0 && list.size() != 1) {
+			userID = userID.substring(0, userID.length() - 2);
+			userName = userName.substring(0, userName.length() - 2);
+			userName2 = userName2.substring(0, userName2.length() - 2);
+		}
 
 		List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
 		
@@ -1295,6 +1305,10 @@ public class EzCircularController extends EgovFileMngUtil {
 		String[] receiverID = receiverIDs.split(", ");
 		String[] receiverName = receiverList.split(", ");
 		String[] receiverName2 = receiverList2.split(", ");
+		
+//		if (receiverID.length == 0) {
+//			#
+//		}
 
 		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularID(), userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId, circularListVO.getMemberName(), circularListVO.getMemberName2(), circularListVO.getStatus(), confirmDate, circularListVO.getContent(), fileList, receiverName, receiverName2, userInfo.getOffset());
 

@@ -406,6 +406,7 @@
 	                A.STATUS,
 	                B.UPDATESTATUS,
 	                A.TITLE,
+	                A.MEMBERNAME,
 	                A.MEMBERID,
 	                DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE,
 	                B.STATUS AS CONFIRMSTATUS,
@@ -515,11 +516,21 @@
 	            	#endDate# > A.REGDATE	        
 	        ]]>
         	</isNotEmpty>
-	        <![CDATA[    	
-	            LIMIT
-	                #limit#, #rowCount#
-			]]>
-        	</isNotEqual>
+        	<isEqual property="filterVal" compareValue="1">
+			<![CDATA[
+            	ORDER BY
+	            	B.UPDATESTATUS DESC,
+	            	B.UPDATEDATE DESC,
+	            	A.REGDATE DESC
+			]]>	
+	        </isEqual>
+	        <isNotEqual property="filterVal" compareValue="1">
+			<![CDATA[
+            	ORDER BY
+					A.REGDATE DESC
+			]]>	
+	        </isNotEqual>
+       	</isNotEqual>
         <isEqual property="filterVal" compareValue="5">
         	<![CDATA[
 				SELECT 
@@ -527,7 +538,8 @@
  					A.IMPORTANCE, 
  					A.HASFILE, 
  					A.STATUS, 
- 					A.TITLE, 
+ 					A.TITLE,
+ 					A.MEMBERNAME, 
  					C.UPDATESTATUS, 
  					A.MEMBERID, 
  					DATE_ADD(DATE_FORMAT(A.REGDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS REGDATE, 
@@ -605,8 +617,8 @@
 	        ]]>
         </isNotEmpty>
 	        <![CDATA[
-	            LIMIT
-	                #limit#, #rowCount#	
+	        	ORDER BY
+					A.REGDATE DESC
         	]]>	
         </isEqual>
     </select>
@@ -1244,7 +1256,7 @@
 			WHERE
 				A.status != 2
 			AND
-				B.UPDATESTATUS IN ('0', '1')
+				A.memberid = b.memberid
 			AND
 				A.memberid = #memberID#
 			AND
@@ -1432,7 +1444,7 @@
             WHERE
             	B.updatestatus = '2'
             AND
-                A.memberid = #memberID#
+                B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
 		]]>

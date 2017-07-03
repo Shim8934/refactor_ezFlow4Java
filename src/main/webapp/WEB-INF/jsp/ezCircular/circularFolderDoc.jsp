@@ -677,6 +677,7 @@
 								 folderId		: folderId
 								},
 						success: function() {
+							alert("기존회람판으로 이동하였습니다.");
 							location.reload();
 						},
 						error: function() {

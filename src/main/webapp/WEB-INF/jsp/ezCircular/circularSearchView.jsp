@@ -261,13 +261,17 @@
 						<th style="width:30px;cursor:pointer;text-align:center" id="updateStatus" onclick="event_HeaderClick(this)">분류</th> 
 						<th style="width:50px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>
 					</c:if>
-					<c:if test="${type == '' }">
+					<c:if test="${type == 'C'}">
+						<th style="width:30px;cursor:pointer;text-align:center" id="updateStatus" onclick="event_HeaderClick(this)">확인</th> 
+						<th style="width:50px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>
+					</c:if>
+					<c:if test="${type != 'N' && type != 'C'}">
 						<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>					
 					</c:if>
 					<th style="width:350px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">제목</th> 
 					<th style="width:120px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)">작성자</th> 
 					<th style="width:150px;" align="left">작성일</th> 
-					<th style="width:100px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)">확인</th>
+					<th style="width:100px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)">회람자확인</th>
 					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">확인일</th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${list}" varStatus="status">
@@ -283,34 +287,57 @@
 			    		</td>
 			    		<c:if test="${type == 'N'}">
 			    			<c:if test="${item.updateStatus == '0'}">
-								<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;color:blue;">의</td>
+								<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;color:red;">신</td>
 							</c:if>
 				    		<c:if test="${item.updateStatus == '4'}">
-				    			<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;color:red;">신</td>
+				    			<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;color:blue;">의</td>
 				    		</c:if>
 				    		<td style="width:50px;cursor:pointer;text-align:center;">
-				    			<c:if test="${item.status == '0'}">진행</c:if>
+				    			<c:if test="${item.status == '0'}">진행중</c:if>
 				    			<c:if test="${item.status == '1'}">종료</c:if>
 				    			<c:if test="${item.status == '2'}">임시</c:if>
 				    		</td>
 						</c:if>
-						<c:if test="${type == ''}">
+						<c:if test="${type == 'C'}">
+			    			<c:if test="${item.updateStatus == '0'}">
+								<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;">미확인</td>
+							</c:if>
+				    		<c:if test="${item.updateStatus == '1'}">
+				    			<td style="width:30px;cursor:pointer;text-align:center;;">확인</td>
+				    		</c:if>
+				    		<td style="width:50px;cursor:pointer;text-align:center;">
+				    			<c:if test="${item.status == '0'}">진행중</c:if>
+				    			<c:if test="${item.status == '1'}">종료</c:if>
+				    			<c:if test="${item.status == '2'}">임시</c:if>
+				    		</td>
+						</c:if>
+						<c:if test="${type != 'N' && type != 'C'}">
 							<td style="width:80px;cursor:pointer;text-align:center">
-				    			<c:if test="${item.status == '0'}">진행</c:if>
+				    			<c:if test="${item.status == '0'}">진행중</c:if>
 				    			<c:if test="${item.status == '1'}">종료</c:if>
 				    			<c:if test="${item.status == '2'}">임시</c:if>
 				    		</td>
 						</c:if>
 			    		<td style="width:350px" align="left">${item.title}</td> 
-		          		<td style="width:120px" align="left">${item.memberID}</td>		         
+		          		<td style="width:120px" align="left">${item.memberName}</td>		         
 		            	<td style="width:150px" align="left">${item.regDate}</td>
-		            	<td style="width:100px;cursor:pointer;text-align:center">${item.confirmCount} / ${item.confirmTotalCount}</td>
+		            	<c:if test="${type == 'T' }">
+			            	<td style="width:100px;cursor:pointer;text-align:center"></td>
+		            	</c:if>
+		            	<c:if test="${type != 'T' }">
+			            	<td style="width:100px;cursor:pointer;text-align:center">${item.confirmCount}/${item.confirmTotalCount}</td>
+		            	</c:if>
 		            	<td style="width:150px;cursor:pointer" align="left">${item.confirmDate}</td>
 			    	</tr>
 		    	</c:forEach>		    	
 		    	<c:if test="${totalCount == 0 && keyword != null && startDate != null}">
 			    	<tr> 
-			        	<td colspan="9" style="text-align:center">검색 결과가 없습니다.</td> 
+			    		<c:if test="${type == 'N' || type == 'C'}">
+				        	<td colspan="10" style="text-align:center">검색 결과가 없습니다.</td> 
+			    		</c:if>
+			    		<c:if test="${type != 'N' && type != 'C'}">
+				        	<td colspan="9" style="text-align:center">검색 결과가 없습니다.</td> 
+			    		</c:if>
 			      	</tr>
 		      	</c:if>
 		  	</table>		

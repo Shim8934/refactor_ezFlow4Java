@@ -199,12 +199,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.insertCircularAttach(attachMap);
 			}
 		}
-		
-		confirmStatus(lastID, userInfo.getId(), userInfo.getTenantId());
+
+		// 임시저장이 아닐 때만 실행
+		if (status != 2) {
+			confirmStatus(lastID, userInfo.getId(), userInfo.getTenantId());			
+		}
 
 		// 회람자에게 메일 발송
 		if (option == 2 || option == 3) {
-			//임시저장 시 미발송
+			// 임시저장 시 미발송
 			if (status != 2) {
 				String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
 				StringBuilder bodyContent = new StringBuilder("");
@@ -971,7 +974,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("searchKeyword", keyword);
 		map.put("filterVal", filterVal);
 		map.put("startDate", startDate);
