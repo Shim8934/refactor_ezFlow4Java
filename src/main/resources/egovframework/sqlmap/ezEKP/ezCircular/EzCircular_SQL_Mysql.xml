@@ -530,10 +530,6 @@
 					A.REGDATE DESC
 			]]>	
 	        </isNotEqual>
-	        <![CDATA[    	
-	            LIMIT
-	                #limit#, #rowCount#
-			]]>
        	</isNotEqual>
         <isEqual property="filterVal" compareValue="5">
         	<![CDATA[
@@ -623,8 +619,6 @@
 	        <![CDATA[
 	        	ORDER BY
 					A.REGDATE DESC
-	            LIMIT
-	                #limit#, #rowCount#	
         	]]>	
         </isEqual>
     </select>
@@ -1448,7 +1442,7 @@
             WHERE
             	B.updatestatus = '2'
             AND
-                A.memberid = #memberID#
+                B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
 		]]>

@@ -332,7 +332,12 @@
 		    	</c:forEach>		    	
 		    	<c:if test="${totalCount == 0 && keyword != null && startDate != null}">
 			    	<tr> 
-			        	<td colspan="10" style="text-align:center">검색 결과가 없습니다.</td> 
+			    		<c:if test="${type == 'N' || type == 'C'}">
+				        	<td colspan="10" style="text-align:center">검색 결과가 없습니다.</td> 
+			    		</c:if>
+			    		<c:if test="${type != 'N' && type != 'C'}">
+				        	<td colspan="9" style="text-align:center">검색 결과가 없습니다.</td> 
+			    		</c:if>
 			      	</tr>
 		      	</c:if>
 		  	</table>		

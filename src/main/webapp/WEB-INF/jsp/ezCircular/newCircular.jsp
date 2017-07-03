@@ -530,7 +530,6 @@
 		    }
 		
 	        function search(type) {
-	        	alert(1);
 	            if (type == "basic") {
 	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
 	                    alert("<spring:message code='ezBoard.t192'/>");
