@@ -964,7 +964,10 @@
             TBL_CIRCULAR_BMUSER A
           JOIN
             TBL_USERMASTER B
-          ON A.MEMBERID = B.CN
+          ON 
+          	A.MEMBERID = B.CN
+          AND
+          	A.TENANTID = B.TENANT_ID
           WHERE
             CIRCULARBMID = #v_CIRCULARBMID#
           AND
@@ -1255,6 +1258,8 @@
 				A.tenantid = B.tenantid
 			WHERE
 				A.status != 2
+			AND
+				B.UPDATESTATUS IN ('0', '1')
 			AND
 				A.memberid = b.memberid
 			AND
@@ -1777,9 +1782,9 @@
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
-              ( MEMBERID,   LISTCNT,     ISPREVIEW,   TENANTID )
+              ( MEMBERID,   LISTCNT,     ISPREVIEW,   PREVIEWLISTVALUE,		PREVIEWCONTENTVALUE, 	TENANTID )
           VALUES 
-              ( #v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
+              ( #v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, '50', '50', #v_TENANTID# )
     ]]>
     </insert>
     

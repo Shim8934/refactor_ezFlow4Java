@@ -503,6 +503,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		String list = request.getParameter("list");
 		String content = request.getParameter("content");
 		
+		logger.debug("previewMode : " + previewMode + ", list : " + list + ", content : " + content);
+		
 		ezCircularService.setCircularList_Config2(userID, listCount, previewMode, list, content, userInfo.getTenantId());
 		
 		return "json";

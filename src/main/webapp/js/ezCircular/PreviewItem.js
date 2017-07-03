@@ -408,7 +408,7 @@ function event_ItemPreviewRead() {
 //            }
             CircularId = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/CircularId");
             MemberId = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/MemberId");
-            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
+            MemberName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/MemberName");
 //            WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
 //            WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
             RegDate = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/RegDate");
@@ -435,15 +435,15 @@ function event_ItemPreviewRead() {
 }
 
 function previewItemSet() {
-	pOCS = "";
-    pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
+//	pOCS = "";
+//    pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
 
-    if (document.getElementById('ifrmPreViewH_photo') != null) {
-        document.getElementById('ifrmPreViewH_photo').style.display = "none";
-        document.getElementById('ifrmPreViewW_photo').style.display = "none";
-        document.getElementById('ifrmPreViewH').style.display = "";
-        document.getElementById('ifrmPreViewW').style.display = "";
-    }
+//    if (document.getElementById('ifrmPreViewH_photo') != null) {
+//        document.getElementById('ifrmPreViewH_photo').style.display = "none";
+//        document.getElementById('ifrmPreViewW_photo').style.display = "none";
+//        document.getElementById('ifrmPreViewH').style.display = "";
+//        document.getElementById('ifrmPreViewW').style.display = "";
+//    }
 //    if (CrossYN()) {
 //    	var boardType = "";
 //    	
@@ -468,7 +468,7 @@ function previewItemSet() {
 //		});	
 //    } else {
         document.getElementById("Pre" + pPreviewShow_HOW + "_sub_subject").innerText = Title;
-        document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = MemberId;
+        document.getElementById("Pre" + pPreviewShow_HOW + "_MailReceiver").innerHTML = MemberName;
         document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = RegDate;
         var readHTML = Content;
         var tempText = xmlhttp2.responseText;

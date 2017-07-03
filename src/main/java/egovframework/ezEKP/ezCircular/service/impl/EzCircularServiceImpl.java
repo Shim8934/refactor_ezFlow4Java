@@ -669,7 +669,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public List<CircularListVO> getMyCircularList(String memberID, String searchValue, int startRow, int endRow, String offset, int tenantID) throws Exception {
-		logger.debug("getMyCircularListCount started.");
+		logger.debug("getMyCircularList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
@@ -681,7 +681,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		List<CircularListVO> list = ezCircularDAO.getMyCircularList(map);
 		
-		logger.debug("getMyCircularListCount ended. listSize = " + list.size());
+		logger.debug("getMyCircularList ended. listSize = " + list.size());
 		
 		return list;
 	}
@@ -882,6 +882,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			sb.append("<Status>" + itemInfo.getStatus() + "</Status>");
 			sb.append("<Title>" + itemInfo.getTitle() + "</Title>");
 			sb.append("<MemberId>" + itemInfo.getMemberID() + "</MemberId>");
+			sb.append("<MemberName>" + itemInfo.getMemberName() + "</MemberName>");
 			sb.append("<RegDate>" + itemInfo.getRegDate() + "</RegDate>");
 			sb.append("<Option>" + itemInfo.getOption() + "</Option>");
 			sb.append("<Content>" + commonUtil.cleanValue(itemInfo.getContent()) + "</Content>");
