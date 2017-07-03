@@ -86,7 +86,12 @@ function InsertRowToSpecialList(pSN, pList1, pList2, pList3) {
         }
         var objTr = specialList.NewAddRow(RowCount, "SpecialListdiv" + "_TR_" + eval(MaxID + 1));
         specialList.AddDataRow(objTr, rowXml);
-
+        
+        if (specialList.GetDataRows()[0].textContent == strLang944) {
+    	        if (specialList.GetDataRows()[0].id == "SpecialListdiv_TR_noItems") {
+    	        	specialList.DeleteRow("SpecialListdiv_TR_noItems");
+    	        }
+        }
     }
 }
 
