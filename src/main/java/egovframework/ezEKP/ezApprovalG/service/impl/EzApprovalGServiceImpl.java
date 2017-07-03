@@ -18067,13 +18067,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	map.put("v_ORDEROPTION", OrderOption1);
     	map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
     	if (OrderOption1.length() > 0) {
-    		map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,11).toLowerCase());
+    		map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,OrderOption1.length()).toLowerCase());
     	}
 		map.put("v_ORDEROPTION2", OrderOption2);
 		map.put("v_ORDEROPTION2LENGTH", OrderOption2.length());
 		
     	if (OrderOption2.length() > 0) {
-    		map.put("v_ORDEROPTION2VALUE", OrderOption2.substring(0,11).toLowerCase());
+    		map.put("v_ORDEROPTION2VALUE", OrderOption2.substring(0,OrderOption2.length()).toLowerCase());
     	}
 		map.put("v_ISDOCPRINT", isdocprint);
 		

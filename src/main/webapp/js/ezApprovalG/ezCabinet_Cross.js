@@ -682,6 +682,8 @@ function InsertToCabListView(Resultxml) {
             xmlDoc.appendChild(ListViewData);
         }
 
+        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
@@ -943,9 +945,10 @@ function SortList(szField) {
 
     if (DocList_Flag == "CABINET") {
         GetCaninetList();
-    }
-    else if (DocList_Flag == "RECORD") {
+    } else if (DocList_Flag == "RECORD") {
         GetRecordList();
+    } else if (DocList_Flag == "Delivery") {
+    	idistbox_onclick();
     }
 }
 

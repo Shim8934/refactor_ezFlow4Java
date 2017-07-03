@@ -269,8 +269,8 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     createNodeAndInsertText(xmlpara, objNode, "PROCESSDEPTCODE", DeptID);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
-    createNodeAndInsertText(xmlpara, objNode, "pOrderCell", "");
-    createNodeAndInsertText(xmlpara, objNode, "pOrderOption", "");
+    createNodeAndInsertText(xmlpara, objNode, "pOrderCell", OrderCell);
+    createNodeAndInsertText(xmlpara, objNode, "pOrderOption", OrderOption);
     createNodeAndInsertText(xmlpara, objNode, "pQuery", "");	
     createNodeAndInsertText(xmlpara, objNode, "ISDOCPRINT", "FALSE");
     if (g_DeliverySearchParamXml != "" && g_DeliverySearchParamXml != undefined) {
