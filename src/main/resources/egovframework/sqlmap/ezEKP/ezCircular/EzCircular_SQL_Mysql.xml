@@ -1256,6 +1256,8 @@
 			WHERE
 				A.status != 2
 			AND
+				B.UPDATESTATUS IN ('0', '1')
+			AND
 				A.memberid = b.memberid
 			AND
 				A.memberid = #memberID#
@@ -1777,9 +1779,9 @@
         <![CDATA[
           INSERT INTO
               TBL_CIRCULAR_OPTION 
-              ( MEMBERID,   LISTCNT,     ISPREVIEW,   TENANTID )
+              ( MEMBERID,   LISTCNT,     ISPREVIEW,   PREVIEWLISTVALUE,		PREVIEWCONTENTVALUE, 	TENANTID )
           VALUES 
-              ( #v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# )
+              ( #v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, '50', '50', #v_TENANTID# )
     ]]>
     </insert>
     
