@@ -32,7 +32,7 @@
 		
 	</head>
 	<body class="popup" style="overflow: hidden;">
-		<h1>의견 및 확인상태</h1>
+		<h1>의견목록</h1>
 		
 		<div id="close">
 			<ul>

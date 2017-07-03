@@ -9,13 +9,20 @@ function getCircularComment() {
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
-			circularUserList = "<colgroup><col width='15%' /><col width='72%' /><col width='13%' /></colgroup>";
+			circularUserList = "<colgroup><col width='15%' /><col width='67%%' /><col width='18%%' /></colgroup>";
 			
 			list = result.circularUserList;
 			list.forEach(function(vo, index) {
 				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
 				circularUserList += "<th style='border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
-				circularUserList += "<img src='/images/i_group.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+				
+				if (vo.status == 1) {
+					//확인 이미지
+					circularUserList += "<img src='/images/i_group.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+				} else {
+					//미확인 이미지
+					circularUserList += "<img src='/images/i_group.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+				}
 				
 				if (status == 0 && (option == 1 || option == 3)) {
 					circularUserList += "<img src='/images/modify2.gif' style='cursor:pointer;vertical-align:middle;'  onclick='showEdit(this)'/>&nbsp;";
@@ -23,15 +30,13 @@ function getCircularComment() {
 					circularUserList += "&nbsp;"
 				}
 				
-				circularUserList += "&nbsp;&nbsp;&nbsp;" + vo.confirmDate.substring(0, 16);
 				circularUserList += "</th>";
 				
 				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
 				
+				//확인일
 				if (vo.status == 1) {
-					circularUserList += "확인완료"
-				} else {
-					circularUserList += "미확인";
+					circularUserList += vo.confirmDate.substring(0, 16);
 				}
 				
 				circularUserList += "</th>";
@@ -46,14 +51,14 @@ function getCircularComment() {
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
 				circularCommentList += "<td style='padding-left:3px'><img src='/images/ellipsis.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
-				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment +  "&nbsp;(" + vo.regDate.substring(11, 16) + ")&nbsp;";
+				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment;
 				
 				if (vo.memberID == userInfoID) {
 					circularCommentList += "<img src='/images/comment_del.gif' style='cursor:pointer;vertical-align:middle;' onclick='deleteCircularComment(this)'/>";
 				}
 				
 				circularCommentList += "</td>";
-				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 10) + "</td>";
+				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate + "</td>";
 				circularCommentList += "</tr>";
 				
 				if (vo.status == 0) {//공개
@@ -88,7 +93,7 @@ function showEdit(obj) {
 		$(".circularCommentEdit").remove();
 		
 		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='height:70px;border:1px solid #e2e2e2'>";
-		circularEdit += "<td colspan='2'><textarea style='width:97%;height:50px;border:0px;resize:none;outline:none;overflow:auto;'></textarea></td>";
+		circularEdit += "<td colspan='2'><textarea style='width:97%;height:50px;resize:none;overflow:auto;'></textarea></td>";
 		circularEdit += "<td><a class='imgbtn'><span onclick='editCircularComment(this)';>의견작성</span>&nbsp;</a><br/><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>비공개</input></td>";
 		circularEdit += "</tr>";
 		

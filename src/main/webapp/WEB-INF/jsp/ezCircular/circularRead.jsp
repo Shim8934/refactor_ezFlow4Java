@@ -161,12 +161,11 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-							<li><span onclick="openCircularComment()">의견 및 확인상태</span></li>
+               	    		<li><span onclick="openCircularComment()">의견보기</span></li>
                         	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
                 	    	</c:if>
-                	    	
 	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
                     	</ul>
                 	</div>
@@ -189,9 +188,9 @@
                 	        </td>
                     	</tr>
                     	<tr>
-	                        <th>중요도</th>
+	                        <th style="width:20px;">중요도</th>
     	                    <td id="Td_Importance" style="padding-left: 4px;">${result.importance == '0' ? '일반' : '중요'}</td>
-		            		<th>옵션</th>
+		            		<th style="width:20px;">옵션</th>
 		            		<td style="width:200px;">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
@@ -211,6 +210,16 @@
 							</td>
                     	</tr>
 		        		<tr>
+							<th>작성자</th>
+	       					<td style="padding-left: 4px;">								
+	         					<div id="writer" >${result.memberName }</div>
+	         				</td>
+							<th>작성일</th> 
+ 							<td style="padding-left: 4px">
+ 								<div id="printStatus">${result.regDate }</div>
+ 							</td> 
+						</tr>
+						<tr>
 		        			<th>회람자확인</th>
 	       					<td>								
 	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
@@ -230,16 +239,6 @@
 		                		</c:choose>
 		            		</td>
 		        		</tr>
-		        		<tr style="height:25px">
-							<th>작성자</th>
-	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${result.memberName }</div>
-	         				</td>
-							<th>작성일</th> 
- 							<td style="padding-left: 4px">
- 								<div id="printStatus">${result.regDate }</div>
- 							</td> 
-						</tr>
 		        		<tr>
 		            		<th>회람자</th>
 		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
