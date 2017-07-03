@@ -43,6 +43,7 @@
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css">   
 		<script type="text/javascript" id="clientEventHandlersJS">
+				var OrderOption = "";
 		        var OrderCell = "";        
 		        var g_sFlag = "${sFlag}";
 		        var g_uFlag = "${sFlag}";
@@ -1506,6 +1507,19 @@
 	    		return result;
 		    }
 		    
+		     function lvtDoclist_HeaderClick(pHeaderName) {
+		            if (OrderCell == pHeaderName) {
+		                if (OrderOption == "")
+		                    OrderOption = "DESC";
+		                else
+		                    OrderOption = "";
+		            }
+		            else {
+		                OrderCell = pHeaderName;
+		                OrderOption = "";
+		            }
+		            SortList(OrderCell);
+		        }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">

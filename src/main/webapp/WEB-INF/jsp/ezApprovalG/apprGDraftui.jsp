@@ -796,7 +796,7 @@
 		            rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
 		
 		        if (!rtnval) {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t32'/>";
+		            var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }

@@ -269,8 +269,8 @@ function GetDocDeliveryList(g_DeliverySearchParamXml) {
     createNodeAndInsertText(xmlpara, objNode, "PROCESSDEPTCODE", DeptID);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
-    createNodeAndInsertText(xmlpara, objNode, "pOrderCell", "");
-    createNodeAndInsertText(xmlpara, objNode, "pOrderOption", "");
+    createNodeAndInsertText(xmlpara, objNode, "pOrderCell", OrderCell);
+    createNodeAndInsertText(xmlpara, objNode, "pOrderOption", OrderOption);
     createNodeAndInsertText(xmlpara, objNode, "pQuery", "");	
     createNodeAndInsertText(xmlpara, objNode, "ISDOCPRINT", "FALSE");
     if (g_DeliverySearchParamXml != "" && g_DeliverySearchParamXml != undefined) {
@@ -393,4 +393,89 @@ function CheckFormConnFlag(pDocID) {
         return true;
     else
         return false;
+}
+
+function lvtDoclist_SelChange() {
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var tr = DocList.GetSelectedRows();
+    if (tr.length > 0) {
+        processRowClick(tr[0]);
+    }
+}
+
+function processRowClick(tr) {
+    if (DocList_Flag == "CABINET" || DocList_Flag == "RECORD")
+        ChkCabRoleInfo(tr);
+
+    if (DocList_Flag != "CABINET") {
+
+        DocID = GetAttribute(tr,"DATA1");
+        pURL = GetAttribute(tr,"DATA2");
+        WriterID = GetAttribute(tr,"DATA3");
+
+        if (typeof (SendOfferCheckBtn) != "undefined")
+            SendOfferCheckBtn(DocID, UserID);
+
+        if (DocList_Flag == "RECORD") {
+            if (document.getElementById("tdGongRam")) {
+                if (GetAttribute(tr, "DATA15") == "011" && (arr_userinfo[1] == WriterID || WriterID == ""))
+                    document.getElementById("tdGongRam").style.display = "";
+                else
+                    document.getElementById("tdGongRam").style.display = "none";
+            }
+        }
+
+        if (WriterID == arr_userinfo[1]) {
+            try {
+                if (typeof (tr.cells[12].innerHTML) == "string") {
+                    
+                    if (tr.cells[12].innerHTML == strLang597 && tr.cells[11].innerHTML == "") {
+                    
+                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+                            document.getElementById("tdReSend").style.display = "";
+                            
+                        }
+                    }
+                    else {
+                        if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+                            document.getElementById("tdReSend").style.display = "none";
+                            
+                        }
+                    }
+                }
+                else {
+                    if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+                        document.getElementById("tdReSend").style.display = "none";
+                        
+                    }
+                }
+            }
+            catch (e) { }
+        }
+        else {
+            if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {
+                document.getElementById("tdReSend").style.display = "none";
+                
+            }
+        }
+
+        switch (jobState) {
+            case "ATTACH":
+                Attach_onclick();
+                break;
+
+            case "OPINION":
+                Opinion_onclick();
+                break;
+
+            case "APPROVAL":
+                Approval_onclick();
+                break;
+
+            case "RECIPENT":
+                Recipent_onclick()
+                break;
+        }
+    }
 }
