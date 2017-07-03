@@ -18,7 +18,7 @@ public interface EzCircularService {
 
 	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, int startRow, int endRow, int tenantId, String offset) throws Exception;
 	
-	public List<CircularListVO> getCircularUserList(int circularID, String searchValue, int tenantID) throws Exception;
+	public List<CircularListVO> getCircularUserList(int circularID, String searchValue, int tenantID, String offset) throws Exception;
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	
@@ -66,7 +66,7 @@ public interface EzCircularService {
 	
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception;
 	
-	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID,  int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate,  String content, String fileList, String[] receiverName, String[] receiverName2) throws Exception;
+	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID,  int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate,  String content, String fileList, String[] receiverName, String[] receiverName2, String offset) throws Exception;
 	
 	public void updateStatus(int status, int circularID, int tenantID) throws Exception;
 	

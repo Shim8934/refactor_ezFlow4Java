@@ -873,7 +873,21 @@
     <select id="EzCircularDAO.getCircularUserList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                *
+                A.circularuserid,
+                A.circularid,
+                A.memberid,
+                A.membername,
+                A.membername2,
+                A.status,
+                IFNULL(DATE_ADD(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
+                A.updatestatus,
+                A.updatedate,
+                A.commentstatus,
+                A.tenantid,
+                B.cn,
+                B.displayname,
+                B.displayname2,
+                B.mail
             FROM
 				TBL_CIRCULAR_USER A
 			JOIN
