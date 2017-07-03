@@ -1279,7 +1279,7 @@
 			WHERE
 				A.status != 2
 			AND
-				B.UPDATESTATUS IN ('0', '1')
+				A.memberid = b.memberid
 			AND
 				A.memberid = #memberID#
 			AND

@@ -149,7 +149,7 @@
 		    }
 		    
 	    	function btn_Modify() {
-		    	//회람저장 눌렀을 시
+		    	//회람수정 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
 				
@@ -180,6 +180,22 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
             		}
 				}
+				
+				var receiverList = document.getElementById("receiverlist").innerHTML;
+				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
+				var receiverID = document.getElementById("receiverID").innerHTML;
+
+				if (receiverList == "") {
+					receiverList = userMyName;
+					receiverList2 = userMyName2;
+					receiverID = userMyID;
+				}
+
+				if (receiverList.indexOf(userMyName) == -1) {
+					receiverList += ", " + userMyName;
+					receiverList2 += ", " + userMyName2;
+					receiverID += ", " + userMyID;
+				}
 
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveModifyCircular.do',
@@ -188,9 +204,9 @@
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
 	                			option : option,
-	                			receiverList : document.getElementById("receiverlist").innerHTML,
-	                			receiverList2 : document.getElementById("receiverlist2").innerHTML,
-	                			receiverID : document.getElementById("receiverID").innerHTML,
+	                			receiverList : receiverList,
+	                			receiverList2 : receiverList2,
+	                			receiverID : receiverID,
 	                			circularID : "${circularID}",
 	                			content : content,
 	                			fileList : fileList
