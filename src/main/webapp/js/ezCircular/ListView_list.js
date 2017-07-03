@@ -789,11 +789,15 @@ function ListView() {
                     objTd.style.fontWeight = "bold";
                     
                     if (strValue == "0") {
-                        strValue = "신";
-                        objTd.style.color = "red";
+                        /*strValue = "신";
+                        objTd.style.color = "red";*/
+                    	titleImage = '<img src="/images/circular_new.png"/>';
+                    	strValue = "";
                     } else {
-                        strValue = "의";
-                        objTd.style.color = "blue";
+                        /*strValue = "의";
+                        objTd.style.color = "blue";*/
+                    	titleImage = '<img src="/images/circular_opinion.png" />';
+                    	strValue = "";
                     }
                 }
                 
@@ -802,9 +806,15 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     if (strValue == '0') {
                     	objTd.style.fontWeight = "bold";
-                    	strValue = '미확인'
+                    	//strValue = '<img src="/images/circularUnread.png" />';
+                    	/*titleImage = '<img src="/images/decide_icon_up.gif" />';*/
+                    	titleImage = '<img src="/images/circular_unread.gif" />';
+                    	strValue = "";
                     } else {
-                    	strValue = '확인'
+                    	//strValue = '<img src="/images/circularRead.png" />';
+                    	/*titleImage = '<img src="/images/decide_icon_ok.gif" />';*/
+                    	titleImage = '<img src="/images/circular_read.png" />';
+                    	strValue = "";
                     }
                 }
                 
