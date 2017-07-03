@@ -21,6 +21,10 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 
+			window.onunload = function() {
+				window.opener.location.reload();
+			}
+
 			$(document).ready(function(){
 	            document.getElementById('circularUserList').innerHTML = "${listUser}";        
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
