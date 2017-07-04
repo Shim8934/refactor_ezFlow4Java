@@ -45,15 +45,23 @@ function getCircularComment() {
 			
 			$("#circularUserList").html("");
 			$("#circularUserList").append(circularUserList);
+			
+			var now = new Date();
 
 			circularCommentList = "";
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
 				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
-//				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/kr/theme01/main/icon_dotList.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
-//				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment + "&nbsp;";
 				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment + "&nbsp;";
+				
+				var arry = vo.regDate.substring(0, 10).split('-');
+				var d = new Date(arry[0], arry[1]-1, arry[2]);
+				var getDiffTime = now.getTime() - d.getTime();
+				
+				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
+					circularCommentList += "<img src='/images/new_icon.gif' />&nbsp;";
+				}
 				
 				if (vo.memberID == userInfoID) {
 					circularCommentList += "<img src='/images/comment_del.gif' style='cursor:pointer;vertical-align:middle;' onclick='deleteCircularComment(this)'/>";
@@ -63,7 +71,7 @@ function getCircularComment() {
 				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 16) + "</td>";
 				circularCommentList += "</tr>";
 				
-				if (vo.status == 0) {//공개
+				if (vo.status == 0) {
 					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
 						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
 					} else {
@@ -141,7 +149,7 @@ function deleteCircularComment(obj) {
 		url : "/ezCircular/deleteCircularComment.do",
 		dataType : "json",
 		data : {
-			circularID : circularID, // 회람ID
+			circularID : circularID,
 			circularCommentID : circularCommentID
 		},
 		success : function(result) {
@@ -160,7 +168,7 @@ function commentSendMail() {
 		url : "/ezCircular/commentSendMail.do",
 		dataType : "json",
 		data : {
-			circularID : circularID // 회람ID
+			circularID : circularID
 		},
 		success : function(result) {
 			alert("공지 메일을 발송했습니다.");
@@ -194,7 +202,6 @@ function DivPopUpPosition(popUpW, popUpH) {
     ReturnValue[1] = pleftpos / 2;
     return ReturnValue
 }
-
 
 function openCircularComment() {
 	$("#mailPanel").css('height', $('body').prop('Height'));
