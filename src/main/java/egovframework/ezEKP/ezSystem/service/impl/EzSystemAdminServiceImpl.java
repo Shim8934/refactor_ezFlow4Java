@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,6 +16,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 
 @Service("EzSystemAdminService")
@@ -137,5 +139,18 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		}
 		
 		logger.debug("updateSysParam ended");
+	}
+
+	@Override
+	public List<ConnectionInfoVO> getLoginHist(int tenantID) throws Exception {
+
+		logger.debug("getLoginHist started. tenantID : " + tenantID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_tenantID", tenantID);
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(map);
+		
+		logger.debug("getLoginHist ended.");
+		return list;
 	}
 }

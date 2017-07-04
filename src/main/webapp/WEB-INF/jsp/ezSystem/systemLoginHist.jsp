@@ -13,6 +13,13 @@
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript">
+$(function(){
+	
+	window.onload = function() {
+		
+	}
+
+})
 
 </script>
 </head>
@@ -55,7 +62,16 @@
 			</tr>
 		</thead>
 		<tbody id="loginHistListBody">
-		
+			<c:forEach items="${loginHistList }" var="list" begin="0" end="5">
+				<tr>
+					<td><c:out value="${list.usernm }"></c:out></td>		
+					<td><c:out value="${list.deptnm }"></c:out></td>		
+					<td><c:out value="${list.connectip }"></c:out></td>		
+					<td><c:out value="${list.connecttime }"></c:out></td>		
+					<td><c:out value="${list.connectbrowser }"></c:out></td>		
+					<td><c:out value="${list.connectos }"></c:out></td>		
+				</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 </body>

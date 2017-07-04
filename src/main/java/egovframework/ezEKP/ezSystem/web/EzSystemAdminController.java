@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSystem.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +16,13 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezStatistics.web.EzStatisticsMailMainController;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -131,10 +135,28 @@ public class EzSystemAdminController {
 	
 	// 로그인 로그기록
 	@RequestMapping(value="/admin/ezSystem/systemLoginHist.do")
-	public String systemLoginHist() {
+	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("started systemLoginHist controller.");
+		// 사용자 권한 확인
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<ConnectionInfoVO> loginHistList = new ArrayList<ConnectionInfoVO>();
+		loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()));
+
+		for (int i = 0; i < loginHistList.size(); i++) {
+			String before = "원래시간" + loginHistList.get(i).getConnecttime();
+			String timezone = commonUtil.getDateStringInUTC(loginHistList.get(i).getTime(), userInfo.getOffset(), false);
+			String after = "바뀐시간시간" + timezone ;  
+			loginHistList.get(i).setConnecttime(timezone);
+		}
+		
+		model.addAttribute("loginHistList", loginHistList);
+		logger.debug("ended systemLoginHist controller");
 		return "/ezSystem/systemLoginHist";
-		
 	}
 	
 }
