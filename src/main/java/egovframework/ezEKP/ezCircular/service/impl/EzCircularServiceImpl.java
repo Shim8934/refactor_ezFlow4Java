@@ -900,18 +900,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, String searchValue, String offset, int tenantID) throws Exception {
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, String searchValue, String circularUserID, String offset, int tenantID) throws Exception {
 		logger.debug("getCircularComment started.");
+		logger.debug("circularID = " + vo.getCircularID() + " || searchValue = " + searchValue + " || circularUserID = " + circularUserID + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", vo.getCircularID());
 		map.put("searchValue", searchValue);
+		map.put("circularUserID", circularUserID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("tenantID", vo.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantID);
 		
 		List<CircularCommentVO> list = ezCircularDAO.getCircularComment(map);
-		//의견확인 - > updateCommentState
-		
+		ezCircularDAO.updateCommentState(map);
 		logger.debug("getCircularComment ended. listSize=" + list.size());
 		
 		return list;
@@ -941,7 +943,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularCommentID", circularCommentID);
 		map.put("commentConfirmStatus", 0);
 		
-		/*ezCircularDAO.insertCommentState(map);*/
+		//공유기능 추가 -> 모든회람자의 확인날짜가 찍혀야할수도있음.
+		ezCircularDAO.insertCommentState(map);
 		
 		logger.debug("editCircularComment ended.");
 	}
@@ -1080,8 +1083,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("memberID", userInfo.getId());
 		map.put("tenantID", userInfo.getTenantId());
 		
+		ezCircularDAO.deleteCommentState(map);
 		ezCircularDAO.deleteCircularComment(map);
-		//deleteCommentState
 		
 		logger.debug("deleteCircularComment ended.");
 	}
