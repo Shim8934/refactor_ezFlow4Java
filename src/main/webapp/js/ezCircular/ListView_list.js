@@ -753,36 +753,37 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++)
-                    {
-                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                        
-                        if (k == parseInt(getNodeText(oDatas[7])) - 1)
-                            titleImage = titleImage + "<img src='/images/i_rep.gif'>&nbsp;";
-                    }
-                    if (getNodeText(oDatas[3]) == "1") {
-                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
-                    }
-                    if (getNodeText(oDatas[8]) == "1") {
-                        titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
-                        objTd.style.fontWeight = "BOLD";
-                    }
-                    if (getNodeText(oDatas[6]) == "Y") {
-                        titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
-                    }
-                    if (getNodeText(oDatas[4]) == "0") 
-                        objTd.style.fontWeight = "BOLD";
-
-                    if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
-                        titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
+                    if (getNodeText(oDatas[2]) == "1") {
+                    	titleImage = "&nbsp;<img src='/images/new_icon.gif'>";
+                    }
+                    
+//                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++)
+//                    {
+//                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+//                        
+//                        if (k == parseInt(getNodeText(oDatas[7])) - 1)
+//                            titleImage = titleImage + "<img src='/images/i_rep.gif'>&nbsp;";
+//                    }
+//                    if (getNodeText(oDatas[3]) == "1") {
+//                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
+//                    }
+//                    if (getNodeText(oDatas[8]) == "1") {
+//                        titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
+//                        objTd.style.fontWeight = "BOLD";
+//                    }
+//                    if (getNodeText(oDatas[6]) == "Y") {
+//                        titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
+//                    }
+//                    if (getNodeText(oDatas[4]) == "0") 
+//                        objTd.style.fontWeight = "BOLD";
+//
+//                    if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
+//                        titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
+//                    
                 }
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
-                    objTd.style.textAlign = "left";
-                    objTd.style.overflow = "hidden";
-                    objTd.style.whiteSpace = "nowrap";
-                    objTd.style.textOverflow = "ellipsis";
-                } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
+                
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
@@ -885,24 +886,25 @@ function ListView() {
                 	objTd.style.textAlign = "center";
                 }
 
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "APPRFLAG") {
-                    objTd.style.textAlign = "center";
-                    if (strValue == "Y") {
-                        strValue = strLang60;
-                    }
-                    else if (strValue == "N") {
-                        strValue = strLang61;
-                    }
-                    else if (strValue == "C") {
-                        strValue = strLang62;
-                    }
-                    else
-                        strValue = "";
-                }
+//                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "APPRFLAG") {
+//                    objTd.style.textAlign = "center";
+//                    if (strValue == "Y") {
+//                        strValue = strLang60;
+//                    }
+//                    else if (strValue == "N") {
+//                        strValue = strLang61;
+//                    }
+//                    else if (strValue == "C") {
+//                        strValue = strLang62;
+//                    }
+//                    else
+//                        strValue = "";
+//                }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT") {
                     objTd.style.textAlign = "center";
                 }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
@@ -911,8 +913,7 @@ function ListView() {
 					
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
                     objTd.appendChild(_TDCheckBox_Sub);
-                }
-                else {
+                } else {
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {
                         if (getNodeText(oDatas[10]) != "0")
                             objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
@@ -921,9 +922,9 @@ function ListView() {
                     }
                     else {
                         if (getNodeText(oDatas[10]) != "0"){
-                            objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
+                            objTd.innerHTML = MakeXMLString(strValue) + titleImage + " " + titleOneLineCnt;
                         }else{
-                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
+                        	objTd.innerHTML = MakeXMLString(strValue) + titleImage;
                         }
                     }
                 }

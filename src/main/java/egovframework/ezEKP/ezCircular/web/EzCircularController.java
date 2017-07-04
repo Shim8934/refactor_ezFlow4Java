@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezCircular.web;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -43,6 +45,7 @@ import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller
 public class EzCircularController extends EgovFileMngUtil {
@@ -604,15 +607,27 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        logger.debug("newlyDate = " + newlyDate);
+        
         for (CircularListVO vo : list) {
     		resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    		
+    		if (vo.getRegDate().compareTo(newlyDate) > 0) {
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			} else {
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			}
+			
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getUpdateStatus() + "</VALUE></CELL>");
 //			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
-			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE></CELL>");
+			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE><DATA>1</DATA></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getMemberName() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
@@ -691,9 +706,21 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        logger.debug("newlyDate = " + newlyDate);
+        
         for (CircularListVO vo : list) {
-        	resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    		resultXML.append("<ROW>");
+    		
+    		if (vo.getRegDate().compareTo(newlyDate) > 0) {
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			} else {
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			}
+        
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
@@ -776,9 +803,21 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        logger.debug("newlyDate = " + newlyDate);
+        
         for (CircularListVO vo : list) {
-        	resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    		resultXML.append("<ROW>");
+    		
+    		if (vo.getRegDate().compareTo(newlyDate) > 0) {
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			} else {
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			}
+    		
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
@@ -859,9 +898,21 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        logger.debug("newlyDate = " + newlyDate);
+        
         for (CircularListVO vo : list) {
-        	resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    		resultXML.append("<ROW>");
+    		
+    		if (vo.getRegDate().compareTo(newlyDate) > 0) {
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			} else {
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			}
+    		
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
@@ -943,9 +994,21 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        logger.debug("newlyDate = " + newlyDate);
+        
         for (CircularListVO vo : list) {
-        	resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    		resultXML.append("<ROW>");
+    		
+    		if (vo.getRegDate().compareTo(newlyDate) > 0) {
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			} else {
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			}
+    		
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
@@ -1885,9 +1948,21 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        logger.debug("newlyDate = " + newlyDate);
+        
         for (CircularListVO vo : list) {
-        	resultXML.append("<ROW>");
-			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    		resultXML.append("<ROW>");
+    		
+    		if (vo.getRegDate().compareTo(newlyDate) > 0) {
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			} else {
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+			}
+    		
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
