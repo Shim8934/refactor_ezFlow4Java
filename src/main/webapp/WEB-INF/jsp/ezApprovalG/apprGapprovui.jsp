@@ -314,21 +314,15 @@
 		        }
 		    }
 		    var noFieldsAvailable = false;
-		    function FieldsAvailable()
-		    {
+		    function FieldsAvailable() {
 		        var fields = message.GetFieldsList();
-		        if (modeflag)
-		        {
+		        if (modeflag) {
 		            CheckSignImg();			
-		            if (noFieldsAvailable)
-		            {
+		            if (noFieldsAvailable) {
 		                noFieldsAvailable = false;
-		            }
-		            else
-		            {
+		            } else {
 		                var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT","");
-		                if(!rtnVal)
-		                {
+		                if(!rtnVal) {
 		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t8'/>";
 		                    OpenAlertUI(pAlertContent);
 		                    return;				
@@ -339,13 +333,11 @@
 		        }
 		        message.SetEditable(false);
 		    }
-		    function CheckOpinionYN()
-		    {
+		    function CheckOpinionYN() {
 		        if (pHasOpinionYN == "Y") {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" + "<spring:message code='ezApprovalG.t10'/>";
 		            OpenInformationUI(pInformationContent, CheckOpinionYN_Complete);
-		        }
-		        else {
+		        } else {
 		            if (pDraftFlag == "SUSIN")
 		                getSusinSNInfo();
 		            else
@@ -855,8 +847,7 @@
 		        if (!Ans) return;
 		        if ("${approvalPWD}" != "N") {
 		            chk_Passwd(pingUserID, btnReject_chkpassword_Complete);
-		        }
-		        else {
+		        } else {
 		            openOpinionUI("BanSong", btnReject_option_Complete);
 		        }
 		    }
@@ -886,7 +877,7 @@
 		            }
 		            
 		            signInfo = putBansongSign();
-		            
+
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
 		            	UndoSignInfo(signInfo);
@@ -912,8 +903,7 @@
 		                SendAckForExch("approval", "ING");
 		                process_AfterApprove("2");
 		            }
-		        }
-		        else if (ret == "cancel") {
+		        } else if (ret == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
 		            OpenAlertUI(pAlertContent);
 		        }
