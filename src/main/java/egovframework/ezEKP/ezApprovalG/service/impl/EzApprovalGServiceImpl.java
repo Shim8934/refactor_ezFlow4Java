@@ -2058,7 +2058,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	}
         	
         	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), apprGDocListVO2.getWriterDeptID(), apprGDocListVO2.getWriterDeptName(), apprGDocListVO2.getWriterDeptName2(),
-        			"1", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), apprGDocListVO2.getWriterName(), apprGDocListVO2.getWriterName2(), EgovDateUtil.getTodayTime().substring(0, 10),
+        			"1", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), "", "", apprGDocListVO2.getWriterName(), apprGDocListVO2.getWriterName2(), EgovDateUtil.getTodayTime().substring(0, 10),
         			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale);
 
         } else {
@@ -7288,7 +7288,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				resultXML.append("]]></VALUE>");
-				
+			
 				if (p == 0) {
 					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA1>");
 					resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "]]></DATA2>");
@@ -12409,7 +12409,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
                     writerDeptID, writerDeptName, writerDeptName2, "2", ezOrganService.getPropertyValue(userID, "title", tenantID), ezOrganService.getPropertyValue(userID, "title2", tenantID),
-                    docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
+                    docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(), "", "",
                     docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(),
                     commonUtil.getTodayUTCTime("yyyy-MM-dd"), userName, userName2, deliverySN, "1", 
 					docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
@@ -12535,6 +12535,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					writerDeptName2,
                     "1", docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(0).getTextContent().trim(),
                     docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(0).getTextContent().trim(), 
+                    docXML.getElementsByTagName("APRMEMBERNAME").item(0).getTextContent().trim(),
+                    docXML.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent().trim(),
 					docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
                     docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(), 
 					commonUtil.getTodayUTCTime("").substring(0, 10),
@@ -12552,7 +12554,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return strSQL;
 	}
 
-	private String regDocToCabinet(String manualFlag, String docID, String regSN, String cabinetID, String title, String deptCode, String deptName, String deptName2, String registerType, String aprMemberTitle, String aprMemberTitle2,
+	private String regDocToCabinet(String manualFlag, String docID, String regSN, String cabinetID, String title, String deptCode, String deptName, String deptName2, String registerType, String aprMemberTitle, String aprMemberTitle2, String aprMemberName, String aprMemberName2,
 			String drafterName, String drafterName2, String executeDate, String receiptMember, String receiptMember2, String deleveryNo, String electronic, String sourceDocID, String specialRec, String publicCode, String limitRange, String rejectFlag,
 			String numOfPage, String attachFlag, String seperateAttachXML, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception{
 		String strSQL = "";
@@ -12574,6 +12576,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<REGISTERTYPE>" + registerType + "</REGISTERTYPE>");
 		resultXML.append("<APRMEMBERTITLE><![CDATA[" + aprMemberTitle + "]]></APRMEMBERTITLE>");
 		resultXML.append("<APRMEMBERTITLE2><![CDATA[" + aprMemberTitle2 + "]]></APRMEMBERTITLE2>");
+		resultXML.append("<APRMEMBERNAME><![CDATA[" + aprMemberName + "]]></APRMEMBERNAME>");
+		resultXML.append("<APRMEMBERNAME2><![CDATA[" + aprMemberName2 + "]]></APRMEMBERNAME2>");
 		resultXML.append("<DRAFTERNAME><![CDATA[" + drafterName + "]]></DRAFTERNAME>");
 		resultXML.append("<DRAFTERNAME2><![CDATA[" + drafterName2 + "]]></DRAFTERNAME2>");
 		resultXML.append("<EXECUTEDATE>" + executeDate + "</EXECUTEDATE>");
@@ -12615,6 +12619,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String registerRecordOfQuery(String strXML, int tenantID, String offSet, Locale locale) throws Exception{
 		Document objParam = commonUtil.convertStringToDocument(strXML);
+logger.debug("strXML in registerRecordOfQuery : " + strXML);		
 		String subSQL = "";
 		String rtnVal = "TRUE";
 		
@@ -12675,6 +12680,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String numOfPage = objParam.getElementsByTagName("NUMOFPAGE").item(0).getTextContent();
 		String aprMemberTitle = objParam.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent();
 		String aprMemberTitle2 = objParam.getElementsByTagName("APRMEMBERTITLE2").item(0).getTextContent();
+		String aprMemberName = objParam.getElementsByTagName("APRMEMBERNAME").item(0).getTextContent();
+		String aprMemberName2 = objParam.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent();
 		String drafterName = objParam.getElementsByTagName("DRAFTERNAME").item(0).getTextContent();
 		String drafterName2 = objParam.getElementsByTagName("DRAFTERNAME2").item(0).getTextContent();
 		String executeDate = objParam.getElementsByTagName("EXECUTEDATE").item(0).getTextContent();
@@ -12702,8 +12709,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_REGYEAR", regYear);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		map.put("v_REGISTERSN", registerSN);
-		map.put("v_APRMEMBERTITLE", aprMemberTitle);
-		map.put("v_APRMEMBERTITLE2", aprMemberTitle2);
+		map.put("v_APRMEMBERTITLE", aprMemberName);
+		map.put("v_APRMEMBERTITLE2", aprMemberName2);
 		map.put("v_DRAFTERNAME", drafterName);
 		map.put("v_DRAFTERNAME2", drafterName2);
 		map.put("v_EXECUTEDATE", executeDate);

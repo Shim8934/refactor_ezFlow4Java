@@ -5232,8 +5232,10 @@
 	              B.PageNum ,
 	              B.LimitRange ,
 	              A.HasAttachYN ,
-	              C.AprMemberJobTitle ,
+	              C.AprMemberJobTitle ,	              
 	              IFNULL(C.AprMemberJobTitle2, C.AprMemberJobTitle) APRMEMBERJOBTITLE2  ,
+	              C.AprMemberName ,
+	              C.AprMemberName2 ,
 	              B.SeperateAttachXML ,
 	              B.DocNumCode ,
 	              B.OrgDocNumCode 
