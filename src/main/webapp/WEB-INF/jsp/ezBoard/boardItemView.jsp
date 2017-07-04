@@ -627,8 +627,7 @@
 				        return;
 				    }
 		        }
-alert(gubun);		        
-// alert(document.getElementById('txtPassWord').value);
+
 		        if (gubun == "2" && trim(document.getElementById('txtPassWord').value) == "") {
 		            alert("<spring:message code='ezBoard.t391' />");
 				    document.getElementById('txtPassWord').focus();
