@@ -868,6 +868,7 @@
 		    function btnReject_option_Complete(ret) {
 		        DivPopUpHidden();
 		        if (ret != "cancel") {
+		        	pHasOpinionYN = "Y";
 		            UpdateLineHistory();
 		            var rtnVal = ExcuteInfo("BANSONG_BEFORE", "");
 		            if (!rtnVal) {
