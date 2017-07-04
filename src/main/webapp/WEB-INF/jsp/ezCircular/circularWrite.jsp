@@ -16,12 +16,17 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript">
-	    	var uploadPath = "${scheduleFilePath}";
+// 	    	var uploadPath = "${scheduleFilePath}";
 	    	var msgRtn = "";
+	    	var oldCircularID = "";
 	    	var AttachLimit = 5;
 	    	var userID = "${userID}";
 	    	var userName = "${userName}";
 	    	var userName2 = "${userName2}";
+	    	var userMyID = "${userMyID}";
+	    	var userMyName = "${userMyName}";
+	    	var userMyName2 = "${userMyName2}";
+	    	var listSize = "${listSize}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -30,7 +35,29 @@
 	    	}
 
 		    window.onload = function () {
-	
+				if (listSize != 0) {
+					oldCircularID = "${circularID}";
+					
+		        	document.getElementById("title").value = "${result.title}";
+		        	document.getElementById("receiverlist").innerHTML = "${userName}";
+		        	document.getElementById("receiverlist2").innerHTML = "${userName2}";
+		        	document.getElementById("receiverID").innerHTML = "${userID}";
+
+		        	//hasFie구분
+		        	setAttachFileInfo("${strAttach}");
+			        
+		        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+		        	
+		        	var list = userID.split(",");
+		        	var nameList = userName.split(",");
+		        	var nameList2 = userName2.split(",");
+		        	
+		        	for (var i = 0; i < listSize; i++) {
+		            	g_attendant["id"][i] = list[i].trim();
+		        		g_attendant["name"][i] = nameList[i].trim();
+		        		g_attendant["name2"][i] = nameList2[i].trim();
+		        	}
+				}
 		    }
 			
 		    window.onresize = function () {
@@ -94,10 +121,10 @@
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
 
-				if (receiverList.indexOf(userName) == -1) {
-					receiverList += ", " + userName;
-					receiverList2 += ", " + userName2;
-					receiverID += ", " + userID;
+				if (receiverList.indexOf(userMyName) == -1) {
+					receiverList += ", " + userMyName;
+					receiverList2 += ", " + userMyName2;
+					receiverID += ", " + userMyID;
 				}
 
 	    		$.ajax ({
@@ -111,7 +138,8 @@
 	                			receiverList2 : receiverList2,
 	                			receiverID : receiverID,
 	                			content : content,
-	                			fileList : fileList
+	                			fileList : fileList,
+	                			oldCircularID : oldCircularID
 	                },  
 	                cache: false,
 	                success: function(data) {	   
@@ -127,6 +155,11 @@
 	    		if (confirm("<spring:message code='ezCircular.t72'/>")) {
 		        	var content = message.GetEditorContent();
 					var option = 0;
+					var circularID = 0;
+					
+					if (oldCircularID != "") {
+						circularID = oldCircularID;
+					}
 					
 					$(':checkbox[id=optionRefly]:checked').each(function(){
 						option = 1;	
@@ -158,15 +191,15 @@
 					var receiverID = document.getElementById("receiverID").innerHTML;
 
 					if (receiverList == "") {
-						receiverList = userName;
-						receiverList2 = userName2;
-						receiverID = userID;
+						receiverList = userMyName;
+						receiverList2 = userMyName2;
+						receiverID = userMyID;
 					}
 
-					if (receiverList.indexOf(userName) == -1) {
-						receiverList += ", " + userName;
-						receiverList2 += ", " + userName2;
-						receiverID += ", " + userID;
+					if (receiverList.indexOf(userMyName) == -1) {
+						receiverList += ", " + userMyName;
+						receiverList2 += ", " + userMyName2;
+						receiverID += ", " + userMyID;
 					}
 
 		    		$.ajax ({
@@ -179,6 +212,7 @@
 		                			receiverList : receiverList,
 		                			receiverList2 : receiverList2,
 		                			receiverID : receiverID,
+		                			circularID : circularID,
 		                			content : content,
 		                			fileList : fileList
 		                },  
@@ -195,45 +229,45 @@
 	    		}
 	    	}
 
-	    	function window_onUnload() {
-	    	}
+// 	    	function window_onUnload() {
+// 	    	}
 	    	
-	    	//파일업로드
-    	    function returnvalue(strXML) {
-		        var pAttachXml = loadXMLString(strXML);
-		        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
-		        var extFlag = false;
-		        for (var i = 0; i < nodes.length; i++) {
-		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
-		                    alert(strLang6);
-		                    return;
-		                }
-		                /* if (document.getElementById('mode').value == "PHOTO")
-		                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
-		            }
-		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
-		                extFlag = true;
-		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-		                alert(strLang8 + AttachLimit + "MB" + strLang9);
-		                return;
-		            }
-		            else {
-		                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
-		            }
-		        }
-		        if (extFlag)
-		            alert(strLang54);
+// 	    	//파일업로드
+//     	    function returnvalue(strXML) {
+// 		        var pAttachXml = loadXMLString(strXML);
+// 		        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
+// 		        var extFlag = false;
+// 		        for (var i = 0; i < nodes.length; i++) {
+// 		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+// 		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
+// 		                    alert(strLang6);
+// 		                    return;
+// 		                }
+// 		                /* if (document.getElementById('mode').value == "PHOTO")
+// 		                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
+// 		            }
+// 		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+// 		                extFlag = true;
+// 		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+// 		                alert(strLang8 + AttachLimit + "MB" + strLang9);
+// 		                return;
+// 		            }
+// 		            else {
+// 		                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
+// 		            }
+// 		        }
+// 		        if (extFlag)
+// 		            alert(strLang54);
 		
-		        if (dadiframe.document.getElementById("lstAttachLink") == null)
-		            setTimeout(function () { AttachFileInfo(strXML); }, 500);
-		        else
-		            AttachFileInfo(strXML);
-			}
+// 		        if (dadiframe.document.getElementById("lstAttachLink") == null)
+// 		            setTimeout(function () { AttachFileInfo(strXML); }, 500);
+// 		        else
+// 		            AttachFileInfo(strXML);
+// 			}
 	    	
-    	    function Editor_Complete() {
+//     	    function Editor_Complete() {
     	    	
-    	    }
+//     	    }
 		</script>
 	</head>
 	<body id="mainbodytag" class="popup" style="height: 100%; overflow: hidden;">
@@ -264,15 +298,31 @@
 	          				<th>중요도</th>
 	          				<td id="Td_StartDate" style="overflow:hidden; width:200px;">
 	          					<select id="importance" class="select">
-	          						<option value="0" >일반</option>
-   									<option value="1" >중요</option>
+	          						<option value="0" <c:if test="${result.importance eq '0'}">selected</c:if>>일반</option>
+   									<option value="1" <c:if test="${result.importance eq '1'}">selected</c:if>>중요</option>
    								</select>	
 	          				</td>
 	       					<th style="width:40px;">옵션</th>
 	       					<td style="width:200px;">
-								<input type="checkbox" id="optionRefly" name="chkList"/>&nbsp;의견&nbsp;&nbsp;
-								<input type="checkbox" id="optionMail" name="chkList"/>&nbsp;공지메일발송
-							</td>
+								<c:choose>
+		                			<c:when test="${result.option eq '1'}">
+		                				<input type="checkbox" id="option" name="chkList" checked/>의견
+		                				<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
+		                			</c:when>
+		                			<c:when test="${result.option eq '2'}">
+		                				<input type="checkbox" id="option" name="chkList"/>의견
+		                				<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
+		                			</c:when>
+		                			<c:when test="${result.option eq '3'}">
+		                				<input type="checkbox" id="option" name="chkList" checked/>의견
+										<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
+		                			</c:when>
+		                			<c:otherwise>
+		                				<input type="checkbox" id="option" name="chkList"/>의견
+										<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
+		                			</c:otherwise>
+		                		</c:choose>					
+	         				</td>
 	        			</tr>
 						<tr>
 	           				<th rowspan="2">회람자</th>

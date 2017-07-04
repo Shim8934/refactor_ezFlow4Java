@@ -41,12 +41,7 @@
 
 	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
 	        });
-	        
-		    //수정버튼 클릭시
-	        function btn_modify() {
-	            window.location.href = "/ezCircular/circularModify.do?circularID="+circularID;
-	        }
-		    
+
 		    //삭제버튼 클릭시
 	        function btn_delete() {
 	            if (!confirm("회람을 삭제하시겠습니까?"))
