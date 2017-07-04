@@ -570,9 +570,6 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 				}
 			}
 			
-			StringBuilder sb = new StringBuilder();
-			sb.append("<DATA>");
-			
 			for (int i=0; i<resultArray.size(); i++) {
 				JSONObject distribution = (JSONObject)resultArray.get(i);
 				String distributionName = (String)distribution.get("distributionName");
