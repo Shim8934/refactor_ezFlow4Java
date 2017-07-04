@@ -910,6 +910,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", vo.getTenantID());
 		
 		List<CircularCommentVO> list = ezCircularDAO.getCircularComment(map);
+		//의견확인 - > updateCommentState
 		
 		logger.debug("getCircularComment ended. listSize=" + list.size());
 		
@@ -934,7 +935,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", userInfo.getTenantId());
 		
 		updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, nowDate, userInfo.getTenantId());
-		ezCircularDAO.insertComment(map);
+		
+		int circularCommentID = ezCircularDAO.insertComment(map);
+		
+		map.put("circularCommentID", circularCommentID);
+		map.put("commentConfirmStatus", 0);
+		
+		/*ezCircularDAO.insertCommentState(map);*/
 		
 		logger.debug("editCircularComment ended.");
 	}
@@ -1074,6 +1081,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", userInfo.getTenantId());
 		
 		ezCircularDAO.deleteCircularComment(map);
+		//deleteCommentState
 		
 		logger.debug("deleteCircularComment ended.");
 	}

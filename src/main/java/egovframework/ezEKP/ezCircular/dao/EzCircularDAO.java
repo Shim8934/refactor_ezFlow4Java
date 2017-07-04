@@ -267,9 +267,13 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.updateCircularCommentStatus", map);
 	}
 
-	public void insertComment(Map<String, Object> map) throws Exception {
-		insert("EzCircularDAO.insertComment", map);
+	public int insertComment(Map<String, Object> map) throws Exception {
+		return (int) insert("EzCircularDAO.insertComment", map);
 	}
+	
+	/*public void insertCommentState(Map<String, Object> map) throws Exception {
+		insert("EzCircularDAO.insertCommentState", map);
+	}*/
 
 	public CircularAttachVO getAttachInfo(Map<String, Object> map) throws Exception {
 		return (CircularAttachVO) select("EzCircularDAO.getAttachInfo", map);

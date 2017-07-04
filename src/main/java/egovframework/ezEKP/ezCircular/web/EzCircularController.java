@@ -1242,9 +1242,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			circularID = req.getParameter("circularID");
 		}
 	 
-		//TODO 회람 상세정보 가져옴
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-		
+//회람카운트 추가
 		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId(), userInfo.getOffset());
 
 		String listUser = "";
