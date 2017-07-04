@@ -128,4 +128,13 @@ public class EzSystemAdminController {
 		
 		return "{\"msg\":\"success\"}";		
 	}
+	
+	// 로그인 로그기록
+	@RequestMapping(value="/admin/ezSystem/systemLoginHist.do")
+	public String systemLoginHist() {
+		
+		return "/ezSystem/systemLoginHist";
+		
+	}
+	
 }
