@@ -22208,6 +22208,8 @@
 			TENANT_ID = #v_TENANTID#
 		AND 	
 			COMPANYID = #companyID#
+		AND
+			WRITERDEPTID = #iv_Type2#
 		ORDER BY 
 			ENDDATE DESC
 		LIMIT 1
