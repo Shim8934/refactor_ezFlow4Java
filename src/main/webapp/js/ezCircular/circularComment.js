@@ -18,10 +18,10 @@ function getCircularComment() {
 				
 				if (vo.status == 1) {
 					//확인 이미지
-					circularUserList += "<img src='/images/circular_read.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				} else {
 					//미확인 이미지
-					circularUserList += "<img src='/images/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				}
 				
 				if (status == 0 && (option == 1 || option == 3)) {
@@ -55,7 +55,7 @@ function getCircularComment() {
 //				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
 				
 				if (vo.memberID == userInfoID) {
-					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "&nbsp;<img src='/images/icon/i_group.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' /></td>";
+					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "&nbsp;<img src='/images/ImgIcon/circular_share.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' /></td>";
 				} else {
 					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
 				}
@@ -67,7 +67,7 @@ function getCircularComment() {
 				var getDiffTime = now.getTime() - d.getTime();
 				
 				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
-					circularCommentList += "<img src='/images/new_icon.gif' />&nbsp;";
+					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon.gif' />&nbsp;";
 				}
 				
 				if (vo.memberID == userInfoID) {
