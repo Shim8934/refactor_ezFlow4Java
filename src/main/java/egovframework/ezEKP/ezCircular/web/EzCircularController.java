@@ -1249,7 +1249,11 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		for (CircularListVO vo : list) {
 			if (!vo.getMemberID().equals(result.getMemberID())) {
-				listUser += vo.getMemberName() + ", ";
+				if (vo.getStatus() == 0) {
+					listUser += "<img src='/images/ImgIcon/circular_unread.gif'>" + vo.getMemberName() + ", ";					
+				} else {
+					listUser += "<img src='/images/ImgIcon/circular_read.gif'>" + vo.getMemberName() + ", ";
+				}
 			}
 		}
 		
@@ -1457,6 +1461,13 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptConfig started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+
+		circularDeptVO.setTenantID(userInfo.getTenantId());
+		circularDeptVO.setMemberID(userInfo.getId());
+		
+		List<CircularDeptVO> result = ezCircularService.getcircularDeptList1(circularDeptVO, userInfo);
+		
+		model.addAttribute("result", result);
 		
 		logger.debug("circularDeptConfig ended");
 		
@@ -1486,7 +1497,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptSave started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-		int circularBMId = circularDeptVO.getCircularBMID();
+		String circularBMId = request.getParameter("circularBMId");
 		
 		circularDeptVO.setMemberID(userInfo.getId());
 		circularDeptVO.setRegDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
@@ -1494,7 +1505,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String[] memberListStr = request.getParameterValues("memberListStr[]");
 
-		if (circularBMId != 0) {
+		if (circularBMId != null) {
 			ezCircularService.update_circularDept(circularDeptVO, memberListStr, circularBMId);
 		} else {
 			ezCircularService.set_circularDeptSave(circularDeptVO, memberListStr);
@@ -1546,17 +1557,18 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularDeptModify started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String title = request.getParameter("title");
+
 		int circularBMId = Integer.parseInt(request.getParameter("id"));
 		int tenantId = userInfo.getTenantId();
-		
+
 		List<CircularListVO> list = ezCircularService.getCircularDeptUserList(circularBMId, tenantId);
 		
 		String userID = "";
 		String userName = "";
 		String userName2 = "";
 
+		String title = list.get(0).getTitle();
+		
 		for (int i=0; i<list.size(); i++) {
 			if (list.size() == 1) {
 				userID = list.get(i).getMemberID();
