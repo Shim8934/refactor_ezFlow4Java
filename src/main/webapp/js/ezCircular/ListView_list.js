@@ -524,7 +524,11 @@ function ListView() {
                 }
 
                 if (strColName == "TITLE") {
-                    objTd.style.width = "50%";
+                    objTd.style.width = "70%";
+                }
+                
+                if (strColName == "MEMBERNAME") {
+                    objTd.style.width = "20%";
                 }
                 
                 if (strColName == "WRITEDATE") {
@@ -626,9 +630,6 @@ function ListView() {
 
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
-                }
-                if (strColName.toUpperCase() == "BOARDNAME") {
-                	objTd.style.width = "100px";
                 }
 
                 objTr.appendChild(objTd);
@@ -752,30 +753,6 @@ function ListView() {
                     if (getNodeText(oDatas[2]) == "1") {
                     	titleImage = "&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
                     }
-                    
-//                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++)
-//                    {
-//                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-//                        
-//                        if (k == parseInt(getNodeText(oDatas[7])) - 1)
-//                            titleImage = titleImage + "<img src='/images/i_rep.gif'>&nbsp;";
-//                    }
-//                    if (getNodeText(oDatas[3]) == "1") {
-//                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
-//                    }
-//                    if (getNodeText(oDatas[8]) == "1") {
-//                        titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
-//                        objTd.style.fontWeight = "BOLD";
-//                    }
-//                    if (getNodeText(oDatas[6]) == "Y") {
-//                        titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
-//                    }
-//                    if (getNodeText(oDatas[4]) == "0") 
-//                        objTd.style.fontWeight = "BOLD";
-//
-//                    if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
-//                        titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
-//                    
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
@@ -875,21 +852,6 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMDATE") {
                 	objTd.style.textAlign = "center";
                 }
-
-//                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "APPRFLAG") {
-//                    objTd.style.textAlign = "center";
-//                    if (strValue == "Y") {
-//                        strValue = strLang60;
-//                    }
-//                    else if (strValue == "N") {
-//                        strValue = strLang61;
-//                    }
-//                    else if (strValue == "C") {
-//                        strValue = strLang62;
-//                    }
-//                    else
-//                        strValue = "";
-//                }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT") {
                     objTd.style.textAlign = "center";

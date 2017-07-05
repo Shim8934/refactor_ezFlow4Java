@@ -235,7 +235,7 @@
 	    </script>
 	</head>
 	<body>
-		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;">
+		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;word-wrap:break-word;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
 		</div>
 	</body>
