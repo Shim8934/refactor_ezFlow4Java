@@ -454,6 +454,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return sb.toString();
 	}
+	
+	@Override
+	public List<CircularDeptVO> getcircularDeptList1(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
+		logger.debug("getcircularDeptList1 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("memberID", circularDeptVO.getMemberID());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
+
+		logger.debug("getcircularDeptList1 ended.");
+
+		return (List<CircularDeptVO>) ezCircularDAO.getcircularDeptList1(map);
+	}
 
 	@Override
 	public void circularDeptDel(String[] delList, int tenantId) throws Exception {

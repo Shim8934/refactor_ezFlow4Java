@@ -11,6 +11,9 @@ public class CircularDeptVO {
 	private String regDate;
 	
 	private String memberName;
+	/** 멤버Count*/
+	private int memberNameCount;
+	
 	/** 테넌트 Id */
 	private int tenantID;
 	public int getCircularBMID() {
@@ -49,6 +52,11 @@ public class CircularDeptVO {
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
 	}
-
+	public int getMemberNameCount() {
+		return memberNameCount;
+	}
+	public void setMemberNameCount(int memberNameCount) {
+		this.memberNameCount = memberNameCount;
+	}
 	
 }
