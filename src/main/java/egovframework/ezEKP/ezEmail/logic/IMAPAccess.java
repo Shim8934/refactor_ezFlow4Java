@@ -156,37 +156,31 @@ public class IMAPAccess {
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
 			
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				sent.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
 			}
 			
 			if (!draft.exists()) {
 				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				draft.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
 			}
 			
 			if (!trash.exists()) {
 				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				trash.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
 			}
 			
 			if (!personal.exists()) {
 				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				personal.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
 			
 			if (!junk.exists()) {
 				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				junk.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
 			}			
 		} catch(MessagingException e) {
@@ -196,7 +190,7 @@ public class IMAPAccess {
 		logger.debug("makeTopLevelFolders ended.");
 	}
 	
-	public List<Folder> getTopLevelFolders(boolean isSubscribe) {
+	public List<Folder> getTopLevelFolders() {
 		ArrayList<Folder> topLevelFolders = new ArrayList<Folder>();
 		
 		try{
@@ -212,81 +206,43 @@ public class IMAPAccess {
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
 			
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				sent.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
 			}
 			
 			if (!draft.exists()) {
 				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				draft.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
 			}
 			
 			if (!trash.exists()) {
 				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				trash.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
 			}
 			
 			if (!personal.exists()) {
 				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				personal.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
 			
 			if (!junk.exists()) {
 				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				junk.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
 			}						
 			
-			if (rootFolder.listSubscribed().length == 0) {
-				setReculsiveSubscribe(rootFolder, true);
-			}
+			//add default folders into top-level folder list
+			topLevelFolders.add(inbox);
+			topLevelFolders.add(sent);
+			topLevelFolders.add(draft);
+			topLevelFolders.add(trash);
+			topLevelFolders.add(personal);
+			topLevelFolders.add(junk);
 			
-			Folder[] folderList = null;
-			if (isSubscribe) {
-				//add subscribe folders and inbox folder into top-level folder list
-				topLevelFolders.add(inbox);
-				
-				if (sent.isSubscribed() || sent.listSubscribed().length > 0) {
-					topLevelFolders.add(sent);
-				}
-				
-				if (draft.isSubscribed() || draft.listSubscribed().length > 0) {
-					topLevelFolders.add(draft);
-				}
-				
-				if (trash.isSubscribed() || trash.listSubscribed().length > 0) {
-					topLevelFolders.add(trash);
-				}
-				
-				if (personal.isSubscribed() || personal.listSubscribed().length > 0) {
-					topLevelFolders.add(personal);
-				}
-				
-				if (junk.isSubscribed() || junk.listSubscribed().length > 0) {
-					topLevelFolders.add(junk);
-				}
-				
-				folderList = rootFolder.listSubscribed();
-			} else {
-				//add default folders into top-level folder list
-				topLevelFolders.add(inbox);
-				topLevelFolders.add(sent);
-				topLevelFolders.add(draft);
-				topLevelFolders.add(trash);
-				topLevelFolders.add(personal);
-				topLevelFolders.add(junk);
-				
-				folderList = rootFolder.list();
-			}
+			Folder[] folderList = rootFolder.list();
 			
 			//add the other folders into top-level folder list
 			for (Folder folder : folderList) {
@@ -308,17 +264,10 @@ public class IMAPAccess {
 		return topLevelFolders;
 	}
 	
-	public List<Folder> getSubFolders(String parent, boolean isSubscribe) {
+	public List<Folder> getSubFolders(String parent) {
 		ArrayList<Folder> subFolders = new ArrayList<Folder>();
 		try {
-			Folder[] f = null;
-			
-			if (isSubscribe) {
-				f = getStore().getFolder(parent).listSubscribed();
-			} else {
-				f = getStore().getFolder(parent).list();
-			}
-			
+			Folder[] f = getStore().getFolder(parent).list();
 			for (Folder fd : f) {
 				subFolders.add(fd);
 			}
@@ -404,7 +353,13 @@ public class IMAPAccess {
 			else if (part.isMimeType("message/rfc822")) {
 				hasAttachment((Part)part.getContent());
 			}
-			else if (part.getDisposition()!= null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+			// Content-Disposition 헤더가 없이 첨부된 파일이 있어
+			// Content-Type이 application으로 시작하는 경우도 추가함 
+			// 예) Content-Type: application/octet-stream;
+			//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
+		    //    Content-Transfer-Encoding: base64	    											
+			else if ((part.getDisposition()!= null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+						|| part.isMimeType("application/*")) {
 				isAttached = true;
 			}			
 		} catch (Exception e) {
@@ -730,12 +685,4 @@ public class IMAPAccess {
 		
 	}		
 	
-	private void setReculsiveSubscribe(Folder folder, boolean isSubscribe) throws MessagingException {
-		Folder[] folderArr = folder.list();
-		
-		for (Folder f : folderArr) {
-			f.setSubscribed(isSubscribe);
-			setReculsiveSubscribe(f, isSubscribe);
-		}
-	}
 }

@@ -246,7 +246,7 @@
             if (pDocID == "")
                 pDocID = createNewDocID();
 
-            if (RegisterRecord()) {
+            if (RegisterRecord()) {return btn_AttachSaveSure_onclick()
                 rtnVal[0] = "TRUE";
                 
                 rtnVal[1] = g_szSCListXml;
@@ -527,7 +527,7 @@
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
                   <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;"value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
                   <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span></td>
@@ -576,7 +576,7 @@
                 <td><table border="0" style="width:98%;border-collapse:collapse; border-spacing:0;padding:0px;" >
                     <tr>
                       <td id="tdSpecialFlag">&nbsp;</td>
-                      <td style="width:70px"><img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle"id="btnAddSC"name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"></td>
+                      <td style="width:70px"><img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"></td>
                     </tr>
                   </table></td>
               </tr>

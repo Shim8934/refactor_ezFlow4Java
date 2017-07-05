@@ -1,8 +1,11 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -536,6 +539,53 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		logger.debug("updateGroupMove ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
 		return reasonCode;
+	}
+
+	@Override
+	public List<String> getUserDistributionList(String userEmailAddress){
+		logger.debug("getUserDistributionList started.");
+		
+		ArrayList<String> returnData = new ArrayList<String>();
+				
+		try {
+			String inputParams = "userEmailAddress=" + userEmailAddress;
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserDistribution";
+			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			
+			logger.debug("response=" + response);
+			
+			JSONArray resultArray = null;
+			
+			if (response != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+				String resultCode = (String)responseObj.get("resultCode");
+				
+				if (resultCode.equalsIgnoreCase("OK")) {
+					resultArray = (JSONArray)responseObj.get("result");
+				}
+			}
+			
+			for (int i=0; i<resultArray.size(); i++) {
+				JSONObject distribution = (JSONObject)resultArray.get(i);
+				String distributionName = (String)distribution.get("distributionName");
+				
+				logger.debug("distributionName=" + distributionName);
+				
+				returnData.add(distributionName);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getUserDistributionList ended.");
+		
+		return returnData;
 	}
 	
 }

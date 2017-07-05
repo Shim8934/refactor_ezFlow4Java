@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html style="height:97%">
 	<head>
@@ -149,8 +151,7 @@
 		            if (field) {
 		                field.style.display = 'none';
 		            }
-		        }
-		        else {
+		        } else {
 		            var field = message.GetListItem(fields, "drafthide");
 		            if (field) {
 		                field.style.display = 'none';
@@ -645,7 +646,10 @@
 		          <li id="btnDocInfo" class ="approvalG"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+
+   				  <c:if test="${approvalFlag != 'G'}">
 		          <li id="btnReuse"><span onClick="return btnReuse_onclick()"><spring:message code='ezApprovalG.t990048'/></span></li>
+				  </c:if>
 		        </ul>
 		      </div>
 		      <div id="close">

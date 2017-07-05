@@ -245,8 +245,7 @@
 	                         MakeSubCondition();
 	                         GetDocSearch();
 	                	}
-	                }
-	                else {
+	                } else {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetDocSearch();
@@ -274,8 +273,7 @@
 		                condition[24] = "";
 		                DocListType == "GetDocSearch";
 		                GetDocSearch();
-		            }
-		            else {
+		            } else {
 		                var nowyear = new Date().getFullYear();
 		                var nowmonth = new Date().getMonth() + 1;
 		                var nowday = new Date().getDate();

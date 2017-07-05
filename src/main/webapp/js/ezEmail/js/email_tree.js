@@ -1,4 +1,4 @@
-﻿function get_childXML_2010(url, broot, bcount, isFolderManager)
+﻿function get_childXML_2010(url, broot, bcount)
 {
     var xmlHTTP = new ActiveXObject("Microsoft.XMLHttp");
     var xmlDOM = new ActiveXObject("Microsoft.XMLDOM");
@@ -13,13 +13,8 @@
     var objNode = xmlDOM.createNode(1, "BCOUNT", "");
     objNode.text = bcount;
     objRoot.appendChild(objNode);
-    
-    if (isFolderManager) {
-    	xmlHTTP.open("POST", "/ezEmail/getFolderList.do?fm=1", false);
-    } else {
-    	xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
-    }
-    
+
+    xmlHTTP.open("POST", "/ezEmail/getFolderList.do", false);
 	xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 	xmlHTTP.send(xmlDOM.xml);
 	
@@ -33,9 +28,9 @@
 	return xmlHTTP.responseText;
 }
 
-function get_childXML(url, broot, bcount, isFolderManager)
+function get_childXML(url, broot, bcount)
 {
-    return get_childXML_2010(url, broot, bcount, isFolderManager);
+    return get_childXML_2010(url, broot, bcount);
     
 	var strXML = "<?xml version='1.0'?>" + 
 					"<d:searchrequest xmlns:d='DAV:'>" +

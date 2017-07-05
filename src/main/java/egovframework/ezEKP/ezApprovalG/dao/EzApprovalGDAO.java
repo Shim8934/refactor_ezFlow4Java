@@ -45,6 +45,21 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGDAO")
 public class EzApprovalGDAO extends EgovAbstractDAO {
+	
+	// 캐비닛 문서 정보 삭제
+	public void deleteCabInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.deleteCabInfo", map);
+	}
+	
+	// 캐비닛 문서 정보 삭제 후 로그 추가
+	public void insertDelCabInfo(Map<String, Object> map) {
+		insert("EzApprovalG.insertDelCabInfo", map);
+	}
+	
+	// 캐비닛 문서 삭제 전 진행중문서 확인
+	public String selectExpCabDocInfo(Map<String, Object> map){
+		return (String) select("EzApprovalG.selectExpCabDocInfo", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<ApprGListHeaderVO> getListHeader(Map<String, Object> map) throws Exception{
@@ -2639,5 +2654,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public String getCircularDocID(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getCircularDocID", map);
+	}
+
+	public String getLastDocDate(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getLastDocDate", map);
+	}
+	
+	public void resetSerialNo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.resetSerialNo", map);
 	}
 }

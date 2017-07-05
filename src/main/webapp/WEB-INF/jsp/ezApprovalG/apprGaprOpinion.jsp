@@ -110,9 +110,9 @@
 		            var Opstate;
 		            OpContent = document.getElementById("txt_OpinionContent").value;
 		            Opstate = document.getElementById("btn_OpinionAdd").textContent;
+		            ChkFlag = true;
 		            AddOpinionContent(Opstate, OpContent);
 		            g_OpinionModifyFlagAdd = false;
-		            ChkFlag = true;
 		        }
 		        catch (e) {
 		            alert("btn_OpinionAdd ::" + e.description);
@@ -121,13 +121,11 @@
 		    function btn_OpinionCancel_onclick() {
 		        if (ChkFlag) {
 		            btn_OpinionSave_onclick();
-		        }
-		        else {
+		        } else {
 		            if (ReturnFunction != null) {
 		                ReturnFunction("cancel");
 		                window.close();
-		            }
-		            else {
+		            } else {
 		                window.returnValue = "cancel";
 		                window.close();
 		            }
@@ -145,12 +143,10 @@
 		                    parent.DivPopUpHidden();
 		                else
 		                    window.close();
-		            }
-		            else {
+		            } else {
 		                saveOpinionInfo();
 		            }
-		        }
-		        catch (e) {
+		        } catch (e) {
 		            alert("btn_OpinionSave  :: " + e.description);
 		        }
 		    }

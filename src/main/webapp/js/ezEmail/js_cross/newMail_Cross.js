@@ -711,7 +711,7 @@ function Send_onClick_Complete(ReturnValue) {
             } catch (e) {}
             
             if ((MsgToGot.childNodes.length + MsgCCGot.childNodes.length + MsgBCCGot.childNodes.length) > individualmailuserNum && iseachMail == "true") {
-                if (confirm(strLang182)) {
+                if (confirm(strLangKMS04 + individualmailuserNum + strLangKMS05)) {
                     iseachMail = "false";
                 }
                 else {
@@ -999,7 +999,19 @@ function event_SaveonClick() {
                 }
                 //유효하지 않은 메일주소(내부)가 있을 경우
                 else if (pRtnMessage.indexOf("Invalid Addresses") > -1) {
-                	alert(strLangLHM16);
+                	var invalidAddresses = pRtnMessage.split(":")[1];
+                	var invalidAddressArr = invalidAddresses.split("|");
+                	invalidAddresses = invalidAddressArr.join("\n");
+                	
+                	if (confirm(strLangLHM16 + "\n" + invalidAddresses + "\n" + strLangLHM17)) {
+                		for (var i=0; i<invalidAddressArr.length; i++) {
+                			try { deleteMailUser(invalidAddressArr[i],"0"); } catch (e) {}
+                			try { deleteMailUser(invalidAddressArr[i],"1"); } catch (e) {}
+                			try { deleteMailUser(invalidAddressArr[i],"2"); } catch (e) {}
+                		}
+                		
+                		setTimeout(Send_onClick(), 100);
+                	}
                 }
                 // 그 외
                 else {
@@ -1063,10 +1075,6 @@ function event_SaveonClick() {
                 else if (pRtnMessage.indexOf("OVERMESSAGESIZE") > -1) {
                 	var messageArr = pRtnMessage.split(":");
                 	alert(strLangLHM13 + "\n(" + strLangLHM14 + messageArr[1] + strLangLHM15 + messageArr[2] + ")");
-                }
-                //유효하지 않은 메일주소(내부)가 있을 경우
-                else if (pRtnMessage.indexOf("Invalid Addresses") > -1) {
-                	alert(strLangLHM16);
                 }
                 // 그 외
                 else {
@@ -2023,6 +2031,27 @@ function ConvertEmbedImagToXml(xmlDoc, rootNode) {
 	                SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].text = XmlHtml;
 	            createNodeAndInsertText(xmlDoc, rootNode, "IMAGENAME", formname);
 	            createNodeAndInsertText(xmlDoc, rootNode, "IMAGEPATH", imagePath);
+            } else {
+            	//2017-06-26 이효민 : 이미지 url앞에 http가 있을 경우, hostname이 서버의 hostname과 같으면 inline-image로 처리함.
+            	//게시판에서 메일로 발송할 경우 inline-image url앞에 http가 붙어있어서 다음과 같이 수정하였음.
+            	if (srcValue.split("/")[2] == window.location.href.split("/")[2]) {
+            		var formname = imgColl.item(i).src.substr(imgColl.item(i).src.lastIndexOf("/") + 1);
+            		
+    	            var XmlHtml = getNodeText(SelectNodes(xmlDoc, "DATA/HTMLBODY")[0]);
+    	            var OrgHteml = imgColl.item(i).outerHTML;
+    	
+    	            imgColl.item(i).setAttribute("src", formname);
+    	            imgColl.item(i).removeAttribute("embedding");
+    	            imgColl.item(i).outerHTML = imgColl.item(i).outerHTML.replace("src=\"" + formname + "\"", "src=\"" + formname + "\" embedding=\"1\" ");
+    	
+    	            XmlHtml = XmlHtml.replace(OrgHteml, imgColl.item(i).outerHTML);
+    	            if (CrossYN())
+    	                SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].textContent = XmlHtml;
+    	            else
+    	                SelectNodes(xmlDoc, "DATA/HTMLBODY")[0].text = XmlHtml;
+    	            createNodeAndInsertText(xmlDoc, rootNode, "IMAGENAME", formname);
+    	            createNodeAndInsertText(xmlDoc, rootNode, "IMAGEPATH", imagePath);
+            	}
             }
         }
         if (imgColl.item(i).src.toLowerCase().indexOf("ezcommon_interface.aspx") > -1) {

@@ -382,12 +382,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// subject
 					subject = ezEmailUtil.getSubject(message);
 					
-					logger.debug("subject=" + subject);
-					
+					if(subject.trim().equals("")){
+						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+					}
 					if (subject != null) {
 						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
 					}
 					
+					logger.debug("subject=" + subject);
+
 					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
 						isSentItems = true;
 					}
@@ -515,7 +518,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
     									userEmail, password);
     							
-    							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
+    							processAutoMDN(sa, message, userInfo.getEmail(), userVO.getDisplayName(), userInfo.getTenantId());
     						}
     						else {
     							logger.debug("MDNSentFlag is set");
@@ -1230,7 +1233,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
     									userEmail, password);
     							
-    							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
+    							processAutoMDN(sa, message, userInfo.getEmail(), userVO.getDisplayName(), userInfo.getTenantId());
     						}
     						else {
     							logger.debug("MDNSentFlag is set");
@@ -1696,7 +1699,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	/**
 	 * MDN 메지시 전송 함수
 	 */
-	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName) {
+	private void processAutoMDN(SMTPAccess sa, Message message, String myEmailAddress, String myName, int tenantId) {
 		logger.debug("processAutoMDN started.");
 		
 		try {		
@@ -1712,11 +1715,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 			String fromEmailDomain = fromEmailAddress.substring(atSignIndex + 1);
-			String myEmailDomain = myEmailAddress.substring(myEmailAddress.indexOf("@") + 1);
+			List<String> innerDomainList = ezEmailUtil.getInnerDomain(tenantId);
 			
-			logger.debug("fromEmailDomain=" + fromEmailDomain + ",myEmailDomain=" + myEmailDomain);
+			logger.debug("fromEmailDomain=" + fromEmailDomain);
 			
-			if (!fromEmailDomain.equalsIgnoreCase(myEmailDomain)) {
+			if (!innerDomainList.contains(fromEmailDomain)) {
 				logger.debug("different domain");
 				logger.debug("processAutoMDN ended.");
 				return;
