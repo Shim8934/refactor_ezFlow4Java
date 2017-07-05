@@ -28,6 +28,10 @@
 					}
 				});
 			});
+			
+			$(window).unload(function() {
+				window.parent.location.reload();
+			});
 		</script>
 		
 	</head>
