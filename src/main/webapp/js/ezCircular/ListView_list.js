@@ -572,7 +572,7 @@ function ListView() {
                 }
                 if (strColName == "CONFIRMFLAG") {
                 	var _HeaderSpanimg = document.createElement("IMG");
-                    _HeaderSpanimg.setAttribute("src", "/images/circular_unread.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
@@ -583,11 +583,7 @@ function ListView() {
                 }
                 if (strColName == "STATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
-//                    _HeaderSpanimg.setAttribute("src", "/images/circular_icon_up.gif");
-//                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/icon_displaypaper.gif");
-//                    _HeaderSpanimg.setAttribute("src", "/images/sub/btn_next.gif");
-//                    _HeaderSpanimg.setAttribute("src", "/images/KakaoTalk_20170703_161711154.png");
-                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/icon-flag.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_ing.gif");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
@@ -597,8 +593,7 @@ function ListView() {
                 
                 if (strColName == "UPDATESTATUS") {
         			var _HeaderSpanimg = document.createElement("IMG");
-//        			_HeaderSpanimg.setAttribute("src", "/images/mobile/new2.png");
-        			_HeaderSpanimg.setAttribute("src", "/images/circular_new.png");
+        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_new.gif");
         			
         			_HeaderSpanimg.border = "0";
     				objTd.style.textAlign = "CENTER";
@@ -755,7 +750,7 @@ function ListView() {
                     objTd.style.textOverflow = "ellipsis";
                     
                     if (getNodeText(oDatas[2]) == "1") {
-                    	titleImage = "&nbsp;<img src='/images/new_icon.gif'>";
+                    	titleImage = "&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
                     }
                     
 //                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++)
@@ -826,12 +821,13 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     objTd.style.fontWeight = "bold";
                     
+                    //공유의견등록시 새로운 상태값 추가될
                     if (strValue == "0") {
-                    	titleImage = '<img src="/images/circular_new.png"/>';
+                    	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
 //                    	titleImage = '<img src="/images/mobile/new2.png"/>';
                     	strValue = "";
                     } else {
-                    	titleImage = '<img src="/images/circular_opinion.png"/>';
+                    	titleImage = '<img src="/imagesImgIcon/circular_opinion.gif"/>';
                     	strValue = "";
                     }
                 }
@@ -843,12 +839,12 @@ function ListView() {
                     	objTd.style.fontWeight = "bold";
                     	//strValue = '<img src="/images/circularUnread.png" />';
                     	/*titleImage = '<img src="/images/decide_icon_up.gif" />';*/
-                    	titleImage = '<img src="/images/circular_unread.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
                     	strValue = "";
                     } else {
                     	//strValue = '<img src="/images/circularRead.png" />';
                     	/*titleImage = '<img src="/images/decide_icon_ok.gif" />';*/
-                    	titleImage = '<img src="/images/circular_read.png" />';
+                    	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
                     	strValue = "";
                     }
                 }
@@ -857,19 +853,14 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     
                     if (strValue == "0") {
-//                    	titleImage = '<img src="/images/ImgIcon/icon_displaypaper.gif" />';
-//                    	titleImage = '<img src="/images/KakaoTalk_20170703_161711154.png" />';
-                    	titleImage = '<img src="/images/ImgIcon/icon-flag.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/circular_ing.gif" />';
                     	
                     	strValue = "";
                     } else if (strValue == "1") {
-//                    	titleImage = '<img src="/images/ImgIcon/icon_enddisplaypaper.gif" />';
-//                    	titleImage = '<img src="/images/KakaoTalk_20170703_161711650.png" />';
-                    	titleImage = '<img src="/images/ImgIcon/view-flag.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/circular_end.gif" />';
                     	strValue = "";
                     } else {
-//                    	titleImage = '<img src="/images/ImgIcon/icon_extraappr.gif" />';
-                    	titleImage = '<img src="/images/ImgIcon/icon-flag.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/circular_temp.gif" />';
                     	strValue = "";
                     }
                 }
