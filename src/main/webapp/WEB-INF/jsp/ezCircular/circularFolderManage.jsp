@@ -125,7 +125,7 @@
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1 style="margin-bottom:0px;"><spring:message code='ezCircular.t74' /></h1>
+		<h1 style="margin-bottom:0px;"><spring:message code='ezCircular.t9' /></h1>
 		<div id="close">
 		  <ul>
 		    <li><span onClick="window.close()"><spring:message code='ezCircular.t84' /></span></li>

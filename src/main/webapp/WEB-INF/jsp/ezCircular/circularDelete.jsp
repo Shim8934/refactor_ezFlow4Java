@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>BoardItemList</title>
+		<title><spring:message code = 'ezCircular.t6' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
@@ -611,7 +611,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-	    <h1><spring:message code='ezCircular.t61'/><span id="mailBoxInfo"></span>
+	    <h1><spring:message code='ezCircular.t6'/><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
