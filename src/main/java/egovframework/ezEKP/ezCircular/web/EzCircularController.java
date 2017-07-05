@@ -2102,4 +2102,26 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	return "/ezCircular/circularCommentPopup";
     }
+
+    /**
+     * 회람 의견목록 팝업화면조회
+     */
+    @RequestMapping(value = "/ezCircular/circularDeptListAdd.do")
+    public String circularDeptListAdd(@CookieValue("loginCookie") String loginCookie, CircularDeptVO circularDeptVO, Model model) throws Exception {
+    	logger.debug("circularDeptListAdd started.");
+
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
+    	circularDeptVO.setTenantID(userInfo.getTenantId());
+		circularDeptVO.setMemberID(userInfo.getId());
+		
+		List<CircularDeptVO> result = ezCircularService.getcircularDeptList1(circularDeptVO, userInfo);
+    	
+    	logger.debug("circularDeptListAdd ended.");
+    	
+    	model.addAttribute("userInfo", userInfo);
+    	model.addAttribute("result", result);
+    	
+    	return "/ezCircular/circularDeptListAdd";
+    }
 }

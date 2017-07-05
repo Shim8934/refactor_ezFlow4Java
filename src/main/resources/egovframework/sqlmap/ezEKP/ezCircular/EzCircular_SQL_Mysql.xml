@@ -939,8 +939,36 @@
                 A.circularbmid,
                 A.title,
                 A.regdate,
-                CONCAT((select membername FROM tbl_circular_bmuser where circularBMId = A.CIRCULARBMID ORDER BY circularBMUserId limit 1),'/',
-                (select count(*) - 1 from tbl_circular_bmuser where circularBMId = A.CIRCULARBMID )) memberName
+                CONCAT((select membername 
+                		FROM tbl_circular_bmuser 
+                		where circularBMId = A.CIRCULARBMID 
+                		ORDER BY circularBMUserId limit 1),
+                		'/',
+                		(select count(*) - 1 
+                		 from tbl_circular_bmuser 
+                		 where circularBMId = A.CIRCULARBMID )) memberName
+            FROM
+                TBL_CIRCULAR_BM A
+            WHERE
+                A.MEMBERID = #memberID#
+            AND
+                A.TENANTID = #tenantID#
+        ]]>
+    </select>
+    
+    <select id="EzCircularDAO.getcircularDeptList1" parameterClass="Map" resultClass="CircularDeptVO">
+        <![CDATA[
+            SELECT
+                A.circularbmid,
+                A.title,
+                A.regdate,
+                (select membername 
+                 FROM tbl_circular_bmuser 
+                 where circularBMId = A.CIRCULARBMID 
+                 ORDER BY circularBMUserId limit 1) memberName,
+             	(select count(*) - 1 
+             	 from tbl_circular_bmuser 
+             	 where circularBMId = A.CIRCULARBMID ) memberNameCount
             FROM
                 TBL_CIRCULAR_BM A
             WHERE

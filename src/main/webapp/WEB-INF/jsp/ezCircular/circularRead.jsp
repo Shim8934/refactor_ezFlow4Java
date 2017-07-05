@@ -343,7 +343,17 @@
 		                			</c:choose>
  								</div>
  							</td> 
-						</tr> 
+						</tr>
+						<tr style="height:25px">
+							<th style="padding-left: 10px;">작성자</th>
+	       					<td style="padding-left: 4px;">								
+	         					<div id="writer" >${result.memberName }</div>
+	         				</td>
+							<th style="padding-left:10px">작성일</th> 
+ 							<td style="padding-left:4px">
+ 								<div id="printStatus">${result.regDate }</div>
+ 							</td> 
+						</tr>
 						<tr style="height:25px">
 							<th style="padding-left:10px">확인</th>
 	       					<td style="padding-left: 4px;">								
@@ -366,16 +376,6 @@
  								</div>
  							</td> 
 						</tr>
-						<tr style="height:25px">
-							<th style="padding-left: 10px;">작성자</th>
-	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${result.memberName }</div>
-	         				</td>
-							<th style="padding-left:10px">작성일</th> 
- 							<td style="padding-left:4px">
- 								<div id="printStatus">${result.regDate }</div>
- 							</td> 
-						</tr> 
 						<tr style="height:25px"> 
  							<th style="padding-left:10px">회람자</th> 
  							<td style="padding-left:4px; width:100%" colspan="3">

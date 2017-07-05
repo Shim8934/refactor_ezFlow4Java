@@ -338,6 +338,11 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void updateCommentState(Map<String, Object> map) throws Exception {
 		update("EzCircularDAO.updateCommentState", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<CircularDeptVO> getcircularDeptList1(Map<String, Object> map) {
+		return (List<CircularDeptVO>) list("EzCircularDAO.getcircularDeptList1", map);
+	}
 
 	public int getCommentCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getCommentCount", map);

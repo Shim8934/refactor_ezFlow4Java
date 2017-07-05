@@ -228,7 +228,10 @@
 		 			});
 	    		}
 	    	}
-
+	    	
+	    	function dept_add() {
+	    		DivPopUpShow(570, 330, "/ezCircular/circularDeptListAdd.do");
+	    	}
 // 	    	function window_onUnload() {
 // 	    	}
 	    	
@@ -328,6 +331,7 @@
 	           				<th rowspan="2">회람자</th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
+	           					<a class="imgbtn"><span id="clickbtn" onclick="dept_add()">회람처추가</span></a>
 	           				</td>
 						</tr>
 						<tr>
