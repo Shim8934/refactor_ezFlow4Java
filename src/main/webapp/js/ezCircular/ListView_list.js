@@ -582,13 +582,13 @@ function ListView() {
                     objTd.style.textAlign = "center";
                 }
                 if (strColName == "STATUS") {
-                	var _HeaderSpanimg = document.createElement("IMG");
-                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_ing.gif");
-                    _HeaderSpanimg.border = "0";
+//                	var _HeaderSpanimg = document.createElement("IMG");
+//                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_ing.gif");
+//                    _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
-                    _HeaderSpanimg.setAttribute("align", "absmiddle");
-                    objTd.appendChild(_HeaderSpanimg);
+//                    _HeaderSpanimg.setAttribute("align", "absmiddle");
+//                    objTd.appendChild(_HeaderSpanimg);
                 }
                 
                 if (strColName == "UPDATESTATUS") {
@@ -853,15 +853,14 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     
                     if (strValue == "0") {
-                    	titleImage = '<img src="/images/ImgIcon/circular_ing.gif" />';
-                    	
-                    	strValue = "";
+//                    	titleImage = '<img src="/images/ImgIcon/circular_ing.gif" />';
+                    	strValue = "진행중";
                     } else if (strValue == "1") {
-                    	titleImage = '<img src="/images/ImgIcon/circular_end.gif" />';
-                    	strValue = "";
+//                    	titleImage = '<img src="/images/ImgIcon/circular_end.gif" />';
+                    	strValue = "종료";
                     } else {
-                    	titleImage = '<img src="/images/ImgIcon/circular_temp.gif" />';
-                    	strValue = "";
+//                    	titleImage = '<img src="/images/ImgIcon/circular_temp.gif" />';
+                    	strValue = "임시";
                     }
                 }
                 
