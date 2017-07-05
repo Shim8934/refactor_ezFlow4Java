@@ -160,7 +160,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="openCircularComment()">의견보기 [${commentCount}]</span></li>
+               	    		<li><span onclick="openCircularComment()">의견목록 [${commentCount}]</span></li>
                         	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
@@ -210,17 +210,17 @@
                     	</tr>
 		        		<tr>
 							<th>작성자</th>
-	       					<td style="padding-left: 4px;">								
+	       					<td style="padding-left: 4px;">
 	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
-							<th>작성일</th> 
+							<th>작성일</th>
  							<td style="padding-left: 4px">
  								<div id="printStatus">${result.regDate }</div>
- 							</td> 
+ 							</td>
 						</tr>
 						<tr>
 		        			<th>확인</th>
-	       					<td>								
+	       					<td>
 	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
 	         				<th>상태</th>
@@ -247,7 +247,6 @@
 	                 			<div id="divCross" style="overflow:auto;"></div>
 	            			</td>
 	        			</tr>
-	        			
 	        		</table>
 	        		<br/>
                     <table class="file">
@@ -256,7 +255,7 @@
                                 <spring:message code='ezSchedule.t316' />
                             </th>
                             <td class="pos1">
-                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">	                                
+                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:20px">
                                     		<c:set var="imagePath" value="/images/file.gif" />
