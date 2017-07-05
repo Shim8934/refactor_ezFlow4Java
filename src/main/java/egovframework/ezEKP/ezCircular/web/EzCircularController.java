@@ -2124,4 +2124,21 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	return "/ezCircular/circularDeptListAdd";
     }
+    
+    /**
+     * 회람판 공유자지정화면 조회
+     */
+    @RequestMapping(value = "/ezCircular/circularCommentSharePopup.do")
+    public String shareUserPopup(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, Model model) throws Exception {
+    	logger.debug("shareUserPopup started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
+    	logger.debug("shareUserPopup ended.");
+    	
+    	model.addAttribute("userInfo", userInfo);
+    	model.addAttribute("vo", vo);
+    	
+    	return "/ezCircular/circularCommentSharePopup";
+    }
 }
