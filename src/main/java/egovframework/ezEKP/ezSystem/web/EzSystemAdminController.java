@@ -144,18 +144,18 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
+		String offset = userInfo.getOffset();
+		String userLang = userInfo.getLang();
+		
 		List<ConnectionInfoVO> loginHistList = new ArrayList<ConnectionInfoVO>();
-		loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()));
-
-		for (int i = 0; i < loginHistList.size(); i++) {
-			String before = "원래시간" + loginHistList.get(i).getConnecttime();
-			String timezone = commonUtil.getDateStringInUTC(loginHistList.get(i).getTime(), userInfo.getOffset(), false);
-			String after = "바뀐시간시간" + timezone ;  
-			loginHistList.get(i).setConnecttime(timezone);
-		}
+		
+		loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset));
 		
 		model.addAttribute("loginHistList", loginHistList);
-		logger.debug("ended systemLoginHist controller");
+		model.addAttribute("userLang", userLang);
+		
+		logger.debug("ended systemLoginHist controller.");
+		
 		return "/ezSystem/systemLoginHist";
 	}
 	

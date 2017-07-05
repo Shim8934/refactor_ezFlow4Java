@@ -64,8 +64,14 @@ $(function(){
 		<tbody id="loginHistListBody">
 			<c:forEach items="${loginHistList }" var="list" begin="0" end="5">
 				<tr>
+				<c:if test="${userLang == 1 }">
 					<td><c:out value="${list.usernm }"></c:out></td>		
 					<td><c:out value="${list.deptnm }"></c:out></td>		
+				</c:if>
+				<c:if test="${userLang != 1 }">
+					<td><c:out value="${list.usernm2 }"></c:out></td>		
+					<td><c:out value="${list.deptnm2 }"></c:out></td>		
+				</c:if>
 					<td><c:out value="${list.connectip }"></c:out></td>		
 					<td><c:out value="${list.connecttime }"></c:out></td>		
 					<td><c:out value="${list.connectbrowser }"></c:out></td>		
@@ -74,5 +80,6 @@ $(function(){
 			</c:forEach>
 		</tbody>
 	</table>
+	<div id="pageLayer"></div>
 </body>
 </html>

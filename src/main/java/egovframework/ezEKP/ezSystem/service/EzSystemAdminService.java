@@ -13,5 +13,5 @@ import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 public interface EzSystemAdminService {
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception;
 	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale) throws Exception;
-	public List<ConnectionInfoVO> getLoginHist(int tenantID) throws Exception;
+	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset) throws Exception;
 }

@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,15 +143,20 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public List<ConnectionInfoVO> getLoginHist(int tenantID) throws Exception {
+	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset) throws Exception {
 
 		logger.debug("getLoginHist started. tenantID : " + tenantID);
-		Map<String, Object> map = new HashMap<String, Object>();
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_tenantID", tenantID);
+		map.put("offset", offset);
+		
 		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(map);
 		
 		logger.debug("getLoginHist ended.");
+		
 		return list;
 	}
+
+
 }
