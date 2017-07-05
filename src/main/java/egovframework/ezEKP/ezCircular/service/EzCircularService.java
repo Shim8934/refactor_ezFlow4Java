@@ -128,6 +128,8 @@ public interface EzCircularService {
 
 	public void circularReturn(String circularIdList, String folderID, String memberID, int tenantID) throws Exception;
 
+	public int getCommentCount(String circularID, String id, int tenantID) throws Exception;
+
 	public List<CircularDeptVO> getcircularDeptList1(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
 
 }

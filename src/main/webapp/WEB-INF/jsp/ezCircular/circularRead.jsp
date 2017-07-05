@@ -146,8 +146,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' /></span></li>
-                        	
+               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' />[${commentCount}]</span></li>                        	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t58' /></span></li>
                 	    	</c:if>
@@ -209,11 +208,11 @@
 							<th><spring:message code='ezCircular.t123' /></th> 
  							<td style="padding-left: 6px">
  								<div id="printStatus">${result.regDate }</div>
- 							</td> 
+ 							</td>
 						</tr>
 						<tr>
 		        			<th><spring:message code='ezCircular.t65' /></th>
-	       					<td>								
+	       					<td>
 	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
 	         				<th><spring:message code='ezCircular.t124' /></th>
@@ -240,7 +239,6 @@
 	                 			<div id="divCross" style="overflow:auto;"></div>
 	            			</td>
 	        			</tr>
-	        			
 	        		</table>
 	        		<br/>
                     <table class="file">
@@ -249,7 +247,7 @@
                                 <spring:message code='ezCircular.t108' />
                             </th>
                             <td class="pos1">
-                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">	                                
+                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:20px">
                                     		<c:set var="imagePath" value="/images/file.gif" />

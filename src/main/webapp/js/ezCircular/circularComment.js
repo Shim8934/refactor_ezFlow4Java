@@ -52,7 +52,14 @@ function getCircularComment() {
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
-				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+//				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+				
+				if (vo.memberID == userInfoID) {
+					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "&nbsp;<img src='/images/icon/i_group.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' /></td>";
+				} else {
+					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+				}
+				
 				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment + "&nbsp;";
 				
 				var arry = vo.regDate.substring(0, 10).split('-');
@@ -179,6 +186,32 @@ function commentSendMail() {
 	});
 }
 
+function getCommentShareUser() {
+	var circularID;
+	//회람자목록 조회(본인제외)
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/getCommentShareUser.do",
+		dataType : "json",
+		data : {
+			circularID : circularID
+		},
+		success : function(result) {
+			//html(list)
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			
+		}
+	});
+}
+
+function commentShareUser() {
+	//공유자로 지정된 회람자들의 상태값 의견,신규 -> 공유상태로 변경
+	//의견공유알림메일 발송
+	var circularID;
+	
+}
+
 function DivPopUpPosition(popUpW, popUpH) {
     var ReturnValue = new Array();
     var heigth = document.documentElement.scrollHeight;
@@ -209,6 +242,12 @@ function openCircularComment() {
 	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
 }
 
-function closeCircularComment() {
+function openCommentSharePopup(obj) {
+	$("#mailPanel").css('height', $('body').prop('Height'));
+	
+	DivPopUpShow(400, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID);
+}
+
+function closePopup() {
 	parent.DivPopUpHidden();
 }

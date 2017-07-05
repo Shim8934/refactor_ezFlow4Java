@@ -2336,4 +2336,27 @@
 				tenantid = #tenantID#
 		]]>
 	</delete>
+	
+	<select id="EzCircularDAO.getCommentCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(B.circularcommentstateid)
+			FROM
+				TBL_CIRCULAR_COMMENT A
+			JOIN
+				TBL_CIRCULAR_COMMENTSTATE B
+			ON
+				A.circularcommentid = B.circularcommentid
+			AND
+				A.tenantid = B.tenantid
+			WHERE
+				B.status = 0
+			AND
+				A.circularid = #circularID#
+			AND
+				A.circularuserid = #circularUserID#
+			AND
+				B.tenantid = #tenantID#
+		]]>
+	</select>
 </sqlMap>

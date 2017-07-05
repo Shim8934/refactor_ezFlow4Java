@@ -258,6 +258,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public CircularListVO getCircular(String circularID, String memberID, String offset, int tenantID, String type) throws Exception {
 		logger.debug("getCircular started.");
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || type = " + type + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
@@ -933,6 +934,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return list;
 	}
+	
+	@Override
+	public int getCommentCount(String circularID, String id, int tenantID) throws Exception {
+		logger.debug("getCommentCount started.");
+		logger.debug("circularID = " + circularID + " || circularUserID = " + id + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("circularUserID", id);
+		map.put("tenantID", tenantID);
+		
+		int result = ezCircularDAO.getCommentCount(map);
+		
+		logger.debug("getCommentCount ended. result = " + result);
+		
+		return result;
+	}
 
 	@Override
 	public void editCircularComment(CircularCommentVO vo, LoginVO userInfo) throws Exception {
@@ -1056,6 +1074,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	private void confirmStatus(int circularID, String memberID, int tenantID) throws Exception {
+		logger.debug("confirmStatus started.");
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || tenantID = " + tenantID);
+		
 		String nowDate = commonUtil.getTodayUTCTime("");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1068,6 +1089,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 //		ezCircularDAO.confirmUpdateDate(map);
 		updateReadStatus(circularID, memberID, 1, nowDate, tenantID);
 		updateCircularCommentStatus(Integer.toString(circularID), memberID, 0, nowDate, tenantID);
+		
+		logger.debug("confirmStatus ended.");
 	}
 
 	@Override
