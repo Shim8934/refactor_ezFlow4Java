@@ -21,9 +21,9 @@
 	        var MozMaxZoom = 2;
 	        var MozMinZoom = 0.8;
 	
-	        var strLang1 = "<spring:message code='ezBoard.t10025'/>";
-	        var strLang2 = "<spring:message code='ezBoard.t10023'/>";
-	        var strLang3 = "<spring:message code='ezBoard.t10024'/>";
+	        var strLang1 = "<spring:message code='ezCircular.t108'/>";
+	        var strLang2 = "<spring:message code='ezCircular.t104'/>";
+	        var strLang3 = "<spring:message code='ezCircular.t107'/>";
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
 	            window.parent.previewItemSet();

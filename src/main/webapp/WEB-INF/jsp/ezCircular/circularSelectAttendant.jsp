@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code='ezCircular.t41' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
+	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />	    
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -204,7 +204,7 @@
 	            var totalLen = totalRows.length;
 	
 	            if (totalLen == 0) {
-	                alert("<spring:message code='ezSchedule.t353' />");
+	                alert("<spring:message code='ezCircular.t147' />");
 	                return;
 	            }
 	
@@ -414,7 +414,7 @@
 	        
 	        function infoview_click() {
 	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
-	                alert("<spring:message code='ezSchedule.t1053' />");
+	                alert("<spring:message code='ezCircular.t148' />");
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
@@ -549,7 +549,7 @@
 	                    getlistview.LoadFromID(listid);
 	                    var IsInsert = CheckMailReceiver(strId, "3");
 	                    if (strId == "<c:out value='${userID}' />") {
-	                        alert("<spring:message code='ezSchedule.t352' />");
+	                        alert("<spring:message code='ezCircular.t149' />");
 	                        continue;
 	                    }
 	
@@ -602,7 +602,7 @@
 	            }
 	            else {
 	                if (p_ListOrderObject == "") {
-	                    alert("<spring:message code='ezSchedule.t1053' />");
+	                    alert("<spring:message code='ezCircular.t148' />");
 	                    return;
 	                }
 	                if (p_ListOrderObject != "") {
@@ -945,12 +945,12 @@
 		        listContentArry = new Array();
 		        
 		        if (specialChk(keyword.value)) {
-		    		alert("<spring:message code='ezResource.special' />");
+		    		alert("<spring:message code='ezCircular.t134' />");
 		    		return;
 		    	}
 		        
 		        if (keyword.value == "") {
-		            alert("<spring:message code='ezSchedule.t8' />");
+		            alert("<spring:message code='ezCircular.t150' />");
 		            keyword.focus();
 		            return;
 		        }
@@ -974,7 +974,7 @@
    						event_displayUserList2(loadXMLString(xml));
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezResource.t2'/>" + textStatus);
+						alert("<spring:message code='ezCircular.t151'/>" + textStatus);
 					}
 				});
 		
@@ -989,7 +989,7 @@
 		    function event_displayUserList2(xml) {
 		        if (xml != null) {
 	                if (SelectNodes(xml, "LISTVIEWDATA/ROWS/ROW").length == 0) {
-                    	alert("<spring:message code='ezPersonal.t211'/>");
+                    	alert("<spring:message code='ezCircular.t152'/>");
 	                } else {
 	                    pListXML_Info = xml;
                     	pSeach = true;
@@ -1231,23 +1231,23 @@
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
 	                                                    <select id="search_type">
-	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezSchedule.t18' /></option>
-	                                                        <option value="description" usedefault="1"><spring:message code='ezSchedule.t12' /></option>
-	                                                        <option value="title" usedefault="1"><spring:message code='ezSchedule.t14' /></option>
-	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezSchedule.t1050' /></option>
-	                                                        <option value="mobile" usedefault="0"><spring:message code='ezSchedule.t1051' /></option>
-	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezSchedule.t20' /></option>
-	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezSchedule.t21' /></option>
-	                                                        <option value="mail" usedefault="0"><spring:message code='ezSchedule.t22' /></option>
-	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezSchedule.t23' /></option>
+	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t153' /></option>
+	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
+	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
+	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezCircular.t155' /></option>
+	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
+	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>
+	                                                        <option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezCircular.t158' /></option>
+	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
+	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>
 	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
-	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezSchedule.t24' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezCircular.t85' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezSchedule.t1052' /></span></a>
+	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezCircular.t161' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -1275,17 +1275,17 @@
 	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
+	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t153' /></td>
+	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t154' /></td>
+	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezCircular.t155' /></td>
 	                                                </tr>
 	                                            </table>
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t12' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezSchedule.t14' /></td>
-	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezSchedule.t1050' /></td>
+	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t78' /></td>
+	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t153' /></td>
+	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t154' /></td>
+	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezCircular.t155' /></td>
 	                                                </tr>
 	                                            </table>
 	                                        </div>
@@ -1313,8 +1313,8 @@
 	    	</tr> 
 	 	</table>	    
 		<div class="btnposition">
-	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezSchedule.t5' /></span></a>
+	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
+	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezCircular.t66' /></span></a>
 		</div>
 	</body>
 </HTML>

@@ -36,15 +36,13 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		
-		<h1>의견목록</h1>
-		
+		<h1><spring:message code='ezCircular.t82'/></h1>
 		<div id="close">
 			<ul>
 				<c:if test="${vo.memberID == userInfo.id}">
-					<li><span onclick="commentSendMail();">회람확인메일발송</span></li>
+					<li><span onclick="commentSendMail();"><spring:message code='ezCircular.t83'/></span></li>
 				</c:if>
-				<li><span onclick="closePopup();"><spring:message code='ezResource.t150' /></span></li>
+				<li><span onclick="closePopup();"><spring:message code='ezCircular.t84' /></span></li>
 			</ul>
 		</div>
 		
@@ -54,9 +52,9 @@
 		
 		<table class="mainlist" style="width:103%;margin-left: -10px;margin-top:-10px;">
 			<tr>
-				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;검색</th>
+				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85' /></th>
 				<th style="text-align:right;border-top:0px">
-					<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCircularComment()">검색</span>&nbsp;</a>
+					<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
 				</th>
 			</tr>			
 		</table>

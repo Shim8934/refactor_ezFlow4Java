@@ -13,17 +13,11 @@
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>	    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 	    <script type="text/javascript">
-// 	        var pUse_Editor = "${useEditor}";
-// 	        var subCode = "${subCode}";
 	        var funcCode = "${funCode}";
-// 	        var g_firstOpen = true;
-// 	        var lang = "${userinfo.lang}";
-// 	        var pNoneActiveX = "${noneActiveX}";
-// 	        var reloadRetryCount = 1;
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -181,7 +175,7 @@
 	</head>
 	<body class="leftbody" style="overflow: hidden;">
 	    <div id="left">
-	        <div class="left_circular" title="회람판"></div>
+	        <div class="left_circular" title="<spring:message code="ezCircular.t1" />"></div>
 	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
 	        <ul id="iconul">
 	        	<li><span style="width:100%;display:inline-block;" id="newCircular" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id=count1></span></span></li>

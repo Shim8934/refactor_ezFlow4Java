@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />		
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
@@ -72,17 +72,17 @@
 		        $("#Edatepicker").datepicker('setDate', EDate);
 		    });
 		    
-		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthMsg = "<spring:message code='ezCircular.t129' />";
 		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayMsg = "<spring:message code='ezCircular.t128' />";
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		        	closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-					currentText: "<spring:message code='main.t0606' />",
+		        $.datepicker.regional["<spring:message code='ezCircular.t130' />"] = {
+		        	closeText: "<spring:message code='ezCircular.t84' />",
+		            prevText: "<spring:message code='ezCircular.t131' />",
+		            nextText: "<spring:message code='ezCircular.t132' />",
+					currentText: "<spring:message code='ezCircular.t133' />",
 		            monthNames: monthStr,
 		            monthNamesShort: monthStr,
 		            dayNames: dayStr,
@@ -96,17 +96,17 @@
 		            showAnim: 'show',
 		            showMonthAfterYear: true
 		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='ezCircular.t130' />"]);
 		    });
 		
 		    function search() {		    	
 		    	if (specialChk(document.getElementById("keyword").value)) {
-		    		alert("<spring:message code='ezResource.special' />");
+		    		alert("<spring:message code='ezCircular.t134' />");
 		    		return;
 		    	}
 		    	
 		        if (document.getElementById("keyword").value == "") {
-		            alert("<spring:message code='ezSchedule.t346'/>");
+		            alert("<spring:message code='ezCircular.t135'/>");
 		            document.getElementById("keyword").focus();
 		            return;
 		        }
@@ -123,7 +123,7 @@
 		        }		
 
 		        if (sdate > edate) {
-		        	alert("<spring:message code='ezResource.dateChk' />");
+		        	alert("<spring:message code='ezCircular.t136' />");
 		        	return;
 		        }
 
@@ -223,26 +223,26 @@
 	</head>
 	<body class="mainbody"> 
 		<form method="post"> 
-			<h1>회람판 검색</h1> 
+			<h1><spring:message code='ezCircular.t8' /></h1> 
 		  	<table style="width:100%" class="content">  
 		    	<tr> 
-		      		<th>검색조건</th> 
+		      		<th><spring:message code='ezCircular.t139' /></th> 
 		      		<td style="width:100%">
 		      			<select name="search_field" id="search_field" style="WIDTH: 130px"> 
-		          			<option value="circularNew" ${filter == 'circularNew' ? 'selected' : ''}>신규회람판</option> 
-		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}>받은회람판</option>
-		          			<option value="circularMy" ${filter == 'circularMy' ? 'selected' : ''}>작성한회람판</option>
-		          			<option value="circularTemp" ${filter == 'circularTemp' ? 'selected' : ''}>임시회람판</option>
-		          			<option value="circularFolder" ${filter == 'circularFolder' ? 'selected' : ''}>회람문서함</option> 
+		          			<option value="circularNew" ${filter == 'circularNew' ? 'selected' : ''}><spring:message code='ezCircular.t2' /></option> 
+		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}><spring:message code='ezCircular.t3' /></option>
+		          			<option value="circularMy" ${filter == 'circularMy' ? 'selected' : ''}><spring:message code='ezCircular.t4' /></option>
+		          			<option value="circularTemp" ${filter == 'circularTemp' ? 'selected' : ''}><spring:message code='ezCircular.t5' /></option>
+		          			<option value="circularFolder" ${filter == 'circularFolder' ? 'selected' : ''}><spring:message code='ezCircular.t7' /></option> 
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
-		        		<a href="#" class="imgbtn"><span onClick="search()">검색</span></a>
+		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezCircular.t85' /></span></a>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 
-		      		<th>검색기간</th>
+		      		<th><spring:message code='ezCircular.t137' /></th>
 		      		<td>
-						<input type="checkbox" value="1" id="usepostdate" style="display:none;"><a class="imgbtn"><span onclick="DateSearch_Click();">검색기간 사용</span></a>
+						<input type="checkbox" value="1" id="usepostdate" style="display:none;"><a class="imgbtn"><span onclick="DateSearch_Click();"><spring:message code='ezCircular.t138' /></span></a>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" disabled/>
 			  		</td>
@@ -250,7 +250,7 @@
 		  	</table> 
 		 	<br/>
 		 	<h2 class="h2_dot">
-		 		<spring:message code='ezSchedule.t295'/>&nbsp;<span class="point">${totalCount}</span>&nbsp;<span id="resultCount"></span><spring:message code='ezSchedule.t296'/>
+		 		<spring:message code='ezCircular.t146'/>&nbsp;<span class="point">${totalCount}</span>&nbsp;<span id="resultCount"></span><spring:message code='ezCircular.t145'/>
 		    </h2>		
 		  	<table class="mainlist" style="table-layout:fixed;width:100%">
 		    	<tr> 
@@ -258,21 +258,21 @@
 			        <th style="width:18px; padding: 0px; color: black;padding-left:3px;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 			        <th style="width:18px; padding: 0px; color: black;cursor:pointer;text-align:center" nowrap title onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th>
 					<c:if test="${type == 'N'}">
-						<th style="width:30px;cursor:pointer;text-align:center" id="updateStatus" onclick="event_HeaderClick(this)">분류</th> 
-						<th style="width:50px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>
+						<th style="width:30px;cursor:pointer;text-align:center" id="updateStatus" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t140' /></th> 
+						<th style="width:50px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t124' /></th>
 					</c:if>
 					<c:if test="${type == 'C'}">
-						<th style="width:30px;cursor:pointer;text-align:center" id="updateStatus" onclick="event_HeaderClick(this)">확인</th> 
-						<th style="width:50px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>
+						<th style="width:30px;cursor:pointer;text-align:center" id="updateStatus" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t65' /></th> 
+						<th style="width:50px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t124' /></th>
 					</c:if>
 					<c:if test="${type != 'N' && type != 'C'}">
-						<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)">상태</th>					
+						<th style="width:80px;cursor:pointer;text-align:center" id="tofromname" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t124' /></th>					
 					</c:if>
-					<th style="width:350px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">제목</th> 
-					<th style="width:120px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)">작성자</th> 
-					<th style="width:150px;" align="left">작성일</th> 
-					<th style="width:100px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)">회람자확인</th>
-					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)">확인일</th> 
+					<th style="width:350px;cursor:pointer" align="left" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t32' /></th> 
+					<th style="width:120px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t122' /></th> 
+					<th style="width:150px;" align="left"><spring:message code='ezCircular.t123' /></th> 
+					<th style="width:100px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t141' /></th>
+					<th style="width:150px;cursor:pointer" align="left" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t142' /></th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${list}" varStatus="status">
 			    	<tr id="searchList${status.count}" style="cursor:pointer;padding:0" onClick="event_click(this)" ondblClick="ItemRead_onclick('${item.circularID}')" bgcolor=#ffffff>
@@ -293,29 +293,29 @@
 				    			<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;color:blue;">의</td>
 				    		</c:if>
 				    		<td style="width:50px;cursor:pointer;text-align:center;">
-				    			<c:if test="${item.status == '0'}">진행중</c:if>
-				    			<c:if test="${item.status == '1'}">종료</c:if>
-				    			<c:if test="${item.status == '2'}">임시</c:if>
+				    			<c:if test="${item.status == '0'}"><spring:message code='ezCircular.t125' /></c:if>
+				    			<c:if test="${item.status == '1'}"><spring:message code='ezCircular.t126' /></c:if>
+				    			<c:if test="${item.status == '2'}"><spring:message code='ezCircular.t127' /></c:if>
 				    		</td>
 						</c:if>
 						<c:if test="${type == 'C'}">
 			    			<c:if test="${item.updateStatus == '0'}">
-								<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;">미확인</td>
+								<td style="width:30px;cursor:pointer;text-align:center;font-weight:bold;"><spring:message code='ezCircular.t143' /></td>
 							</c:if>
 				    		<c:if test="${item.updateStatus == '1'}">
-				    			<td style="width:30px;cursor:pointer;text-align:center;;">확인</td>
+				    			<td style="width:30px;cursor:pointer;text-align:center;;"><spring:message code='ezCircular.t65' /></td>
 				    		</c:if>
 				    		<td style="width:50px;cursor:pointer;text-align:center;">
-				    			<c:if test="${item.status == '0'}">진행중</c:if>
-				    			<c:if test="${item.status == '1'}">종료</c:if>
-				    			<c:if test="${item.status == '2'}">임시</c:if>
+				    			<c:if test="${item.status == '0'}"><spring:message code='ezCircular.t125' /></c:if>
+				    			<c:if test="${item.status == '1'}"><spring:message code='ezCircular.t126' /></c:if>
+				    			<c:if test="${item.status == '2'}"><spring:message code='ezCircular.t127' /></c:if>
 				    		</td>
 						</c:if>
 						<c:if test="${type != 'N' && type != 'C'}">
 							<td style="width:80px;cursor:pointer;text-align:center">
-				    			<c:if test="${item.status == '0'}">진행중</c:if>
-				    			<c:if test="${item.status == '1'}">종료</c:if>
-				    			<c:if test="${item.status == '2'}">임시</c:if>
+				    			<c:if test="${item.status == '0'}"><spring:message code='ezCircular.t125' /></c:if>
+				    			<c:if test="${item.status == '1'}"><spring:message code='ezCircular.t126' /></c:if>
+				    			<c:if test="${item.status == '2'}"><spring:message code='ezCircular.t127' /></c:if>
 				    		</td>
 						</c:if>
 			    		<td style="width:350px" align="left">${item.title}</td> 
@@ -333,10 +333,10 @@
 		    	<c:if test="${totalCount == 0 && keyword != null && startDate != null}">
 			    	<tr> 
 			    		<c:if test="${type == 'N' || type == 'C'}">
-				        	<td colspan="10" style="text-align:center">검색 결과가 없습니다.</td> 
+				        	<td colspan="10" style="text-align:center"><spring:message code='ezCircular.t144' /></td> 
 			    		</c:if>
 			    		<c:if test="${type != 'N' && type != 'C'}">
-				        	<td colspan="9" style="text-align:center">검색 결과가 없습니다.</td> 
+				        	<td colspan="9" style="text-align:center"><spring:message code='ezCircular.t144' /></td> 
 			    		</c:if>
 			      	</tr>
 		      	</c:if>

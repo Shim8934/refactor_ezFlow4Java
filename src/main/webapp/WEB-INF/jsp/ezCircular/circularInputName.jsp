@@ -65,7 +65,7 @@
 						ReturnFunction();
 					},
 					error : function() {
-						alert("에러 발생");	
+						alert("<spring:message code='ezCircular.t102' />");	
 					}
 				})
 	        }
@@ -81,14 +81,14 @@
 	    </script>
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
-	    <h1>회람문서함 추가/수정</h1>
-	    <div class="txt">회람문서함 이름을 입력하세요.</div>
+	    <h1><spring:message code='ezCircular.t105' /></h1>
+	    <div class="txt"><spring:message code='ezCircular.t106' /></div>
 	    <div class="nobox">
 	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%" maxlength="8">
 	    </div>
 	    <div class="btnposition">
-	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezEmail.t38' /></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezEmail.t39' /></span></a>
+	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezCircular.t65' /></span></a>
+	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezCircular.t66' /></span></a>
 	    </div>
 	</body>
 </html>

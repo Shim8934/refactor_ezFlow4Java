@@ -5,11 +5,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>이동</title>
+	    <title><spring:message code='ezCircular.t56' /></title>
 	    <meta name="CODE_LANGUAGE" content="C#">
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -54,7 +54,7 @@
 				var originLoc = "${originLoc}";
 
 				if (folderId == oldFolderId) {
-					alert("같은 문서함으로 이동할 수 없습니다.");
+					alert("<spring:message code='ezCircular.t109' />");
 					return;
 				}
 
@@ -70,22 +70,22 @@
 	                		originLoc		:	originLoc,
 	                },  
 	                success : function(data) {	
-	                  alert("이동하였습니다.");
+	                  alert("<spring:message code='ezCircular.t110' />");
 	                  window.opener.window_reload();
 	             	  window.close();
 	                },
 	                error : function() {
-	                	alert("에러발생")
+	                	alert("<spring:message code='ezCircular.t102' />")
 	                }
 	 			});
 	        }
 	    </script>
 	</head>
 	<body scroll="no" class="popup" onload="javascript:window_onload()">
-	    <h1>이동</h1>
+	    <h1><spring:message code='ezCircular.t56' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_Close();">닫기</span></li>
+	            <li><span onclick="Window_Close();"><spring:message code='ezCircular.t84' /></span></li>
 	        </ul>
 	    </div>
 	    <table class="content">
@@ -95,7 +95,7 @@
 	                </div>
 	            </td>
 	            <td class="pos3">
-	            	<a class="imgbtn"><span onclick="return btn_Move_onclick()">이동</span></a>
+	            	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezCircular.t56' /></span></a>
 	            </td>
 	        </tr>
 	    </table>

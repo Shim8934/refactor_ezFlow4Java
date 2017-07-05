@@ -76,7 +76,7 @@
             
 		    function modify_onclick() {
 		        if (PostTreeView.selectedIndex() == -1) {
-		            alert("<spring:message code='ezEmail.t158' />");
+		            alert("<spring:message code='ezCircular.t103' />");
 		            return;
 		        }
 		        
@@ -97,18 +97,13 @@
 		    	var deleteFolder = "";
 		    	
 		    	if (PostTreeView.selectedIndex() == -1) {
-		            alert("<spring:message code='ezEmail.t158' />");
+		            alert("<spring:message code='ezCircular.t103' />");
 		            return;
 		        }
-		    	
+
 		        deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
 
-		        if (deleteFolder == "") {
-		            alert("해당폴더는 삭제할 수 없습니다.");
-		            return;
-		        }
-
-				if (confirm("삭제하시겠습니까?")) {
+				if (confirm("<spring:message code='ezCircular.t46' />")) {
 					$.ajax({
 						method : "POST",
 						dataType : "text",
@@ -118,11 +113,11 @@
 							deleteFolder : deleteFolder 
 						},
 						success : function() {
-							alert("삭제하였습니다.");
+							alert("<spring:message code='ezCircular.t45' />");
 							location.reload();
 						},
 						error : function() {
-							alert("에러발생");
+							alert("<spring:message code='ezCircular.t102' />");
 						}
 					})
 				}
@@ -130,16 +125,16 @@
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1 style="margin-bottom:0px;">회람문서함 관리</h1>
+		<h1 style="margin-bottom:0px;"><spring:message code='ezCircular.t74' /></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close()">닫기</span></li>
+		    <li><span onClick="window.close()"><spring:message code='ezCircular.t84' /></span></li>
 		  </ul>
 		</div>
 		<div style="margin-bottom:5px;">
-		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;">추가</span></a>
-		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;">수정</span></a>
-		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;">삭제</span></a>
+		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezCircular.t77' /></span></a>
+		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezCircular.t29' /></span></a>
+		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezCircular.t58' /></span></a>
 		</div>
 		<table class="popuplist" style="width:100%">
 		  <tr>

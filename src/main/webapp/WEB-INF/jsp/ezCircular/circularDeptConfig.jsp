@@ -70,7 +70,7 @@
                             } else {
                             	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
                             }   
-                            	_html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[보기]" + "</td>";
+	                            _html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[" + "<spring:message code='ezCircular.t92' />" +"]</td>";
 	                            _html += "</tr>";
 	                            _html += "</html>";
 	                            document.getElementById("contentlist").innerHTML = _html;
@@ -93,7 +93,7 @@
                                 } else {
                                 	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
                                 }
-                                	_html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[보기]" + "</td>";
+                                	_html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[" + "<spring:message code='ezCircular.t92' />" +"]</td>";
 	                                _html += "</tr>";
 	                                _html += "</html>";
 	                                document.getElementById("contentlist").innerHTML = _html;

@@ -9,7 +9,7 @@
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>        
-        <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
+        <script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<title><spring:message code='ezCircular.t67'/></title>
 		<script>
 		    /* function cancel_onClick() {
@@ -34,12 +34,12 @@
 			<table id="List" class="mainlist" style="width:100%">
 				<thead id="List_THEAD">
 					<tr>
-						<th id="TH_0" style="width:5%">NO</th>
-						<th id="TH_1" style="width:15%">회사</th>
-						<th id="TH_2" style="width:17%">부서</th>
-						<th id="TH_3" style="width:12%">직급</th>
-						<th id="TH_4" style="width:13%">이름</th>
-						<th id="TH_5" style="width:38%">E-MAIL</th>
+						<th id="TH_0" style="width:5%"><spring:message code='ezCircular.t31' /></th>
+						<th id="TH_1" style="width:15%"><spring:message code='ezCircular.t76' /></th>
+						<th id="TH_2" style="width:17%"><spring:message code='ezCircular.t78' /></th>
+						<th id="TH_3" style="width:12%"><spring:message code='ezCircular.t79' /></th>
+						<th id="TH_4" style="width:13%"><spring:message code='ezCircular.t80' /></th>
+						<th id="TH_5" style="width:38%"><spring:message code='ezCircular.t81' /></th>
 					</tr>
 				</thead>
 				<tbody>

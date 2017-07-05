@@ -58,11 +58,11 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden;">
-		<h1>회람처목록</h1>
+		<h1><spring:message code='ezCircular.t87'/></h1>
 		
 		<div id="close">
 			<ul>
-				<li><span onclick="closeDeptListAdd();">닫기</span></li>
+				<li><span onclick="closeDeptListAdd();"><spring:message code='ezCircular.t84'/></span></li>
 			</ul>
 		</div>
 		
@@ -88,7 +88,7 @@
 		                            	<td style="width:250px;color:gray;padding-left: 20px;">${item.title }</td>
 		                            	<c:if test="${item.memberNameCount != 0}">
 		                        			<td style="width: 80px;color:gray;" align="center">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
-		                            		<td id="pop" style="width: 80px;"><a href="javascript:memberList();" style="color:gray;">[보기]</a></td>
+		                            		<td id="pop" style="width: 80px;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t50' />]</a></td>
 		                            	</c:if>
 	                            		<c:if test="${item.memberNameCount == 0}">
 	                            			<td style='width: 80px;color:gray;'>${item.memberName }</td>

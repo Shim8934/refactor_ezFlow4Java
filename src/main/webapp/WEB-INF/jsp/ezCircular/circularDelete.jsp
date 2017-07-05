@@ -6,7 +6,7 @@
 	<head>
 		<title>BoardItemList</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -279,14 +279,14 @@
 	                    PreviewRayerChange(pPreviewShow_HOW);
 	                    if (CrossYN()) {
 	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
 	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
 	                    } else {
 	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
 	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
 	                    }
 	                    firstFlag = true;
 	                }
@@ -533,26 +533,26 @@
 	            if (type == "basic") {
 	
 	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
-	                    alert("<spring:message code='ezBoard.t192'/>");
+	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	
 	                if (document.getElementById("idDatepicker").value != "" && document.getElementById("_D2").value == "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezCircular.t89'/>");
 	                    return;
 	                }
 	                if (document.getElementById("idDatepicker").value == "" && document.getElementById("_D2").value != "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezCircular.t89'/>");
 	                    return;
 	                }
 	                if (Number(ReplaceText(document.getElementById("idDatepicker").value.substring(0, 10), "-", "")) > Number(ReplaceText(document.getElementById("_D2").value.substring(0, 10), "-", ""))) {
-	                    alert("<spring:message code='ezBoard.t191'/>");
+	                    alert("<spring:message code='ezCircular.t90'/>");
 	                    return;
 	                }
 	            }
 	            else if (type == "quick") {
 	                if (document.getElementById("txt_keyword").value == "") {
-	                    alert("<spring:message code='ezBoard.t192'/>");
+	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	            }
@@ -577,7 +577,7 @@
 	        		return;
 	        	}
 	        	
-	        	if(confirm("<spring:message code='ezCircular.t74'/>")) {
+	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
 		        	var arrList = new Array();
 			        var circularIDList = "";
 			        var i = 0;
@@ -598,10 +598,10 @@
 						data : { circularIDList : circularIDList
 								},
 						success: function() {
-							alert("<spring:message code='ezCircular.t77'/>");
+							alert("<spring:message code='ezCircular.t45'/>");
 						},
 						error: function() {
-							alert("삭제실패");
+							alert("<spring:message code='ezCircular.t102'/>");
 						}
 					});
 
@@ -620,7 +620,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t62'/></span></li>
-	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
+	            <li id="right"><spring:message code='ezCircular.t88'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -636,7 +636,7 @@
 	                        <col>
 	                    </colgroup>
 	                     <tr>
-	                        <th><spring:message code='ezBoard.t10021'/></th>
+	                        <th><spring:message code='ezCircular.t86'/></th>
 	                        <td>
 	                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
 	                                <option value="10">10</option>
@@ -648,7 +648,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <th><spring:message code='ezBoard.t431'/></th>
+	                        <th><spring:message code='ezCircular.t19'/></th>
 	                        <td>
 	                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
