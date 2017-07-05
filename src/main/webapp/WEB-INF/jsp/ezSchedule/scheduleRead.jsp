@@ -63,8 +63,11 @@
 						itemID 	 : contentpath
 					},
 					success: function(result){
-						document.getElementById('message').innerHTML = result;
-					}        			
+						var doc = document.getElementById('message').contentWindow.document;
+						doc.open();
+						doc.write(result);
+						doc.close();
+					}
 				});
 	            
 	            window.onresize();
@@ -78,8 +81,9 @@
 	                if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6")) {
 	                    document.getElementById("messagetd").style.height = document.body.clientHeight - 250 + "PX";
 	                }
-	            } else
+	            } else {
 	                document.getElementById("messagetd").style.height = document.body.clientHeight - 298 + "PX";
+	            }
 	        }
 				
 	        function show_personinfo(userid) {
@@ -274,7 +278,8 @@
 	            printDate = getNodeText(document.getElementById("LabelDate"));
 	            printLocation = getNodeText(document.getElementById("LabelLocation"));
 	            printTitle = getNodeText(document.getElementById("LabelSubject"));
-	            printDocument = document.getElementById("message").innerHTML;
+			
+	            printDocument = document.getElementById("message").contentWindow.document.body.innerHTML;
 	            printAttach = document.getElementById("attachedfileDIV").innerHTML;
 	
 	            var params = { 'type': 'READ', 'printCreator': printCreator, 'printCreateDate': printCreateDate, 'printAttendant': printAttendant, 'printIsPublic': printIsPublic, 'printImportance': printImportance, 'printRepetition': printRepetition, 'printDate': printDate, 'printLocation': printLocation, 'printTitle': printTitle, 'printAttach': printAttach, 'printDocument': printDocument };
@@ -289,10 +294,14 @@
 	            var conHeight = pheight * 0.8;
 	            var pwidth = window.screen.availWidth;
 	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
+	            if (conWidth > 790) {
+	                conWidth = 790;
+	            }
+	            if (conHeight > 670) {
+	            	conHeight = 670;
+	            }
 	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
+	            var pLeft = (pwidth - 790) / 2;
 	
 	            var title = "Print";
 	            var status = "toolbar=no,directories=no,scrollbars=no,resizable=no,status=no,menubar=no,width=" + conWidth + "px, height=" + conHeight + "px, top=" + pTop.toString() + ",left=" + pLeft.toString();
@@ -458,7 +467,7 @@
 	            </tr>
 	            <tr>
 	                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    <div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></div>
+	                    <iframe id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></iframe>	                    
 	                </td>
 	            </tr>
 	            <tr>
