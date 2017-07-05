@@ -78,7 +78,7 @@ public interface EzCircularService {
 
 	public void circularDeptDel(String[] deleteList, int tenantId) throws Exception;
 
-	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, int circularBMId) throws Exception;
+	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, String circularBMId) throws Exception;
 
 	public void circularConfirmStatus(String[] circularIDList, String memberID, int tenantID) throws Exception;
 

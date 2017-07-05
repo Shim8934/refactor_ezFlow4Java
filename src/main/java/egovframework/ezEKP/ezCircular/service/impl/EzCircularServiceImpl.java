@@ -425,9 +425,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		for (int i=0; i<memberListStr.length; i++) {
 			String memberStr = memberListStr[i].trim();
 			
-			map.put("v_CIRCULARBMID", circularBMId);
+			map.put("CIRCULARBMID", circularBMId);
 			map.put("v_MEMBERID", memberStr);
-			map.put("v_TENANTID", tenantId);			
+			map.put("TENANTID", tenantId);			
 			
 			ezCircularDAO.set_circularMemberList(map);
 		}
@@ -487,19 +487,18 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, int circularBMId) throws Exception {
+	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, String circularBMId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		ezCircularDAO.update_circularDept(circularDeptVO);
+		map.put("TITLE", circularDeptVO.getTitle());
+		map.put("CIRCULARBMID", Integer.parseInt(circularBMId));
+		map.put("TENANTID", circularDeptVO.getTenantID());
+		map.put("MEMBERID", circularDeptVO.getMemberID());
 		
-		int tenantId = circularDeptVO.getTenantID();
-		
-		map.put("v_CIRCULARBMID", circularBMId);
-		map.put("v_TENANTID", tenantId);
-		
+		ezCircularDAO.update_circularDept(map);
 		ezCircularDAO.delete_circularMemberList(map);
 		
-		for (int i=0; i<memberListStr.length; i++) {
+		for (int i=0; i<memberListStr.length; i++) {	
 			String memberStr = memberListStr[i].trim();
 			
 			map.put("v_MEMBERID", memberStr);

@@ -907,13 +907,17 @@
     <select id="EzCircularDAO.getCircularDeptUserList" resultClass="CircularListVO" >
         <![CDATA[
             SELECT
-                MEMBERID, MEMBERNAME, MEMBERNAME2
+                A.MEMBERID, A.MEMBERNAME, A.MEMBERNAME2, B.TITLE
             FROM
-                TBL_CIRCULAR_BMUSER
+                TBL_CIRCULAR_BMUSER A
+            JOIN
+            	TBL_CIRCULAR_BM B
+            ON
+            	A.CIRCULARBMID = B.CIRCULARBMID
             WHERE
-                CIRCULARBMID = #circularBMId#
+                A.CIRCULARBMID = #circularBMId#
             AND
-                TENANTID = #tenantID#     
+                A.TENANTID = #tenantID#     
         ]]>
     </select>
     
@@ -1795,14 +1799,14 @@
             CIRCULARBMID,   MEMBERID,   MEMBERNAME,   MEMBERNAME2,    TENANTID
           )
           select 
-            #v_CIRCULARBMID#, 
+            #CIRCULARBMID#, 
             cn, 
             displayname, 
             displayname2, 
             tenant_id
           from tbl_usermaster
           where cn = #v_MEMBERID#
-          and tenant_id = #v_TENANTID#
+          and tenant_id = #TENANTID#
         ]]>
     </insert>
      
@@ -2002,18 +2006,18 @@
       </isEmpty>
     </update>
     
-    <update id="EzCircularDAO.update_circularDept" parameterClass="CircularDeptVO">
+    <update id="EzCircularDAO.update_circularDept" parameterClass="map">
         <![CDATA[
           UPDATE
             TBL_CIRCULAR_BM
           SET
-            TITLE = #title#
+            TITLE = #TITLE#
           WHERE
-            CIRCULARBMID = #circularBMID#
+            CIRCULARBMID = #CIRCULARBMID#
           AND
-            TENANTID = #tenantID#
+            TENANTID = #TENANTID#
           AND
-            MEMBERID = #memberID#
+            MEMBERID = #MEMBERID#
         ]]>
     </update>
     
@@ -2153,9 +2157,9 @@
 		  DELETE FROM
 			  TBL_CIRCULAR_BMUSER 
 		  WHERE
-		 	  CIRCULARBMID = #v_CIRCULARBMID#
+		 	  CIRCULARBMID = #CIRCULARBMID#
 		  AND 
-		      TENANTID = #v_TENANTID#
+		      TENANTID = #TENANTID#
 	    ]]>
 	</delete>
 	

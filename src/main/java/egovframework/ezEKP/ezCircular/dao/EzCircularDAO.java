@@ -188,8 +188,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.updateStatus", map);
 	}
 	
-	public void update_circularDept(CircularDeptVO circularDeptVO) throws Exception {
-		update("EzCircularDAO.update_circularDept", circularDeptVO);
+	public void update_circularDept(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.update_circularDept", map);
 	}
 
 	public void circularClose(Map<String, Object> map) throws Exception {
