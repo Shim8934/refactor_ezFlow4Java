@@ -146,13 +146,23 @@ public class EzSystemAdminController {
 		
 		String offset = userInfo.getOffset();
 		String userLang = userInfo.getLang();
+		String sysLang = "";
 		
-		List<ConnectionInfoVO> loginHistList = new ArrayList<ConnectionInfoVO>();
+		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset));
+		List<SysParamVO> configList = ezSystemAdminService.getSysParam(userInfo.getTenantId());
+		Map<String, String> configMap = new HashMap<String, String>();
 		
-		loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset));
+		for (SysParamVO param : configList) {
+			configMap.put(param.getName(), param.getValue());
+			
+			if (param.getName().equals("PrimaryLang")) {
+				sysLang = param.getValue();
+			}
+		}
 		
 		model.addAttribute("loginHistList", loginHistList);
 		model.addAttribute("userLang", userLang);
+		model.addAttribute("sysLang", sysLang);
 		
 		logger.debug("ended systemLoginHist controller.");
 		

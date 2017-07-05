@@ -9,7 +9,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<script type="text/javascript" src=""></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript">
@@ -64,22 +63,22 @@ $(function(){
 		<tbody id="loginHistListBody">
 			<c:forEach items="${loginHistList }" var="list" begin="0" end="5">
 				<tr>
-				<c:if test="${userLang == 1 }">
-					<td><c:out value="${list.usernm }"></c:out></td>		
-					<td><c:out value="${list.deptnm }"></c:out></td>		
-				</c:if>
-				<c:if test="${userLang != 1 }">
-					<td><c:out value="${list.usernm2 }"></c:out></td>		
-					<td><c:out value="${list.deptnm2 }"></c:out></td>		
-				</c:if>
-					<td><c:out value="${list.connectip }"></c:out></td>		
-					<td><c:out value="${list.connecttime }"></c:out></td>		
-					<td><c:out value="${list.connectbrowser }"></c:out></td>		
-					<td><c:out value="${list.connectos }"></c:out></td>		
+					<c:if test="${ (userLang == 1) && (sysLang == 1) }">
+						<td><c:out value="${list.usernm }"></c:out></td>		
+						<td><c:out value="${list.deptnm }"></c:out></td>		
+					</c:if>
+					<c:if test="${ (userLang != 1) || (sysLang != 1) }">
+						<td><c:out value="${list.usernm2 }"></c:out></td>		
+						<td><c:out value="${list.deptnm2 }"></c:out></td>		
+					</c:if>
+						<td><c:out value="${list.connectip }"></c:out></td>		
+						<td><c:out value="${list.connecttime }"></c:out></td>		
+						<td><c:out value="${list.connectbrowser }"></c:out></td>		
+						<td><c:out value="${list.connectos }"></c:out></td>		
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
-	<div id="pageLayer"></div>
+	<div id="pagingLayer"></div>
 </body>
 </html>
