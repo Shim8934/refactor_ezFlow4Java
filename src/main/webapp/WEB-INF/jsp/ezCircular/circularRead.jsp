@@ -160,7 +160,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="openCircularComment()">의견보기</span></li>
+               	    		<li><span onclick="openCircularComment()">의견보기 [${commentCount}]</span></li>
                         	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>

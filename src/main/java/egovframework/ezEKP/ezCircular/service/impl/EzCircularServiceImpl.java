@@ -918,6 +918,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		return list;
 	}
+	
+	@Override
+	public int getCommentCount(String circularID, String id, int tenantID) throws Exception {
+		logger.debug("getCommentCount started.");
+		logger.debug("circularID = " + circularID + " || circularUserID = " + id + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("circularUserID", id);
+		map.put("tenantID", tenantID);
+		
+		int result = ezCircularDAO.getCommentCount(map);
+		
+		logger.debug("getCommentCount ended. result = " + result);
+		
+		return result;
+	}
 
 	@Override
 	public void editCircularComment(CircularCommentVO vo, LoginVO userInfo) throws Exception {

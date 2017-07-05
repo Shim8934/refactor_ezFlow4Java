@@ -1243,7 +1243,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 	 
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-//		int commentCount = ezCircularService.getCommentCount();//해당유저의 안 읽은 댓글 수
+		int commentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), userInfo.getTenantId());//해당유저의 안 읽은 댓글 수
 		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId(), userInfo.getOffset());
 
 		String listUser = "";
@@ -1274,6 +1274,7 @@ public class EzCircularController extends EgovFileMngUtil {
         }  
 
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("result", result);
 		model.addAttribute("listUser", listUser);
 		
