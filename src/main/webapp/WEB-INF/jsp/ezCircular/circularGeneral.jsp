@@ -7,25 +7,11 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    	<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+    	<link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-// 	 		$(document).ready(function() {	 		
-// 		 	var HListUser = $('#HListUser option:selected').val();
-// 		 	$("#HListUser").val("<c:out value="${boardListConfig.previewHList}"/>").attr("selected", "selected");
-		 
-// 		 	var WListUser = $('#WListUser option:selected').val();
-// 		 	$("#WListUser").val("<c:out value="${boardListConfig.previewWList}"/>").attr("selected", "selected");
-		 
-// 		 	var HPreUser = $('#HPreUser option:selected').val();
-// 		 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
-		 
-// 		 	var WPreUser = $('#WPreUser option:selected').val();
-// 		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	    
-// 		 		});
-	 		
          	document.onselectstart = function () { return false; };
         	window.onload = function () {
            		if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -92,7 +78,7 @@
 	</head>
 		<body style="margin-left: 10px; margin-right: 10px;">
 			<br/>	
-    		<h2><spring:message code="ezBoard.t0006" /></h2>
+    		<h2><spring:message code="ezCircular.t11" /></h2>
     		<span class="txt">▒ <spring:message code="ezCircular.t16" /></span>
         	<br />    
         	<table class="content" style="width: 623px;margin-top:5px">
@@ -106,7 +92,7 @@
                       			<option value='40' ${circularListConfig.listCnt == '40' ? 'selected' : ''}>40</option>
                       			<option value='50' ${circularListConfig.listCnt == '50' ? 'selected' : ''}>50</option>                        
                    		</select>
-                    	<spring:message code="ezBoard.t00019" />
+                    	<spring:message code="ezCircular.t104" />
                     </td>
             	</tr>
             	<tr>

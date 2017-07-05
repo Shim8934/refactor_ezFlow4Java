@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 		<style>
 			#lstAttachLink {
 			height: 115px;
@@ -38,7 +38,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
-		            alert("<spring:message code='ezBoard.t2000'/>");
+		            alert("<spring:message code='ezCircular.t93'/>");
 		            return;
 		        }
 		        var filelist;
@@ -152,11 +152,11 @@
 		    }
 		
 		    function uploadFailed(evt) {
-		        alert("<spring:message code='ezBoard.hyj02'/>");
+		        alert("<spring:message code='ezCircular.t94'/>");
 		    }
 		
 		    function uploadCanceled(evt) {
-		        alert("<spring:message code='ezBoard.hyj03'/>");
+		        alert("<spring:message code='ezCircular.t95'/>");
 		    }
 		
 		    function btnfileup() {
@@ -251,8 +251,8 @@
 	<body style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block; height: 20px;">
             <div style="float:left">
-                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezBoard.t440' /></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezBoard.t441' /></span></a>   
+                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezCircular.t96' /></span></a>
+                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezCircular.t97' /></span></a>   
             </div>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>

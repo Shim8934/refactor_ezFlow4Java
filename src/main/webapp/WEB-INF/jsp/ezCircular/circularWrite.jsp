@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html style="height:100%">
 	<head>
-		<title>회람작성</title>
+		<title><spring:message code="ezCircular.t55"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
@@ -143,7 +143,7 @@
 	                },  
 	                cache: false,
 	                success: function(data) {	   
-	                  alert("회람을 저장하였습니다. \n작성한 회람판에서 확인하실 수 있습니다.");
+	                  alert("<spring:message code='ezCircular.t70'/>");
 	                  window.opener.window_reload();
 	             	  window.close();
 	                }
@@ -223,7 +223,7 @@
 		             	  window.close();
 		                },
 		                error: function() {
-		                	alert("에러발생");	
+		                	alert("<spring:message code='ezCircular.t102'/>");	
 		                }
 		 			});
 	    		}
@@ -283,55 +283,55 @@
     			<td style="height:20px">
       				<div id="menu">      
         				<ul>
-          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t70"/></span></li>
+          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t55"/></span></li>
           					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
         				</ul>
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"><spring:message code="ezResource.t150"/></span></li>
+          					<li><span onClick="window.close();"><spring:message code="ezCircular.t84"/></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
         				<tr>
-          					<th style="width:200px;">제목</th>
+          					<th style="width:200px;"><spring:message code="ezCircular.t32"/></th>
           					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
         				</tr>
 	        			<tr>
-	          				<th>중요도</th>
+	          				<th><spring:message code="ezCircular.t115"/></th>
 	          				<td id="Td_StartDate" style="overflow:hidden; width:200px;">
 	          					<select id="importance" class="select">
-	          						<option value="0" <c:if test="${result.importance eq '0'}">selected</c:if>>일반</option>
-   									<option value="1" <c:if test="${result.importance eq '1'}">selected</c:if>>중요</option>
+	          						<option value="0" <c:if test="${result.importance eq '0'}">selected</c:if>><spring:message code="ezCircular.t116"/></option>
+   									<option value="1" <c:if test="${result.importance eq '1'}">selected</c:if>><spring:message code="ezCircular.t117"/></option>
    								</select>	
 	          				</td>
-	       					<th style="width:40px;">옵션</th>
+	       					<th style="width:40px;"><spring:message code="ezCircular.t118"/></th>
 	       					<td style="width:200px;">
 								<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/>의견
-		                				<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
+		                				<input type="checkbox" id="option" name="chkList" checked/><spring:message code="ezCircular.t119"/>
+		                				<input type="checkbox" id="AllDay" name="chkList"/><spring:message code="ezCircular.t120"/>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" name="chkList"/>의견
-		                				<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
+		                				<input type="checkbox" id="option" name="chkList"/><spring:message code="ezCircular.t119"/>
+		                				<input type="checkbox" id="AllDay" name="chkList" checked/><spring:message code="ezCircular.t120"/>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/>의견
-										<input type="checkbox" id="AllDay" name="chkList" checked/>공지메일발송
+		                				<input type="checkbox" id="option" name="chkList" checked/><spring:message code="ezCircular.t119"/>
+										<input type="checkbox" id="AllDay" name="chkList" checked/><spring:message code="ezCircular.t120"/>
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" name="chkList"/>의견
-										<input type="checkbox" id="AllDay" name="chkList"/>공지메일발송
+		                				<input type="checkbox" id="option" name="chkList"/><spring:message code="ezCircular.t119"/>
+										<input type="checkbox" id="AllDay" name="chkList"/><spring:message code="ezCircular.t120"/>
 		                			</c:otherwise>
 		                		</c:choose>					
 	         				</td>
 	        			</tr>
 						<tr>
-	           				<th rowspan="2">회람자</th>
+	           				<th rowspan="2"><spring:message code="ezCircular.t34"/></th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
-	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()">선택</span></a>
-	           					<a class="imgbtn"><span id="clickbtn" onclick="dept_add()">회람처추가</span></a>
+	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code="ezCircular.t39"/></span></a>
+	           					<a class="imgbtn"><span id="clickbtn" onclick="dept_add()"><spring:message code="ezCircular.t162"/></span></a>
 	           				</td>
 						</tr>
 						<tr>
@@ -392,19 +392,19 @@
     			<td style="vertical-align:top">
     				<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
 	      				<tr style="height:25px"> 
-        					<th style="padding-left:10px" width="80"><spring:message code="ezResource.t193"/></th> 
+        					<th style="padding-left:10px" width="80"><spring:message code="ezCircular.t122"/></th>
         					<td style="padding-left:10px"> <div id="printOwner"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezResource.t213"/></th> 
+	        				<th style="padding-left:10px"><spring:message code="ezCircular.t115"/></th>
         					<td style="padding-left:10px"> <div id="printImportance"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezResource.t197"/></th> 
+	        				<th style="padding-left:10px"><spring:message code="ezCircular.t37"/></th>
         					<td style="padding-left:10px"> <div id="printDate"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezResource.t224"/></th> 
+	        				<th style="padding-left:10px"><spring:message code="ezCircular.t32"/></th>
         					<td style="padding-left:10px"> <div id="printTitle"></div></td> 
       					</tr> 
       					<tr> 

@@ -4,9 +4,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>회람 상세정보</title>
+		<title><spring:message code='ezCircular.t111'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
@@ -44,7 +44,7 @@
 
 		    //삭제버튼 클릭시
 	        function btn_delete() {
-	            if (!confirm("회람을 삭제하시겠습니까?"))
+	            if (!confirm("<spring:message code='ezCircular.t46'/>"))
 	                return;
 	            
 	            $.ajax({
@@ -56,7 +56,7 @@
 						circularID : circularID
 					},
 					success: function() {
-						alert("회람을 삭제하였습니다.");
+						alert("<spring:message code='ezCircular.t45'/>");
 						
 		                try { window.opener.RefreshView() } catch (e) { }
 		
@@ -66,7 +66,7 @@
 		                window.close();
 					},
 					error: function(err) {
-						alert("<spring:message code='ezSchedule.t212' />");
+						alert("<spring:message code='ezCircular.t102' />");
 					}
 				});	
 	        }
@@ -76,8 +76,6 @@
 	            g_printTrueFalse = printTrueFalse;
 	            
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
-	            
-	            onbeforeprint2();
 
 	            var feature = GetOpenPosition(700, 700);
 	            printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
@@ -89,24 +87,12 @@
 	            strContent = strContent + "<table id='printScreen' class='layout'>";
 	            strContent = strContent + document.getElementById("printScreen").innerHTML;
 	            strContent = strContent + "</table></div>";
-// 	            strContent = strContent + "<div style='width:100%'>";
-// 	            strContent = strContent + "<table id='printComment' class='layout'>";
-// 	            strContent = strContent + document.getElementById("printComment").innerHTML;
-// 	            strContent = strContent + "</table></div>";
 	            strContent = strContent + "</body>";
 	            printWindow.document.write(strContent);
 	            printWindow.document.close();
 	            printWindow.focus();
 	        }
 
-	        function onbeforeprint2() {
-	        	//프린트 관련
-	            /* document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
-	            document.getElementById("printImportance").textContent = document.getElementById("importanceDIV").textContent;
-	            document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
-	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent; */
-	        }
-	        
 	        function attach_SelectAll() {
 			    var checks = document.getElementById('attachedfileDIV').getElementsByTagName("input");
 			    for (var i = 0; i < checks.length; i++)
@@ -160,17 +146,17 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="openCircularComment()">의견보기</span></li>
+               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' /></span></li>
                         	
                 	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
-                	    		<li id="deletebtbn"><span onclick="btn_delete()">삭제</span></li>
+                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t58' /></span></li>
                 	    	</c:if>
-	                        <li><span onclick="print_onClick2( false )">인쇄</span></li>
+	                        <li><span onclick="print_onClick2( false )"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>
                 	</div>
                 	<div id="close">
 	                    <ul>
-    	                    <li><span onclick="closing();"><spring:message code='ezResource.t150' /></span></li>
+    	                    <li><span onclick="closing();"><spring:message code='ezCircular.t84' /></span></li>
         	            </ul>
             	    </div>
             	    
@@ -181,65 +167,72 @@
             	    
 					<table class="content" style="width:100%;">
 	                    <tr>
-    	                    <th style="width: 200px;">제목</th>
+    	                    <th style="width: 200px;"><spring:message code='ezCircular.t32' /></th>
         	                <td colspan="3" style="width: 100%; padding-left: 4px;">
             	                ${result.title}
                 	        </td>
                     	</tr>
                     	<tr>
-	                        <th style="width:20px;">중요도</th>
-    	                    <td id="Td_Importance" style="padding-left: 4px;">${result.importance == '0' ? '일반' : '중요'}</td>
-		            		<th style="width:20px;">옵션</th>
+	                        <th style="width:20px;"><spring:message code='ezCircular.t115' /></th>
+    	                    <td id="Td_Importance" style="padding-left: 4px;">
+    	                    	<c:if test="${result.importance == '0' }">
+	    	                    	<span><spring:message code='ezCircular.t116' /></span>  	                    	
+    	                    	</c:if>
+    	                    	<c:if test="${result.importance == '1' }">
+	    	                    	<span><spring:message code='ezCircular.t117' /></span>  	                    	
+    	                    	</c:if>
+    	                    </td>
+		            		<th style="width:20px;"><spring:message code='ezCircular.t118' /></th>
 		            		<td style="width:200px;">
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<span id="option" style="padding-left: 4px;">의견</span>
+		                				<span id="option" style="padding-left: 4px;"><spring:message code='ezCircular.t119' /></span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<span id="AllDay" style="padding-left: 4px;">공지메일발송</span>
+		                				<span id="AllDay" style="padding-left: 4px;"><spring:message code='ezCircular.t120' /></span>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<span id="option" style="padding-left: 4px;">의견</span>,  
-										<span id="AllDay">공지메일발송</span>
+		                				<span id="option" style="padding-left: 4px;"><spring:message code='ezCircular.t119' /></span>,  
+										<span id="AllDay"><spring:message code='ezCircular.t120' /></span>
 		                			</c:when>
 		                			<c:otherwise>
-		                				<span id="option" style="padding-left: 4px;">사용안함</span>
+		                				<span id="option" style="padding-left: 4px;"><spring:message code='ezCircular.t121' /></span>
 		                			</c:otherwise>
 		                		</c:choose>
 							</td>
                     	</tr>
 		        		<tr>
-							<th>작성자</th>
+							<th><spring:message code='ezCircular.t122' /></th>
 	       					<td style="padding-left: 4px;">								
 	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
-							<th>작성일</th> 
- 							<td style="padding-left: 4px">
+							<th><spring:message code='ezCircular.t123' /></th> 
+ 							<td style="padding-left: 6px">
  								<div id="printStatus">${result.regDate }</div>
  							</td> 
 						</tr>
 						<tr>
-		        			<th>확인</th>
+		        			<th><spring:message code='ezCircular.t65' /></th>
 	       					<td>								
 	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
-	         				<th>상태</th>
+	         				<th><spring:message code='ezCircular.t124' /></th>
 		            		<td>
 		            			<c:choose>
 			            			<c:when test="${result.status eq '0'}">
-			            				<div id="status" style="padding-left: 4px;">진행중</div>
+			            				<div id="status" style="padding-left: 4px;"><spring:message code='ezCircular.t125' /></div>
 			            			</c:when>
 			            			<c:when test="${result.status eq '1'}">
-			            				<div id="status" style="padding-left: 4px;">종료</div>
+			            				<div id="status" style="padding-left: 4px;"><spring:message code='ezCircular.t126' /></div>
 			            			</c:when>
 			            			<c:otherwise>
-			            				<div id="status" style="padding-left: 4px;">임시</div>
+			            				<div id="status" style="padding-left: 4px;"><spring:message code='ezCircular.t127' /></div>
 			            			</c:otherwise>
 		                		</c:choose>
 		            		</td>
 		        		</tr>
 		        		<tr>
-		            		<th>회람자</th>
+		            		<th><spring:message code='ezCircular.t34' /></th>
 		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
@@ -253,7 +246,7 @@
                     <table class="file">
                         <tr>
                             <th>
-                                <spring:message code='ezSchedule.t316' />
+                                <spring:message code='ezCircular.t108' />
                             </th>
                             <td class="pos1">
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">	                                
@@ -292,10 +285,10 @@
                             </td>
                             <td class="pos2">	                                
                                 <a href="#" class="imgbtn">
-                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
+                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezCircular.t112' /></span>
                                 </a><br/>	                                
                                 <a href="#" class="imgbtn">
-                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
+                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezCircular.t25' /></span>
                                 </a>
                             </td>
                         </tr>
@@ -309,7 +302,7 @@
 				<td style="vertical-align:top">
 					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px">제목</th> 
+ 							<th style="padding-left:10px"><spring:message code='ezCircular.t32' /></th> 
  							<td style="padding-left:4px; width:100%" colspan="3">
  								<div id="printTitle">
  									${result.title}
@@ -317,67 +310,68 @@
  							</td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px">중요도</th> 
- 							<td style="padding-left:4px; width:200px"> 
- 								<div id="printImportance">
- 									${result.importance == '0' ? '일반' : '중요'}
- 								</div>
- 							</td> 
- 							<th style="padding-left:10px">옵션</th> 
- 							<td style="padding-left:4px; width:200px">
- 								<div id="printOption">
- 									<c:choose>
-		                				<c:when test="${result.option eq '1'}">
-		                					<span id="option">댓글기능 사용</span>
-			                			</c:when>
-			                			<c:when test="${result.option eq '2'}">
-			                				<span id="AllDay">메일공지 사용</span>
-			                			</c:when>
-			                			<c:when test="${result.option eq '3'}">
-			                				<span id="option">댓글기능 사용</span>,  
-											<span id="AllDay">메일공지 사용</span>
-			                			</c:when>
-			                			<c:otherwise>
-			                				<span id="option">사용안함</span>
-			                			</c:otherwise>
-		                			</c:choose>
- 								</div>
- 							</td> 
+ 							<th style="padding-left:10px"><spring:message code='ezCircular.t115' /></th> 
+ 							<td style="padding-left: 4px; width:200px">
+    	                    	<c:if test="${result.importance == '0' }">
+	    	                    	<span><spring:message code='ezCircular.t116' /></span>  	                    	
+    	                    	</c:if>
+    	                    	<c:if test="${result.importance == '1' }">
+	    	                    	<span><spring:message code='ezCircular.t117' /></span>  	                    	
+    	                    	</c:if>
+    	                    </td>
+    	                    <th style="padding-left:10px;"><spring:message code='ezCircular.t118' /></th>
+		            		<td style="width:200px;">
+		                		<c:choose>
+		                			<c:when test="${result.option eq '1'}">
+		                				<span id="option" style="padding-left: 4px;"><spring:message code='ezCircular.t119' /></span>
+		                			</c:when>
+		                			<c:when test="${result.option eq '2'}">
+		                				<span id="AllDay" style="padding-left: 4px;"><spring:message code='ezCircular.t120' /></span>
+		                			</c:when>
+		                			<c:when test="${result.option eq '3'}">
+		                				<span id="option" style="padding-left: 4px;"><spring:message code='ezCircular.t119' /></span>,  
+										<span id="AllDay"><spring:message code='ezCircular.t120' /></span>
+		                			</c:when>
+		                			<c:otherwise>
+		                				<span id="option" style="padding-left: 4px;"><spring:message code='ezCircular.t121' /></span>
+		                			</c:otherwise>
+		                		</c:choose>
+							</td>
 						</tr>
 						<tr style="height:25px">
-							<th style="padding-left: 10px;">작성자</th>
+							<th style="padding-left: 10px;"><spring:message code='ezCircular.t122' /></th>
 	       					<td style="padding-left: 4px;">								
 	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
-							<th style="padding-left:10px">작성일</th> 
- 							<td style="padding-left:4px">
+							<th style="padding-left:10px"><spring:message code='ezCircular.t123' /></th> 
+ 							<td style="padding-left:6px">
  								<div id="printStatus">${result.regDate }</div>
  							</td> 
 						</tr>
 						<tr style="height:25px">
-							<th style="padding-left:10px">확인</th>
+							<th style="padding-left:10px"><spring:message code='ezCircular.t65' /></th>
 	       					<td style="padding-left: 4px;">								
 	         					<div id="statusNum">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
-							<th style="padding-left:10px">상태</th> 
+							<th style="padding-left:10px"><spring:message code='ezCircular.t124' /></th> 
  							<td style="padding-left:4px">
  								<div id="printStatus">
  									<c:choose>
 				            			<c:when test="${result.status eq '0'}">
-				            				<div id="status">진행중</div>
+				            				<div id="status"><spring:message code='ezCircular.t125' /></div>
 				            			</c:when>
 				            			<c:when test="${result.status eq '1'}">
-				            				<div id="status">종료</div>
+				            				<div id="status"><spring:message code='ezCircular.t126' /></div>
 				            			</c:when>
 				            			<c:otherwise>
-				            				<div id="status">임시</div>
+				            				<div id="status"><spring:message code='ezCircular.t127' /></div>
 				            			</c:otherwise>
 		                			</c:choose>
  								</div>
  							</td> 
 						</tr>
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px">회람자</th> 
+ 							<th style="padding-left:10px"><spring:message code='ezCircular.t34' /></th> 
  							<td style="padding-left:4px; width:100%" colspan="3">
  								<div id="printCircularUser">
  									${listUser}

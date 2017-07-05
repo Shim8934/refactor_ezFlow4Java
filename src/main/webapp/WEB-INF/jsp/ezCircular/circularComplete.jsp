@@ -51,12 +51,8 @@
 		}
 		</style>
 	    <script type="text/javascript">
-//  	        var ShowAdjacent = "";
-// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
-	        //var CurPage = "${page}";
-	        //var CurPage = "${totalCount}";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
 	        var OrderCell = "";
@@ -69,25 +65,14 @@
 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-// 	        var pMailListHeightW = 0;
-// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
-// 	        var pMailListWidthH = 0;
-// 	        var pMailPreWidthH = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-// 	        var SmallSizeList = false;
-// 	        var OldSmallSizeList = false;
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-// 	        var pMode = "new";
 	        var pAdminType = "n";
-// 	        var pUse_Editor = "${useEditor}";
-// 	        var pNoneActiveX = "YES";
-// 	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
@@ -271,14 +256,14 @@
 	                    PreviewRayerChange(pPreviewShow_HOW);
 	                    if (CrossYN()) {
 	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
 	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
 	                    } else {
 	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
 	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
 	                    }
 	                    firstFlag = true;
 	                }
@@ -539,41 +524,35 @@
 		            }
 		        }
 		    }
-		    
-// 		    function BoardSearchOptionHidden() {
-// 		        document.getElementById("layer_popup").style.display = "none";
-// 		        document.getElementById("SearchOption").setAttribute("mode", "off");
-// 		    }
-		
+
 	        function search(type) {
 	            if (type == "basic") {
 	
 	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
-	                    alert("<spring:message code='ezBoard.t192'/>");
+	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	
 	                if (document.getElementById("idDatepicker").value != "" && document.getElementById("_D2").value == "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezCircular.t89'/>");
 	                    return;
 	                }
 	                if (document.getElementById("idDatepicker").value == "" && document.getElementById("_D2").value != "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezCircular.t89'/>");
 	                    return;
 	                }
 	                if (Number(ReplaceText(document.getElementById("idDatepicker").value.substring(0, 10), "-", "")) > Number(ReplaceText(document.getElementById("_D2").value.substring(0, 10), "-", ""))) {
-	                    alert("<spring:message code='ezBoard.t191'/>");
+	                    alert("<spring:message code='ezCircular.t90'/>");
 	                    return;
 	                }
 	            }
 	            else if (type == "quick") {
 	                if (document.getElementById("txt_keyword").value == "") {
-	                    alert("<spring:message code='ezBoard.t192'/>");
+	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	            }
 	            CurPage = "1";
-// 	            BoardSearchOptionHidden();
 	            getBoardList();
 	        }
 
@@ -615,7 +594,7 @@
 	                        <col>
 	                    </colgroup>
 	                     <tr>
-	                        <th><spring:message code='ezBoard.t10021'/></th>
+	                        <th><spring:message code='ezCircular.t86'/></th>
 	                        <td>
 	                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
 	                                <option value="10">10</option>
@@ -627,7 +606,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <th><spring:message code='ezBoard.t431'/></th>
+	                        <th><spring:message code='ezCircular.t19'/></th>
 	                        <td>
 	                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
