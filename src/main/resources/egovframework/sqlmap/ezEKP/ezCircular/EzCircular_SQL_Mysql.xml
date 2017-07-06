@@ -528,7 +528,7 @@
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 A.option,
                 A.content,
-                B.DISPLAYNAME AS memberName,
+                A.memberName,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount
             FROM

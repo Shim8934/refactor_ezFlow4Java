@@ -38,6 +38,8 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 
+		        var height = parseInt(document.documentElement.clientHeight - 240);
+		        document.getElementById("divList").style.height = height + "px";
 		        $("keyword").text = "";
 		    }
 			
@@ -153,6 +155,7 @@
 		        	data : {
 		        		sdate : sdate,
 		        		edate : edate,
+		        		pageNum : CurPage,
 		        		searchValue : keyword
 		        	},
 		        	success : function(xml) {
@@ -168,31 +171,14 @@
                 var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
                 var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 
-//                 pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
-// 	            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
-// 	            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
-// 	            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
-// 	            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
-
-//                 switch (pPreviewShow_HOW) {
-// 				case 0:
-// 					pPreviewShow_HOW = "OFF";
-// 					break;
-// 				case 1:
-// 					pPreviewShow_HOW = "H";
-// 					break;
-// 				case 2:
-// 					pPreviewShow_HOW = "W";
-// 					break;
-// 				}
-                
                 if (listNode == null) return;
             	
                 var lstCnt = getNodeText(cntNode);
                 var pageCnt = getNodeText(pageNode);
                 var perCnt = getNodeText(perNode);
  
-//                 listcount.value = perCnt;
+                $(".point").text(lstCnt);
+
                 totalPage = Math.ceil(new Number(pageCnt / perCnt));
                 pTotalCnt = lstCnt;
                 makePageSelPage();
@@ -230,21 +216,6 @@
                     document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
                 }
 
-//                 if (!firstFlag) {
-//                     PreviewRayerChange(pPreviewShow_HOW);
-//                     if (CrossYN()) {
-//                         if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-//                             ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
-//                         if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-//                             ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
-//                     } else {
-//                         if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-//                             ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
-//                         if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-//                             ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
-//                     }
-//                     firstFlag = true;
-//                 }
                 endtime = new Date().getTime();
                 strListInfo = "";
             }
@@ -376,7 +347,7 @@
 	        function movePage(newPage) {
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 	                CurPage = newPage;
-	                getBoardList();
+	                search();
 	            }
 	        }
 	
@@ -384,7 +355,7 @@
 	            newPage = parseInt(CurPage) - 1;
 	            if (newPage > 0) {
 	                CurPage = newPage;
-	                getBoardList();
+	                search();
 	            }
 	        }
 	
@@ -392,7 +363,7 @@
 	            newPage = parseInt(CurPage) + 1;
 	            if (newPage <= parseInt(totalPage)) {
 	                CurPage = newPage;
-	                getBoardList();
+	                search();
 	            }
 	        }
 
@@ -460,7 +431,7 @@
 		  	</table> 
 		 	<br/>
 		 	<h2 class="h2_dot">
-		 		<spring:message code='ezCircular.t146'/>&nbsp;<span class="point">${totalCount}</span>&nbsp;<span id="resultCount"></span><spring:message code='ezCircular.t145'/>
+		 		<spring:message code='ezCircular.t146'/>&nbsp;<span class="point"></span>&nbsp;<span id="resultCount"></span><spring:message code='ezCircular.t145'/>
 		    </h2>
 		  	<table class="mainlist" name="mainlist" style="width:100%">
 		    	<tr> 
@@ -473,6 +444,10 @@
 					<th style="width:60px;" align="left"><spring:message code='ezCircular.t123' /></th> 
 					<th style="width:80px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t65' /></th>
 					<th style="width:20px;cursor:pointer" align="left" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t124' /></th>
+				</tr>
+				<tr>
+					<td colspan="9" style="text-align:center"><spring:message code='ezCircular.t144' /></td>
+				</tr>
 		  	</table>		    
 		</form>
 		<span id="MailListRayer" style="border: 0px solid blue; width: 100%; height: 100%; vertical-align: top; overflow: hidden; display: inline-block;">
