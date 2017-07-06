@@ -47,7 +47,7 @@
 			<tr>
 				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;검색</th>
 				<th style="text-align:right;border-top:0px">
-					<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCircularComment()">검색</span>&nbsp;</a>
+					<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCommentShareUser()">검색</span>&nbsp;</a>
 				</th>
 			</tr>
 		</table>
