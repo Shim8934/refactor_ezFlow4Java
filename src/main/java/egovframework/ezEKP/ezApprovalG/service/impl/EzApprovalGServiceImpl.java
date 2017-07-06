@@ -8421,7 +8421,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String subSQL = "";
 		String result = "";
 		boolean rtnVal = true;
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
@@ -12619,7 +12619,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String registerRecordOfQuery(String strXML, int tenantID, String offSet, Locale locale) throws Exception{
 		Document objParam = commonUtil.convertStringToDocument(strXML);
-logger.debug("strXML in registerRecordOfQuery : " + strXML);		
+		logger.debug("strXML in registerRecordOfQuery : " + strXML);		
 		String subSQL = "";
 		String rtnVal = "TRUE";
 		
