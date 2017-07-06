@@ -41,7 +41,10 @@
                 autoSize: true,
                 showOn: "both",
                 buttonImage: "/images/calendar-month.gif",
-                buttonImageOnly: true
+                buttonImageOnly: true,
+	            onClose: function (selectedDate) {
+	            	$("#Edatepicker").datepicker("option", "minDate", selectedDate);
+	            }                
             });
             $("#Edatepicker").datepicker({
                 changeMonth: true,
@@ -49,7 +52,10 @@
                 autoSize: true,
                 showOn: "both",
                 buttonImage: "/images/calendar-month.gif",
-                buttonImageOnly: true
+                buttonImageOnly: true,
+	            onClose: function (selectedDate) {
+	            	$("#Sdatepicker").datepicker("option", "maxDate", selectedDate);
+	            }	                
             });
 
             $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");

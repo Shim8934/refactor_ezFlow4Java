@@ -542,7 +542,7 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 
 	@Override
-	public List<String> getUserDistributionList(String userEmailAddress){
+	public List<String> getUserDistributionList(String userEmailAddress) {
 		logger.debug("getUserDistributionList started.");
 		
 		ArrayList<String> returnData = new ArrayList<String>();
@@ -567,18 +567,17 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 				
 				if (resultCode.equalsIgnoreCase("OK")) {
 					resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i = 0; i < resultArray.size(); i++) {
+						JSONObject distribution = (JSONObject)resultArray.get(i);
+						String distributionName = (String)distribution.get("distributionName");
+						
+						logger.debug("distributionName=" + distributionName);
+						
+						returnData.add(distributionName);
+					}					
 				}
-			}
-			
-			for (int i=0; i<resultArray.size(); i++) {
-				JSONObject distribution = (JSONObject)resultArray.get(i);
-				String distributionName = (String)distribution.get("distributionName");
-				
-				logger.debug("distributionName=" + distributionName);
-				
-				returnData.add(distributionName);
-			}
-			
+			}						
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
