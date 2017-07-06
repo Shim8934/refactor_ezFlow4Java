@@ -205,14 +205,59 @@
 		    }
 			function delete_onClick()
 		    {
-			    if (ReturnFunction!=null) {
-			        Arguments["recipientTDData"] = "delete";
-			        ReturnFunction(Arguments);
-			    }
-			    else {
-			        dialogArguments["recipientTDData"] = "delete";
-			        window.close();
-			    }
+				var count1;
+		        var selectedItemCount;
+		        var selRow;
+
+		        var pListViewDL = new ListView();
+		        pListViewDL.LoadFromID("DLList");
+
+		        var arrRows = pListViewDL.GetSelectedRows();
+
+		        var listCount = arrRows.length;
+
+		        if (listCount == 0) {
+		            cancel_onClick();
+		            return;
+		        }
+		        if (ReturnFunction != null) {
+		            Arguments["recipientTDData"] = "delete";
+		            Arguments["returnedRecipientType"] = new Array();
+		            Arguments["returnedRecipientName"] = new Array();
+		            Arguments["returnedRecipientEmail"] = new Array();
+		            Arguments["returnedRecipientHref"] = new Array();
+		        }
+		        else {
+		            dialogArguments["recipientTDData"] = "delete";
+		            dialogArguments["returnedRecipientType"] = new Array();
+		            dialogArguments["returnedRecipientName"] = new Array();
+		            dialogArguments["returnedRecipientEmail"] = new Array();
+		            dialogArguments["returnedRecipientHref"] = new Array();
+		        }
+		        var emailExistsCnt = 0;
+		        for (count1 = 0; count1 < listCount; count1++) {
+		            var isexists = GetAttribute(arrRows[count1], "data2") != "" && GetAttribute(arrRows[count1], "data2").lastIndexOf("@") > 1 || trim(GetAttribute(arrRows[count1], "data3")) == "mailgroup";
+		            if (isexists) {
+		                if (ReturnFunction != null) {
+		                    Arguments["returnedRecipientType"][emailExistsCnt] = GetAttribute(arrRows[count1], "data3");
+		                    Arguments["returnedRecipientName"][emailExistsCnt] = GetAttribute(arrRows[count1], "data1");
+		                    Arguments["returnedRecipientEmail"][emailExistsCnt] = GetAttribute(arrRows[count1], "data2");
+		                    Arguments["returnedRecipientHref"][emailExistsCnt] = GetAttribute(arrRows[count1], "data4");
+		                }
+		                else {
+		                    dialogArguments["returnedRecipientType"][emailExistsCnt] = GetAttribute(arrRows[count1], "data3");
+		                    dialogArguments["returnedRecipientName"][emailExistsCnt] = GetAttribute(arrRows[count1], "data1");
+		                    dialogArguments["returnedRecipientEmail"][emailExistsCnt] = GetAttribute(arrRows[count1], "data2");
+		                    dialogArguments["returnedRecipientHref"][emailExistsCnt] = GetAttribute(arrRows[count1], "data4");
+		                }
+		                emailExistsCnt++;
+		            }
+		        }
+
+		        if (ReturnFunction != null)
+		            ReturnFunction(Arguments);
+		        else
+		            window.close();
 			}
 		
 			function cancel_onClick()
