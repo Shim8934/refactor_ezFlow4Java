@@ -527,10 +527,6 @@ function ListView() {
                     objTd.style.width = "70%";
                 }
                 
-                if (strColName == "MEMBERNAME") {
-                    objTd.style.width = "20%";
-                }
-                
                 if (strColName == "WRITEDATE") {
                 	objTd.width = "120px";
                 	objTd.style.textAlign = "CENTER";
