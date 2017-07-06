@@ -1218,9 +1218,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		for (CircularListVO vo : list) {
 			if (!vo.getMemberID().equals(result.getMemberID())) {
 				if (vo.getStatus() == 0) {
-					listUser += "<img src='/images/ImgIcon/circular_unread.gif'>" + vo.getMemberName() + ", ";					
+					listUser += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'>" + vo.getMemberName() + ", ";					
 				} else {
-					listUser += "<img src='/images/ImgIcon/circular_read.gif'>" + vo.getMemberName() + ", ";
+					listUser += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'>" + vo.getMemberName() + ", ";
 				}
 			}
 		}

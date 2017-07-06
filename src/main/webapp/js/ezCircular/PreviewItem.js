@@ -1,6 +1,6 @@
 ﻿function MailOptionView(obj) {
     if (obj.getAttribute("mode") == "off") {
-        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
         if(pAdminType == "y")
             document.getElementById("layer_Viewpopup").style.top = "50px";
         else
