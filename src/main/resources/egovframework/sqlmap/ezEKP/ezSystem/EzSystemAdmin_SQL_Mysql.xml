@@ -48,7 +48,16 @@
 			WHERE 
 					C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
 			ORDER BY 
-					SEQUENCE DESC; 
+					SEQUENCE DESC
+			LIMIT
+				    #v_start#, #pageCount#
 		]]>
 	</select>
+	
+	<select id="EzSystemAdminDAO.getLoginHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE) 
+		FROM   	TBL_CONNECTION_INFO
+		WHERE	TENANT_ID = #v_tenantID#
+	</select>
+	
 </sqlMap>

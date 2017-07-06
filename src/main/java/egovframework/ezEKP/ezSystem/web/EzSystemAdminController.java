@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,9 +136,10 @@ public class EzSystemAdminController {
 	
 	// 로그인 로그기록
 	@RequestMapping(value="/admin/ezSystem/systemLoginHist.do")
-	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		
 		logger.debug("started systemLoginHist controller.");
-		// 사용자 권한 확인
+		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -147,8 +149,27 @@ public class EzSystemAdminController {
 		String offset = userInfo.getOffset();
 		String userLang = userInfo.getLang();
 		String sysLang = "";
+		String currPage = req.getParameter("GotoPage");
 		
-		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset));
+		if (currPage == null || currPage.equals("")) {
+			currPage = "1";
+		}
+		
+		int nowBlock = 0;
+		int maxItemPerPage = 25; // 한 화면에 보여줄 게시물 갯수 
+		int startPage = ((Integer.parseInt(currPage) - 1)  * maxItemPerPage ) + 1;
+		int currentPage = Integer.parseInt(currPage);
+		
+		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset), startPage, maxItemPerPage);
+		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId());
+		int totalPage = itemCnt / maxItemPerPage ;
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1 ;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);	
+		
 		List<SysParamVO> configList = ezSystemAdminService.getSysParam(userInfo.getTenantId());
 		Map<String, String> configMap = new HashMap<String, String>();
 		
@@ -163,6 +184,10 @@ public class EzSystemAdminController {
 		model.addAttribute("loginHistList", loginHistList);
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("sysLang", sysLang);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("nowBlock", nowBlock);
+		model.addAttribute("itemCnt", itemCnt);
 		
 		logger.debug("ended systemLoginHist controller.");
 		

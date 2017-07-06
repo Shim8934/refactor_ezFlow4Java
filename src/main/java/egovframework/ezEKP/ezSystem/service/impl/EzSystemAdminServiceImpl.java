@@ -143,20 +143,34 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset) throws Exception {
+	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage) throws Exception {
 
 		logger.debug("getLoginHist started. tenantID : " + tenantID);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_tenantID", tenantID);
-		map.put("offset", offset);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
 		
-		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(map);
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
 		
 		logger.debug("getLoginHist ended.");
 		
 		return list;
 	}
 
+	@Override
+	public int getLoginHistCount(int tenantID) throws Exception {
+		
+		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+				
+		logger.debug("getLoginHistCount ended.");
+		
+		return ezSystemAdminDAO.getLoginHistCount(params);
+	}
 
 }
