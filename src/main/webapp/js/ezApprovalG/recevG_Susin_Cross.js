@@ -2265,23 +2265,28 @@ function OpenAlertUI_Close_Complete() {
 
 function setCabinetHeSong(pDocSN) {
     try {
-        var xmlpara = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARAMETER");
-        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptID", arr_userinfo[4]);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptName", arr_userinfo[15]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[11]);
-        createNodeAndInsertText(xmlpara, objNode, "pDocSN", pDocSN);
-        createNodeAndInsertText(xmlpara, objNode, "pDeptName2", arr_userinfo[16]);
-        createNodeAndInsertText(xmlpara, objNode, "pUserName2", arr_userinfo[12]);
-
-        xmlhttp.open("POST", "/myoffice/ezApprovalG/aspx/setCabinetHesong.aspx", false);
-        xmlhttp.send(xmlpara);
-
-        var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
-
-        if (RtnVal == "TRUE")
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/setCabinetHesong.do",
+    		data : {
+    			docID : pDocID,
+    			deptID  : arr_userinfo[4],
+    			deptName : arr_userinfo[15],
+    			deptName2 : arr_userinfo[16],
+    			userName : arr_userinfo[11],
+    			userName2 : arr_userinfo[12],
+    			docSN     : pDocSN
+    		},
+    		success: function(xml){
+    			result = xml;
+    		}, error: function() {
+                return false;
+    		}			
+    	});
+        
+        if (result == "TRUE")
             return true;
         else
             return false;

@@ -2663,4 +2663,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void resetSerialNo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.resetSerialNo", map);
 	}
+
+	public ApprGDocListVO setcabinetHesong(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.setcabinetHesong", map);
+	}
+
+	public void updateResetDoc(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateResetDoc", map);
+	}
 }

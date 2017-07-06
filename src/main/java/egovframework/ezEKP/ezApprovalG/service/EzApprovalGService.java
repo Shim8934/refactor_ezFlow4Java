@@ -457,4 +457,6 @@ public interface EzApprovalGService {
 
 	public String getCirculationinfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception;
 
+	public String setCabinetHesong(String docID, String deptID,	String deptName, String deptName2, String userName,	String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
+
 }
