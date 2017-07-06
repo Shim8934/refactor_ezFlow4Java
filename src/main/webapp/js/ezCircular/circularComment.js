@@ -186,7 +186,6 @@ function commentSendMail() {
 }
 
 function getCommentShareUser() {
-	var circularID;
 	//회람자목록 조회(본인제외)
 	$.ajax({
 		type : "POST",
@@ -196,7 +195,8 @@ function getCommentShareUser() {
 			circularID : circularID
 		},
 		success : function(result) {
-			//html(list)
+			//본인 제외하고 회람자 목록 보여주면서 체크박스 만들고 확인버튼 눌렀을때 updateStatus 새거 하나 쓰자
+			
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -207,7 +207,6 @@ function getCommentShareUser() {
 function commentShareUser() {
 	//공유자로 지정된 회람자들의 상태값 의견,신규 -> 공유상태로 변경
 	//의견공유알림메일 발송
-	var circularID;
 	
 }
 

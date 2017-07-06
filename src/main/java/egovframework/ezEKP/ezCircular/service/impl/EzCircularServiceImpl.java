@@ -962,7 +962,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("circularUserID", vo.getCircularUserID());
 		map.put("circularComment", vo.getCircularComment());
 		map.put("memberID", userInfo.getId());
-		map.put("memberName", userInfo.getDisplayName());
+		map.put("memberName", userInfo.getDisplayName1());
 		map.put("memberName2", userInfo.getDisplayName2());
 		map.put("status", vo.getStatus());// 0공개, 1비공개
 		map.put("nowDate", nowDate);
