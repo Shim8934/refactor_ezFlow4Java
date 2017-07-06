@@ -22304,5 +22304,96 @@
 	     AND
 	     		COMPANYID = #companyID#
 	</update>
-		
+	
+	<select id="EzApprovalG.setcabinetHesong" parameterClass="map" resultClass="ApprGDocListVO">
+			SELECT 
+				A.DocNo ,
+                B.CabinetID ,
+                A.DocTitle ,
+                A.WriterDeptID ,
+                A.WriterDeptName ,
+                A.WriterDeptName2 ,
+                A.WriterName ,
+                A.WriterName2 ,
+                A.EndDate ,
+                A.OrgDocID ,
+                B.SpecialRecordCode ,
+                B.PublicityCode ,
+                B.PageNum ,
+                B.LimitRange ,
+                A.HasAttachYN ,
+                '회송문서' APRMEMBERJOBTITLE  ,
+                'Return a document' APRMEMBERJOBTITLE2  ,
+                B.SeperateAttachXML ,
+                B.DocNumCode ,
+                B.OrgDocNumCode 
+           FROM 
+           		TBL_APRDOCINFO A
+           JOIN 
+           		TBL_EXPAPRDOCINFO B   
+           ON 
+           		A.DocID = B.DocID
+           AND
+           		A.TENANT_ID = B.TENANT_ID
+           AND
+           		A.COMPANYID = B.COMPANYID
+           WHERE  
+           		A.TENANT_ID = #v_TENANTID#
+           AND
+           		A.COMPANYID = #companyID#
+           AND
+           		A.DocID = #v_DOCID# 
+           LIMIT 1
+      </select>  
+      
+      <update id="EzApprovalG.updateResetDoc" parameterClass="map">
+      	UPDATE 
+      		TBL_EXPAPRDOCINFO 
+         SET 
+         	CABINETID = C.CABINETID, 
+            TASKCODE = C.TASKCODE, 
+            DOCNUMCODE = C.DOCNUMCODE, 
+            ORGDOCNUMCODE = C.ORGDOCNUMCODE 
+         FROM 
+         	TBL_ENDAPRDOCINFO  A 
+         INNER JOIN  
+           	TBL_APRDOCINFO  B 
+         ON 
+         	A.DOCID = B.ORGDOCID 
+         AND
+         	A.COMPANYID = B.COMPANYID
+         AND
+         	A.TENANT_ID = B.TENANT_ID
+         INNER JOIN 
+         	TBL_EXPENDAPRDOCINFO  C
+         ON 
+         	A.DOCID = C.DOCID 
+         AND
+         	A.COMPANYID = C.COMPANYID
+         AND
+         	A.TENANT_ID = C.TENANT_ID
+         INNER JOIN 
+         	TBL_EXPAPRDOCINFO  D 
+         ON 
+         	B.DOCID = D.DOCID 
+         AND
+         	B.COMPANYID = D.COMPANYID
+         AND
+         	B.TENANT_ID = D.TENANT_ID
+         WHERE 
+         	A.TENANT_ID = #v_TENANTID#
+         AND
+         	A.DOCID IN (SELECT 
+         					ORGDOCID 
+         				FROM 
+         					TBL_APRDOCINFO  
+         				WHERE 
+         					DOCID= #v_DOCID#
+         				AND
+         					COMPANYID = #companyID#
+         				AND
+         					TENANT_ID = #v_TENANTID#) E
+         AND
+         	A.COMPANYID = #companyID#
+      </update>
 </sqlMap>

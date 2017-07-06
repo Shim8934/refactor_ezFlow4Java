@@ -5702,7 +5702,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				        }
 				    }
 				    
-					docNO = numHeader + getNDigitNum(cabinetSN.substring(cabinetSN.length() - Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt));
+					docNO = numHeader + getNDigitNum(getNDigitNum(cabinetSN, 6).substring(getNDigitNum(cabinetSN, 6).length()-Integer.parseInt(docNumZeroCnt)), Integer.parseInt(docNumZeroCnt));
 					doc.getElementById("docnumber").text(docNO);
 					
 					if (doc.getElementById("enforcedate") != null) {
@@ -21419,5 +21419,95 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		logger.debug("serviceimpl : selectExpendDocInfo_beforeDel : select map : error : result :"+ result + cnt);
 		return result;
+	}
+
+	@Override
+	public String setCabinetHesong(String docID, String deptID, String deptName, String deptName2, String userName, String userName2, String dirpath, String docSN, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
+		String newDocID = "";
+		String docNo = "";
+		String docNumCode = "";
+		String extFileName = "";
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_FLAG", "APR");
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		String href = ezApprovalGDAO.getDocInfoHref(map);
+		
+		if(href != "") {
+			extFileName = getExtendedFileName(href);
+			docNo = (lang == "1" ? deptName : deptName2 + "-" + docSN);
+			docNumCode = deptID +  getNDigitNum(docSN, 6);
+			newDocID = getNewID(companyID, tenantID);
+		}
+		
+		String oldYear = getDocHrefYear(docID, companyID, tenantID);
+		String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
+			
+		// 문서상태는 회송으로 고정
+		String docState = StaDSHesong;
+		
+		String containerID = returnContainerID(deptID, docState, companyID, tenantID);
+		
+		copyFile(dirpath + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+				dirpath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName,
+				dirpath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID));
+		
+		map.put("v_NEWDOCID", newDocID);
+		map.put("v_DOCID", docID);
+		map.put("v_ENDURL", endURL);
+		map.put("v_DOCSTATE", docState);
+		map.put("v_DOCNO", docNo);
+		map.put("v_DOCNUMCODE", docNumCode);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_CONTAINERID", containerID);
+		
+		
+		ezApprovalGDAO.insertRejectEndAprDocInfo(map);
+		ezApprovalGDAO.insertRejectEndAprLineInfo(map);
+		ezApprovalGDAO.insertRejectEndAttachInfo(map);
+		ezApprovalGDAO.insertRejectEndDocAttachInfo(map);
+		ezApprovalGDAO.insertRejectEndAprOpinionInfo(map);
+		ezApprovalGDAO.insertRejectEndReceiptPointInfo(map);
+		ezApprovalGDAO.insertRejectEndAprReceiptProcessInfo(map);
+		ezApprovalGDAO.insertRejectExpendAprDocInfo(map);
+		ezApprovalGDAO.insertRejectExpendAprLine(map);
+		
+	        
+        ApprGDocListVO apprGDocListVO2 = ezApprovalGDAO.setcabinetHesong(map);
+        
+        if (apprGDocListVO2 != null) {
+        	if (!docNumCode.trim().equals("")) {
+        		docSN = docNumCode.trim();
+        	} else {
+        		docSN = apprGDocListVO2.getDocNumCode();
+        	}
+        	
+        	if (docSN != null && !docSN.equals("")) {
+        		docSN = docSN.substring(docSN.length() - 6);
+        	}
+        	
+        	String hasAttach = "0";
+        	
+        	if (apprGDocListVO2.getHasAttachYn().equals("Y")) {
+        		hasAttach = "1";
+        	}
+        	
+        	String seperateAttachXML = makeListField(apprGDocListVO2.getSeperateAttachXML().trim());
+        	String numOfPage = makeListField(apprGDocListVO2.getPageNum().trim());
+        	
+        	if (numOfPage.equals("")) {
+        		numOfPage = "1";
+        	}
+        	
+        	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), deptID, deptName, deptName2,
+        			"2", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), "", "", userName, userName2, EgovDateUtil.getTodayTime().substring(0, 10),
+        			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale);
+       
+        }
+		return rtnVal;
 	}
 }

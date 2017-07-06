@@ -449,13 +449,17 @@
 		    }
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
-		        condition = returnvalue;
+	    	   for(var i =0; i < returnvalue.length; i++) {
+		        	condition[i] = returnvalue[i]; 
+		        }
+	    	   
 		        if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
 		        $('#sel_year').val("ALL");
 		        $('#sel_year').selectmenu('refresh');
+		     
 		    }
 		    function lvtDoclist_onclick() {
 		    }
