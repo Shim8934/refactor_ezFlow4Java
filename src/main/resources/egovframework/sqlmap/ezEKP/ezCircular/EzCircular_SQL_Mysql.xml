@@ -2367,11 +2367,9 @@
 			AND
 				A.tenantid = B.tenantid
 			WHERE
-				B.status = 0
-			AND
 				A.circularid = #circularID#
 			AND
-				A.circularuserid = #circularUserID#
+				((A.status = 1 AND (A.circularuserid = #circularUserID# OR B.memberid = #circularUserID#)) OR (A.status = 0))
 			AND
 				B.tenantid = #tenantID#
 		]]>
