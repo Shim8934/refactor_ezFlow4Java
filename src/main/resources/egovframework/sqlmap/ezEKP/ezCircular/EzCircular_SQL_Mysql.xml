@@ -779,7 +779,7 @@
 				D.confirmtotalcount
             FROM
                 TBL_CIRCULAR A
-            JOIN
+            LEFT JOIN
             	TBL_USERMASTER B
             ON
             	A.MEMBERID = B.CN
@@ -884,7 +884,7 @@
                 B.mail
             FROM
 				TBL_CIRCULAR_USER A
-			JOIN
+			LEFT JOIN
 				TBL_USERMASTER B
 			ON
 				A.memberid = B.cn
@@ -966,19 +966,27 @@
                 A.circularbmid,
                 A.title,
                 A.regdate,
-                (select membername 
-                 FROM tbl_circular_bmuser 
-                 where circularBMId = A.CIRCULARBMID 
-                 ORDER BY circularBMUserId limit 1) memberName,
-             	(select count(*) - 1 
-             	 from tbl_circular_bmuser 
-             	 where circularBMId = A.CIRCULARBMID ) memberNameCount
-            FROM
+                (SELECT
+                	membername 
+                 FROM
+                 	tbl_circular_bmuser 
+                 WHERE
+                 	circularbmid = A.circularbmid 
+                 ORDER BY
+                 	circularbmuserid
+                 LIMIT 1) membername,
+             	(SELECT
+             		COUNT(*) - 1 
+             	 FROM
+             	 	TBL_CIRCULAR_BMUSER
+             	 WHERE
+             	 	circularbmid = A.circularbmid) membernamecount
+			FROM
                 TBL_CIRCULAR_BM A
             WHERE
-                A.MEMBERID = #memberID#
+                A.memberid = #memberID#
             AND
-                A.TENANTID = #tenantID#
+                A.tenantid = #tenantID#
         ]]>
     </select>
     
@@ -990,20 +998,25 @@
       
     <select id="EzCircularDAO.getMemberName" parameterClass="map" resultClass="CircularMemberVO">
         <![CDATA[
-          SELECT
-            A.MEMBERID,   B.COMPANY,    B.DESCRIPTION,    B.TITLE,    A.MEMBERNAME,   B.MAIL
-          FROM
-            TBL_CIRCULAR_BMUSER A
-          JOIN
-            TBL_USERMASTER B
-          ON 
-          	A.MEMBERID = B.CN
-          AND
-          	A.TENANTID = B.TENANT_ID
-          WHERE
-            CIRCULARBMID = #v_CIRCULARBMID#
-          AND
-            TENANTID = #v_TENANTID#
+			SELECT
+				A.memberid,
+				B.company,
+				B.description,
+				B.title,
+				A.membername,
+				B.mail
+			FROM
+				TBL_CIRCULAR_BMUSER A
+			LEFT JOIN
+				TBL_USERMASTER B
+			ON
+				A.memberid = B.cn
+			AND
+				A.tenantid = B.tenant_id
+			WHERE
+				circularbmid = #v_CIRCULARBMID#
+			AND
+				tenantid = #v_TENANTID#
         ]]>
     </select>
     
@@ -2289,7 +2302,7 @@
 				B.mail AS mail
 			FROM
 				TBL_CIRCULAR_USER A
-			JOIN
+			LEFT JOIN
 				TBL_USERMASTER B
 			ON
 				A.memberid = B.cn
