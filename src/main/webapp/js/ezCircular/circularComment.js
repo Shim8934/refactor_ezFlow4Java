@@ -9,7 +9,7 @@ function getCircularComment() {
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
-			circularUserList = "<colgroup><col width='15%' /><col width='67%%' /><col width='18%%' /></colgroup>";
+			circularUserList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 			
 			list = result.circularUserList;
 			list.forEach(function(vo, index) {
@@ -60,7 +60,7 @@ function getCircularComment() {
 					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
 				}
 				
-				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment + "&nbsp;";
+				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
 				
 				var arry = vo.regDate.substring(0, 10).split('-');
 				var d = new Date(arry[0], arry[1]-1, arry[2]);

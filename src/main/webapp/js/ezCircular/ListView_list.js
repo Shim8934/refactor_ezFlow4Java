@@ -527,6 +527,10 @@ function ListView() {
                     objTd.style.width = "70%";
                 }
                 
+                if (strColName == "MEMBERNAME") {
+                    objTd.style.textAlign = "CENTER";
+                }
+                
                 if (strColName == "WRITEDATE") {
                 	objTd.width = "120px";
                 	objTd.style.textAlign = "CENTER";
@@ -747,7 +751,7 @@ function ListView() {
                     objTd.style.textOverflow = "ellipsis";
                     
                     if (getNodeText(oDatas[2]) == "1") {
-                    	titleImage = "&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
+                    	titleImage = "&nbsp;&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
                     }
                 }
                 
@@ -803,6 +807,10 @@ function ListView() {
                     	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
                     	strValue = "";
                     }
+                }
+                
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "MEMBERNAME") {
+                    objTd.style.textAlign = "CENTER";
                 }
                 
                 //본인확인

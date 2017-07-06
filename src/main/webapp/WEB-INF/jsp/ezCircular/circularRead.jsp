@@ -166,13 +166,11 @@
             	    
 					<table class="content" style="width:100%;">
 	                    <tr>
-    	                    <th style="width: 200px;"><spring:message code='ezCircular.t32' /></th>
-        	                <td colspan="3" style="width: 100%; padding-left: 4px;">
-            	                ${result.title}
-                	        </td>
+    	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
+        	                <td colspan="3" style="padding-left: 4px;">${result.title}</td>
                     	</tr>
                     	<tr>
-	                        <th style="width:20px;"><spring:message code='ezCircular.t115' /></th>
+	                        <th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t115' /></th>
     	                    <td id="Td_Importance" style="padding-left: 4px;">
     	                    	<c:if test="${result.importance == '0' }">
 	    	                    	<span><spring:message code='ezCircular.t116' /></span>  	                    	
@@ -181,8 +179,8 @@
 	    	                    	<span><spring:message code='ezCircular.t117' /></span>  	                    	
     	                    	</c:if>
     	                    </td>
-		            		<th style="width:20px;"><spring:message code='ezCircular.t118' /></th>
-		            		<td style="width:200px;">
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t118' /></th>
+		            		<td>
 		                		<c:choose>
 		                			<c:when test="${result.option eq '1'}">
 		                				<span id="option" style="padding-left: 4px;"><spring:message code='ezCircular.t119' /></span>
@@ -201,21 +199,15 @@
 							</td>
                     	</tr>
 		        		<tr>
-							<th><spring:message code='ezCircular.t122' /></th>
-	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${result.memberName }</div>
-	         				</td>
-							<th><spring:message code='ezCircular.t123' /></th> 
- 							<td style="padding-left: 6px">
- 								<div id="printStatus">${result.regDate }</div>
- 							</td>
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
+	       					<td style="padding-left: 4px;"><div id="writer" >${result.memberName }</div></td>
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t123' /></th> 
+ 							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
 						</tr>
 						<tr>
-		        			<th><spring:message code='ezCircular.t65' /></th>
-	       					<td>
-	         					<div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div>
-	         				</td>
-	         				<th><spring:message code='ezCircular.t124' /></th>
+		        			<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t65' /></th>
+	       					<td><div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div></td>
+	         				<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t124' /></th>
 		            		<td>
 		            			<c:choose>
 			            			<c:when test="${result.status eq '0'}">
@@ -231,13 +223,11 @@
 		            		</td>
 		        		</tr>
 		        		<tr>
-		            		<th><spring:message code='ezCircular.t34' /></th>
-		            		<td colspan="7" id="circularUserList" style="padding-left: 4px;"></td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t34' /></th>
+		            		<td colspan="3" id="circularUserList" style="padding-left: 4px;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;">
-	                 			<div id="divCross" style="overflow:auto;"></div>
-	            			</td>
+	            			<td colspan="4" style="height:100%;"><div id="divCross" style="overflow:auto;"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
