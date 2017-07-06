@@ -224,7 +224,7 @@
 		        		</tr>
 		        		<tr>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t34' /></th>
-		            		<td colspan="3" id="circularUserList" style="padding-left: 4px;"></td>
+		            		<td colspan="3" id="circularUserList" style="padding-left: 4px; vertical-align: middle;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;"><div id="divCross" style="overflow:auto;"></div></td>
