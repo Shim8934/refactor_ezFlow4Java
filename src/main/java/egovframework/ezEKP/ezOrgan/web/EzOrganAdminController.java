@@ -135,11 +135,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
+		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -662,6 +664,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());		
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -671,7 +674,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("birthDay", "");
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
-		
+		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+				
 		logger.debug("userInfo ended");
 		
 		return "admin/ezOrgan/userInfo";
