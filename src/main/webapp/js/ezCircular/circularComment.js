@@ -52,9 +52,8 @@ function getCircularComment() {
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
-//				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
 				
-				if (vo.memberID == userInfoID) {
+				if (vo.memberID == userInfoID && vo.status == 0) {
 					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "&nbsp;<img src='/images/ImgIcon/circular_share.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' /></td>";
 				} else {
 					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
