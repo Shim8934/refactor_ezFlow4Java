@@ -891,9 +891,9 @@
 			AND
 				A.tenantid = B.tenant_id
             WHERE
-                CIRCULARID = #circularID#
+                circularid = #circularID#
             AND
-                TENANTID = #tenantID#
+                tenantid = #tenantID#
         ]]>
         
        	<isNotEqual property="searchValue" compareValue="">
@@ -902,6 +902,12 @@
 					B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			]]>
 		</isNotEqual>
+		
+		<![CDATA[
+			ORDER BY
+				FIELD(A.memberid, (SELECT memberID FROM TBL_CIRCULAR WHERE circularid = #circularID#)) DESC,
+				A.memberid DESC;
+		]]>
     </select>
     
     <select id="EzCircularDAO.getCircularDeptUserList" resultClass="CircularListVO" >
