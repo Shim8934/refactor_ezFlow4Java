@@ -32,6 +32,4 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzSystemAdminDAO.getLoginHistCount", map); 
 	}
 	
-	
-	
 }

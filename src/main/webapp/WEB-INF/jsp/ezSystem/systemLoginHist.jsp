@@ -14,13 +14,33 @@
 
 <script type="text/javascript">
 
-	// 페이징처리
+
+
+	//**/ 페이징처리
 	var strLang1 = "<spring:message code='main.kyj8'/>";
 	var strLang2 = "<spring:message code='main.kyj9'/>";
 
+	var keyword = "<c:out value = '${keyword}' />";
+	var keycode = "<c:out value = '${keycode}' />";
 	var CurPage = "<c:out value = '${currPage}' />";
 	var totalPage = "<c:out value = '${totalPage}' />";
+	var totalCount = "<c:out value = '${itemCnt}' />";
 	var BlockSize = 10;
+	
+	function keyword_onkeydown(e) {
+	    if (!window.ActiveXObject) {
+	        var keyCode = e.keyCode;
+	    } else {
+	        var keyCode = event.keyCode;
+	    }
+	    
+        if (keyCode == 13) {
+			search();
+			return false;
+		}
+		return true;
+	}
+	
 	
 	function td_Create1(strtext) {
         document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -140,15 +160,29 @@
             return;
         }
     }
+
+	//**/ 검색 버튼 클릭시 이벤트
+    function search() {
+		var search_select = document.getElementById("search_keycode");
+		var search_select1 = search_select.options[search_select.selectedIndex].value;
+		var search_keyword = document.getElementById("search_keyword").value;
+		alert(search_keyword);
+    	var strSearch = "keycode=" +  search_select1 + "&keyword=" + search_keyword;
+		var href = "/admin/ezSystem/systemLoginHist.do";
+		window.location.href = href + "?" + encodeURI(strSearch) ;
 		
+    }
+
+    //**/ 페이지 전환
 	function goToPage(page) {
- 		var href = "/admin/ezSystem/systemLoginHist.do" ;
- 		if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
- 			document.location.href = href + "?GotoPage=" + encodeURIComponent(parseInt(page));
+
+		var href = "/admin/ezSystem/systemLoginHist.do?keycode=" + keycode + "&keyword=" + keyword ;
+
+		if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
+ 			document.location.href = href + "&GotoPage=" + encodeURIComponent(parseInt(page));
  		}
-	}				
-    // 페이징처리 완료
-	
+	}		
+
 </script>
 </head>
 <body class="mainbody" onload="makePageSelPage()">
@@ -157,22 +191,23 @@
 		<tr>
 			<td style="margin-bottom: 10px; padding: 5px 5px;">
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002'/> : &nbsp;
-					<input type="text" id="start_datepicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
-					<input type="text" id="ended_datepicker" style="width: 100px; text-align: center" readonly="readonly" />
+					<input type="text" id="start_datepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
+					<input type="text" id="ended_datepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
 				</span> 
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code="main.kyj6"></spring:message> : &nbsp;
-					<select> 
-						<option><spring:message code="main.t76"></spring:message></option>
-						<option><spring:message code="main.t75"></spring:message></option>
-						<option><spring:message code="main.kyj2"></spring:message></option>
-						<option><spring:message code="main.kyj3"></spring:message></option>
-						<option><spring:message code="main.kyj4"></spring:message></option>
-						<option><spring:message code="main.kyj5"></spring:message></option>
+					<select id="search_keycode" > 
+						<option value="1"><spring:message code="main.t76"></spring:message></option>
+						<option value="2"><spring:message code="main.t75"></spring:message></option>
+						<option value="3"><spring:message code="main.kyj2"></spring:message></option>
+						<option value="4"><spring:message code="main.kyj3"></spring:message></option>
+						<option value="5"><spring:message code="main.kyj4"></spring:message></option>
+						<option value="6"><spring:message code="main.kyj5"></spring:message></option>
 					</select>
-					<input type="text" style="width: 150px;" />
-					<a class="imgbtn" id="btnSearchLoginHist">
-						<span><spring:message code="main.kyj7"></spring:message></span>
+					<input type="text" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)" id="search_keyword"/>
+					<input type="hidden" id="search_key_hidden">
+					<a class="imgbtn" >
+						<span onclick="javascript:search();"><spring:message code="main.kyj7"></spring:message></span>
 					</a>
 				</span> 
 			</td>
@@ -194,11 +229,11 @@
 				<tr>
 					<c:if test="${ (userLang == 1) && (sysLang == 1) }">
 						<td><c:out value="${list.usernm }"></c:out></td>		
-						<td><c:out value="${list.deptnm }"></c:out></td>		
+						<td><c:out value="${list.deptnm }"></c:out></td>
 					</c:if>
 					<c:if test="${ (userLang != 1) || (sysLang != 1) }">
 						<td><c:out value="${list.usernm2 }"></c:out></td>		
-						<td><c:out value="${list.deptnm2 }"></c:out></td>		
+						<td><c:out value="${list.deptnm2 }"></c:out></td>	
 					</c:if>
 						<td><c:out value="${list.connectip }"></c:out></td>		
 						<td><c:out value="${list.connecttime }"></c:out></td>		

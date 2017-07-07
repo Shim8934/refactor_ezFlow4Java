@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -136,7 +137,8 @@ public class EzSystemAdminController {
 	
 	// 로그인 로그기록
 	@RequestMapping(value="/admin/ezSystem/systemLoginHist.do")
-	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
+			@RequestParam(required=false)String keycode, @RequestParam(required=false)String keyword ) throws Exception {
 		
 		logger.debug("started systemLoginHist controller.");
 		
@@ -150,7 +152,6 @@ public class EzSystemAdminController {
 		String userLang = userInfo.getLang();
 		String sysLang = "";
 		String currPage = req.getParameter("GotoPage");
-		
 		if (currPage == null || currPage.equals("")) {
 			currPage = "1";
 		}
@@ -159,16 +160,6 @@ public class EzSystemAdminController {
 		int maxItemPerPage = 25; // 한 화면에 보여줄 게시물 갯수 
 		int startPage = ((Integer.parseInt(currPage) - 1)  * maxItemPerPage ) + 1;
 		int currentPage = Integer.parseInt(currPage);
-		
-		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), commonUtil.getMinuteUTC(offset), startPage, maxItemPerPage);
-		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId());
-		int totalPage = itemCnt / maxItemPerPage ;
-		
-		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
-			totalPage = totalPage + 1 ;
-		}
-		
-		currentPage = Math.min(currentPage, totalPage);	
 		
 		List<SysParamVO> configList = ezSystemAdminService.getSysParam(userInfo.getTenantId());
 		Map<String, String> configMap = new HashMap<String, String>();
@@ -180,6 +171,23 @@ public class EzSystemAdminController {
 				sysLang = param.getValue();
 			}
 		}
+
+		String lang = "2";
+		if ( userInfo.getLang().equals("1") && sysLang.equals("1") )  {
+			lang = "1";
+		} 
+		
+		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
+				commonUtil.getMinuteUTC(offset), startPage, maxItemPerPage, keycode, keyword, lang);
+		
+		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), keycode, keyword, lang);
+		int totalPage = itemCnt / maxItemPerPage ;
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1 ;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);	
 		
 		model.addAttribute("loginHistList", loginHistList);
 		model.addAttribute("userLang", userLang);
@@ -188,6 +196,8 @@ public class EzSystemAdminController {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("nowBlock", nowBlock);
 		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("keycode", keycode);
 		
 		logger.debug("ended systemLoginHist controller.");
 		
