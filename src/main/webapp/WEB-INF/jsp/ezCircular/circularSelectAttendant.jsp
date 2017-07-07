@@ -96,9 +96,9 @@
 	            if (pGubun == "") {
 // 	                document.getElementById("btnAddUser").style.display = "";
 	                if (CrossYN())
-	                    document.getElementById("ToTitleStr").textContent = "회람자";
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezCircular.t34'/>";
 	                else
-	                    document.getElementById("ToTitleStr").innerText = "회람자";
+	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezCircular.t34'/>";
 	            }
 	
 	            ListTypeChangeIcon();
@@ -128,7 +128,7 @@
 	            	treeView.DataBind("TreeView");
 	            	
 	                if (type == "group") {
-	                    document.getElementById("ToTitleStr").textContent = "회람자";
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezCircular.t34'/>";
 // 	                    document.getElementById("btnAddUser").style.display = "none";	
 	                }
 	            }
@@ -1301,7 +1301,7 @@
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
-	                                <span style="min-width: 45px;" id="ToTitleStr">회람자</span>
+	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezCircular.t34'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
 	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>

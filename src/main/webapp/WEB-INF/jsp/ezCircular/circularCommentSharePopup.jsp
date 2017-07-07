@@ -7,6 +7,7 @@
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -30,12 +31,12 @@
 	</head>
 	
 	<body class="popup" style="overflow: hidden;">
-		<h1>공유자목록</h1>
+		<h1><spring:message code='ezCircular.t167'/></h1>
 		
 		<div id="close">
 			<ul>
-				<li><span onclick="shareComment();">공유자지정</span></li>
-				<li><span onclick="closePopup();">닫기</span></li>
+				<li><span onclick="shareComment();"><spring:message code='ezCircular.t168'/></span></li>
+				<li><span onclick="closePopup();"><spring:message code='ezCircular.t84'/></span></li>
 			</ul>
 		</div>
 		
@@ -45,9 +46,9 @@
 		
 		<table class="mainlist" style="width:105%;margin-left: -10px;margin-top:-10px;">
 			<tr>
-				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;검색</th>
+				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85'/></th>
 				<th style="text-align:right;border-top:0px">
-					<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCommentShareUser()">검색</span>&nbsp;</a>
+					<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCommentShareUser()"><spring:message code='ezCircular.t85'/></span>&nbsp;</a>
 				</th>
 			</tr>
 		</table>

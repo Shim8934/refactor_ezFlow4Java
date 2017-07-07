@@ -110,7 +110,7 @@ function showEdit(obj) {
 		
 		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='height:70px;border:1px solid #e2e2e2'>";
 		circularEdit += "<td colspan='2'><textarea style='width:97%;height:50px;resize:none;overflow:auto;'></textarea></td>";
-		circularEdit += "<td><a class='imgbtn'><span onclick='editCircularComment(this)';>의견작성</span>&nbsp;</a><br/><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>비공개</input></td>";
+		circularEdit += "<td><a class='imgbtn'><span onclick='editCircularComment(this)';>" + strLang3 + "</span>&nbsp;</a><br/><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></td>";
 		circularEdit += "</tr>";
 		
 		$(obj).closest("tr").after(circularEdit);
@@ -123,7 +123,7 @@ function editCircularComment(obj) {
 	var circularCommentStatus = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > input:checked").length;
 
 	if (circularComment == "") {
-		alert("의견을 입력해주세요");
+		alert(strLang5);
 		return ;
 	}
 	
@@ -159,7 +159,7 @@ function deleteCircularComment(obj) {
 			circularCommentID : circularCommentID
 		},
 		success : function(result) {
-			alert("의견을 삭제했습니다.");
+			alert(strLang6);
 			getCircularComment();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -177,7 +177,7 @@ function commentSendMail() {
 			circularID : circularID
 		},
 		success : function(result) {
-			alert("공지 메일을 발송했습니다.");
+			alert(strLang7);
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			

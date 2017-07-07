@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>

@@ -1990,10 +1990,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularListVO circularVO = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "comment");
     	List<CircularCommentVO> list = ezCircularService.getCircularCommentUserList(circularCommentVO.getCircularID(), circularCommentVO.getCircularUserID(), userInfo.getTenantId(), "circularComment");
     	
-    	String subject = "[신규의견알림] 새로운 의견이 등록되었습니다.";
+    	String subject = egovMessageSource.getMessage("ezCircular.t163", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
-    	bodyContent.append(" 제목 : " + circularVO.getTitle() + "</br>");
-    	bodyContent.append(" 의견 작성자 : " + userInfo.getDisplayName());
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + circularVO.getTitle() + "</br>");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
     	
     	InternetAddress from = new InternetAddress();
 		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -2042,10 +2042,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	CircularListVO circularVO = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "comment");
     	List<CircularCommentVO> list = ezCircularService.getCircularCommentUserList(circularCommentVO.getCircularID(), circularCommentVO.getCircularUserID(), userInfo.getTenantId(), "circularUser");
     	
-    	String subject = "[회람확인요청] 회람확인요청이 도착했습니다.";
+    	String subject = egovMessageSource.getMessage("ezCircular.t165", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
-    	bodyContent.append(" 제목 : " + circularVO.getTitle() + " </br>");
-    	bodyContent.append(" 내용 : " + circularVO.getContent());
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + circularVO.getTitle() + " </br>");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t166", userInfo.getLocale()) + " : " + circularVO.getContent());
     	
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");

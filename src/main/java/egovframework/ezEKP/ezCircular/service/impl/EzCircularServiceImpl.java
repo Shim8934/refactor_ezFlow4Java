@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCircular.dao.EzCircularDAO;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
@@ -40,6 +41,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Resource(name="EzCircularDAO")
 	private EzCircularDAO ezCircularDAO;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Override
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception {
@@ -217,10 +221,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		if (option == 2 || option == 3) {
 			// 임시저장 시 미발송
 			if (status != 2) {
-				String subject = "[신규회람알림] 새로운 회람이 등록되었습니다.";
+				String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 				StringBuilder bodyContent = new StringBuilder("");
-				bodyContent.append(" 제목 : " + title + " </br>");
-		    	bodyContent.append(" 내용 : " + content);
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + title + " </br>");
+		    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t166", userInfo.getLocale()) + " : " + content);
 				
 				for (int i=0; i<receiverLength; i++) {
 					InternetAddress from = new InternetAddress();

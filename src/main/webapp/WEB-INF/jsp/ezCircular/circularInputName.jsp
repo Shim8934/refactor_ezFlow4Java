@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>회람문서함 추가/수정</title>
+	    <title><spring:message code='ezCircular.t105'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
