@@ -143,7 +143,8 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, String keyword, String lang) throws Exception {
+	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
+			String keyword, String lang, String startDate, String endDate) throws Exception {
 
 		logger.debug("getLoginHist started. tenantID : " + tenantID);
 		
@@ -155,6 +156,8 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
 		
 		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
 		
@@ -164,15 +167,18 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public int getLoginHistCount(int tenantID, String keycode, String keyword, String lang) throws Exception {
+	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate) throws Exception {
 		
 		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
 		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
 				
 		logger.debug("getLoginHistCount ended.");
 		

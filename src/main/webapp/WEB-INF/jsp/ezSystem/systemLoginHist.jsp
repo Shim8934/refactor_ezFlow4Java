@@ -10,16 +10,15 @@
 <link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-
 <script type="text/javascript">
-
-
 
 	//**/ 페이징처리
 	var strLang1 = "<spring:message code='main.kyj8'/>";
 	var strLang2 = "<spring:message code='main.kyj9'/>";
-
+	var startDate = "<c:out value = '${startDate}' />";
+	var endDate = "<c:out value = '${endDate}' />";
 	var keyword = "<c:out value = '${keyword}' />";
 	var keycode = "<c:out value = '${keycode}' />";
 	var CurPage = "<c:out value = '${currPage}' />";
@@ -28,6 +27,7 @@
 	var BlockSize = 10;
 	
 	function keyword_onkeydown(e) {
+		
 	    if (!window.ActiveXObject) {
 	        var keyCode = e.keyCode;
 	    } else {
@@ -38,6 +38,7 @@
 			search();
 			return false;
 		}
+        
 		return true;
 	}
 	
@@ -163,26 +164,79 @@
 
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
-		var search_select = document.getElementById("search_keycode");
-		var search_select1 = search_select.options[search_select.selectedIndex].value;
-		var search_keyword = document.getElementById("search_keyword").value;
-		alert(search_keyword);
-    	var strSearch = "keycode=" +  search_select1 + "&keyword=" + search_keyword;
-		var href = "/admin/ezSystem/systemLoginHist.do";
-		window.location.href = href + "?" + encodeURI(strSearch) ;
-		
+		$(function(){
+			var startDate = $('#startDatepicker').datepicker({dateFormat: 'yyyy-mm-dd'}).val();
+        	var endDate = $('#endDatepicker').datepicker({dateFormat:'yyyy-mm-dd'}).val();
+			var selectOption = document.getElementById("searchKeycode");
+			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
+			var searchKeyword = document.getElementById("searchKeyword").value;
+	    	var strSearch = "keycode=" +  searchKeycode + "&keyword=" + searchKeyword + "&startDate=" + startDate + "&endDate=" + endDate;
+			var href = "/admin/ezSystem/systemLoginHist.do";
+
+			window.location.href = href + "?" + encodeURI(strSearch) ;
+		});
     }
 
     //**/ 페이지 전환
 	function goToPage(page) {
+		var href = "/admin/ezSystem/systemLoginHist.do";
+		var strPage = "?keycode=" + keycode + "&keyword=" + keyword + "&startDate=" + startDate + "&endDate=" + endDate; ;
 
-		var href = "/admin/ezSystem/systemLoginHist.do?keycode=" + keycode + "&keyword=" + keyword ;
-
-		if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
- 			document.location.href = href + "&GotoPage=" + encodeURIComponent(parseInt(page));
+		if (parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
+ 			document.location.href = href + strPage + "&GotoPage=" + encodeURIComponent(parseInt(page));
  		}
 	}		
-
+    
+    //**/ 날짜 아이콘 적용 및 날짜 검색
+    var holidaydate = "";
+    var holidayid = "";
+    
+    $(function(){
+    	$('#startDatepicker').datepicker({
+    		changeMonth: true,
+    		changeYear: true,
+    		autoSize: true,
+    		showOn: "both",
+    		
+    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImageOnly: true    	
+    	});
+    	$('#endDatepicker').datepicker({
+    		changeMonth: true,
+    		changeYear: true,
+    		autoSize: true,
+    		showOn: "both",
+    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImageOnly: true    	
+    	});    	    	
+    });
+    
+    var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+    var monthStr = monthMsg.split(";");
+    var dayMsg = "일;월;화;수;목;금;토";
+    var dayStr = dayMsg.split(";");
+   
+    $(function(){
+    	$.datepicker.regional["ko"] = {
+    			closeText: "닫기",
+    			prevText: "이전달",
+    			nextText: "다음달",
+    			monthNames: monthStr,
+				monthNamesShort: monthStr,
+    			dayNames: dayStr,
+    			dayNamesShort: dayStr,
+    			dayNamesMin: dayStr,
+    			weekHeader: 'Wk',
+    			dateFormat: 'yy-mm-dd',
+       			firstDay:0,
+    			isRTL: false,
+    			duration: 200,
+    			showAnim: 'show',
+    			showMonthAfterYear: true
+    	};
+    	$.datepicker.setDefaults($.datepicker.regional["ko"]);	
+    });
+    
 </script>
 </head>
 <body class="mainbody" onload="makePageSelPage()">
@@ -191,12 +245,12 @@
 		<tr>
 			<td style="margin-bottom: 10px; padding: 5px 5px;">
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002'/> : &nbsp;
-					<input type="text" id="start_datepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
-					<input type="text" id="ended_datepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
+					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
+					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
 				</span> 
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code="main.kyj6"></spring:message> : &nbsp;
-					<select id="search_keycode" > 
+					<select id="searchKeycode" > 
 						<option value="1"><spring:message code="main.t76"></spring:message></option>
 						<option value="2"><spring:message code="main.t75"></spring:message></option>
 						<option value="3"><spring:message code="main.kyj2"></spring:message></option>
@@ -204,8 +258,7 @@
 						<option value="5"><spring:message code="main.kyj4"></spring:message></option>
 						<option value="6"><spring:message code="main.kyj5"></spring:message></option>
 					</select>
-					<input type="text" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)" id="search_keyword"/>
-					<input type="hidden" id="search_key_hidden">
+					<input type="text" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)" id="searchKeyword"/>
 					<a class="imgbtn" >
 						<span onclick="javascript:search();"><spring:message code="main.kyj7"></spring:message></span>
 					</a>
