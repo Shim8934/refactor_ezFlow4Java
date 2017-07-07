@@ -66,12 +66,12 @@
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
 			<![CDATA[
-			DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) >= #startDate# 
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
 			]]>
 		</isNotEmpty>
 		<isNotEmpty property="endDate" prepend="and">
 			<![CDATA[
-			DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) <= #endDate#
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
 			]]>
 		</isNotEmpty>
 	</sql>
