@@ -381,7 +381,7 @@ public class EzEmailUtil {
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
                         
-                        logger.debug("changed ks_c_5601-1987 to ms949.");
+                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
                         
                         subject = MimeUtility.decodeText(rawHeader);
                     }                        
@@ -497,6 +497,11 @@ public class EzEmailUtil {
 		// 이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
 		// disposition이 attachment인지 체크하는 조건을 뺐다.
 		//
+		// 본문인(첨부파일이 아닌) text/plain 혹은 text/html에서 Content-Disposition 헤더가 있는 경우가 있어 
+		// disposition이 attachment인지 체크하는 조건을 다시 추가함
+		// Content-Type: text/plain; charset="UTF-8"
+		//		 Content-Disposition: inline
+		
 		// 다음과 같이 message/rfc822이면서 Content-Disposition에 filename이 없는 경우가 있어
 		// 이 경우엔 message/rfc822 type을 처리하는 if문 조건절에서 처리하도록 하기 위해 조건을 추가함.
 		// Content-Type: message/rfc822
@@ -508,7 +513,7 @@ public class EzEmailUtil {
 		// 예) Content-Type: application/octet-stream;
 		//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 	    //    Content-Transfer-Encoding: base64	    										
-		if ((part.getDisposition() != null 
+		if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
 				|| part.isMimeType("application/*")) {
             double size = part.getSize();
@@ -557,29 +562,31 @@ public class EzEmailUtil {
 			
 			logger.debug("filename=" + filename);
 			
-			// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
-			// 예) Content-Type: application/octet-stream; name=
-			//        "=?utf-8?B?MTcwNjIwMC00MTkwMDAxOTE1LVQ1MFBCTOyaqSBHQ1UoU042NCntmZXsoJVQTyDrsI8gR0NVM+uM?==?utf-8?B?gChTTiAzLTM3LTc0KSDsiJjrpqzsnoTsi5wgUE8ucGRm?="
-			int pos = filename.indexOf("?==?");
-			
-			if (pos >= 0) {
-				StringBuilder sb = new StringBuilder();
+			if (filename != null) {
+				// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
+				// 예) Content-Type: application/octet-stream; name=
+				//        "=?utf-8?B?MTcwNjIwMC00MTkwMDAxOTE1LVQ1MFBCTOyaqSBHQ1UoU042NCntmZXsoJVQTyDrsI8gR0NVM+uM?==?utf-8?B?gChTTiAzLTM3LTc0KSDsiJjrpqzsnoTsi5wgUE8ucGRm?="
+				int pos = filename.indexOf("?==?");
 				
-				sb.append(filename.substring(0, pos));
-				
-				int nextPos = filename.indexOf("?", pos + 4);
-				
-				if (nextPos >= 0) {
-					nextPos = filename.indexOf("?", nextPos + 1);
+				if (pos >= 0) {
+					StringBuilder sb = new StringBuilder();
+					
+					sb.append(filename.substring(0, pos));
+					
+					int nextPos = filename.indexOf("?", pos + 4);
 					
 					if (nextPos >= 0) {
-						sb.append(filename.substring(nextPos + 1));
+						nextPos = filename.indexOf("?", nextPos + 1);
 						
-						filename = sb.toString();
-						
-						logger.debug("line broken new filename=" + filename);						
-					}
-				}				
+						if (nextPos >= 0) {
+							sb.append(filename.substring(nextPos + 1));
+							
+							filename = sb.toString();
+							
+							logger.debug("line broken new filename=" + filename);						
+						}
+					}				
+				}
 			}
 									
             // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
@@ -587,7 +594,7 @@ public class EzEmailUtil {
             if (originalFilename != null && originalFilename.startsWith("=?ks_c_5601-1987")) {
                 originalFilename = originalFilename.replace("ks_c_5601-1987", "ms949");
                 
-                logger.debug("changed ks_c_5601-1987 to ms949.");
+                logger.debug("originalFilename changed ks_c_5601-1987 to ms949.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
@@ -632,66 +639,70 @@ public class EzEmailUtil {
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
-			/*
-			if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
-				InputStream is = getContentInputStream(part);
+			String[] headers = part.getHeader("Content-Type");
+			String rawContentType = "";
+			
+			if (headers != null) {
+				rawContentType = headers[0];
+			}
+			
+			boolean isCharSet = rawContentType.toLowerCase().contains("charset");
+			
+			try {
+				strContent = part.getContent().toString();
+								
+				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
+		            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+		            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+					if (strContent.contains("�")) {
+						InputStream is = getContentInputStream(part);
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							logger.debug("text/html changed ks_c_5601-1987 to ms949.");
+							
+							strContent = new String(buf, "ms949");
+						}											
+					}
+				}
 				
+				// Content-Type 헤더에 charset 속성이 없는 경우엔 US-ASCII로만 구성되어야 한다.
+				// Content-Type: text/html 과 같이 charset이 없지만 본문이 euc-kr로 작성된 메일이 발견되어 추가함.
+				if (!isCharSet) {
+					logger.debug("rawContentType=" + rawContentType);
+					logger.debug("no charset attribute");
+					
+					// US-ASCII로만 되어 있지 않은 경우 직접 디코딩을 수행한다.
+					if (!isPureAscii(strContent)) {
+						logger.debug("content isn't ascii only");
+						
+						InputStream is = getContentInputStream(part); 
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							strContent = decodeNonAsciiBytes(buf);						
+						}							
+					}
+				}
+				
+			// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+			// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				InputStream is = getContentInputStream(part); 
+										
 				if (is.available() > 0) {
 					byte[] buf = new byte[is.available()];
 					is.read(buf);
 					
-					strContent = new String(buf, "ms949");
-				}				
-			} else {
-			*/							
-				String[] headers = part.getHeader("Content-Type");
-				String rawContentType = "";
-				
-				if (headers != null) {
-					rawContentType = headers[0];
+					strContent = decodeNonAsciiBytes(buf);						
 				}
-				
-				boolean isCharSet = rawContentType.toLowerCase().contains("charset");
-				
-				try {
-					strContent = part.getContent().toString();
-					
-					// Content-Type 헤더에 charset 속성이 없는 경우엔 US-ASCII로만 구성되어야 한다.
-					// Content-Type: text/html 과 같이 charset이 없지만 본문이 euc-kr로 작성된 메일이 발견되어 추가함.
-					if (!isCharSet) {
-						logger.debug("rawContentType=" + rawContentType);
-						logger.debug("no charset attribute");
-						
-						// US-ASCII로만 되어 있지 않은 경우 직접 디코딩을 수행한다.
-						if (!isPureAscii(strContent)) {
-							logger.debug("content isn't ascii only");
-							
-							InputStream is = getContentInputStream(part); 
-							
-							if (is.available() > 0) {
-								byte[] buf = new byte[is.available()];
-								is.read(buf);
-								
-								strContent = decodeNonAsciiBytes(buf);						
-							}							
-						}
-					}
-					
-				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
-				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
-				} catch (Exception e) {
-					e.printStackTrace();
-					
-					InputStream is = getContentInputStream(part); 
-											
-					if (is.available() > 0) {
-						byte[] buf = new byte[is.available()];
-						is.read(buf);
-						
-						strContent = decodeNonAsciiBytes(buf);						
-					}
-				}
-//			}
+			}
 			
 			// process in-line images
 			int index1 = -1;
@@ -759,36 +770,41 @@ public class EzEmailUtil {
 			else {
 				String contentType = part.getContentType();
 				
-				/*
-				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
-					InputStream is = getContentInputStream(part);
+				try {
+					strContent = part.getContent().toString();
 					
+					if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
+			            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+			            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
+								
+								strContent = new String(buf, "ms949");
+							}											
+						}
+					}
+					
+				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					InputStream is = getContentInputStream(part); 
+											
 					if (is.available() > 0) {
 						byte[] buf = new byte[is.available()];
 						is.read(buf);
 						
-						strContent = new String(buf, "ms949");
-					}				
-				} else {
-				*/							
-					try {
-						strContent = part.getContent().toString();
-					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
-					// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
-					} catch (Exception e) {
-						e.printStackTrace();
-						
-						InputStream is = getContentInputStream(part); 
-												
-						if (is.available() > 0) {
-							byte[] buf = new byte[is.available()];
-							is.read(buf);
-							
-							strContent = decodeNonAsciiBytes(buf);						
-						}
+						strContent = decodeNonAsciiBytes(buf);						
 					}
 				}				
-//			}
+			}
 			
 			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 			StringBuilder tempText2 = new StringBuilder();

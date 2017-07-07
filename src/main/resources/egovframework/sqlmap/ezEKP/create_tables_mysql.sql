@@ -6882,7 +6882,9 @@ CREATE TABLE `tbl_tmpapropinioninfo` (
   `USERDEPTNAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`USERID`,`OPINIONSN`)
+
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`OPINIONSN`,`USERID`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -245,8 +245,7 @@
 	                         MakeSubCondition();
 	                         GetDocSearch();
 	                	}
-	                }
-	                else {
+	                } else {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetDocSearch();
@@ -274,8 +273,7 @@
 		                condition[24] = "";
 		                DocListType == "GetDocSearch";
 		                GetDocSearch();
-		            }
-		            else {
+		            } else {
 		                var nowyear = new Date().getFullYear();
 		                var nowmonth = new Date().getMonth() + 1;
 		                var nowday = new Date().getDate();
@@ -451,13 +449,17 @@
 		    }
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
-		        condition = returnvalue;
+	    	   for(var i =0; i < returnvalue.length; i++) {
+		        	condition[i] = returnvalue[i]; 
+		        }
+	    	   
 		        if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
 		        $('#sel_year').val("ALL");
 		        $('#sel_year').selectmenu('refresh');
+		     
 		    }
 		    function lvtDoclist_onclick() {
 		    }

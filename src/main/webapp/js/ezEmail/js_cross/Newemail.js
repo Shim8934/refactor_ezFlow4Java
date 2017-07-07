@@ -761,6 +761,11 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreH_MailReceiverDetail_Rayer").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
                 document.getElementById("PreH_sub_subject").innerHTML = pSubject;
+                //kms
+                pSubject = pSubject.trim();
+                if(pSubject == ""){
+                	document.getElementById("PreH_sub_subject").innerHTML = strLang97;
+                }
                 document.getElementById("PreH_subject").style.display = "";
                 document.getElementById("PreH_date").innerHTML = pDate;
                 document.getElementById("PreH_MailReceiver").innerHTML = pReceiverHtml;
@@ -777,6 +782,10 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_MailReceiverDetail_Rayer").style.display = "none";
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("PreW_sub_subject").innerHTML = pSubject;
+                pSubject = pSubject.trim();
+                if(pSubject == ""){
+                	document.getElementById("PreW_sub_subject").innerHTML = strLang97;
+                }
                 document.getElementById("PreW_subject").style.display = "";
                 document.getElementById("PreW_date").innerHTML = pDate;
                 document.getElementById("PreW_MailReceiver").innerHTML = pReceiverHtml;
