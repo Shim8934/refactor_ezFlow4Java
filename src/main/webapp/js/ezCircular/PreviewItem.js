@@ -211,8 +211,7 @@ function ItemPreviewRead(obj) {
     xmlhttp2.send();
     
     /* 2017-07-07 이효진 */
-    //unread 이미지를 read 이미지로 교체
-    
+    $(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif')
     
     if (typeof (window.parent.frames.left) != "undefined") {
         parent.frames["left"].getNewCircularCount();
