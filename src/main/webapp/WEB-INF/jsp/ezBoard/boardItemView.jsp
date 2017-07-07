@@ -627,6 +627,7 @@
 				        return;
 				    }
 		        }
+
 		        if (gubun == "2" && trim(document.getElementById('txtPassWord').value) == "") {
 		            alert("<spring:message code='ezBoard.t391' />");
 				    document.getElementById('txtPassWord').focus();
@@ -681,19 +682,19 @@
 		        
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (gubun == "2") {
-		
 		                if (CrossYN()) {
 		                	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
 		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
+		                    
 		                    if (ret == "NO") {
 		                        alert("<spring:message code='ezBoard.t267' />");
 		                        return;
-		                    }
-		                    else if (ret == "cancel" || ret == undefined) {
+		                    } else if (ret == "cancel" || ret == undefined) {
 		                        alert(strLang27);
 		                        return;
 		                    }
+		                    
 		                    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
 		                    xmlhttp.send();
 		                    if (xmlhttp.responseText == "FAIL") {
@@ -702,16 +703,14 @@
 		
 		                    getOneLineReply();
 		                    xmlhttp = null;
-		                }
-		                else {		                	
+		                } else {		                	
 		                    checkpassword_dialogArguments = new Array();
 		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
 		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                    try { OpenWin.focus(); } catch (e) { }
 		                }
 		                
-		            }
-		            else {
+		            } else {
 		                xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
 		                xmlhttp.send();
 		                if (xmlhttp.responseText.substr(0, 2) != "OK") {
@@ -721,11 +720,11 @@
 		                if (!confirm("<spring:message code='ezBoard.t311' />")) return;
 		            }
 		        } else {
-		        	gubun=2;
 		        	if (!confirm("<spring:message code='ezBoard.t311' />")) return;
 		        }
 		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
 		        xmlhttp.send();	        
+		        
 		        if (xmlhttp.responseText == "FAIL") {
 		            alert("<spring:message code='ezBoard.t310' />");
 		        }
@@ -958,11 +957,15 @@
 		        		<c:when test="${boardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 		        			<c:if test="${guBun != '3'}">
 			        			<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+<%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 		        			</c:if>
 		        		</c:when>
 		        		<c:when test="${pReservedItem == 'true'}">
 		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
 		                    <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
+		        			<c:if test="${guBun != '3'}">
+<%-- 			        			<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
+		        			</c:if>
 		        		</c:when>
 		        		<c:when test="${apprFlag == 'N'}">
 		        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
@@ -991,6 +994,7 @@
 			                        <li ID='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezBoard.t89' /></span></li>
 			                        <c:if test="${guBun != '3'}">
 			                        	<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+<%-- 			        					<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 			                        	<li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
 			                        </c:if>
 			        			</c:when>
@@ -1007,6 +1011,7 @@
 								            <li><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
 			                        	</c:if>
 			                      		<li ID='btn_Move' ><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+<%-- 			                      		<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
 			                    	</c:if>
 			                    	<c:if test="${guBun != '2'}">
 			                        	<li ID='btn_Move'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
@@ -1019,6 +1024,9 @@
 			        				<c:if test="${guBun != '3'}">
 				                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
 				                        <li ID='btn_Move' style="display:none;"><span onclick='mail_boarditem()' ><spring:message code='ezBoard.t317' /></span></li>
+				                        <c:if test="${guBun != '2'}">
+<%-- 				                        	<li ID='btn_Move'><span onclick='btn_SaveToPC_Onclick()'><spring:message code='ezBoard.t999023'/></span></li> --%>
+				                        </c:if>
 				                        <li ID='btn_Move' style="display:none;"><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
 				                        <li ID='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezBoard.t318' /></span></li>
 				                    </c:if>

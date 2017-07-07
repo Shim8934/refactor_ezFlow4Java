@@ -43,6 +43,7 @@
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css">   
 		<script type="text/javascript" id="clientEventHandlersJS">
+				var OrderOption = "";
 		        var OrderCell = "";        
 		        var g_sFlag = "${sFlag}";
 		        var g_uFlag = "${sFlag}";
@@ -512,10 +513,8 @@
 		                if (g_bRecAdmin || AdminYN == "TRUE") {
 		                    document.getElementById("tdVeiwRecHist").style.display = "";
 		                    document.getElementById("tdbtnViewRecReadHist").style.display = "";
-		
 		                    CheckBtnSetRecRole();
-		                }
-		                else {
+		                } else {
 		                    document.getElementById("tdVeiwRecHist").style.display = "none";
 		                    document.getElementById("tdbtnViewRecReadHist").style.display = "none";
 		                    document.getElementById("tdbtnSetRecRole").style.display = "none";
@@ -1460,6 +1459,67 @@
 		        $('#sel_year').val("ALL");
 		        $('#sel_year').selectmenu('refresh');
 		    }
+		    
+			/////////////////////////////////////////////////////////////////////////////
+		    
+		    function DeleteCab() {  	
+		    	var DocList = new ListView();
+		    	DocList.LoadFromID("DocList");
+		    	var selRow = DocList.GetSelectedRows();
+		    	if (selRow.length != 0) {
+		    		var tr = selRow[0];
+		    		SwapSubMenuDisplay("1");
+		    		pCabClassNo = tr.getAttribute("DATA1");
+		    		
+		    		var selectResult = DeleteORselect_CabNo(pCabClassNo, '/ezApprovalG/selectExpCabDocInfo.do');
+
+		    		if (selectResult=="TRUE") {
+		    			if (confirm("<spring:message code='ezApprovalG.t30000'/>")) {
+			    			DeleteORselect_CabNo(pCabClassNo, '/ezApprovalG/deleteCabInfo.do');
+			    			LoadList();
+		    			}
+		    		} else {
+		    			OpenAlertUI("<spring:message code='ezApprovalG.t30002'/>");
+		    			return false;
+		    		}
+					return false;
+		    	} else {
+		    		OpenAlertUI("<spring:message code='ezApprovalG.t913'/>");
+		    		return false;
+		    	}	
+		    }
+		    
+		    function DeleteORselect_CabNo(pCabClassNo, pUrl) {
+	    		var result = "";
+	    		$.ajax ({
+	    			url: pUrl
+	    			,type: 'POST'
+	    			,dataType: 'text'
+	    			,async: false
+	    			,data: {
+	    				cabClassNO : pCabClassNo
+	    			}, success: function(res) {
+	    				result = res;
+	    			}, error: function() {
+	    				OpenAlertUI("<spring:message code='ezApprovalG.t30001'/>");
+	    			}
+	    		});
+	    		return result;
+		    }
+		    
+		     function lvtDoclist_HeaderClick(pHeaderName) {
+		            if (OrderCell == pHeaderName) {
+		                if (OrderOption == "")
+		                    OrderOption = "DESC";
+		                else
+		                    OrderOption = "";
+		            }
+		            else {
+		                OrderCell = pHeaderName;
+		                OrderOption = "";
+		            }
+		            SortList(OrderCell);
+		        }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1497,6 +1557,7 @@
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
 	            <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
+	            <li ><span id="btnCabDel" onclick="return DeleteCab();"><spring:message code='ezApprovalG.t266'/></span> </li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 	            <select id="cab_year" name="cab_year" style="width:70px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>

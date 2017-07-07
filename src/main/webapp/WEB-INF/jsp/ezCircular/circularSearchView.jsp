@@ -104,6 +104,20 @@
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='ezCircular.t130' />"]);
 		    });
+		    
+		    var usepostDate = false;
+		    function DateSearch_Click() {
+		        if(usepostDate){
+		            usepostDate = false;
+		            $("#Sdatepicker").datepicker('disable');
+		            $("#Edatepicker").datepicker('disable');
+		        }
+		        else {
+		            usepostDate = true;
+		            $("#Sdatepicker").datepicker('enable');
+		            $("#Edatepicker").datepicker('enable');
+		        }
+		    }
 		
 		    function search() {		    	
 		    	if (specialChk(document.getElementById("keyword").value)) {
@@ -435,13 +449,13 @@
 		    </h2>
 		  	<table class="mainlist" name="mainlist" style="width:100%">
 		    	<tr> 
-		      		<th style="width:20px; color: black;" nowrap title><input type="checkbox" id="Checkbox1" onClick="check_change(this)"></th>
-			        <th style="width:28px; color: black;cursor:pointer;" nowrap title onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
-			        <th style="width:28px; color: black;cursor:pointer;" nowrap title onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/circular_new.gif" border="0"></th>
-					<th style="width:28px;cursor:pointer;" id="updateStatus" onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th> 
+		      		<th style="width:20px; color: black;" nowrap title><input type="checkbox" id="Checkbox" onClick="check_change(this)"></th>
+			        <th style="width:28px; color: black;cursor:pointer;" nowrap class="image" onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
+			        <th style="width:28px; color: black;cursor:pointer;" nowrap class="image" onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/circular_new.gif" border="0"></th>
+					<th style="width:28px;cursor:pointer;" class="image" onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th> 
 					<th style="width:350px;cursor:pointer;" id="tofromname" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t32' /></th>
 					<th style="width:150px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t122' /></th> 
-					<th style="width:60px;" align="left"><spring:message code='ezCircular.t123' /></th> 
+					<th style="width:60px;" align="left"><spring:message code='ezCircular.t33' /></th> 
 					<th style="width:80px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t65' /></th>
 					<th style="width:20px;cursor:pointer" align="left" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t124' /></th>
 				</tr>

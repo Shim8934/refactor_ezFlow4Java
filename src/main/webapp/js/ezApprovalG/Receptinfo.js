@@ -695,13 +695,6 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
     
     GetXml += "</ROWS>";
     
-    if (approvalFlag == "G") {
-	    GetXml += "<APRDEPT>";
-	    GetXml += "<pAprNDeptNumber>1</pAprNDeptNumber>";
-	    GetXml += "<pAprDeptFlag>NDept</pAprDeptFlag>";
-	    GetXml += "</APRDEPT>";
-    }
-    
     GetXml += "</LISTVIEWDATA>";
     
     return GetXml;

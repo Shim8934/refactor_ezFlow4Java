@@ -385,8 +385,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			}
 			
 			//get innerAddresses(내부사용자)
-			String innerDomainStr = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
-			String[] innerDomainArr = innerDomainStr.split(";");
+			List<String> innerDomainList = ezEmailUtil.getInnerDomain(loginInfo.getTenantId());
 			List<String> innerAddresses = new ArrayList<String>();
 			
 			for (String address : arrAddress) {
@@ -396,9 +395,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 					domain = address.substring(index + 1);
 				}
 				
-				
-				for (int i=0; i<innerDomainArr.length; i++) {
-					if (domain.equals(innerDomainArr[i])) {
+				for (int i=0; i<innerDomainList.size(); i++) {
+					if (domain.equals(innerDomainList.get(i))) {
 						innerAddresses.add(address);
 						break;
 					}

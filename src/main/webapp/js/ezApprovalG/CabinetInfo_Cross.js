@@ -157,7 +157,7 @@ function AddNewVolume(pCabClassNo, pNewVolNo) {
 		}      			
 	});
   
-    return rtn;
+    return result;
 }
 
 function EndCabProduce(pCabClassNo, pExpYear, pFlag) {

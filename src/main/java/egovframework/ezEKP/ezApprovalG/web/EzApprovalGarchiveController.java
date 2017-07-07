@@ -1115,7 +1115,8 @@ public class EzApprovalGarchiveController {
 		
 		StringBuilder yearOption = new StringBuilder("");
 		int curYear = Integer.parseInt(EgovDateUtil.getTodayTime().substring(0, 4));
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		yearOption.append("<Option Value=\"\"></Option>");
 		
 		for (int i = curYear; i >= curYear - 5; i--) {
@@ -1124,7 +1125,8 @@ public class EzApprovalGarchiveController {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("yearOption", yearOption.toString());
-		
+		model.addAttribute("approvalFlag", approvalFlag);
+
 		logger.debug("searchCab ended");
 		
 		return "/ezApprovalG/apprGsearchCab";
@@ -2074,4 +2076,29 @@ public class EzApprovalGarchiveController {
 //          ezAPI = null;
 		return result;
 	}
+	
+	/** 전자결재 G 한글 양식 기안*/
+	@RequestMapping(value = "ezApprovalG/setCabinetHesong.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setCabinetHesong(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		
+	logger.debug("setCabinetHesong started");
+	userInfo = commonUtil.aprUserInfo(loginCookie);
+	
+	String docID = request.getParameter("docID");
+	String deptID = request.getParameter("deptID");
+	String deptName = request.getParameter("deptName");
+	String deptName2 = request.getParameter("deptName2");
+	String userName = request.getParameter("userName");
+	String userName2 = request.getParameter("userName2");
+	String docSN = request.getParameter("docSN");
+	String dirpath =  commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+	
+	String result = ezApprovalGService.setCabinetHesong(docID, deptID, deptName, deptName2, userName, userName2, dirpath, docSN, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+
+	logger.debug("setCabinetHesong ended");
+		
+	return result;
+	}
+	
 }

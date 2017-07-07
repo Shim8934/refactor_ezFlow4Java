@@ -1126,4 +1126,70 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("delQuickLink ended");
 		return "OK";
 	}
+	
+	/**
+	 * 초기화면 QuickLink typeImage 추가
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/typeImageUpload.do", produces = "text/xml; charset=utf-8")
+	public String  typeImageUpload(@CookieValue("loginCookie") String loginCookie,  MultipartHttpServletRequest request, Model model ) throws Exception {
+		logger.debug("typeImageUpload started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+
+		String boardID = "LinkType";
+		String qID = request.getParameter("QId");
+		String fileName = qID + ".jpg";
+		String dirPath = commonUtil.getUploadPath("upload_personal.ROOT", userInfo.getTenantId());
+		String serverPath = dirPath + commonUtil.separator  + boardID + commonUtil.separator;
+		MultipartFile multiFile = null;
+		StringBuilder strXML = new StringBuilder();
+		
+		if (request.getFile("file1") != null) {
+			multiFile = request.getFile("file1");
+		}
+		writeUploadedFile(multiFile, fileName, realPath + serverPath);
+
+        String pAttachPath = dirPath + commonUtil.separator + boardID + commonUtil.separator + fileName;
+       
+        File dir = new File(realPath + serverPath);
+		
+   		if (!dir.exists()) {
+   			dir.mkdirs();
+   		}
+   		
+         File file = new File(realPath + pAttachPath);
+    
+        String pSaveName = qID + ".jpg";
+        BufferedImage inputImage = ImageIO.read(file);
+		BufferedImage outputImage = null;
+		Graphics2D saveImage = null;
+		
+		outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
+         
+		saveImage = outputImage.createGraphics();
+		saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
+		saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		
+		File newFile = new File(dirPath + serverPath + pSaveName);
+		
+		ImageIO.write(outputImage, "png" , newFile);
+		deleteFile(dirPath + serverPath + fileName);
+		
+		String fileLocation = serverPath  + pSaveName;
+	
+		strXML.append("<ROOT><NODES>");
+		strXML.append("<NODE><PUPLOADSN><![CDATA[" + qID + ".jpg" + "]]></PUPLOADSN>");
+		strXML.append("<RESULTUPLOADA><![CDATA[true]]></RESULTUPLOADA>");
+		strXML.append( "<PFILENAME><![CDATA[" + qID + ".jpg" + "]]></PFILENAME>");
+		strXML.append( "<FILESIZE>" + (int) multiFile.getSize() + "</FILESIZE>");
+		strXML.append("<FILELOCATION><![CDATA[" + fileLocation + "]]></FILELOCATION>");
+		strXML.append( "</NODE>");
+		strXML.append("</NODES></ROOT>");
+            
+		logger.debug("typeImageUpload ended");
+		model.addAttribute("strXML", strXML);
+
+		return "/admin/ezPortal/portalPortletImageUpload";
+	}
 }

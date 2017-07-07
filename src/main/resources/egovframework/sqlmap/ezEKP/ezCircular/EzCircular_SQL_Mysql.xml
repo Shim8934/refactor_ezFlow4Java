@@ -121,9 +121,9 @@
 		<isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE        
 	        ]]>
 	    </isNotEqual>
 	        
@@ -400,9 +400,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE       
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -882,9 +882,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE	        
 	        ]]>
 	    </isNotEqual>
         
@@ -929,9 +929,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -953,7 +953,7 @@
             AND
              	B.updatestatus IN (0, 1)
             AND
-                A.memberid = #memberID#
+                B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
         ]]>
@@ -968,9 +968,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -1052,15 +1052,15 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE    
 	        ]]>
 	    </isNotEqual>
         
 		<![CDATA[
             AND
-                A.memberid = #memberID#
+                B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
             GROUP BY
@@ -1119,9 +1119,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE     
 	        ]]>
 	    </isNotEqual>
     </select>
@@ -1209,9 +1209,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
 	        ]]>
 	    </isNotEqual>
         
@@ -1388,9 +1388,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
 	        ]]>
 	    </isNotEqual>
         
@@ -1489,9 +1489,9 @@
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
-	            	#sdate# <= A.REGDATE
+	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	#edate# > A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
 	        ]]>
 	    </isNotEqual>
 

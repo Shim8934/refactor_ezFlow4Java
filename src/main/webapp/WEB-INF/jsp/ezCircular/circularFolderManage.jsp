@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>회람문서함 관리</title>
+		<title><spring:message code='ezCircular.t9'/></title>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
@@ -134,7 +134,7 @@
 		<div style="margin-bottom:5px;">
 		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezCircular.t77' /></span></a>
 		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezCircular.t29' /></span></a>
-		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezCircular.t58' /></span></a>
+		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezCircular.t30' /></span></a>
 		</div>
 		<table class="popuplist" style="width:100%">
 		  <tr>

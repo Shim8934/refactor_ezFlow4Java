@@ -7,6 +7,7 @@
 		<title><spring:message code='ezCircular.t111'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
@@ -138,7 +139,7 @@
                 	    <ul>
                	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' />[${commentCount}]</span></li>                        	
                 	    	<c:if test="${result.memberID == userInfo.id}">
-                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t58' /></span></li>
+                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
                 	    	</c:if>
 	                        <li><span onclick="print_onClick2( false )"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>
@@ -191,7 +192,7 @@
 		        		<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
 	       					<td style="padding-left: 4px;"><div id="writer" >${result.memberName }</div></td>
-							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t123' /></th> 
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t33' /></th> 
  							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
 						</tr>
 						<tr>
@@ -321,7 +322,7 @@
 	       					<td style="padding-left: 4px;">								
 	         					<div id="writer" >${result.memberName }</div>
 	         				</td>
-							<th style="padding-left:10px"><spring:message code='ezCircular.t123' /></th> 
+							<th style="padding-left:10px"><spring:message code='ezCircular.t33' /></th> 
  							<td style="padding-left:6px">
  								<div id="printStatus">${result.regDate }</div>
  							</td> 

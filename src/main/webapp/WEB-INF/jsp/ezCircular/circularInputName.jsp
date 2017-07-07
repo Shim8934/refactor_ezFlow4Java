@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>회람문서함 추가/수정</title>
+	    <title><spring:message code='ezCircular.t105'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -88,7 +88,7 @@
 	    </div>
 	    <div class="btnposition">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezCircular.t65' /></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezCircular.t66' /></span></a>
+	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezCircular.t26' /></span></a>
 	    </div>
 	</body>
 </html>
