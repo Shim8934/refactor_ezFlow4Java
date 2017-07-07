@@ -21,10 +21,6 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 
-			window.onunload = function() {
-				window.opener.location.reload();
-			}
-
 			$(document).ready(function(){
 	            document.getElementById('circularUserList').innerHTML = "${listUser}";        
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
@@ -58,11 +54,6 @@
 					success: function() {
 						alert("<spring:message code='ezCircular.t45'/>");
 						
-		                try { window.opener.RefreshView() } catch (e) { }
-		
-		                if (window.opener.reload != undefined)
-		                    window.opener.reload();
-		                window.opener.window_reload();
 		                window.close();
 					},
 					error: function(err) {
@@ -123,7 +114,6 @@
 			}
 			
 			function closing() {
-				window.opener.location.reload();
 	          	window.close();
 			}
 		</script>
