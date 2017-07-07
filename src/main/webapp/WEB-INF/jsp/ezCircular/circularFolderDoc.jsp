@@ -53,8 +53,6 @@
 	    <script type="text/javascript">
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
-	        //var CurPage = "${page}";
-	        //var CurPage = "${totalCount}";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
 	        var OrderCell = "";
@@ -67,28 +65,19 @@
 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-// 	        var pMailListHeightW = 0;
-// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
-// 	        var pMailListWidthH = 0;
-// 	        var pMailPreWidthH = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-// 	        var SmallSizeList = false;
-// 	        var OldSmallSizeList = false;
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-// 	        var pMode = "new";
 	        var pAdminType = "n";
 	        var useEditor = "${useEditor}";
-// 	        var pNoneActiveX = "YES";
-// 	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var strNameInfo = "";
 	        var folderId = "${folderId}";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
@@ -295,10 +284,12 @@
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
 		            strListInfo += obj.id;
+		            strNameInfo += $(obj).closest("td").closest("tr").attr("memberid") + ";";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		            strNameInfo = ReplaceText(strNameInfo, $(obj).closest("td").closest("tr").attr("memberid") + ";", "");	            
 		        }
-		        
+
 		        listEventCheckbox = true;
 		    }
 	
@@ -598,10 +589,21 @@
                 OpenWin.focus();     
 	        }
 
+	        var arrName = new Array();
 	        function CircularDelete_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
+	        	}
+
+	        	arrName = strNameInfo.split(";");
+
+	        	for (var i=0; i <arrName.length - 1; i++) {
+	        		if (SSUserID != arrName[i]) {
+		        		alert("본인이 작성한 회람만 삭제할 수 있습니다.");
+
+		        		return;
+		        	}
 	        	}
 	        	
 	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
