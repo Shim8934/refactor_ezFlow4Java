@@ -32,6 +32,7 @@
         	document.getElementById("CheckQuota3").checked = false;
             document.getElementById("TextQuota2").value = "";
             document.getElementById("TextQuota3").value = "";
+            document.getElementById("CheckUseDefault").checked = true;
         }
     }
 
