@@ -488,8 +488,12 @@
 		        return (orgStr.replace(re, replaceStr));
 		    }
 		
-		    function window_reload() {
-		        window.location.href = window.location.href;
+		    function refresh_onclick() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getMyCircularCount();
+		    	}
+		    	
+		    	window.location.href = "/ezCircular/circularMyCircular.do";
 		    }
 		
 		    function checkBox_checkAll(obj) {
@@ -609,13 +613,12 @@
 								},
 						success: function() {
 							alert("<spring:message code='ezCircular.t45'/>");
+							refresh_onclick();
 						},
 						error: function() {
 							alert("<spring:message code='ezCircular.t102'/>");
 						}
 					});
-
-		            location.href = location.href;
 	        	}
 	        }
 

@@ -150,7 +150,7 @@
 	        
 	        /* 2017-05-17 정수현 구현 */
 	        function newCircular() {
-	        	window.parent.frames["right"].location.href = "/ezcircular/newCircular.do";
+	        	window.parent.frames["right"].location.href = "/ezCircular/newCircular.do";
 	        }
 	        
 	        function circularComplete() {                
@@ -201,7 +201,7 @@
 					data : {
 						listType : 'circularComplete'
 					},
-					success: function(){
+					success: function(result){
 						$("#circularCompleteCount").html("(" + result.count + ")");
 					}
 				});
@@ -216,7 +216,7 @@
 					data : {
 						listType : 'myCircular'
 					},
-					success: function(){
+					success: function(result){
 						$("#myCircularCount").html("(" + result.count + ")");
 					}
 				});
@@ -231,7 +231,7 @@
 					data : {
 						listType : 'circularTemp'
 					},
-					success: function(){
+					success: function(result){
 						$("#circularTempCount").html("(" + result.count + ")");
 					}
 				});
@@ -246,7 +246,7 @@
 					data : {
 						listType : 'deleteCircular'
 					},
-					success: function(){
+					success: function(result){
 						$("#circularDeleteCount").html("(" + result.count + ")");
 					}
 				});

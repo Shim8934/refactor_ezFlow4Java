@@ -503,8 +503,12 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		
-		    function window_reload() {
-		        window.location.href = window.location.href;
+		    function refresh_onclick() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getCircularCompleteCount();
+		    	}
+		    	
+// 		    	window.location.href = "/ezCircular/circularComplete.do";
 		    }
 		
 		    function checkBox_checkAll(obj) {

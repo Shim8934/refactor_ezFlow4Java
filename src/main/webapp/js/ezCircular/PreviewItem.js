@@ -182,7 +182,7 @@ function PreviewMode_ChangeBtn() {
 function ItemPreviewRead_click(obj) {
     selobj = document.getElementById(obj);
     onclickFlag = true;
-
+    
     if (g_bPrevShow) {
         ItemPreviewRead(document.getElementById(obj));
     }
@@ -209,6 +209,18 @@ function ItemPreviewRead(obj) {
     xmlhttp2.open("POST", "/ezCircular/getItemAttachments.do?pcircularId=" + pcircularId, true);
     xmlhttp2.onreadystatechange = event_ItemPreviewRead;
     xmlhttp2.send();
+    
+    /* 2017-07-07 이효진 */
+    //unread 이미지를 read 이미지로 교체
+    
+    
+    if (typeof (window.parent.frames.left) != "undefined") {
+        parent.frames["left"].getNewCircularCount();
+        parent.frames["left"].getCircularCompleteCount();
+        parent.frames["left"].getMyCircularCount();
+        parent.frames["left"].getCircularTempCount();
+        parent.frames["left"].getCircularDeleteCount();
+	}
 }
 var ItemID;
 var WriterID;

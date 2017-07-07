@@ -487,8 +487,12 @@
 		        return (orgStr.replace(re, replaceStr));
 		    }
 
-		    function window_reload() {
-		        window.location.href = window.location.href;
+		    function refresh_onclick() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getNewCircularCount();
+		    	}
+		    	
+// 		    	window.location.href = "/ezCircular/circularFolderDoc.do";
 		    }
 		
 		    function checkBox_checkAll(obj) {

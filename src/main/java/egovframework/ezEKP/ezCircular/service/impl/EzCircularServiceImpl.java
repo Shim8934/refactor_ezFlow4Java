@@ -958,6 +958,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public String getItemXML(String circularID, String memberID, String offset, int tenantID) throws Exception {
 		logger.debug("getItemXML started.");
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || tenantID = " + tenantID);
 		
 		StringBuilder sb = new StringBuilder();
 		

@@ -169,7 +169,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 신규회람판 호출 Method
 	 */
-	@RequestMapping(value = "/ezcircular/newCircular.do")
+	@RequestMapping(value = "/ezCircular/newCircular.do")
 	public String newCircular(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("newCircular started");
 
@@ -193,9 +193,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularID = request.getParameter("pcircularId"); 		
-		String memberID = request.getParameter("pmemberId"); 		
+//		String memberID = request.getParameter("pmemberId");// 이거 때문에 프리뷰할때 읽음 체크가 작성자만 되고있엇네
 
-		String retXML = ezCircularService.getItemXML(circularID, memberID, userInfo.getOffset(), userInfo.getTenantId());
+		String retXML = ezCircularService.getItemXML(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
 		
 		logger.debug("getPreviewItem ended.");
 		

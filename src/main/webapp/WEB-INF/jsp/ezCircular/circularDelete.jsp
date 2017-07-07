@@ -496,19 +496,11 @@
 		        return (orgStr.replace(re, replaceStr));
 		    }
 		
-// 		    function refresh_onclick() {
-// 		    	window.location.href = "/ezcircular/newCircular.do";
-// 		    }
-		
 // 		    function MemberInfo_onclick(pUserID) {
 // 		        if (gubun == "2") return;
 // 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 // 		        feature = feature + GetOpenPosition(420, 450);
 // 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
-// 		    }
-		
-// 		    function window_reload() {
-// 		        window.location.href = window.location.href;
 // 		    }
 		
 		    function checkBox_checkAll(obj) {
@@ -605,8 +597,16 @@
 						}
 					});
 
-		            location.href = location.href;
+					refresh_onclick();
 	        	}	
+	        }
+	        
+	        function refresh_onclick() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getNewCircularCount();
+		    	}
+		    	
+		    	window.location.href = "/ezCircular/circularDelete.do";
 	        }
 	    </script>
 	</head>
