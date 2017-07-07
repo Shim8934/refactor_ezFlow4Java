@@ -502,13 +502,19 @@
 		        feature = feature + GetOpenPosition(420, 450);
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
-		
-		    function refresh_onclick() {
+
+		    function getLeftCount() {
 		    	if (typeof (window.parent.frames.left) != "undefined") {
+		    		parent.frames["left"].getNewCircularCount();
 		            parent.frames["left"].getCircularCompleteCount();
+		            parent.frames["left"].getMyCircularCount();
+		            parent.frames["left"].getCircularTempCount();
+		            parent.frames["left"].getCircularDeleteCount();
 		    	}
-		    	
-// 		    	window.location.href = "/ezCircular/circularComplete.do";
+		    }
+		    
+		    function refresh_onclick() {
+		    	window.location.href = "/ezCircular/circularComplete.do";
 		    }
 		
 		    function checkBox_checkAll(obj) {

@@ -458,12 +458,18 @@
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
-		
-		    function refresh_onclick() {
+			
+		    function getLeftCount() {
 		    	if (typeof (window.parent.frames.left) != "undefined") {
-		            parent.frames["left"].getNewCircularCount();
+		    		parent.frames["left"].getNewCircularCount();
+		            parent.frames["left"].getCircularCompleteCount();
+		            parent.frames["left"].getMyCircularCount();
+		            parent.frames["left"].getCircularTempCount();
+		            parent.frames["left"].getCircularDeleteCount();
 		    	}
-		    	
+		    }
+		    
+		    function refresh_onclick() {
 		    	window.location.href = "/ezCircular/newCircular.do";
 		    }
 		

@@ -596,16 +596,23 @@
 							alert("<spring:message code='ezCircular.t102'/>");
 						}
 					});
-
+					
+					getLeftCount();
 					refresh_onclick();
 	        	}	
 	        }
 	        
-	        function refresh_onclick() {
-		    	if (typeof (window.parent.frames.left) != "undefined") {
-		            parent.frames["left"].getNewCircularCount();
+	        function getLeftCount() {
+	        	if (typeof (window.parent.frames.left) != "undefined") {
+	        		parent.frames["left"].getNewCircularCount();
+		            parent.frames["left"].getCircularCompleteCount();
+		            parent.frames["left"].getMyCircularCount();
+		            parent.frames["left"].getCircularTempCount();
+		            parent.frames["left"].getCircularDeleteCount();
 		    	}
-		    	
+	        }
+	        
+	        function refresh_onclick() {
 		    	window.location.href = "/ezCircular/circularDelete.do";
 	        }
 	    </script>

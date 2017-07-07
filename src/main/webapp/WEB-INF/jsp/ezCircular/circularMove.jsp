@@ -71,6 +71,8 @@
 	                },  
 	                success : function(data) {	
 	                  alert("<spring:message code='ezCircular.t110' />");
+	                  
+	                  window.opener.getLeftCount();
 	                  window.opener.refresh_onclick();
 	             	  window.close();
 	                },
