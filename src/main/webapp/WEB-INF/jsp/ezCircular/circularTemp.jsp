@@ -490,10 +490,6 @@
 		        return (orgStr.replace(re, replaceStr));
 		    }
 		
-// 		    function refresh_onclick() {
-// 		    	window.location.href = "/ezCircular/circularTemp.do";
-// 		    }
-		
 		    function MemberInfo_onclick(pUserID) {
 		        if (gubun == "2") return;
 		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
@@ -501,8 +497,12 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
 		
-		    function window_reload() {
-		        window.location.href = window.location.href;
+		    function refresh_onclick() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getCircularTempCount();
+		    	}
+		    	
+		    	window.location.href = "/ezCircular/circularTemp.do";
 		    }
 		
 		    function checkBox_checkAll(obj) {
@@ -598,7 +598,7 @@
 						}
 					});
 
-		            location.href = location.href;
+					refresh_onclick();
 	        	}	
 	        }
 	    </script>
@@ -682,7 +682,7 @@
 	                <span class="previewmail_info" style="display: block; width: 100%;">
 	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
 	                        <p class="mail_title" style="margin-left: 0px;">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
+	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
@@ -709,7 +709,7 @@
 	                <span class="previewmail_info" style="display: block; width: 100%;">
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
 	                        <p class="mail_title">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
+	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>

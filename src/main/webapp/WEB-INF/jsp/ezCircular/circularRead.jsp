@@ -22,10 +22,6 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 
-			window.onunload = function() {
-				window.opener.location.reload();
-			}
-
 			$(document).ready(function(){
 	            document.getElementById('circularUserList').innerHTML = "${listUser}";        
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
@@ -59,11 +55,7 @@
 					success: function() {
 						alert("<spring:message code='ezCircular.t45'/>");
 						
-		                try { window.opener.RefreshView() } catch (e) { }
-		
-		                if (window.opener.reload != undefined)
-		                    window.opener.reload();
-		                window.opener.window_reload();
+						window.opener.refresh_onclick();
 		                window.close();
 					},
 					error: function(err) {
@@ -124,7 +116,6 @@
 			}
 			
 			function closing() {
-				window.opener.location.reload();
 	          	window.close();
 			}
 		</script>
@@ -148,7 +139,7 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' />[${commentCount}]</span></li>                        	
-                	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
+                	    	<c:if test="${result.memberID == userInfo.id}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
                 	    	</c:if>
 	                        <li><span onclick="print_onClick2( false )"><spring:message code='ezCircular.t114' /></span></li>

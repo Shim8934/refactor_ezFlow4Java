@@ -268,6 +268,10 @@
                 }
                 endtime = new Date().getTime();
                 strListInfo = "";
+                
+                if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getNewCircularCount();
+		    	}
             }
 	
 	        var BlockSize = 10;
@@ -444,6 +448,10 @@
 	            	var feature = GetOpenPosition(790, 900);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
+                
+                if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getNewCircularCount();
+		    	}
 	        }
 
 		    function ReplaceText(orgStr, findStr, replaceStr) {
@@ -452,11 +460,11 @@
 		    }
 		
 		    function refresh_onclick() {
-		    	window.location.href = "/ezcircular/newCircular.do";
-		    }
-
-		    function window_reload() {
-		        window.location.href = window.location.href;
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		            parent.frames["left"].getNewCircularCount();
+		    	}
+		    	
+		    	window.location.href = "/ezCircular/newCircular.do";
 		    }
 		
 		    function checkBox_checkAll(obj) {
@@ -566,7 +574,8 @@
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t38'/></span></li>
-<%-- 	            <li id="right"><spring:message code='ezCircular.t99'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li> --%>
+	            <li><span onClick="refresh_onclick()"><spring:message code='ezCircular.t173'/></span></li>
+	            
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
@@ -629,7 +638,7 @@
 	                <span class="previewmail_info" style="display: block; width: 100%;">
 	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
 	                        <p class="mail_title" style="margin-left: 0px;">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
+	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
@@ -656,7 +665,7 @@
 	                <span class="previewmail_info" style="display: block; width: 100%;">
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
 	                        <p class="mail_title">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
+	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>

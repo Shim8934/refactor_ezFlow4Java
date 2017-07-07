@@ -145,7 +145,7 @@
 	                cache: false,
 	                success: function(data) {	   
 	                  alert("<spring:message code='ezCircular.t70'/>");
-	                  window.opener.window_reload();
+	                  window.opener.refresh_onclick();
 	             	  window.close();
 	                }
 	 			});

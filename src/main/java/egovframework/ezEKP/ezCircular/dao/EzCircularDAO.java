@@ -348,4 +348,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (int) select("EzCircularDAO.getCommentCount", map);
 	}
 
+	public int getListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getListCount", map);
+	}
+
 }

@@ -958,6 +958,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public String getItemXML(String circularID, String memberID, String offset, int tenantID) throws Exception {
 		logger.debug("getItemXML started.");
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || tenantID = " + tenantID);
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1262,5 +1263,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 		logger.debug("circularReturn ended.");
 	}
-	
+
+	@Override
+	public int getListCount(String listType, String userID, int tenantID) throws Exception {
+		logger.debug("getListCount started.");
+		logger.debug("listType = " + listType);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listType", listType);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		int count= ezCircularDAO.getListCount(map);
+		
+		logger.debug("getListCount ended.");
+		
+		return count;
+	}
 }

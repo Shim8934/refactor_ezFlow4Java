@@ -132,4 +132,6 @@ public interface EzCircularService {
 
 	public List<CircularDeptVO> getcircularDeptList1(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
 
+	public int getListCount(String listType, String userID, int tenantID) throws Exception;
+
 }
