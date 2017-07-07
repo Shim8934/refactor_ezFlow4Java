@@ -2139,4 +2139,24 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	return "json";
     }
+    
+    /**
+     * 회람판 왼쪽메뉴 전체화면 카운트
+     */
+    @RequestMapping(value = "/ezCircular/getListCount.do")
+    public String getListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+    	logger.debug("getListCount started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String listType = request.getParameter("listType");
+    	
+    	int count = ezCircularService.getListCount(listType, userInfo.getId(), userInfo.getTenantId());
+    	
+    	model.addAttribute("count", count);
+    	
+    	logger.debug("getListCount ended.");
+    	
+    	return "json";
+    }
+    
 }

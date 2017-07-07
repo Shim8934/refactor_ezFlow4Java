@@ -2216,4 +2216,119 @@
 				B.tenantid = #tenantID#
 		]]>
 	</select>
+	
+	<select id="EzCircularDAO.getListCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="listType" compareValue="newCircular">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					(B.updatestatus = 0 OR B.commentstatus = 1)
+				AND
+					A.status != 2
+				AND
+					B.memberid = #userID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="circularComplete">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.status != '2'
+				AND
+					B.updatestatus IN (0, 1)
+				AND
+					B.memberid = #userID#
+				AND
+					A.memberid != #userID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="myCircular">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.status != 2
+				AND
+					B.UPDATESTATUS IN ('0', '1')
+				AND
+					A.memberid = b.memberid
+				AND
+					A.memberid = #userID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="circularTemp">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.status = 2
+				AND
+					B.updatestatus IN (0, 1)
+				AND
+					A.memberid = #userID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="listType" compareValue="deleteCircular">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(DISTINCT A.circularid), 0) cnt
+				FROM
+					TBL_CIRCULAR A
+				JOIN
+					TBL_CIRCULAR_USER B
+				ON
+					A.circularid = B.circularid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					B.updatestatus = '2'
+				AND
+					A.memberid = #userID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+	</select>
 </sqlMap>

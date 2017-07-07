@@ -498,11 +498,6 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     return (orgStr.replace(re, replaceStr));
 }
 function Window_resize() {
-    if (clickPreviweType == "PHOTO") {
-        Window_resize_photo();
-        return;
-    }
-
     try {
         if (!isPreviewChange) {
             if (parseInt(document.documentElement.clientWidth) < 1000) {
@@ -601,42 +596,7 @@ function Window_resize() {
         }
     } catch (e) { }
 }
-function Window_resize_photo() {
-    try {
-        if (!isPreviewChange) {
-            if (parseInt(document.documentElement.clientWidth) < 1000) {
-                document.getElementById("PreViewleft").style.display = "none";
-                if (pPreviewShow_HOW.trim() == "H")
-                    pPreviewShow_HOW = "W";
-                PreviewMode_ChangeBtn();
-            }
-            else {
-                document.getElementById("PreViewleft").style.display = "";
-            }
-            if (document.documentElement.clientWidth < 1300) {
-                PreviewRayerChange("NONE");
-                document.getElementById("right").style.display = "none";
-            }
-            else {
-                document.getElementById("right").style.display = "";
-            }
 
-
-            if (pPreviewShow_HOW.trim() == "H") {
-                if (document.documentElement.clientWidth < 1300) {
-                    PreviewRayerChange("NONE");
-                    document.getElementById("right").style.display = "none";
-                }
-                else {
-                    document.getElementById("right").style.display = "";
-                    PreviewRayerChange("H");
-                }
-            }
-        }
-        
-        MailOptionHidden();
-    } catch (e) { }
-}
 var lCount;
 function ListCount(pCount) {
 	lCount = pCount;

@@ -46,6 +46,12 @@
 	            
 	            /* 2017-05-18 장진혁 신규회람판에 클릭이벤트 생성 */ 
 	            $("#newCircular").click();
+	            
+	            getNewCircularCount();
+	            getCircularCompleteCount();
+	            getMyCircularCount();
+	            getCircularTempCount();
+	            getCircularDeleteCount();
 	        }
 	        
 	        function LoadEmailTree() {
@@ -103,7 +109,6 @@
 	        }
 
 	        function WebPartToggle(obj) {
-	
 	            if (obj.listNum && currentListNum != obj.listNum + 1) {
 	                level1El.item(currentListNum - 1).className = null;
 	                level2El.item(currentListNum - 1).className = "off";
@@ -144,7 +149,7 @@
 	        }
 	        
 	        /* 2017-05-17 정수현 구현 */
-	        function newCircular() {                
+	        function newCircular() {
 	        	window.parent.frames["right"].location.href = "/ezcircular/newCircular.do";
 	        }
 	        
@@ -171,6 +176,81 @@
 	        function circular_Search() {
 	        	window.parent.frames["right"].location.href = "/ezCircular/circularSearchView.do";	
 	        }
+	        
+	        function getNewCircularCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'newCircular'
+					},
+					success: function(result){
+						$("#newCircularCount").html("(" + result.count + ")");
+					}
+				});
+	        }
+	        
+	        function getCircularCompleteCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'circularComplete'
+					},
+					success: function(){
+						$("#circularCompleteCount").html("(" + result.count + ")");
+					}
+				});
+	        }
+	        
+	        function getMyCircularCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'myCircular'
+					},
+					success: function(){
+						$("#myCircularCount").html("(" + result.count + ")");
+					}
+				});
+	        }
+	        
+	        function getCircularTempCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'circularTemp'
+					},
+					success: function(){
+						$("#circularTempCount").html("(" + result.count + ")");
+					}
+				});
+	        }
+	        
+	        function getCircularDeleteCount() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezCircular/getListCount.do",
+					data : {
+						listType : 'deleteCircular'
+					},
+					success: function(){
+						$("#circularDeleteCount").html("(" + result.count + ")");
+					}
+				});
+	        }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: hidden;">
@@ -178,11 +258,11 @@
 	        <div class="left_circular" title="<spring:message code="ezCircular.t1" />"></div>
 	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
 	        <ul id="iconul">
-	        	<li><span style="width:100%;display:inline-block;" id="newCircular" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id=count1></span></span></li>
-				<li><span style="width:100%;display:inline-block;" id="circularComplete" onClick="circularComplete()"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t3" /></span></li>
-				<li><span style="width:100%;display:inline-block;" id="circularMyCircular" onClick="circularMyCircular()"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t4" /></span></li>				
-				<li><span style="width:100%;display:inline-block;" id="circularTemp" onClick="circularTemp()"><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t5" /></span></li>
-				<li><span style="width:100%;display:inline-block;" id="circularDelete" onClick="circularDelete()"><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><span style="margin-left:1px"><spring:message code="ezCircular.t6" /></span></span></li>
+	        	<li><span style="width:100%;display:inline-block;" id="newCircular" onClick="newCircular()"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t2" /><span id="newCircularCount"></span></span></li>
+				<li><span style="width:100%;display:inline-block;" id="circularComplete" onClick="circularComplete()"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t3" /><span id="circularCompleteCount"></span></span></li>
+				<li><span style="width:100%;display:inline-block;" id="circularMyCircular" onClick="circularMyCircular()"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span></li>				
+				<li><span style="width:100%;display:inline-block;" id="circularTemp" onClick="circularTemp()"><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span></li>
+				<li><span style="width:100%;display:inline-block;" id="circularDelete" onClick="circularDelete()"><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
 				<li id="circularDoc"><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	        
 	            <div class="tree" style="height: 200px; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="PostTreeView"></div>
 	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="circular_Search()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
