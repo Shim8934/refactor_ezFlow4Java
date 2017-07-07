@@ -899,14 +899,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getFolderCircularListCount(int folderID, String memberID, String searchValue, String sdate, String edate, int tenantID) throws Exception {
+	public int getFolderCircularListCount(String folderID, String memberID, String searchValue, String sdate, String edate, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
 			edate += " 23:59:59";			
 		}
-		
+
 		map.put("folderID", folderID);
 		map.put("memberID", memberID);
 		map.put("searchValue", searchValue);
@@ -918,7 +918,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListVO> getFolderCircularList(int folderID, String memberID, int startRow, int endRow, String searchValue, String sdate, String edate, String offset, int tenantID) throws Exception {
+	public List<CircularListVO> getFolderCircularList(String folderID, String memberID, int startRow, int endRow, String searchValue, String sdate, String edate, String offset, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		if (!sdate.equals("")) {

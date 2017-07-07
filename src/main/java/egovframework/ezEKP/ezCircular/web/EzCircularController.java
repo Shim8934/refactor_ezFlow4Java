@@ -1761,6 +1761,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
         int folderId = Integer.parseInt(request.getParameter("folderId"));
 
+        logger.debug("folderID : " + folderId);
+        
 		String folderName = ezCircularService.getFolderInfo(folderId, userInfo.getId(), userInfo.getTenantId());
 
 		model.addAttribute("userInfo", userInfo);
@@ -1879,8 +1881,12 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
         
-        int folderId = Integer.parseInt(req.getParameter("folderId"));
-    	
+        String folderId = "";
+        
+        if (req.getParameter("folderId") != null) {
+        	folderId = req.getParameter("folderId");
+        }
+
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();

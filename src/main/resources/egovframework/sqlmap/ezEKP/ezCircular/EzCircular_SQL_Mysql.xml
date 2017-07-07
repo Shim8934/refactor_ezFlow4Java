@@ -1375,27 +1375,27 @@
 		<isNotEqual property="folderID" compareValue="">
 			<![CDATA[
 				B.CIRCULARFOLDERID = #folderID#
+			 AND
 			]]>
 		</isNotEqual>
 		
         <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+        	<![CDATA[	
+       			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+       		 AND
         	]]>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
-	            AND
 	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
 	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
+	        	AND
 	        ]]>
 	    </isNotEqual>
         
         <![CDATA[
-             AND
                  D.UPDATESTATUS = '3'  
              AND
                  A.TENANTID = #tenantID#
@@ -1476,27 +1476,27 @@
 		<isNotEqual property="folderID" compareValue="">
 			<![CDATA[
 				B.CIRCULARFOLDERID = #folderID#
+			AND
 			]]>
 		</isNotEqual>
 		
         <isNotEqual property="searchValue" compareValue="">
         	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+       			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+       		AND
         	]]>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
-	            AND
-	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
-	            AND
-	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
+            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
+            AND
+            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
+            AND
 	        ]]>
 	    </isNotEqual>
 
         <![CDATA[
-			AND
 				D.memberid = #memberID#
 			AND
 				D.updatestatus = '3'  

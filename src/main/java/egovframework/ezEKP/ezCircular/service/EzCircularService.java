@@ -98,9 +98,9 @@ public interface EzCircularService {
 
 	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, String originLoc, int tenantId) throws Exception;
 
-	public int getFolderCircularListCount(int folderId, String memberId, String searchValue, String sdate, String edate, int tenantId) throws Exception;
+	public int getFolderCircularListCount(String folderId, String memberId, String searchValue, String sdate, String edate, int tenantId) throws Exception;
 
-	public List<CircularListVO> getFolderCircularList(int folderId, String memberId, int startRow, int endRow, String offset, String searchValue, String sdate, String edate, int tenantId) throws Exception;
+	public List<CircularListVO> getFolderCircularList(String folderId, String memberId, int startRow, int endRow, String offset, String searchValue, String sdate, String edate, int tenantId) throws Exception;
 
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
