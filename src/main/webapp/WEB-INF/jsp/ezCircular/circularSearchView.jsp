@@ -455,7 +455,7 @@
 					<th style="width:28px;cursor:pointer;" class="image" onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th> 
 					<th style="width:350px;cursor:pointer;" id="tofromname" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t32' /></th>
 					<th style="width:150px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t122' /></th> 
-					<th style="width:60px;" align="left"><spring:message code='ezCircular.t123' /></th> 
+					<th style="width:60px;" align="left"><spring:message code='ezCircular.t33' /></th> 
 					<th style="width:80px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t65' /></th>
 					<th style="width:20px;cursor:pointer" align="left" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t124' /></th>
 				</tr>

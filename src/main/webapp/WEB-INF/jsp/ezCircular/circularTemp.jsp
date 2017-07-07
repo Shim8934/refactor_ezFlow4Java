@@ -613,7 +613,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t58'/></span></li>
+	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t30'/></span></li>
 <%-- 	            <li id="right"><spring:message code='ezCircular.t99'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li> --%>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">

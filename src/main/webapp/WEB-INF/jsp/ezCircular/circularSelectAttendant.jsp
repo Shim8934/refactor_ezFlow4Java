@@ -1314,7 +1314,7 @@
 	 	</table>	    
 		<div class="btnposition">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezCircular.t66' /></span></a>
+	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezCircular.t26' /></span></a>
 		</div>
 	</body>
 </HTML>

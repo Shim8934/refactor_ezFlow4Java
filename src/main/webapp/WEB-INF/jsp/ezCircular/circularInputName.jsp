@@ -88,7 +88,7 @@
 	    </div>
 	    <div class="btnposition">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezCircular.t65' /></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezCircular.t66' /></span></a>
+	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezCircular.t26' /></span></a>
 	    </div>
 	</body>
 </html>
