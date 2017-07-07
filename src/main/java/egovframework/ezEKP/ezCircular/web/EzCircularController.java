@@ -2077,10 +2077,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	CircularListVO vo = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
     	
-    	logger.debug("circularCommentPopup ended.");
-    	
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("vo", vo);
+    	
+    	logger.debug("circularCommentPopup ended.");
     	
     	return "/ezCircular/circularCommentPopup";
     }
@@ -2099,10 +2099,10 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		List<CircularDeptVO> result = ezCircularService.getcircularDeptList1(circularDeptVO, userInfo);
     	
-    	logger.debug("circularDeptListAdd ended.");
-    	
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("result", result);
+    	
+    	logger.debug("circularDeptListAdd ended.");
     	
     	return "/ezCircular/circularDeptListAdd";
     }
@@ -2116,10 +2116,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	
-    	logger.debug("shareUserPopup ended.");
-    	
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("vo", vo);
+    	
+    	logger.debug("shareUserPopup ended.");
     	
     	return "/ezCircular/circularCommentSharePopup";
     }
@@ -2129,7 +2129,15 @@ public class EzCircularController extends EgovFileMngUtil {
      */
     @RequestMapping(value = "/ezCircular/getCommentShareUser.do")
     public String getCommentShareUser(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, Model model) throws Exception {
+    	logger.debug("getCommentShareUser started.");
     	
-    	return "";
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), "", userInfo.getTenantId(), userInfo.getOffset());
+    	
+    	model.addAttribute("list", list);
+    	
+    	logger.debug("getCommentShareUser ended.");
+    	
+    	return "json";
     }
 }

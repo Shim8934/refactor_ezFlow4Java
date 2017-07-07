@@ -355,56 +355,60 @@
 			
 			function btnOK_onclick() {
 				var RtnVal = new Array();
-				if (Flag == "I") {
-					if (document.getElementById("rdTotal").checked) {
-			    		InsFContTotal();
-					} else {
-			    		InsFContGroup();
-					}
-					
-					if (RtnState) {
-			    		if (document.getElementById("rdTotal").checked) {
-			        		gManageID = "ALL";
-			    		}
-			
-					    RtnVal[0] = "TRUE";
-					    RtnVal[1] = gFContID;
-					    RtnVal[2] = document.getElementById("tbFormContName").value;
-					    RtnVal[3] = gManageID;
-					    RtnVal[4] = gParant;
-					    RtnVal[5] = document.getElementById("tbDescript").value;
-					    RtnVal[6] = document.getElementById("tbManage").value;
-			
-					    if (document.getElementById("tbFormContName2").value == "") {
-					        RtnVal[7] = document.getElementById("tbFormContName").value;
-					    } else {
-					        RtnVal[7] = document.getElementById("tbFormContName2").value;
-					    }
-					} else {
-			    		RtnVal[0] = "FALSE";
-					}
-				} else {
-					if (document.getElementById("rdTotal").checked) {
-			    		UpFcontTotal();
-					} else {
-			    		UpFContGroup();
-					}
-					
-					if (RtnState) {
-					    RtnVal[0] = "TRUE";
-					    RtnVal[1] = document.getElementById("tbFormContName").value;
-					    RtnVal[2] = document.getElementById("tbDescript").value;
-					    RtnVal[3] = gManageID;
-					    RtnVal[4] = document.getElementById("tbManage").value;
-					    RtnVal[5] = document.getElementById("tbFormContName2").value;
-					} else {
-			    		RtnVal[0] = "FALSE";
-					}
-				}
+				if (document.getElementById("tbFormContName").value != "" && document.getElementById("tbFormContName2").value != "") {
+					if (Flag == "I") {
+						if (document.getElementById("rdTotal").checked) {
+				    		InsFContTotal();
+						} else {
+				    		InsFContGroup();
+						}
+						
+						if (RtnState) {
+				    		if (document.getElementById("rdTotal").checked) {
+				        		gManageID = "ALL";
+				    		}
 				
-// 				window.returnValue = RtnVal;
-				returnFunction(RtnVal);
-				window.close();
+						    RtnVal[0] = "TRUE";
+						    RtnVal[1] = gFContID;
+						    RtnVal[2] = document.getElementById("tbFormContName").value;
+						    RtnVal[3] = gManageID;
+						    RtnVal[4] = gParant;
+						    RtnVal[5] = document.getElementById("tbDescript").value;
+						    RtnVal[6] = document.getElementById("tbManage").value;
+				
+						    if (document.getElementById("tbFormContName2").value == "") {
+						        RtnVal[7] = document.getElementById("tbFormContName").value;
+						    } else {
+						        RtnVal[7] = document.getElementById("tbFormContName2").value;
+						    }
+						} else {
+				    		RtnVal[0] = "FALSE";
+						}
+					} else {
+						if (document.getElementById("rdTotal").checked) {
+				    		UpFcontTotal();
+						} else {
+				    		UpFContGroup();
+						}
+						
+						if (RtnState) {
+						    RtnVal[0] = "TRUE";
+						    RtnVal[1] = document.getElementById("tbFormContName").value;
+						    RtnVal[2] = document.getElementById("tbDescript").value;
+						    RtnVal[3] = gManageID;
+						    RtnVal[4] = document.getElementById("tbManage").value;
+						    RtnVal[5] = document.getElementById("tbFormContName2").value;
+						} else {
+				    		RtnVal[0] = "FALSE";
+						}
+					}
+//	 				window.returnValue = RtnVal;
+					returnFunction(RtnVal);
+					window.close();					
+				} else {
+					alert("<spring:message code = 'ezApprovalG.pjg01' />");
+				}
+
 			}
 			
 			function btncancel_onclick() {

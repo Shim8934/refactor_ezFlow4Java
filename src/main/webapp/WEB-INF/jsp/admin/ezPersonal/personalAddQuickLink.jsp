@@ -117,7 +117,8 @@
 				    var LinkType = SelectSingleNodeValue(xmldomNode[i], "LINKTYPE");
 				    var URL = SelectSingleNodeValue(xmldomNode[i], "URL");
 				    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE_");
-				
+				    var url  = SelectSingleNodeValue(xmldomNode[i], "LINKTYPEURL");
+				    
 				    if (SIZE == "FULL") {
 				        eval("chk_Full").checked = true;
 				        document.getElementById("txt_Width").value = "";
@@ -150,6 +151,23 @@
 				    }
 				    
 				    document.getElementById("txtURL").value = trim_Cross(URL);
+				    
+				    if (LinkType == "Z") {
+                        document.getElementById("makeTypeTable").style.display = "";
+                        document.getElementById("makeTypeImgTD").innerHTML = "";
+
+                        var _img = document.createElement("IMG");
+                        _img.src = url;
+
+                        _img.id = "ZmakeTypeImg";
+                        _img.onclick = function () { radioClick(this, 'img') };
+                        _img.style.cursor = "pointer";
+                        document.getElementById("makeTypeImgTD").appendChild(_img);
+
+                        document.getElementById("Z").checked = true;
+                        checkValue = "Z";
+                        LinkTypeURL = LinkTypeURL;
+                    }
 				}
 	        }
 	        
@@ -399,6 +417,103 @@
 	            else
 	                document.getElementById("div_Size").style.display = "";
 	        }
+	        
+	        var g_xmlhttp = createXMLHttpRequest();
+	        function CreateType() {
+	            if (CrossYN() || (pNoneActiveX == "YES")) {
+	                document.getElementById('mode').value = "PHOTO";
+	                document.form.file1.click();
+	            }
+	            else {
+	                
+	                var ezUtil = new ActiveXObject("ezUtil.MiscFunc");
+	                var filepath = ezUtil.OpenLoadDlg("Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0All Files (*.*)\0*.*\0\0", "");
+	                if (filepath == "") return;
+
+	                var strBase64 = ezUtil.DownloadToBase64(filepath);
+	                ezUtil = null;
+
+	                var ezUtil = new ActiveXObject("ezUtil.ImageFunc");
+	                var temp = ezUtil.GetImageSize(filepath);
+	                ezUtil = null;
+
+	                imageWidth = temp.split("*")[0];
+	                imageHeight = temp.split("*")[1];
+
+	                var strXML = "<IMAGE><DATA>" + strBase64 + "</DATA></IMAGE>";
+
+	                g_xmlhttp = createXMLHttpRequest();
+<%-- 	                g_xmlhttp.open("POST", "/myoffice/ezPersonal/QuickLink/aspx/TypeImage_upload.aspx?ComId=<%= ComId%>&QId=<%=guid %>", true); --%>
+	                g_xmlhttp.onreadystatechange = changeNormalImage_end;
+	                g_xmlhttp.send(strXML);
+	            }
+	        }
+	        
+	        function changeNormalImage_end() {
+	            if (g_xmlhttp.readyState != 4) return;
+	            
+	            document.getElementById("makeTypeTable").style.display = "";
+	            document.getElementById("makeTypeImgTD").innerHTML = "";
+	            
+	            var _img = document.createElement("IMG");
+	            _img.src = g_xmlhttp.responseText;
+	            _img.id = "ZmakeTypeImg";
+	            _img.onclick = function(){ radioClick(this,'img') };
+	            _img.style.cursor = "pointer";
+
+	            document.getElementById("makeTypeImgTD").appendChild(_img);
+
+	            document.getElementById("Z").checked = true;
+	            checkValue = "Z";
+	            LinkTypeURL = g_xmlhttp.responseText;
+
+	        }
+	        
+	        function btn_AttachAdd_onclick() {
+	            if (document.form.file1.value != "") {
+	                if (document.getElementById('mode').value == "PHOTO") {
+	                    if (document.getElementById("form").file1.files.length < 2) {
+	                    }
+	                    else
+	                        alert("");
+	                }
+	                document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
+	                var frm = document.getElementById('form');
+	                frm.action = "/admin/ezPersonal/typeImageUpload.do?QId=" + guid;
+
+	                frm.submit();
+	                document.form.file1.value = "";
+	            }
+	        }
+	            
+	        function returnvalue(strXML) {
+	            var xml = loadXMLString(strXML);
+	            var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
+	            for (i = 0; i < nodes.length; i++) {
+	                if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
+	                    document.getElementById("makeTypeTable").style.display = "";
+
+	                    var path = getNodeText(GetChildNodes(nodes[i])[4]);
+
+	                    document.getElementById("makeTypeTable").style.display = "";
+	                    document.getElementById("makeTypeImgTD").innerHTML = "";
+
+
+	                    var _img = document.createElement("IMG");
+	                    _img.src = path;
+	                    _img.id = "ZmakeTypeImg";
+	                    _img.onclick = function () { radioClick(this, 'img') };
+	                    _img.style.cursor = "pointer";
+
+	                    document.getElementById("makeTypeImgTD").appendChild(_img);
+
+	                    document.getElementById("Z").checked = true;
+	                    checkValue = "Z";
+	                    LinkTypeURL = path;
+
+	                }
+	            }
+	        }
 		</script>
 	</head>
 	<body class="popup">
@@ -445,7 +560,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="text-align:center"><spring:message code = 'ezPersonal.t1023' /> Type <span style="color:red">*</span></th>
+	            <th style="text-align:center" rowspan="2"><spring:message code = 'ezPersonal.t1023' /> Type <span style="color:red">*</span></th>
 	            <td colspan="2">
 	                <div>
 	                    <table style="width:280px;margin-top:10px;">
@@ -509,6 +624,35 @@
 	                </div>
 	            </td>
 	        </tr>
+	        
+	        <tr>
+            <td colspan="2">
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="height:80px;">
+                    <tr>
+                        <td>
+                            <table style="margin-top: 10px; margin-left: 10px;display:none;" id="makeTypeTable">
+                                <tr style="text-align: center;">
+                                    <td id="makeTypeImgTD">
+                                    </td>
+                                </tr>
+                                <tr style="text-align: center;">
+                                    <td style="text-align: center;">
+                                        <input name="linktypeOption" type="radio" value="Z" id="Z" onclick="radioClick(this, 'rad')" style="margin-top: -5px;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="100%" align="center" nowrap>
+                            <a class="imgbtn"><span onclick="CreateType()">Type<spring:message code = 'ezPersonal.t105'/>
+                            </span></a>
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        	</tr>
+        
 	        <tr>
 	            <th style="text-align:center">URL <span style="color:red">*</span></th>
 	            <td colspan="2">
@@ -536,5 +680,16 @@
 	        <a class="imgbtn"><span id="btn_OK" onclick="btn_ok()"><spring:message code = 'ezPersonal.t105' /></span></a>
 	        <a class="imgbtn"><span onclick="btn_cancel()"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>
+	    
+	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+    	<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPersonal/typeImageUpload.do?guid=" target="ifrm" style ="display:none">
+	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
+	        <input type="hidden" name="boardid" id="boardid" />
+	        <input type="hidden" name="maxsize" id="maxsize" />
+	        <input type="hidden" name="mode" id="mode" value="PHOTO"/>
+	        <input type="hidden" name="cnt" id="cnt" />
+	        <input type="hidden" name="guid" id="guid"  />
+	        <input type="hidden" name="mailgubun" id="mailgubun" />
+    </form>
 	</body>
 </html>

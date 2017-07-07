@@ -537,12 +537,25 @@ function ListView() {
                 }
 
                 try{
-                    if (OrderCell == strName) {
-                        if (OrderOption.lastIndexOf("DESC") > -1)
-                            strName += "<img src='/images/view-sortdown.gif'>";
-                        else
-                            strName += "<img src='/images/view-sortup.gif'>";
-                    }
+            	   if (_HeaderNode == "COLNAME") {
+            		   if(strColName != "") {
+                           if (OrderCell == strColName) {
+                               if (OrderOption.lastIndexOf("DESC") > -1)
+                                   strName += "<img src='/images/view-sortdown.gif'>";
+                               else
+                                   strName += "<img src='/images/view-sortup.gif'>";
+                           }
+            		   }
+                    } else {
+                    	if (strName != "") {
+                           if (OrderCell == strName) {
+                               if (OrderOption.lastIndexOf("DESC") > -1)
+                                   strName += "<img src='/images/view-sortdown.gif'>";
+                               else
+                                   strName += "<img src='/images/view-sortup.gif'>";
+                           }
+                    	}
+                     }
                 }catch(e){}
 
                 var oText = document.createTextNode(strName);

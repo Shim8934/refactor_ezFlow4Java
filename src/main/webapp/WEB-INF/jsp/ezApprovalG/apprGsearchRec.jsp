@@ -70,7 +70,10 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            onClose: function (selectedDate) {
+		            	$("#Edatepicker").datepicker("option", "minDate", selectedDate);
+		            }
 		        });
 		        $("#Edatepicker").datepicker({
 		            changeMonth: true,
@@ -78,12 +81,15 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            onClose: function (selectedDate) {
+		            	$("#Sdatepicker").datepicker("option", "maxDate", selectedDate);
+		            }		            
 		        });
 		
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', "");
-		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");  
 		        $("#Edatepicker").datepicker('setDate', "");
 		    });
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -209,7 +215,7 @@
 		    }
 		    function GetRegSDate() {
 		        if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().length > 0)
-		            return $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00:00.001";
+		        	return $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00:00.001";
 		        else
 		            return "";
 		    }

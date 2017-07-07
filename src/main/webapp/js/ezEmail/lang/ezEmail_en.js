@@ -364,9 +364,13 @@ var strLangLHM12 = "세션에 문제가 생겼습니다.\n다시 로그인해주
 var strLangLHM13 = "메일 크기가 최대 허용 크기를 초과하였습니다. \n메일 수정 후 다시 시도해주세요.";
 var strLangLHM14 = "최대 허용 크기 : ";
 var strLangLHM15 = ", 현재 크기 : ";
-var strLangLHM16 = "유효하지 않은 수신인이 있습니다. 이메일 주소를 확인해주세요.";
+var strLangLHM16 = "유효하지 않은 수신인이 있습니다.";
+var strLangLHM17 = "해당 수신인을 제외하고 메일을 발송하시겠습니까?";
 var strLangKMS01 = "";
 var strLangKMS02 = "첨부파일 총 크기가 ";
+var strLangKMS03 = "No mail.";
+var strLangKMS04 = "수신자가 "; 
+var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다. \r\n 개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
 
 function GetLocalTime(Offset , pDateTime)
 {

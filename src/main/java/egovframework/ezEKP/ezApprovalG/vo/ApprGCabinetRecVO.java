@@ -43,7 +43,23 @@ public class ApprGCabinetRecVO {
 	private String cabinetID;
 	/** */
 	private String sn;
+	/** 결재자이름 **/
+	private String aprMemberName;
+	/** 결재자이름 (다국어)**/
+	private String aprMemberName2;
 	
+	public String getAprMemberName2() {
+		return aprMemberName2;
+	}
+	public void setAprMemberName2(String aprMemberName2) {
+		this.aprMemberName2 = aprMemberName2;
+	}
+	public String getAprMemberName() {
+		return aprMemberName;
+	}
+	public void setAprMemberName(String aprMemberName) {
+		this.aprMemberName = aprMemberName;
+	}
 	public String getDocNo() {
 		return docNo;
 	}

@@ -56,9 +56,9 @@ function GetDocList(p_FormCd) {
     createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
     createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
     if (GamSaFlag)
-        xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
+        xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
     else
-        xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
+        xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", false);
 
     xmlhttp.onreadystatechange = getDocList_after;
     xmlhttp.send(xmlpara);
@@ -201,9 +201,9 @@ function GetDocSearch() {
         createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
         
 	    if (GamSaFlag){
-	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
+	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
-	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", true);
+	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", false);
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocListS_after;		
 	    xmlhttp.send(xmlpara);
@@ -237,9 +237,9 @@ function GetDocSearch() {
 	    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
 	    
 	    if (GamSaFlag){
-	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
+	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", false);
 	    } else {
-	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
+	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", false);
 	    }
 	    xmlhttp.onreadystatechange = getsearchDocList_after;		
 	    xmlhttp.send(xmlpara);

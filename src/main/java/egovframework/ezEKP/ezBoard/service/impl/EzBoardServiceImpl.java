@@ -285,7 +285,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
+			boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
