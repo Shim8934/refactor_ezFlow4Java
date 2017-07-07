@@ -104,6 +104,20 @@
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='ezCircular.t130' />"]);
 		    });
+		    
+		    var usepostDate = false;
+		    function DateSearch_Click() {
+		        if(usepostDate){
+		            usepostDate = false;
+		            $("#Sdatepicker").datepicker('disable');
+		            $("#Edatepicker").datepicker('disable');
+		        }
+		        else {
+		            usepostDate = true;
+		            $("#Sdatepicker").datepicker('enable');
+		            $("#Edatepicker").datepicker('enable');
+		        }
+		    }
 		
 		    function search() {		    	
 		    	if (specialChk(document.getElementById("keyword").value)) {
@@ -447,6 +461,8 @@
 				</tr>
 				<tr>
 					<td colspan="9" style="text-align:center"><spring:message code='ezCircular.t144' /></td>
+				</tr>
+				<tr>
 				</tr>
 		  	</table>		    
 		</form>
