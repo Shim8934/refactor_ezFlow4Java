@@ -18,13 +18,20 @@
     }
 
     function check_change(checkbox, inputbox) {
+    	
         if (checkbox.checked == true) {
+        	document.getElementById("CheckQuota2").checked = true;
+        	document.getElementById("CheckQuota3").checked = true;
+            document.getElementById("TextQuota2").readOnly = false;
+            document.getElementById("TextQuota3").readOnly = false;
             document.getElementById("CheckUseDefault").checked = false;
-            inputbox.readOnly = false;
-        }
-        else {
-            inputbox.value = "";
-            inputbox.readOnly = true;
+        } else {
+        	document.getElementById("TextQuota2").readOnly = true;
+            document.getElementById("TextQuota3").readOnly = true;
+            document.getElementById("CheckQuota2").checked = false;
+        	document.getElementById("CheckQuota3").checked = false;
+            document.getElementById("TextQuota2").value = "";
+            document.getElementById("TextQuota3").value = "";
         }
     }
 
@@ -32,6 +39,12 @@
         if (document.getElementById("CheckUseDefault").checked == true) {
             document.getElementById("CheckQuota2").checked = false;
             document.getElementById("CheckQuota3").checked = false;
+
+            check_change(document.getElementById("CheckQuota2"), document.getElementById("TextQuota2"));
+            check_change(document.getElementById("CheckQuota3"), document.getElementById("TextQuota3"));
+        } else {
+        	document.getElementById("CheckQuota2").checked = true;
+            document.getElementById("CheckQuota3").checked = true;
 
             check_change(document.getElementById("CheckQuota2"), document.getElementById("TextQuota2"));
             check_change(document.getElementById("CheckQuota3"), document.getElementById("TextQuota3"));
