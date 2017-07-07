@@ -147,7 +147,7 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' />[${commentCount}]</span></li>                        	
-                	    	<c:if test="${result.memberID == userInfo.id and result.status == 1}">
+                	    	<c:if test="${result.memberID == userInfo.id}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t58' /></span></li>
                 	    	</c:if>
 	                        <li><span onclick="print_onClick2( false )"><spring:message code='ezCircular.t114' /></span></li>
