@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>

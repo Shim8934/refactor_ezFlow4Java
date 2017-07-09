@@ -13,9 +13,9 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/PreviewItem.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
 		
 		<style>
 		#layer_Viewpopup { 
@@ -51,8 +51,6 @@
 		}
 		</style>
 	    <script type="text/javascript">
-//  	        var ShowAdjacent = "";
-// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
 	        var CurPage = "1";
@@ -67,25 +65,14 @@
 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-// 	        var pMailListHeightW = 0;
-// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-// 	        var pMailListWidthH = 0;
-// 	        var pMailPreWidthH = 0;
-// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-// 	        var SmallSizeList = false;
-// 	        var OldSmallSizeList = false;
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-// 	        var pMode = "new";
 	        var pAdminType = "n";
-// 	        var pUse_Editor = "${useEditor}";
-// 	        var pNoneActiveX = "YES";
-// 	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";

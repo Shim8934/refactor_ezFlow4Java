@@ -79,18 +79,18 @@
             }
         }
     </script>
-	</head>
-	<body class="mainbody">
-	    <h1><spring:message code="ezCircular.t17" /></h1>
-	    <div class="portlet_tabpart01">
-	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezCircular.t11" /></span></p>
-	            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezCircular.t12" /></span></p>
-	        </div>
-	    </div>
-	    <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0" ></iframe>
-	</body>
-	<script type="text/javascript">
-	    Tab1_NewTabIni("tab1");
-	</script>
+</head>
+<body class="mainbody">
+    <h1><spring:message code="ezCircular.t17" /></h1>
+    <div class="portlet_tabpart01">
+        <div class="portlet_tabpart01_top" id="tab1">
+            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezCircular.t11" /></span></p>
+            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezCircular.t12" /></span></p>
+        </div>
+    </div>
+    <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0" ></iframe>
+</body>
+<script type="text/javascript">
+    Tab1_NewTabIni("tab1");
+</script>
 </html>

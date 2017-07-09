@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		
 		<style>
 		#layer_Viewpopup { 
@@ -593,7 +593,7 @@
 
 	        	for (var i=0; i <arrName.length - 1; i++) {
 	        		if (SSUserID != arrName[i]) {
-		        		alert("본인이 작성한 회람만 삭제할 수 있습니다.");
+		        		alert("<spring:message code='ezCircular.t174'/>");
 
 		        		return;
 		        	}

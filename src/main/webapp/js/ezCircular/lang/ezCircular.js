@@ -5,3 +5,6 @@ var strLang4 = "비공개";
 var strLang5 = "의견을 입력해주세요";
 var strLang6 = "의견을 삭제했습니다.";
 var strLang7 = "공지 메일을 발송했습니다.";
+var strLang8 = "진행중";
+var strLang9 = "종료";
+var strLang10 = "임시";

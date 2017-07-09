@@ -835,13 +835,13 @@ function ListView() {
                     
                     if (strValue == "0") {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_ing.gif" />';
-                    	strValue = "진행중";
+                    	strValue = strLang8;
                     } else if (strValue == "1") {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_end.gif" />';
-                    	strValue = "종료";
+                    	strValue = strLang9;
                     } else {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_temp.gif" />';
-                    	strValue = "임시";
+                    	strValue = strLang10;
                     }
                 }
                 
