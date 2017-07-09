@@ -210,8 +210,6 @@ function ItemPreviewRead(obj) {
     xmlhttp2.onreadystatechange = event_ItemPreviewRead;
     xmlhttp2.send();
     
-    //여기 댓글 가져오는거 추가시키고 previewItemSet에 의견목록까지 넣어서 뿌려야.
-    
     /* 2017-07-07 이효진 */
     $(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif')
     
@@ -235,6 +233,8 @@ var Title;
 var pOCS;
 var RegDate;
 var Content;
+var status;
+var option;
 
 function event_ItemPreviewRead() {
     if ((xmlhttp != null && xmlhttp.readyState == 4) && (xmlhttp2 != null && xmlhttp2.readyState == 4)) {
@@ -251,6 +251,8 @@ function event_ItemPreviewRead() {
             RegDate = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/RegDate");
             Title = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Title");
             Content = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Content");
+            status = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Status");
+            option = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/Option");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
@@ -276,16 +278,24 @@ function previewItemSet() {
     document.getElementById("Pre" + pPreviewShow_HOW + "_date").innerText = RegDate;
     var readHTML = Content;
     var tempText = xmlhttp2.responseText;
-
+    
     if (xmlhttp2.readyState == 4) {
         setTimeout(function () {
             if (pPreviewShow_HOW.trim() == "W") {
-                if (document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent != undefined)
-                    document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent(readHTML, tempText);
+                if (document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent != undefined) {
+                    document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent(readHTML, tempText, option);
+                    if (option == "1" || option == "3") {
+                    	document.getElementById("ifrmPreViewW").contentWindow.getCircularComment(CircularId, SSUserID, status);
+                    }
+                }
             }
             else if (pPreviewShow_HOW.trim() == "H") {
-                if (document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent != undefined)
-                    document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent(readHTML, tempText);
+                if (document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent != undefined) {
+                    document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent(readHTML, tempText, option);
+                    if (option == "1" || option == "3") {
+                    	document.getElementById("ifrmPreViewH").contentWindow.getCircularComment(CircularId, SSUserID, status);
+                    }
+                }
             }
         }, 100);
     }
@@ -468,40 +478,6 @@ function CircularReadOpen() {
 	}
 }
 
-function WriteContent(strContentLocation, ItemID) {
-    objMHT = new ActiveXObject("MhtFormat.Convert");
-    var ContentHTML = MhtConvert(strContentLocation, ItemID);
-    ContentHTML = ReplaceText(ContentHTML, "onmouseover", "");
-    ContentHTML = ReplaceText(ContentHTML, "onfocus", "");
-    ContentHTML = ReplaceText(ContentHTML, "contentEditable=true", "");
-    ContentHTML = ReplaceText(ContentHTML, "contentEditable=\"true\"", "");
-    return ContentHTML;
-}
-function MhtConvert(strContentLocation, ItemID) {
-    var fullPath;
-    if (pMode == "temp")
-        fullPath = "/ezBoard/getContentInfo.do?type=BOARDCONTENTTEMP&docID=" + encodeURI(ItemID);
-    else
-        fullPath = "/ezBoard/getContentInfo.do?type=BOARDCONTENT&docID=" + encodeURI(ItemID);
-    objMHT.sync = true;
-    var strMht = objMHT.DownloadURL(fullPath);
-    objMHT.mhtData = strMht;
-    objMHT.filterIn();
-    var ret = objMHT.htmlData;
-    if (window.location.protocol.toLowerCase() == "https:") {
-        var idx = 0; var start = 0;
-        while (ret.indexOf("src=\"", start) > 0) {
-            start = ret.indexOf("src=\"", start);
-            var end = ret.indexOf("\"", start + 5);
-            var link = ImageUrl(strContentLocation, idx);
-            ret = ret.substring(0, start + 5) + link + ret.substring(end);
-
-            idx = idx + 1;
-            start = end;
-        }
-    }
-    return ret;
-}
 function ReplaceText(orgStr, findStr, replaceStr) {
     var re = new RegExp(findStr, "gi");
     return (orgStr.replace(re, replaceStr));
