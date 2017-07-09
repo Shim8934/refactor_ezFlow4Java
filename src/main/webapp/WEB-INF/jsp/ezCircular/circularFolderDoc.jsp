@@ -478,10 +478,18 @@
 		        return (orgStr.replace(re, replaceStr));
 		    }
 
-		    function refresh_onclick() {
+		    function getLeftCount() {
 		    	if (typeof (window.parent.frames.left) != "undefined") {
-		            parent.frames["left"].getNewCircularCount();
+		    		parent.frames["left"].getNewCircularCount();
+		            parent.frames["left"].getCircularCompleteCount();
+		            parent.frames["left"].getMyCircularCount();
+		            parent.frames["left"].getCircularTempCount();
+		            parent.frames["left"].getCircularDeleteCount();
 		    	}
+		    }
+		    
+		    function refresh_onclick() {
+		    	window.location.href = "/ezCircular/circularFolderDoc.do";
 		    }
 		
 		    function checkBox_checkAll(obj) {
@@ -581,8 +589,7 @@
                 OpenWin.focus();     
 	        }
 
-	        
-        	var arrName = new Array();
+	        var arrName = new Array();
 	        function CircularDelete_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
@@ -598,7 +605,7 @@
 		        		return;
 		        	}
 	        	}
-
+	        	
 	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
 		        	var arrList = new Array();
 			        var circularIDList = "";

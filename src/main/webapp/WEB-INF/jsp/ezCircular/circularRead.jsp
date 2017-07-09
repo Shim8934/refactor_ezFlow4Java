@@ -55,6 +55,7 @@
 					success: function() {
 						alert("<spring:message code='ezCircular.t45'/>");
 						
+						window.opener.getLeftCount();
 						window.opener.refresh_onclick();
 		                window.close();
 					},

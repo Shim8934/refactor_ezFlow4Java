@@ -210,6 +210,8 @@ function ItemPreviewRead(obj) {
     xmlhttp2.onreadystatechange = event_ItemPreviewRead;
     xmlhttp2.send();
     
+    //여기 댓글 가져오는거 추가시키고 previewItemSet에 의견목록까지 넣어서 뿌려야.
+    
     /* 2017-07-07 이효진 */
     $(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif')
     
@@ -242,11 +244,7 @@ function event_ItemPreviewRead() {
             }
             
             xmlDoc = loadXMLString(xmlhttp.responseText);
-
-//            if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
-//                alert(strLang173);
-//                return;
-//            }
+            
             CircularId = SelectSingleNodeValueNew(xmlDoc, "NODES/NODE/CircularId");
             MemberId = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/MemberId");
             MemberName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/MemberName");

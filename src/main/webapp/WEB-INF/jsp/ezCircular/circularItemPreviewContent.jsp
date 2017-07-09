@@ -69,6 +69,14 @@
 	                document.getElementById("divContent").style.zoom = nowZoom + "%";
 	            }
 	        }
+	        
+	        function goComment() {
+	        	//의견목록 쪽으로 포커스이동
+	        }
+	        
+	        function getCircularComment() {
+// 	        	getCircularComment();
+	        }
 	
 	        function makeWriteContent(responseText, AttachText) {	            
 	        	try {
@@ -83,10 +91,10 @@
 	                document.getElementById("txtContent").innerHTML = "";
 	                var _img1;
 	                var _img2;
+	                var _img3;
 	
 	                _img1 = document.createElement("IMG");
 	                _img1.id = "smallImg";
-	                //_img1.setAttribute("onclick", "Smaller()");
 	                _img1.onclick = function () { Smaller(); };
 	
 	                _img1.style.cursor = "pointer";
@@ -98,14 +106,22 @@
 	                _img2.setAttribute("onclick", "Bigger()");
 	                _img2.onclick = function () { Bigger(); };
 	                
-	                
 	                _img2.style.cursor = "pointer";
 	                _img2.style.margin = "5px";
 	                _img2.style.marginLeft = "-4px";
 	                _img2.src = "/images/plus.png";
+	                
+	                _img3 = document.createElement("IMG");
+	                _img3.id = "goComment";
+	                _img3.onclick = function () { goComment(); };
+	
+	                _img3.style.cursor = "pointer";
+	                _img3.style.margin = "7px";
+	                _img3.src = "/images/ImgIcon/circular_opinion.gif";
 	
 	                document.getElementById("txtContent").appendChild(_img1);
 	                document.getElementById("txtContent").appendChild(_img2);
+	                document.getElementById("txtContent").appendChild(_img3);
 	
 	                var xmldom = loadXMLString(AttachText);
 	                var _attchDIV;
@@ -235,7 +251,7 @@
 	    </script>
 	</head>
 	<body>
-		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;word-wrap:break-word;">
+		<div id="txtContent" name="txtContent" style="position:absolute;margin-left:5px;margin-right:5px;word-wrap:break-word;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
 		</div>
 	</body>
