@@ -30,7 +30,7 @@
 		</script>
 	</head>
 	
-	<body class="popup" style="overflow: hidden;">
+	<body class="popup" style="overflow: auto;">
 		<h1><spring:message code='ezCircular.t167'/></h1>
 		
 		<div id="close">
@@ -44,7 +44,7 @@
    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<table class="mainlist" style="width:105%;margin-left: -10px;margin-top:-10px;">
+		<table class="mainlist" style="width:100%;">
 			<tr>
 				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85'/></th>
 				<th style="text-align:right;border-top:0px">
@@ -53,10 +53,8 @@
 			</tr>
 		</table>
 		
-		<div style="height:500px;overflow-y: auto;">			
-			<table id="shareUserList" style="width:100%;margin-top:15px;table-layout: fixed;">
-				
-			</table>
+		<div>			
+			<table id="shareUserList" style="width:100%;margin-top:15px;table-layout: fixed;"></table>
 		</div>
 	</body>
 </html>
