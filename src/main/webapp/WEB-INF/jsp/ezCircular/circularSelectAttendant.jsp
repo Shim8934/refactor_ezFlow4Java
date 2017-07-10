@@ -130,8 +130,7 @@
 	            	treeView.DataBind("TreeView");
 	            	
 	                if (type == "group") {
-	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezCircular.t34'/>";
-// 	                    document.getElementById("btnAddUser").style.display = "none";	
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezCircular.t34'/>";	
 	                }
 	            }
 	            catch (ErrMsg) {
@@ -204,7 +203,7 @@
 	
 	            var totalRows = listView.GetDataRows();
 	            var totalLen = totalRows.length;
-	
+
 	            if (totalLen == 0) {
 	                alert("<spring:message code='ezCircular.t147' />");
 	                return;
@@ -530,21 +529,160 @@
 		    function event_listDBclick(obj) {
 	            InsertReceiver("MsgToList");
 		    }
+		    
 		    function InsertReceiver(pListView) {
 	            var pparsingXML = "";
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
-	            if (listContentArry != "") {
-	                for (var i = 0; i < listContentArry.length; i++) {
-	                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-	                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-	                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
-	                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-	                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
-	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
-	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
-	                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+	            if (_RowObjectID == "") {
+		            if (listContentArry != "") {
+		                for (var i = 0; i < listContentArry.length; i++) {
+		                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
+		                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+		                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
+		                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+		                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
+		                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
+		                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
+		                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+		
+		                    var listid = "MsgToList";
+		                    var getlistview = new ListView();
+		                    getlistview.LoadFromID(listid);
+		                    var IsInsert = CheckMailReceiver(strId, "3");
+		                    if (strId == "<c:out value='${userID}' />") {
+		                        alert("<spring:message code='ezCircular.t149' />");
+		                        continue;
+		                    }
+		
+		                    if (!IsInsert) {
+		                        pparsingXML2 = "";
+		                        pparsingXML = "";
+		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		
+		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
+		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
+		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
+		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                        Resultxml = loadXMLString(pparsingXML2);
+		
+		                        var listview = new ListView();
+		                        listview.LoadFromID(listid);
+		
+		                        var MaxID = 0;
+		                        var InitTr = listview.GetDataRows();
+		                        var MaxCntNum = 0;
+		                        for (var j = 0  ; j < InitTr.length  ; j++) {
+		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                            if (MaxID < curnum) {
+		                                MaxID = curnum;
+		                                MaxCntNum = j;
+		                            }
+		                        }
+		
+		                        var objTr = listview.AddRow(InitTr.length);
+		                        if (MaxCntNum != 0)
+		                            MaxCntNum = MaxCntNum + 1;
+		                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                        listview.AddDataRow(objTr, Resultxml);
+		
+		                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                        for (var y = 0; y < _tdlength; y++) {
+		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                        }
+		
+		                    }
+		                }
+		
+		            }
+		            else {
+		                if (p_ListOrderObject == "") {
+		                    alert("<spring:message code='ezCircular.t148' />");
+		                    return;
+		                }
+		                if (p_ListOrderObject != "") {
+		                    var strId = p_ListOrderObject.getAttribute("_data2");
+		                    var strName = p_ListOrderObject.getAttribute("_data4");
+		                    var strDeptNM = p_ListOrderObject.getAttribute("_data5");
+		                    var strEmail = p_ListOrderObject.getAttribute("_data3");
+		                    var strName2 = p_ListOrderObject.getAttribute("_data11");
+		                    var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
+		                    var jickwe = p_ListOrderObject.getAttribute("_data14");
+		                    var phone = p_ListOrderObject.getAttribute("_data8");
+		
+		                    var listid = "MsgToList";
+		                
+		                    var getlistview = new ListView();
+		                    getlistview.LoadFromID(listid);
+		                    var bFlag = getlistview.ExistRow("DATA2", strEmail);
+		
+		                    if (bFlag) {
+		                        pAddFlag = true;
+		                    }
+		                    else {
+		                        pparsingXML2 = "";
+		                        pparsingXML = "";
+		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
+		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
+		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
+		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                        Resultxml = loadXMLString(pparsingXML2);
+		
+		                        var listview = new ListView();
+		                        listview.LoadFromID(listid);
+		
+		                        var MaxID = 0;
+		                        var InitTr = listview.GetDataRows();
+		                        var MaxCntNum = 0;
+		                        for (var j = 0  ; j < InitTr.length  ; j++) {
+		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                            if (MaxID < curnum) {
+		                                MaxID = curnum;
+		                                MaxCntNum = j;
+		                            }
+		                        }
+		
+		                        var objTr = listview.AddRow(InitTr.length);
+		                        if (MaxCntNum != 0)
+		                            MaxCntNum = MaxCntNum + 1;
+		                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                        listview.AddDataRow(objTr, Resultxml);
+		
+		                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                        for (var y = 0; y < _tdlength; y++) {
+		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                        }
+		                    }
+		                }
+		            }
+	            	
+	            } else {
+	            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
+	            		var strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
+	                    var strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
+
+	                    var strDeptNM = "";
+	                    var strEmail = "";
+	                    var strName2 = "";
+	                    var strDeptNM2 = "";
+	                    var jickwe = "";
+	                    var phone = "";
 	
 	                    var listid = "MsgToList";
 	                    var getlistview = new ListView();
@@ -554,7 +692,7 @@
 	                        alert("<spring:message code='ezCircular.t149' />");
 	                        continue;
 	                    }
-	
+alert(IsInsert);	
 	                    if (!IsInsert) {
 	                        pparsingXML2 = "";
 	                        pparsingXML = "";
@@ -600,79 +738,10 @@
 	
 	                    }
 	                }
-	
-	            }
-	            else {
-	                if (p_ListOrderObject == "") {
-	                    alert("<spring:message code='ezCircular.t148' />");
-	                    return;
-	                }
-	                if (p_ListOrderObject != "") {
-	                    var strId = p_ListOrderObject.getAttribute("_data2");
-	                    var strName = p_ListOrderObject.getAttribute("_data4");
-	                    var strDeptNM = p_ListOrderObject.getAttribute("_data5");
-	                    var strEmail = p_ListOrderObject.getAttribute("_data3");
-	                    var strName2 = p_ListOrderObject.getAttribute("_data11");
-	                    var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
-	                    var jickwe = p_ListOrderObject.getAttribute("_data14");
-	                    var phone = p_ListOrderObject.getAttribute("_data8");
-	
-	                    var listid = "MsgToList";
-	                
-	                    var getlistview = new ListView();
-	                    getlistview.LoadFromID(listid);
-	                    var bFlag = getlistview.ExistRow("DATA2", strEmail);
-	
-	                    if (bFlag) {
-	                        pAddFlag = true;
-	                    }
-	                    else {
-	                        pparsingXML2 = "";
-	                        pparsingXML = "";
-	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
-	                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
-	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                        Resultxml = loadXMLString(pparsingXML2);
-	
-	                        var listview = new ListView();
-	                        listview.LoadFromID(listid);
-	
-	                        var MaxID = 0;
-	                        var InitTr = listview.GetDataRows();
-	                        var MaxCntNum = 0;
-	                        for (var j = 0  ; j < InitTr.length  ; j++) {
-	                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                            if (MaxID < curnum) {
-	                                MaxID = curnum;
-	                                MaxCntNum = j;
-	                            }
-	                        }
-	
-	                        var objTr = listview.AddRow(InitTr.length);
-	                        if (MaxCntNum != 0)
-	                            MaxCntNum = MaxCntNum + 1;
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                        listview.AddDataRow(objTr, Resultxml);
-	
-	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                        for (var y = 0; y < _tdlength; y++) {
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                        }
-	                    }
-	                }
 	            }
 			                
 		        var listid ="MsgToList";
-		        
+		        _RowObjectID = "";
 		    }
 	    
 		    function CheckMailReceiver(selRow, option) {
@@ -1231,8 +1300,8 @@
    							circularDeptList += ("<tr id='" + vo.circularBMID + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)'>");
    							circularDeptList += ("<td style='width:40%'>" + vo.title + " ");
    							circularDeptList += ("<td style='width:27%'>" + vo.regDate + " ");
-   							circularDeptList += ("<td style='width:16%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />");
-   							circularDeptList += ("<td style='width:10%'>");
+   							circularDeptList += ("<td style='width:19%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />");
+   							circularDeptList += ("<td style='width:13%'>");
    							circularDeptList += ("</tr>");
    						});
    						
@@ -1255,13 +1324,17 @@
 		    }
 		    
 		    var _RowObject = null;
-		    
+		    var _RowObjectID = null;
+		    var _RowObjectArray = new Array();
+
 		    function event_click(obj) {
 		    	if (_RowObject != null) {
 		    		_RowObject.style.backgroundColor = "#ffffff";
 		    	}
 
 		        _RowObject = obj;
+		        _RowObjectID = obj.id;
+
 		        obj.style.backgroundColor = "rgb(233, 241, 244)";
 		        
 		        $.ajax({
@@ -1276,19 +1349,20 @@
    						list = result.circularDeptNamelist;
 
    						list.forEach(function(vo, index) {
-   							circularDeptNamelist += ("<tr style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)'>");
-   							circularDeptNamelist += ("<td style='width:55%'>" + (index+1) + " ");
-   							circularDeptNamelist += ("<td style='width:15%'>" + vo.company + " ");
-   							circularDeptNamelist += ("<td style='width:17%'>" + vo.description + " ");
-   							circularDeptNamelist += ("<td style='width:12%'>" + vo.title + " ");
-   							circularDeptNamelist += ("<td style='width:13%'>" + vo.memberName + " ");
-   							circularDeptNamelist += ("<td style='width:38%'>" + vo.mail + " ");
+   							circularDeptNamelist += ("<tr id='nameList_" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)'>");
+   							circularDeptNamelist += ("<td id='data1' style='width:55%'>" + (index+1) + " ");
+   							circularDeptNamelist += ("<td id='data2' style='width:15%'>" + vo.company + " ");
+   							circularDeptNamelist += ("<td id='data3' style='width:17%'>" + vo.description + " ");
+   							circularDeptNamelist += ("<td id='data4' style='width:12%'>" + vo.title + " ");
+   							circularDeptNamelist += ("<td id='data5' style='width:13%'>" + vo.memberName + " ");
+   							circularDeptNamelist += ("<td id='data6' style='width:38%'>" + vo.mail + " ");
+   							circularDeptNamelist += ("<td id='data7' style='display:none'>" + vo.memberID + " ");
    							circularDeptNamelist += ("</tr>");
    						});
    						
    						$("#List_TBODY2").html("");
    						$("#List_TBODY2").append(circularDeptNamelist);
-					}
+   					}
 		        })
 		    }
 		    
@@ -1310,6 +1384,7 @@
 		                if (document.getElementById("circularOrgan_content").style.display == "none") {
 		                    document.getElementById("circularOrgan_content").style.display = "";
 		                    document.getElementById("circularDept_content").style.display = "none";
+		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff");
 		                }
 		                break;
 		            case "circularDept":
@@ -1343,8 +1418,8 @@
 	                	<tr>
 	                		<div class="portlet_tabpart01">
 	        					<div class="portlet_tabpart01_top" id="tab1">
-					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)">조직도</span></p>
-									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)">회람처</span></p>
+					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t41' /></span></p>
+									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t40' /></span></p>
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
@@ -1419,20 +1494,20 @@
 	                                </tr>
 	                            </table>
 	                        </td>
-	                        <td id="circularDept_content" style="display:none; width:654px;">
-	                        	<table>
+	                        <td id="circularDept_content" style="display:none; width:664px;">
+	                        	<table style="width:100%">
 	                                <tr>
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezCircular.t87'/></h2>
 	                                        <div class="border_gray">
-	                                            <div id="circularDept" style="border: 0px; Width: 654px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
 									                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
 									                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
-									                            <th style="width: 16%; "><span><spring:message code='ezCircular.t34' /></span></th>
-									                            <th style="width: 10%; "></th>
+									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
+									                            <th style="width: 13%; "></th>
 									                        </tr>
 								                        </thead>
 								                        <tbody id="List_TBODY">					                        
@@ -1445,21 +1520,22 @@
 	                                <tr>
 	                                    <td style="vertical-align: top;">
 	                                        <div class="border_gray">
-                                            <div id="circularTemp" style="Width: 654px; Height: 329px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
-                                            	<table id="List" class="mainlist" style="width:100%">
-													<thead id="List_THEAD2">
-														<tr>
-															<th id="TH_0" style="width:5%"><spring:message code='ezCircular.t31' /></th>
-															<th id="TH_1" style="width:15%"><spring:message code='ezCircular.t76' /></th>
-															<th id="TH_2" style="width:17%"><spring:message code='ezCircular.t78' /></th>
-															<th id="TH_3" style="width:12%"><spring:message code='ezCircular.t79' /></th>
-															<th id="TH_4" style="width:13%"><spring:message code='ezCircular.t80' /></th>
-															<th id="TH_5" style="width:38%"><spring:message code='ezCircular.t81' /></th>
-														</tr>
-													</thead>
-													<tbody id="List_TBODY2">
-													</tbody>
-												</table>
+	                                            <div id="circularTemp" style="Width: 100%; Height: 329px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            	<table id="List" class="mainlist" style="width:100%">
+														<thead id="List_THEAD2">
+															<tr>
+																<th id="TH_0" style="width:5%"><spring:message code='ezCircular.t31' /></th>
+																<th id="TH_1" style="width:15%"><spring:message code='ezCircular.t76' /></th>
+																<th id="TH_2" style="width:17%"><spring:message code='ezCircular.t78' /></th>
+																<th id="TH_3" style="width:12%"><spring:message code='ezCircular.t79' /></th>
+																<th id="TH_4" style="width:13%"><spring:message code='ezCircular.t80' /></th>
+																<th id="TH_5" style="width:38%"><spring:message code='ezCircular.t81' /></th>
+															</tr>
+														</thead>
+														<tbody id="List_TBODY2">
+														</tbody>
+													</table>
+	                                            </div>
                                             </div>
 	                                    </td>
 	                                </tr>
