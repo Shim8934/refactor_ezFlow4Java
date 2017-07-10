@@ -1604,7 +1604,7 @@
 	            </select>    
 	        </ul>
 	    </div>
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 310px; overflow: AUTO" id="divList">
+	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <br>
@@ -1619,7 +1619,7 @@
 	            </ul>
 	        </div>
 	
-	        <div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;" align="center">
 	        </div>
 	    </div>

@@ -804,7 +804,7 @@
         	</ul>
     	</div>
 
-    	<div class="div_scroll" style="width: 100%; HEIGHT: 300px; overflow: AUTO" id="divList">
+    	<div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
         	<div id="lvtDoclist"></div>
     	</div>
     	<div id="tblPageRayer" style="margin-bottom: 10px;"></div>
@@ -830,7 +830,7 @@
         	</ul>
     	</div>
 
-    	<div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+    	<div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
         	<div id="lvAprLine"></div>
     	</div>
 

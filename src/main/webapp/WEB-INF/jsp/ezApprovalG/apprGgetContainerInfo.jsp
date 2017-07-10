@@ -1302,7 +1302,7 @@
 	            </select>  
 	        </ul>
 	    </div>
-	    <div class="div_scroll" style="width:100%;HEIGHT:315px; overflow:AUTO" id="divList">
+	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
@@ -1324,7 +1324,7 @@
 	            </ul>
 	        </div>
 	
-	        <div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>
 	    </div>
