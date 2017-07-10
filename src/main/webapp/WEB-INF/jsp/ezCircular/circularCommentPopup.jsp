@@ -32,7 +32,7 @@
 		</script>
 		
 	</head>
-	<body class="popup" style="overflow: hidden;">
+	<body class="popup" style="overflow: auto;">
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -51,7 +51,7 @@
    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<table class="mainlist" style="width:103%;margin-left: -10px;margin-top:-10px;">
+		<table class="mainlist" style="width:100%;">
 			<tr>
 				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85' /></th>
 				<th style="text-align:right;border-top:0px">
@@ -60,7 +60,7 @@
 			</tr>			
 		</table>
 		
-		<div style="height:500px;overflow-y: auto;">			
+		<div>			
 			<table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed"></table>
 		</div>
 	</body>

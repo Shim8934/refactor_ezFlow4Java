@@ -2120,9 +2120,9 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getCommentShareUser started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
-    	List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), "", userInfo.getTenantId(), userInfo.getOffset());
+    	List<CircularListVO> shareUserList = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), "", userInfo.getTenantId(), userInfo.getOffset());
     	
-    	model.addAttribute("list", list);
+    	model.addAttribute("shareUserList", shareUserList);
     	
     	logger.debug("getCommentShareUser ended.");
     	

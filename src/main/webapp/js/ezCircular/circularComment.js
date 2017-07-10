@@ -52,21 +52,19 @@ function getCircularComment() {
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
-				
-				if (vo.memberID == userInfoID && vo.status == 0) {
-					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "&nbsp;<img src='/images/ImgIcon/circular_share.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' /></td>";
-				} else {
-					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
-				}
-				
-				circularCommentList += "<td style='text-align:left;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
+				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+				circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
 				
 				var arry = vo.regDate.substring(0, 10).split('-');
 				var d = new Date(arry[0], arry[1]-1, arry[2]);
 				var getDiffTime = now.getTime() - d.getTime();
 				
 				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
-					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon.gif' />&nbsp;";
+					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' style='vertical-align:middle;'/>&nbsp;";
+				}
+				
+				if (vo.memberID == userInfoID && vo.status == 0) {
+					circularCommentList += "<img src='/images/ImgIcon/circular_share.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
 				}
 				
 				if (vo.memberID == userInfoID) {
@@ -196,7 +194,22 @@ function getCommentShareUser() {
 		},
 		success : function(result) {
 			//본인 제외하고 회람자 목록 보여주면서 체크박스 만들고 확인버튼 눌렀을때 updateStatus 새거 하나 쓰자
+			shareUserList = "<colgroup><col width='10%' /><col width='90%' /></colgroup>";
 			
+			list = result.shareUserList;
+			list.forEach(function(vo, index) {
+				shareUserList += "<tr class='shareUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+				
+				shareUserList += "<td style='background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
+				shareUserList += "<input type='checkbox' />";
+				shareUserList += "</td>";
+				shareUserList += "<td>" + vo.memberName + "</td>";
+				
+				shareUserList += "</tr>";
+			});
+			
+			$("#shareUserList").html("");
+			$("#shareUserList").append(shareUserList);
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -243,7 +256,7 @@ function openCircularComment() {
 function openCommentSharePopup(obj) {
 	$("#mailPanel").css('height', $('body').prop('Height'));
 	
-	DivPopUpShow(400, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID);
+	DivPopUpShow(300, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID);
 }
 
 function closePopup() {

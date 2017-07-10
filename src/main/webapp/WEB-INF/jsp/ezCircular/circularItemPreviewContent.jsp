@@ -11,8 +11,16 @@
 				font-family: 'Gulim', 'arial', 'verdana';
 				text-decoration: none;
 	    	}
+	    	
+	    	table th, td {
+	    		font-size:12px;
+				font-family: 'Gulim', 'arial', 'verdana';
+				text-decoration: none;
+	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    
 	    <script type="text/javascript">
 	        var nowZoom = 100;
 	        var maxZoom = 200;
@@ -71,14 +79,10 @@
 	        }
 	        
 	        function goComment() {
-	        	//의견목록 쪽으로 포커스이동
+	        	$("#circularUserList").attr("tabindex", -1).focus();
 	        }
 	        
-	        function getCircularComment() {
-// 	        	getCircularComment();
-	        }
-	
-	        function makeWriteContent(responseText, AttachText) {	            
+	        function makeWriteContent(responseText, AttachText, option) {
 	        	try {
 	                nowZoom = 100;
 	                maxZoom = 200;
@@ -121,10 +125,14 @@
 	
 	                document.getElementById("txtContent").appendChild(_img1);
 	                document.getElementById("txtContent").appendChild(_img2);
-	                document.getElementById("txtContent").appendChild(_img3);
+	                
+	                if (option == "1" || option == "3") {
+	                	document.getElementById("txtContent").appendChild(_img3);
+	                }
 	
 	                var xmldom = loadXMLString(AttachText);
 	                var _attchDIV;
+	                
 	                if (SelectNodes(xmldom, "NODES/NODE").length > 0) {
 	                    var AttchHTML = SetAttachmentInfo(xmldom);
 	                    _attchDIV = document.createElement("DIV");
@@ -137,7 +145,6 @@
 	                _div.id = "divContent";
 	                _div.innerHTML = responseText;
 	                document.getElementById("txtContent").appendChild(_div);
-	                
 	            } catch (e) {}
 	        }
 	
@@ -247,6 +254,94 @@
 	            }
 	            else
 	                suffix = 0;
+	        }
+	        
+	        function getCircularComment(circularID, userInfoID, status) {
+				var divComment = document.createElement("DIV");
+                divComment.id = 'divComment';
+                divComment.innerHTML = '<table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>';
+                document.getElementById("txtContent").appendChild(divComment);
+	        	
+	        	$.ajax({
+            		type : "POST",
+            		url : "/ezCircular/getCircularComment.do",
+            		dataType : "json",
+            		data : {
+            			circularID : circularID,
+            			searchValue : ""
+            		},
+            		success : function(result) {
+            			circularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";
+            			
+            			list = result.circularUserList;
+            			list.forEach(function(vo, index) {
+            				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:30px;text-align:left;vertical-align:middle;'>";
+            				circularUserList += "<th style='border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
+            				
+            				if (vo.status == 1) {
+            					//확인 이미지
+            					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            				} else {
+            					//미확인 이미지
+            					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            				}
+            				
+            				circularUserList += "</th>";
+            				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
+            				//확인일
+            				if (vo.status == 1) {
+            					circularUserList += vo.confirmDate.substring(0, 16);
+            				}
+            				
+            				circularUserList += "</th>";
+            				circularUserList += "</tr>";
+            			});
+            			
+            			$("#circularUserList").html("");
+            			$("#circularUserList").append(circularUserList);
+            			
+            			var now = new Date();
+
+            			circularCommentList = "";
+            			list = result.circularCommentList ;
+            			list.forEach(function(vo, index) {
+            				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:30px;text-align:left;border-top:1px solid #e2e2e2'>";
+           					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+            				circularCommentList += "<td style='text-align:left;padding:8px;'>" + vo.circularComment + "&nbsp;&nbsp;";
+            				
+            				var arry = vo.regDate.substring(0, 10).split('-');
+            				var d = new Date(arry[0], arry[1]-1, arry[2]);
+            				var getDiffTime = now.getTime() - d.getTime();
+            				
+            				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
+            					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon.gif' />&nbsp;";
+            				}
+            				
+            				circularCommentList += "</td>";
+            				circularCommentList += "<td style='text-align:right;'>" + vo.regDate.substring(0, 16) + "</td>";
+            				circularCommentList += "</tr>";
+            				
+            				if (vo.status == 0) {
+            					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+            						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+            					} else {
+            						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+            					}
+            				} else {//비공개
+            					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
+            						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+            							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+            						} else {
+            							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+            						}
+            					}
+            				}
+            			});
+            		},
+            		error : function(jqXHR, textStatus, errorThrown) {
+            			
+            		}
+            	});
 	        }
 	    </script>
 	</head>
