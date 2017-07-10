@@ -8,13 +8,12 @@
 		<title><spring:message code='ezCircular.t41' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />	    
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezSchedule/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
         <script type="text/javascript" src="/js/Common.js"></script>        
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
@@ -101,7 +100,9 @@
 	                else
 	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezCircular.t34'/>";
 	            }
-	
+
+	            ChangeTab(document.getElementById("1tab1"));
+	            getCircularDept();
 	            ListTypeChangeIcon();
 	            recevieListview("MsgToList", "ListViewMsgTo");
 	            
@@ -1215,6 +1216,57 @@
 		                displayUserList();
 		        }
 		    }
+		    
+		    function getCircularDept() {
+		    	$.ajax({
+					url : '/ezCircular/getcircularDeptList.do',
+					type : 'POST',
+					dataType : "json",
+					data : {},
+   					success : function(result) {
+   						circularDeptList = $("#List_TBODY").html();
+alert(circularDeptList);
+   						list = result.circularDeptList;
+   						list.forEach(function(vo, index) {
+   							circularDeptList.prepend("<tr>33</tr>");
+   							circularDeptList.prepend("<td>44</td>");
+   							
+   						});
+					}
+				});
+		    }
+		    
+		    var Tab1_SelectID = "1tab1";
+		    function ChangeTab(obj) {
+		    	var pSelectTab = GetAttribute(obj, "tdname");
+
+		        switch (pSelectTab) {
+		            case "circularOrgan":
+		                if (document.getElementById("circularOrgan_content").style.display == "none") {
+		                    document.getElementById("circularOrgan_content").style.display = "";
+		                    document.getElementById("circularDept_content").style.display = "none";
+		                }
+		                break;
+		            case "circularDept":
+		                if (document.getElementById("circularDept_content").style.display == "none") {
+		                    document.getElementById("circularOrgan_content").style.display = "none";
+		                    document.getElementById("circularDept_content").style.display = "";
+		                }
+		                break;
+		    	}
+		    }
+		        
+	        function Tab1_MouseClick(obj) {
+	            obj.className = "tabon";
+	            if (obj.id != Tab1_SelectID) {
+	                if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
+	                    document.getElementById(Tab1_SelectID).className = "";
+
+	                obj.className = "tabon";
+	                Tab1_SelectID = obj.id;
+	                ChangeTab(obj);
+	            }
+	        }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -1224,7 +1276,13 @@
 				<td>
 	        		<table id="TreeViewTD">
 	                	<tr>
-	                    	<td>
+	                		<div class="portlet_tabpart01">
+	        					<div class="portlet_tabpart01_top" id="tab1">
+					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)">조직도</span></p>
+									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)">회람처</span></p>
+						        </div>
+						    </div>
+	                    	<td id="circularOrgan_content" style="display:none;">
 	                            <div class="portlet_tabpart03" style="background-color: #e9e9e9; margin-top: 4px;">
 	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 1px solid #d3d2d2;">
 	                                    <table style="margin-top: 3px; width: 100%;">
@@ -1296,6 +1354,47 @@
 	                                </tr>
 	                            </table>
 	                        </td>
+	                        <td id="circularDept_content" style="display:none; width:654px;">
+	                        	<table>
+	                                <tr>
+	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                                        <h2 class="h2_dot" style="padding-top: 2px;"><spring:message code='ezCircular.t87'/></h2>
+	                                        <div class="border_gray">
+	                                            <div id="circularDept" style="border: 0px; Width: 654px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                            	<table class="mainlist" style="width: 100%;">
+								                        <tr>
+								                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
+								                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
+								                            <th style="width: 12%; "><span><spring:message code='ezCircular.t34' /></span></th>
+								                        </tr>
+								                    </table>
+	                                            </div>
+	                                        </div>
+	                                    </td>
+	                                </tr>
+	                                <tr>
+	                                    <td style="vertical-align: top;">
+	                                        <div class="border_gray">
+                                            <div id="circularTemp" style="Width: 654px; Height: 329px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                                            	<table id="List" class="mainlist" style="width:100%">
+													<thead id="List_THEAD">
+														<tr>
+															<th id="TH_0" style="width:5%"><spring:message code='ezCircular.t31' /></th>
+															<th id="TH_1" style="width:15%"><spring:message code='ezCircular.t76' /></th>
+															<th id="TH_2" style="width:17%"><spring:message code='ezCircular.t78' /></th>
+															<th id="TH_3" style="width:12%"><spring:message code='ezCircular.t79' /></th>
+															<th id="TH_4" style="width:13%"><spring:message code='ezCircular.t80' /></th>
+															<th id="TH_5" style="width:38%"><spring:message code='ezCircular.t81' /></th>
+														</tr>
+													</thead>
+													<tbody id="List_TBODY">
+													</tbody>
+												</table>
+                                            </div>
+	                                    </td>
+	                                </tr>
+	                            </table>
+	                        </td>
 	                        <td style="width: 30px; text-align: center;">                            
 	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
@@ -1305,7 +1404,7 @@
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezCircular.t34'/></span>
 	                            </h2>
 	                            <div class="receiver_borderbox">
-	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 477px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
+	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 520px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>
 	                            </div>
 	                        </td>
 	                    </tr>

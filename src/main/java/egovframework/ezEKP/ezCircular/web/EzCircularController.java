@@ -1418,6 +1418,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("getCircularAttachInfo ended");
 	}
 
+	/**
+	 * 회람처 목록 호출 Method
+	 */
 	@RequestMapping(value = "/ezCircular/circularDeptConfig.do")
 	public String circularDeptConfig(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, Model model) throws Exception {
 		
@@ -1428,7 +1431,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		circularDeptVO.setTenantID(userInfo.getTenantId());
 		circularDeptVO.setMemberID(userInfo.getId());
 		
-		List<CircularDeptVO> result = ezCircularService.getcircularDeptList1(circularDeptVO, userInfo);
+		List<CircularDeptVO> result = ezCircularService.getcircularDeptList(circularDeptVO, userInfo);
 		
 		model.addAttribute("result", result);
 		
@@ -1489,28 +1492,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 		return "/ezCircular/circularSelectAttendant";
 	}
-	
-	/**
-	 * 회람처 목록 호출 Method
-	 */
-	@RequestMapping(value = "/ezCircular/getcircularDeptList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
-	@ResponseBody
-	public String getcircularDeptList(@CookieValue("loginCookie") String loginCookie, CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
-		
-		logger.debug("circularGetList started");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		circularDeptVO.setTenantID(userInfo.getTenantId());
-		circularDeptVO.setMemberID(userInfo.getId());
-		
-		String result = ezCircularService.getcircularDeptList(circularDeptVO, userInfo);
-		
-		logger.debug("circularGetList ended");
-		
-		return result;
-	}
-	
+
 	/**
 	 * 회람처 목록 수정 호출 Method
 	 */
@@ -2092,7 +2074,7 @@ public class EzCircularController extends EgovFileMngUtil {
     }
 
     /**
-     * 회람 의견목록 팝업화면조회
+     * 회람처 추가
      */
     @RequestMapping(value = "/ezCircular/circularDeptListAdd.do")
     public String circularDeptListAdd(@CookieValue("loginCookie") String loginCookie, CircularDeptVO circularDeptVO, Model model) throws Exception {
@@ -2103,7 +2085,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	circularDeptVO.setTenantID(userInfo.getTenantId());
 		circularDeptVO.setMemberID(userInfo.getId());
 		
-		List<CircularDeptVO> result = ezCircularService.getcircularDeptList1(circularDeptVO, userInfo);
+		List<CircularDeptVO> result = ezCircularService.getcircularDeptList(circularDeptVO, userInfo);
     	
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("result", result);
@@ -2184,4 +2166,25 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	return "json";
     }
+    /**
+	 * 회람작성 시 회람처 List 호출
+     *  
+	 */
+	@RequestMapping(value = "/ezCircular/getcircularDeptList.do", method = RequestMethod.POST)
+	public String getcircularDeptList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getcircularDeptList started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		circularDeptVO.setTenantID(userInfo.getTenantId());
+		circularDeptVO.setMemberID(userInfo.getId());
+
+		List<CircularDeptVO> circularDeptList = ezCircularService.getcircularDeptList(circularDeptVO, userInfo);
+
+		logger.debug("getcircularDeptList ended");
+
+		model.addAttribute("circularDeptList", circularDeptList);
+		
+		return "json";
+	}
 }

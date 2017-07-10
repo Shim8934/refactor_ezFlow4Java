@@ -40,8 +40,6 @@ public interface EzCircularService {
 	
 	public String setCircularConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 	
-	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
-	
 	public String getFolderInfo(int folderId, String memberId, int tenantId) throws Exception;
 	
 	public int getCircularListCount(String memberID, String searchValue, String sdate, String edate, int tenantID) throws Exception;
@@ -126,7 +124,7 @@ public interface EzCircularService {
 
 	public int getCommentCount(String circularID, String id, int tenantID) throws Exception;
 
-	public List<CircularDeptVO> getcircularDeptList1(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
+	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
 
 	public int getListCount(String listType, String userID, int tenantID) throws Exception;
 
