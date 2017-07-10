@@ -1264,7 +1264,9 @@
 	    <div id="mainmenu">
 	        <ul>
 	        	<c:if test ="${approvalFlag == 'S'}">
+	        	<c:if test ="${tmpValue !='' && contID !=''}">
 	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
+	            </c:if>
 	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
 	            <li id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
 <!-- 	            시행문 변환 추후 개발 -->
