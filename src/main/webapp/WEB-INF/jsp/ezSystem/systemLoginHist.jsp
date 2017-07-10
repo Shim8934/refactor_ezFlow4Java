@@ -14,16 +14,20 @@
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript">
 
-	//**/ 페이징처리
 	var strLang1 = "<spring:message code='main.kyj8'/>";
 	var strLang2 = "<spring:message code='main.kyj9'/>";
-	var startDate = "<c:out value = '${startDate}' />";
-	var endDate = "<c:out value = '${endDate}' />";
-	var keyword = "<c:out value = '${keyword}' />";
-	var keycode = "<c:out value = '${keycode}' />";
-	var CurPage = "<c:out value = '${currPage}' />";
-	var totalPage = "<c:out value = '${totalPage}' />";
-	var totalCount = "<c:out value = '${itemCnt}' />";
+	var strLang3 = "<spring:message code='main.kyj12'/>";
+	var strLang4 = "<spring:message code='main.kyj13'/>";
+	var strLang5 = "<spring:message code='main.kyj14'/>";
+	var strLang6 = "<spring:message code='main.kyj15'/>";
+	
+	var startDate = "<c:out value = '${startDate}'/>";
+	var endDate = "<c:out value = '${endDate}'/>";
+	var keyword = "<c:out value = '${keyword}'/>";
+	var keycode = "<c:out value = '${keycode}'/>";
+	var CurPage = "<c:out value = '${currPage}'/>";
+	var totalPage = "<c:out value = '${totalPage}'/>";
+	var totalCount = "<c:out value = '${itemCnt}'/>";
 	var BlockSize = 10;
 	
 	function keyword_onkeydown(e) {
@@ -42,11 +46,12 @@
 		return true;
 	}
 	
-	
+
 	function td_Create1(strtext) {
         document.getElementById("tblPageRayer").innerHTML = strtext;
     }
     
+	//**/ 페이징처리
     function makePageSelPage() {
         var strtext;
         var PagingHTML = "";
@@ -164,26 +169,48 @@
 
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
-		$(function(){
+		$(function() {
+			
+			// 날짜 값이 없는 경우
+			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
+				alert(strLang5);
+				return false;
+			} 
+			if ($('#startDatepicker').val() == '' && $('#endDatepicker').val() != '') {
+				alert(strLang6);
+				return false;
+			} 
+			
 			var startDate = $('#startDatepicker').datepicker({dateFormat: 'yyyy-mm-dd'}).val();
         	var endDate = $('#endDatepicker').datepicker({dateFormat:'yyyy-mm-dd'}).val();
 			var selectOption = document.getElementById("searchKeycode");
 			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 			var searchKeyword = document.getElementById("searchKeyword").value;
-	    	var strSearch = "keycode=" +  searchKeycode + "&keyword=" + searchKeyword + "&startDate=" + startDate + "&endDate=" + endDate;
+			var strSearch = "keycode=" +  searchKeycode + "&keyword=" + searchKeyword + "&startDate=" + startDate + "&endDate=" + endDate;
 			var href = "/admin/ezSystem/systemLoginHist.do";
 
 			window.location.href = href + "?" + encodeURI(strSearch) ;
+			
 		});
     }
 
-    //**/ 페이지 전환
+	
+	//**/ 초기화버튼
+	function reset() {
+		$(function() {
+			$('#searchKeyword').val('');
+			$('#startDatepicker').val('');
+			$('#endDatepicker').val('');
+		});
+	}
+	
+    //**/ 페이지네이션 클릭시
 	function goToPage(page) {
 		var href = "/admin/ezSystem/systemLoginHist.do";
-		var strPage = "?keycode=" + keycode + "&keyword=" + keyword + "&startDate=" + startDate + "&endDate=" + endDate; ;
+		var strPage = "keycode=" + keycode + "&keyword=" + keyword + "&startDate=" + startDate + "&endDate=" + endDate;
 
 		if (parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
- 			document.location.href = href + strPage + "&GotoPage=" + encodeURIComponent(parseInt(page));
+ 			document.location.href = href + "?" + strPage + "&GotoPage=" + encodeURIComponent(parseInt(page));
  		}
 	}		
     
@@ -191,24 +218,34 @@
     var holidaydate = "";
     var holidayid = "";
     
-    $(function(){
+    $(function() {
+    	
     	$('#startDatepicker').datepicker({
     		changeMonth: true,
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
-    		
     		buttonImage: "/images/ImgIcon/calendar-month.gif",
-    		buttonImageOnly: true    	
+    		buttonImageOnly: true,
+    		maxDate: 0,
+    		onSelect: function(selected) {
+    			$('#endDatepicker').datepicker("option","minDate",selected)
+    		}
     	});
+    	
     	$('#endDatepicker').datepicker({
     		changeMonth: true,
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
     		buttonImage: "/images/ImgIcon/calendar-month.gif",
-    		buttonImageOnly: true    	
+    		buttonImageOnly: true,
+    		maxDate: 0,
+    		onSelect: function(selected) {
+    			$('#startDatepicker').datepicker("option", "maxDate", selected)
+    		}
     	});    	    	
+    	
     });
     
     var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
@@ -216,7 +253,7 @@
     var dayMsg = "일;월;화;수;목;금;토";
     var dayStr = dayMsg.split(";");
    
-    $(function(){
+    $(function() {
     	$.datepicker.regional["ko"] = {
     			closeText: "닫기",
     			prevText: "이전달",
@@ -234,7 +271,9 @@
     			showAnim: 'show',
     			showMonthAfterYear: true
     	};
+    	
     	$.datepicker.setDefaults($.datepicker.regional["ko"]);	
+  		
     });
     
 </script>
@@ -244,7 +283,7 @@
 	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 		<tr>
 			<td style="margin-bottom: 10px; padding: 5px 5px;">
-				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002'/> : &nbsp;
+				<span id="topmenu" style="width: 500px"><spring:message code='main.kyj10'/> : &nbsp;
 					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
 					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
 				</span> 
@@ -261,6 +300,9 @@
 					<input type="text" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)" id="searchKeyword"/>
 					<a class="imgbtn" >
 						<span onclick="javascript:search();"><spring:message code="main.kyj7"></spring:message></span>
+					</a>
+					<a class="imgbtn" >
+						<span onclick="javascript:reset();"><spring:message code="main.kyj11"></spring:message></span>
 					</a>
 				</span> 
 			</td>
