@@ -799,10 +799,10 @@ function ListView() {
                     objTd.style.fontWeight = "bold";
                     
                     //공유의견등록시 새로운 상태값 추가될
-                    if (strValue == "0") {
+                    if (strValue == "new") {
                     	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
                     	strValue = "";
-                    } else if(strValue == "4") {
+                    } else if(strValue == "share") {
                     	titleImage = '<img src="/images/ImgIcon/circular_share.gif"/>';
                     	strValue = "";
                     } else {

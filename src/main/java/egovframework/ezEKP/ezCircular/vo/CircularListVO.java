@@ -41,6 +41,10 @@ public class CircularListVO {
 	private String updateDate;
 	/** 테넌트 ID */
 	private int tenantID;
+	/** 의견상태 */
+	private String commentStatus;
+	/** 공유상태 */
+	private String shareStatus;
 	
 	public int getCircularID() {
 		return circularID;
@@ -161,5 +165,17 @@ public class CircularListVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getCommentStatus() {
+		return commentStatus;
+	}
+	public void setCommentStatus(String commentStatus) {
+		this.commentStatus = commentStatus;
+	}
+	public String getShareStatus() {
+		return shareStatus;
+	}
+	public void setShareStatus(String shareStatus) {
+		this.shareStatus = shareStatus;
 	}
 }

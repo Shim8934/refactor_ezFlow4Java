@@ -1109,6 +1109,22 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.updateCircularCommentStatus(map);
 		
 		logger.debug("updateCircularUser ended.");
+	}
+	
+	private void updateCircularShareStatus(String circularID, String memberID, int shareStatus, String nowDate, int tenantID) throws Exception {
+		logger.debug("updateCircularShareStatus started.");
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || shareStatus = " + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("shareStatus", shareStatus);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+		
+		ezCircularDAO.updateCircularShareStatus(map);
+		
+		logger.debug("updateCircularShareStatus ended.");
 	}	
 
 	private void updateReadStatus(int circularID, String circularUserID, int status, String confirmDate, int tenantID) throws Exception {
@@ -1140,9 +1156,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		
 		ezCircularDAO.confirmStatus(map);
-//		ezCircularDAO.confirmUpdateDate(map);
 		updateReadStatus(circularID, memberID, 1, nowDate, tenantID);
 		updateCircularCommentStatus(Integer.toString(circularID), memberID, 0, nowDate, tenantID);
+		updateCircularShareStatus(Integer.toString(circularID), memberID, 0, nowDate, tenantID);
 		
 		logger.debug("confirmStatus ended.");
 	}
@@ -1265,16 +1281,19 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("commentShareUser started.");
 		logger.debug("circularID = " + circularID + " || memberIDList = " + memberIDList + " || tenantID = " + tenantID);
 		
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
-		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("nowDate", nowDate);
 		
 		String memberIDs[] = memberIDList.split(";");
 		
 		for (String memberID : memberIDs) {
 			map.put("memberID", memberID);
-			ezCircularDAO.commentShareUser(map);
+			
+			updateCircularShareStatus(circularID, memberID, 1, nowDate, tenantID);
 		}
 		
 		logger.debug("commentShareUser ended.");
