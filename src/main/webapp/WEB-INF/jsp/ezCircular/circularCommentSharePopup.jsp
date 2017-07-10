@@ -30,7 +30,7 @@
 		</script>
 	</head>
 	
-	<body class="popup" style="overflow: auto;">
+	<body class="popup">
 		<h1><spring:message code='ezCircular.t167'/></h1>
 		
 		<div id="close">
@@ -44,16 +44,18 @@
    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		<table class="mainlist" style="width:100%;">
-			<tr>
-				<th style="width: 51.5px;border-top:0px; vertical-align: middle;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85'/></th>
-				<th style="text-align:right;border-top:0px">
-					<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCommentShareUser()"><spring:message code='ezCircular.t85'/></span>&nbsp;</a>
-				</th>
-			</tr>
-		</table>
 		
-		<div>			
+		
+		<div style='height:230px;overflow-y:auto;'>
+			<table class="mainlist" style="width:100%;">
+				<tr>
+					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85' /></th>
+					<th style="text-align:right;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
+						<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
+					</th>
+				</tr>
+			</table>
+			
 			<table id="shareUserList" style="width:100%;margin-top:15px;table-layout: fixed;"></table>
 		</div>
 	</body>

@@ -14,7 +14,8 @@ function getCircularComment() {
 			list = result.circularUserList;
 			list.forEach(function(vo, index) {
 				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
-				circularUserList += "<th style='border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
+//				circularUserList += "<th style='border-right:0px;text-align:left;background-color: #fafafa;border-color:#e2e2e2'>";
+				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 				
 				if (vo.status == 1) {
 					//확인 이미지
@@ -32,7 +33,8 @@ function getCircularComment() {
 				
 				circularUserList += "</th>";
 				
-				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
+//				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
+				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
 				
 				//확인일
 				if (vo.status == 1) {
@@ -51,7 +53,7 @@ function getCircularComment() {
 			circularCommentList = "";
 			list = result.circularCommentList ;
 			list.forEach(function(vo, index) {
-				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border-top:1px solid #e2e2e2'>";
+				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
 				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
 				circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
 				
@@ -107,8 +109,8 @@ function showEdit(obj) {
 		$(".circularCommentEdit").remove();
 		
 		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='height:70px;border:1px solid #e2e2e2'>";
-		circularEdit += "<td colspan='2'><textarea style='width:97%;height:50px;resize:none;overflow:auto;'></textarea></td>";
-		circularEdit += "<td><a class='imgbtn'><span onclick='editCircularComment(this)';>" + strLang3 + "</span>&nbsp;</a><br/><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></td>";
+		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:97%;height:50px;resize:none;overflow:auto;'></textarea></td>";
+		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn'><span onclick='editCircularComment(this)';>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-right:15px;'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></div></td>";
 		circularEdit += "</tr>";
 		
 		$(obj).closest("tr").after(circularEdit);
@@ -201,10 +203,10 @@ function getCommentShareUser() {
 			list.forEach(function(vo, index) {
 				shareUserList += "<tr class='shareUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
 				
-				shareUserList += "<td style='background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
+				shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 				shareUserList += "<input type='checkbox' class='chkBox' />";
 				shareUserList += "</td>";
-				shareUserList += "<td>" + vo.memberName + "</td>";
+				shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>" + vo.memberName + "</td>";
 				
 				shareUserList += "</tr>";
 			});
