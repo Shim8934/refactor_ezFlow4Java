@@ -5056,7 +5056,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String sQuery = request.getParameter("sQuery");
 		String type = request.getParameter("type");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		
+		String tmpValue = request.getParameter("tmpValue");
 		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(result);
@@ -5081,8 +5081,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfoEnforce", userInfoEnforce);
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("approvalPWD", approvalPWD);
-		
-		logger.debug("getContainerInfo ended");
+		model.addAttribute("tmpValue", tmpValue);
+
+ 		logger.debug("getContainerInfo ended");
 		
 		return "ezApprovalG/apprGgetContainerInfo";
 	}

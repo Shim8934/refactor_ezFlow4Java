@@ -1057,13 +1057,12 @@ form{display:inline;margin:0}
 .todaytd_02
 {
 	height:30px;
-	background-color:white; 
-	border:1px solid #dddddd;
-	
+	background-color:white;
+	border:1px solid #dddddd;	
 }
 
 .mainlist{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
-
+.mainlist tr{height:31px}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:12px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist tr th.title{width:100%; text-align:left;}
 
