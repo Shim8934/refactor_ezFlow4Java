@@ -98,7 +98,7 @@
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME><spring:message code='ezPersonal.t9'/></NAME>
+		        <NAME><spring:message code='ezOrgan.t70'/></NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		      <HEADER>
