@@ -2195,4 +2195,26 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		return "json";
 	}
+
+	/**
+	 * 회람작성 시 회람처 List 호출
+     *  
+	 */
+	@RequestMapping(value = "/ezCircular/getcircularDeptName.do", method = RequestMethod.POST)
+	public String getcircularDeptName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("getcircularDeptName started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		int circularBMId = Integer.parseInt(request.getParameter("circularBMID"));
+		int tenantId = userInfo.getTenantId();
+	
+		List<CircularMemberVO> circularDeptNamelist = ezCircularService.getMemberName(circularBMId, tenantId);
+
+		logger.debug("getcircularDeptName ended");
+
+		model.addAttribute("circularDeptNamelist", circularDeptNamelist);
+		
+		return "json";
+	}
 }

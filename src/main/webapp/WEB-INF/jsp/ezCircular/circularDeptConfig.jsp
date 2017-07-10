@@ -275,11 +275,11 @@
 			                            	<td style="width:27%;color:gray;">${item.regDate }</td>
 			                            	<c:if test="${item.memberNameCount != 0}">
 			                        			<td style="width: 12%;color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
-			                            		<td id="pop" style="width: 80px;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
+			                            		<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
 			                            	</c:if>
 		                            		<c:if test="${item.memberNameCount == 0}">
 		                            			<td style='width: 12%;color:gray;'>${item.memberName }</td>
-		                            			<td id="pop" style="width: 80px;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
+		                            			<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
 		                            		</c:if>
 			                            </tr>
 		                            </c:forEach>

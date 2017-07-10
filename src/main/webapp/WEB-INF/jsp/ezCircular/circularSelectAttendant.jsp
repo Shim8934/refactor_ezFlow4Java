@@ -1224,16 +1224,81 @@
 					dataType : "json",
 					data : {},
    					success : function(result) {
-   						circularDeptList = $("#List_TBODY").html();
-alert(circularDeptList);
+   						circularDeptList = "";
    						list = result.circularDeptList;
+
    						list.forEach(function(vo, index) {
-   							circularDeptList.prepend("<tr>33</tr>");
-   							circularDeptList.prepend("<td>44</td>");
-   							
+   							circularDeptList += ("<tr id='" + vo.circularBMID + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)'>");
+   							circularDeptList += ("<td style='width:40%'>" + vo.title + " ");
+   							circularDeptList += ("<td style='width:27%'>" + vo.regDate + " ");
+   							circularDeptList += ("<td style='width:16%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />");
+   							circularDeptList += ("<td style='width:10%'>");
+   							circularDeptList += ("</tr>");
    						});
+   						
+   						$("#List_TBODY").html("");
+   						$("#List_TBODY").append(circularDeptList);
 					}
 				});
+		    }
+		    
+		    function event_Mover(obj) {
+		        if (obj != _RowObject) {
+		        	obj.style.backgroundColor = "#EDEDED";
+		        }
+		    }
+			
+		    function event_Mout(obj) {
+		        if (obj != _RowObject) {
+		        	obj.style.backgroundColor = "#FFFFFF";
+		        }
+		    }
+		    
+		    var _RowObject = null;
+		    
+		    function event_click(obj) {
+		    	if (_RowObject != null) {
+		    		_RowObject.style.backgroundColor = "#ffffff";
+		    	}
+
+		        _RowObject = obj;
+		        obj.style.backgroundColor = "rgb(233, 241, 244)";
+		        
+		        $.ajax({
+		        	url : '/ezCircular/getcircularDeptName.do',
+					type : 'POST',
+					dataType : "json",
+					data : {
+						circularBMID : obj.id
+					},
+   					success : function(result) {
+   						circularDeptNamelist = "";
+   						list = result.circularDeptNamelist;
+
+   						list.forEach(function(vo, index) {
+   							circularDeptNamelist += ("<tr style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)'>");
+   							circularDeptNamelist += ("<td style='width:55%'>" + (index+1) + " ");
+   							circularDeptNamelist += ("<td style='width:15%'>" + vo.company + " ");
+   							circularDeptNamelist += ("<td style='width:17%'>" + vo.description + " ");
+   							circularDeptNamelist += ("<td style='width:12%'>" + vo.title + " ");
+   							circularDeptNamelist += ("<td style='width:13%'>" + vo.memberName + " ");
+   							circularDeptNamelist += ("<td style='width:38%'>" + vo.mail + " ");
+   							circularDeptNamelist += ("</tr>");
+   						});
+   						
+   						$("#List_TBODY2").html("");
+   						$("#List_TBODY2").append(circularDeptNamelist);
+					}
+		        })
+		    }
+		    
+		    function event_click2(obj) {
+		    	if (_RowObject != null) {
+		    		_RowObject.style.backgroundColor = "#ffffff";
+		    	}
+
+		        _RowObject = obj;
+		        obj.style.backgroundColor = "rgb(233, 241, 244)";
 		    }
 		    
 		    var Tab1_SelectID = "1tab1";
@@ -1362,11 +1427,16 @@ alert(circularDeptList);
 	                                        <div class="border_gray">
 	                                            <div id="circularDept" style="border: 0px; Width: 654px; Height: 182px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                            	<table class="mainlist" style="width: 100%;">
-								                        <tr>
-								                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
-								                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
-								                            <th style="width: 12%; "><span><spring:message code='ezCircular.t34' /></span></th>
-								                        </tr>
+								                        <thead id="List_THEAD">
+									                        <tr>
+									                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
+									                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
+									                            <th style="width: 16%; "><span><spring:message code='ezCircular.t34' /></span></th>
+									                            <th style="width: 10%; "></th>
+									                        </tr>
+								                        </thead>
+								                        <tbody id="List_TBODY">					                        
+								                        </tbody>
 								                    </table>
 	                                            </div>
 	                                        </div>
@@ -1377,7 +1447,7 @@ alert(circularDeptList);
 	                                        <div class="border_gray">
                                             <div id="circularTemp" style="Width: 654px; Height: 329px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                             	<table id="List" class="mainlist" style="width:100%">
-													<thead id="List_THEAD">
+													<thead id="List_THEAD2">
 														<tr>
 															<th id="TH_0" style="width:5%"><spring:message code='ezCircular.t31' /></th>
 															<th id="TH_1" style="width:15%"><spring:message code='ezCircular.t76' /></th>
@@ -1387,7 +1457,7 @@ alert(circularDeptList);
 															<th id="TH_5" style="width:38%"><spring:message code='ezCircular.t81' /></th>
 														</tr>
 													</thead>
-													<tbody id="List_TBODY">
+													<tbody id="List_TBODY2">
 													</tbody>
 												</table>
                                             </div>
