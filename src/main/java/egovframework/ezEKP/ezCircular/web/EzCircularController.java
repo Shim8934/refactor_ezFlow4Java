@@ -2116,11 +2116,13 @@ public class EzCircularController extends EgovFileMngUtil {
      * 회람판 공유자 조회
      */
     @RequestMapping(value = "/ezCircular/getCommentShareUser.do")
-    public String getCommentShareUser(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, Model model) throws Exception {
+    public String getCommentShareUser(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, HttpServletRequest request, Model model) throws Exception {
     	logger.debug("getCommentShareUser started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
-    	List<CircularListVO> shareUserList = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), "", userInfo.getTenantId(), userInfo.getOffset());
+    	String searchValue = request.getParameter("searchValue");
+    	
+    	List<CircularListVO> shareUserList = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), searchValue, userInfo.getTenantId(), userInfo.getOffset());
     	
     	model.addAttribute("shareUserList", shareUserList);
     	
@@ -2148,6 +2150,22 @@ public class EzCircularController extends EgovFileMngUtil {
     	return "json";
     }
     
+    /**
+     * 회람판 공유자지정 실행함수
+     */
+    @RequestMapping(value = "/ezCircular/commentShareUser.do")
+    public String commentShareUser(@CookieValue("loginCookie") String loginCookie, CircularCommentVO vo, HttpServletRequest request, Model model) throws Exception {
+    	logger.debug("commentShareUser started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String memberIDList = request.getParameter("memberIDList");
+    	
+    	ezCircularService.commentShareUser(vo.getCircularID(), memberIDList, userInfo.getTenantId());
+    	
+    	logger.debug("commentShareUser ended.");
+    	
+    	return "json";
+    }
     /**
 	 * 회람작성 시 회람처 List 호출
      *  

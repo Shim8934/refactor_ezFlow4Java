@@ -36,7 +36,7 @@
 	                }
 	            }
 
-	            document.getElementById("divCross").style.height = window.innerHeight - 300 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 310 + "px";
 	        });
 
 		    //삭제버튼 클릭시

@@ -105,7 +105,7 @@
 			ON
 				A.circularid = D.circularid
             WHERE
-            	(B.updatestatus = 0 OR B.commentstatus = 1)
+            	(B.updatestatus IN(0, 4) OR B.commentstatus = 1)
             AND
             	A.status != '2'
             	
@@ -211,7 +211,7 @@
 	        <![CDATA[
 	        		A.STATUS != '2'
 	        	AND
-	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
+	            	(B.updatestatus IN(0, 4) OR B.commentstatus = 1)
 	            AND
 	                B.MEMBERID = #memberID#	
 	        ]]> 
@@ -220,7 +220,7 @@
 			<![CDATA[
 	            	A.STATUS != '2'
 	            AND
-	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
+	            	(B.UPDATESTATUS IN (0, 1, 4) OR B.COMMENTSTATUS = 1)
 	            AND
 	                B.MEMBERID = #memberID#
 	            AND
@@ -231,7 +231,7 @@
 			<![CDATA[
 	            	A.STATUS != '2'
 	            AND
-	            	B.UPDATESTATUS IN ('0', '1')
+	            	B.UPDATESTATUS IN (0, 1, 4)
 				AND
 	            	A.MEMBERID = B.MEMBERID
 	            AND
@@ -242,7 +242,7 @@
 			<![CDATA[
 	            	A.STATUS = '2'
 	            AND
-	            	B.UPDATESTATUS IN ('0', '1')
+	            	B.UPDATESTATUS IN (0, 1, 4)
 	            AND
 	                A.MEMBERID = #memberID#	
 			]]>	
@@ -381,7 +381,7 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	(B.updatestatus = 0 OR B.commentstatus = 1)
+            	(B.updatestatus IN(0, 4) OR B.commentstatus = 1)
             AND
             	A.status != 2
             AND
@@ -426,7 +426,7 @@
 		        <![CDATA[
 		            A.STATUS != '2'
 	        	AND
-	            	(B.UPDATESTATUS = 0 OR B.COMMENTSTATUS = 1)
+	            	(B.UPDATESTATUS IN(0, 4) OR B.COMMENTSTATUS = 1)
 	            AND
 	                B.MEMBERID = #memberID#
 		        ]]>
@@ -435,7 +435,7 @@
 				<![CDATA[
 		            A.STATUS != '2'
 	            AND
-	            	(B.UPDATESTATUS IN ('0', '1') OR B.COMMENTSTATUS = 1)
+	            	(B.UPDATESTATUS IN (0, 1, 4) OR B.COMMENTSTATUS = 1)
 	            AND
 	                B.MEMBERID = #memberID#
 	            AND
@@ -446,7 +446,7 @@
 				<![CDATA[
 		            A.STATUS != '2'
 	            AND
-	            	B.UPDATESTATUS IN ('0', '1')
+	            	B.UPDATESTATUS IN (0, 1, 4)
 				AND
 	            	A.MEMBERID = B.MEMBERID
 	            AND
@@ -457,7 +457,7 @@
 				<![CDATA[
 		            A.STATUS = '2'
 	            AND
-	            	B.UPDATESTATUS IN ('0', '1')
+	            	B.UPDATESTATUS IN (0, 1, 4)
 	            AND
 	                A.MEMBERID = #memberID#
 				]]>
@@ -581,34 +581,6 @@
                 A.tenantid = #tenantID#
             GROUP BY
             	A.circularid
-        ]]>
-    </select>
-  
-    <select id="EzCircularDAO.getConfirmStatusFirst" resultClass="Integer" >
-        <![CDATA[
-            SELECT
-                COUNT(circularid)
-            FROM
-                TBL_CIRCULAR_USER
-            WHERE
-                (updatestatus = 1 OR updatestatus = 3)
-            AND
-                circularid = #circularID#
-            AND
-                tenantid = #tenantID#
-        ]]>
-    </select>
-  
-    <select id="EzCircularDAO.getConfirmStatusSecond" resultClass="Integer" >
-        <![CDATA[
-             SELECT
-                COUNT(CIRCULARID)
-            FROM
-                TBL_CIRCULAR_USER
-            WHERE
-                CIRCULARID = #circularID#
-            AND
-                TENANTID = #tenantID#      
         ]]>
     </select>
   
@@ -840,7 +812,7 @@
 			WHERE
 				A.STATUS != '2'
 			AND
-				B.updatestatus IN ('0', '1')
+				B.updatestatus IN (0, 1, 4)
 			AND
 				B.memberid = #memberID#
 			AND
@@ -888,7 +860,7 @@
             WHERE
             	A.STATUS != '2'
             AND
-            	B.updatestatus IN (0, 1)
+            	B.updatestatus IN (0, 1, 4)
             AND
                 B.memberid = #memberID#
             AND
@@ -928,7 +900,7 @@
             WHERE
             	A.status = 2
             AND
-             	B.updatestatus IN (0, 1)
+             	B.updatestatus IN (0, 1, 4)
             AND
                 B.memberid = #memberID#
             AND
@@ -1016,7 +988,7 @@
             WHERE
             	A.status = 2
             AND
-             	B.updatestatus IN (0, 1)
+             	B.updatestatus IN (0, 1, 4)
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
@@ -1077,7 +1049,7 @@
 			WHERE
 				A.status != 2
 			AND
-				B.UPDATESTATUS IN ('0', '1')
+				B.UPDATESTATUS IN (0, 1, 4)
 			AND
 				A.memberid = b.memberid
 			AND
@@ -1194,7 +1166,7 @@
         
 		<![CDATA[
 			AND
-				B.UPDATESTATUS IN ('0', '1')
+				B.UPDATESTATUS IN (0, 1, 4)
 			GROUP BY
 				A.CIRCULARID
 			ORDER BY
@@ -1727,7 +1699,7 @@
 	        WHERE 
 	            circularid = #circularID#
 	        AND
-	        	updatestatus = 0
+	        	updatestatus IN(0, 4)
 	        AND
 	            memberid = #memberID#
 	        AND
@@ -2208,7 +2180,7 @@
 				AND
 					A.tenantid = B.tenantid
 				WHERE
-					(B.updatestatus = 0 OR B.commentstatus = 1)
+					(B.updatestatus IN(0, 4) OR B.commentstatus = 1)
 				AND
 					A.status != 2
 				AND
@@ -2232,7 +2204,7 @@
 				WHERE
 					A.status != '2'
 				AND
-					B.updatestatus IN (0, 1)
+					B.updatestatus IN (0, 1, 4)
 				AND
 					B.memberid = #userID#
 				AND
@@ -2256,7 +2228,7 @@
 				WHERE
 					A.status != 2
 				AND
-					B.UPDATESTATUS IN ('0', '1')
+					B.UPDATESTATUS IN (0, 1, 4)
 				AND
 					A.memberid = b.memberid
 				AND
@@ -2280,7 +2252,7 @@
 				WHERE
 					A.status = 2
 				AND
-					B.updatestatus IN (0, 1)
+					B.updatestatus IN (0, 1, 4)
 				AND
 					A.memberid = #userID#
 				AND
@@ -2308,4 +2280,20 @@
 			]]>
 		</isEqual>
 	</select>
+	
+	<update id="EzCircularDAO.commentShareUser">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				updatestatus = 4,
+				updatedate = #nowDate#
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
 </sqlMap>

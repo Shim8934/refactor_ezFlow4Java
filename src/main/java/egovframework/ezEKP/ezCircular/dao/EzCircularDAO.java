@@ -88,14 +88,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (int) select("EzCircularDAO.getCircularListCount", map);
 	}
 	
-	public int getConfirmStatusFirst(Map<String, Object> map) throws Exception {
-		return (int) select("EzCircularDAO.getConfirmStatusFirst", map);
-	}
-	
-	public int getConfirmStatusSecond(Map<String, Object> map) throws Exception {
-		return (int) select("EzCircularDAO.getConfirmStatusSecond", map);
-	}
-	
 	public int getLastID() throws Exception {
 		return (int) select("EzCircularDAO.getLastID");
 	}
@@ -345,6 +337,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 
 	public int getListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getListCount", map);
+	}
+
+	public void commentShareUser(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.commentShareUser", map);
 	}
 
 }

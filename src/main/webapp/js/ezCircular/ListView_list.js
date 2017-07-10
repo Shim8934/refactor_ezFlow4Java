@@ -801,7 +801,9 @@ function ListView() {
                     //공유의견등록시 새로운 상태값 추가될
                     if (strValue == "0") {
                     	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
-//                    	titleImage = '<img src="/images/mobile/new2.png"/>';
+                    	strValue = "";
+                    } else if(strValue == "4") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_share.gif"/>';
                     	strValue = "";
                     } else {
                     	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
