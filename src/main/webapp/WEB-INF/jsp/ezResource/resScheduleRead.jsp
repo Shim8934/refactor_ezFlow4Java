@@ -260,6 +260,7 @@
 	            var iframe = printWindow.document.getElementById("printDocument");
 
 	            iframe.style.border = "0px";
+	            iframe.style.height = "565px";
 	            
 	            var doc = iframe.document;
 
