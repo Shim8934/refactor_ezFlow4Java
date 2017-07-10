@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -399,26 +398,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("getCircularListCount ended. result = " + result);
 		
 		return result;
-	}
-
-	@Override
-	public int getConfirmStatusFirst(int circularID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("circularID", circularID);
-		map.put("tenantID", tenantID);
-		
-		return ezCircularDAO.getConfirmStatusFirst(map);
-	}
-
-	@Override
-	public int getConfirmStatusSecond(int circularID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("circularID", circularID);
-		map.put("tenantID", tenantID);
-		
-		return ezCircularDAO.getConfirmStatusSecond(map);
 	}
 
 	@Override
@@ -1279,5 +1258,25 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("getListCount ended.");
 		
 		return count;
+	}
+
+	@Override
+	public void commentShareUser(String circularID, String memberIDList, int tenantID) throws Exception {
+		logger.debug("commentShareUser started.");
+		logger.debug("circularID = " + circularID + " || memberIDList = " + memberIDList + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("tenantID", tenantID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		String memberIDs[] = memberIDList.split(";");
+		
+		for (String memberID : memberIDs) {
+			map.put("memberID", memberID);
+			ezCircularDAO.commentShareUser(map);
+		}
+		
+		logger.debug("commentShareUser ended.");
 	}
 }

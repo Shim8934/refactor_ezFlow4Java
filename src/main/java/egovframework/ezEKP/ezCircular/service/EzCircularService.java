@@ -46,10 +46,6 @@ public interface EzCircularService {
 	
 	public int getCircularListCount(String memberID, String searchValue, String sdate, String edate, int tenantID) throws Exception;
 	
-	public int getConfirmStatusFirst(int circularID, int tenantID) throws Exception;
-	
-	public int getConfirmStatusSecond(int circularID, int tenantID) throws Exception;
-	
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception;
 	
 	public int getCircularCompleteListCount(String memberID, String searchValue, String sdate, String edate, int tenantID) throws Exception;
@@ -133,5 +129,7 @@ public interface EzCircularService {
 	public List<CircularDeptVO> getcircularDeptList1(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
 
 	public int getListCount(String listType, String userID, int tenantID) throws Exception;
+
+	public void commentShareUser(String circularID, String memberIDList, int tenantID) throws Exception;
 
 }

@@ -64,7 +64,7 @@ function getCircularComment() {
 				}
 				
 				if (vo.memberID == userInfoID && vo.status == 0) {
-					circularCommentList += "<img src='/images/ImgIcon/circular_share.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
+					circularCommentList += "<img src='/images/ImgIcon/circular_share1.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
 				}
 				
 				if (vo.memberID == userInfoID) {
@@ -190,7 +190,8 @@ function getCommentShareUser() {
 		url : "/ezCircular/getCommentShareUser.do",
 		dataType : "json",
 		data : {
-			circularID : circularID
+			circularID : circularID,
+			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
 			//본인 제외하고 회람자 목록 보여주면서 체크박스 만들고 확인버튼 눌렀을때 updateStatus 새거 하나 쓰자
@@ -201,7 +202,7 @@ function getCommentShareUser() {
 				shareUserList += "<tr class='shareUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
 				
 				shareUserList += "<td style='background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
-				shareUserList += "<input type='checkbox' />";
+				shareUserList += "<input type='checkbox' class='chkBox' />";
 				shareUserList += "</td>";
 				shareUserList += "<td>" + vo.memberName + "</td>";
 				
@@ -217,10 +218,36 @@ function getCommentShareUser() {
 	});
 }
 
-function commentShareUser() {
+function shareComment() {
 	//공유자로 지정된 회람자들의 상태값 의견,신규 -> 공유상태로 변경
 	//의견공유알림메일 발송
+	var memberIDList = "";
 	
+	if ($(".chkBox:checked").length ==  0) {
+		alert("공유자를 선택해주세요");
+		return;
+	} 
+	
+	for (var i=0; i < $(".chkBox:checked").length; i++) {
+		memberIDList += $(".chkBox:checked").eq(i).closest("tr").attr("circularUserID") + ";";
+	}	
+	
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/commentShareUser.do",
+		dataType : "json",
+		data : {
+			circularID : circularID,
+			memberIDList : memberIDList
+		},
+		success : function (result) {
+			alert("공유자를 지정하였습니다.")
+			closePopup();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			
+		}
+	});
 }
 
 function DivPopUpPosition(popUpW, popUpH) {
@@ -248,13 +275,13 @@ function DivPopUpPosition(popUpW, popUpH) {
 }
 
 function openCircularComment() {
-	$("#mailPanel").css('height', $('body').prop('Height'));
+	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
 	
 	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
 }
 
 function openCommentSharePopup(obj) {
-	$("#mailPanel").css('height', $('body').prop('Height'));
+	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
 	
 	DivPopUpShow(300, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID);
 }
