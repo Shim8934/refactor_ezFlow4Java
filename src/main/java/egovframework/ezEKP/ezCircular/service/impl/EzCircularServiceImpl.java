@@ -452,42 +452,42 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 	}
 
+//	@Override
+//	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
+//		logger.debug("getcircularDeptList started.");
+//		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("memberID", circularDeptVO.getMemberID());
+//		map.put("tenantID", userInfo.getTenantId());
+//		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
+//		
+//		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(map);
+//		
+//		StringBuilder sb = new StringBuilder("<DATA>");
+//		
+//		for (CircularDeptVO vo : list) {
+//			sb.append(commonUtil.getQueryResult(vo));
+//		}
+//		sb.append("</DATA>");
+//		
+//		logger.debug("getcircularDeptList ended.");
+//		
+//		return sb.toString();
+//	}
+	
 	@Override
-	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
+	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
 		logger.debug("getcircularDeptList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+
 		map.put("memberID", circularDeptVO.getMemberID());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
-		
-		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(map);
-		
-		StringBuilder sb = new StringBuilder("<DATA>");
-		
-		for (CircularDeptVO vo : list) {
-			sb.append(commonUtil.getQueryResult(vo));
-		}
-		sb.append("</DATA>");
-		
+
 		logger.debug("getcircularDeptList ended.");
-		
-		return sb.toString();
-	}
-	
-	@Override
-	public List<CircularDeptVO> getcircularDeptList1(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
-		logger.debug("getcircularDeptList1 started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("memberID", circularDeptVO.getMemberID());
-		map.put("tenantID", userInfo.getTenantId());
-		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
-
-		logger.debug("getcircularDeptList1 ended.");
-
-		return (List<CircularDeptVO>) ezCircularDAO.getcircularDeptList1(map);
+		return (List<CircularDeptVO>) ezCircularDAO.getcircularDeptList(map);
 	}
 
 	@Override

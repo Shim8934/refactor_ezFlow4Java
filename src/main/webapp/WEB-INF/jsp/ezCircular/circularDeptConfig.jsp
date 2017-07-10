@@ -283,13 +283,13 @@
 		                            		</c:if>
 			                            </tr>
 		                            </c:forEach>
-	                            <c:if test="${circularbmid == 0 }">
-		                            <tr>
-		                                <td style="text-align: center;">
-		                                    <spring:message code='ezCircular.t47'/>
-		                                </td>
-		                            </tr>	                            
-	                            </c:if>
+		                            <c:if test="${circularbmid == 0 }">
+			                            <tr>
+			                                <td style="text-align: center;">
+			                                    <spring:message code='ezCircular.t47'/>
+			                                </td>
+			                            </tr>	                            
+		                            </c:if>
 		                        </table>
 		                    </div>
 		                </div>
