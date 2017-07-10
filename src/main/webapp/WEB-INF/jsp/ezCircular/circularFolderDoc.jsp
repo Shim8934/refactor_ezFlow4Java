@@ -481,10 +481,6 @@
 		    function getLeftCount() {
 		    	if (typeof (window.parent.frames.left) != "undefined") {
 		    		parent.frames["left"].getNewCircularCount();
-		            parent.frames["left"].getCircularCompleteCount();
-		            parent.frames["left"].getMyCircularCount();
-		            parent.frames["left"].getCircularTempCount();
-		            parent.frames["left"].getCircularDeleteCount();
 		    	}
 		    }
 		    
@@ -714,7 +710,6 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
-	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t30'/></span></li>
 	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li><span onClick="CircularReturn_onclick()"><spring:message code='ezCircular.t98'/></span></li>
 	            <li id="right">

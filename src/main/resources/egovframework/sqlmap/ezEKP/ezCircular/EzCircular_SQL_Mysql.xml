@@ -1258,7 +1258,7 @@
             WHERE
             	B.updatestatus = '2'
             AND
-                B.memberid = #memberID#
+                A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
 		]]>
@@ -1274,7 +1274,7 @@
             ORDER BY
             	A.regdate DESC
             LIMIT
-                #limit#, #rowCount#        
+                #limit#, #rowCount#
         ]]>
     </select>
 	
