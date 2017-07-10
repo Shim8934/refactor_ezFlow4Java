@@ -708,6 +708,7 @@
     <select id="EzCircularDAO.getMemberName" parameterClass="map" resultClass="CircularMemberVO">
         <![CDATA[
 			SELECT
+				A.circularbmid,
 				A.memberid,
 				B.company,
 				B.description,
