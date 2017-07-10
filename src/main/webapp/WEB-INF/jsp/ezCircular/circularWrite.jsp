@@ -223,8 +223,8 @@
 		                success: function(data) {	   
 							alert("<spring:message code='ezCircular.t73'/>");
 							
-							getLeftCount();
-							refresh_onclick();
+							window.opener.getLeftCount();
+							window.opener.refresh_onclick();
 							window.close();
 		                },
 		                error: function() {

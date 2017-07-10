@@ -48,10 +48,6 @@
 	            $("#newCircular").click();
 	            
 	            getNewCircularCount();
-	            getCircularCompleteCount();
-	            getMyCircularCount();
-	            getCircularTempCount();
-	            getCircularDeleteCount();
 	        }
 	        
 	        function LoadEmailTree() {
