@@ -339,8 +339,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (int) select("EzCircularDAO.getListCount", map);
 	}
 
-	public void commentShareUser(Map<String, Object> map) throws Exception {
-		update("EzCircularDAO.commentShareUser", map);
+	public void updateCircularShareStatus(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircularShareStatus", map);
 	}
 
 }
