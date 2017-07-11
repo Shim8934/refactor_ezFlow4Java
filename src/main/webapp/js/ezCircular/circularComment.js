@@ -33,7 +33,6 @@ function getCircularComment() {
 				
 				circularUserList += "</th>";
 				
-//				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
 				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
 				
 				//확인일
