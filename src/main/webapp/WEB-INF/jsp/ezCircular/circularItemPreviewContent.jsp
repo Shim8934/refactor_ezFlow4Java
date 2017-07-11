@@ -79,7 +79,7 @@
 	        }
 	        
 	        function goComment() {
-	        	$("#circularUserList").attr("tabindex", -1).focus();
+	        	$("#commentLists").attr("tabindex", -1).focus();
 	        }
 	        
 	        function makeWriteContent(responseText, AttachText, option) {
@@ -128,6 +128,14 @@
 	                
 	                if (option == "1" || option == "3") {
 	                	document.getElementById("txtContent").appendChild(_img3);
+	                	
+// 	                	var span1 = document.createElement("SPAN");
+// 	                	span1.style.marginTop("10px");
+// 	                	span1.style.position("absolute");
+	                	
+// 	                    var count = document.createTextNode("[1]");
+// 	                    span1.appendChild(count);
+// 	                    document.getElementById("txtContent").appendChild(span1);
 	                }
 	
 	                var xmldom = loadXMLString(AttachText);
@@ -259,7 +267,8 @@
 	        function getCircularComment(circularID, userInfoID, status) {
 				var divComment = document.createElement("DIV");
                 divComment.id = 'divComment';
-                divComment.innerHTML = '<table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>';
+                divComment.style.borderTop = "1px solid";
+                divComment.innerHTML = '<p id = "commentLists"><spring:message code = "ezCircular.t82" /></p><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;"></table>';
                 document.getElementById("txtContent").appendChild(divComment);
 	        	
 	        	$.ajax({

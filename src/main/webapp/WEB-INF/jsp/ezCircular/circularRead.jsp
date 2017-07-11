@@ -123,7 +123,7 @@
 			}
 			
 			function getCircularComment(circularID, userInfoID, status) {
-				$("#divCross").html($("#divCross").html() + '<table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
+				$("#divCross").html($("#divCross").html() + '<div id = "commentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
 	        	
 	        	$.ajax({
             		type : "POST",
