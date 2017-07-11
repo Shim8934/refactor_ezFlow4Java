@@ -1321,7 +1321,7 @@
 		    function SearchCondi_onclick_Complete(returnvalue) {
 		        condition = returnvalue;
 		        if (condition) {
-		        	for (var i = 0; i < 11; i++) {
+		        	for (var i = 0; i < condition.length; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
 		                SearchCond[i] = condition[i];
@@ -1473,9 +1473,8 @@
 					        TYPE += condition[16];
 					        DATA += condition[17];
 					    }
-
-					    SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 					}
+				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		
 		    window.onresize = function () {
