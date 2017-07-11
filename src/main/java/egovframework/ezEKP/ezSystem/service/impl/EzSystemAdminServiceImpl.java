@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezSystem.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezSystem.dao.EzSystemAdminDAO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CheckName;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 
 @Service("EzSystemAdminService")
@@ -138,4 +141,48 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		logger.debug("updateSysParam ended");
 	}
+
+	@Override
+	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, String keycode, 
+			String keyword, String lang, String startDate, String endDate) throws Exception {
+
+		logger.debug("getLoginHist started. tenantID : " + tenantID);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("v_start", startPage);
+		params.put("pageCount", maxItemPerPage);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		
+		List<ConnectionInfoVO> list = ezSystemAdminDAO.getLoginHist(params);
+		
+		logger.debug("getLoginHist ended.");
+		
+		return list;
+	}
+
+	@Override
+	public int getLoginHistCount(int tenantID, String offset, String keycode, String keyword, String lang, String startDate, String endDate) throws Exception {
+		
+		logger.debug("getLoginHistCount started. tenantID : " + tenantID);
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("v_tenantID", tenantID);
+		params.put("offset", offset);
+		params.put("search_keycode", keycode);
+		params.put("search_keyword", keyword);
+		params.put("lang", lang);
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+				
+		logger.debug("getLoginHistCount ended.");
+		
+		return ezSystemAdminDAO.getLoginHistCount(params);
+	}
+
 }

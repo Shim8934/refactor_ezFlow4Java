@@ -136,8 +136,19 @@ public class EzEmailUtil {
 			
 			if (addresses != null && addresses.length > 0) {
 				addressStr = ((InternetAddress)addresses[0]).getPersonal(); // name part
+
 				if (addressStr == null) {
 					addressStr = ((InternetAddress)addresses[0]).getAddress(); // email address part
+					
+					// From: =?euc-kr?B?vLrH9rz3?= 와 같은 경우엔 위 라인의 결과가
+					// =?euc-kr?B?vLrH9rz3?=:; 로 반환되어 이 경우 헤더 디코딩을 직접 처리하도록 함
+					if (addressStr != null && !addressStr.contains("@") && addressStr.startsWith("=?")) {
+						String fromHeader = message.getHeader("From")[0];
+						
+						logger.debug("fromHeader=" + fromHeader);
+						
+						addressStr = MimeUtility.decodeText(fromHeader);
+					}
 				} else {
 					String fromHeader = message.getHeader("From")[0];
 					

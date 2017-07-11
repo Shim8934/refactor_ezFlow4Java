@@ -1654,7 +1654,7 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
     }
 
-    if (pListTypeValue == "3" || pListTypeValue == "2" || pListTypeValue == "8" || pListTypeValue == "10")
+    if (pListTypeValue == "8" || pListTypeValue == "10")
         document.getElementById("tbar1").style.display = "none";
     else
         document.getElementById("tbar1").style.display = "";

@@ -3,6 +3,7 @@
 <sqlMap namespace="ezSystemAdmin">
 
 	<typeAlias alias="SysParamVO" type="egovframework.ezEKP.ezSystem.vo.SysParamVO"/>
+	<typeAlias alias="ConnectionInfoVO" type="egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO"/>
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
@@ -17,15 +18,92 @@
 	</select>
 	
 	<update id="EzSystemAdminDAO.updateSysParam" parameterClass="SysParamVO">
-	<![CDATA[
-		UPDATE 
-			TBL_TENANT_CONFIG 
-		SET 
-			PROPERTY_VALUE=#value# 
-		WHERE 
-			PROPERTY_NAME=#name#
-		AND
-			TENANT_ID=#tenantID#
-	]]>
+		<![CDATA[
+			UPDATE 
+				TBL_TENANT_CONFIG 
+			SET 
+				PROPERTY_VALUE=#value# 
+			WHERE 
+				PROPERTY_NAME=#name#
+			AND
+				TENANT_ID=#tenantID#
+		]]>
 	</update>
+	
+	
+	<sql id="DynamicSearchQuery">
+		<isNotEmpty property="search_keycode" prepend="and">
+			<isNotEmpty property="search_keyword" >
+				<isEqual property="lang" compareValue="1" >
+						<isEqual property="search_keycode" compareValue="1">
+							USERNM LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+						<isEqual property="search_keycode" compareValue="2">
+							DEPTNM LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+				</isEqual>
+				<isNotEqual property="lang" compareValue="1">
+						<isEqual property="search_keycode" compareValue="1">
+							USERNM2 LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+						<isEqual property="search_keycode" compareValue="2">
+							DEPTNM2 LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+				</isNotEqual>
+						<isEqual property="search_keycode" compareValue="3">
+							CONNECTIP LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+						<isEqual property="search_keycode" compareValue="4">
+							CONNECTTIME LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+						<isEqual property="search_keycode" compareValue="5">
+							CONNECTBROWSER LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+						<isEqual property="search_keycode" compareValue="6">
+							CONNECTOS LIKE CONCAT('%', #search_keyword#,'%')
+						</isEqual>
+			</isNotEmpty>
+		</isNotEmpty>
+		<isNotEmpty property="startDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') >= #startDate# 
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="endDate" prepend="and">
+			<![CDATA[
+			DATE_FORMAT(DATE_ADD(DATE_FORMAT(CONNECTTIME,'%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d') <= #endDate#
+			]]>
+		</isNotEmpty>
+	</sql>
+	
+	<select id="EzSystemAdminDAO.getLoginHist" parameterClass="map" resultClass="ConnectionInfoVO">
+		SELECT  DATE_ADD(DATE_FORMAT(C.CONNECTTIME, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE) AS CONNECTTIME,
+				C.SEQUENCE,
+				C.USERNM,
+				C.USERNM2,
+				C.DEPTNM,
+				C.DEPTNM2,
+				C.CONNECTIP,
+				C.CONNECTBROWSER,
+				C.CONNECTOS
+		FROM 
+				TBL_CONNECTION_INFO C INNER JOIN TBL_USERLOCALINFO U
+		ON 
+				C.USERID = U.USERID
+		WHERE 
+				C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
+				<include refid="DynamicSearchQuery"/>
+		ORDER BY 
+				SEQUENCE DESC
+		LIMIT
+			    #v_start#, #pageCount#
+	</select>
+	
+	<select id="EzSystemAdminDAO.getLoginHistCount" parameterClass="map" resultClass="int">
+		SELECT 	COUNT(SEQUENCE) 
+		FROM   	TBL_CONNECTION_INFO
+		WHERE	TENANT_ID = #v_tenantID#
+				<include refid="DynamicSearchQuery"/>
+	</select>
+	
 </sqlMap>
