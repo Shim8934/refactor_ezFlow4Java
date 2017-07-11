@@ -30,9 +30,8 @@
 		            return true;
 		    };
 		    
-		    window.onunload = function () {
-		        if(ReturnFunction != null)
-			        ReturnFunction(EventCheck);
+		    window.onunload = function() {
+				opener.location.reload();
 			}
 		    
 			var ReturnFunction;
@@ -122,13 +121,18 @@
 					})
 				}
 		    }
+		    
+		    function close_onclick() {
+		    	opener.location.reload();
+		    	window.close();
+		    }
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1 style="margin-bottom:0px;"><spring:message code='ezCircular.t9' /></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close()"><spring:message code='ezCircular.t84' /></span></li>
+		    <li><span onClick="close_onclick()"><spring:message code='ezCircular.t84' /></span></li>
 		  </ul>
 		</div>
 		<div style="margin-bottom:5px;">
