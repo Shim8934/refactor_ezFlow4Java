@@ -3929,6 +3929,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     	}
 	}
 	
+	/**
+	 * size만 읽는 OutputStream 클래스
+	 */
 	public class CountOutputStream extends OutputStream {
 	    int size;
 		
