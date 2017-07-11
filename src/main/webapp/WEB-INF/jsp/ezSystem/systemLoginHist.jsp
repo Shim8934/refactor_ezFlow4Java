@@ -44,7 +44,6 @@
         
 		return true;
 	}
-	
 
 	function td_Create1(strtext) {
         document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -166,6 +165,11 @@
         }
     }
 
+    //**/ 새로고침 클릭시 이벤트
+    function reload() {
+    	goToPage(CurPage);
+    }
+    
 	//**/ 검색 버튼 클릭시 이벤트
     function search() {
 		$(function() {
@@ -192,7 +196,6 @@
 			
 		});
     }
-
 	
 	//**/ 초기화버튼
 	function reset() {
@@ -218,7 +221,6 @@
     var holidayid = "";
     
     $(function() {
-    	
     	$('#startDatepicker').datepicker({
     		changeMonth: true,
     		changeYear: true,
@@ -231,7 +233,6 @@
     			$('#endDatepicker').datepicker("option", "minDate", selected)
     		}
     	});
-    	
     	$('#endDatepicker').datepicker({
     		changeMonth: true,
     		changeYear: true,
@@ -244,7 +245,6 @@
     			$('#startDatepicker').datepicker("option", "maxDate", selected)
     		}
     	});    	    	
-    	
     });
     
     var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
@@ -303,9 +303,12 @@
 					<a class="imgbtn" >
 						<span onclick="javascript:reset();"><spring:message code="ezSystem.x0033"></spring:message></span>
 					</a>
+					<a class="imgbtn" >
+						<span onclick="javascript:reload();"><spring:message code="ezSystem.x0037"></spring:message></span>
+					</a>
 				</span> 
 			</td>
-		</tr>
+
 	</table>
 	<table class="mainlist" style="width:100%;">
 		<thead>
