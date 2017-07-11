@@ -1999,7 +1999,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			if (circularCommentVO.getCircularUserID().equals(vo.getMemberID())) {
 				InternetAddress to = new InternetAddress();
 				to.setPersonal(vo.getMemberName(), "UTF-8");
-				to.setAddress(vo.getMemberID());
+				to.setAddress(vo.getMail());
 				
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
 			}
@@ -2051,7 +2051,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			if (!vo.getMemberID().equals(userInfo.getId())) {				
 				InternetAddress to = new InternetAddress();
 				to.setPersonal(vo.getMemberName(), "UTF-8");
-				to.setAddress(vo.getMemberID());
+				to.setAddress(vo.getMail());
 				
 				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
 			}
@@ -2168,7 +2168,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	String memberIDList = request.getParameter("memberIDList");
     	
-    	ezCircularService.commentShareUser(vo.getCircularID(), memberIDList, userInfo.getTenantId());
+    	ezCircularService.commentShareUser(vo.getCircularID(), memberIDList, userInfo, loginCookie);
     	
     	logger.debug("commentShareUser ended.");
     	
