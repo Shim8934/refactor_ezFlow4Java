@@ -245,8 +245,7 @@
 	                         MakeSubCondition();
 	                         GetDocSearch();
 	                	}
-	                }
-	                else {
+	                } else {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetDocSearch();
@@ -274,8 +273,7 @@
 		                condition[24] = "";
 		                DocListType == "GetDocSearch";
 		                GetDocSearch();
-		            }
-		            else {
+		            } else {
 		                var nowyear = new Date().getFullYear();
 		                var nowmonth = new Date().getMonth() + 1;
 		                var nowday = new Date().getDate();
@@ -451,13 +449,17 @@
 		    }
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
-		        condition = returnvalue;
+	    	   for(var i =0; i < returnvalue.length; i++) {
+		        	condition[i] = returnvalue[i]; 
+		        }
+	    	   
 		        if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
 		        $('#sel_year').val("ALL");
 		        $('#sel_year').selectmenu('refresh');
+		     
 		    }
 		    function lvtDoclist_onclick() {
 		    }
@@ -1262,7 +1264,9 @@
 	    <div id="mainmenu">
 	        <ul>
 	        	<c:if test ="${approvalFlag == 'S'}">
+	        	<c:if test ="${tmpValue !='' && contID !=''}">
 	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
+	            </c:if>
 	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
 	            <li id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
 <!-- 	            시행문 변환 추후 개발 -->
@@ -1298,7 +1302,7 @@
 	            </select>  
 	        </ul>
 	    </div>
-	    <div class="div_scroll" style="width:100%;HEIGHT:315px; overflow:AUTO" id="divList">
+	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="loadingPanel" onclick="ContextMenuHidden();"></div>
@@ -1320,7 +1324,7 @@
 	            </ul>
 	        </div>
 	
-	        <div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+	        <div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	            <div id="lvtDetail" style="border: 0;"></div>
 	        </div>
 	    </div>

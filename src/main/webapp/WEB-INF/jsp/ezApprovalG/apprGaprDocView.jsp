@@ -406,19 +406,23 @@
 		    }
 		    
 		    function btncallback_onclick() {
-	            OpenInformationUI("<spring:message code='ezApprovalG.t67'/>", btncallback_onclick_Complete);
+	            var pMsg = "<spring:message code='ezApprovalG.t67'/>";
+	            var Ans = OpenInformationUI(pMsg, doCancel);
 	        }
+		    
 	        function btncallback_onclick_Complete(ans) {
 	            if (ans && ConnExist("DRAFT_CALLBACK", "")) {
 	                var RtnVal = ExcuteInfo("DRAFT_CALLBACK", "")
 	                if (RtnVal) {
 	                    doCancel();
 	                }
+	            } else {
+	            	doCancel();
 	            }
-	            else
-	                doCancel();
 	        }
-	        function doCancel() {
+	        function doCancel(ans) {
+	        	DivPopUpHidden();
+	        	if (ans) {
 	            var GetCurrentlinelist = getAprLinefor("APR", DocID);
 	        	var result = "";
 	        	
@@ -460,7 +464,7 @@
 	            	var pAlertContent = strLang898;
 	                OpenAlertUI(pAlertContent);
 	            }
-	            
+	        	}
 	        }
 	        
 	        function SendMailToCancel_Function(GetCurrentlinelist) {

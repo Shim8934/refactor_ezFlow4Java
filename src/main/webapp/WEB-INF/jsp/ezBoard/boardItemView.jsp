@@ -627,6 +627,7 @@
 				        return;
 				    }
 		        }
+
 		        if (gubun == "2" && trim(document.getElementById('txtPassWord').value) == "") {
 		            alert("<spring:message code='ezBoard.t391' />");
 				    document.getElementById('txtPassWord').focus();
@@ -681,19 +682,19 @@
 		        
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (gubun == "2") {
-		
 		                if (CrossYN()) {
 		                	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
 		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
+		                    
 		                    if (ret == "NO") {
 		                        alert("<spring:message code='ezBoard.t267' />");
 		                        return;
-		                    }
-		                    else if (ret == "cancel" || ret == undefined) {
+		                    } else if (ret == "cancel" || ret == undefined) {
 		                        alert(strLang27);
 		                        return;
 		                    }
+		                    
 		                    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
 		                    xmlhttp.send();
 		                    if (xmlhttp.responseText == "FAIL") {
@@ -702,16 +703,14 @@
 		
 		                    getOneLineReply();
 		                    xmlhttp = null;
-		                }
-		                else {		                	
+		                } else {		                	
 		                    checkpassword_dialogArguments = new Array();
 		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
 		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
 		                    try { OpenWin.focus(); } catch (e) { }
 		                }
 		                
-		            }
-		            else {
+		            } else {
 		                xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
 		                xmlhttp.send();
 		                if (xmlhttp.responseText.substr(0, 2) != "OK") {
@@ -721,11 +720,11 @@
 		                if (!confirm("<spring:message code='ezBoard.t311' />")) return;
 		            }
 		        } else {
-		        	gubun=2;
 		        	if (!confirm("<spring:message code='ezBoard.t311' />")) return;
 		        }
 		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
 		        xmlhttp.send();	        
+		        
 		        if (xmlhttp.responseText == "FAIL") {
 		            alert("<spring:message code='ezBoard.t310' />");
 		        }

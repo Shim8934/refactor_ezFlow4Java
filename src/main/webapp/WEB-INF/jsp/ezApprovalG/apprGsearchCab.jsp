@@ -220,6 +220,42 @@
 		        else
 		            window.returnValue = rtnVal;
 		    }
+		    function checkProdDate(opt, value) {
+	    		var selectE = document.getElementById("selEProduceY");
+	    		var selectS = document.getElementById("selSProduceY");
+	    		var valueE = selectE.options[selectE.selectedIndex].value;
+	    		var valueS = selectS.options[selectS.selectedIndex].value;
+	    		
+		    	if (opt == "selSProduceY") {
+		    		if (valueS > valueE && valueE != "") {
+		    			alert("<spring:message code='ezApprovalG.t10030'/>");
+		    			selectS.selectedIndex = 0;
+		    		}
+		    	} else if (opt == "selEProduceY") {
+		    		if (valueE < valueS && valueS != "") {
+		    			alert("<spring:message code='ezApprovalG.t10030'/>");
+		    			selectE.selectedIndex = 0;
+		    		}
+		    	}
+		    }
+		    function checkEndDate(opt, value) {
+	    		var selectE = document.getElementById("selEEndY");
+	    		var selectS = document.getElementById("selSEndY");
+	    		var valueE = selectE.options[selectE.selectedIndex].value;
+	    		var valueS = selectS.options[selectS.selectedIndex].value;
+	    		
+		    	if (opt == "selSEndY") {
+		    		if (valueS > valueE && valueE != "") {
+		    			alert("<spring:message code='ezApprovalG.t10030'/>");
+		    			selectS.selectedIndex = 0;
+		    		}
+		    	} else if (opt == "selEEndY") {
+		    		if (valueE < valueS && valueS != "") {
+		    			alert("<spring:message code='ezApprovalG.t10030'/>");
+		    			selectE.selectedIndex = 0;
+		    		}
+		    	}
+		    }		    
 		</script>
 	</head>
 	<body class="popup" leftmargin="0" topmargin="0" LANGUAGE ="javascript">
@@ -250,18 +286,18 @@
 		    <tr> 
 		        <th> <spring:message code='ezApprovalG.t1094'/></th>
 		        <td>
-		            <select name="selSProduceY" id="selSProduceY">${yearOption}</select>
+		            <select name="selSProduceY" id="selSProduceY" onchange="return checkProdDate('selSProduceY', this.value )">${yearOption}</select>
 		            <spring:message code='ezApprovalG.t1095'/>
-		            <select name="selEProduceY" id="selEProduceY">${yearOption}</select>
+		            <select name="selEProduceY" id="selEProduceY" onchange="return checkProdDate('selEProduceY', this.value )">${yearOption}</select>
 		            <spring:message code='ezApprovalG.t1096'/>
 		        </td>
 		    </tr>
 		    <tr> 
 		        <th> <spring:message code='ezApprovalG.t1097'/></th>
 		        <td>
-		            <select name="selSEndY" id="selSEndY">${yearOption}</select>
+		            <select name="selSEndY" id="selSEndY" onchange="return checkEndDate('selSEndY', this.value )">${yearOption}</select>
 		            <spring:message code='ezApprovalG.t1095'/>
-		            <select name="selEEndY" id="selEEndY">${yearOption}</select>
+		            <select name="selEEndY" id="selEEndY" onchange="return checkEndDate('selEEndY', this.value )">${yearOption}</select>
 		            <spring:message code='ezApprovalG.t1096'/>
 		        </td>
 		    </tr>
