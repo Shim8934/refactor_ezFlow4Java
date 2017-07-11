@@ -24,6 +24,8 @@ import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListVO;
 import egovframework.ezEKP.ezCircular.vo.CircularMemberVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -37,6 +39,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 
 	@Resource(name="EzCircularDAO")
 	private EzCircularDAO ezCircularDAO;
@@ -1271,29 +1276,50 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		int count= ezCircularDAO.getListCount(map);
 		
-		logger.debug("getListCount ended.");
+		logger.debug("getListCount ended. count = " + count);
 		
 		return count;
 	}
 
 	@Override
-	public void commentShareUser(String circularID, String memberIDList, int tenantID) throws Exception {
+	public void commentShareUser(String circularID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("commentShareUser started.");
-		logger.debug("circularID = " + circularID + " || memberIDList = " + memberIDList + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + circularID + " || memberIDList = " + memberIDList);
+		
+		CircularListVO circularVO = getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "comment");
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
+		int tenantID = userInfo.getTenantId();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", nowDate);
 		
+		String subject = egovMessageSource.getMessage("ezCircular.t123", userInfo.getLocale());
+    	StringBuilder bodyContent = new StringBuilder("");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + circularVO.getTitle() + "</br>");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+    	
+    	InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		
 		String memberIDs[] = memberIDList.split(";");
 		
 		for (String memberID : memberIDs) {
 			map.put("memberID", memberID);
-			
 			updateCircularShareStatus(circularID, memberID, 1, nowDate, tenantID);
+			
+			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(memberID, userInfo.getPrimary(), tenantID);
+	    	
+			if (AccessUserInfo != null) {
+				InternetAddress to = new InternetAddress();
+				to.setPersonal(AccessUserInfo.getDisplayName(), "UTF-8");
+				to.setAddress(AccessUserInfo.getMail());
+				
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			}
 		}
 		
 		logger.debug("commentShareUser ended.");

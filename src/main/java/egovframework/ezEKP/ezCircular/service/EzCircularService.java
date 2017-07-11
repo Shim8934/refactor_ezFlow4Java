@@ -128,6 +128,6 @@ public interface EzCircularService {
 
 	public int getListCount(String listType, String userID, int tenantID) throws Exception;
 
-	public void commentShareUser(String circularID, String memberIDList, int tenantID) throws Exception;
+	public void commentShareUser(String circularID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception;
 
 }

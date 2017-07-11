@@ -384,6 +384,7 @@
 
 		    function ItemRead_onclick(circularID) {
 		        var circularID = circularID;
+		        $(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif');
 
 		        if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);

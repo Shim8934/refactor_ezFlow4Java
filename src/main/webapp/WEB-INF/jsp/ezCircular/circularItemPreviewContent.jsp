@@ -122,7 +122,7 @@
 	                _img3.style.cursor = "pointer";
 	                _img3.style.margin = "7px";
 	                _img3.src = "/images/ImgIcon/circular_opinion.gif";
-	
+	                
 	                document.getElementById("txtContent").appendChild(_img1);
 	                document.getElementById("txtContent").appendChild(_img2);
 	                
@@ -275,8 +275,8 @@
             			
             			list = result.circularUserList;
             			list.forEach(function(vo, index) {
-            				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:30px;text-align:left;vertical-align:middle;'>";
-            				circularUserList += "<th style='border-right:0px;background-color: #fafafa;border-color:#e2e2e2;text-align:left'>";
+            				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+            				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
             				
             				if (vo.status == 1) {
             					//확인 이미지
@@ -287,7 +287,7 @@
             				}
             				
             				circularUserList += "</th>";
-            				circularUserList += "<th style='border-left:0px;text-align:right;background-color: #fafafa;border-color:#e2e2e2' colspan='2'>";
+            				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
             				//확인일
             				if (vo.status == 1) {
             					circularUserList += vo.confirmDate.substring(0, 16);
@@ -305,20 +305,20 @@
             			circularCommentList = "";
             			list = result.circularCommentList ;
             			list.forEach(function(vo, index) {
-            				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:30px;text-align:left;border-top:1px solid #e2e2e2'>";
-           					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
-            				circularCommentList += "<td style='text-align:left;padding:8px;'>" + vo.circularComment + "&nbsp;&nbsp;";
+            				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
+           					circularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+            				circularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
             				
             				var arry = vo.regDate.substring(0, 10).split('-');
             				var d = new Date(arry[0], arry[1]-1, arry[2]);
             				var getDiffTime = now.getTime() - d.getTime();
             				
             				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
-            					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon.gif' />&nbsp;";
+            					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' />&nbsp;";
             				}
             				
             				circularCommentList += "</td>";
-            				circularCommentList += "<td style='text-align:right;'>" + vo.regDate.substring(0, 16) + "</td>";
+            				circularCommentList += "<td style='text-align:right; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.regDate.substring(0, 16) + "</td>";
             				circularCommentList += "</tr>";
             				
             				if (vo.status == 0) {

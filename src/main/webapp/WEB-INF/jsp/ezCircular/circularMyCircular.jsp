@@ -454,6 +454,7 @@
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
 	        	var circularID = obj.getAttribute("CIRCULARID");
+	        	$(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif');
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
