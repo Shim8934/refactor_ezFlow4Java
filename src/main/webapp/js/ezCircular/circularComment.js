@@ -226,7 +226,7 @@ function shareComment() {
 	var memberIDList = "";
 	
 	if ($(".chkBox:checked").length ==  0) {
-		alert("공유자를 선택해주세요");
+		alert(strLang11);
 		return;
 	} 
 	
@@ -243,7 +243,7 @@ function shareComment() {
 			memberIDList : memberIDList
 		},
 		success : function (result) {
-			alert("공유자를 지정하였습니다.")
+			alert(strLang12);
 			closePopup();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

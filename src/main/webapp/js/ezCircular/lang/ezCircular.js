@@ -8,3 +8,5 @@ var strLang7 = "공지 메일을 발송했습니다.";
 var strLang8 = "진행중";
 var strLang9 = "종료";
 var strLang10 = "임시";
+var strLang11 = "공유자를 선택해주세요.";
+var strLang12 = "공유자를 지정하였습니다.";
