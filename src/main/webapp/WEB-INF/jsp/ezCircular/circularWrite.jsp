@@ -61,10 +61,6 @@
 				}
 		    }
 			
-		    window.onresize = function () {
-		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
-	    	}
-
 	    	function FieldsAvailable() {
 	    	}
 
@@ -425,7 +421,6 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
-			document.getElementById("EdtorSize").style.height = document.body.clientHeight - 391 + "PX";
 		</script>
 	</body>
 </html>

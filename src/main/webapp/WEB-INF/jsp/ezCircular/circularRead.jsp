@@ -38,7 +38,7 @@
 	                }
 	            }
 
-	            document.getElementById("divCross").style.height = window.innerHeight - 310 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
 	        });
 
 		    //삭제버튼 클릭시
@@ -307,7 +307,7 @@
 		            		<td colspan="3" id="circularUserList1" style="padding-left: 4px; vertical-align: middle;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;"><div id="divCross" style="overflow:auto;"></div></td>
+	            			<td colspan="4" style="height:100%;"><div id="divCross" style="overflow:auto; margin:8px; height:100%"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
