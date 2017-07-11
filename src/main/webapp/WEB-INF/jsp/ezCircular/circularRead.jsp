@@ -307,7 +307,7 @@
 		            		<td colspan="3" id="circularUserList1" style="padding-left: 4px; vertical-align: middle;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;"><div id="divCross" style="overflow:auto; margin:8px; height:100%"></div></td>
+	            			<td colspan="4" style="height:100%; overflow:auto;"><div id="divCross" style="margin:8px; height:100%"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
@@ -447,7 +447,7 @@
  							</td>
 						</tr>
 						<tr> 
- 							<td colspan="4"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
+ 							<td colspan="4"> <div align="left" id="printDocument" style="paddingt: 5px; margin: 8px; width: 100%; "></div></td> 
 						</tr>	
 					</table>
 				</td>
