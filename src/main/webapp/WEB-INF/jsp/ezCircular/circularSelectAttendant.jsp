@@ -529,28 +529,170 @@
 		    function event_listDBclick(obj) {
 	            InsertReceiver("MsgToList");
 		    }
-		    
+
+		    var strId = "";
+            var strName = "";
+            var strDeptNM = "";
+            var strEmail = "";
+            var strName2 = "";
+            var strDeptNM2 = "";
+            var jickwe = "";
+            var phone = "";
+            
 		    function InsertReceiver(pListView) {
 	            var pparsingXML = "";
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
-	            if (_RowObjectID == "") {
-		            if (listContentArry != "") {
-		                for (var i = 0; i < listContentArry.length; i++) {
-		                    var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
-		                    var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-		                    var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
-		                    var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
-		                    var strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
-		                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
-		                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
-		                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+
+	            if (_RowObjectID != null) {
+	            	if (_RowObjectName.trim() == "deptList") {            		
+		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
+		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
+		                    strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
+	
+		                    strDeptNM = "";
+		                    strEmail = "";
+		                    strName2 = "";
+		                    strDeptNM2 = "";
+		                    jickwe = "";
+		                    phone = "";
 		
 		                    var listid = "MsgToList";
 		                    var getlistview = new ListView();
 		                    getlistview.LoadFromID(listid);
 		                    var IsInsert = CheckMailReceiver(strId, "3");
+		                    if (strId == "<c:out value='${userID}' />") {
+		                        alert("<spring:message code='ezCircular.t149' />");
+		                        continue;
+		                    }
+		
+		                    if (!IsInsert) {
+		                        pparsingXML2 = "";
+		                        pparsingXML = "";
+		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+		
+		                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+		                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
+		                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+		                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
+		                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+		                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
+		                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+		                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+		                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+		                        Resultxml = loadXMLString(pparsingXML2);
+		
+		                        var listview = new ListView();
+		                        listview.LoadFromID(listid);
+		
+		                        var MaxID = 0;
+		                        var InitTr = listview.GetDataRows();
+		                        var MaxCntNum = 0;
+		                        for (var j = 0  ; j < InitTr.length  ; j++) {
+		                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                            if (MaxID < curnum) {
+		                                MaxID = curnum;
+		                                MaxCntNum = j;
+		                            }
+		                        }
+		
+		                        var objTr = listview.AddRow(InitTr.length);
+		                        if (MaxCntNum != 0)
+		                            MaxCntNum = MaxCntNum + 1;
+		                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                        listview.AddDataRow(objTr, Resultxml);
+		
+		                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+		                        for (var y = 0; y < _tdlength; y++) {
+		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+		                        }
+		
+		                    }
+		                }
+	            	} else {
+	            		strId = $("[name='" + _RowObjectName + "'").find("#data7").text();
+	                    strName = $("[name='" + _RowObjectName + "'").find("#data5").text();
+
+	                    strDeptNM = "";
+	                    strEmail = "";
+	                    strName2 = "";
+	                    strDeptNM2 = "";
+	                    jickwe = "";
+	                    phone = "";
+	
+	                    var listid = "MsgToList";
+	                    var getlistview = new ListView();
+	                    getlistview.LoadFromID(listid);
+	                    var IsInsert = CheckMailReceiver(strId, "3");
+	                    if (strId == "<c:out value='${userID}' />") {
+	                        alert("<spring:message code='ezCircular.t149' />");
+	                        return;
+	                    }
+	
+	                    if (!IsInsert) {
+	                        pparsingXML2 = "";
+	                        pparsingXML = "";
+	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+	
+	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+	                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
+	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
+	                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
+	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
+	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
+	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                        Resultxml = loadXMLString(pparsingXML2);
+	
+	                        var listview = new ListView();
+	                        listview.LoadFromID(listid);
+	
+	                        var MaxID = 0;
+	                        var InitTr = listview.GetDataRows();
+	                        var MaxCntNum = 0;
+	                        for (var j = 0  ; j < InitTr.length  ; j++) {
+	                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+	                            if (MaxID < curnum) {
+	                                MaxID = curnum;
+	                                MaxCntNum = j;
+	                            }
+	                        }
+	
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        if (MaxCntNum != 0)
+	                            MaxCntNum = MaxCntNum + 1;
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        listview.AddDataRow(objTr, Resultxml);
+	
+	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                        for (var y = 0; y < _tdlength; y++) {
+	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
+	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
+	                        }
+	            		}
+	            	}
+	            } else {
+		            if (listContentArry != "") {
+		                for (var i = 0; i < listContentArry.length; i++) {
+		                	strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
+		                    strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
+		                    strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
+		                    strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+		                    strName2 = document.getElementById(listContentArry[i]).getAttribute("_data11");
+		                    strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
+		                    jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
+		                    phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+		
+		                    var listid = "MsgToList";
+		                    var getlistview = new ListView();
+		                    getlistview.LoadFromID(listid);
+		                    var IsInsert = CheckMailReceiver(strId, "3");
+	
 		                    if (strId == "<c:out value='${userID}' />") {
 		                        alert("<spring:message code='ezCircular.t149' />");
 		                        continue;
@@ -609,14 +751,14 @@
 		                    return;
 		                }
 		                if (p_ListOrderObject != "") {
-		                    var strId = p_ListOrderObject.getAttribute("_data2");
-		                    var strName = p_ListOrderObject.getAttribute("_data4");
-		                    var strDeptNM = p_ListOrderObject.getAttribute("_data5");
-		                    var strEmail = p_ListOrderObject.getAttribute("_data3");
-		                    var strName2 = p_ListOrderObject.getAttribute("_data11");
-		                    var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
-		                    var jickwe = p_ListOrderObject.getAttribute("_data14");
-		                    var phone = p_ListOrderObject.getAttribute("_data8");
+		                    strId = p_ListOrderObject.getAttribute("_data2");
+		                    strName = p_ListOrderObject.getAttribute("_data4");
+		                    strDeptNM = p_ListOrderObject.getAttribute("_data5");
+		                    strEmail = p_ListOrderObject.getAttribute("_data3");
+		                    strName2 = p_ListOrderObject.getAttribute("_data11");
+		                    strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
+		                    jickwe = p_ListOrderObject.getAttribute("_data14");
+		                    phone = p_ListOrderObject.getAttribute("_data8");
 		
 		                    var listid = "MsgToList";
 		                
@@ -671,77 +813,10 @@
 		                    }
 		                }
 		            }
-	            	
-	            } else {
-	            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
-	            		var strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
-	                    var strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
-
-	                    var strDeptNM = "";
-	                    var strEmail = "";
-	                    var strName2 = "";
-	                    var strDeptNM2 = "";
-	                    var jickwe = "";
-	                    var phone = "";
-	
-	                    var listid = "MsgToList";
-	                    var getlistview = new ListView();
-	                    getlistview.LoadFromID(listid);
-	                    var IsInsert = CheckMailReceiver(strId, "3");
-	                    if (strId == "<c:out value='${userID}' />") {
-	                        alert("<spring:message code='ezCircular.t149' />");
-	                        continue;
-	                    }
-	
-	                    if (!IsInsert) {
-	                        pparsingXML2 = "";
-	                        pparsingXML = "";
-	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
-	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
-	                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
-	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
-	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                        Resultxml = loadXMLString(pparsingXML2);
-	
-	                        var listview = new ListView();
-	                        listview.LoadFromID(listid);
-	
-	                        var MaxID = 0;
-	                        var InitTr = listview.GetDataRows();
-	                        var MaxCntNum = 0;
-	                        for (var j = 0  ; j < InitTr.length  ; j++) {
-	                            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                            if (MaxID < curnum) {
-	                                MaxID = curnum;
-	                                MaxCntNum = j;
-	                            }
-	                        }
-	
-	                        var objTr = listview.AddRow(InitTr.length);
-	                        if (MaxCntNum != 0)
-	                            MaxCntNum = MaxCntNum + 1;
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-	                        listview.AddDataRow(objTr, Resultxml);
-	
-	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-	                        for (var y = 0; y < _tdlength; y++) {
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-	                        }
-	
-	                    }
-	                }
 	            }
-			                
-		        var listid ="MsgToList";
-		        _RowObjectID = "";
+	            
+	        var listid ="MsgToList";
+	        _RowObjectID = null;
 		    }
 	    
 		    function CheckMailReceiver(selRow, option) {
@@ -757,10 +832,14 @@
 		        var _listview = new ListView();
 		        _listview.LoadFromID("MsgToList");
 		        var arrRows = _listview.GetDataRows();
+
 		        for (count2 = 0; count2 < arrRows.length; count2++) {
-		            if (email == arrRows[count2].getAttribute("data1"))
+		            if (email.trim() == $("tr[id*='MsgToList_TR']").eq(count2).attr("data1").trim()) {
 		                rtnValue = true;
+		                break ;
+		            }
 		        }
+
 		        return rtnValue
 		    }
 		    
@@ -1297,7 +1376,7 @@
    						list = result.circularDeptList;
 
    						list.forEach(function(vo, index) {
-   							circularDeptList += ("<tr id='" + vo.circularBMID + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)'>");
+   							circularDeptList += ("<tr id='" + vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
    							circularDeptList += ("<td style='width:40%'>" + vo.title + " ");
    							circularDeptList += ("<td style='width:27%'>" + vo.regDate + " ");
    							circularDeptList += ("<td style='width:19%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />");
@@ -1325,6 +1404,7 @@
 		    
 		    var _RowObject = null;
 		    var _RowObjectID = null;
+		    var _RowObjectName = null;
 		    var _RowObjectArray = new Array();
 
 		    function event_click(obj) {
@@ -1334,6 +1414,7 @@
 
 		        _RowObject = obj;
 		        _RowObjectID = obj.id;
+		        _RowObjectName = $(obj).attr("name");
 
 		        obj.style.backgroundColor = "rgb(233, 241, 244)";
 		        
@@ -1349,7 +1430,7 @@
    						list = result.circularDeptNamelist;
 
    						list.forEach(function(vo, index) {
-   							circularDeptNamelist += ("<tr id='nameList_" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)'>");
+   							circularDeptNamelist += ("<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)' ondblclick='event_listDBclick(this)'>");
    							circularDeptNamelist += ("<td id='data1' style='width:55%'>" + (index+1) + " ");
    							circularDeptNamelist += ("<td id='data2' style='width:15%'>" + vo.company + " ");
    							circularDeptNamelist += ("<td id='data3' style='width:17%'>" + vo.description + " ");
@@ -1372,6 +1453,8 @@
 		    	}
 
 		        _RowObject = obj;
+		        _RowObjectID = obj.id;
+		        _RowObjectName = $(obj).attr("name");
 		        obj.style.backgroundColor = "rgb(233, 241, 244)";
 		    }
 		    
