@@ -692,7 +692,7 @@
 	                        alert("<spring:message code='ezCircular.t149' />");
 	                        continue;
 	                    }
-alert(IsInsert);	
+	
 	                    if (!IsInsert) {
 	                        pparsingXML2 = "";
 	                        pparsingXML = "";

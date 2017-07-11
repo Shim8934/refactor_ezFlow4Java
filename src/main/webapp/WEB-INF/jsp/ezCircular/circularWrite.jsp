@@ -233,10 +233,7 @@
 		 			});
 	    		}
 	    	}
-	    	
-	    	function dept_add() {
-	    		DivPopUpShow(570, 330, "/ezCircular/circularDeptListAdd.do");
-	    	}
+
 // 	    	function window_onUnload() {
 // 	    	}
 	    	
@@ -342,7 +339,6 @@
 	           				<th rowspan="2"><spring:message code="ezCircular.t34"/></th>
 	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
 	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code="ezCircular.t39"/></span></a>
-	           					<a class="imgbtn"><span id="clickbtn" onclick="dept_add()"><spring:message code="ezCircular.t162"/></span></a>
 	           				</td>
 						</tr>
 						<tr>
