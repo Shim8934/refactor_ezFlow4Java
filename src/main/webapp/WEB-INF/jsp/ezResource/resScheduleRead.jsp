@@ -79,8 +79,24 @@
 	                document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
 	            }
 	            
-	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
-	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
+	            var iframeStyle = "<style>";
+	            iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+	            iframeStyle += "TABLE TD { text-indent: 0px }";
+	            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
+	            iframeStyle += "</style>";	            
+	            
+	            var doc = document.getElementById('message').contentWindow.document;
+				doc.open();
+				doc.write(iframeStyle + sigBody.innerHTML);
+				doc.close();
+	            
+	            var Bodytd = document.getElementById("message").getElementsByTagName("TD");
 	            for (var i = 0; i < Bodytd.length; i++) {
 	                if (Bodytd[i].width != "") {
 	                    Bodytd[i].style.width = Bodytd[i].width + "px";
@@ -90,13 +106,13 @@
 	                }
 	            }
 	            
-	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	            document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
+	            document.getElementById("message").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	            document.getElementById("message").style.height = window.innerHeight - 233 + "px";
 	        }
 			
 	        window.onresize = function () {
-	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	        	document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
+	        	document.getElementById("message").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	        	document.getElementById("message").style.height = window.innerHeight - 233 + "px";
 	        }
 	        
 		    function show_repetition_info2() {
@@ -215,8 +231,6 @@
 	        function print_onClick2(printTrueFalse) {
 	            g_printTrueFalse = printTrueFalse;
 	            
-	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
-	            
 	            onbeforeprint2();
 
 	            var feature = GetOpenPosition(700, 700);
@@ -230,6 +244,36 @@
 	            strContent = strContent + "</table></div>";
 	            strContent = strContent + "</body>";
 	            printWindow.document.write(strContent);
+
+	            var iframeStyle = "<style>";
+	            iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "DIV { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "TD { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
+	            iframeStyle += "BODY { MARGIN-RIGHT: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+	            iframeStyle += "TABLE TD { text-indent: 0px }";
+	            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
+	            iframeStyle += "</style>";
+	            
+	            var iframe = printWindow.document.getElementById("printDocument");
+
+	            iframe.style.border = "0px";
+	            iframe.style.height = "565px";
+	            
+	            var doc = iframe.document;
+
+	            if (iframe.contentDocument)
+	              doc = iframe.contentDocument; // For NS6
+	            else if(iframe.contentWindow)
+	              doc = iframe.contentWindow.document; // For IE5.5 and IE6
+	             
+	            // Put the content in the iframe
+	            doc.open();
+	            doc.writeln(iframeStyle+sigBody.innerHTML);
+	            doc.close();
+            
 	            printWindow.document.close();
 	            printWindow.focus();
 	        }
@@ -416,15 +460,15 @@
 		            		<td colspan="3">
 		                		<div id="titleDIV"> <c:out value='${title}' /></div>
 		            		</td>
-		        		</tr>
-	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;">
-	                 			<div id="divCross" style="overflow:auto;"></div>
-	            			</td>
-	        			</tr>
+		        		</tr>	        			
 	        		</table>
 	        	</td>
         	</tr>
+        	<tr>
+                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
+                    <iframe id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 471px; background-color: white"></iframe>	                    
+                </td>
+            </tr>
 		</table>
 		
 		<input type="hidden" id="iReFlag" value="${reFlagVal}" />
@@ -444,9 +488,9 @@
  							<td style="padding-left:10px"> <div id="printOwner"></div></td> 
 						</tr> 
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th> 
- 							<td style="padding-left:10px"> <div id="printImportance"></div></td> 
-						</tr> 
+ 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th>
+ 							<td style="padding-left:10px"> <div id="printImportance"></div></td>
+						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
  							<td style="padding-left:10px"> <div id="printDate"></div></td> 
@@ -456,7 +500,7 @@
  							<td style="padding-left:10px"> <div id="printTitle"></div></td> 
 						</tr> 
 						<tr> 
- 							<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
+ 							<td colspan="2"> <iframe align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></iframe></td> 
 						</tr> 
 					</table>
 				</td>

@@ -80,8 +80,7 @@
 		        var szRtnVal = GetSCListXml();
 		        if (szRtnVal == "") {
 		            alert("<spring:message code='ezApprovalG.t1036'/>");
-		        }
-		        else {
+		        } else {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = szRtnVal;
 		            ReturnFunction(rtnVal);

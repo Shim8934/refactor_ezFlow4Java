@@ -3424,7 +3424,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String deptID = request.getParameter("deptID");
-		String result = ezApprovalGService.getCabinetNum(deptID, "", userInfo.getCompanyID(), docID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getCabinetNum(deptID, "", userInfo.getCompanyID(), docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		logger.debug("docID = " + docID + "deptID = " + deptID);
 
 		logger.debug("getCabinetSN result = " + result);
@@ -3495,7 +3495,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		
+
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String result = ezApprovalGService.doProcess("003", xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent(), xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent(), 
 				xmlDom.getDocumentElement().getChildNodes().item(43).getTextContent(), dirPath, xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent(), 
@@ -5056,7 +5056,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String sQuery = request.getParameter("sQuery");
 		String type = request.getParameter("type");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		
+		String tmpValue = request.getParameter("tmpValue");
 		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument(result);
@@ -5081,8 +5081,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("userInfoEnforce", userInfoEnforce);
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("approvalPWD", approvalPWD);
-		
-		logger.debug("getContainerInfo ended");
+		model.addAttribute("tmpValue", tmpValue);
+
+ 		logger.debug("getContainerInfo ended");
 		
 		return "ezApprovalG/apprGgetContainerInfo";
 	}

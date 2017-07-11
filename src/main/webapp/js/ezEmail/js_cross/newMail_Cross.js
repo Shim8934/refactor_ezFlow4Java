@@ -1546,6 +1546,16 @@ function CompleteEmailAddress_Complete(rgParams) {
 
         CompletCancelBtn = true;
     }
+    else if (rgParams["recipientTDData"] == "delete") {
+        for (var z = 0; z < rgParams["returnedRecipientEmail"].length; z++) {
+            for (var i = 0; i < checkname_cross_dialogArguments[5].childNodes.length; i++) {
+                if (GetAttribute(checkname_cross_dialogArguments[5].childNodes[i].childNodes[0], "email") == rgParams["returnedRecipientEmail"][z]) {
+                	checkname_cross_dialogArguments[5].removeChild(checkname_cross_dialogArguments[5].childNodes[i]);
+                    break;
+                }
+            }
+        }
+    }
     else {
         if (rgParams["recipientTDData"] == "change") {
             length = rgParams["returnedRecipientName"].length;

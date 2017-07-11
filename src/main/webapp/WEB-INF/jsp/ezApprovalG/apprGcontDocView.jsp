@@ -151,8 +151,7 @@
 		            if (field) {
 		                field.style.display = 'none';
 		            }
-		        }
-		        else {
+		        } else {
 		            var field = message.GetListItem(fields, "drafthide");
 		            if (field) {
 		                field.style.display = 'none';

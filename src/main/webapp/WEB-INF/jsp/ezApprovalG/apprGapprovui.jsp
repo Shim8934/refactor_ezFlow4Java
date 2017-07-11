@@ -314,21 +314,15 @@
 		        }
 		    }
 		    var noFieldsAvailable = false;
-		    function FieldsAvailable()
-		    {
+		    function FieldsAvailable() {
 		        var fields = message.GetFieldsList();
-		        if (modeflag)
-		        {
+		        if (modeflag) {
 		            CheckSignImg();			
-		            if (noFieldsAvailable)
-		            {
+		            if (noFieldsAvailable) {
 		                noFieldsAvailable = false;
-		            }
-		            else
-		            {
+		            } else {
 		                var rtnVal = ExcuteInfo("MIDDLE_SIGN_INIT","");
-		                if(!rtnVal)
-		                {
+		                if(!rtnVal) {
 		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t8'/>";
 		                    OpenAlertUI(pAlertContent);
 		                    return;				
@@ -339,13 +333,11 @@
 		        }
 		        message.SetEditable(false);
 		    }
-		    function CheckOpinionYN()
-		    {
+		    function CheckOpinionYN() {
 		        if (pHasOpinionYN == "Y") {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" + "<spring:message code='ezApprovalG.t10'/>";
 		            OpenInformationUI(pInformationContent, CheckOpinionYN_Complete);
-		        }
-		        else {
+		        } else {
 		            if (pDraftFlag == "SUSIN")
 		                getSusinSNInfo();
 		            else
@@ -855,8 +847,7 @@
 		        if (!Ans) return;
 		        if ("${approvalPWD}" != "N") {
 		            chk_Passwd(pingUserID, btnReject_chkpassword_Complete);
-		        }
-		        else {
+		        } else {
 		            openOpinionUI("BanSong", btnReject_option_Complete);
 		        }
 		    }
@@ -877,6 +868,7 @@
 		    function btnReject_option_Complete(ret) {
 		        DivPopUpHidden();
 		        if (ret != "cancel") {
+		        	pHasOpinionYN = "Y";
 		            UpdateLineHistory();
 		            var rtnVal = ExcuteInfo("BANSONG_BEFORE", "");
 		            if (!rtnVal) {
@@ -886,7 +878,7 @@
 		            }
 		            
 		            signInfo = putBansongSign();
-		            
+
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
 		            	UndoSignInfo(signInfo);
@@ -912,8 +904,7 @@
 		                SendAckForExch("approval", "ING");
 		                process_AfterApprove("2");
 		            }
-		        }
-		        else if (ret == "cancel") {
+		        } else if (ret == "cancel") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
 		            OpenAlertUI(pAlertContent);
 		        }
@@ -1289,7 +1280,7 @@
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-		
+
 		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1393,6 +1384,13 @@
 		                pSummery = ret[9];
 		                tempSecurityDate = ret[14];
 		                pPublicityCode = ret[11];
+		                
+		                //tempPublic 추가
+		                if (ret[11].substring(0,1) == '1') {
+		                	tempPublic = 'Y';
+		                } else {
+		                	tempPublic = 'N';
+		                }
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];

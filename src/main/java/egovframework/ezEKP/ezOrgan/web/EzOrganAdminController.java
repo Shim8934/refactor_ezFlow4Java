@@ -135,11 +135,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
+		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -662,6 +664,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());		
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -671,7 +674,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("birthDay", "");
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
-		
+		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+				
 		logger.debug("userInfo ended");
 		
 		return "admin/ezOrgan/userInfo";
@@ -922,9 +926,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 로컬 시스템 계정을 삭제한다.
 				ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 			} else if (userExists == 1 || userExists == 2) { // 1은 유효한 이메일 계정. 2는 퇴직자 계정.
+				List<String> distributionList = null;
 				String groupAddr = null;
 				
-				if (userExists == 1) { // 유효한 이메일 계정이 존재함.	
+				if (userExists == 1) { // 유효한 이메일 계정이 존재함.						
 					// 먼저 퇴직자 처리를 수행한다. 로컬 계정 삭제가 실패할 경우 복구를 위해.
 					rc = ezEmailUserAdminService.retireUser(mailAddr);
 
@@ -940,11 +945,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						
 						logger.debug("updateGroupDel rc=" + rc);
 						
-						if (rc == -100) { // Group Email 주소에서 제거 실패함.(부모(그룹)나 자식(유저)를 찾지 못해도 성공으로 봄.)
+						if (rc == -100) { // Group Email 주소에서 제거 실패함.(부모(그룹)나 자식(유저)를 찾지 못한 경우는 성공으로 취급함)
 							ezEmailUserAdminService.restoreUser(mailAddr);
 							
 							throw new Exception("removing the user '" + mailAddr + "' from its group email failed.");
-						}
+						}						
+						
+						// 사용자가 속한 공용배포그룹의 Group Email 주소 목록을 구한다.
+						distributionList = ezEmailUserAdminService.getUserDistributionList(mailAddr);
+						
+						for (String dist : distributionList) {
+							logger.debug("dist=" + dist);
+							
+							// 공용배포그룹의 Group Email 주소로부터 해당 User를 제거한다.
+							rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
+							
+							logger.debug("updateGroupDel rc=" + rc);							
+						}						
 					} else {
 						throw new Exception("retiring the user '" + mailAddr + "' failed.");
 					}
@@ -955,6 +972,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				try {
 					String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
 					
+					// 비즈메카와 연동된 경우에는 비즈메카 API를 이용해 비즈메카 사용자 계정을 삭제한다.
 					if (useBizmekaSpambox.equals("YES")) {
 						String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
 						String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
@@ -968,11 +986,22 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							throw new Exception("bizmekaDeleteUser failed");
 						}						
 					}
-					
+										
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 				} catch (Exception e) {
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
+						if (distributionList != null) {
+							for (String dist : distributionList) {
+								logger.debug("dist=" + dist);
+								
+								// 공용배포그룹의 Group Email 주소에 해당 User를 추가한다.
+								rc = ezEmailUserAdminService.updateGroupAdd(dist, mailAddr);	
+								
+								logger.debug("updateGroupAdd rc=" + rc);							
+							}													
+						}
+						
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);							
 					}

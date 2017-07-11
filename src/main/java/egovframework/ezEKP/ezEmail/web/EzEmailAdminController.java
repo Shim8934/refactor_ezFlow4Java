@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -119,7 +120,7 @@ public class EzEmailAdminController {
 		logger.debug("mailGetDistribution started.");
 		logger.debug("bodyData=" + bodyData);
 		
-        //관리자 권한체크
+		//관리자 권한체크
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         if (auth == null) {
             return "cmm/error/adminDenied";
@@ -127,52 +128,31 @@ public class EzEmailAdminController {
 		
 		String returnData = "";
 		
-		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
-		
-		String domain = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
-		
 		try {
-			String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
-			inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-
-			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionList";			
-			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-			logger.debug("response=" + response);
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 			
-			JSONArray resultArray = null;
-			
-			if (response != null) {
-				JSONParser jsonParser = new JSONParser();
-				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-				
-				String resultCode = (String)responseObj.get("resultCode");
-				
-				if (resultCode.equalsIgnoreCase("OK")) {
-					resultArray = (JSONArray)responseObj.get("result");
-				}
-			}
+			List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(companyId, auth.getTenantId());
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
 
-			if (resultArray != null) {
-				for (int i = 0; i < resultArray.size(); i++) {
-					sb.append("<ROW><CELL>");
-					
-					Map<String, String> rowObject = (Map<String, String>)resultArray.get(i);
-					
-					for (String colName : rowObject.keySet()) {
-						String colValue = rowObject.get(colName);
-						sb.append("<" + colName + ">");
-						sb.append(commonUtil.cleanValue(colValue));
-						sb.append("</" + colName + ">");
-					}
-					
-					sb.append("</CELL></ROW>");
-				}
+			for (MailDistributionVO vo : distributionList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getId()));
+				sb.append("</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getMail()));
+				sb.append("</DATA2>");
+				
+				sb.append("</CELL></ROW>");
 			}
 			
 			sb.append("</ROWS></LISTVIEWDATA>");

@@ -682,6 +682,8 @@ function InsertToCabListView(Resultxml) {
             xmlDoc.appendChild(ListViewData);
         }
 
+        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
@@ -780,7 +782,7 @@ function InsertToRecListView(Resultxml) {
             xmlDoc = createXmlDom();
             xmlDoc.appendChild(ListViewData);
         }
-
+        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
@@ -943,9 +945,10 @@ function SortList(szField) {
 
     if (DocList_Flag == "CABINET") {
         GetCaninetList();
-    }
-    else if (DocList_Flag == "RECORD") {
+    } else if (DocList_Flag == "RECORD") {
         GetRecordList();
+    } else if (DocList_Flag == "Delivery") {
+    	idistbox_onclick();
     }
 }
 
@@ -1709,15 +1712,18 @@ function insertSortInfoToHeader(header, listData) {
                     var colAlias = getNodeText(SelectSingleNode(nodesCell[j], "COLALIAS"));
                     var colname = getNodeText(SelectSingleNode(nodesCell[j], "COLNAME"));
                     if (i == j && colname != "") {                
-                        createNodeAndAppandNodeText(listData, header[i], objNode, "COLNAME", colAlias);
+                    	if (GetElementsByTagName(header[i], "COLNAME").length > 0) {
+                            setNodeText(GetElementsByTagName(header[i], "COLNAME")[0], colAlias);
+                        }
+                        else {
+                            createNodeAndAppandNodeText(listData, header[i], objNode, "COLNAME", colAlias);
+                        }
                         j = nodesCell.length;
-
                     }
                 }
 
             }
         }
-
         return listData;
 
     } catch (e) { }
