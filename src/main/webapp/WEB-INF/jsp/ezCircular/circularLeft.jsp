@@ -147,30 +147,37 @@
 	        /* 2017-05-17 정수현 구현 */
 	        function newCircular() {
 	        	window.parent.frames["right"].location.href = "/ezCircular/newCircular.do";
+	        	getNewCircularCount();
 	        }
 	        
 	        function circularComplete() {                
 	        	window.parent.frames["right"].location.href = "/ezCircular/circularComplete.do";
+	        	getNewCircularCount();
 	        }
 	        
 	        function circularMyCircular() {                
 	        	window.parent.frames["right"].location.href = "/ezCircular/circularMyCircular.do";
+	        	getNewCircularCount();
 	        }
 	        
 	        function circularTemp() {                
 	        	window.parent.frames["right"].location.href = "/ezCircular/circularTemp.do";
+	        	getNewCircularCount();
 	        }
 	        
 	        function circularDelete() {                
 	        	window.parent.frames["right"].location.href = "/ezCircular/circularDelete.do";
+	        	getNewCircularCount();
 	        }
 	        
 	        function circularConfig() {                
 	        	window.parent.frames["right"].location.href = "/ezCircular/circularConfig.do";
+	        	getNewCircularCount();
 	        }
 
 	        function circular_Search() {
-	        	window.parent.frames["right"].location.href = "/ezCircular/circularSearchView.do";	
+	        	window.parent.frames["right"].location.href = "/ezCircular/circularSearchView.do";
+	        	getNewCircularCount();
 	        }
 	        
 	        function getNewCircularCount() {
@@ -188,7 +195,7 @@
 				});
 	        }
 	        
-	        function getCircularCompleteCount() {
+	        /* function getCircularCompleteCount() {
 	        	$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -246,7 +253,7 @@
 						$("#circularDeleteCount").html("(" + result.count + ")");
 					}
 				});
-	        }
+	        } */
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: hidden;">

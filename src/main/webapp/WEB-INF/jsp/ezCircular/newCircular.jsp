@@ -441,7 +441,8 @@
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
 				var circularID = obj.getAttribute("CIRCULARID");
-
+				$(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif');
+				
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
@@ -449,10 +450,6 @@
 	            	var feature = GetOpenPosition(790, 900);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
-                
-                if (typeof (window.parent.frames.left) != "undefined") {
-		            parent.frames["left"].getNewCircularCount();
-		    	}
 	        }
 
 		    function ReplaceText(orgStr, findStr, replaceStr) {

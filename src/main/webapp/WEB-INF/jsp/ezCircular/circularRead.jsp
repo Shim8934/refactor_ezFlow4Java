@@ -23,6 +23,7 @@
 			var option = "${result.option}";
 
 			$(document).ready(function(){
+				window.opener.getLeftCount();
 	            document.getElementById('circularUserList1').innerHTML = "${listUser}";        
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            getCircularComment(circularID, userInfoID, status);

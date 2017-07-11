@@ -212,10 +212,6 @@ function ItemPreviewRead(obj) {
     
     /* 2017-07-07 이효진 */
     $(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif')
-    
-    if (typeof (window.parent.frames.left) != "undefined") {
-        parent.frames["left"].getNewCircularCount();
-	}
 }
 var ItemID;
 var WriterID;
@@ -266,6 +262,10 @@ function event_ItemPreviewRead() {
             }
         }
     }
+    
+    if (typeof (window.parent.frames.left) != "undefined") {
+        parent.frames["left"].getNewCircularCount();
+	}
 }
 
 function previewItemSet() {

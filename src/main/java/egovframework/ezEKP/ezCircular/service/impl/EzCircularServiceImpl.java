@@ -1276,7 +1276,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		int count= ezCircularDAO.getListCount(map);
 		
-		logger.debug("getListCount ended.");
+		logger.debug("getListCount ended. count = " + count);
 		
 		return count;
 	}
@@ -1313,11 +1313,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 			
 			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(memberID, userInfo.getPrimary(), tenantID);
 	    	
-			InternetAddress to = new InternetAddress();
-			to.setPersonal(AccessUserInfo.getDisplayName(), "UTF-8");
-			to.setAddress(AccessUserInfo.getMail());
-			
-			ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			if (AccessUserInfo != null) {
+				InternetAddress to = new InternetAddress();
+				to.setPersonal(AccessUserInfo.getDisplayName(), "UTF-8");
+				to.setAddress(AccessUserInfo.getMail());
+				
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			}
 		}
 		
 		logger.debug("commentShareUser ended.");
