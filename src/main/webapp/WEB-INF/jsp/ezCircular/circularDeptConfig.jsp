@@ -14,97 +14,26 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-// 			$(document).ready(function() {
-// 				$("#checkboxAll").click(function() {
-// 					if ($("#checkboxAll").prop("checked")) {
-// 						$("input[id=checkbox]").prop("checked", true);
-// 					} else {
-// 						$("input[id=checkbox]").prop("checked", false);
-// 					}
-// 				})
-// 			})
-			
-// 			window.onload = function() {
-// 				$(":checkbox[name=checkbox]:checked").each(function(){
-// 					deleteList.push($(this).val());
-// 				});
-// 				get_circularDept();	
-// 			}
-			
-// 			function get_circularDept() {
-// 				$.ajax({
-// 					url : "/ezCircular/getcircularDeptList.do",
-// 					method : 'POST',
-//      				dataType : 'xml',
-// 					async : false,
-// 					success : function(data) {
-// 						MakeSliderList(data)
-// 					}
-// 				})
-// 			}
-			
-// 			function MakeSliderList(text) {		
-// 				var _html = "";
-// 				try {
-// 	                var XmlNode = text;
-// 	                var countValue = 0;
-// 	                _html = "<table class='mainlist' style='width:100%;'>";
-
-// 	                if (SelectNodes(XmlNode, "DATA/ROW").length > 0) {	                	
-// 	                    if (CrossYN()) {
-// 	                        for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-// 	                            var _Value;
-// 	                            _html += "<tr id='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
-// 	                            + "'title = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent
-// 	                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-// 	                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox" + i + "' name='myCheckbox' value='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
-// 	                            	  + "'type='checkbox' onclick='event_statuschange(this);'></td>";
-// 	                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent + "</td>";
-// 	                            _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>";
-	                            
-//                             if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] != "0") {
-// 	                            _html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0]
-// 	                            + "&nbsp<spring:message code='ezCircular.t50' />&nbsp" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] + "<spring:message code='ezCircular.t51' />" + "</td>";
-//                             } else {
-//                             	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
-//                             }   
-// 	                            _html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[" + "<spring:message code='ezCircular.t92' />" +"]</td>";
-// 	                            _html += "</tr>";
-// 	                            _html += "</html>";
-// 	                            document.getElementById("contentlist").innerHTML = _html;
-// 	                        }
-// 	                    } else {
-// 	                        for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-// 	                            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-// 	                               	 var _Value;
-// 	                               	_html += "<tr id='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
-// 		                            + "'title = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent
-// 		                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-// 		                            _html += "<td style='width:7%;padding-left:5px;'><input id='checkbox" + i + "' name='myCheckbox' value='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent
-// 	                            	      + "'type='checkbox' onclick='event_statuschange(this);'></td>";
-// 		                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent + "</td>";
-// 	                                _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>";
-	                        
-//                                 if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] != "0") {
-// 	                                _html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0]
-//     	                            + "&nbsp<spring:message code='ezCircular.t50' />&nbsp" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] + "<spring:message code='ezCircular.t51' />" + "</td>";
-//                                 } else {
-//                                 	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>";
-//                                 }
-//                                 	_html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[" + "<spring:message code='ezCircular.t92' />" +"]</td>";
-// 	                                _html += "</tr>";
-// 	                                _html += "</html>";
-// 	                                document.getElementById("contentlist").innerHTML = _html;
-// 	                            }
-// 	                        }
-// 	                    }
-// 	                } else {
-// 	                    document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + "<spring:message code='ezCircular.t47'/>" + "</td></tr></table>";
-// 	                }	
-// 		        } catch (e) {
-// 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + "<spring:message code='ezCircular.t47'/>" + "</td></tr></table>";
-// 		        }
-// 			}
+			$(function() {
+				// 전체 체크박스 선택, 해제
+				$("#checkboxAll").on("click", function(){
+					if ($("#checkboxAll").is(":checked")) {
+						$(".myCheckbox").prop("checked", true);
+					} else {
+						$(".myCheckbox").prop("checked", false);
+					}
+				})
+				// 개별 체크박스 선택, 해제
+				$(".myCheckbox").on("click", function(){
+					if ($(this).is(":checked")) {
+						$(this).prop("checked", false);
+					} else {
+						$(this).prop("checked", true);
+					}
+					
+				})
+				
+			});
 			
 			function event_Mover(obj) {
 		        if (obj != _RowObject) {
@@ -124,19 +53,29 @@
 		    	if (_RowObject != null) {
 		    		_RowObject.style.backgroundColor = "#ffffff";
 		    	}
+		    	
+		    	if (_RowObject == obj) {
+		    		obj.style.backgroundColor = "#FFFFFF";
+		    	}
+
+		    	if ($("input[value=" + obj.id + "]").is(":checked")) {
+		    		$("input[value=" + obj.id + "]").prop("checked", false);
+		    	} else {
+		    		$("input[value=" + obj.id + "]").prop("checked", true);
+		    		$("input[value!=" + obj.id + "]").prop("checked", false);
+		    	}
+
+		    	if (_RowObject != obj) {
+			    	obj.style.backgroundColor = "rgb(233, 241, 244)";		    		
+		    	}
 
 		        _RowObject = obj;
-		        obj.style.backgroundColor = "rgb(233, 241, 244)";
 		    }
 
 		    function event_dbclick() {
 		    	modify_circularDept();
 		    }
-		    
-		    function event_statuschange(obj) {
-		    	
-		    }
-		    
+
 		    function memberList() {
 		    	var circularBMId = _RowObject.id;
 		    	
@@ -248,31 +187,14 @@
 		                            <th style="width: 12%; "><span><spring:message code='ezCircular.t34' /></span></th>
 		                        	<th style="width: 14%; "></th>
 		                        </tr>
-		                    </table>
-		                    
-<!-- 		                     _html += "<tr id='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent -->
-<!-- 	                            + "'title = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent -->
-<!-- 	                            + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>"; -->
-<!-- 	                            <td style='width:7%;padding-left:5px;'><input id='checkbox" + i + "' name='myCheckbox' value='" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "CIRCULARBMID")[0].textContent -->
-<!-- 	                            	  type='checkbox' onclick='event_statuschange(this);'></td> -->
-<!-- 	                            _html += "<td style='width:40%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "TITLE")[0].textContent + "</td>"; -->
-<!-- 	                            _html += "<td style='width:27%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0].textContent + "</td>"; -->
-	                            
-<!--                             if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] != "0") { -->
-<!-- 	                            _html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] -->
-<%-- 	                            + "&nbsp<spring:message code='ezCircular.t50' />&nbsp" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[1] + "<spring:message code='ezCircular.t51' />" + "</td>"; --%>
-<!--                             } else { -->
-<!--                             	_html += "<td style='width:12%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "MEMBERNAME")[0].textContent.split("/")[0] + "</td>"; -->
-<!--                             }    -->
-<%-- 	                            _html += "<td id='pop'><a href='javascript:memberList();' style='width:14%;color:gray;'/>[" + "<spring:message code='ezCircular.t92' />" +"]</td>"; --%>
-	                            
+		                    </table>   
 		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
 		                        <table class="mainlist" style="width: 100%;">
 		                            <c:forEach var="item" items="${result}">
 			                            <tr id="${item.circularBMID }" title="${item.title }" style="cursor:pointer" onmouseover="event_Mover(this);" onmouseout="event_Mout(this);" onclick="event_click(this);" ondblclick="event_dbclick(this);">
 			                            	<td style='width:7%;padding-left:5px;'><input class="myCheckbox" name="myCheckbox" value="${item.circularBMID }" type='checkbox' onclick='event_statuschange(this);'></td>
 			                            	<td style="width:40%;color:gray;">${item.title }</td>
-			                            	<td style="width:27%;color:gray;">${item.regDate }</td>
+			                            	<td style="width:27%;color:gray;">${item.regDate.substring(0,16) }</td>
 			                            	<c:if test="${item.memberNameCount != 0}">
 			                        			<td style="width: 12%;color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
 			                            		<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>

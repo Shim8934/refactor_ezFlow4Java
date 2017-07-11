@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezCircular.t36' /></title>
+		<title><spring:message code='ezCircular.t43' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
@@ -108,7 +108,7 @@
 	    </script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code='ezCircular.t36' /></h1>
+	    <h1><spring:message code='ezCircular.t43' /></h1>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t32' /></th>

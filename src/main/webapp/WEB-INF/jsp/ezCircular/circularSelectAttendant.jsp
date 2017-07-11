@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezCircular.t41' /></title>
+		<title><spring:message code='ezCircular.t40' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -103,6 +103,7 @@
 	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezCircular.t34'/>";
 	            }
 
+	            $("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
 	            getCircularDept();
 	            ListTypeChangeIcon();
@@ -1379,8 +1380,9 @@
 
    						list.forEach(function(vo, index) {
    							circularDeptList += ("<tr id='" + vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-   							circularDeptList += ("<td style='width:40%'>" + vo.title + " ");
-   							circularDeptList += ("<td style='width:27%'>" + vo.regDate + " ");
+   							circularDeptList += ("<td style='width:5%'>" + (index + 1) + " ");
+   							circularDeptList += ("<td style='width:35%'>" + vo.title + " ");
+   							circularDeptList += ("<td style='width:27%'>" + vo.regDate.substring(0,16) + " ");
    							circularDeptList += ("<td style='width:19%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />");
    							circularDeptList += ("<td style='width:13%'>");
    							circularDeptList += ("</tr>");
@@ -1433,7 +1435,7 @@
 
    						list.forEach(function(vo, index) {
    							circularDeptNamelist += ("<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)' ondblclick='event_listDBclick(this)'>");
-   							circularDeptNamelist += ("<td id='data1' style='width:55%'>" + (index+1) + " ");
+   							circularDeptNamelist += ("<td id='data1' style='width:55%'>" + (index + 1) + " ");
    							circularDeptNamelist += ("<td id='data2' style='width:15%'>" + vo.company + " ");
    							circularDeptNamelist += ("<td id='data3' style='width:17%'>" + vo.description + " ");
    							circularDeptNamelist += ("<td id='data4' style='width:12%'>" + vo.title + " ");
@@ -1495,7 +1497,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title"><spring:message code='ezCircular.t41' /></h1>
+		<h1 id="h1Title"><spring:message code='ezCircular.t40' /></h1>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1504,7 +1506,7 @@
 	                		<div class="portlet_tabpart01">
 	        					<div class="portlet_tabpart01_top" id="tab1">
 					            	<p><span id="1tab1" tdname="circularOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t41' /></span></p>
-									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t40' /></span></p>
+									<p><span id="1tab2" tdname="circularDept" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezCircular.t12' /></span></p>
 						        </div>
 						    </div>
 	                    	<td id="circularOrgan_content" style="display:none;">
@@ -1589,7 +1591,8 @@
 	                                            	<table class="mainlist" style="width: 100%;">
 								                        <thead id="List_THEAD">
 									                        <tr>
-									                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
+									                        	<th style="width: 5%;"><span><spring:message code='ezCircular.t31' /></span></th>
+									                            <th style="width: 35%; "><span><spring:message code='ezCircular.t32' /></span></th>
 									                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
 									                            <th style="width: 19%; "><span><spring:message code='ezCircular.t34' /></span></th>
 									                            <th style="width: 13%; "></th>

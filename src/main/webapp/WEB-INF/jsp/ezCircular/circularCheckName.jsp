@@ -57,9 +57,5 @@
 				</tbody>
 			</table>
 		</div>
-<!-- 		<div class="btnposition"> -->
-<%-- 		    <a class="imgbtn" name="button2" onClick="change_onClick()" ><span><spring:message code='ezCircular.t65' /></span></a> --%>
-<%-- 		    <a class="imgbtn" name="button3" onClick="window.close()" ><span><spring:message code='ezCircular.t66' /></span></a> --%>
-<!-- 		</div> -->
 	</body>
 </html>
