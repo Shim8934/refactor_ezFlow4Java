@@ -23,8 +23,9 @@
 			var option = "${result.option}";
 
 			$(document).ready(function(){
-	            document.getElementById('circularUserList').innerHTML = "${listUser}";        
+	            document.getElementById('circularUserList1').innerHTML = "${listUser}";        
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
+	            getCircularComment(circularID, userInfoID, status);
 	            
 	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
 	            for (var i = 0; i < Bodytd.length; i++) {
@@ -119,6 +120,91 @@
 			function closing() {
 	          	window.close();
 			}
+			
+			function getCircularComment(circularID, userInfoID, status) {
+				$("#divCross").html($("#divCross").html() + '<table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
+	        	
+	        	$.ajax({
+            		type : "POST",
+            		url : "/ezCircular/getCircularComment.do",
+            		dataType : "json",
+            		data : {
+            			circularID : circularID,
+            			searchValue : ""
+            		},
+            		success : function(result) {
+            			circularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";
+            			
+            			list = result.circularUserList;
+            			list.forEach(function(vo, index) {
+            				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+            				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+            				
+            				if (vo.status == 1) {
+            					//확인 이미지
+            					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            				} else {
+            					//미확인 이미지
+            					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            				}
+            				
+            				circularUserList += "</th>";
+            				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
+            				//확인일
+            				if (vo.status == 1) {
+            					circularUserList += vo.confirmDate.substring(0, 16);
+            				}
+            				
+            				circularUserList += "</th>";
+            				circularUserList += "</tr>";
+            			});
+            			
+            			$("#circularUserList").html("");
+            			$("#circularUserList").append(circularUserList);
+            			
+            			var now = new Date();
+
+            			circularCommentList = "";
+            			list = result.circularCommentList ;
+            			list.forEach(function(vo, index) {
+            				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
+           					circularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/dot.gif' style='vertical-align:middle;'/>&nbsp;&nbsp;" + vo.memberName + "</td>";
+            				circularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
+            				
+            				var arry = vo.regDate.substring(0, 10).split('-');
+            				var d = new Date(arry[0], arry[1]-1, arry[2]);
+            				var getDiffTime = now.getTime() - d.getTime();
+            				
+            				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
+            					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' />&nbsp;";
+            				}
+            				
+            				circularCommentList += "</td>";
+            				circularCommentList += "<td style='text-align:right; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.regDate.substring(0, 16) + "</td>";
+            				circularCommentList += "</tr>";
+            				
+            				if (vo.status == 0) {
+            					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+            						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+            					} else {
+            						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+            					}
+            				} else {//비공개
+            					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
+            						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+            							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+            						} else {
+            							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+            						}
+            					}
+            				}
+            			});
+            		},
+            		error : function(jqXHR, textStatus, errorThrown) {
+            			
+            		}
+            	});
+	        }
 		</script>
 	</head>
 	<style>
@@ -217,7 +303,7 @@
 		        		</tr>
 		        		<tr>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t34' /></th>
-		            		<td colspan="3" id="circularUserList" style="padding-left: 4px; vertical-align: middle;"></td>
+		            		<td colspan="3" id="circularUserList1" style="padding-left: 4px; vertical-align: middle;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;"><div id="divCross" style="overflow:auto;"></div></td>

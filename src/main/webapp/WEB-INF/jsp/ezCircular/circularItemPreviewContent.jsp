@@ -122,7 +122,7 @@
 	                _img3.style.cursor = "pointer";
 	                _img3.style.margin = "7px";
 	                _img3.src = "/images/ImgIcon/circular_opinion.gif";
-	
+	                
 	                document.getElementById("txtContent").appendChild(_img1);
 	                document.getElementById("txtContent").appendChild(_img2);
 	                
