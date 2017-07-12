@@ -58,12 +58,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		CircularConfigVO vo = ezCircularDAO.getCircularList_Config(map);
 		
-		if (vo == null) {
+		if (vo == null) { // 새로운 유저가 접속했을때 Config 값 없으면 기본 값 설정
 			vo = new CircularConfigVO();
+			vo.setMemberID(memberId);
 			vo.setListCnt(10);
 			vo.setIsPreview(0);
 			vo.setPreviewListValue("50");
 			vo.setPreviewContentValue("50");
+			
+			ezCircularDAO.setCircularList_Config_I(vo);
 		}
 		
 		return vo;
@@ -71,16 +74,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception {
-		String memberId = circularConfigVO.getMemberID();
-		int tenantId = circularConfigVO.getTenantID();
-		
-		CircularConfigVO circularListConfig = getCircularList_Config(memberId, tenantId);
-				
-		if (circularListConfig != null) {		
-			ezCircularDAO.setCircularList_Config_U(circularConfigVO);
-		} else {
-			ezCircularDAO.setCircularList_Config_I(circularConfigVO);
-		}
+		logger.debug("setCircularList_Config started.");
+
+		ezCircularDAO.setCircularList_Config_U(circularConfigVO);
+
+		logger.debug("setCircularList_Config ended.");
 	}
 	
 	@Override
@@ -92,14 +90,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("v_LIST", list);
 		map.put("v_CONTENT", content);
 		map.put("v_TENANTID", tenantID);
-		
-		CircularConfigVO circularListConfig = getCircularList_Config(userID, tenantID);
-		
-		if (circularListConfig != null) {
-			ezCircularDAO.setCircularList_Config2_U(map);
-		} else {
-			ezCircularDAO.setCircularList_Config2_I(map);
-		}
+
+		ezCircularDAO.setCircularList_Config2_U(map);
 	}
 	
 	@Override

@@ -1546,37 +1546,7 @@
                 ( #circularID#, #fileName#, #fileSize#, #filePath#, #tenantID# )
         ]]>
     </insert>
-  
-    <insert id="EzCircularDAO.setCircularList_Config2_I" parameterClass="Map">
-      <isEqual property="v_PREVIEWMODE" compareValue="OFF">
-        <![CDATA[
-          INSERT INTO
-              TBL_CIRCULAR_OPTION 
-              ( MEMBERID,  LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
-         VALUES 
-              ( #v_USERID#, #v_LISTCNT#, 0, 50, 50, #v_TENANTID#)
-        ]]>
-      </isEqual>
-      <isEqual property="v_PREVIEWMODE" compareValue="W">
-        <![CDATA[
-          INSERT INTO
-              TBL_CIRCULAR_OPTION 
-              ( MEMBERID, LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
-          VALUES 
-              ( #v_USERID#, #v_LISTCNT#, 2, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
-        ]]>
-      </isEqual>
-      <isEqual property="v_PREVIEWMODE" compareValue="H">
-        <![CDATA[
-          INSERT INTO
-              TBL_CIRCULAR_OPTION 
-              ( MEMBERID, LISTCNT,   ISPREVIEW, PREVIEWLISTVALUE, PREVIEWCONTENTVALUE, TENANTID )
-          VALUES 
-              ( #v_USERID#, #v_LISTCNT#, 1, #v_LIST#,   #v_CONTENT#, #v_TENANTID# )
-        ]]>
-      </isEqual>
-    </insert>
-    
+
     <insert id="EzCircularDAO.setCircularList_Config_I" parameterClass="CircularConfigVO">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR_OPTION (
@@ -1802,14 +1772,6 @@
               MEMBERID = #v_USERID#
         ]]>
       </isEqual>
-      <isEmpty property="v_PREVIEWMODE">
-        <![CDATA[
-          SELECT
-            1
-          FROM
-            DUAL
-        ]]>
-      </isEmpty>
     </update>
     
     <update id="EzCircularDAO.update_circularDept" parameterClass="map">

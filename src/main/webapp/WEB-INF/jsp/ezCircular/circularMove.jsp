@@ -69,12 +69,11 @@
 	                		oldFolderId 	: 	oldFolderId,
 	                		originLoc		:	originLoc,
 	                },  
-	                success : function(data) {	
-	                  alert("<spring:message code='ezCircular.t110' />");
-	                  
+	                success : function(data) {		                  
 	                  window.opener.getLeftCount();
 	                  window.opener.refresh_onclick();
 	             	  window.close();
+	                  alert("<spring:message code='ezCircular.t110' />");
 	                },
 	                error : function() {
 	                	alert("<spring:message code='ezCircular.t102' />")

@@ -192,8 +192,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String circularID = request.getParameter("pcircularId"); 		
-//		String memberID = request.getParameter("pmemberId");// 이거 때문에 프리뷰할때 읽음 체크가 작성자만 되고있엇네
+		String circularID = request.getParameter("pcircularId");
 
 		String retXML = ezCircularService.getItemXML(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
 		
@@ -419,11 +418,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		circularConfigVO.setTenantID(userInfo.getTenantId());
 		circularConfigVO.setMemberID(userInfo.getId());
-
-		if (request.getParameter("isPreview").equals("0")) {
-			circularConfigVO.setPreviewListValue("50");
-			circularConfigVO.setPreviewContentValue("50");
-		}
 
 		ezCircularService.setCircularList_Config(circularConfigVO);
 		
