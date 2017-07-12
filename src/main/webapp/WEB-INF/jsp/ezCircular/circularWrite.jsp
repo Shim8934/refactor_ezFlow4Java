@@ -71,8 +71,8 @@
 		        return true;
 		    }
 
+		    // 버튼 중복클릭 방지
 		    var doubleSubmitFlag = false;
-		    
 		    function doubleSubmitCheck() {
 		    	if (doubleSubmitFlag) {
 		    		return doubleSubmitFlag;
