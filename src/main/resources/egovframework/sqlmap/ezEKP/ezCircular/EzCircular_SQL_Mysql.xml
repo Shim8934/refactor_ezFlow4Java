@@ -633,7 +633,7 @@
 		<![CDATA[
 			ORDER BY
 				FIELD(A.memberid, (SELECT memberID FROM TBL_CIRCULAR WHERE circularid = #circularID#)) DESC,
-				A.memberid DESC;
+				A.memberid ASC;
 		]]>
     </select>
     
