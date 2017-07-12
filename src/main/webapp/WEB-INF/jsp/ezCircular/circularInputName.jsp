@@ -47,6 +47,11 @@
 	        function btn_ok_onclick() {
 	            var folderName = txt_FolderName.value;
 	            
+	            if (folderName == "") {
+	            	alert("<spring:message code='ezCircular.t58' />")
+	            	return;
+	            }
+	            
 	            if (FolderId == "") {
 	            	url = "/ezCircular/circularFolderAdd.do"; 
 	            } else {

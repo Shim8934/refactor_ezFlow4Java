@@ -70,15 +70,20 @@
 	                		originLoc		:	originLoc,
 	                },  
 	                success : function(data) {		                  
+	             	  window.close();
 	                  window.opener.getLeftCount();
 	                  window.opener.refresh_onclick();
-	             	  window.close();
-	                  alert("<spring:message code='ezCircular.t110' />");
+	                  call();
+// 	                  alert("<spring:message code='ezCircular.t110' />");
 	                },
 	                error : function() {
 	                	alert("<spring:message code='ezCircular.t102' />")
 	                }
 	 			});
+	        }
+	        
+	        function call() {
+	        	alert("<spring:message code='ezCircular.t110' />");
 	        }
 	    </script>
 	</head>
