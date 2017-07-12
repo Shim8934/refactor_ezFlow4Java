@@ -161,3 +161,5 @@ var strLang535 = "No data found.";
 
 var strLang1000 = "Can not insert company schedule.";
 var strLang1001 = "Can not insert department schedule.";
+/* 2017-07-11 */
+var strLang1002 = "leap ";
