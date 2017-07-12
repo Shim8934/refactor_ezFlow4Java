@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezStatistics.web.EzStatisticsMailMainController;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -128,4 +131,79 @@ public class EzSystemAdminController {
 		
 		return "{\"msg\":\"success\"}";		
 	}
+	
+	//**/ 로그인 로그기록
+	@RequestMapping(value="/admin/ezSystem/systemLoginHist.do")
+	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req,
+			@RequestParam(required=false)String keycode, @RequestParam(required=false)String keyword,
+			@RequestParam(required=false)String startDate, @RequestParam(required=false)String endDate) throws Exception {
+		
+		logger.debug("started systemLoginHist controller.");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String offset = userInfo.getOffset();
+		String userLang = userInfo.getLang();
+		String sysLang = "";
+		String currPage = req.getParameter("GotoPage");
+		
+		if (currPage == null || currPage.equals("")) {
+			currPage = "1";
+		}
+		
+		int nowBlock = 0;
+		int maxItemPerPage = 25; // 한 화면에 보여줄 게시물 갯수 
+		int startPage = ((Integer.parseInt(currPage) - 1)  * maxItemPerPage ) + 1;
+		int currentPage = Integer.parseInt(currPage);
+		
+		List<SysParamVO> configList = ezSystemAdminService.getSysParam(userInfo.getTenantId());
+		Map<String, String> configMap = new HashMap<String, String>();
+		
+		for (SysParamVO param : configList) {
+			configMap.put(param.getName(), param.getValue());
+			
+			if (param.getName().equals("PrimaryLang")) {
+				sysLang = param.getValue();
+			}
+		}
+
+		String lang = "2";
+
+		if ( userInfo.getLang().equals("1") && sysLang.equals("1") )  {
+			lang = "1";
+		} 
+		
+		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
+				commonUtil.getMinuteUTC(offset), startPage, maxItemPerPage, keycode, keyword, lang, startDate, endDate);
+		
+		int itemCnt = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), keycode, keyword, lang, startDate, endDate);
+		int totalPage = itemCnt / maxItemPerPage ;
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1 ;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);	
+		
+		model.addAttribute("loginHistList", loginHistList); 
+		model.addAttribute("userLang", userLang);
+		model.addAttribute("sysLang", sysLang);
+		model.addAttribute("currPage", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("nowBlock", nowBlock);
+		model.addAttribute("itemCnt", itemCnt);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("keycode", keycode);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		logger.debug("ended systemLoginHist controller.");
+		
+		return "/ezSystem/systemLoginHist";
+	}
+	
 }

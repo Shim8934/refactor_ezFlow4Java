@@ -1582,7 +1582,49 @@
 		        $('#sel_year').val("ALL");
 		        $('#sel_year').selectmenu('refresh');
 		    }
-		
+		    
+		    var SelUserCont_dialogArgument = new Array();
+		    function btnRegUserCont_onclick() {
+		        SelUserCont_dialogArgument[0] = "";
+		        SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
+		        var url = "/ezApprovalG/selUserCont.do";
+		        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
+		        try { ContOpen.focus() } catch (e) { }
+		    }
+		    
+		    function RegUserCont_Complete(RtnVal) {
+		        ContOpen.close();
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var selRow = DocList.GetSelectedRows();
+
+		        if (selRow.length <= 0) {
+		            var InformationString = strLangS385;
+		            OpenAlertUI(InformationString);
+		            return;
+		        }
+		        if (RtnVal != "cancel") {
+		            for (i = 0; i < selRow.length; i++) {
+		                var xmlhttp = createXMLHttpRequest();
+		                var xmlpara = createXmlDom();
+		                var objNode;
+		                var tr = selRow[i];
+		                createNodeInsert(xmlpara, objNode, "PARAMETER");
+		                createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
+		                createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);
+		                createNodeAndInsertText(xmlpara, objNode, "Desc", "");
+
+		                xmlhttp.open("POST", "/ezApprovalG/setUserContDoc.do", false);
+		                xmlhttp.send(xmlpara);
+		            }
+		            var InformationString
+		            if (xmlhttp.responseText.indexOf("TRUE") > -1)
+		                InformationString = strLangS386;
+		            else
+		                InformationString = strLangS1124;
+		            alert(InformationString);
+		        }
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
@@ -1597,6 +1639,7 @@
 		</h1>
 		    <div id="mainmenu">
 		  <ul>  
+		  		<li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
 				<li id="tbtnDraft"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
 				<li id="tbtnLinkDraft" style="display:none"><span id="btnLinkDraft" onclick="return btnLinkDraft_onclick()"><spring:message code='ezApprovalG.t1737'/></span></li>
 				<li id="tbtnRedraft"><span id="btnRedraft" onclick="return btnRedraft_onclick()"><spring:message code='ezApprovalG.t1738'/></span></li>
@@ -1638,7 +1681,7 @@
 		        </select>  
 			</ul>
 			</div>
-		<div class="div_scroll" style="width:100%;HEIGHT:315px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
 		  <div id="lvDocList"></div>
 		</div>
 		
@@ -1662,7 +1705,7 @@
 		  </ul>
 		</div>
 		
-		<div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 		  <div id="lvAprLine" ></div>
 		</div>
 		<script type="text/javascript">

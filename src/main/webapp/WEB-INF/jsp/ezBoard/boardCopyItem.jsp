@@ -228,7 +228,7 @@
 			font-family: "<spring:message code='ezBoard.t347'/>";
 			font-size: 9pt;
 			background-color : #ffffff;
-			height : 15px;
+			height : 22px;
 			cursor : hand;
 		}
 		.node_selected{
@@ -236,7 +236,7 @@
 			vertical-align:top;
 			font-family: "<spring:message code='ezBoard.t347'/>";
 			font-size: 9pt;
-			height : 15px;
+			height : 22px;
 			background-color : rgb(233, 241, 244);
 			cursor : hand;
 		}
@@ -246,7 +246,7 @@
 			font-family: "<spring:message code='ezBoard.t347'/>";
 			font-size: 9pt;
 			background-color : #F7FAE0;
-			height : 15px;
+			height : 22px;
 			cursor : hand;
 		}
 		</style>

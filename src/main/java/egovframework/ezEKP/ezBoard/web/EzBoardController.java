@@ -2875,7 +2875,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 읽음표시 실행 Method
 	 */
 	@RequestMapping(value="/ezBoard/setRead.do")
-	public void setAsRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+	public void setAsRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pBoardID = "";

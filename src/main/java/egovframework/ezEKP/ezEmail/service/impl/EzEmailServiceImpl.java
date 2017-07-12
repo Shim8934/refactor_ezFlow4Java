@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.mail.FetchProfile;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;

@@ -396,7 +396,7 @@ public interface EzApprovalGService {
 
 	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang) throws Exception;
 
-	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId) throws Exception;
+	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId, Locale locale) throws Exception;
 
 	public String insUserCont(String ownUserID, String parentContID, String ownUserName, String description, String companyID, String lang, int tenantID) throws Exception;
 
