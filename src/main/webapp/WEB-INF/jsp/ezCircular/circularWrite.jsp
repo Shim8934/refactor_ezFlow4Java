@@ -87,12 +87,12 @@
 	    		}
 				
 				//의견
-				$(':checkbox[id=optionRefly]:checked').each(function(){
+				$(':checkbox[id=option1]:checked').each(function(){
 					option = 1;	
 				});
 				
 				//공지메일발송
-				$(':checkbox[id=optionMail]:checked').each(function(){
+				$(':checkbox[id=option2]:checked').each(function(){
 					option = 2;
 				});
 				
@@ -100,7 +100,7 @@
 				if ($(':checkbox[name=chkList]:checked').length == 2) {
 					option = 3;
 				}
-				
+		
 				//파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
@@ -160,11 +160,11 @@
 						circularID = oldCircularID;
 					}
 					
-					$(':checkbox[id=optionRefly]:checked').each(function(){
+					$(':checkbox[id=option1]:checked').each(function(){
 						option = 1;	
 					});
 					
-					$(':checkbox[id=optionMail]:checked').each(function(){
+					$(':checkbox[id=option2]:checked').each(function(){
 						option = 2;	
 					});
 					
@@ -313,20 +313,20 @@
 	       					<td style="width:200px;">
 								<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/><spring:message code="ezCircular.t119"/>
-		                				<input type="checkbox" id="AllDay" name="chkList"/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList" checked/><spring:message code="ezCircular.t119"/>
+		                				<input type="checkbox" id="option2" name="chkList"/><spring:message code="ezCircular.t120"/>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option" name="chkList"/><spring:message code="ezCircular.t119"/>
-		                				<input type="checkbox" id="AllDay" name="chkList" checked/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList"/><spring:message code="ezCircular.t119"/>
+		                				<input type="checkbox" id="option2" name="chkList" checked/><spring:message code="ezCircular.t120"/>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option" name="chkList" checked/><spring:message code="ezCircular.t119"/>
-										<input type="checkbox" id="AllDay" name="chkList" checked/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList" checked/><spring:message code="ezCircular.t119"/>
+										<input type="checkbox" id="option2" name="chkList" checked/><spring:message code="ezCircular.t120"/>
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option" name="chkList"/><spring:message code="ezCircular.t119"/>
-										<input type="checkbox" id="AllDay" name="chkList"/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList"/><spring:message code="ezCircular.t119"/>
+										<input type="checkbox" id="option2" name="chkList"/><spring:message code="ezCircular.t120"/>
 		                			</c:otherwise>
 		                		</c:choose>					
 	         				</td>
