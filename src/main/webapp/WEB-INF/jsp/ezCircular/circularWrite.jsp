@@ -71,8 +71,22 @@
 		        return true;
 		    }
 
+		    var doubleSubmitFlag = false;
+		    
+		    function doubleSubmitCheck() {
+		    	if (doubleSubmitFlag) {
+		    		return doubleSubmitFlag;
+		    	} else {
+		    		doubleSubmitFlag = true;
+		    		return false;
+		    	}
+		    }
+		    
 	    	function btn_Save() {
-	        	//회람작성 눌렀을 시
+	        	if (doubleSubmitCheck()){
+	        		return;
+	        	}
+	    		//회람작성 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
 				
