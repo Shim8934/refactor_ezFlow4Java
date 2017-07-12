@@ -947,14 +947,14 @@
 			                <DATA1>a</DATA1>
 			            </CELL>
 			        </ROW>
-                    <!-- 구현 완료 시까지 임시 제거함
+			        <c:if test="${approvalFlag != 'S'}">
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t294'/></VALUE>
 			                <DATA1>i</DATA1>
 			            </CELL>
 			        </ROW>
-                    -->
+			        </c:if>
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t297'/></VALUE>
