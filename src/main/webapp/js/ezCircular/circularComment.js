@@ -119,8 +119,8 @@ function showEdit(obj) {
 function editCircularComment(obj) {
 	var circularUserID = $(obj).closest("tr").attr("circularUserID");
 	var circularComment = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > textarea").val();
-	var circularCommentStatus = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > input:checked").length;
-
+	var circularCommentStatus = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > div > input:checked").length;
+	
 	if (circularComment == "") {
 		alert(strLang5);
 		return ;
