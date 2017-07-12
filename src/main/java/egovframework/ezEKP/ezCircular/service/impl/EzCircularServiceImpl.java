@@ -230,6 +230,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 					InternetAddress to = new InternetAddress();
 					
 					if (!receiverID[i].trim().equals(userInfo.getId())) {
+logger.debug("receiverID = " + receiverID);
 						to.setPersonal(receiverName[i].trim(), "UTF-8");
 						to.setAddress(receiverID[i].trim());
 						
