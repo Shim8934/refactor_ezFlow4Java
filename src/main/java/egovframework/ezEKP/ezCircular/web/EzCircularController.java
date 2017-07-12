@@ -1034,15 +1034,9 @@ public class EzCircularController extends EgovFileMngUtil {
 			
 			for (CircularListVO vo : list) {
 				if (!vo.getMemberID().equals(result.getMemberID())) {
-					if (list.indexOf(vo) < list.size() - 1) {
 						userID += vo.getMemberID() + ", ";
 						userName += vo.getMemberName() + ", ";
 						userName2 += vo.getMemberName2() + ", ";
-					} else {
-						userID += vo.getMemberID();
-						userName += vo.getMemberName();
-						userName2 += vo.getMemberName2();
-					}
 				}
 			}
 			
