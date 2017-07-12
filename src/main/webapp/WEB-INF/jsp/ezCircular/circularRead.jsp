@@ -307,7 +307,7 @@
 		            		<td colspan="3" id="circularUserList1" style="padding-left: 4px; vertical-align: middle;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%; overflow:auto;"><div id="divCross" style="margin:8px; height:100%"></div></td>
+	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; height:100%; overflow:auto;"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
