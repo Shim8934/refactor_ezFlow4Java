@@ -38,7 +38,7 @@
 	                }
 	            }
 
-	            document.getElementById("divCross").style.height = window.innerHeight - 310 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
 	        });
 
 		    //삭제버튼 클릭시
@@ -123,7 +123,7 @@
 			}
 			
 			function getCircularComment(circularID, userInfoID, status) {
-				$("#divCross").html($("#divCross").html() + '<table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
+				$("#divCross").html($("#divCross").html() + '<div id = "commentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
 	        	
 	        	$.ajax({
             		type : "POST",
@@ -307,7 +307,7 @@
 		            		<td colspan="3" id="circularUserList1" style="padding-left: 4px; vertical-align: middle;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;"><div id="divCross" style="overflow:auto;"></div></td>
+	            			<td colspan="4" style="height:100%; overflow:auto;"><div id="divCross" style="margin:8px; height:100%"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
@@ -447,7 +447,7 @@
  							</td>
 						</tr>
 						<tr> 
- 							<td colspan="4"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
+ 							<td colspan="4"> <div align="left" id="printDocument" style="paddingt: 5px; margin: 8px; width: 100%; "></div></td> 
 						</tr>	
 					</table>
 				</td>
