@@ -1281,7 +1281,7 @@
 		        var top = 0;
 		        left = (parseInt(width) - parseInt(wWeigth)) / 2;
 		        top = (parseInt(heigth) - parseInt(wHeigth)) / 2;
-		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=300,width=400,top=" + top + ",left =" + left);
+		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=310,width=410,top=" + top + ",left =" + left);
 		    }
 		    function TextReplace(pStr, pStr1, pStr2) {
 		        TextReplace = pStr.replace(pStr1, pStr2);
