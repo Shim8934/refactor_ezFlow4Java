@@ -21,6 +21,7 @@
 	    <script type="text/javascript">
 	    	var CurPage = "1";
 	    	var OrderCell = "";
+	    	var OrderOption = "";
 	    	var checkval = "f";
 	    	var keyword = "";
 	        var filter = "";
@@ -119,6 +120,22 @@
 		            $("#Edatepicker").datepicker('enable');
 		        }
 		    }
+		    
+		    function SortPage(strHeaderName) {
+	            if (strHeaderName != "CHECK") {
+	                if (OrderCell == strHeaderName) {
+	                    if (OrderOption == "")
+	                        OrderOption = "DESC";
+	                    else
+	                        OrderOption = "";
+	                }
+	                else {
+	                    OrderCell = strHeaderName;
+	                    OrderOption = "";
+	                }
+	                search();
+	            }
+	        }
 		
 		    function search() {		    	
 		    	if (specialChk(document.getElementById("keyword").value)) {
@@ -171,7 +188,9 @@
 		        		sdate : sdate,
 		        		edate : edate,
 		        		pageNum : CurPage,
-		        		searchValue : keyword
+		        		searchValue : keyword,
+		        		orderCell : OrderCell,
+		        		orderOption : OrderOption
 		        	},
 		        	success : function(xml) {
 		        		getSearchList_after(loadXMLString(xml));

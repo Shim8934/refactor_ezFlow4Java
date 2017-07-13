@@ -134,9 +134,20 @@
             AND
                 A.tenantid = #tenantID#
             ORDER BY
+        ]]>
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+            	$orderOption1$
+            ]]>
+        </isNotEqual>
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
             	B.updatestatus DESC,
             	B.updatedate DESC,
             	A.regdate DESC
+            ]]>
+        </isEqual>
+        <![CDATA[
             LIMIT
                 #limit#, #rowCount#
         ]]>
@@ -835,13 +846,22 @@
 	            AND
 	            	DATE_ADD(DATE_FORMAT(#sdate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)<= A.REGDATE
 	            AND
-	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE	        
+	            	DATE_ADD(DATE_FORMAT(#edate#, '%Y-%m-%d %H:%i:%s'), INTERVAL -#offset# MINUTE)> A.REGDATE
 	        ]]>
 	    </isNotEqual>
-        
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[
+        		ORDER BY
+            		$orderOption1$
+            ]]>
+        </isNotEqual>
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+        		ORDER BY
+            		A.regdate DESC
+            ]]>
+        </isEqual>
 		<![CDATA[
-			ORDER BY
-				A.regdate DESC
 			LIMIT
 				#limit#, #rowCount#     
         ]]>
@@ -1017,7 +1037,18 @@
             GROUP BY
             	A.circularID
             ORDER BY
+        ]]>
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+            	$orderOption1$
+            ]]>
+        </isNotEqual>
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
             	A.regdate DESC
+            ]]>
+        </isEqual>
+       	<![CDATA[
             LIMIT
                 #limit#, #rowCount#
         ]]>
@@ -1172,7 +1203,18 @@
 			GROUP BY
 				A.CIRCULARID
 			ORDER BY
-				A.REGDATE DESC 
+		]]>
+		<isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+            	$orderOption1$
+            ]]>
+        </isNotEqual>
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[
+        		A.REGDATE DESC
+        	]]>
+        </isEqual>
+        	<![CDATA[ 
 			LIMIT
 				#limit#, #rowCount#
 		]]>
@@ -1272,8 +1314,19 @@
         <![CDATA[
             GROUP BY
 				A.circularid
-            ORDER BY
+			ORDER BY
+        ]]>
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+            	$orderOption1$
+            ]]>
+        </isNotEqual>
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
             	A.regdate DESC
+            ]]>
+        </isEqual>
+       	<![CDATA[
             LIMIT
                 #limit#, #rowCount#
         ]]>
@@ -1446,15 +1499,25 @@
             AND
 	        ]]>
 	    </isNotEqual>
-
         <![CDATA[
 				D.memberid = #memberID#
 			AND
 				D.updatestatus = '3'  
 			AND
-				A.tenantid = #tenantID# 
+				A.tenantid = #tenantID#
 			ORDER BY
-				A.REGDATE DESC 
+        ]]>
+        <isNotEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+            	$orderOption1$
+            ]]>
+        </isNotEqual>
+        <isEqual property="orderCell" compareValue="">
+        	<![CDATA[    
+            	A.regdate DESC
+            ]]>
+        </isEqual>
+       	<![CDATA[
 			LIMIT
 				#limit#, #rowCount#
          ]]>
