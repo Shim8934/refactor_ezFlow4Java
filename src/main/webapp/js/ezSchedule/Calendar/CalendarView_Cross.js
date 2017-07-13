@@ -306,7 +306,6 @@ function CalendarView(pTagetID) {
         objElm = null;
     }
 
-
     CalViewSource();
     resize();
 }
@@ -398,7 +397,12 @@ function MonthData(oThisDate, TDIndex) {
         LunarDate = lunarCalc(tempyear, month, oThisDate.getDate(), 1);
         var LunarDatemonth = LunarDate.month;
         var LunarDateday = LunarDate.day;
+        
         LunarDate2 = LunarDatemonth + "." + LunarDateday;
+        
+        if (LunarDate.leapMonth) {
+        	LunarDate2 = strLang1002 + LunarDate2;
+        }        
     }
 
     var objTd = document.createElement("TD");
@@ -1399,7 +1403,7 @@ function lunarCalc(year, month, day, type, leapmonth) {
                 lunMonthDay = 29;
             else if (lunarMonthTable[lunIndex][lunMonth - 1] == 4 &&
               lunLeapMonth == 1)
-                lunMonthDay = 30;
+                lunMonthDay = 29;
             else if (lunarMonthTable[lunIndex][lunMonth - 1] == 5 &&
               lunLeapMonth == 0)
                 lunMonthDay = 30;
@@ -1633,7 +1637,7 @@ var lunarMonthTable = [
 [1, 2, 1, 2, 1, 2, 1, 2, 5, 2, 1, 2],
 [1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1],
 [2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
-[1, 2, 1, 2, 1, 4, 1, 2, 1, 2, 2, 2],
+[1, 2, 1, 2, 4, 2, 1, 2, 1, 2, 2, 2],
 [1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
 [2, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2],
 [2, 1, 2, 5, 2, 1, 1, 2, 1, 2, 1, 2],
@@ -1652,7 +1656,7 @@ var lunarMonthTable = [
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 5, 2],
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2],
 [2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
-[2, 2, 1, 2, 1, 4, 1, 1, 2, 2, 1, 2],
+[2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2],
 [2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2],
 [2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],
 [2, 2, 1, 2, 5, 2, 1, 2, 1, 2, 1, 1],
