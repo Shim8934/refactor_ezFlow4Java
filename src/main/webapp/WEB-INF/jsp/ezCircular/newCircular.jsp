@@ -141,23 +141,7 @@
 	                Save_unloadSave = true;
 	            }
 	        }
-	
-	        function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
-	                if (OrderCell == strHeaderName) {
-	                    if (OrderOption == "")
-	                        OrderOption = "DESC";
-	                    else
-	                        OrderOption = "";
-	                }
-	                else {
-	                    OrderCell = strHeaderName;
-	                    OrderOption = "";
-	                }
-	                getBoardList();
-	            }
-	        }
-	
+
 	        function getBoardList() {
 	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
