@@ -1936,6 +1936,11 @@ function setbuttonenable() {
 	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
 	    }
+	    if (pListTypeValue == "10") {
+	    	document.getElementById("tbtnRegUserCont").style.display = "";
+	    } else {
+	    	document.getElementById("tbtnRegUserCont").style.display = "none";
+	    }
     }
     return true;
 }
