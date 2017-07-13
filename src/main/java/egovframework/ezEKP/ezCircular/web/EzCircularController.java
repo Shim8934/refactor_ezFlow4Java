@@ -564,14 +564,6 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			
-//			if (vo.getUpdateStatus() == 0) {
-//				resultXML.append("<CELL><VALUE>new</VALUE></CELL>");
-//			} else if (vo.getCommentStatus().equals("1")) {
-//				resultXML.append("<CELL><VALUE>comment</VALUE></CELL>");
-//			} else if (vo.getShareStatus().equals("1")) {
-//				resultXML.append("<CELL><VALUE>share</VALUE></CELL>");
-//			}
-			
 			if (vo.getCommentStatus().equals("1")) {
 				resultXML.append("<CELL><VALUE>comment</VALUE></CELL>");
 			} else if (vo.getShareStatus().equals("1")) {

@@ -24,22 +24,18 @@
 
 			$(document).ready(function(){
 				window.opener.getLeftCount();
-	            document.getElementById('circularUserList1').innerHTML = "${listUser}";        
+	            document.getElementById('circularUserList1').innerHTML = "${listUser}";
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
-	            getCircularComment(circularID, userInfoID, status);
+	            /* getCircularComment(circularID, userInfoID, status); */
 	            
-	            var Bodytd = document.getElementById("divCross").getElementsByTagName("TD");
-	            for (var i = 0; i < Bodytd.length; i++) {
-	                if (Bodytd[i].width != "") {
-	                    Bodytd[i].style.width = Bodytd[i].width + "px";
-	                }
-	                if (Bodytd[i].height != "") {
-	                    Bodytd[i].style.height = Bodytd[i].height + "px";
-	                }
-	            }
-
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
 	        });
+			
+			window.onresize = function () {
+				var contentHeight;
+				contentHeight = document.documentElement.innerHeight - 320;
+				document.getElementById("divCross").style.height = contentHeight + "PX";
+			};
 
 		    //삭제버튼 클릭시
 	        function btn_delete() {
@@ -122,7 +118,7 @@
 	          	window.close();
 			}
 			
-			function getCircularComment(circularID, userInfoID, status) {
+			/* function getCircularComment(circularID, userInfoID, status) {
 				$("#divCross").html($("#divCross").html() + '<div id = "commentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
 	        	
 	        	$.ajax({
@@ -205,7 +201,7 @@
             			
             		}
             	});
-	        }
+	        } */
 		</script>
 	</head>
 	<style>
