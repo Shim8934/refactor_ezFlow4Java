@@ -340,8 +340,7 @@
 		    		async : false,
 		    		url : "/admin/ezApprovalG/getFormRecvAdmin.do",
 		    		data : {
-		    			formID 	  : formID,
-		    			companyID : companyID
+		    			formID : formID
 		    		},
 		    		success: function(text){
 		    			result = text;

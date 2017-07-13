@@ -224,7 +224,9 @@
 		        	type : "POST",
 		        	url : "/admin/ezApprovalG/getFormRecvAdmin.do",
 		        	async : false,
-		        	data : {formID : formID},
+		        	data : {
+		        		formID : formID
+		        	},
 		        	success : function(result) {
 						xmlpara = loadXMLString(result);
 	        		}
@@ -733,13 +735,13 @@
             	<span style="min-width: 45px;" id="groupstr"><spring:message code = 'ezApprovalG.t1577' /></span>
             </h2>
 
-            <table style="width:100%; height:565px; border : none;">         
+            <table style="width:100%; height:775px; border : none;">         
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border:none">
                         <h2>
                             <spring:message code = 'ezApprovalG.t232' />
                         </h2>
-                        <div id="divUserContTree" style="height: 530px; width: 100%; overflow-x: auto; overflow-y: auto; border: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="divUserContTree" style="height: 100%; width: 100%; overflow-x: auto; overflow-y: auto; border: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                     </td>
                     <td style="text-align:center; width:50px; border-left:none; border:none">
                         <img style="cursor:pointer" src="/images/arr_r.gif" width="24" height="24" onclick="return insertCont_onclick()"><br>
@@ -753,7 +755,7 @@
                         <h2>
                             <spring:message code = 'ezApprovalG.t999932' />
                         </h2>
-                        <div class="listview" style="border-top:none; height:530px;">
+                        <div class="listview" style="border-top:none; height:100%;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%; overflow-x:auto;overflow-y:auto; padding:0px;"></div>
                         </div>
                     </td>
