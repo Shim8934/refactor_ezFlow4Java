@@ -1281,7 +1281,7 @@
 		        var top = 0;
 		        left = (parseInt(width) - parseInt(wWeigth)) / 2;
 		        top = (parseInt(heigth) - parseInt(wHeigth)) / 2;
-		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=300,width=400,top=" + top + ",left =" + left);
+		        window.open("secondApprovalInfo.do", '', "status=0,menubar=0,scrollbars=0,resizable=1,height=310,width=410,top=" + top + ",left =" + left);
 		    }
 		    function TextReplace(pStr, pStr1, pStr2) {
 		        TextReplace = pStr.replace(pStr1, pStr2);
@@ -1321,7 +1321,7 @@
 		    function SearchCondi_onclick_Complete(returnvalue) {
 		        condition = returnvalue;
 		        if (condition) {
-		        	for (var i = 0; i < 11; i++) {
+		        	for (var i = 0; i < condition.length; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
 		                SearchCond[i] = condition[i];
@@ -1473,9 +1473,8 @@
 					        TYPE += condition[16];
 					        DATA += condition[17];
 					    }
-
-					    SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 					}
+				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		
 		    window.onresize = function () {
