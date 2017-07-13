@@ -18321,6 +18321,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	    cabinetListVO.setMultiLang(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 	    cabinetListVO.setNowDate(commonUtil.getTodayUTCTime(""));
 	    cabinetListVO.setNowYear(commonUtil.getTodayUTCTime("yyyy"));
+	    cabinetListVO.setTenantID(userInfo.getTenantId());
 
 		switch (cabinetListVO.getListFlag()) {
 		case "0" :	// 기록물철 대장
