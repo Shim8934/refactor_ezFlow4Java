@@ -31,37 +31,37 @@
 	</update>
 	
 	
-	<sql id="DynamicSearchQuery">
+	<sql id="EzSystemAdminDAO.searchQuery">
 		<isNotEmpty property="search_keycode" prepend="and">
 			<isNotEmpty property="search_keyword" >
 				<isEqual property="lang" compareValue="1" >
-						<isEqual property="search_keycode" compareValue="1">
-							USERNM LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
-						<isEqual property="search_keycode" compareValue="2">
-							DEPTNM LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
 				</isEqual>
 				<isNotEqual property="lang" compareValue="1">
-						<isEqual property="search_keycode" compareValue="1">
-							USERNM2 LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
-						<isEqual property="search_keycode" compareValue="2">
-							DEPTNM2 LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
+					<isEqual property="search_keycode" compareValue="1">
+						USERNM2 LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="2">
+						DEPTNM2 LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
 				</isNotEqual>
-						<isEqual property="search_keycode" compareValue="3">
-							CONNECTIP LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
-						<isEqual property="search_keycode" compareValue="4">
-							CONNECTTIME LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
-						<isEqual property="search_keycode" compareValue="5">
-							CONNECTBROWSER LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
-						<isEqual property="search_keycode" compareValue="6">
-							CONNECTOS LIKE CONCAT('%', #search_keyword#,'%')
-						</isEqual>
+				<isEqual property="search_keycode" compareValue="3">
+					CONNECTIP LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="4">
+					CONNECTTIME LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="5">
+					CONNECTBROWSER LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
+				<isEqual property="search_keycode" compareValue="6">
+					CONNECTOS LIKE CONCAT('%', #search_keyword#,'%')
+				</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="startDate" prepend="and">
@@ -92,7 +92,7 @@
 				C.USERID = U.USERID
 		WHERE 
 				C.TENANT_ID=#v_tenantID# AND U.TENANT_ID=#v_tenantID#
-				<include refid="DynamicSearchQuery"/>
+				<include refid="EzSystemAdminDAO.searchQuery"/>
 		ORDER BY 
 				SEQUENCE DESC
 		LIMIT
@@ -103,7 +103,7 @@
 		SELECT 	COUNT(SEQUENCE) 
 		FROM   	TBL_CONNECTION_INFO
 		WHERE	TENANT_ID = #v_tenantID#
-				<include refid="DynamicSearchQuery"/>
+				<include refid="EzSystemAdminDAO.searchQuery"/>
 	</select>
 	
 </sqlMap>
