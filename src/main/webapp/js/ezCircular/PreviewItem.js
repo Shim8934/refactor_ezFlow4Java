@@ -280,17 +280,17 @@ function previewItemSet() {
             if (pPreviewShow_HOW.trim() == "W") {
                 if (document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent != undefined) {
                     document.getElementById("ifrmPreViewW").contentWindow.makeWriteContent(readHTML, tempText, option);
-                    if (option == "1" || option == "3") {
-                    	document.getElementById("ifrmPreViewW").contentWindow.getCircularComment(CircularId, SSUserID, status);
-                    }
+//                    if (option == "1" || option == "3") {
+//                    	document.getElementById("ifrmPreViewW").contentWindow.getCircularComment(CircularId, SSUserID, status);
+//                    }
                 }
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 if (document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent != undefined) {
                     document.getElementById("ifrmPreViewH").contentWindow.makeWriteContent(readHTML, tempText, option);
-                    if (option == "1" || option == "3") {
-                    	document.getElementById("ifrmPreViewH").contentWindow.getCircularComment(CircularId, SSUserID, status);
-                    }
+//                    if (option == "1" || option == "3") {
+//                    	document.getElementById("ifrmPreViewH").contentWindow.getCircularComment(CircularId, SSUserID, status);
+//                    }
                 }
             }
         }, 100);
