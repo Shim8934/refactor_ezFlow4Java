@@ -680,7 +680,7 @@
 	            }
 	            window.close();
 	        }
-	        
+
 	        var rgParams = new Array();
 		    var checkname2_cross_dialogArguments = new Array();
 		    function deptsearch_click() {
@@ -689,6 +689,13 @@
 		            document.all("deptkeyword").focus();
 		            return;
 		        }
+
+		        if ($.trim($("#deptkeyword").val()) == "") {
+		        	alert("<spring:message code='ezOrgan.jsh1' />");
+		            document.all("deptkeyword").focus();
+		            return;
+		        }
+
 		        var xmlDOM = createXmlDom();
 		        
 		        $.ajax({
