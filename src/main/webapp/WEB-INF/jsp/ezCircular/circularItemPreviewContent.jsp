@@ -95,7 +95,7 @@
 	                document.getElementById("txtContent").innerHTML = "";
 	                var _img1;
 	                var _img2;
-	                var _img3;
+// 	                var _img3;
 	
 	                _img1 = document.createElement("IMG");
 	                _img1.id = "smallImg";
@@ -115,28 +115,28 @@
 	                _img2.style.marginLeft = "-4px";
 	                _img2.src = "/images/plus.png";
 	                
-	                _img3 = document.createElement("IMG");
+	                /* _img3 = document.createElement("IMG");
 	                _img3.id = "goComment";
 	                _img3.onclick = function () { goComment(); };
 	
 	                _img3.style.cursor = "pointer";
 	                _img3.style.margin = "7px";
-	                _img3.src = "/images/ImgIcon/circular_opinion.gif";
+	                _img3.src = "/images/ImgIcon/circular_opinion.gif"; */
 	                
 	                document.getElementById("txtContent").appendChild(_img1);
 	                document.getElementById("txtContent").appendChild(_img2);
 	                
-	                if (option == "1" || option == "3") {
+	                /* if (option == "1" || option == "3") {
 	                	document.getElementById("txtContent").appendChild(_img3);
 	                	
-// 	                	var span1 = document.createElement("SPAN");
-// 	                	span1.style.marginTop("10px");
-// 	                	span1.style.position("absolute");
+	                	var span1 = document.createElement("SPAN");
+	                	span1.style.marginTop("10px");
+	                	span1.style.position("absolute");
 	                	
-// 	                    var count = document.createTextNode("[1]");
-// 	                    span1.appendChild(count);
-// 	                    document.getElementById("txtContent").appendChild(span1);
-	                }
+	                    var count = document.createTextNode("[1]");
+	                    span1.appendChild(count);
+	                    document.getElementById("txtContent").appendChild(span1);
+	                } */
 	
 	                var xmldom = loadXMLString(AttachText);
 	                var _attchDIV;
@@ -264,7 +264,7 @@
 	                suffix = 0;
 	        }
 	        
-	        function getCircularComment(circularID, userInfoID, status) {
+	        /* function getCircularComment(circularID, userInfoID, status) {
 				var divComment = document.createElement("DIV");
                 divComment.id = 'divComment';
                 divComment.style.borderTop = "1px solid";
@@ -351,7 +351,7 @@
             			
             		}
             	});
-	        }
+	        } */
 	    </script>
 	</head>
 	<body>
