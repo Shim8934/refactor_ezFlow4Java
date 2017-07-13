@@ -418,23 +418,7 @@
 	                getBoardList();
 	            }
 	        }
-	
-	        function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
-	                if (OrderCell == strHeaderName) {
-	                    if (OrderOption == "")
-	                        OrderOption = "DESC";
-	                    else
-	                        OrderOption = "";
-	                }
-	                else {
-	                    OrderCell = strHeaderName;
-	                    OrderOption = "";
-	                }
-	                getBoardList();
-	            }
-	        }
-			
+
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
 	        	var circularID = obj.getAttribute("CIRCULARID");
