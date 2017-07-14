@@ -63,7 +63,7 @@
 		            get_FormInfo();
 		        }
 	
-		        getDeptFullTree("<c:out value = '${topID}' />");
+		        getDeptFullTree(companyID);
 		        getFormRecv();
 		        
 		        add_doc_maker(companyID);
@@ -160,7 +160,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${topID}' />");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
 	
 		            var xmlHTTP = createXMLHttpRequest();
