@@ -276,11 +276,6 @@ function shareComment() {
 }*/
 
 function openCircularComment() {
-//alert("height : " + $('body').prop('scrollHeight'));
-//alert("width : " + $('body').prop('scrollWidth'));
-
-	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
-	
 	DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.7, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
 }
 
