@@ -653,12 +653,12 @@
                     </td>
                     <th style="width:10%; text-align:center"><spring:message code = 'ezApprovalG.t1664' /></th>
                     <td style="width:40%;" colspan="5">
-                        <select name="selFormKind" style="WIDTH: 170px;">
+                        <select name="selFormKind" style="width: 100%;">
                             ${docType}
                         </select>
                     </td>
                 </tr>        
-                  <tr>
+                <tr>
                     <td colspan="8" style="width:10%; text-align:center">
                         <input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
                     </td>                    
@@ -752,9 +752,7 @@
                         <img style="cursor:pointer" src="/images/arr_d.gif" width="24" height="24" onclick="return moveDown_onclick()">
                     </td>
                     <td style="width:600px; vertical-align:top; padding-top:5px; border:none;">
-                        <h2>
-                            <spring:message code = 'ezApprovalG.t999932' />
-                        </h2>
+                        <h2><spring:message code = 'ezApprovalG.t999932' /></h2>
                         <div class="listview" style="border-top:none; height:100%;">
                             <div id="divlvtForm" style="WIDTH: 100%; HEIGHT: 100%; overflow-x:auto;overflow-y:auto; padding:0px;"></div>
                         </div>
