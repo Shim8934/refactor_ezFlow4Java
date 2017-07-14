@@ -912,11 +912,14 @@
 				</c:if>
 			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
+				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
 		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
 		        <ul>
 				</ul>
 			</c:if>
+			<c:if test="${approvalFlag == 'G'}">
 			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1554'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1554'/></span><ul></ul></h2>
+			</c:if>
 			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
 			<ul>
 				<c:choose>
