@@ -681,8 +681,10 @@ function InsertToCabListView(Resultxml) {
             xmlDoc = createXmlDom();
             xmlDoc.appendChild(ListViewData);
         }
-
-        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        
+        if (g_HeaderInfoXml != "") {
+        	xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        }
         
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
