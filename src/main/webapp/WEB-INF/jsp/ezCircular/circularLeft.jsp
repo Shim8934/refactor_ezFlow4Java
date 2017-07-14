@@ -256,7 +256,7 @@
 	        } */
 	    </script>
 	</head>
-	<body class="leftbody" style="overflow: hidden;">
+	<body class="leftbody">
 	    <div id="left">
 	        <div class="left_circular" title="<spring:message code="ezCircular.t1" />"></div>
 	        <h2><span style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t1" /></span></h2>				
