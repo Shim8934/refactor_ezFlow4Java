@@ -16,8 +16,8 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
+		
 		<script type="text/javascript">
-// 	    	var uploadPath = "${scheduleFilePath}";
 	    	var msgRtn = "";
 	    	var oldCircularID = "";
 	    	var AttachLimit = 5;
@@ -60,6 +60,10 @@
 		        	}
 				}
 		    }
+		    
+			window.onresize = function () {
+				document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
+			}
 			
 	    	function FieldsAvailable() {
 	    	}

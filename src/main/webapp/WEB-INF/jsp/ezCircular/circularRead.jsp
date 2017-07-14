@@ -26,15 +26,13 @@
 				window.opener.getLeftCount();
 	            document.getElementById('circularUserList1').innerHTML = "${listUser}";
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
-	            /* getCircularComment(circularID, userInfoID, status); */
 	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
 	        });
 			
 			window.onresize = function () {
 				var contentHeight;
-				contentHeight = document.documentElement.innerHeight - 320;
-				document.getElementById("divCross").style.height = contentHeight + "PX";
+				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
 			};
 
 		    //삭제버튼 클릭시
