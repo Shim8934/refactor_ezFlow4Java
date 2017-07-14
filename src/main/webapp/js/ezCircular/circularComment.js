@@ -251,7 +251,7 @@ function shareComment() {
 	});
 }
 
-function DivPopUpPosition(popUpW, popUpH) {
+/*function DivPopUpPosition(popUpW, popUpH) {
     var ReturnValue = new Array();
     var heigth = document.documentElement.scrollHeight;
     if (heigth == 0)
@@ -273,12 +273,15 @@ function DivPopUpPosition(popUpW, popUpH) {
         ReturnValue[0] = (heigth / 2) - 50;
     ReturnValue[1] = pleftpos / 2;
     return ReturnValue
-}
+}*/
 
 function openCircularComment() {
+//alert("height : " + $('body').prop('scrollHeight'));
+//alert("width : " + $('body').prop('scrollWidth'));
+
 	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
 	
-	DivPopUpShow(700, 600, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
+	DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.7, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
 }
 
 function openCommentSharePopup(obj) {
