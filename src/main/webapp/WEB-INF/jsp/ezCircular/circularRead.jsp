@@ -441,7 +441,7 @@
  							</td>
 						</tr>
 						<tr> 
- 							<td colspan="4"> <div align="left" id="printDocument" style="paddingt: 5px; margin: 8px; width: 100%; "></div></td> 
+ 							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 
 						</tr>	
 					</table>
 				</td>
