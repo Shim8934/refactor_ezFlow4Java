@@ -809,7 +809,19 @@ CREATE TABLE `jmocha_stat_mail_log` (
   `TOTALBYTES` int(11) DEFAULT NULL,
   `MESSAGEID` varchar(200) DEFAULT NULL,
   `MESSAGESUBJECT` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`IDX`)
+  `SENDER_NAME` varchar(255) DEFAULT NULL,
+  `RECIPIENT_NAME` varchar(255) DEFAULT NULL,
+  `ATTACHED_FILENAME` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`IDX`),
+  KEY `IDX_TENANT_ID` (`TENANT_ID`),
+  KEY `IDX_LOG_DATE` (`LOG_DATE`),
+  KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
+  KEY `IDX_SENDER` (`SENDER`),
+  KEY `IDX_RECIPIENT` (`RECIPIENT`),
+  KEY `IDX_MESSAGESUBJECT` (`MESSAGESUBJECT`(255)),
+  KEY `IDX_SENDER_NAME` (`SENDER_NAME`),
+  KEY `IDX_RECIPIENT_NAME` (`RECIPIENT_NAME`),
+  KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1129,8 +1141,7 @@ CREATE TABLE `road_name_add_info` (
   `건축물대장건물명` varchar(40) DEFAULT NULL,
   `시군구건물명` varchar(200) DEFAULT NULL,
   `공동주택여부` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`관리번호`),
-  CONSTRAINT `부가정보_FK` FOREIGN KEY (`관리번호`) REFERENCES `road_name_address_info` (`관리번호`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`관리번호`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1192,8 +1203,7 @@ CREATE TABLE `road_name_address_info` (
   `변경전도로명주소` varchar(25) DEFAULT NULL,
   `상세주소부여여부` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`관리번호`),
-  KEY `FK_idx` (`도로명코드`,`읍면동일련번호`),
-  CONSTRAINT `주소정보_FK` FOREIGN KEY (`도로명코드`, `읍면동일련번호`) REFERENCES `road_name_code` (`도로명코드`, `읍면동일련번호`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `index` (`도로명코드`,`읍면동일련번호`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1313,8 +1323,7 @@ CREATE TABLE `road_name_jibun_info` (
   `지번본번` int(11) DEFAULT NULL,
   `지번부번` int(11) DEFAULT NULL,
   `대표여부` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`관리번호`,`일련번호`),
-  CONSTRAINT `지번정보_FK` FOREIGN KEY (`관리번호`) REFERENCES `road_name_address_info` (`관리번호`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`관리번호`,`일련번호`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2946,6 +2955,7 @@ CREATE TABLE `tbl_circular_user` (
   `updateStatus` mediumint(5) DEFAULT NULL,
   `updateDate` varchar(40) DEFAULT NULL,
   `commentStatus` mediumint(5) DEFAULT '0',
+  `shareStatus` mediumint(5) DEFAULT '0',
   `tenantId` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
@@ -6876,7 +6886,7 @@ CREATE TABLE `tbl_tmpapropinioninfo` (
   `USERDEPTNAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`OPINIONSN`,`USERID`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`USERID`,`OPINIONSN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
