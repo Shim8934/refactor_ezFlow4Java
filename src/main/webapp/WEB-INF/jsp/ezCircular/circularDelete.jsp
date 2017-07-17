@@ -649,7 +649,7 @@
 	                        <col>
 	                    </colgroup>
 	                     <tr>
-	                        <th><spring:message code='ezCircular.t86'/></th>
+	                        <th><spring:message code='ezCircular.t18'/></th>
 	                        <td>
 	                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
 	                                <option value="10">10</option>

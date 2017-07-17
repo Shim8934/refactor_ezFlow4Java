@@ -222,7 +222,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' />[${commentCount}]</span></li>
+               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>
                	    		<li><span onclick="confirmCircular()"><spring:message code='ezCircular.t65' /></span></li>
                	    		
                 	    	<c:if test="${result.memberID == userInfo.id}">
