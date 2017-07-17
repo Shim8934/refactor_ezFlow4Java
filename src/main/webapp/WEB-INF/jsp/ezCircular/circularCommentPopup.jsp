@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Insert title here</title>
+		<title><spring:message code="ezCircular.t82" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
 		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>

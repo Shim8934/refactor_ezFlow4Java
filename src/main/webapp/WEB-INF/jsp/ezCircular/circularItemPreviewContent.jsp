@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title></title>
+	    <title><spring:message code='ezCircular.t19'/></title>
 	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 	    <style type="text/css">
 	    	.list {

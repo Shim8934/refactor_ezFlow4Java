@@ -414,11 +414,11 @@ function manage_attendant_Complete(rtn) {
             if (i == 0) {
             	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
             	document.getElementById("receiverID").innerHTML = rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML = rtn["name2"][i];
+            	document.getElementById("receiverlist2").innerHTML = rtn["name1"][i];
             } else {
             	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
             	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
-            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name2"][i];
+            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name1"][i];
             }
 
             g_attendant["name"][i] = rtn["name"][i];
@@ -486,6 +486,7 @@ function check_name(type) {
             alert("'" + names[i] + "'" + strLang21);
             continue;
         } else if (adCount == 1) {
+alert("333");
             if (g_attendant == null)
                 g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
@@ -510,10 +511,14 @@ function check_name(type) {
             g_attendant["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6")[0]);
             g_attendant["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8")[0]);
 
-            if (length == 0)
-                document.getElementById("receiverlist").innerHTML = g_attendant["name"][length];
-            else
-                document.getElementById("receiverlist").innerHTML += ", " + g_attendant["name"][length];
+            if (length == 0) {
+            	document.getElementById("receiverlist").innerHTML = g_attendant["name"][length];
+            	document.getElementById("receiverlist2").innerHTML = g_attendant["name2"][length];            	
+            }
+            else {
+            	document.getElementById("receiverlist").innerHTML += ", " + g_attendant["name"][length];
+            	document.getElementById("receiverlist2").innerHTML += ", " + g_attendant["name2"][length];
+            }
         } else {
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDOM;
@@ -538,6 +543,7 @@ function check_name(type) {
 }
 
 function check_name_Complete(rgParams) {
+alert("!!!");
     DivPopUpHidden();
     if (rgParams["name"] != "") {
         if (g_attendant == null)
