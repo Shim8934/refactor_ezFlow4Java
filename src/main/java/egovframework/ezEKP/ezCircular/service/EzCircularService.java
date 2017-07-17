@@ -84,6 +84,8 @@ public interface EzCircularService {
 	
 	public int getListCount(String listType, String userID, int tenantID) throws Exception;
 	
+	public int getConfirmStatus(String circularID, String circularUserID, int tenantID) throws Exception;
+	
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
@@ -129,5 +131,9 @@ public interface EzCircularService {
 	public void circularReturn(String circularIdList, String folderID, String memberID, int tenantID) throws Exception;
 	
 	public void commentShareUser(String circularID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception;
+	
+	public void circularConfirm(String circularID, String memberID, int tenantID) throws Exception;
+	
+	public void confirmStatus(String circularID, String memberID, int tenantID, String type) throws Exception;
 	
 }

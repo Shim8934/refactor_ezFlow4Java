@@ -69,7 +69,7 @@
 		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">			
 			<div id="close" style="right:330px">
 		        <ul style="padding-top:2px">
-		            <li><span onClick="CircularWrite_onclick()">의견확인</li>
+		            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t54' /></li>
 		        </ul>
 		    </div>
 		</div>
