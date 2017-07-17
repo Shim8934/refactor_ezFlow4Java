@@ -251,32 +251,8 @@ function shareComment() {
 	});
 }
 
-/*function DivPopUpPosition(popUpW, popUpH) {
-    var ReturnValue = new Array();
-    var heigth = document.documentElement.scrollHeight;
-    if (heigth == 0)
-        heigth = document.body.scrollHeight;
-
-    var width = document.documentElement.clientWidth;
-    if (width == 0)
-        width = document.body.clientWidth;
-
-    var left = 0;
-    var top = 0;
-    var pleftpos;
-    pleftpos = parseInt(width) - popUpW;
-    heigth = parseInt(heigth) - popUpH;
-    width = parseInt(width) - pleftpos;
-    if (heigth < (popUpH + 50))
-        ReturnValue[0] = (heigth / 2);
-    else
-        ReturnValue[0] = (heigth / 2) - 50;
-    ReturnValue[1] = pleftpos / 2;
-    return ReturnValue
-}*/
-
 function openCircularComment() {
-	DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.7, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
+	DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.9, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
 }
 
 function openCommentSharePopup(obj) {
