@@ -1598,7 +1598,7 @@
 	                                    </h2>
 	                                    <div class="border_gray" style="margin-top:4px">
 	                                        <c:if test="${approvalFlag == 'G' }">
-	                                        <div id="APRLINE" style="Width: 717px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">

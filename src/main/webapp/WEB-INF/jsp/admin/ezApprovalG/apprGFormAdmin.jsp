@@ -309,6 +309,7 @@
 									url = "/admin/ezApprovalG/formMain.do";
 								}
 							} else {
+// 								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 								if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 									url = "/admin/ezApprovalG/formMainOther.do";
 								} else {
@@ -371,7 +372,8 @@
 								url = "/admin/ezApprovalG/formMain.do";
 							}
 						} else {
-							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+// 							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
+ 							if (pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE") {
 								url = "/admin/ezApprovalG/formMainOther.do";
 							} else {
 								url = "/admin/ezApprovalG/formMain.do";
@@ -380,10 +382,8 @@
 		            }
 		            
 		            GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
-		           // window.showModalDialog(url, window, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 
 		            Tree_setconfig();
-// 		            InitFormCont();
 		        } else {
 		        	OpenAlertUI("<spring:message code = 'ezApprovalG.t1532' />");
 		        }

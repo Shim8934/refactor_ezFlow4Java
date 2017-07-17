@@ -10407,16 +10407,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("offsetMin", commonUtil.getMinuteUTC(offsetMin));
 			lastDocDate = ezApprovalGDAO.getLastDocDate(map);
 			
-			String sysdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offsetMin, false);
-			
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			Date day1 = format.parse(sysdate);
-			Date day2 = format.parse(lastDocDate.substring(0,10));
-			
-			if (day1.compareTo(day2) > 0) {
-				ezApprovalGDAO.resetSerialNo(map);
-				result = ezApprovalGDAO.spGetSerialNo(map);
-				map.put("v_CurSN", result);
+			if (lastDocDate != null) {
+				String sysdate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offsetMin, false);
+				
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date day1 = format.parse(sysdate);
+				Date day2 = format.parse(lastDocDate.substring(0,10));
+				
+				if (day1.compareTo(day2) > 0) {
+					ezApprovalGDAO.resetSerialNo(map);
+					result = ezApprovalGDAO.spGetSerialNo(map);
+					map.put("v_CurSN", result);
+				}
 			}
 		}
 		
