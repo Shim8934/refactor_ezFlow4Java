@@ -220,11 +220,6 @@
 		            if (approvalFlag == "S") {
 			            SetAutoDocnumItem();
 		            }
-		            
-		            //재기안시 임시저장 버튼 숨기기
-		            if (pDraftFlag == "REDRAFT")
-		                setMenuBar("btnSaveServer", false);
-
 		        }
 		    }
 		    
@@ -801,7 +796,7 @@
 		            rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
 		
 		        if (!rtnval) {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t32'/>";
+		            var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }

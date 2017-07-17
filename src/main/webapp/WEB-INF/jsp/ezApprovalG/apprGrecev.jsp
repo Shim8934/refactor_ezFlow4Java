@@ -238,10 +238,6 @@
 			        setAutoProperty();
 			        process_AfterOpen();
 			    }
-			    else {
-			        message2.Set_EditorContentURL(pFormHref);
-			        
-			    }
 			}
 			
 			var setFildAvailable;

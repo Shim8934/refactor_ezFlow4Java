@@ -235,7 +235,7 @@
 	            CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        }
 			
-			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/CK_contents.css";
+			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
 			
 		    CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";

@@ -757,40 +757,46 @@ public class EzBoardController extends EgovFileMngUtil{
     @RequestMapping(value = "/ezBoard/getBoardList.do", produces = "text/xml; charset=utf-8")
     @ResponseBody
     public String getBoardList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, BoardVO boardVO) throws Exception{
+    	logger.debug("getBoardList started");
+    	logger.debug("boardID : " + boardVO.getBoardId());
+    	logger.debug("boardType : " + boardVO.getBoardType());
+
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-        String boardID = boardVO.getBoardId();
-        String boardType = boardVO.getBoardType();
-        String mode = boardVO.getMode();
-        String type = "1";
-        String resultXML = "";
-        
-        if (boardVO.getType() != null && !boardVO.getType().equals("")) {
-        	type = boardVO.getType();
-        }
-        
-        BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-        
-        boardVO.setType(type);
-        boardVO.setLang(userInfo.getLang());
-        boardVO.setTenantID(userInfo.getTenantId());
-        
-        if (boardType.equals("4")) { // 썸네일 
-        	resultXML = getThumbList(boardVO, userInfo, type);
-        } else if (boardType.equals("5")) { //Q&A
-            resultXML = getQnAListItem(boardVO, userInfo, type, boardInfo.getBoardAdmin_FG());
-        } else if (boardType.equals("M")) { //마이게시판
-        	resultXML = getMyboardList(boardVO, userInfo, mode);
-        } else if (boardType.equals("A")) { //게시판승인
-        	resultXML = getApprboardList(boardVO, userInfo, mode, type);
-        } else {
-            if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-            	boardVO.setBoardType("N");
-            	resultXML = getNewItemList(boardVO, userInfo);
-            } else {
-            	resultXML = getBoardListItem(boardVO, userInfo, type);
-            }
-        }
+    	String boardID = boardVO.getBoardId();
+    	String boardType = boardVO.getBoardType();
+    	String mode = boardVO.getMode();
+    	String type = "1";
+    	String resultXML = "";
+    	
+    	if (boardVO.getType() != null && !boardVO.getType().equals("")) {
+    		type = boardVO.getType();
+    	}
+    	
+    	BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+    	
+    	boardVO.setType(type);
+    	boardVO.setLang(userInfo.getLang());
+    	boardVO.setTenantID(userInfo.getTenantId());
+    	
+    	if (boardType.equals("4")) { // 썸네일 
+    		resultXML = getThumbList(boardVO, userInfo, type);
+    	} else if (boardType.equals("5")) { //Q&A
+    		resultXML = getQnAListItem(boardVO, userInfo, type, boardInfo.getBoardAdmin_FG());
+    	} else if (boardType.equals("M")) { //마이게시판
+    		resultXML = getMyboardList(boardVO, userInfo, mode);
+    	} else if (boardType.equals("A")) { //게시판승인
+    		resultXML = getApprboardList(boardVO, userInfo, mode, type);
+    	} else {
+    		if (boardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+    			boardVO.setBoardType("N");
+    			resultXML = getNewItemList(boardVO, userInfo);
+    		} else {
+    			resultXML = getBoardListItem(boardVO, userInfo, type);
+    		}
+    	}
+
+		logger.debug("getBoardList ended");
 
         return resultXML.toString();
     }
@@ -2869,7 +2875,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 읽음표시 실행 Method
 	 */
 	@RequestMapping(value="/ezBoard/setRead.do")
-	public void setAsRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo) throws Exception{
+	public void setAsRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pBoardID = "";
@@ -3107,19 +3113,12 @@ public class EzBoardController extends EgovFileMngUtil{
         if (request.getParameter("mode") != null) {
         	pMode = request.getParameter("mode");
         }
+        
         if (request.getParameter("guBun") != null) {
         	gubun = request.getParameter("guBun");
         }
         
         Document doc = commonUtil.convertStringToDocument(xmlData.toString());
-
-//        String attachList = "";
-//        String smallName = "";
-//        String title = "";
-//        String itemID = "";
-//        String[] attchArray = null;
-//        String[] smallArray = null;
-//        String[] itemid = null;
     	
     	if (gubun.equals("2")) {
     		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
@@ -3133,40 +3132,8 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardInfo.getWrite_FG().equals("false")) {
             return "<RESULT>INACCESSIBLE</RESULT>";
         }
-//        if (gubun.equals("3")) {
-//            attachList = doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent();
-//            smallName = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
-//            title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
-//            itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
-//            attchArray = attachList.split(";");
-//            smallArray = smallName.split(";");
-//            itemid = itemID.split(";");
-//        }                
 
-        String ret = "";
-
-        //gubun 3이면 포토게시판 2는 익명
-//        if (gubun.equals("3")) {
-//            if (attchArray.length == smallArray.length) {
-//                for (int i = 0; i < attchArray.length - 1; i++) {
-//                    doc.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attchArray[i] + ";");
-//                    doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).setTextContent(smallArray[i]);
-//                    doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemid[i]);
-//                    doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemid[i]);
-//                    
-//                    if (attchArray.length > 2) {
-//                    	doc.getElementsByTagName("TITLE").item(0).setTextContent(title + "_" + (i + 1));
-//                    }
-//                    if (i > 0) {
-//                        pMode = "New";
-//                        doc.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getTodayUTCTime(""));
-//                    }
-//                    ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
-//                }
-//            }
-//        } else {
-        ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
-//        }
+        String ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
         
         logger.debug("saveItem ended. ret=" + ret);
         
@@ -3198,10 +3165,10 @@ public class EzBoardController extends EgovFileMngUtil{
             pUploadSN[i] = "{" + sGUID[i] + "}";
         }
         
-        int maxSize = 0;
+        long maxSize = 0;
         String pBoardID = "";
         String pMode = "";
-        maxSize = Integer.parseInt(request.getParameter("maxSize"));
+        maxSize = Long.parseLong(request.getParameter("maxSize"));
         pBoardID = request.getParameter("boardID");
         pMode = request.getParameter("mode");
 
@@ -3245,12 +3212,14 @@ public class EzBoardController extends EgovFileMngUtil{
                         resultUpload[i] = "denied";
                     } else {
                         String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator;
-                        File fTemp = new File(pAttachPath);
+                        File fTemp = new File(pAttachPath, pUploadSN[i] + "_" + pFileName[i]);
                         
                         if (!file.exists()) {
                         	fTemp.mkdirs();
                         }
+                        
                         writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
+                        
                         fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
                         resultUpload[i] = "true";
                     }

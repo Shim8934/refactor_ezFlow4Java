@@ -192,7 +192,7 @@
 	            <td style="width: 25px;">
 	                <a class="imgbtn"><span onclick="add_onclick()"><spring:message code='ezEmail.t308' /></span></a>
 	                <a class="imgbtn"><span onclick="btn_Select_onclick()"><spring:message code='ezEmail.t38' /></span></a>
-	                <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezEmail.t39' /></span></a>
+	                <a class="imgbtn"><span onclick="Window_Close()"><spring:message code='ezEmail.t39' /></span></a>
 	            </td>
 	        </tr>
 	    </table>

@@ -91,6 +91,7 @@ import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -800,47 +801,53 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	}
 		        	
 		        	//set importance
-		        	if (orgMessage.getHeader("X-Priority") != null) {
-		        		String tempImportance = orgMessage.getHeader("X-Priority")[0];
-	        			if (tempImportance.equals("1")) {
-	        				importance = "2";
-	        			} else if (tempImportance.equals("5")) {
-	        				importance = "0";
-	        			} else {
-	        				importance = "1";
-	        			}
-	        		}
-		        	logger.debug("importance=" + importance);
-
-		        	//set isEachMail
-		        	if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
-		        		isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
-	        		}
-		        	//set bodyType
-		        	if (orgMessage.getHeader("Content-Type") != null) {
-		        		String tempBodyType = orgMessage.getHeader("Content-Type")[0];
-		        		if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
-		        			bodyType = "1";
-		        		}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
-		        			bodyType = "0";
+		        	if(_cmd.equals("EDIT")) {
+		        		logger.debug("EDIT MODE : set mail option start");
+		        		if (orgMessage.getHeader("X-Priority") != null) {
+		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
+		        			if (tempImportance.equals("1")) {
+		        				importance = "2";
+		        			} else if (tempImportance.equals("5")) {
+		        				importance = "0";
+		        			} else {
+		        				importance = "1";
+		        			}
 		        		}
-	        		}
-		        	if (orgMessage.getHeader("Return-Receipt-To") != null) {
-		        		replySendTime = "1";
-	        		} else {
-	        			replySendTime = "0";
-	        		}
-		        	if (orgMessage.getHeader("Disposition-Notification-To") != null) {
-		        		replyReadTime = "1";
-	        		} else {
-	        			replyReadTime = "0";
-	        		}
+		        		logger.debug("importance=" + importance);
 		        	
-		        	if (orgMessage.getHeader("Delivery-Date") != null) {
-		        		delaySendDate = orgMessage.getHeader("Delivery-Date")[0].trim();
-	        		} else {
-	        			delaySendDate = "";
-	        		}
+		        		//set isEachMail
+		        		if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
+		        			isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
+		        		}
+		        		//set bodyType
+		        		if (orgMessage.getHeader("Content-Type") != null) {
+		        			String tempBodyType = orgMessage.getHeader("Content-Type")[0];
+		        			
+		        			if(tempBodyType.split(";")[0].trim().equals("text/plain")) {
+		        				bodyType = "1";
+		        			}else if ( tempBodyType.split(";")[0].trim().equals("multipart/alternative")) {
+		        				bodyType = "0";
+		        			}
+		        		}
+		        		if (orgMessage.getHeader("Return-Receipt-To") != null) {
+		        			replySendTime = "1";
+		        		} else {
+		        			replySendTime = "0";
+		        		}
+		        		if (orgMessage.getHeader("Disposition-Notification-To") != null) {
+		        			replyReadTime = "1";
+		        		} else {
+		        			replyReadTime = "0";
+		        		}
+		        	
+		        		if (orgMessage.getHeader("Delivery-Date") != null) {
+		        			delaySendDate = orgMessage.getHeader("Delivery-Date")[0].trim();
+		        		} else {
+		        			delaySendDate = "";
+		        		}
+		        		
+		        		logger.debug("EDIT MODE : set mail option end");
+		        	}
 				}
 				orgFolder.close(true);
 				
@@ -903,7 +910,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
         String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
-        
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
 		model.addAttribute("to", to);
@@ -2983,11 +2990,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
 	        
 			} catch (Exception e) {
-				e.printStackTrace();
 				
-				//OVERQUOTA / OVERMESSAGESIZE / Invalid Addresses exception이 아니면 retry한다.
-				if (e.getMessage().indexOf("OVERQUOTA") == -1 && e.getMessage().indexOf("OVERMESSAGESIZE") == -1
-						&& e.getMessage().indexOf("Invalid Addresses") == -1) {
+				if (e.getMessage().indexOf("OVERQUOTA") > -1 && e.getMessage().indexOf("OVERMESSAGESIZE") > -1) {
+					logger.error("mailInterSend : " + e.getMessage());
+					pResult = e.getMessage();
+				} else if (e.getMessage().indexOf("Invalid Addresses") > -1) {
+					pResult = e.getMessage();
+					String cause = e.getCause().toString();
+					
+					String pattern = "Unknown user: ([\\S]+)";
+					Pattern r = Pattern.compile(pattern);
+					Matcher m = r.matcher(cause);
+					pResult = "Invalid Addresses:";
+					
+					int index = 1000;
+					while (m.find()) {
+						// 1000번 이상 반복되면 break한다.
+						--index;
+						if (index < 0) {
+							logger.error("Stop finding invalid addresses, because over 1000 times.");
+							break;
+						}
+						
+						pResult += m.group(1) + "|";
+					}
+					
+					pResult = pResult.substring(0, pResult.length() - 1);
+				} else { // retry
+					e.printStackTrace();
+					
 					retryFlag = true;
 					--retryCount;
 					
@@ -3001,8 +3032,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						//더이상 retry를 하지 않으므로 리턴 메시지를 세팅한다.
 						pResult = e.getMessage();
 					}
-				} else {
-					pResult = e.getMessage();
 				}
 			} finally {
 				if (ia != null) {
@@ -3552,51 +3581,30 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String returnData = "";
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String companyId = userInfo.getCompanyID();
-		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		
 		try {
-			String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
-			inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
-			logger.debug("inputParams=" + inputParams);
-
-			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionList";			
-			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-			logger.debug("response=" + response);
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
-			JSONArray resultArray = null;
-			
-			if (response != null) {
-				JSONParser jsonParser = new JSONParser();
-				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-				
-				String resultCode = (String)responseObj.get("resultCode");
-				
-				if (resultCode.equals("OK")) {
-					resultArray = (JSONArray)responseObj.get("result");
-				}
-			}
+			List<MailDistributionVO> distributionList = ezEmailService.getDistributionList(userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
 
-			if (resultArray != null) {
-				for (int i = 0; i < resultArray.size(); i++) {
-					sb.append("<ROW><CELL>");
-					
-					Map<String, String> rowObject = (Map<String, String>)resultArray.get(i);
-					
-					for (String colName : rowObject.keySet()) {
-						String colValue = rowObject.get(colName);
-						sb.append("<" + colName + ">");
-						sb.append(commonUtil.cleanValue(colValue));
-						sb.append("</" + colName + ">");
-					}
-					
-					sb.append("</CELL></ROW>");
-				}
+			for (MailDistributionVO vo : distributionList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getId()));
+				sb.append("</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getMail()));
+				sb.append("</DATA2>");
+				
+				sb.append("</CELL></ROW>");
 			}
 			
 			sb.append("</ROWS></LISTVIEWDATA>");
@@ -3762,64 +3770,46 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	 * 공용배포그룹 정보 호출 함수
 	 */
 	private String getOrganDLSearch(String pSearchList, LoginVO userInfo) {
-        String pResult = "";
+        String returnData = "";
+        
         try {
-        	pSearchList = pSearchList.split("::")[1];
+        	String searchValue = pSearchList.split("::")[1];
         	
-        	String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-        	
-        	String inputParams = "companyId=" + URLEncoder.encode(userInfo.getCompanyID(), "UTF-8");
-        	inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
-        	inputParams += "&filter=" + URLEncoder.encode("AND GROUP_NAME LIKE '%" + pSearchList + "%'", "UTF-8");
-        	
-			logger.debug("inputParams=" + inputParams);
-
-			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchList";			
-			String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-
-			logger.debug("response=" + response);
+			List<MailDistributionVO> distributionList = ezEmailService.getDistributionSearchList(userInfo.getCompanyID(), userInfo.getTenantId(), searchValue);
 			
-			JSONArray resultArray = null;
-			
-			if (response != null) {
-				JSONParser jsonParser = new JSONParser();
-				JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-				
-				String resultCode = (String)responseObj.get("resultCode");
-				
-				if (resultCode.equalsIgnoreCase("OK")) {
-					resultArray = (JSONArray)responseObj.get("result");
-				}
-			}
-        	
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
 
-			if (resultArray != null) {
-				for (int i = 0; i < resultArray.size(); i++) {
-					sb.append("<ROW><CELL>");
-					
-					Map<String, String> rowObject = (Map<String, String>)resultArray.get(i);
-					
-					for (String colName : rowObject.keySet()) {
-						String colValue = rowObject.get(colName);
-						sb.append("<" + colName + ">");
-						sb.append(commonUtil.cleanValue(colValue));
-						sb.append("</" + colName + ">");
-					}
-					
-					sb.append("</CELL></ROW>");
-				}
+			for (MailDistributionVO vo : distributionList) {
+				sb.append("<ROW><CELL>");
+				
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getName()));
+				sb.append("</VALUE>");
+				
+				sb.append("<DATA1>group</DATA1>");
+				
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getId()));
+				sb.append("</DATA2>");
+				
+				sb.append("<DATA3>");
+				sb.append(commonUtil.cleanValue(vo.getMail()));
+				sb.append("</DATA3>");
+				
+				sb.append("</CELL></ROW>");
 			}
 			
 			sb.append("</ROWS></LISTVIEWDATA>");
-        	
-        	pResult = "<LISTVIEWDATA><ROWS>" + sb.toString() + "</ROWS></LISTVIEWDATA>";
-        } catch (Exception e) {
-        	e.printStackTrace();
-            pResult = "EXCEPTION";
-        }
-        return pResult;
+			
+			returnData = sb.toString();
+			
+		} catch (Exception e) {
+			returnData = "EXCEPTION";
+			e.printStackTrace();
+		}
+        
+        return returnData;
     }
 	
 	/**
@@ -3939,6 +3929,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     	}
 	}
 	
+	/**
+	 * size만 읽는 OutputStream 클래스
+	 */
 	public class CountOutputStream extends OutputStream {
 	    int size;
 		

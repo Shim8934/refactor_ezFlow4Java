@@ -408,10 +408,12 @@ public class IMAPAccess {
 		        	 }
 		         }
 			}
+			/*
 			// this is a nested message			
 			else if (part.isMimeType("message/rfc822")) {
 				hasAttachment((Part)part.getContent());
 			}
+			*/
 			// Content-Disposition 헤더가 없이 첨부된 파일이 있어
 			// Content-Type이 application으로 시작하는 경우도 추가함 
 			// 예) Content-Type: application/octet-stream;

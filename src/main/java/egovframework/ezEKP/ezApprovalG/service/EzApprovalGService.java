@@ -15,7 +15,16 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
+	
+	// 캐비닛 기록물철 문서 삭제
+	public String deleteCapInfo(String cabinetID, String companyID, int tenantID) throws Exception;
 
+	// 캐비닛 기록물철 문서 삭제 정보 추가
+	public String insertDelCapInfo(String cabinetID, String delUserID, String ipAddress, String companyID, int tenantID) throws Exception;
+	
+	// 캐비닛 기록물철 삭제 전 진행중문서 확인
+	public String selectExpCabDocInfo(String cabinetID) throws Exception;
+	
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception;
 	
 	public List<ApprGgetDeptStacticsVO> getDeptStactics (String pStartDate, String pEndDate, String pLang, String companyID, int tenantID) throws Exception;
@@ -195,7 +204,7 @@ public interface EzApprovalGService {
 	
 	public String getSignInfo(String docID, String offset, Locale locale, String companyID, int tenantID) throws Exception;
 	
-	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID) throws Exception;
+	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID, String offSet) throws Exception;
 	
 	public String rollbackCabinetNum(String deptID, String subID, String sn, String companyID, String docID, String lang, int tenantID) throws Exception;
 	
@@ -387,7 +396,7 @@ public interface EzApprovalGService {
 
 	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang) throws Exception;
 
-	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId) throws Exception;
+	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId, Locale locale) throws Exception;
 
 	public String insUserCont(String ownUserID, String parentContID, String ownUserName, String description, String companyID, String lang, int tenantID) throws Exception;
 
@@ -447,5 +456,7 @@ public interface EzApprovalGService {
 	public void delCirculation(String docID, String companyID, int tenantID) throws Exception;
 
 	public String getCirculationinfo(String docID, String mode, String companyID, String lang, int tenantID, String offset) throws Exception;
+
+	public String setCabinetHesong(String docID, String deptID,	String deptName, String deptName2, String userName,	String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
 }

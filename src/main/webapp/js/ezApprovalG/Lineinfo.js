@@ -633,13 +633,13 @@ function APRLINESNDownFunction() {
     		var pSelectedRow = pAPRLINE.GetSelectedRows();
     		
     		if(pSelectedRow[0] == undefined){
-    			OpenAlertUI(strLang549);
+    			OpenAlertUI(strLangS574);
     			return;            
     		}
     		
     		if(pSelectedRow[0].getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && pSelectedRow[0].childNodes[0].innerHTML == "1")
     		{
-    			OpenAlertUI(strLang550);    
+    			OpenAlertUI(strLang306);    
     			return;
     		}
     		
@@ -648,40 +648,32 @@ function APRLINESNDownFunction() {
     		if (pSelectedRow.length != 0) {
     			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
     			
-    			if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1")
-    			{
-    				OpenAlertUI(strLang551);    
+    			if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
+    				OpenAlertUI(strLangS576);    
     				return;
-    			}
-    			if(pSelectedRow[0].getAttribute("DATA5") == "N")
-    			{
-    				if(pSelectedRow[0].cells[4].childNodes[0].options[2].selected == true || pSelectedRow[0].cells[4].childNodes[0].options[3].selected == true)
-    				{
-    					OpenAlertUI(strLang552);    
-    					return;
-    				}
+    			} 
+    			
+    			if(pSelectedRow[0].getAttribute("DATA5") == "N") {
+//    				if(pSelectedRow[0].cells[4].childNodes[0].options[2].selected == true || pSelectedRow[0].cells[4].childNodes[0].options[3].selected == true) {
+//    					OpenAlertUI(strLang552);    
+//    					return;
+//    				}
     				
-    				if(p_NextSelRow.getAttribute("DATA5") == "N")
-    				{
-    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true)
-    					{
-    						OpenAlertUI(strLang551);    
-    						return;
-    					}
-    				}
-    				
-    			}
-    			else
-    			{
-    				if(p_NextSelRow.getAttribute("DATA5") == "N")
-    				{
-    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true)
-    					{
-    						OpenAlertUI(strLang551);    
+//    				if(p_NextSelRow.getAttribute("DATA5") == "N") {
+//    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true) {
+//    						OpenAlertUI(strLang551);    
+//    						return;
+//    					}
+//    				}
+    			} else {
+    				if(p_NextSelRow.getAttribute("DATA5") == "N") {
+    					if(p_NextSelRow.cells[4].childNodes[0].options[2].selected == true || p_NextSelRow.cells[4].childNodes[0].options[3].selected == true) {
+    						OpenAlertUI(strLangS576);    
     						return;
     					}
     				}
     			}
+    			
     			if (p_NextSelRow != null) {
     				var p_NextAprStat = GetAttribute(p_NextSelRow, "DATA12");
     				if ((pSelAprLineState == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
