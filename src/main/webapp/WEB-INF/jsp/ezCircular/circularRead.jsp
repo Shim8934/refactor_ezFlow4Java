@@ -26,7 +26,7 @@
 
 			$(document).ready(function(){
 				window.opener.getLeftCount();
-	            document.getElementById('circularUserList1').innerHTML = "${listUser}";
+// 	            document.getElementById('circularUserList1').innerHTML = "${listUser}";
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
@@ -248,6 +248,12 @@
         	                <td colspan="3" style="padding-left: 4px;">${result.title}</td>
                     	</tr>
                     	<tr>
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
+	       					<td style="padding-left: 4px;"><div id="writer" >${result.memberName }</div></td>
+							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t33' /></th> 
+ 							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
+						</tr>
+                    	<tr>
 	                        <th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t115' /></th>
     	                    <td id="Td_Importance" style="padding-left: 4px;">
     	                    	<c:if test="${result.importance == '0' }">
@@ -276,14 +282,8 @@
 		                		</c:choose>
 							</td>
                     	</tr>
-		        		<tr>
-							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
-	       					<td style="padding-left: 4px;"><div id="writer" >${result.memberName }</div></td>
-							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t33' /></th> 
- 							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
-						</tr>
 						<tr>
-		        			<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t65' /></th>
+		        			<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t74' /></th>
 	       					<td><div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div></td>
 	         				<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t124' /></th>
 		            		<td>
@@ -301,8 +301,8 @@
 		            		</td>
 		        		</tr>
 		        		<tr>
-		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t34' /></th>
-		            		<td colspan="3" id="circularUserList1" style="padding-left: 4px; vertical-align: middle;"></td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t86' /></th>
+		            		<td colspan="3" id="circularUserStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; height:100%; overflow:auto;"></div></td>
@@ -374,7 +374,17 @@
  									${result.title}
  								</div>
  							</td> 
-						</tr> 
+						</tr>
+						<tr style="height:25px">
+							<th style="padding-left: 10px;"><spring:message code='ezCircular.t122' /></th>
+	       					<td style="padding-left: 4px;">								
+	         					<div id="writer" >${result.memberName }</div>
+	         				</td>
+							<th style="padding-left:10px"><spring:message code='ezCircular.t33' /></th> 
+ 							<td style="padding-left:6px">
+ 								<div id="printStatus">${result.regDate }</div>
+ 							</td> 
+						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t115' /></th> 
  							<td style="padding-left: 4px; width:200px">
@@ -405,17 +415,7 @@
 							</td>
 						</tr>
 						<tr style="height:25px">
-							<th style="padding-left: 10px;"><spring:message code='ezCircular.t122' /></th>
-	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${result.memberName }</div>
-	         				</td>
-							<th style="padding-left:10px"><spring:message code='ezCircular.t33' /></th> 
- 							<td style="padding-left:6px">
- 								<div id="printStatus">${result.regDate }</div>
- 							</td> 
-						</tr>
-						<tr style="height:25px">
-							<th style="padding-left:10px"><spring:message code='ezCircular.t65' /></th>
+							<th style="padding-left:10px"><spring:message code='ezCircular.t74' /></th>
 	       					<td style="padding-left: 4px;">								
 	         					<div id="statusNum">${result.confirmCount} / ${result.confirmTotalCount}</div>
 	         				</td>
@@ -437,12 +437,8 @@
  							</td> 
 						</tr>
 						<tr style="height:25px"> 
- 							<th style="padding-left:10px"><spring:message code='ezCircular.t34' /></th> 
- 							<td style="padding-left:4px; width:100%" colspan="3">
- 								<div id="printCircularUser">
- 									${listUser}
- 								</div>
- 							</td>
+ 							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
+		            		<td colspan="3" id="circularUserStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
 						</tr>
 						<tr> 
  							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 

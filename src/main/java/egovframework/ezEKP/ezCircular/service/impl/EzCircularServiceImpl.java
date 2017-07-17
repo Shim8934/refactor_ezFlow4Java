@@ -1173,6 +1173,22 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		logger.debug("confirmStatus ended.");
 	}
+	
+	@Override
+	public int getConfirmStatus(String circularID, String circularUserID, int tenantID) throws Exception {
+		logger.debug("getConfirmStatus started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("circularUserID", circularUserID);
+		map.put("tenantID", tenantID);
+		
+		int confirmStatus = ezCircularDAO.getConfirmStatus(map);
+		
+		logger.debug("getConfirmStatus ended. confirmStatus = " + confirmStatus);
+		
+		return confirmStatus;
+	}
 
 	@Override
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception {

@@ -1786,6 +1786,27 @@
 				tenantID = #tenantID#
     	]]>
     </select>
+    
+    <select id="EzCircularDAO.getConfirmStatus" parameterClass="Map" resultClass="Integer">
+    	<![CDATA[
+			SELECT
+				B.status
+			FROM
+				TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
+			WHERE
+				A.circularID = #circularID#
+			AND
+				B.memberID = #circularUserID#
+			AND
+				B.tenantid = #tenantID#
+    	]]>
+    </select>
 
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[

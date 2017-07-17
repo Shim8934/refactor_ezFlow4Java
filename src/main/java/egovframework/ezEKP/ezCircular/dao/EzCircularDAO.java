@@ -187,6 +187,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public int getListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getListCount", map);
 	}
+	
+	public int getConfirmStatus(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.getConfirmStatus", map);
+	}
 
 	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) throws Exception {
 		insert("EzCircularDAO.setCircularList_Config_I", circularConfigVO);

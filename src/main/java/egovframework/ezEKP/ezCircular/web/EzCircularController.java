@@ -1276,26 +1276,11 @@ System.out.println("orderOption1 : " + orderOption1);
 		}
 	 
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-		int commentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), userInfo.getTenantId());//해당유저의 안 읽은 댓글 수
-		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId(), userInfo.getOffset());
-
-		String listUser = "";
+		int commentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), userInfo.getTenantId());
+		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
+		
 		result.setRegDate(result.getRegDate().substring(0, 16));
 		
-		for (CircularListVO vo : list) {
-			if (!vo.getMemberID().equals(result.getMemberID())) {
-				if (vo.getStatus() == 0) {
-					listUser += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'>" + vo.getMemberName() + ", ";					
-				} else {
-					listUser += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'>" + vo.getMemberName() + ", ";
-				}
-			}
-		}
-		
-		if (list.size() > 0 && list.size() != 1) {
-			listUser = listUser.substring(0, listUser.length() - 2);
-		}
-
 	    //첨부파일 정보  hasFile이 Y일때
         if (result.getHasFile() == 1) {        
         	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
@@ -1314,7 +1299,7 @@ System.out.println("orderOption1 : " + orderOption1);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("result", result);
-		model.addAttribute("listUser", listUser);
+		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
 		
 		return "/ezCircular/circularRead";
 	}
