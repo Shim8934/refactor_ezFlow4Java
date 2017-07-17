@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title><spring:message code='ezCircular.t8' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />		
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">

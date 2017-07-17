@@ -222,9 +222,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 				StringBuilder bodyContent = new StringBuilder("");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + title + " </br>");
-		    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t166", userInfo.getLocale()) + " : " + content);
-				
+		    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getId());
+
 				for (int i=0; i<receiverLength; i++) {
+					OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
+					
 					InternetAddress from = new InternetAddress();
 					from.setPersonal(userInfo.getDisplayName(), "UTF-8");
 					from.setAddress(userInfo.getEmail());
@@ -232,9 +234,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 					InternetAddress to = new InternetAddress();
 					
 					if (!receiverID[i].trim().equals(userInfo.getId())) {
-logger.debug("receiverID = " + receiverID);
 						to.setPersonal(receiverName[i].trim(), "UTF-8");
-						to.setAddress(receiverID[i].trim());
+						to.setAddress(AccessUserInfo.getMail());
 						
 						ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
 					}
