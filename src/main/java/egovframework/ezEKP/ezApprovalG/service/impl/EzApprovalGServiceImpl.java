@@ -19184,7 +19184,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("</CELL>");
 			strSQL.append("<CELL>");
 			strSQL.append("<VALUE>"); 
-System.out.println("modifyFlag:"+docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent());
 			if (makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("0")) {
 				strSQL.append(langType.equals("1")? messageSource.getMessage("ezApprovalG.pjj23", userInfo.getLocale()) : "BasicRegItems");
 			} else {
