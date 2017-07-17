@@ -158,10 +158,6 @@ public class IMAPAccess {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
-			} else {
-				if (!inbox.isSubscribed()) {
-					inbox.setSubscribed(true);
-				}
 			}
 			
 			if (!sent.exists()) {
@@ -206,6 +202,10 @@ public class IMAPAccess {
 		try{
 			Folder rootFolder = getStore().getDefaultFolder();
 			
+			if (rootFolder.listSubscribed().length == 0) {
+				setReculsiveSubscribe(rootFolder, true);
+			}
+			
 			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
 			Folder sent = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t645", locale));
 			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
@@ -218,10 +218,6 @@ public class IMAPAccess {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				inbox.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
-			} else {
-				if (!inbox.isSubscribed()) {
-					inbox.setSubscribed(true);
-				}
 			}
 			
 			if (!sent.exists()) {
@@ -253,10 +249,6 @@ public class IMAPAccess {
 				junk.setSubscribed(true);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
 			}						
-			
-			if (rootFolder.listSubscribed().length == 0) {
-				setReculsiveSubscribe(rootFolder, true);
-			}
 			
 			Folder[] folderList = null;
 			if (isSubscribe) {
