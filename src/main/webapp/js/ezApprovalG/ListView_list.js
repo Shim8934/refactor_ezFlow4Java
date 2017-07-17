@@ -452,7 +452,7 @@ function ListView() {
 
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
         for (var i = 0; i < oHeaders.length; i++) {
-            var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
+    		var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
             
             if(strWidth != "0"){ //2011.07.05 Header의 width가 0이면 td를 만들지 않는다.
                 var strName = SelectSingleNodeValue(oHeaders[i], "NAME");
@@ -463,7 +463,13 @@ function ListView() {
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
                 if(strColName == "DocTitle")
                     _titleIdx = i;
-                                
+               
+                if (strColName == "ProcessDate") {
+                	if (CrossYN() && navigator.userAgent.search('rv:11.0') == -1) {
+                		strWidth = parseInt(strWidth) + parseInt("20");		
+                	}
+                }
+                
                 var objTd = document.createElement("TH");
 
                 objTd.id = _thisID + "_TH_" + i;
