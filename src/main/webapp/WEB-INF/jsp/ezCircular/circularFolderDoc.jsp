@@ -18,38 +18,39 @@
 		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		
 		<style>
-		#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-		}
-		#layer_Viewpopup .popupwrap1 {
-			border:1px solid #555a64;
-			padding:0px;
-			margin:0px;
+			#layer_Viewpopup { 
+				z-index:1000; 
+				margin:0px; 
+				padding:0px;
+			}
+			#layer_Viewpopup .popupwrap1 {
+				border:1px solid #555a64;
+				padding:0px;
+				margin:0px;
+				
+			}
+			#layer_Viewpopup .shadow {
+				height:2px;
+				background:#d7d7d7;
+				
+			}
+			#layer_Viewpopup .popupwrap2 {
+				border:2px solid #e5e5e5;
+				padding:10px;
+				
+			}
+			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 			
-		}
-		#layer_Viewpopup .shadow {
-			height:2px;
-			background:#d7d7d7;
-			
-		}
-		#layer_Viewpopup .popupwrap2 {
-			border:2px solid #e5e5e5;
-			padding:10px;
-			
-		}
-		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
-		
-		#layer_Viewpopup .popupwrap3 {
-			position:relative;
-			padding:10px;
-			background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-		}
-		#layer_Viewpopup .popupwrap3 h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
+			#layer_Viewpopup .popupwrap3 {
+				position:relative;
+				padding:10px;
+				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+			}
+			#layer_Viewpopup .popupwrap3 h1 {
+				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			}
 		</style>
+		
 	    <script type="text/javascript">
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
@@ -85,11 +86,12 @@
 	        window.onresize = function () {
 	            var height = parseInt(document.documentElement.clientHeight - 320);
 	            Window_resize();
-	
 	        };
+	        
 	        document.onselectstart = function () { return false; };
-	         window.onload = function () {
-	            if (navigator.userAgent.indexOf('Firefox') != -1) {
+	        
+	        window.onload = function () {
+	        	if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
 	                document.body.style.khtmlUserSelect = 'none';
@@ -101,7 +103,8 @@
 	            document.getElementById("divList").style.height = height + "px";
 	            window_onunload_Event = true;
 	            getBoardList();
-	        }; 
+	        };
+	        
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
@@ -426,7 +429,6 @@
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
 	        	var circularID = obj.getAttribute("CIRCULARID");
-	        	$(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif');
 
                 if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
@@ -718,7 +720,7 @@
 	                        <col>
 	                    </colgroup>
 	                     <tr>
-	                        <th><spring:message code='ezCircular.t86'/></th>
+	                        <th><spring:message code='ezCircular.t18'/></th>
 	                        <td>
 	                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
 	                                <option value="10">10</option>
