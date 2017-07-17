@@ -317,7 +317,7 @@
       				<table class="content" style="width:100%;">
         				<tr>
           					<th style="width:200px;"><spring:message code="ezCircular.t32"/></th>
-          					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:700px"></td>
+          					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:100%"></td>
         				</tr>
 	        			<tr>
 	          				<th><spring:message code="ezCircular.t115"/></th>
