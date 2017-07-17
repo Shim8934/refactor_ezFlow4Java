@@ -988,7 +988,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(850, 460));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(870, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1019,7 +1019,7 @@
 		            selectcabinet_cross_dialogArguments[0] = para;
 		            selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(850, 480));
+		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(870, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		           
@@ -1237,7 +1237,7 @@
 		            aprgongramline_cross_dialogArguments[0] = para;
 		            aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1000, 740));
+		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1120, 740));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
