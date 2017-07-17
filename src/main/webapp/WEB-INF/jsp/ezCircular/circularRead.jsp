@@ -242,13 +242,14 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>
-               	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t65' /></span></li>
+               	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
                	    		
                 	    	<c:if test="${result.memberID == userInfo.id}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
                 	    	</c:if>
 	                        <li><span onclick="print_onClick2( false )"><spring:message code='ezCircular.t114' /></span></li>
+<!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
+	                        <li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>
                     	</ul>
                 	</div>
                 	<div id="close">
