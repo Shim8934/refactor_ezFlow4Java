@@ -53,7 +53,7 @@
 		
 		
 		
-		<div style='height:530px;overflow-y:auto;'>
+		<div style='height:702px;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%;">
 				<tr>
 					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85' /></th>
@@ -63,7 +63,15 @@
 				</tr>			
 			</table>
 			
-			<table id="circularUserList" style="width:99.5%;margin-top:15px;table-layout: fixed; overflow:auto"></table>
+			<table id="circularUserList" style="width:99.5%;margin-top:15px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+		</div>
+		
+		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">			
+			<div id="close" style="right:330px">
+		        <ul style="padding-top:2px">
+		            <li><span onClick="CircularWrite_onclick()">의견확인</li>
+		        </ul>
+		    </div>
 		</div>
 	</body>
 </html>
