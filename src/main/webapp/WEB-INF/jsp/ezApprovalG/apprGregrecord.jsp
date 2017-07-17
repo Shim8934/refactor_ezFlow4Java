@@ -246,7 +246,7 @@
             if (pDocID == "")
                 pDocID = createNewDocID();
 
-            if (RegisterRecord()) {return btn_AttachSaveSure_onclick()
+            if (RegisterRecord()) {
                 rtnVal[0] = "TRUE";
                 
                 rtnVal[1] = g_szSCListXml;
