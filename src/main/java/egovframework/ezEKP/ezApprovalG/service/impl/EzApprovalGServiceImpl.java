@@ -19082,7 +19082,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 			map.put("v_Title", title);
 			map.put("v_RecTypeCode", recTypeCode);
-			map.put("v_ModifyFlag", "1");
+			map.put("v_ModifyFlag", "0");
 			map.put("v_REASON", changeReason);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("v_USERID", userID);
@@ -19184,6 +19184,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("</CELL>");
 			strSQL.append("<CELL>");
 			strSQL.append("<VALUE>"); 
+System.out.println("modifyFlag:"+docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent());
 			if (makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("0")) {
 				strSQL.append(langType.equals("1")? messageSource.getMessage("ezApprovalG.pjj23", userInfo.getLocale()) : "BasicRegItems");
 			} else {
