@@ -15,6 +15,8 @@
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
+		
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
 			var circularUserID = "${result.memberID}";
@@ -220,7 +222,9 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' />[${commentCount}]</span></li>                        	
+               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t113' />[${commentCount}]</span></li>
+               	    		<li><span onclick="confirmCircular()"><spring:message code='ezCircular.t65' /></span></li>
+               	    		
                 	    	<c:if test="${result.memberID == userInfo.id}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
                 	    	</c:if>
