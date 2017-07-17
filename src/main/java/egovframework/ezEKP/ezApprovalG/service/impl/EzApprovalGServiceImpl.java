@@ -17331,7 +17331,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getRecReadHistory(Document xmlDom, int tenantID) throws Exception {
+	public String getRecReadHistory(Document xmlDom, String offset, int tenantID) throws Exception {
 		logger.debug("getRecReadHistory Started");
 
 		StringBuilder resultXML = new StringBuilder();
@@ -17379,7 +17379,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 for (int j=0; j<dlength; j++) {
 			 resultXML.append("<ROW>");
 			 resultXML.append("<CELL>");
-			 resultXML.append("<VALUE>" + makeListField(convertDate(docXML.getElementsByTagName("READDATE").item(j).getTextContent())) + "</VALUE>");
+			 resultXML.append("<VALUE>" + makeListField(convertDate(commonUtil.getDateStringInUTC(docXML.getElementsByTagName("READDATE").item(j).getTextContent().substring(0, 18), offset, false))) + "</VALUE>");
 			 resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(j).getTextContent())+ "</DATA1>");
 			 resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("USERID").item(j).getTextContent())+ "</DATA2>");
 			 resultXML.append("</CELL>");  

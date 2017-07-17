@@ -296,7 +296,7 @@ public class EzApprovalGarchiveController {
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.getRecReadHistory(xmlDom, userInfo.getTenantId());
+		String result = ezApprovalGService.getRecReadHistory(xmlDom, userInfo.getOffset(), userInfo.getTenantId());
 		
 		logger.debug("getRecReadHistory ended");
 		

@@ -330,7 +330,7 @@ public interface EzApprovalGService {
 
 	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale)throws Exception;
 
-	public String getRecReadHistory(Document xmlDom, int tenantID) throws Exception;
+	public String getRecReadHistory(Document xmlDom, String offset, int tenantID) throws Exception;
 
 	public String getRecordClassInfo(Document xmlDom, int tenantID) throws Exception;
 	
