@@ -74,11 +74,19 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
+		        if (approvalFlag == 'S') {
+					$(".approvalG").hide();
+					$(".approvalS").show();
+				} else {
+					$(".approvalS").hide();
+					$(".approvalG").show();
+				}
+		        
 		        document.getElementById("1tab1").setAttribute("class", "tabon");
 		        Tab1_SelectID = "1tab1";
 		        ChangeTab(document.getElementById("1tab1"));
 		
-		        getDeptFullTree("${topID}");
+		        getDeptFullTree(companyID);
 		        getFormRecv();
 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
@@ -265,7 +273,7 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${topID}");
+		            createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
 		
 		            var xmlHTTP = createXMLHttpRequest();
@@ -340,8 +348,7 @@
 		    		async : false,
 		    		url : "/admin/ezApprovalG/getFormRecvAdmin.do",
 		    		data : {
-		    			formID 	  : formID,
-		    			companyID : companyID
+		    			formID : formID
 		    		},
 		    		success: function(text){
 		    			result = text;
@@ -786,7 +793,7 @@
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
                 <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
-                <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApproval.t730'/></span></p>
+                <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApprovalG.t1629'/></span></p>
                 <p id = "ApvForm_sub6" style = 'display:none;'><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
 	        </div>
         </div>
@@ -806,7 +813,7 @@
                     <th style="width:100px; text-align:center">${secondary}</th>
                     <td style="width:40%;" colspan="5">
                         <input type="text" id="tbFormName2" name="tbFormName2" maxlength="50" style="width:100%" >
-                    </td>        
+                    </td>
                 </tr>
                 <tr>
                     <th style="width:100px; text-align:center"><spring:message code='ezApprovalG.t598'/></th>
@@ -815,13 +822,18 @@
                     </td>
                     <th style="width:100px; text-align:center"><spring:message code='ezApproval.t758'/></th>
                     <td style="width:40%;" colspan="5">
-                        <select id="selFormKind" name="selFormKind" style="WIDTH: 170px;">${docType}</select>
+                        <select id="selFormKind" name="selFormKind" style="width: 100%;">${docType}</select>
                     </td>
-                </tr>    
-			</table>   
+                </tr>
+                <tr class="approvalG">
+                    <td colspan="8" style="width:10%; text-align:center">
+                        <input type="checkbox" id="setConnFlag" /><spring:message code = 'ezApprovalG.t1665' />
+                    </td>
+                </tr>
+			</table>
             <br />
-            <div style="padding-bottom:5px; vertical-align:middle"><input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" /><span><spring:message code='ezApproval.t00004'/></span></div>
-            <table class="content" style="width:100%;">               
+            <div class="approvalS" style="padding-bottom:5px; vertical-align:middle"><input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" /><span><spring:message code='ezApproval.t00004'/></span></div>
+            <table class="content approvalS" style="width:100%;">
 				<tr id="tr_setAutoItemCode">
 					<th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t1197'/></th>
                     <td style="width:400px;">
@@ -847,9 +859,9 @@
                         </select>
                     </td>
                 </tr>
-            </table>   
+            </table>
         </div>
-           
+		
         <div id="ApvForm_content2" style="width:100%;display:none; padding-top:10px;">
             <h2 id="H1" class="receiver_tltype01" style="margin-bottom:5px;">
             <span style="min-width: 45px;" id="Span1"><spring:message code='ezApproval.t00007'/></span>
@@ -862,7 +874,7 @@
                 </div>
                 <script type="text/javascript">
                     selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-                </script>          
+                </script>
 				<table id="TForm" style="height:770px; width:1030px;">
 					<tr>
                         <td style="height:770px; vertical-align:top">
@@ -879,12 +891,12 @@
                     </tr>
                 </table>  
 			</div>
-		</div>      
-        <div id="ApvForm_content3" style="width:100%;height:90%;display:none; padding-top:10px;">   
+		</div>
+        <div id="ApvForm_content3" style="width:100%;height:90%;display:none; padding-top:10px;">
             <h2 id="H2" class="receiver_tltype01" style="margin-bottom:5px;">
             	<span style="min-width: 45px;" id="Span2"><spring:message code='ezApproval.t504'/></span>
             </h2>
-                     
+			
             <table class="content">
                 <tr>
                     <td style="height:800px">&lt;xml id=conn&gt;<br>
@@ -908,29 +920,29 @@
 
         <div id="ApvForm_content4" style="width:100%;height:60%;display:none; padding-top:10px;">
         	<table class="content"> 
-                <tr> 
-                	<td>&lt;xml id=WORKFLOW&gt;<br> 
-	                    &lt;WORKFLOW&gt;<br> 
-	                    &lt;VALIDATIONS&gt;<br> 
-	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent1"></textarea> 
-	                    <br> &lt;/VALIDATIONS&gt;<br> 
-	                    &lt;STATUS&gt;<br> 
-	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent2"></textarea> 
-	                    <br> &lt;/STATUS&gt;<br> 
-	                    &lt;/WORKFLOW&gt;<br> 
+                <tr>
+                	<td>&lt;xml id=WORKFLOW&gt;<br>
+	                    &lt;WORKFLOW&gt;<br>
+	                    &lt;VALIDATIONS&gt;<br>
+	                    <textarea name="txt_OpinionContent1" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent1"></textarea>
+	                    <br> &lt;/VALIDATIONS&gt;<br>
+	                    &lt;STATUS&gt;<br>
+	                    <textarea name="txt_OpinionContent2" style="FONT-SIZE:9pt; WIDTH:98.5%; HEIGHT:350px" id="txt_OpinionContent2"></textarea>
+	                    <br> &lt;/STATUS&gt;<br>
+	                    &lt;/WORKFLOW&gt;<br>
 	                    &lt;/xml&gt;
-	                </td> 
-                	<th> 
-	                    <a class="imgbtn" id="Submit1"><span onclick="btn_OpinionAdd1_onclick()"><spring:message code='ezApproval.t529'/></span></a><br>      
-	                    <a class="imgbtn" id="Submit2"><span onclick="btn_OpinionAdd2_onclick()"><spring:message code='ezApproval.t530'/></span></a><br>                           
+	                </td>
+                	<th>
+	                    <a class="imgbtn" id="Submit1"><span onclick="btn_OpinionAdd1_onclick()"><spring:message code='ezApproval.t529'/></span></a><br>
+	                    <a class="imgbtn" id="Submit2"><span onclick="btn_OpinionAdd2_onclick()"><spring:message code='ezApproval.t530'/></span></a><br>
 		            </th>
                 </tr>
             </table>
         </div>
         
-        <div id="ApvForm_content5" style="width:100%;height:90%;display:none; padding-top:10px;">         
+        <div id="ApvForm_content5" style="width:100%;height:90%;display:none; padding-top:10px;">
             <h2 id="group" class="receiver_tltype01" style="margin-bottom:5px;">
-            	<span style="min-width: 45px;" id="groupstr"><spring:message code='ezApproval.t646'/></span>
+            	<span style="min-width: 45px;" id="groupstr"><spring:message code='ezApprovalG.t1577'/></span>
             </h2>
             
             <table style="width:100%; height:810px;">
@@ -962,7 +974,7 @@
                 </tr>
             </table>
         </div>
-        <div id="ApvForm_content6" style="width:100%;height:90%;display:none; padding-top:10px;">         
+        <div id="ApvForm_content6" style="width:100%;height:90%;display:none; padding-top:10px;">
             <h2 id="H3" class="receiver_tltype01" style="margin-bottom:5px;"><span style="min-width: 45px;" id="Span3"><spring:message code='ezApproval.t990012'/></span></h2>
             
             <table>
@@ -973,21 +985,21 @@
             </table>
             <br />
             <table style="width:100%; border:none;">
-                <tr>                 
-                    <td colspan="2" style="text-align:right;vertical-align:bottom;"> 
+                <tr>
+                    <td colspan="2" style="text-align:right;vertical-align:bottom;">
                         <img src="/images/arr_u.gif" width="24" height="24" style="cursor: pointer;" onclick="MoveUp_List_AutoRule_onclick()">
                         <img src="/images/arr_d.gif" width="24" height="24" style="cursor: pointer" onclick="MoveDown_List_AutoRule_onclick()">
                     </td>
                 </tr>
-            	<tr> 
-                	<td style="vertical-align:top;height: 135px;" colspan="2"> 
+            	<tr>
+                	<td style="vertical-align:top;height: 135px;" colspan="2">
                     	<div class="listview" style="border:1px solid #b6b6b6;width:100%">
                         	<div id="div_List_AutoRule" style="border: 0; font-size:9pt;width: 100%; height: 130px;overflow:auto;"></div>
                     	</div>
                 	</td>
             	</tr>
             	<tr>
-                	<td style="vertical-align:top" colspan="2"> 
+                	<td style="vertical-align:top" colspan="2">
                     	<table class="content" style="width:100%;border:0">
                         	<tr>
                             	<th style="text-align:center;width:10%"><spring:message code='ezApproval.t990016'/></th>
@@ -1002,7 +1014,7 @@
 	                                <input type="text" id="txtCondVal" style="width:150px;ime-mode:disabled;margin-top:-1px" />
 	                            </td>
 	                            <td rowspan="4" style="width:150px;">
-	                                <a class="imgbtn" onclick="return btn_Add();" ><span style="font-size:8pt"><spring:message code='ezApproval.t990043'/></span></a>                   
+	                                <a class="imgbtn" onclick="return btn_Add();" ><span style="font-size:8pt"><spring:message code='ezApproval.t990043'/></span></a>
 	                            </td>
                         	</tr>
                         	<tr>
@@ -1014,34 +1026,34 @@
 	                                </select>
 	                                <select id="DDL_NUMBER_EQUAL" style="width:80px;display:none">
 	                                    <option value="NUM_GE">>= <spring:message code='ezApproval.t990029'/></option>
-	                                    <option value="NUM_LE"><= <spring:message code='ezApproval.t990030'/></option>                        
+	                                    <option value="NUM_LE"><= <spring:message code='ezApproval.t990030'/></option>
 	                                    <option value="NUM_GT">> <spring:message code='ezApproval.t990031'/></option>
 	                                    <option value="NUM_LT">< <spring:message code='ezApproval.t990032'/></option>
 	                                    <option value="NUM_EQ">= <spring:message code='ezApproval.t990026'/></option>
 	                                </select>
 	                                <select id="DDL_TEXT_EQUAL" style="width:80px">
 	                                    <option value="TXT_EQ"><spring:message code='ezApproval.t990026'/></option>
-	                                    <option value="TXT_INC"><spring:message code='ezApproval.t990027'/></option>                        
+	                                    <option value="TXT_INC"><spring:message code='ezApproval.t990027'/></option>
 	                                    <option value="TXT_NOTINC"><spring:message code='ezApproval.t990028'/></option>
 	                                </select>
 	                            </td>
 	                        </tr>
-	                        <tr> 
+	                        <tr>
 	                            <th style="text-align:center;"><spring:message code='ezApproval.t990019'/></th>
-	                            <td> 
+	                            <td>
 	                                <select id="DDL_STANDVAL" onchange="ChangeStandVal()" >
-	                                    <option value="DeptId"><spring:message code='ezApproval.t171'/></option>                      
+	                                    <option value="DeptId"><spring:message code='ezApproval.t171'/></option>
 	                                    <option value="TitleCd" style="display:none"><spring:message code='ezApproval.t170'/></option>
 	                                    <option value="Direct"><spring:message code='ezApproval.t990022'/></option>
 	                                </select>
 	                                <input type="button" value="<spring:message code='ezApproval.t344'/>" id="btnSelDept" onclick="SelectDept()" />
-	                                <select id="DDL_TITLE" style="display:none" onchange="DDL_TITLE_OnChange()"> 
-	                                    <option><spring:message code='ezApproval.t990046'/></option>  
+	                                <select id="DDL_TITLE" style="display:none" onchange="DDL_TITLE_OnChange()">
+	                                    <option><spring:message code='ezApproval.t990046'/></option>
 	                                </select>
 	                                <input type="text" id="txtStandVal" value="" style="width:150px;margin-top:-5px" />
 	                            </td>
 	                        </tr>
-						</table> 
+						</table>
                 	</td>
             	</tr>
         	</table>
@@ -1052,7 +1064,7 @@
 	                    <td style="height:480px;width:330px;margin-left:5px;vertical-align:top;">
 	                        <div class="portlet_tabpart01" align="right" style="margin-top:3px;">
 		                        <div class="portlet_tabpart01_top" id="tab2">
-	                                    <p><span divname="Organ" id="2tab1"><spring:message code='ezApprovalG.t232'/></span></p>  
+	                                    <p><span divname="Organ" id="2tab1"><spring:message code='ezApprovalG.t232'/></span></p>
 		                        </div>
 	                        </div>
 	                        <div id="OrganLineTab">
@@ -1083,14 +1095,14 @@
 	                    </td>
 	                    <td style="border:0px solid red;vertical-align:central;padding-left:4px;padding-right:4px">
 	                        <img src="/images/arr_up.gif" width="16" height="16" vspace="2" style="cursor: pointer;" onclick="AprlineUpper_onclick()" alt="<spring:message code='ezApproval.hyj9'/>"><br />
-	                        <img src="/images/arr_down.gif" width="16" height="16" vspace="2" style="cursor: pointer" onclick="AprlineDown_onclick()" alt="<spring:message code='ezApproval.hyj10'/>"><br />  
+	                        <img src="/images/arr_down.gif" width="16" height="16" vspace="2" style="cursor: pointer" onclick="AprlineDown_onclick()" alt="<spring:message code='ezApproval.hyj10'/>"><br />
 	                    </td>
 	                    <td style="border:0px solid red;height:550px;width:650px;vertical-align:top;">
 	                      <table style="margin-left:1px;height:450px;">
 	                        <tr>
 	                            <td valign="top">
-	                                <h2 style ="vertical-align:top;" >                            
-	                                    <div style="text-align:right;vertical-align: top; height: 20px;"> 
+	                                <h2 style ="vertical-align:top;" >
+	                                    <div style="text-align:right;vertical-align: top; height: 20px;">
 	                                        <a class="imgbtn" onclick="return AddDeptmentSelected();" ><span><spring:message code='ezApproval.t990036'/></span></a>
 	                                        <a class="imgbtn" onclick="AprlineNullAdd_onclick('user')"><span><spring:message code='ezApproval.t990037'/></span></a>
 	                                        <a class="imgbtn" onclick="AprlineNullAdd_onclick('dept')"><span><spring:message code='ezApproval.t1101'/></span></a>
@@ -1115,8 +1127,8 @@
 	            </table>
         	</div>
         </div>
-           
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel">&nbsp;</div>	
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		    <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
