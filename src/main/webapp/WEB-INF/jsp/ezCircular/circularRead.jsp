@@ -26,9 +26,7 @@
 
 			$(document).ready(function(){
 				window.opener.getLeftCount();
-// 	            document.getElementById('circularUserList1').innerHTML = "${listUser}";
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
-	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
 	        });
 			
@@ -36,6 +34,28 @@
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
 			};
+			
+			function circularConfirm() {
+				if(!confirm("<spring:message code='ezCircular.t68' />")) {
+					return;
+				} else {
+					$.ajax({
+						type : "POST",
+						url : "/ezCircular/circularConfirm.do",
+						dataType : "json",
+						data : {
+							circularID : circularID
+						},
+						success : function(result) {
+							window.opener.getLeftCount();
+							window.opener.refresh_onclick();
+			                window.close();
+						},error : function(jqXHR, textStatus, errorThrown) {
+							alert("<spring:message code='ezCircular.t102' />");
+						}
+					});
+				}
+			}
 
 		    //삭제버튼 클릭시
 	        function btn_delete() {
@@ -223,7 +243,7 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>
-               	    		<li><span onclick="confirmCircular()"><spring:message code='ezCircular.t65' /></span></li>
+               	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t65' /></span></li>
                	    		
                 	    	<c:if test="${result.memberID == userInfo.id}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>

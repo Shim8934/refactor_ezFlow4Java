@@ -2281,4 +2281,40 @@ System.out.println("orderOption1 : " + orderOption1);
 		
 		return "json";
 	}
+	
+	/**
+	 * 회람확인
+	 */
+	@RequestMapping(value = "/ezCircular/circularConfirm.do")
+	public String circularConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("circularConfirm started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String circularID = request.getParameter("circularID");
+		
+		ezCircularService.confirmStatus(circularID, userInfo.getId(), userInfo.getTenantId(), "circularConfirm");
+		
+		logger.debug("circularConfirm ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 의견확인(의견, 공유상태 변경)
+	 */
+	@RequestMapping(value = "/ezCircular/commentConfirm.do")
+	public String commentConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("circularConfirm started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String circularID = request.getParameter("circularID");
+		
+		ezCircularService.confirmStatus(circularID, userInfo.getId(), userInfo.getTenantId(), "commentConfirm");
+		
+		logger.debug("circularConfirm ended.");
+		
+		return "json";
+	}
 }
