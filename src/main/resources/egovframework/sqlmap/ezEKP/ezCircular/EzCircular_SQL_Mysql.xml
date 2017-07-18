@@ -928,7 +928,7 @@
             AND
              	B.updatestatus IN (0, 1)
             AND
-                B.memberid = #memberID#
+                A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
         ]]>
@@ -1035,7 +1035,7 @@
         
 		<![CDATA[
             AND
-                B.memberid = #memberID#
+                A.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
             GROUP BY
