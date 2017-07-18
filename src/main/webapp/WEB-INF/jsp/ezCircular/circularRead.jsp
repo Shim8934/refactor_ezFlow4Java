@@ -34,13 +34,10 @@
 				if ("${attachList}" != "") {
 					attachList = true;
 				}
-				
-alert("1 " + comment + " / " + attachList);
 			}
 
 			$(document).ready(function(){
 				window.opener.getLeftCount();
-	            document.getElementById('circularUserList1').innerHTML = "${listUser}";
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -127,7 +124,7 @@ alert("1 " + comment + " / " + attachList);
 	        
 	        function OpenQuestionUI_Complete(ret) {
 	            DivPopUpHidden();
-alert("2 " + ret[0] + " / " + ret[1]);
+	            
 	            if (ret[0] == "0" && ret[1] == "0")
 	                return;
 	            var rtnVal = "";
