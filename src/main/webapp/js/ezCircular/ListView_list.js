@@ -820,13 +820,9 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     if (strValue == '0') {
                     	objTd.style.fontWeight = "bold";
-                    	//strValue = '<img src="/images/circularUnread.png" />';
-                    	/*titleImage = '<img src="/images/decide_icon_up.gif" />';*/
                     	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
                     	strValue = "";
                     } else {
-                    	//strValue = '<img src="/images/circularRead.png" />';
-                    	/*titleImage = '<img src="/images/decide_icon_ok.gif" />';*/
                     	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
                     	strValue = "";
                     }
@@ -836,13 +832,10 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     
                     if (strValue == "0") {
-//                    	titleImage = '<img src="/images/ImgIcon/circular_ing.gif" />';
                     	strValue = strLang8;
                     } else if (strValue == "1") {
-//                    	titleImage = '<img src="/images/ImgIcon/circular_end.gif" />';
                     	strValue = strLang9;
                     } else {
-//                    	titleImage = '<img src="/images/ImgIcon/circular_temp.gif" />';
                     	strValue = strLang10;
                     }
                 }

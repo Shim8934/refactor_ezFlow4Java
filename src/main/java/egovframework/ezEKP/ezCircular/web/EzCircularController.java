@@ -476,6 +476,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String result = ezCircularService.setCircularConfig(userID, tempCount, preView, userInfo.getTenantId());
 
 		logger.debug("setCircularConfig ended");
+		
 		return result;
 	}
 	
@@ -506,7 +507,6 @@ public class EzCircularController extends EgovFileMngUtil {
         String orderOption1 = "";
         String sdate = "";
         String edate = "";
-System.out.println("orderCell : " + orderCell + " / orderOption : " + orderOption );
 
 		for (int i = 0; i < headerLength; i++) {
 		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
@@ -517,7 +517,6 @@ System.out.println("orderCell : " + orderCell + " / orderOption : " + orderOptio
 		        }
 		    }
 		}
-System.out.println("orderOption1 : " + orderOption1);		
 
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
@@ -566,6 +565,7 @@ System.out.println("orderOption1 : " + orderOption1);
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -587,6 +587,15 @@ System.out.println("orderOption1 : " + orderOption1);
 			} else {
 				resultXML.append("<CELL><VALUE>new</VALUE></CELL>");
 			}
+			
+			//신규회람판 우선순위 신규, 의견, 공유
+			/*if (vo.getUpdateStatus() == 0 ) {
+				resultXML.append("<CELL><VALUE>new</VALUE></CELL>");
+			} else if (vo.getCommentStatus().equals("1")) {
+				resultXML.append("<CELL><VALUE>comment</VALUE></CELL>");
+			} else if (vo.getShareStatus().equals("1")){
+				resultXML.append("<CELL><VALUE>share</VALUE></CELL>");
+			}*/
 			
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE><DATA>1</DATA></CELL>");
@@ -1276,26 +1285,11 @@ System.out.println("orderOption1 : " + orderOption1);
 		}
 	 
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-		int commentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), userInfo.getTenantId());//해당유저의 안 읽은 댓글 수
-		List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId(), userInfo.getOffset());
-
-		String listUser = "";
+		int commentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), userInfo.getTenantId());
+		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
+		
 		result.setRegDate(result.getRegDate().substring(0, 16));
 		
-		for (CircularListVO vo : list) {
-			if (!vo.getMemberID().equals(result.getMemberID())) {
-				if (vo.getStatus() == 0) {
-					listUser += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'>" + vo.getMemberName() + ", ";					
-				} else {
-					listUser += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'>" + vo.getMemberName() + ", ";
-				}
-			}
-		}
-		
-		if (list.size() > 0 && list.size() != 1) {
-			listUser = listUser.substring(0, listUser.length() - 2);
-		}
-
 	    //첨부파일 정보  hasFile이 Y일때
         if (result.getHasFile() == 1) {        
         	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
@@ -1314,7 +1308,7 @@ System.out.println("orderOption1 : " + orderOption1);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("result", result);
-		model.addAttribute("listUser", listUser);
+		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
 		
 		return "/ezCircular/circularRead";
 	}
@@ -2313,5 +2307,41 @@ System.out.println("orderOption1 : " + orderOption1);
 		logger.debug("circularprtQuestion ended");
 		
 		return "ezCircular/circularprtQuestion";
+	}
+	
+	/**
+	 * 회람확인
+	 */
+	@RequestMapping(value = "/ezCircular/circularConfirm.do")
+	public String circularConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("circularConfirm started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String circularID = request.getParameter("circularID");
+		
+		ezCircularService.confirmStatus(circularID, userInfo.getId(), userInfo.getTenantId(), "circularConfirm");
+		
+		logger.debug("circularConfirm ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 의견확인(의견, 공유상태 변경)
+	 */
+	@RequestMapping(value = "/ezCircular/commentConfirm.do")
+	public String commentConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("circularConfirm started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String circularID = request.getParameter("circularID");
+		
+		ezCircularService.confirmStatus(circularID, userInfo.getId(), userInfo.getTenantId(), "commentConfirm");
+		
+		logger.debug("circularConfirm ended.");
+		
+		return "json";
 	}
 }
