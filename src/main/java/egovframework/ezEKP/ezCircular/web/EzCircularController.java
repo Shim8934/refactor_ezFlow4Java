@@ -476,6 +476,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String result = ezCircularService.setCircularConfig(userID, tempCount, preView, userInfo.getTenantId());
 
 		logger.debug("setCircularConfig ended");
+		
 		return result;
 	}
 	
@@ -506,7 +507,6 @@ public class EzCircularController extends EgovFileMngUtil {
         String orderOption1 = "";
         String sdate = "";
         String edate = "";
-System.out.println("orderCell : " + orderCell + " / orderOption : " + orderOption );
 
 		for (int i = 0; i < headerLength; i++) {
 		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
@@ -517,7 +517,6 @@ System.out.println("orderCell : " + orderCell + " / orderOption : " + orderOptio
 		        }
 		    }
 		}
-System.out.println("orderOption1 : " + orderOption1);		
 
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
@@ -566,6 +565,7 @@ System.out.println("orderOption1 : " + orderOption1);
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -587,6 +587,15 @@ System.out.println("orderOption1 : " + orderOption1);
 			} else {
 				resultXML.append("<CELL><VALUE>new</VALUE></CELL>");
 			}
+			
+			//신규회람판 우선순위 신규, 의견, 공유
+			/*if (vo.getUpdateStatus() == 0 ) {
+				resultXML.append("<CELL><VALUE>new</VALUE></CELL>");
+			} else if (vo.getCommentStatus().equals("1")) {
+				resultXML.append("<CELL><VALUE>comment</VALUE></CELL>");
+			} else if (vo.getShareStatus().equals("1")){
+				resultXML.append("<CELL><VALUE>share</VALUE></CELL>");
+			}*/
 			
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE><DATA>1</DATA></CELL>");

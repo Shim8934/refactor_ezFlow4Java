@@ -84,10 +84,7 @@ function PreviewRayerChange(pGubun) {
                 document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
-            else
-                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+            document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -211,7 +208,7 @@ function ItemPreviewRead(obj) {
     xmlhttp2.send();
     
     /* 2017-07-07 이효진 */
-    $(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif')
+//    $(obj).find("img[src='/images/ImgIcon/circular_unread.gif']").attr('src', '/images/ImgIcon/circular_read.gif')
 }
 var ItemID;
 var WriterID;
