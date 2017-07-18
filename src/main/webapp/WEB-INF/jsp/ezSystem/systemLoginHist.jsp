@@ -24,9 +24,12 @@
 	var totalPage = "";
 	var totalCount = "";
 	var BlockSize = 10;
+	var searchStartTime = "";
+	var searchEndTime = "";
 	
 	window.onload = function(){
-		getLoginHist(1);
+		getTime();
+		getLoginHist(1, searchStartTime, searchEndTime);
 		makePageSelPage();
 	}
 		
@@ -47,6 +50,29 @@
 	}
 
 	 //**/ 날짜 아이콘 적용 및 날짜 검색
+	 function getTime() {
+		
+		var dateObj = new Date();
+		var year = dateObj.getFullYear();
+		var month = dateObj.getMonth() + 1;
+		var date = dateObj.getDate();
+		
+		if (date<10) {
+			date = '0' + date;
+		}
+		if (month<10) {
+			month = '0' + month;
+		}
+		
+		dateObj = year +"-"+ month +"-" + date;
+		searchStartTime = dateObj;
+    	searchEndTime = dateObj;
+    	
+    	$('#startDatepicker').val(dateObj);
+		$('#endDatepicker').val(dateObj);
+		
+	}
+	 
     $(function() {
     	$('#startDatepicker').datepicker({
     		changeMonth: true,
@@ -239,8 +265,9 @@
 				alert(strLang6);
 				return false;
 			} 
-
-			getLoginHist(1);
+			searchStartTime = $('#startDatepicker').datepicker({dateFormat: 'yyyymmdd'}).val();
+        	searchEndTime = $('#endDatepicker').datepicker({dateFormat:'yyyymmdd'}).val();
+			getLoginHist(1, searchStartTime, searchEndTime);
 			
 		});
     }
@@ -248,24 +275,20 @@
 	//**/ 초기화버튼
 	function reset() {
 		$(function() {
- 			$('#startDatepicker, #endDatepicker').datepicker('setDate', null);
 			$('#searchKeyword').val('');
-			$('#startDatepicker').val('');
-			$('#endDatepicker').val('');
+			getTime();
 		});
 	}
 	
     //**/ 페이지네이션 클릭시
 	function goToPage(page) {
-		getLoginHist(page);
+		getLoginHist(page, searchStartTime, searchEndTime);
 	}		
 
-    function getLoginHist(pageNum){
+    function getLoginHist(pageNum, searchStartTime, searchEndTime){
     	$(function() {
 
     		var url = "/admin/ezSystem/systemLoginHistList.do";
-			var startDate = $('#startDatepicker').datepicker({dateFormat: 'yyyy-mm-dd'}).val();
-        	var endDate = $('#endDatepicker').datepicker({dateFormat:'yyyy-mm-dd'}).val();
 			var selectOption = document.getElementById("searchKeycode");
 			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 			var searchKeyword = document.getElementById("searchKeyword").value;
@@ -276,8 +299,8 @@
     			,async: false
     			,dataType: 'json'
     			,data: {  
-    					  'startDate':startDate, 'endDate':endDate, 'searchKeycode':searchKeycode
-    					  ,'searchKeyword':searchKeyword, 'GotoPage':pageNum 
+    					  'startDate' : searchStartTime, 'endDate' : searchEndTime, 'searchKeycode' : searchKeycode
+    					  ,'searchKeyword' : searchKeyword, 'GotoPage' : pageNum 
     				   }    
     			,success: function(res) {
     				var html = "";
@@ -346,9 +369,8 @@
 						<option value="1"><spring:message code="ezSystem.x0022"></spring:message></option>
 						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
 						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
-						<option value="4"><spring:message code="ezSystem.x0025"></spring:message></option>
-						<option value="5"><spring:message code="ezSystem.x0026"></spring:message></option>
-						<option value="6"><spring:message code="ezSystem.x0027"></spring:message></option>
+						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
+						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
 					</select>
 					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
 					<a class="imgbtn" >

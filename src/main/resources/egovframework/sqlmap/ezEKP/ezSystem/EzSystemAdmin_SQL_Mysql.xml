@@ -54,12 +54,9 @@
 					CONNECTIP LIKE CONCAT('%', #search_keyword#,'%')
 				</isEqual>
 				<isEqual property="search_keycode" compareValue="4">
-					CONNECTTIME LIKE CONCAT('%', #search_keyword#,'%')
-				</isEqual>
-				<isEqual property="search_keycode" compareValue="5">
 					CONNECTBROWSER LIKE CONCAT('%', #search_keyword#,'%')
 				</isEqual>
-				<isEqual property="search_keycode" compareValue="6">
+				<isEqual property="search_keycode" compareValue="5">
 					CONNECTOS LIKE CONCAT('%', #search_keyword#,'%')
 				</isEqual>
 			</isNotEmpty>
