@@ -2296,4 +2296,22 @@ System.out.println("orderOption1 : " + orderOption1);
 		
 		return "json";
 	}
+	
+	/**
+	 * 회람판 인쇄상세질문 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularprtQuestion.do")
+	public String circularprtQuestion(HttpServletRequest request, Model model) throws Exception{
+		logger.debug("circularprtQuestion started");
+		
+		String comment = request.getParameter("comment");
+		String attachList = request.getParameter("attachList");
+		
+		model.addAttribute("attachList", attachList);
+		model.addAttribute("comment", comment);
+		
+		logger.debug("circularprtQuestion ended");
+		
+		return "ezCircular/circularprtQuestion";
+	}
 }
