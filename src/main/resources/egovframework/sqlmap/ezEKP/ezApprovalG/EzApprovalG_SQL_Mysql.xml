@@ -16257,7 +16257,7 @@
              CABINETCLASSNO ,
              TITLE ,
              RECTYPECODE ,
-             STR_TO_DATE(MODIFYDATE, '%Y-%m-%d %H:%i:%s') MODIFYDATE ,
+             STR_TO_DATE(MODIFYDATE, '%Y%m%d') MODIFYDATE ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
