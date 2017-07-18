@@ -104,7 +104,7 @@
 		
 		
 		
-		<div style='height:100%;overflow-y:auto;'>
+		<div style='height:702px;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%;">
 				<tr>
 					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85' /></th>
@@ -118,10 +118,10 @@
 		</div>
 		
 		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">			
-			<div class="commentConfirmDiv" style="right:44%; display:none;">
+			<div class="commentConfirmDiv" style="right:330px; display:none;">
 		        <ul style="padding-top:2px">
 		            <li><span id="commentConfirm" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
-		        </ul> 
+		        </ul>
 		    </div>
 		</div>
 	</body>
