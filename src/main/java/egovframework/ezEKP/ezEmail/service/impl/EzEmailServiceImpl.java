@@ -1119,6 +1119,7 @@ public class EzEmailServiceImpl implements EzEmailService {
             int attachIDPos3 = url.indexOf("&contentId=");
 			
             String mailbox = url.substring(attachIDPos1, attachIDPos2);
+            mailbox = URLDecoder.decode(mailbox, "utf-8");
             String uidStr = url.substring(attachIDPos2 + 5, attachIDPos3);
             String contentId = url.substring(attachIDPos3 + 11);
             contentId = URLDecoder.decode(contentId, "utf-8");

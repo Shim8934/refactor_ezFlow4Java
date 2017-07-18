@@ -36,6 +36,7 @@
 	    <script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
+	    <script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>	    
 		<script type="text/javascript">
 			//TODO: 이거 문제있네!
 			$(function () {
@@ -294,10 +295,6 @@
 	        function ChangeSubtitle() {
 	        }
 	        
-	        function resetCurPageAndSearchAddress() {
-	        	CurPage = 1;
-	        	SearchAddress();
-	        }
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden">
@@ -337,7 +334,7 @@
 	                </td>
 	                <td style="border:0px">
 	                    <div class="searchWrap" style="padding-left:4px">
-			            	<div class="searchDesignBtn" onclick="resetCurPageAndSearchAddress()">
+			            	<div class="searchDesignBtn" onclick="SearchAddress()">
 			                	<input type="image" <spring:message code='ezPersonal.t5004' /> id="btnImgSrch" alt="<spring:message code='ezPersonal.t83' />"><img <spring:message code='ezPersonal.t5004' /> id="searchingBtnImg" style="display:none;" alt="<spring:message code='ezPersonal.t83' />">
 			            	</div>
 	                    	<div class="searchDesign">
