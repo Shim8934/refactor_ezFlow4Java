@@ -20,15 +20,19 @@
 	var strLang5 = "<spring:message code='ezSystem.x0035'/>";
 	var strLang6 = "<spring:message code='ezSystem.x0036'/>";
 	
-	var startDate = "<c:out value = '${startDate}'/>";
-	var endDate = "<c:out value = '${endDate}'/>";
-	var keyword = "<c:out value = '${keyword}'/>";
-	var keycode = "<c:out value = '${keycode}'/>";
-	var CurPage = "<c:out value = '${currPage}'/>";
-	var totalPage = "<c:out value = '${totalPage}'/>";
-	var totalCount = "<c:out value = '${itemCnt}'/>";
+	var CurPage = "";
+	var totalPage = "";
+	var totalCount = "";
 	var BlockSize = 10;
+	var searchStartTime = "";
+	var searchEndTime = "";
 	
+	window.onload = function(){
+		getTime();
+		getLoginHist(1, searchStartTime, searchEndTime);
+		makePageSelPage();
+	}
+		
 	function keyword_onkeydown(e) {
 		
 	    if (!window.ActiveXObject) {
@@ -45,11 +49,90 @@
 		return true;
 	}
 
+	 //**/ 날짜 아이콘 적용 및 날짜 검색
+	 function getTime() {
+		
+		var dateObj = new Date();
+		var year = dateObj.getFullYear();
+		var month = dateObj.getMonth() + 1;
+		var date = dateObj.getDate();
+		
+		if (date<10) {
+			date = '0' + date;
+		}
+		if (month<10) {
+			month = '0' + month;
+		}
+		
+		dateObj = year +"-"+ month +"-" + date;
+		searchStartTime = dateObj;
+    	searchEndTime = dateObj;
+    	
+    	$('#startDatepicker').val(dateObj);
+		$('#endDatepicker').val(dateObj);
+		
+	}
+	 
+    $(function() {
+    	$('#startDatepicker').datepicker({
+    		changeMonth: true,
+    		changeYear: true,
+    		autoSize: true,
+    		showOn: "both",
+    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImageOnly: true,
+    		maxDate: 0,
+    		onSelect: function(selected) {
+    			$('#endDatepicker').datepicker("option", "minDate", selected)
+    		}
+    	});
+    	$('#endDatepicker').datepicker({
+    		changeMonth: true,
+    		changeYear: true,
+    		autoSize: true,
+    		showOn: "both",
+    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImageOnly: true,
+    		maxDate: 0,
+    		onSelect: function(selected) {
+    			$('#startDatepicker').datepicker("option", "maxDate", selected)
+    		}
+    	});    	    	
+    });
+    
+    var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+    var monthStr = monthMsg.split(";");
+    var dayMsg = "일;월;화;수;목;금;토";
+    var dayStr = dayMsg.split(";");
+   
+    $(function() {
+    	$.datepicker.regional["ko"] = {
+    			closeText: "닫기",
+    			prevText: "이전달",
+    			nextText: "다음달",
+    			monthNames: monthStr,
+				monthNamesShort: monthStr,
+    			dayNames: dayStr,
+    			dayNamesShort: dayStr,
+    			dayNamesMin: dayStr,
+    			weekHeader: 'Wk',
+    			dateFormat: 'yy-mm-dd',
+       			firstDay:0,
+    			isRTL: false,
+    			duration: 200,
+    			showAnim: 'show',
+    			showMonthAfterYear: true
+    	};
+    	
+    	$.datepicker.setDefaults($.datepicker.regional["ko"]);	
+  		
+    });
+	
+	//**/ 페이징처리
 	function td_Create1(strtext) {
         document.getElementById("tblPageRayer").innerHTML = strtext;
     }
     
-	//**/ 페이징처리
     function makePageSelPage() {
         var strtext;
         var PagingHTML = "";
@@ -174,7 +257,6 @@
     function search() {
 		$(function() {
 			
-			// 날짜 값이 없는 경우
 			if ($('#startDatepicker').val() != '' && $('#endDatepicker').val() == '') {
 				alert(strLang5);
 				return false;
@@ -183,16 +265,9 @@
 				alert(strLang6);
 				return false;
 			} 
-			
-			var startDate = $('#startDatepicker').datepicker({dateFormat: 'yyyy-mm-dd'}).val();
-        	var endDate = $('#endDatepicker').datepicker({dateFormat:'yyyy-mm-dd'}).val();
-			var selectOption = document.getElementById("searchKeycode");
-			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
-			var searchKeyword = document.getElementById("searchKeyword").value;
-			var strSearch = "keycode=" +  searchKeycode + "&keyword=" + searchKeyword + "&startDate=" + startDate + "&endDate=" + endDate;
-			var href = "/admin/ezSystem/systemLoginHist.do";
-
-			window.location.href = href + "?" + encodeURI(strSearch);
+			searchStartTime = $('#startDatepicker').datepicker({dateFormat: 'yyyymmdd'}).val();
+        	searchEndTime = $('#endDatepicker').datepicker({dateFormat:'yyyymmdd'}).val();
+			getLoginHist(1, searchStartTime, searchEndTime);
 			
 		});
     }
@@ -201,83 +276,85 @@
 	function reset() {
 		$(function() {
 			$('#searchKeyword').val('');
-			$('#startDatepicker').val('');
-			$('#endDatepicker').val('');
+			getTime();
 		});
 	}
 	
     //**/ 페이지네이션 클릭시
 	function goToPage(page) {
-		var href = "/admin/ezSystem/systemLoginHist.do";
-		var strPage = "keycode=" + keycode + "&keyword=" + keyword + "&startDate=" + startDate + "&endDate=" + endDate;
-
-		if (parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
- 			document.location.href = href + "?" + strPage + "&GotoPage=" + encodeURIComponent(parseInt(page));
- 		}
+		getLoginHist(page, searchStartTime, searchEndTime);
 	}		
-    
-    //**/ 날짜 아이콘 적용 및 날짜 검색
-    var holidaydate = "";
-    var holidayid = "";
-    
-    $(function() {
-    	$('#startDatepicker').datepicker({
-    		changeMonth: true,
-    		changeYear: true,
-    		autoSize: true,
-    		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-    		buttonImageOnly: true,
-    		maxDate: 0,
-    		onSelect: function(selected) {
-    			$('#endDatepicker').datepicker("option", "minDate", selected)
-    		}
+
+    function getLoginHist(pageNum, searchStartTime, searchEndTime){
+    	$(function() {
+
+    		var url = "/admin/ezSystem/systemLoginHistList.do";
+			var selectOption = document.getElementById("searchKeycode");
+			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
+			var searchKeyword = document.getElementById("searchKeyword").value;
+			
+    		$.ajax({
+    			 url: url
+    			,type: "POST"
+    			,async: false
+    			,dataType: 'json'
+    			,data: {  
+    					  'startDate' : searchStartTime, 'endDate' : searchEndTime, 'searchKeycode' : searchKeycode
+    					  ,'searchKeyword' : searchKeyword, 'GotoPage' : pageNum 
+    				   }    
+    			,success: function(res) {
+    				var html = "";
+    				if (res.lang == 1) {
+    					res.loginHistList.forEach(function(i,v){
+    						html += "<tr>";
+    						html += "	<td>" + i.usernm 			+ "</td>";
+    						html += "	<td>" + i.deptnm 			+ "</td>";
+    						html += "	<td>" + i.connectip 		+ "</td>";
+    	    				html += "	<td>" + i.connecttime 		+ "</td>";
+    	    				html += "	<td>" + i.connectbrowser 	+ "</td>";
+    	    				html += "	<td>" + i.connectos 		+ "</td>";
+    	    				html += "</tr>";
+        				});
+					} else {
+						res.loginHistList.forEach(function(i,v){
+							html += "<tr>";
+							html += "	<td>" + i.usernm2 			+ "</td>";
+							html += "	<td>" + i.deptnm2 			+ "</td>";
+							html += "	<td>" + i.connectip 		+ "</td>";
+		    				html += "	<td>" + i.connecttime 		+ "</td>";
+		    				html += "	<td>" + i.connectbrowser 	+ "</td>";
+		    				html += "	<td>" + i.connectos 		+ "</td>";
+		    				html += "</tr>";
+	    				});
+					}
+    				
+    				$('#loginHistListBody').empty().append(html);
+    				
+    				CurPage = res.currPage;
+    				totalPage = res.totalPage;
+    				totalCount = res.itemCnt;
+    				
+    				if (res.searchKeycode != null) {
+    					var idx = parseInt(searchKeycode) - 1;
+	    				$('#searchKeycode option:eq('+idx+')').attr('selected','selected');
+    				}
+    				
+    				$('#searchKeyword').val(res.searchKeyword);
+    				$('#startDatepicker').val(res.startDate);
+    				$('#endDatepicker').val(res.endDate);
+    				
+    			}
+    			,error: function(err) {
+    				alert(err);
+    			}
+    		})
+    		makePageSelPage();
     	});
-    	$('#endDatepicker').datepicker({
-    		changeMonth: true,
-    		changeYear: true,
-    		autoSize: true,
-    		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-    		buttonImageOnly: true,
-    		maxDate: 0,
-    		onSelect: function(selected) {
-    			$('#startDatepicker').datepicker("option", "maxDate", selected)
-    		}
-    	});    	    	
-    });
-    
-    var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
-    var monthStr = monthMsg.split(";");
-    var dayMsg = "일;월;화;수;목;금;토";
-    var dayStr = dayMsg.split(";");
-   
-    $(function() {
-    	$.datepicker.regional["ko"] = {
-    			closeText: "닫기",
-    			prevText: "이전달",
-    			nextText: "다음달",
-    			monthNames: monthStr,
-				monthNamesShort: monthStr,
-    			dayNames: dayStr,
-    			dayNamesShort: dayStr,
-    			dayNamesMin: dayStr,
-    			weekHeader: 'Wk',
-    			dateFormat: 'yy-mm-dd',
-       			firstDay:0,
-    			isRTL: false,
-    			duration: 200,
-    			showAnim: 'show',
-    			showMonthAfterYear: true
-    	};
-    	
-    	$.datepicker.setDefaults($.datepicker.regional["ko"]);	
-  		
-    });
+    }
     
 </script>
 </head>
-<body class="mainbody" onload="makePageSelPage()">
+<body class="mainbody">
 	<h1><spring:message code="ezSystem.x0021"></spring:message></h1>
 	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 		<tr>
@@ -288,15 +365,14 @@
 				</span> 
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code="ezSystem.x0028"></spring:message> : &nbsp;
-					<select id="searchKeycode" > 
+					<select id="searchKeycode"> 
 						<option value="1"><spring:message code="ezSystem.x0022"></spring:message></option>
 						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
 						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
-						<option value="4"><spring:message code="ezSystem.x0025"></spring:message></option>
-						<option value="5"><spring:message code="ezSystem.x0026"></spring:message></option>
-						<option value="6"><spring:message code="ezSystem.x0027"></spring:message></option>
+						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
+						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
 					</select>
-					<input type="text" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)" id="searchKeyword"/>
+					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
 					<a class="imgbtn" >
 						<span onclick="javascript:search();"><spring:message code="ezSystem.x0029"></spring:message></span>
 					</a>
@@ -308,7 +384,7 @@
 					</a>
 				</span> 
 			</td>
-
+		</tr>
 	</table>
 	<table class="mainlist" style="width:100%;">
 		<thead>
@@ -321,24 +397,7 @@
 				<th><spring:message code="ezSystem.x0027"></spring:message></th>
 			</tr>
 		</thead>
-		<tbody id="loginHistListBody">
-			<c:forEach items="${loginHistList }" var="list">
-				<tr>
-					<c:if test="${ (userLang == 1) && (sysLang == 1) }">
-						<td><c:out value="${list.usernm }"></c:out></td>		
-						<td><c:out value="${list.deptnm }"></c:out></td>
-					</c:if>
-					<c:if test="${ (userLang != 1) || (sysLang != 1) }">
-						<td><c:out value="${list.usernm2 }"></c:out></td>		
-						<td><c:out value="${list.deptnm2 }"></c:out></td>	
-					</c:if>
-						<td><c:out value="${list.connectip }"></c:out></td>		
-						<td><c:out value="${list.connecttime }"></c:out></td>		
-						<td><c:out value="${list.connectbrowser }"></c:out></td>		
-						<td><c:out value="${list.connectos }"></c:out></td>		
-				</tr>
-			</c:forEach>
-		</tbody>
+		<tbody id="loginHistListBody"></tbody>
 	</table>
 	<div id="tblPageRayer" style="padding-top: 20px;"></div>
 </body>

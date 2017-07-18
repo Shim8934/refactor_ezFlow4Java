@@ -877,9 +877,11 @@
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL2" onClick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL3" onClick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>
-				<c:if test="${approvalFlag == 'S'}">
+
+				<c:if test="${approvalFlag == 'S'}"> 
 				<li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.hyj04'/><span id="count99"></span></span></li>
-				</c:if>
+				</c:if>	
+
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
 
 	            <c:if test="${userInfoEnforce == '2'}">
@@ -912,11 +914,14 @@
 				</c:if>
 			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
+				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
 		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
 		        <ul>
 				</ul>
 			</c:if>
+			<c:if test="${approvalFlag == 'G'}">
 			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1554'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1554'/></span><ul></ul></h2>
+			</c:if>
 			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
 			<ul>
 				<c:choose>
