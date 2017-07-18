@@ -13,6 +13,51 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		
+		<style type="text/css">
+			.commentConfirmDiv {
+				position:absolute;
+				right:10px;
+				top:7px;
+				height:35px;
+			}
+			
+			.commentConfirmDiv ul li {
+				display: block;
+				float:left;
+				margin:0 2px 0 0px;
+				background:url(/images/kr/cm/btn_popup_offleft.gif) no-repeat top left;
+				height:28px;
+				padding:0px 0px 0px 8px;
+				vertical-align:top;
+				cursor:pointer;
+				vertical-align:middle
+			}
+
+			.commentConfirmDiv span {
+				display:inline-block;
+				background:url(/images/kr/cm/btn_popup_offright.gif) no-repeat top right;
+				height:28px;
+				padding:0px 8px 0px 0px;
+				line-height:28px;
+				font-size:12px;
+				color:#fff;
+			}
+			
+			.commentConfirmDiv ul li.on {
+				background:url(/images/kr/cm/btn_popup_onleft.gif) no-repeat top left;
+				color:#333;
+			}
+			
+			.commentConfirmDiv ul li.on span {
+				background:url(/images/kr/cm/btn_popup_onright.gif) no-repeat top right;
+				color:#333;
+			}
+			
+			.commentConfirmDiv ul li.off {
+				background:url(/images/kr/cm/btn_popup_offleft.gif) no-repeat top left;
+			}
+		</style>
+		
 		<script type="text/javascript">
 			var circularID = "${vo.circularID}";
 			var circularUserID = "${vo.memberID}";
@@ -67,9 +112,9 @@
 		</div>
 		
 		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">			
-			<div id="close" style="right:330px">
+			<div class="commentConfirmDiv" style="right:330px">
 		        <ul style="padding-top:2px">
-		            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t54' /></li>
+		            <li><span id="commentConfirm" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
 		        </ul>
 		    </div>
 		</div>
