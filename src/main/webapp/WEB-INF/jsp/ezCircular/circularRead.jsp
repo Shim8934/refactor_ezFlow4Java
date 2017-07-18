@@ -42,13 +42,13 @@
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
-	            document.getElementById("printDivCross").style.height = window.innerHeight - 320 + "px";
+	            document.getElementById("printDocument").style.height = window.innerHeight - 320 + "px";
 	        });
 			
 			window.onresize = function () {
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
-				document.getElementById("printDivCross").style.height = window.innerHeight - 320 + "px";
+				document.getElementById("printDocument").style.height = window.innerHeight - 320 + "px";
 			};
 			
 			function circularConfirm() {
