@@ -547,9 +547,9 @@
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
-
+alert(_RowObjectID + " / " + _RowObjectName);
 	            if (_RowObjectID != null) {
-	            	if (_RowObjectName.trim() == "deptList") {            		
+	            	if (_RowObjectName.trim() == "deptList") {        		
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
 		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
 		                    strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
@@ -612,7 +612,6 @@
 		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 		                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 		                        }
-		
 		                    }
 		                }
 	            	} else {
@@ -1471,7 +1470,8 @@
 		                if (document.getElementById("circularOrgan_content").style.display == "none") {
 		                    document.getElementById("circularOrgan_content").style.display = "";
 		                    document.getElementById("circularDept_content").style.display = "none";
-		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff");
+		                    $("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
+		                    _RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 		                }
 		                break;
 		            case "circularDept":
