@@ -194,7 +194,7 @@
 					}
 				});
 	        }
-	        
+
 	        /* function getCircularCompleteCount() {
 	        	$.ajax({
 					type : "POST",

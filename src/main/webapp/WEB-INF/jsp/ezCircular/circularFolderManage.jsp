@@ -89,7 +89,7 @@
 		    
 		    function onclick_Complete(szName) {
 		    	DivPopUpHidden();
-		        location.reload();
+		        document.location.reload();
 		    }
 		    
 		    function delete_onclick() {
@@ -113,7 +113,7 @@
 						},
 						success : function() {
 							alert("<spring:message code='ezCircular.t45' />");
-							location.reload();
+							document.location.reload();
 						},
 						error : function() {
 							alert("<spring:message code='ezCircular.t102' />");
@@ -123,9 +123,41 @@
 		    }
 		    
 		    function close_onclick() {
-		    	opener.location.reload();
+		    	getFolderManage();
 		    	window.close();
 		    }
+		    
+		    function getFolderManage() {
+	        	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCircular/getCircularFolderList.do",
+					data : {
+						
+					},
+					success: function(result){
+						
+					}
+				});
+				PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
+                
+                var xmlHTTP = createXMLHttpRequest();
+                xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+                xmlHTTP.send();
+                
+                var treeconfig;
+                
+                if (CrossYN()) {
+                    treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
+                }
+                else
+                    treeconfig = xmlHTTP.responseXML;
+
+                PostTreeView.config(treeconfig);
+                PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+                PostTreeView.update();
+	        }
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">

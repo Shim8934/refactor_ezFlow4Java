@@ -53,12 +53,8 @@
 		</style>
 		
 	    <script type="text/javascript">
-//  	        var ShowAdjacent = "";
-// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
-	        //var CurPage = "${page}";
-	        //var CurPage = "${totalCount}";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
 	        var OrderCell = "";
@@ -71,25 +67,14 @@
 	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-// 	        var pMailListHeightW = 0;
-// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-// 	        var pMailListWidthH = 0;
-// 	        var pMailPreWidthH = 0;
-// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-// 	        var SmallSizeList = false;
-// 	        var OldSmallSizeList = false;
 	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-// 	        var pMode = "new";
 	        var pAdminType = "n";
-// 	        var pUse_Editor = "${useEditor}";
-// 	        var pNoneActiveX = "YES";
-// 	        var pUse_IE11Browser = "CK";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
@@ -462,7 +447,7 @@
 		    	}
 		    }
 		    function refresh_onclick() {
-		    	window.location.href = "/ezCircular/circularMyCircular.do";
+		    	getBoardList();
 		    }
 		
 		    function search(type) {
@@ -566,7 +551,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-	    <h1><spring:message code='ezCircular.t4'/><span id="mailBoxInfo"></span>
+	    <h1><spring:message code='ezCircular.t4'/>(${count})<span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
