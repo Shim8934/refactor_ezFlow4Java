@@ -52,41 +52,40 @@
 			function circularConfirm() {
 				if(!confirm("<spring:message code='ezCircular.t68' />")) {
 					return;
-				} else {
-					$.ajax({
-						type : "POST",
-						url : "/ezCircular/circularConfirm.do",
-						dataType : "json",
-						data : {
-							circularID : circularID
-						},
-						success : function(result) {
-							window.opener.getLeftCount();
-							window.opener.refresh_onclick();
-			                window.close();
-						},error : function(jqXHR, textStatus, errorThrown) {
-							alert("<spring:message code='ezCircular.t102' />");
-						}
-					});
 				}
+				
+				$.ajax({
+					type : "POST",
+					url : "/ezCircular/circularConfirm.do",
+					dataType : "json",
+					data : {
+						circularID : circularID
+					},
+					success : function(result) {
+						window.opener.getLeftCount();
+						window.opener.refresh_onclick();
+		                window.close();
+					},error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezCircular.t102' />");
+					}
+				});
 			}
 
 		    //삭제버튼 클릭시
 	        function btn_delete() {
-	            if (!confirm("<spring:message code='ezCircular.t46'/>"))
+	            if (!confirm("<spring:message code='ezCircular.t46'/>")) {
 	                return;
+	            }
 	            
 	            $.ajax({
 					type : "POST",
-					dataType : "text",
+					dataType : "json",
 					async : false,
-					url : "/ezCircular/circularDelete.do",
+					url : "/ezCircular/circularDeleteTemp.do",
 					data : { 
-						circularID : circularID
+						circularIDList : circularID + ";"
 					},
 					success: function() {
-						alert("<spring:message code='ezCircular.t45'/>");
-						
 						window.opener.getLeftCount();
 						window.opener.refresh_onclick();
 		                window.close();
@@ -447,10 +446,7 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
-               	    		
-                	    	<c:if test="${result.memberID == userInfo.id}">
-                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
-                	    	</c:if>
+               	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
 <!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
 	                        <li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>

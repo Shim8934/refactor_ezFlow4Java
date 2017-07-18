@@ -299,9 +299,9 @@
 	        
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += obj.id;
+		            strListInfo += $(obj).closest("tr").attr("circularID");
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
 		        }
 		        
 		        listEventCheckbox = true;
@@ -451,27 +451,6 @@
 	        	}
 	        }
 		
-// 		    function event_HeaderCheckBoxClick(obj) {
-// 		        var SelList = new ListView();
-// 		        SelList.LoadFromID("BoardList");
-// 		        if (obj.checked) {
-// 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-// 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-// 		                SelList.GetDataRows()[i].setAttribute("selected", true);
-// 		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-// 		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-// 		            }
-// 		        }
-// 		        else {
-// 		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-// 		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-// 		                SelList.GetDataRows()[i].setAttribute("selected", false);
-// 		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-// 		                strListInfo = "";
-// 		            }
-// 		        }
-// 		    }
-		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
@@ -484,24 +463,6 @@
 		    }
 		    function refresh_onclick() {
 		    	window.location.href = "/ezCircular/circularMyCircular.do";
-		    }
-		
-		    function checkBox_checkAll(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        var oArrRows = SelList.GetSelectedRows();
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                strListInfo = "";
-		            }
-		        }
 		    }
 		
 		    function search(type) {
@@ -546,25 +507,13 @@
 	        		return;
 	        	}
 	        	
-	        	var arrList = new Array();
-		        var strItemList = "";
-		        var i = 0;
-		        
-		        arrList = strListInfo.split(";");
-		        
-		        for (i = 0; i < arrList.length - 1; i++) {
-		            strItemList += arrList[i].split(",")[1] + ";";
-		        }
-		        
-		        arrList = null;
-	        	
 	        	if (confirm("<spring:message code='ezCircular.t170'/>")) {
 		        	$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : false,
 						url : "/ezCircular/circularClose.do",
-						data : { circularIDList : strItemList
+						data : { circularIDList : strListInfo
 								},
 						success: function(xml){
 							alert("<spring:message code='ezCircular.t171'/>");
@@ -582,24 +531,12 @@
 	        	}
 	        	
 	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
-		        	var arrList = new Array();
-			        var circularIDList = "";
-			        var i = 0;
-			        
-			        arrList = strListInfo.split(";");
-			        
-			        for (i = 0; i < arrList.length - 1; i++) {
-			        	circularIDList += arrList[i].split(",")[1] + ";";
-			        }
-			        
-			        arrList = null;
-			        
 					$.ajax({
 						type : "POST",
-						dataType : "text",
+						dataType : "json",
 						async : false,
 						url : "/ezCircular/circularDeleteTemp.do",
-						data : { circularIDList : circularIDList
+						data : { circularIDList : strListInfo
 								},
 						success: function() {
 							alert("<spring:message code='ezCircular.t45'/>");
@@ -618,20 +555,8 @@
 	        		return;
 	        	}
 
-	        	var arrList = new Array();
-		        var circularIDList = "";
-		        var i = 0;
-		        
-		        arrList = strListInfo.split(";");
-		        
-		        for (i = 0; i < arrList.length - 1; i++) {
-		        	circularIDList += arrList[i].split(",")[1] + ";";
-		        }
-
-		        arrList = null;
-	        	
 	        	var feature = GetOpenPosition(820, 700);
-				url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
+				url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 

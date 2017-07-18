@@ -281,9 +281,9 @@
 	        
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += obj.id;
+		            strListInfo += $(obj).closest("tr").attr("circularID");
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
 		        }
 		        
 		        listEventCheckbox = true;
@@ -439,42 +439,9 @@
 	        		return;
 	        	}
 
-	        	var arrList = new Array();
-		        var circularIDList = "";
-		        var i = 0;
-		        
-		        arrList = strListInfo.split(";");
-		        
-		        for (i = 0; i < arrList.length - 1; i++) {
-		        	circularIDList += arrList[i].split(",")[1] + ";";
-		        }
-
-		        arrList = null;
-	        	
 	        	var feature = GetOpenPosition(820, 700);
-				url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList;
+				url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
-		    }
-		
-		    function event_HeaderCheckBoxClick(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                SelList.GetDataRows()[i].setAttribute("selected", true);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                SelList.GetDataRows()[i].setAttribute("selected", false);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-		                strListInfo = "";
-		            }
-		        }
 		    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
@@ -499,24 +466,6 @@
 		    	window.location.href = "/ezCircular/circularComplete.do";
 		    }
 		
-		    function checkBox_checkAll(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        var oArrRows = SelList.GetSelectedRows();
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                strListInfo = "";
-		            }
-		        }
-		    }
-
 	        function search(type) {
 	            if (type == "basic") {
 	

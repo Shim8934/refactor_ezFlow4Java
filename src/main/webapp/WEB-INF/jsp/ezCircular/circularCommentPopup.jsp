@@ -102,8 +102,6 @@
    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
-		
-		
 		<div style='height:702px;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%;">
 				<tr>

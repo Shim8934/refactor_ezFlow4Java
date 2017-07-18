@@ -475,22 +475,14 @@
 		    	window.location.href = "/ezCircular/circularFolderDoc.do";
 		    }
 		
-		    function checkBox_checkAll(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        var oArrRows = SelList.GetSelectedRows();
+		    function chk_onselect(obj) {
 		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
+		            strListInfo += $(obj).closest("tr").attr("circularID");
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
 		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                strListInfo = "";
-		            }
-		        }
+		        
+		        listEventCheckbox = true;
 		    }
 		
 		    function search(type) {
@@ -536,25 +528,13 @@
 	        		return;
 	        	}
 	        	
-	        	var arrList = new Array();
-		        var strItemList = "";
-		        var i = 0;
-		        
-		        arrList = strListInfo.split(";");
-		        
-		        for (i = 0; i < arrList.length - 1; i++) {
-		            strItemList += arrList[i].split(",")[1] + ";";
-		        }
-		        
-		        arrList = null;
-	        	
 	        	if (confirm("<spring:message code='ezCircular.t170'/>")) {
 		        	$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : false,
 						url : "/ezCircular/circularClose.do",
-						data : { circularIDList : strItemList
+						data : { circularIDList : strListInfo
 								},
 						success: function(xml){
 							alert("<spring:message code='ezCircular.t171'/>");
@@ -572,42 +552,22 @@
                 OpenWin.focus();     
 	        }
 
-	        var arrName = new Array();
 	        function CircularDelete_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
 
-	        	arrName = strNameInfo.split(";");
-
-	        	for (var i=0; i <arrName.length - 1; i++) {
-	        		if (SSUserID != arrName[i]) {
-		        		alert("<spring:message code='ezCircular.t174'/>");
-
-		        		return;
-		        	}
-	        	}
-	        	
 	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
 		        	var arrList = new Array();
-			        var circularIDList = "";
 			        var i = 0;
-			        
-			        arrList = strListInfo.split(";");
-			        
-			        for (i = 0; i < arrList.length - 1; i++) {
-			        	circularIDList += arrList[i].split(",")[1] + ";";
-			        }
-			        
-			        arrList = null;
 			        
 					$.ajax({
 						type : "POST",
-						dataType : "text",
+						dataType : "json",
 						async : false,
 						url : "/ezCircular/circularDeleteTemp.do",
-						data : { circularIDList : circularIDList
+						data : { circularIDList : strListInfo
 								},
 						success: function() {
 							alert("<spring:message code='ezCircular.t45'/>");
@@ -627,20 +587,8 @@
 	        		return;
 	        	}
 	        	
-	        	var arrList = new Array();
-		        var circularIDList = "";
-		        var i = 0;
-		        
-		        arrList = strListInfo.split(";");
-		        
-		        for (i = 0; i < arrList.length - 1; i++) {
-		        	circularIDList += arrList[i].split(",")[1] + ";";
-		        }
-
-		        arrList = null;
-	        	
 	        	var feature = GetOpenPosition(820, 700);
-	        	url = "/ezCircular/circularMove.do?circularIdList=" + circularIDList + "&folderId=" + folderId;
+	        	url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo + "&folderId=" + folderId;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 	        
@@ -651,24 +599,12 @@
 	        	}
 
 	        	if (confirm("<spring:message code='ezCircular.t100'/>")) {
-		        	var arrList = new Array();
-			        var circularIDList = "";
-			        var i = 0;
-			        
-			        arrList = strListInfo.split(";");
-			        
-			        for (i = 0; i < arrList.length - 1; i++) {
-			        	circularIDList += arrList[i].split(",")[1] + ";";
-			        }
-	
-			        arrList = null;
-
 		        	$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : false,
 						url : "/ezCircular/circularReturn.do",
-						data : { circularIDList : circularIDList,
+						data : { circularIDList : strListInfo,
 								 folderId		: folderId
 								},
 						success: function() {

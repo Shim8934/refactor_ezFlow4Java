@@ -1198,7 +1198,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		//임시회람판에서 회람등록 시 임시회람판에 있는 데이터 삭제
 		if (!oldCircularID.equals("")) {
-			ezCircularService.circularDeleteItem(oldCircularID, userInfo.getTenantId());
+			ezCircularService.deleteCircular(oldCircularID, userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
 		}
 
 		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
@@ -1621,28 +1621,47 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람판 삭제 실행 Method
+	 * 회람판 리스트 삭제 실행 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDeleteItem.do", method = RequestMethod.POST)
-	@ResponseBody
-	public void circularDelete(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
-		logger.debug("circularDeleteItem started");
+	@RequestMapping(value = "/ezCircular/deleteCircularList.do")
+	public String deleteCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+		logger.debug("deleteCircularList started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularIDList = request.getParameter("circularIDList");
 		
-		ezCircularService.circularDeleteItem(circularIDList, userInfo.getTenantId());
+		ezCircularService.deleteCircularList(circularIDList, userInfo.getId(), userInfo.getTenantId());
 
-		logger.debug("circularDeleteItem ended");
+		logger.debug("deleteCircularList ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 회람판 삭제 실행 Method
+	 */
+	@RequestMapping(value = "/ezCircular/deleteCircular.do")
+	public String deleteCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("deleteCircular started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String circularID = request.getParameter("circularID");
+		String memberID = request.getParameter("memberID");
+		
+		ezCircularService.deleteCircular(circularID, memberID, userInfo.getId(), userInfo.getTenantId());
+
+		logger.debug("deleteCircular ended");
+		
+		return "json";
 	}
 	
 	/**
 	 * 회람판 삭제 시 휴지통으로 이동 실행 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDeleteTemp.do", method = RequestMethod.POST)
-	@ResponseBody
-	public void circularDeleteTemp(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+	public String circularDeleteTemp(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
 		logger.debug("circularDeleteTemp started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1654,6 +1673,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		ezCircularService.circularDeleteTemp(circularIDList, memberId, tenantId);
 
 		logger.debug("circularDeleteTemp ended");
+		
+		return "json";
 	}
 
     /**

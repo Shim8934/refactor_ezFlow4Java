@@ -98,7 +98,9 @@ public interface EzCircularService {
 	
 	public void updateStatus(int status, int circularID, int tenantID) throws Exception;
 	
-	public void circularDeleteItem(String circularIDList,int tenantID) throws Exception;
+	public void deleteCircularList(String circularIDList,String memberID, int tenantID) throws Exception;
+	
+	public void deleteCircular(String circularID, String memberID, String userID, int tenantID) throws Exception;
 	
 	public void deleteCircularUser(int circularID,int tenantID) throws Exception;
 

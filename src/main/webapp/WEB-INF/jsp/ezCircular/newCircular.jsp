@@ -267,9 +267,9 @@
 	        
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += obj.id;
+		            strListInfo += $(obj).closest("tr").attr("circularID");
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
 		        }
 		        
 		        listEventCheckbox = true;
@@ -451,24 +451,6 @@
 		    	window.location.href = "/ezCircular/newCircular.do";
 		    }
 		
-		    function checkBox_checkAll(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        var oArrRows = SelList.GetSelectedRows();
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                strListInfo = "";
-		            }
-		        }
-		    }
-		
 		    function search(type) {
 	            if (type == "basic") {
 	
@@ -516,25 +498,13 @@
 	        		return;
 	        	}
 	        	
-	        	var arrList = new Array();
-		        var strItemList = "";
-		        var i = 0;
-		        
-		        arrList = strListInfo.split(";");
-		        
-		        for (i = 0; i < arrList.length - 1; i++) {
-		            strItemList += arrList[i].split(",")[1] + ";";
-		        }
-		        
-		        arrList = null;
-		        
 	        	if (confirm("<spring:message code='ezCircular.t68'/>")) {
 					$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : false,
 						url : "/ezCircular/circularConfirmStatus.do",
-						data : { circularIDList : strItemList
+						data : { circularIDList : strListInfo
 								},
 						success: function(){
 							

@@ -347,19 +347,56 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularDeleteItem(String circularIDList, int tenantID) throws Exception {
+	public void deleteCircularList(String circularIDList, String userID, int tenantID) throws Exception {
+		logger.debug("deleteCircularList started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String[] circularIDArr = circularIDList.split(";");
-		
-		for (int i=0; i<circularIDArr.length; i++) {
-			map.put("circularID", circularIDArr[i]);
+		for (String ids : circularIDList.split(";")) {
+			String[] idsArr = ids.split("|");
+			String circularID = idsArr[0];
+			String memberID = idsArr[1];
+			
+			logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || userID = " + userID + " || tenantID = " + tenantID);
+			
+			map.put("circularID", circularID);
+			map.put("memberID", memberID);
+			map.put("userID", userID);
 			map.put("tenantID", tenantID);
+			
+			if (memberID.equals(userID)) {
+				//작성자
+				ezCircularDAO.deleteCircular(map);
+				ezCircularDAO.deleteCircularUser(map);
+				ezCircularDAO.deleteCircularAttach(map);
+			} else {
+				//회람자
+				ezCircularDAO.updateDeleteFlag(map);
+//				logger.debug("회람자 삭제 미개발");
+			}
+		}
 		
+		logger.debug("deleteCircularList ended.");
+	}
+	
+	@Override
+	public void deleteCircular(String circularID, String memberID, String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
+		if (memberID.equals(userID)) {
+			//작성자
 			ezCircularDAO.deleteCircular(map);
 			ezCircularDAO.deleteCircularUser(map);
-			ezCircularDAO.deleteCircularAttach(map);			
+			ezCircularDAO.deleteCircularAttach(map);
+		} else {
+			//회람자
+			ezCircularDAO.updateDeleteFlag(map);
 		}
+		
 	}
 
 	@Override
@@ -849,13 +886,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void circularDeleteTemp(String circularIDList, String memberId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberID", memberId);
+		map.put("tenantID", tenantId);
 		
-		String[] circularIDArr = circularIDList.split(";");
-		
-		for (int i=0; i<circularIDArr.length; i++) {
-			map.put("circularID", circularIDArr[i]);
-			map.put("memberID", memberId);
-			map.put("tenantID", tenantId);
+		for (String circularID : circularIDList.split(";")) {
+			map.put("circularID", circularID);
 		
 			ezCircularDAO.tempDeleteCircular(map);
 		}

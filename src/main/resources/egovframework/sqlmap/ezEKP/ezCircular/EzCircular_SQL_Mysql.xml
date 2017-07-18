@@ -1303,9 +1303,7 @@
 			ON
 				A.circularid = D.circularid
             WHERE
-            	B.updatestatus = '2'
-            AND
-                A.memberid = #memberID#
+            	(B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID#)
             AND
                 A.tenantid = #tenantID#
 		]]>
@@ -1339,21 +1337,19 @@
 	<select id="EzCircularDAO.getCircularTDListCount" parameterClass="Map" resultClass="Integer" >
         <![CDATA[
             SELECT
-                COUNT(DISTINCT A.CIRCULARID) CNT
+                COUNT(DISTINCT A.circularid) CNT
             FROM
                 TBL_CIRCULAR A
 			JOIN
 				TBL_CIRCULAR_USER B
 			ON
-				A.CIRCULARID = B.CIRCULARID
+				A.circularid = B.circularid
 			AND
-				A.TENANTID = B.TENANTID
+				A.tenantid = B.tenantid
             WHERE
-            	B.UPDATESTATUS = '2'
+            	(B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID#)
             AND
-                A.MEMBERID = #memberID#
-            AND
-                A.TENANTID = #tenantID#
+                A.tenantid = #tenantID#
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
@@ -2226,6 +2222,21 @@
 		</isEqual>
 		
 		<![CDATA[
+			WHERE
+				circularid = #circularID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</update>
+	
+	<update id="EzCircularDAO.updateDeleteFlag">
+		<![CDATA[
+			UPDATE
+				TBL_CIRCULAR_USER
+			SET
+				deletestatus = 1
 			WHERE
 				circularid = #circularID#
 			AND
