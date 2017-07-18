@@ -103,10 +103,10 @@
 		    }
 		    function cmdConfirm_onclick() {
 		        if (typeof (arrDeptInfo[0]) == "undefined") {
-		            alert("<spring:message code='ezApprovalG.t1126'/>");
+	                OpenAlertUI("<spring:message code='ezApprovalG.t1126'/>");
 		        }
 		        else if (arrDeptInfo[0] == "") {
-		            alert("<spring:message code='ezApprovalG.t1126'/>");
+		        	OpenAlertUI("<spring:message code='ezApprovalG.t1126'/>");
 		        }
 		        else {
 		            rtnVal[0] = "TRUE";

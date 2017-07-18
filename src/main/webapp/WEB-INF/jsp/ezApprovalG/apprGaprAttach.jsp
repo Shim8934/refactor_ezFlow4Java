@@ -329,44 +329,38 @@
 			}
 			
 			//   첨부파일 리스트를 DB에 저장하는 function
-			function btn_AttachSaveSure_onclick()
-			{
+			function btn_AttachSaveSure_onclick() {
 			    var listview = new ListView();
 			    listview.LoadFromID("attachList");
 			    
 			    var Listlen =listview.GetDataRows();
-				
+			    var tr = Listlen[0];
 				chkFlag = true;
 				// 리스트에 리스트 목록이 있는 경우 그리고 파일추가 flag > 0 인경우 
-				if(Listlen.length == 0)
-				{
+				if (Listlen.length == 0 || tr.getAttribute("DATA1") == null) {
 					CheckHistory(0);
 					var RtnVal = AttachRemoveAll();
-					if(RtnVal == "FALSE")
-					{
+					if(RtnVal == "FALSE") {
 						var pAlertContent = "<spring:message code='ezApprovalG.t280'/>";
 						OpenAlertUI(pAlertContent);
 					}
-					for (i=0 ; i < pDeleteFile.length ; i++)
-					{
+					
+					for (i=0 ; i < pDeleteFile.length ; i++) {
 						DeleteFileAtServer_true(pDeleteFile[i]);
 					}
+					
 					if (CrossYN()) {
 					    parent.setAttachInfo(pDocID, "APR", parent.lstAttachLink);
 					    parent.DivPopUpHidden();
-					}
-					else {
+					} else {
 					    window.returnValue = "Clear";
 					    window.close();
 					}
-				}
-				else
-				{
+				} else 	{
 					CheckHistory(0);
 					var Attachxml = APRAttachXMLParsing(ATTACH,pDocID);
 					SaveAttachListInfo(Attachxml);
-					for (i=0 ; i < pDeleteFile.length ; i++)
-					{
+					for (i=0 ; i < pDeleteFile.length ; i++) {
 						DeleteFileAtServer_true(pDeleteFile[i]);
 					}
 				}

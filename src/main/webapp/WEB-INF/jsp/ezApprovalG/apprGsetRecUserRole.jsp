@@ -76,7 +76,7 @@
          if (document.getElementsByName("rdoRecRole")[0].checked) {
         	 $('#txtKeyword').prop("disabled",true);
         	 $('.listview').prop("disabled",true);
-        	 
+        	 $('#trRecUserRole').css("display","none");
 //          document.getElementById("DataLayout").disabled = true;
             document.getElementById("OrganListView").disabled = true;
 //          document.getElementById("DataLayout").style.display = true;
@@ -86,6 +86,7 @@
         else if (document.getElementsByName("rdoRecRole")[1].checked) {
         	$('#txtKeyword').prop("disabled","");
         	$('.listview').prop("disabled","");
+        	$('#trRecUserRole').css("display","");
             document.getElementById("DataLayout").style.display = "";
             document.getElementById("DataLayout").disabled = "";
         }

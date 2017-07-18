@@ -6486,7 +6486,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_FLAG", "1");
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			
+			int gongRamCount2 = ezApprovalGDAO.gongRamActivateCount2(map);
+			
 			ezApprovalGDAO.gongRamActivateAprState(map);
+			
+			if (gongRamCount2 == 0) {
+				ezApprovalGDAO.updateGongRamDocSate(map);
+			}
 			rtnVal = true;
 		} else {
 			int gongRamCount = ezApprovalGDAO.gongRamActivateCount(map);
@@ -19084,7 +19090,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 			map.put("v_Title", title);
 			map.put("v_RecTypeCode", recTypeCode);
-			map.put("v_ModifyFlag", "1");
+			map.put("v_ModifyFlag", "0");
 			map.put("v_REASON", changeReason);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("v_USERID", userID);
