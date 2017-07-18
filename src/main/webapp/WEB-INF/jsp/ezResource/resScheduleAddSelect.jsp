@@ -361,6 +361,10 @@
                   pListView.make();
               }
           }
+          
+          if (pListView.listlength() < 1) {
+        	  boolfirstlist = true;
+          }
       }
 
       function TreeViewNodeClick() {
