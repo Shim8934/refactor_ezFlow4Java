@@ -291,7 +291,8 @@
 // 	        }
 			
 			function getCircularPrintComment(circularID, userInfoID, status) {
-				$("#printDocument").html($("#printDocument").html() + '<div id = "printCommentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="printCircularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
+				if ($("#printCommentLists").length == 0) 
+					$("#printDocument").html($("#printDocument").html() + '<div id = "printCommentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="printCircularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
 
 				printCircularUserList = ""
 	        	$.ajax({
