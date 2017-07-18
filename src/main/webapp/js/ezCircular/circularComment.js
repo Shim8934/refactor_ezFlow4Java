@@ -18,10 +18,8 @@ function getCircularComment() {
 				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 				
 				if (vo.status == 1) {
-					//확인 이미지
 					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				} else {
-					//미확인 이미지
 					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 				}
 				
@@ -35,7 +33,6 @@ function getCircularComment() {
 				
 				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
 				
-				//확인일
 				if (vo.status == 1) {
 					circularUserList += vo.confirmDate.substring(0, 16);
 				}
@@ -82,7 +79,7 @@ function getCircularComment() {
 					} else {
 						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
 					}
-				} else {//비공개
+				} else {
 					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
 						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
 							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
@@ -220,18 +217,20 @@ function getCommentShareUser() {
 }
 
 function shareComment() {
-	//공유자로 지정된 회람자들의 상태값 의견,신규 -> 공유상태로 변경
-	//의견공유알림메일 발송
 	var memberIDList = "";
 	
 	if ($(".chkBox:checked").length ==  0) {
 		alert(strLang11);
 		return;
-	} 
+	}
+	
+	if(!confirm(strLang13)) {
+		return;
+	}
 	
 	for (var i=0; i < $(".chkBox:checked").length; i++) {
 		memberIDList += $(".chkBox:checked").eq(i).closest("tr").attr("circularUserID") + ";";
-	}	
+	}
 	
 	$.ajax({
 		type : "POST",
@@ -242,11 +241,34 @@ function shareComment() {
 			memberIDList : memberIDList
 		},
 		success : function (result) {
-			alert(strLang12);
 			closePopup();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			
+			alert(strLang14);
+		}
+	});
+}
+
+function commentConfirm() {
+	if (!confirm(strLang15)) {
+		return;
+	}
+	
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/commentConfirm.do",
+		dataType : "json",
+		data : {
+			circularID : circularID
+		},
+		success : function (result) {
+			closePopup();
+			parent.window.opener.getLeftCount();
+			parent.window.opener.refresh_onclick();
+			parent.window.close();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert(strLang16);
 		}
 	});
 }

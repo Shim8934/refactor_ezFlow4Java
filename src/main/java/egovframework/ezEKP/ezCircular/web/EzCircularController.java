@@ -236,13 +236,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		StringBuilder resultXML = new StringBuilder();
 		resultXML.append("<NODES>");
-		
+
 		for (int i = 0; i < circularAttachVOList.size(); i++) {
 			resultXML.append("<NODE>");
 			resultXML.append("<CircularFileId>" + circularAttachVOList.get(i).getCircularFileID() + "</CircularFileId>");
-			resultXML.append("<FileSize>" + circularAttachVOList.get(i).getFileSize() + "</FileSize>");
+			resultXML.append("<FileSize>" + commonUtil.byteCalculation(Long.toString(circularAttachVOList.get(i).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileName>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFileName()) + "</FileName>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFilePath()) + "</FilePath>");
+			resultXML.append("<FileType>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFilePath().split("\\.")[1]) + "</FileType>");
 			resultXML.append("</NODE>");
 		}
 		resultXML.append("</NODES>");
@@ -476,6 +477,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String result = ezCircularService.setCircularConfig(userID, tempCount, preView, userInfo.getTenantId());
 
 		logger.debug("setCircularConfig ended");
+		
 		return result;
 	}
 	
@@ -506,7 +508,6 @@ public class EzCircularController extends EgovFileMngUtil {
         String orderOption1 = "";
         String sdate = "";
         String edate = "";
-System.out.println("orderCell : " + orderCell + " / orderOption : " + orderOption );
 
 		for (int i = 0; i < headerLength; i++) {
 		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
@@ -517,7 +518,6 @@ System.out.println("orderCell : " + orderCell + " / orderOption : " + orderOptio
 		        }
 		    }
 		}
-System.out.println("orderOption1 : " + orderOption1);		
 
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
@@ -566,6 +566,7 @@ System.out.println("orderOption1 : " + orderOption1);
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -580,6 +581,7 @@ System.out.println("orderOption1 : " + orderOption1);
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			
+			//의견, 공유 이미지통합필요
 			if (vo.getCommentStatus().equals("1")) {
 				resultXML.append("<CELL><VALUE>comment</VALUE></CELL>");
 			} else if (vo.getShareStatus().equals("1")) {
@@ -2280,6 +2282,24 @@ System.out.println("orderOption1 : " + orderOption1);
 		model.addAttribute("circularDeptNamelist", circularDeptNamelist);
 		
 		return "json";
+	}
+	
+	/**
+	 * 회람판 인쇄상세질문 호출 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularprtQuestion.do")
+	public String circularprtQuestion(HttpServletRequest request, Model model) throws Exception{
+		logger.debug("circularprtQuestion started");
+		
+		String comment = request.getParameter("comment");
+		String attachList = request.getParameter("attachList");
+		
+		model.addAttribute("attachList", attachList);
+		model.addAttribute("comment", comment);
+		
+		logger.debug("circularprtQuestion ended");
+		
+		return "ezCircular/circularprtQuestion";
 	}
 	
 	/**

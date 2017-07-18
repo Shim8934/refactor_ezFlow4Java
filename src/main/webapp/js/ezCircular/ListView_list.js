@@ -750,9 +750,10 @@ function ListView() {
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                     
-                    if (getNodeText(oDatas[2]) == "1") {
-                    	titleImage = "&nbsp;&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
-                    }
+//                    새글 new 주석처리
+//                    if (getNodeText(oDatas[2]) == "1") {
+//                    	titleImage = "&nbsp;&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
+//                    } 
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
@@ -799,7 +800,7 @@ function ListView() {
                     objTd.style.fontWeight = "bold";
                     
                     //공유의견등록시 새로운 상태값 추가될
-                    if (strValue == "new") {
+                    /*if (strValue == "new") {
                     	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
                     	strValue = "";
                     } else if(strValue == "share") {
@@ -807,6 +808,13 @@ function ListView() {
                     	strValue = "";
                     } else {
                     	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
+                    	strValue = "";
+                    }*/
+                    if (strValue == "comment" || strValue == "share") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
+                    	strValue = "";
+                    } else if(strValue == "new") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
                     	strValue = "";
                     }
                 }
@@ -820,13 +828,9 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     if (strValue == '0') {
                     	objTd.style.fontWeight = "bold";
-                    	//strValue = '<img src="/images/circularUnread.png" />';
-                    	/*titleImage = '<img src="/images/decide_icon_up.gif" />';*/
                     	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
                     	strValue = "";
                     } else {
-                    	//strValue = '<img src="/images/circularRead.png" />';
-                    	/*titleImage = '<img src="/images/decide_icon_ok.gif" />';*/
                     	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
                     	strValue = "";
                     }
@@ -836,13 +840,10 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     
                     if (strValue == "0") {
-//                    	titleImage = '<img src="/images/ImgIcon/circular_ing.gif" />';
                     	strValue = strLang8;
                     } else if (strValue == "1") {
-//                    	titleImage = '<img src="/images/ImgIcon/circular_end.gif" />';
                     	strValue = strLang9;
                     } else {
-//                    	titleImage = '<img src="/images/ImgIcon/circular_temp.gif" />';
                     	strValue = strLang10;
                     }
                 }

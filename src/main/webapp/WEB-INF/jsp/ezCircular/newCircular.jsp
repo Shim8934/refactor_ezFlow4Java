@@ -537,8 +537,10 @@
 						data : { circularIDList : strItemList
 								},
 						success: function(){
-							alert("<spring:message code='ezCircular.t69'/>")
-						}        			
+							
+						},error : function(jqXHR, textStatus, errorThrown) {
+							alert("<spring:message code='ezCircular.t102' />");
+						}
 					});
 
 		            location.href = location.href;
