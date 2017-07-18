@@ -1682,7 +1682,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 **/
 	@RequestMapping(value = "/ezCircular/circularCheckName.do")
 	public String circularCheckName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
-		
 		logger.debug("circularCheckName started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1704,11 +1703,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	 **/
 	@RequestMapping(value = "/ezCircular/circularFolderManage.do")
 	public String circularFolderManage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
-		
 		logger.debug("circularFolderManage started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-
 		
 		logger.debug("circularFolderManage ended");
 		
@@ -1720,11 +1717,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	 **/
 	@RequestMapping(value = "/ezCircular/circularInputName.do")
 	public String circularInputName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
-		
 		logger.debug("circularInputName started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-
 		
 		logger.debug("circularInputName ended");
 		
@@ -1737,7 +1732,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circularClose.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circularClose(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
-		
 		logger.debug("circularClose started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1755,7 +1749,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circularFolderAdd.do")
 	@ResponseBody
 	public void circularFolderAdd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
-		
 		logger.debug("circularFolderAdd started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1776,7 +1769,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circularFolderModify.do")
 	@ResponseBody
 	public void circularFolderModify(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
-		
 		logger.debug("circularFolderModify started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1798,7 +1790,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circularDeleteFolder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circularDeleteFolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
-		
 		logger.debug("circularDeleteFolder started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1883,7 +1874,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/moveCircular.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void moveCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
-		
 		logger.debug("moveCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
