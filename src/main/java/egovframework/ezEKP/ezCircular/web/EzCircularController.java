@@ -580,6 +580,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			
+			//의견, 공유 이미지통합필요
 			if (vo.getCommentStatus().equals("1")) {
 				resultXML.append("<CELL><VALUE>comment</VALUE></CELL>");
 			} else if (vo.getShareStatus().equals("1")) {
@@ -587,15 +588,6 @@ public class EzCircularController extends EgovFileMngUtil {
 			} else {
 				resultXML.append("<CELL><VALUE>new</VALUE></CELL>");
 			}
-			
-			//신규회람판 우선순위 신규, 의견, 공유
-			/*if (vo.getUpdateStatus() == 0 ) {
-				resultXML.append("<CELL><VALUE>new</VALUE></CELL>");
-			} else if (vo.getCommentStatus().equals("1")) {
-				resultXML.append("<CELL><VALUE>comment</VALUE></CELL>");
-			} else if (vo.getShareStatus().equals("1")){
-				resultXML.append("<CELL><VALUE>share</VALUE></CELL>");
-			}*/
 			
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getTitle() + "</VALUE><DATA>1</DATA></CELL>");

@@ -800,7 +800,7 @@ function ListView() {
                     objTd.style.fontWeight = "bold";
                     
                     //공유의견등록시 새로운 상태값 추가될
-                    if (strValue == "new") {
+                    /*if (strValue == "new") {
                     	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
                     	strValue = "";
                     } else if(strValue == "share") {
@@ -808,6 +808,13 @@ function ListView() {
                     	strValue = "";
                     } else {
                     	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
+                    	strValue = "";
+                    }*/
+                    if (strValue == "comment" || strValue == "share") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
+                    	strValue = "";
+                    } else if(strValue == "new") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
                     	strValue = "";
                     }
                 }
