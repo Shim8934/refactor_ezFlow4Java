@@ -64,9 +64,15 @@
 			var status = "${vo.status}";
 			var userInfoID = "${userInfo.id}";
 			var option = "${vo.option}";
+			var commentStatus = "${vo.commentStatus}";
+			var shareStatus = "${vo.shareStatus}";
 			
 			$(document).ready(function(){
 				getCircularComment();
+				
+				if (commentStatus == "1" || shareStatus == "1") {
+					$(".commentConfirmDiv").show();
+				}
 				
 				$("#searchValue").keypress(function(e) {
 					if (e.keyCode == 13) {
@@ -112,7 +118,7 @@
 		</div>
 		
 		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">			
-			<div class="commentConfirmDiv" style="right:330px">
+			<div class="commentConfirmDiv" style="right:330px; display:none;">
 		        <ul style="padding-top:2px">
 		            <li><span id="commentConfirm" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
 		        </ul>

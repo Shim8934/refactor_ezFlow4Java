@@ -542,13 +542,21 @@
                 A.content,
                 A.memberName,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
-				D.confirmtotalcount
+				D.confirmtotalcount,
+				B.commentStatus,
+				B.shareStatus
             FROM
                 TBL_CIRCULAR A
+			JOIN
+				TBL_CIRCULAR_USER B
+			ON
+				A.circularid = B.circularid
+			AND
+				A.tenantid = B.tenantid
             LEFT JOIN
-            	TBL_USERMASTER B
+            	TBL_USERMASTER C
             ON
-            	A.MEMBERID = B.CN
+            	A.MEMBERID = C.CN
             LEFT JOIN
 				(SELECT
 					DISTINCT BB.circularid,
@@ -589,6 +597,8 @@
 				A.circularid = D.circularid
             WHERE
                 A.circularid = #circularID#
+            AND
+            	B.memberid = #memberID#
             AND
                 A.tenantid = #tenantID#
             GROUP BY

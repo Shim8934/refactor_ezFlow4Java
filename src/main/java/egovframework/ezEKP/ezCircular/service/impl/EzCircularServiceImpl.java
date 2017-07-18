@@ -271,6 +271,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
+		map.put("memberID", memberID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		
@@ -1111,7 +1112,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
 		
-		if (type.equals("Circularconfirm")) {
+		if (type.equals("circularConfirm")) {
 			updateUpdateStatus(circularID, memberID, nowDate, tenantID);
 			updateConfirmStatus(circularID, memberID, 1, nowDate, tenantID);
 		} else if (type.equals("commentConfirm")) {

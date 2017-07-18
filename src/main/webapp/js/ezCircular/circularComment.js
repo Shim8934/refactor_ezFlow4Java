@@ -222,11 +222,15 @@ function shareComment() {
 	if ($(".chkBox:checked").length ==  0) {
 		alert(strLang11);
 		return;
-	} 
+	}
+	
+	if(!confirm(strLang13)) {
+		return;
+	}
 	
 	for (var i=0; i < $(".chkBox:checked").length; i++) {
 		memberIDList += $(".chkBox:checked").eq(i).closest("tr").attr("circularUserID") + ";";
-	}	
+	}
 	
 	$.ajax({
 		type : "POST",
@@ -237,18 +241,36 @@ function shareComment() {
 			memberIDList : memberIDList
 		},
 		success : function (result) {
-			alert(strLang12);
 			closePopup();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			
+			alert(strLang14);
 		}
 	});
 }
 
 function commentConfirm() {
-	 
+	if (!confirm(strLang15)) {
+		return;
+	}
 	
+	$.ajax({
+		type : "POST",
+		url : "/ezCircular/commentConfirm.do",
+		dataType : "json",
+		data : {
+			circularID : circularID
+		},
+		success : function (result) {
+			closePopup();
+			parent.window.opener.getLeftCount();
+			parent.window.opener.refresh_onclick();
+			parent.window.close();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert(strLang16);
+		}
+	});
 }
 
 function openCircularComment() {
