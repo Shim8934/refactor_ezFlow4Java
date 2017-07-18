@@ -84,10 +84,6 @@
 	        InitCode();
 	        InitCategorySelection();
 	        selTaskCategory_onchange();
-	        
-	        if(ua.indexOf('Chrome') > 0){
-		      	  window.resizeTo(767, 422 + (window.outerHeight - window.innerHeight));
-	        }
 	    }
 	     
 	     var AddSpecialCatalog_Cross_dialogArguments = new Array();
