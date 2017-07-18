@@ -42,13 +42,11 @@
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
-	            document.getElementById("printDocument").style.height = window.innerHeight - 320 + "px";
 	        });
 			
 			window.onresize = function () {
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
-				document.getElementById("printDocument").style.height = window.innerHeight - 320 + "px";
 			};
 			
 			function circularConfirm() {
@@ -103,8 +101,8 @@
 
 	        //인쇄버튼 클릭시
 	        function print_onClick() {
-// 	        	getCircularPrintComment(circularID, userInfoID, status);
 	        	var parameter = "";
+	        	
 	            var url = "/ezCircular/circularprtQuestion.do?comment=" + comment + "&attachList=" + attachList;
 
 	            if (CrossYN()) {
@@ -124,39 +122,32 @@
 	        
 	        function OpenQuestionUI_Complete(ret) {
 	            DivPopUpHidden();
-	            
-	            if (ret[0] == "0" && ret[1] == "0")
+
+	            if (ret[0] == "0" && ret[1] == "0") // 취소
 	                return;
 	            var rtnVal = "";
-	            
-	            //의견 인쇄
-	            if (ret[0] == "Y") {
+
+	            if (ret[0] == "Y" && ret[1] == "N") { // 의견만 인쇄
+	            	$("#attachView").remove();
 	            	getCircularPrintComment(circularID, userInfoID, status);
-	            }
-	            //첨부파일 인쇄
-	            if (ret[1] == "Y") {
-	            	
+	            } else if (ret[0] == "N" && ret[1] == "Y") { // 첨부파일만 인쇄
+	            	$("#printCommentLists").remove();
+					$("#printCircularUserList").remove();
+	            	SetAttachmentInfo();
+	            } else if (ret[0] == "N" && ret[1]== "N") { // 문서만 인쇄
+	            	$("#printCommentLists").remove();
+					$("#printCircularUserList").remove();
+					$("#attachView").remove();
+	            } else {
+	            	getCircularPrintComment(circularID, userInfoID, status);
+	            	SetAttachmentInfo();
 	            }
 
-// 	            var bodycontent = "";
-// 	            if (tempType == "FormProc")
-// 	                bodycontent = pzFormProc.Editor.DOM.body.innerHTML + rtnVal;
-// 	            else if (tempType == "Cross")
-// 	                bodycontent = message.Get_EditorBodyHTML() + rtnVal;
-// 	            else if (tempType == "Enforce")
-// 	                bodycontent = message2.Get_EditorBodyHTML() + rtnVal;
-
-// 	            PrtBodyContent = bodycontent;
-// 	            var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
-// 	            feature = feature + GetOpenPosition(800, 500);
-// 	            window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
 				print_onClick2();
 	        }
 	        
 	        function print_onClick2() {
-// 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
-
-	            var feature = GetOpenPosition(700, 700);
+				var feature = GetOpenPosition(700, 700);
 	            printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
@@ -291,8 +282,9 @@
 // 	        }
 			
 			function getCircularPrintComment(circularID, userInfoID, status) {
-				if ($("#printCommentLists").length == 0) 
-					$("#printDocument").html($("#printDocument").html() + '<div id = "printCommentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="printCircularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
+				if ($("#printCommentLists").length == 0) {
+					$("#printDocument").html($("#printDocument").html() + '<div id = "printCommentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="printCircularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');					
+				}
 
 				printCircularUserList = ""
 	        	$.ajax({
@@ -374,8 +366,66 @@
             		error : function(jqXHR, textStatus, errorThrown) {
             			
             		}
-            	});	        
+            	});
 			}
+
+			function SetAttachmentInfo() {
+				var xmlhttp = createXMLHttpRequest();
+		        var xmldom = createXmlDom();
+		        xmlhttp.open("POST", "/ezCircular/getItemAttachments.do?pcircularId=" + circularID, false);
+		        xmlhttp.send();
+		        xmldom = loadXMLString(xmlhttp.responseText);
+		        xmlhttp = null;
+		        var filename = "";
+		        var filetype = "";
+		        var imagePath = "";
+		        var strAttachView = "";
+		        var strAttach = new Array();
+
+		        strAttachView += "<table id='attachView' class='layout' style='margin-top:5px; height:66px;'>";
+		        strAttachView += "<tr><td class='pad1'><table class='file2'>";
+		        strAttachView += "<tr><th><spring:message code='ezBoard.t292'/></th>";
+		        strAttachView += "<td style='width:100%;'><div id='lstAttachLink' style='padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;background-color:white; text-align:left'></div></td>";
+		        strAttachView += "<td id='ItemLevel' style='display:none;'></td>";
+		        strAttachView += "</tr></table></td></tr></table>";
+
+		        if ($("#attachView").length == 0) {
+			        $(".content2").after(strAttachView);		        	
+		        }
+
+		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
+		        for (var i = 0; i < xmldomNodes.length; i++) {
+		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
+		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
+		            filetype = getNodeText(SelectSingleNode(xmldomNodes[i], "FileType"));
+           
+		            if (filetype == "jpg" || filetype == "jpeg" || filetype == "bmp" || filetype == "gif" || filetype == "png" || filetype == "tif" || filetype == "tiff") {
+		            	imagePath = "/images/image.png";
+		            } else if (filetype == "doc" || filetype == "docx") {
+		            	imagePath = "/images/doc.png";
+		            } else if (filetype == "xls" || filetype == "xlsx") {
+		            	imagePath = "/images/xls.png";
+		            } else if (filetype == "ppt" || filetype == "pptx" || filetype == "pps" || filetype == "ppsx") {
+		            	imagePath = "/images/ppt.png";
+		            } else if (filetype == "txt") {
+		            	imagePath = "/images/txt.png";
+		            } else if (filetype == "zip") {
+		            	imagePath = "/images/zip.png";
+		            } else if (filetype == "pdf") {
+		            	imagePath = "/images/pdf.png";
+		            } else if (filetype == "ecm") {
+		            	imagePath = "/images/ecm.png";
+		            }
+
+		            strAttach[i] = "<img src='" + imagePath + "'/>&nbsp;" + filename + "&nbsp;(" + filesize + ")<br>";
+		        }
+
+		        $("#lstAttachLink").html("");
+		        for (var i = 0; i<strAttach.length; i++) {
+		        	$("#lstAttachLink").append(strAttach[i]);
+		        }
+		    }
 		</script>
 	</head>
 	<style>

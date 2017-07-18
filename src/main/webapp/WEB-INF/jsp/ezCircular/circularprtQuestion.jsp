@@ -71,6 +71,8 @@
 		        if (attachList == "true") {
 		            if (att.checked == true)
 		                rvalue[1] = "Y";
+		            else
+		                rvalue[1] = "N";
 		        }
 		        else
 		            rvalue[1] = "N";
@@ -170,24 +172,24 @@
 		</script>
 	</head>
 	<body class="popup">
-		<h1>인쇄항목 선택</h1>
-		<span>▒ 문서하단에 함께 인쇄할 항목을 선택하세요.</span>
+		<h1><spring:message code='ezCircular.t113' /></h1>
+		<span>▒ <spring:message code='ezCircular.t162' /></span>
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
 			<tr>
 				<th><input id='opi' name ='opi'  type='checkbox' ></th>
-				<td><span id="ext1">의견정보</span></td>
+				<td><span id="ext1"><spring:message code='ezCircular.t176' /></span></td>
 			</tr>
 			<tr>
 				<th><input id='att' name='att'  type='checkbox' ></th>
-				<td><span id="ext2">첨부정보</span></td>
+				<td><span id="ext2"><spring:message code='ezCircular.t175' /></span></td>
 			</tr>
 		</table>
 		<div class="btnposition" style="margin-top:15px">
-		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span>모두인쇄</span></a>
-		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span>선택인쇄</span></a>
-		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span>문서만인쇄</span></a>
-		    <a id="Submit4" class="imgbtn" onClick="return Cancel()" ><span>취소</span></a>
+		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezCircular.t177' /></span></a>
+		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span><spring:message code='ezCircular.t178' /></span></a>
+		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezCircular.t179' /></span></a>
+		    <a id="Submit4" class="imgbtn" onClick="return Cancel()" ><span><spring:message code='ezCircular.t26' /></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

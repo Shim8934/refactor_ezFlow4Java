@@ -236,13 +236,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		StringBuilder resultXML = new StringBuilder();
 		resultXML.append("<NODES>");
-		
+
 		for (int i = 0; i < circularAttachVOList.size(); i++) {
 			resultXML.append("<NODE>");
 			resultXML.append("<CircularFileId>" + circularAttachVOList.get(i).getCircularFileID() + "</CircularFileId>");
-			resultXML.append("<FileSize>" + circularAttachVOList.get(i).getFileSize() + "</FileSize>");
+			resultXML.append("<FileSize>" + commonUtil.byteCalculation(Long.toString(circularAttachVOList.get(i).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileName>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFileName()) + "</FileName>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFilePath()) + "</FilePath>");
+			resultXML.append("<FileType>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFilePath().split("\\.")[1]) + "</FileType>");
 			resultXML.append("</NODE>");
 		}
 		resultXML.append("</NODES>");
