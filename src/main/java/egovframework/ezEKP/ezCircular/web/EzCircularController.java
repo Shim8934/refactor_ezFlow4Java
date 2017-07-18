@@ -81,7 +81,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezCircular/circularIndex.do")
 	public String main(HttpServletRequest req, Model model) {
-		
 		logger.debug("Circularmain started");
 		
 		String func = "";
@@ -108,7 +107,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezCircular/circularLeft.do")
 	public String circularLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
-		
 		logger.debug("circularLeft started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -143,7 +141,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/getCircularFolderList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getCircularFolderList(HttpServletRequest request, HttpServletResponse response, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		
 		logger.debug("getCircularFolderList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -297,7 +294,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularMyCircular.do")
 	public String circularMyCircular(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-		
 		logger.debug("circularMyCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -314,7 +310,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularTemp.do")
 	public String circularTemp(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-		
 		logger.debug("circularTemp started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -331,7 +326,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularDelete.do")
 	public String circularDelete(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-		
 		logger.debug("circularDelete started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -370,7 +364,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularConfig.do")
 	public String circularConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
-		
 		logger.debug("circularConfig started");
 		
 		logger.debug("circularConfig ended");
@@ -383,7 +376,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularGeneral.do")
 	public String circuralGeneral(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model) throws Exception {
-		
 		logger.debug("circuralGeneral started");
 		
 		loginVO = commonUtil.userInfo(loginCookie);
@@ -412,7 +404,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circular_generallist_save.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circular_generallist_save(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularConfigVO circularConfigVO) throws Exception {
-		
 		logger.debug("circular_generallist_save started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -695,6 +686,7 @@ public class EzCircularController extends EgovFileMngUtil {
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -813,6 +805,7 @@ public class EzCircularController extends EgovFileMngUtil {
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -841,6 +834,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         logger.debug("resultXML : "+resultXML);
 		logger.debug("getCircularList ended");
+		
         return resultXML.toString();
     }
     
@@ -930,6 +924,7 @@ public class EzCircularController extends EgovFileMngUtil {
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -1040,6 +1035,7 @@ public class EzCircularController extends EgovFileMngUtil {
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -1518,7 +1514,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circularDeptSave.do")
 	@ResponseBody
 	public void circularDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
-		
 		logger.debug("circularDeptSave started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1543,8 +1538,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람처 조직도 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularSelectAttendant.do")
-	public String circularSelectAttendant(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, Model model) throws Exception {
-		
+	public String circularSelectAttendant(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("circularSelectAttendant started");
 		
 		logger.debug("circularSelectAttendant ended");
@@ -1557,7 +1551,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularDeptModify.do")
 	public String circularDeptModify(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularDeptVO circularDeptVO, Model model) throws Exception {
-		
 		logger.debug("circularDeptModify started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1607,7 +1600,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezCircular/circularDeptDel.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void circularDeptDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularDeptVO circularDeptVO) throws Exception {
-		
 		logger.debug("circularDeptDel started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -1920,7 +1912,6 @@ public class EzCircularController extends EgovFileMngUtil {
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
             edate = req.getParameter("edate");
-
         }
     	
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
@@ -1991,6 +1982,7 @@ public class EzCircularController extends EgovFileMngUtil {
         Date now = new Date();
         String strDate = sdfDate.format(now);
         String newlyDate = EgovDateUtil.addDay(strDate, -3, "yyyy-MM-dd HH:mm:ss");
+        
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
@@ -2205,6 +2197,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getCommentShareUser started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
     	String searchValue = request.getParameter("searchValue");
     	
     	List<CircularListVO> shareUserList = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), searchValue, userInfo.getTenantId(), userInfo.getOffset());
@@ -2224,6 +2217,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getListCount started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
     	String listType = request.getParameter("listType");
     	
     	int count = ezCircularService.getListCount(listType, userInfo.getId(), userInfo.getTenantId());
@@ -2243,6 +2237,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("commentShareUser started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	
     	String memberIDList = request.getParameter("memberIDList");
     	
     	ezCircularService.commentShareUser(vo.getCircularID(), memberIDList, userInfo, loginCookie);
