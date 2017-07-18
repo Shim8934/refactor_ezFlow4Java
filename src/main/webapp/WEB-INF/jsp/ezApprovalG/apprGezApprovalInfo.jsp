@@ -783,7 +783,7 @@
 		                if (line == false) {
 		                    return;
 		                }
-     
+		                
 		                if (approvalFlag == "G") {
 			                if (pIniGubun != 5 && pIniGubun != 7 && pIniGubun != 10 && pIniGubun != 12) {
 			                    var rtnVal = CheckSignCellValueLast();

@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
@@ -1083,6 +1084,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
 	    		}
 	    		
+	    		message.setFlag(Flags.Flag.SEEN, true);
     			sentFolder.open(Folder.READ_WRITE);
     			sentFolder.appendMessages(new Message[]{message});
     			sentFolder.close(true);
@@ -1117,6 +1119,7 @@ public class EzEmailServiceImpl implements EzEmailService {
             int attachIDPos3 = url.indexOf("&contentId=");
 			
             String mailbox = url.substring(attachIDPos1, attachIDPos2);
+            mailbox = URLDecoder.decode(mailbox, "utf-8");
             String uidStr = url.substring(attachIDPos2 + 5, attachIDPos3);
             String contentId = url.substring(attachIDPos3 + 11);
             contentId = URLDecoder.decode(contentId, "utf-8");

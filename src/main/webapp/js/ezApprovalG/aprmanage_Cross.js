@@ -1654,7 +1654,7 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
     }
 
-    if (pListTypeValue == "3" || pListTypeValue == "2" || pListTypeValue == "8" || pListTypeValue == "10")
+    if (pListTypeValue == "8" || pListTypeValue == "10")
         document.getElementById("tbar1").style.display = "none";
     else
         document.getElementById("tbar1").style.display = "";
@@ -1935,8 +1935,30 @@ function setbuttonenable() {
 	    if (pListTypeValue == "4") {
 	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
+	        document.getElementById("tbtnReceipt").style.display = "";
+	    }
+	    if (pListTypeValue == "10") {
+	    	document.getElementById("tbtnRegUserCont").style.display = "";
+	    } else {
+	    	document.getElementById("tbtnRegUserCont").style.display = "none";
+	    }
+	    if (pListTypeValue == "3") {
+            document.getElementById("tbtnDraft").style.display = "";   
+	    }
+	    if (pListTypeValue == "2") {
+            document.getElementById("tbtnDraft").style.display = "";      
+	    }
+	    
+	    if (pListTypeValue == "99" ) {
+	        document.getElementById("tbtnGongRam").style.display = "";      
 	    }
     }
+    
+    if (pListTypeValue != "21" ) {
+        document.getElementById("tbtnTotalSave").style.display = "";      
+    }
+    
+    document.getElementById("tSearchCondi").style.display = ""; 
     return true;
 }
 

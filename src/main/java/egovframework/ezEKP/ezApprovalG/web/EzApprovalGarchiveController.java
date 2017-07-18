@@ -1439,7 +1439,7 @@ public class EzApprovalGarchiveController {
 		logger.debug("mngUserCont started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
 		model.addAttribute("userCont", userCont.replace("\"", "\\\""));
 		model.addAttribute("userInfo", userInfo);
 		
@@ -1503,7 +1503,7 @@ public class EzApprovalGarchiveController {
 		String ParentContID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String OwnUserName = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
 		
-		String result = ezApprovalGService.getUserContTree(OwnUserID, ParentContID, OwnUserName, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getUserContTree(OwnUserID, ParentContID, OwnUserName, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
 
 		logger.debug("getUserContSubTree ended");
 		
@@ -1593,7 +1593,7 @@ public class EzApprovalGarchiveController {
 		logger.debug("selUserCont started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getLocale());
 		model.addAttribute("userCont", userCont);
 		model.addAttribute("userInfo", userInfo);
 		

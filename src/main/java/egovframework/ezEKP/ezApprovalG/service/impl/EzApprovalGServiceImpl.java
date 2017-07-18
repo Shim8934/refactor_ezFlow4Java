@@ -6486,7 +6486,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_FLAG", "1");
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			
+			int gongRamCount2 = ezApprovalGDAO.gongRamActivateCount2(map);
+			
 			ezApprovalGDAO.gongRamActivateAprState(map);
+			
+			if (gongRamCount2 == 0) {
+				ezApprovalGDAO.updateGongRamDocSate(map);
+			}
 			rtnVal = true;
 		} else {
 			int gongRamCount = ezApprovalGDAO.gongRamActivateCount(map);
@@ -8420,7 +8426,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String subSQL = "";
 		String result = "";
 		boolean rtnVal = true;
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID.trim());
@@ -10421,7 +10427,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 		}
-		
 		if (rollBackFlag == 1) {
 			 ezApprovalGDAO.deleteSerialNo(map);
 		} else {
@@ -14627,6 +14632,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String getLVFieldInfo(String listType, String companyID, String lang, int tenantID) throws Exception{
+		logger.debug("getLVFieldInfo started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_LISTTYPE", listType);
@@ -14965,6 +14971,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception{
+		logger.debug("makeTaskListXml started");
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
 		
@@ -20108,7 +20115,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getUserContTree(String OwnUserID, String ParentContID, String OwnUserName, String companyID, String lang, int tenantID) throws Exception {
+	public String getUserContTree(String OwnUserID, String ParentContID, String OwnUserName, String companyID, String lang, int tenantID, Locale locale) throws Exception {
 		String tempOwnUserName = OwnUserName;
         StringBuilder rtnXML = new StringBuilder("");
 
@@ -20155,7 +20162,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnXML.append("<DATA3>" + makeXMLString(docXML.getElementsByTagName("DESCRIPTION").item(0).getTextContent())+ "</DATA3>");
                 rtnXML.append("<DATA4>" + OwnUserID + "</DATA4><ISLEAF>" + getUserContTreeLeaf(docXML.getElementsByTagName("USERCONTID").item(0).getTextContent(), companyID, tenantID) + "</ISLEAF><EXPANDED>FALSE</EXPANDED>");
 				// 표준모듈 (2007.05.07) : 다국어
-				rtnXML.append(getUserContTree(OwnUserID, docXML.getElementsByTagName("USERCONTID").item(0).getTextContent(), "", companyID, lang, tenantID));
+				rtnXML.append(getUserContTree(OwnUserID, docXML.getElementsByTagName("USERCONTID").item(0).getTextContent(), "", companyID, lang, tenantID, locale));
 				rtnXML.append("</NODE>");
 			} else {
 				for (int j = 0; j < dlength; j++) {
@@ -20170,11 +20177,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			if (ParentContID.toUpperCase().equals("ROOT")) {
 				// 표준모듈 (2007.05.07) : 다국어
-				String NewContID = createUserCont(tempOwnUserName, ParentContID, strLangDeptDocFolder, OwnUserID, companyID, lang, tenantID);
+				String NewContID = createUserCont(messageSource.getMessage("ezApproval.t848", locale), ParentContID, strLangDeptDocFolder, OwnUserID, companyID, lang, tenantID);
 
 				if (!NewContID.trim().equals("")) {
                     rtnXML.append("<NODE>");
-					rtnXML.append("<VALUE>" + tempOwnUserName + "</VALUE>");
+					rtnXML.append("<VALUE>" + messageSource.getMessage("ezApproval.t848", locale) + "</VALUE>");
 					rtnXML.append("<DATA1>" + NewContID + "</DATA1>");
 					rtnXML.append("<DATA2>" + ParentContID+ "</DATA2>");
                     rtnXML.append("<DATA3>" + strLangDeptDocFolder + "</DATA3>");
