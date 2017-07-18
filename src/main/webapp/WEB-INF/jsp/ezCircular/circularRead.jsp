@@ -23,16 +23,35 @@
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
+			var comment = "";
+			var attachList = "";
+			
+			window.onload = function() {
+				if ("${commentCount}" != 0) {
+					comment = true;
+				}
+				
+				if ("${attachList}" != "") {
+					attachList = true;
+				}
+				
+alert("1 " + comment + " / " + attachList);
+			}
 
 			$(document).ready(function(){
 				window.opener.getLeftCount();
+	            document.getElementById('circularUserList1').innerHTML = "${listUser}";
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
+	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
+	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+	            document.getElementById("printDivCross").style.height = window.innerHeight - 320 + "px";
 	        });
 			
 			window.onresize = function () {
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+				document.getElementById("printDivCross").style.height = window.innerHeight - 320 + "px";
 			};
 			
 			function circularConfirm() {
@@ -83,11 +102,62 @@
 				});	
 	        }
 		    
+	        var ezprtquestion_cross_dialogArguments = new Array();
+
 	        //인쇄버튼 클릭시
-	        function print_onClick2(printTrueFalse) {
-	            g_printTrueFalse = printTrueFalse;
+	        function print_onClick() {
+// 	        	getCircularPrintComment(circularID, userInfoID, status);
+	        	var parameter = "";
+	            var url = "/ezCircular/circularprtQuestion.do?comment=" + comment + "&attachList=" + attachList;
+
+	            if (CrossYN()) {
+	                ezprtquestion_cross_dialogArguments[0] = parameter;
+	                ezprtquestion_cross_dialogArguments[1] = OpenQuestionUI_Complete;
+
+	                DivPopUpShow(380, 210, url);
+	            }
+	            else {
+	                var feature = "status:no;dialogWidth:380px;dialogHeight:210px;help:no;";
+	                feature = feature + GetShowModalPosition(380, 210);
+	                var RtnVal = window.showModalDialog(url, parameter, feature);
+
+	                return RtnVal;
+	            }
+	        }
+	        
+	        function OpenQuestionUI_Complete(ret) {
+	            DivPopUpHidden();
+alert("2 " + ret[0] + " / " + ret[1]);
+	            if (ret[0] == "0" && ret[1] == "0")
+	                return;
+	            var rtnVal = "";
 	            
-	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
+	            //의견 인쇄
+	            if (ret[0] == "Y") {
+	            	getCircularPrintComment(circularID, userInfoID, status);
+	            }
+	            //첨부파일 인쇄
+	            if (ret[1] == "Y") {
+	            	
+	            }
+
+// 	            var bodycontent = "";
+// 	            if (tempType == "FormProc")
+// 	                bodycontent = pzFormProc.Editor.DOM.body.innerHTML + rtnVal;
+// 	            else if (tempType == "Cross")
+// 	                bodycontent = message.Get_EditorBodyHTML() + rtnVal;
+// 	            else if (tempType == "Enforce")
+// 	                bodycontent = message2.Get_EditorBodyHTML() + rtnVal;
+
+// 	            PrtBodyContent = bodycontent;
+// 	            var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
+// 	            feature = feature + GetOpenPosition(800, 500);
+// 	            window.open("/ezApprovalG/ezApprovalPrint.do", "", feature);
+				print_onClick2();
+	        }
+	        
+	        function print_onClick2() {
+// 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 
 	            var feature = GetOpenPosition(700, 700);
 	            printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
@@ -138,80 +208,166 @@
 	          	window.close();
 			}
 			
-			/* function getCircularComment(circularID, userInfoID, status) {
-				$("#divCross").html($("#divCross").html() + '<div id = "commentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
+// 			function getCircularComment(circularID, userInfoID, status) {
+// 				$("#divCross").html($("#divCross").html() + '<div id = "commentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
 	        	
+// 	        	$.ajax({
+//             		type : "POST",
+//             		url : "/ezCircular/getCircularComment.do",
+//             		dataType : "json",
+//             		data : {
+//             			circularID : circularID,
+//             			searchValue : ""
+//             		},
+//             		success : function(result) {
+//             			circularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";
+            			
+//             			list = result.circularUserList;
+//             			list.forEach(function(vo, index) {
+//             				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+//             				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+            				
+//             				if (vo.status == 1) {
+//             					//확인 이미지
+//             					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+//             				} else {
+//             					//미확인 이미지
+//             					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+//             				}
+            				
+//             				circularUserList += "</th>";
+//             				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
+//             				//확인일
+//             				if (vo.status == 1) {
+//             					circularUserList += vo.confirmDate.substring(0, 16);
+//             				}
+            				
+//             				circularUserList += "</th>";
+//             				circularUserList += "</tr>";
+//             			});
+ 			
+//             			$("#circularUserList").html("");
+//             			$("#circularUserList").append(circularUserList);
+            			
+//             			var now = new Date();
+
+//             			circularCommentList = "";
+//             			list = result.circularCommentList ;
+//             			list.forEach(function(vo, index) {
+//             				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
+//            					circularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "</td>";
+//             				circularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
+            				
+//             				var arry = vo.regDate.substring(0, 10).split('-');
+//             				var d = new Date(arry[0], arry[1]-1, arry[2]);
+//             				var getDiffTime = now.getTime() - d.getTime();
+            				
+//             				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
+//             					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' />&nbsp;";
+//             				}
+            				
+//             				circularCommentList += "</td>";
+//             				circularCommentList += "<td style='text-align:right; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.regDate.substring(0, 16) + "</td>";
+//             				circularCommentList += "</tr>";
+            				
+//             				if (vo.status == 0) {
+//             					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+//             						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+//             					} else {
+//             						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+//             					}
+//             				} else {//비공개
+//             					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
+//             						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+//             							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+//             						} else {
+//             							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+//             						}
+//             					}
+//             				}
+//             			});
+//             		},
+//             		error : function(jqXHR, textStatus, errorThrown) {
+            			
+//             		}
+//             	});
+// 	        }
+			
+			function getCircularPrintComment(circularID, userInfoID, status) {
+				$("#printDocument").html($("#printDocument").html() + '<div id = "printCommentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="printCircularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
+
+				printCircularUserList = ""
 	        	$.ajax({
             		type : "POST",
             		url : "/ezCircular/getCircularComment.do",
             		dataType : "json",
+            		async : false,
             		data : {
             			circularID : circularID,
             			searchValue : ""
             		},
             		success : function(result) {
-            			circularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";
-            			
+            			printCircularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";    			
             			list = result.circularUserList;
             			list.forEach(function(vo, index) {
-            				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
-            				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+            				printCircularUserList += "<tr class='printCircularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+            				printCircularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				} else {
             					//미확인 이미지
-            					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				}
             				
-            				circularUserList += "</th>";
-            				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
+            				printCircularUserList += "</th>";
+            				printCircularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
             				//확인일
             				if (vo.status == 1) {
-            					circularUserList += vo.confirmDate.substring(0, 16);
+            					printCircularUserList += vo.confirmDate.substring(0, 16);
             				}
             				
-            				circularUserList += "</th>";
-            				circularUserList += "</tr>";
+            				printCircularUserList += "</th>";
+            				printCircularUserList += "</tr>";
             			});
-            			
-            			$("#circularUserList").html("");
-            			$("#circularUserList").append(circularUserList);
+
+            			$("#printCircularUserList").html("");
+            			$("#printCircularUserList").append(printCircularUserList);
             			
             			var now = new Date();
 
-            			circularCommentList = "";
+            			printCircularCommentList = "";
             			list = result.circularCommentList ;
             			list.forEach(function(vo, index) {
-            				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
-           					circularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "</td>";
-            				circularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
+            				printCircularCommentList  = "<tr class='printCircularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
+            				printCircularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "</td>";
+            				printCircularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
             				
             				var arry = vo.regDate.substring(0, 10).split('-');
             				var d = new Date(arry[0], arry[1]-1, arry[2]);
             				var getDiffTime = now.getTime() - d.getTime();
             				
             				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
-            					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' />&nbsp;";
+            					printCircularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' />&nbsp;";
             				}
             				
-            				circularCommentList += "</td>";
-            				circularCommentList += "<td style='text-align:right; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.regDate.substring(0, 16) + "</td>";
-            				circularCommentList += "</tr>";
+            				printCircularCommentList += "</td>";
+            				printCircularCommentList += "<td style='text-align:right; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.regDate.substring(0, 16) + "</td>";
+            				printCircularCommentList += "</tr>";
             				
             				if (vo.status == 0) {
-            					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
-            						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+            					if ($(".printCircularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+            						$(".printCircularUser[circularUserID='" + vo.circularUserID + "']").after(printCircularCommentList);
             					} else {
-            						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+            						$(".printCircularComment[circularUserID='" + vo.circularUserID + "']:last").after(printCircularCommentList);
             					}
             				} else {//비공개
             					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
-            						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
-            							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+            						if ($(".printCircularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+            							$(".printCircularUser[circularUserID='" + vo.circularUserID + "']").after(printCircularCommentList);
             						} else {
-            							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+            							$(".printCircularComment[circularUserID='" + vo.circularUserID + "']:last").after(printCircularCommentList);
             						}
             					}
             				}
@@ -220,8 +376,8 @@
             		error : function(jqXHR, textStatus, errorThrown) {
             			
             		}
-            	});
-	        } */
+            	});	        
+			}
 		</script>
 	</head>
 	<style>
@@ -247,7 +403,7 @@
                 	    	<c:if test="${result.memberID == userInfo.id}">
                 	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
                 	    	</c:if>
-	                        <li><span onclick="print_onClick2( false )"><spring:message code='ezCircular.t114' /></span></li>
+	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
 <!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
 	                        <li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>
                     	</ul>
@@ -463,7 +619,7 @@
 						</tr>
 						<tr> 
  							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 
-						</tr>	
+						</tr>
 					</table>
 				</td>
 			</tr>
