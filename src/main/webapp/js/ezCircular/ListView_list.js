@@ -750,9 +750,10 @@ function ListView() {
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
                     
-                    if (getNodeText(oDatas[2]) == "1") {
-                    	titleImage = "&nbsp;&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
-                    }
+//                    새글 new 주석처리
+//                    if (getNodeText(oDatas[2]) == "1") {
+//                    	titleImage = "&nbsp;&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
+//                    } 
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
