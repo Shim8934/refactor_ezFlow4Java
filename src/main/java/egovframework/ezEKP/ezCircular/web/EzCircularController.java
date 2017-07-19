@@ -123,13 +123,7 @@ public class EzCircularController extends EgovFileMngUtil {
 					list.get(i).getCircularFolderID() + "'></node>");
 		}
 		
-		String funCode = "1";
-		if (request.getParameter("funCode") != null) {
-			funCode = request.getParameter("funCode");
-		}
-		
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
-		model.addAttribute("funCode", funCode);
 		
 		logger.debug("circularLeft ended.");
 
