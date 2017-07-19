@@ -275,7 +275,7 @@
         							<li><span onClick="btn_Save('${mode}')">회람수정</span></li>
         						</c:when>
         						<c:otherwise>
-		          					<li><span onClick="btn_Save('${mode}')">재회람작성</span></li>        						
+		          					<li><span onClick="btn_Save('${mode}')">복사작성</span></li>        						
         						</c:otherwise>
         					</c:choose>
         				</ul>

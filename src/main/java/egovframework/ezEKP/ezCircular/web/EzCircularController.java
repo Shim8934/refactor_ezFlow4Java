@@ -1893,6 +1893,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
 
+		logger.debug("circularIdList : " + circularIdList);
+
 		if (folderId != null) {	
 			model.addAttribute("folderId", folderId);
 		}
