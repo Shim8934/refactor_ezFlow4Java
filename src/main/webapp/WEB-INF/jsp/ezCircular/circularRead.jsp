@@ -446,6 +446,14 @@
 		        	$("#lstAttachLink").append(strAttach[i]);
 		        }
 		    }
+			
+			function circularModify() {
+				
+			}
+			
+			function circularReUse() {
+				
+			}
 		</script>
 	</head>
 	<style>
@@ -460,7 +468,6 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		
 	    <table id="normalScreen" class="layout">
     	    <tr>
         	    <td style="height: 20px">
@@ -471,6 +478,8 @@
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
 <!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
 	                        <li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>
+	                        <li><span onclick="circularModify()">회람수정</span></li>
+	                        <li><span onclick="circularReUse()">재회람</span></li>
                     	</ul>
                 	</div>
                 	<div id="close">
