@@ -1306,7 +1306,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);
-//		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
+		model.addAttribute("confirmStatus", result.getConfirmStatus().equals("1") ? "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
 		
 		return "/ezCircular/circularRead";
 	}

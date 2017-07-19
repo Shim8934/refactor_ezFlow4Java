@@ -543,6 +543,7 @@
                 A.memberName,
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
+				B.status confirmstatus,
 				B.updateStatus,
 				B.commentStatus,
 				B.shareStatus
@@ -1304,7 +1305,7 @@
 			ON
 				A.circularid = D.circularid
             WHERE
-            	(B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0)
+            	((B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0))
             AND
                 A.tenantid = #tenantID#
 		]]>
@@ -1348,7 +1349,7 @@
 			AND
 				A.tenantid = B.tenantid
             WHERE
-            	(B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0)
+            	((B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0))
             AND
                 A.tenantid = #tenantID#
         ]]>

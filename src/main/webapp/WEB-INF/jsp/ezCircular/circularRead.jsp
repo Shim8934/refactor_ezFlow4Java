@@ -31,7 +31,7 @@
 			$(document).ready(function() {
 				window.opener.getLeftCount();
 				getCommentCount();
-				getConfirmStatus();
+				
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -81,12 +81,15 @@
 						var confirmStatus = result.confirmStatus;
 						
 						if (confirmStatus == "1") {
-							confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";  
+							confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
+							$("#circularConfirm").hide();
 						} else {
 							confirmStatus = "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />";
+							$("#circularConfirm").show();
 						}
 						
 						$(".confirmStatus").html(confirmStatus);
+						
 					},error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezCircular.t102' />");
 					}
@@ -428,13 +431,18 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-               	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
-               	    		<li><span onclick="openCircularComment()" id="commentCount"></span></li>
+                	    	<c:if test="${result.status == '0'}">
+								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
+                	    	</c:if>
+                	    	
+               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' /></span></li>
 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li>
+	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
 		                        <li><span onclick="circularModify()">회람수정</span></li>
 		                        <li><span onclick="circularReUse()">재회람</span></li>
 	                        </c:if>
+	                        
                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>
@@ -510,7 +518,7 @@
 		        		</tr>
 		        		<tr>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;"></td>
+		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; height:100%; overflow:auto;"></div></td>
@@ -646,7 +654,7 @@
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;"></td>
+		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
 						</tr>
 						<tr> 
  							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 
