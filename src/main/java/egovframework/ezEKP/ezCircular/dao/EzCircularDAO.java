@@ -338,4 +338,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public void updateDeleteFlag(Map<String, Object> map) throws Exception {
 		update("EzCircularDAO.updateDeleteFlag", map);
 	}
+
+	public void updateCircular(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircular", map);
+	}
+
+	public void updateCircularAttach(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircularAttach", map);
+	}
 }

@@ -547,7 +547,7 @@
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
-alert(_RowObjectID + " / " + _RowObjectName);
+
 	            if (_RowObjectID != null) {
 	            	if (_RowObjectName.trim() == "deptList") {        		
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
