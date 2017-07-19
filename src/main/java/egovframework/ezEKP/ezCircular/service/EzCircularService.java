@@ -134,8 +134,6 @@ public interface EzCircularService {
 	
 	public void commentShareUser(String circularID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception;
 	
-	public void circularConfirm(String circularID, String memberID, int tenantID) throws Exception;
-	
 	public void confirmStatus(String circularID, String memberID, int tenantID, String type) throws Exception;
 	
 }
