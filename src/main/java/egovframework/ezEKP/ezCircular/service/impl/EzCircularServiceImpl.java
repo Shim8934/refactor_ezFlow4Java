@@ -283,6 +283,61 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
+	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, int receiverLength,
+			int status, String regDate, String content, String fileList, String offset) throws Exception {
+		//파일이 있으면 hasFile을 1로 설정
+		int hasFile = 0;
+
+		if (fileList != null && !fileList.equals("")) {
+			hasFile = 1;
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+	
+		map.put("title", title);
+		map.put("importance", importance);
+		map.put("option", option);
+		map.put("content", content);
+		map.put("circularID", circularID);
+		map.put("hasFile", hasFile);
+		map.put("status", status);
+		map.put("regDate", regDate);
+		map.put("tenantID", tenantID);
+
+		ezCircularDAO.updateCircular(map);
+
+		for (int i=0; i<receiverLength; i++) {
+			updateStatus(circularID, tenantID);
+		}
+
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		
+		if (fileList != null && !fileList.equals("")) {
+			int fileLength = fileList.split(",").length;
+			String[] fileLists = fileList.split(",");
+			
+			for (int j=0; j<fileLength; j++) {
+				String[] files = fileLists[j].split("/");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+				
+				String uploadFilePath = commonUtil.separator + "uploadFile";
+				
+				filePath = uploadFilePath + commonUtil.separator + filePath;
+				
+				attachMap.put("circularID", circularID);
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", filePath);
+				attachMap.put("tenantID", tenantID);
+				
+				ezCircularDAO.updateCircularAttach(attachMap);
+			}
+		}
+	}
+
+	@Override
 	public void modifyCircular(String title, int importance, int option, int circularID, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content, String fileList, String[] receiverName, String[] receiverName2, String offset) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
@@ -343,7 +398,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.insertCircularAttach(attachMap);
 			}
 		}
-		
 	}
 
 	@Override
@@ -436,11 +490,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return result;
 	}
 
-	@Override
-	public void updateStatus(int status, int circularID, int tenantID) throws Exception {
+	public void updateStatus(String circularID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("status", status);
+
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
 		
@@ -1034,14 +1086,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
-	public int getCommentCount(String circularID, String id, int tenantID) throws Exception {
+	public int getCommentCount(String circularID, String memberID, String type, int tenantID) throws Exception {
 		logger.debug("getCommentCount started.");
-		logger.debug("circularID = " + circularID + " || circularUserID = " + id + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || type = " + type + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
-		map.put("circularUserID", id);
+		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
+		map.put("type", type);
 		
 		int result = ezCircularDAO.getCommentCount(map);
 		
@@ -1067,7 +1120,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("nowDate", nowDate);
 		map.put("tenantID", userInfo.getTenantId());
 		
-		updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, 0, nowDate, userInfo.getTenantId());
+		if (!vo.getCircularUserID().equals(userInfo.getId())) {
+			updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, 0, nowDate, userInfo.getTenantId());
+		}
 		
 		int circularCommentID = ezCircularDAO.insertComment(map);
 		
@@ -1157,11 +1212,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 		} else if (type.equals("commentConfirm")) {
 			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
+			updateCommentState(circularID, memberID, 1, nowDate, tenantID);
 		} else {
 			updateUpdateStatus(circularID, memberID, nowDate, tenantID);
 			updateConfirmStatus(circularID, memberID, 1, nowDate, tenantID);
 			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
+			updateCommentState(circularID, memberID, 1, nowDate, tenantID);
 		}
 		
 		logger.debug("confirmStatus ended.");
@@ -1183,6 +1240,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateReadStatus ended.");
 	}
 	
+	private void updateStatus(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
+		logger.debug("updateStatus started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+		
+		ezCircularDAO.updateUpdateStatus(map);
+		
+		logger.debug("updateStatus ended.");
+	}
+	
 	private void updateUpdateStatus(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateUpdateStatus started.");
 		
@@ -1198,7 +1269,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	private void updateCircularCommentStatus(String circularID, String memberID, int commentStatus, int deleteStatus, String nowDate, int tenantID) throws Exception {
-		logger.debug("updateCircularUser started.");
+		logger.debug("updateCircularCommentStatus started.");
 		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || commentStatus = " + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1211,7 +1282,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				
 		ezCircularDAO.updateCircularCommentStatus(map);
 		
-		logger.debug("updateCircularUser ended.");
+		logger.debug("updateCircularCommentStatus ended.");
 	}
 	
 	private void updateCircularShareStatus(String circularID, String memberID, int shareStatus, int deleteStatus, String nowDate, int tenantID) throws Exception {
@@ -1231,10 +1302,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateCircularShareStatus ended.");
 	}
 	
-	private void updateCommentState(String circularID, String memberID, int status, String nowDate, int tenantID) throws Exception {
+	private void updateCommentState(String circularID, String memberID, int confirmStatus, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateCommentState started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("status", confirmStatus);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
 		
+		ezCircularDAO.updateCommentState(map);
 		
 		logger.debug("updateCommentState ended.");
 	}
@@ -1396,7 +1474,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		for (String memberID : memberIDs) {
 			map.put("memberID", memberID);
-			updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+			
+			if (!memberID.equals(userInfo.getId())) {
+				updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+			}
+			
 			//이효진 commentState 테이블에 공유자 추가
 			updateCommentState(circularID, memberID, 0, nowDate, tenantID);
 			

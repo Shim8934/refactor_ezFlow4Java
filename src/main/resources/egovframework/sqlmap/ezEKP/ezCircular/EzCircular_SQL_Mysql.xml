@@ -1638,24 +1638,48 @@
 	</select>
 
 	<select id="EzCircularDAO.getCommentCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				COUNT(B.circularcommentstateid)
-			FROM
-				TBL_CIRCULAR_COMMENT A
-			JOIN
-				TBL_CIRCULAR_COMMENTSTATE B
-			ON
-				A.circularcommentid = B.circularcommentid
-			AND
-				A.tenantid = B.tenantid
-			WHERE
-				A.circularid = #circularID#
-			AND
-				((A.status = 1 AND (A.circularuserid = #circularUserID# OR B.memberid = #circularUserID#)) OR (A.status = 0))
-			AND
-				B.tenantid = #tenantID#
-		]]>
+		<isEqual property="type" compareValue="totalComment">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(B.circularcommentstateid), 0) cnt
+				FROM
+					TBL_CIRCULAR_COMMENT A
+				JOIN
+					TBL_CIRCULAR_COMMENTSTATE B
+				ON
+					A.circularcommentid = B.circularcommentid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.circularid = #circularID#
+				AND
+					((A.status = 1 AND (A.circularuserid = #memberID# OR A.memberid = #memberID#)) OR (A.status = 0))
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="myComment">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(B.circularcommentstateid), 0) cnt
+				FROM
+					TBL_CIRCULAR_COMMENT A
+				JOIN
+					TBL_CIRCULAR_COMMENTSTATE B
+				ON
+					A.circularcommentid = B.circularcommentid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.circularid = #circularID#
+				AND
+					B.memberid = #memberID#
+				AND
+					B.status = 0
+				AND
+					B.tenantid = #tenantID#
+			]]>
+		</isEqual>
 	</select>
 
 	<select id="EzCircularDAO.getListCount" parameterClass="Map" resultClass="Integer">
@@ -2198,7 +2222,7 @@
 									WHERE
 										circularid = #circularID#
 									AND
-										circularuserid = #circularUserID#
+										circularuserid = #memberID#
 									)
 			AND
 				status = 0
@@ -2246,6 +2270,55 @@
 				tenantid = #tenantID#
 		]]>
 	</update>
+	
+	<update id="EzCircularDAO.updateCircular" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_CIRCULAR
+            SET
+                TITLE = #title#,
+                IMPORTANCE = #importance#,
+                OPTION = #option#,
+                CONTENT = #content#,
+                HASFILE = #hasFile#,
+                STATUS = #status#,
+                REGDATE = #regDate#
+            WHERE 
+                CIRCULARID = #circularID#
+            AND
+                TENANTID = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateStatus" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR_USER
+	        SET
+	            status = 0
+	        WHERE 
+	            circularid = #circularID#
+	        AND
+	        	updatestatus = 0
+	        AND
+	            tenantid = #tenantID#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateCircularAttach" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR_FILE
+	        SET
+	            FILENAME = #fileName#,
+	            FILESIZE = #fileSize#,
+	            FILEPATH = #filePath#
+	        WHERE 
+	            circularid = #circularID#
+	        AND
+	            tenantid = #tenantID#
+        ]]>
+    </update>
 
     <delete id="EzCircularDAO.deleteCircular" parameterClass="Map">
         <![CDATA[

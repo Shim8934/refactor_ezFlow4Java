@@ -17,9 +17,8 @@
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 	    <script type="text/javascript">
-	        var funcCode = "${funCode}";
-	        
 	        document.onselectstart = function () { return false; };
+	        
 	        window.onresize = function () {
 	            if (document.documentElement.clientHeight > 900) {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.58) + "px";	                
@@ -28,6 +27,7 @@
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
 	            }
 	        }
+	        
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
@@ -42,7 +42,8 @@
 	            else {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
 	            }	            
-	            Function_Flag(funcCode);
+
+	            LoadEmailTree();
 	            
 	            /* 2017-05-18 장진혁 신규회람판에 클릭이벤트 생성 */ 
 	            $("#newCircular").click();
@@ -50,7 +51,19 @@
 	            getNewCircularCount();
 	        }
 	        
-	        function LoadEmailTree() {
+	        function LoadEmailTree() {	
+	        	$.ajax({
+            		type : "POST",
+            		url : "/ezCircular/getCircularFolderList.do",
+            		async : false,
+            		dataType : "json",
+            		data : {},
+            		success : function(result) {
+            			$("#RootFolderXML").html("");
+	            		$("#RootFolderXML").append(result.rootFolderXML);
+            		}
+	        	});
+	        	
 	            var PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
 	            PostTreeView.attachEvent('requestdata', requestdata);
 	            PostTreeView.attachEvent('nodeselect', selectnode);
@@ -88,40 +101,6 @@
 	            var url = "/ezCircular/circularFolderDoc.do?folderId=" + folderId;
  	            
 				window.open(url, "right");
-	        }
-
-	        function Function_Flag(v_data) {
-	            v_data = parseInt(v_data);
-	
-	            switch (v_data) {
-	                case 1:
-	                    LoadEmailTree();
-	                    break;
-	                case 2:
-	                    LoadEmailTree();
-	                    WebPartToggle(level1El.item(1));
-	                    break;
-	            }
-	        }
-
-	        function WebPartToggle(obj) {
-	            if (obj.listNum && currentListNum != obj.listNum + 1) {
-	                level1El.item(currentListNum - 1).className = null;
-	                level2El.item(currentListNum - 1).className = "off";
-	            }
-	
-	            if (level2El.item(obj.listNum).className == "on") {
-	                level1El.item(obj.listNum).className = null;
-	                level2El.item(obj.listNum).className = "off";
-	            }
-	            else {
-	                level1El.item(obj.listNum).className = "on";
-	                level2El.item(obj.listNum).className = "on";
-	            }
-	
-	            currentListNum = obj.listNum + 1;
-	
-	            setMenu(level2El.item(obj.listNum));
 	        }
 
 	        /* 2017-05-17 장진혁 구현 */	        
@@ -276,8 +255,6 @@
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>
-	    <xml id="RootFolderXML" style="display: none;">
-	    	${rootFolderXML}
-	    </xml>
+	    <xml id="RootFolderXML" style="display: none;"></xml>
 	</body>
 </html>

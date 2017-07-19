@@ -268,7 +268,7 @@
 				var divComment = document.createElement("DIV");
                 divComment.id = 'divComment';
                 divComment.style.borderTop = "1px solid";
-                divComment.innerHTML = '<p id = "commentLists"><spring:message code = "ezCircular.t82" /></p><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;"></table>';
+                divComment.innerHTML = '<p id = "commentLists"><spring:message code = "ezCircular.t180" /></p><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;"></table>';
                 document.getElementById("txtContent").appendChild(divComment);
 	        	
 	        	$.ajax({

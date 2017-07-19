@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code="ezCircular.t82" /></title>
+		<title><spring:message code="ezCircular.t180" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
 		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
@@ -88,7 +88,7 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<h1><spring:message code='ezCircular.t82'/></h1>
+		<h1><spring:message code='ezCircular.t180'/></h1>
 		<div id="close">
 			<ul>
 				<c:if test="${vo.memberID == userInfo.id}">

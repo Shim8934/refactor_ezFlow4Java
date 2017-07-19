@@ -19,7 +19,8 @@
 		
 		<script type="text/javascript">
 	    	var msgRtn = "";
-	    	var oldCircularID = "";
+	    	var mode = "${mode}";
+	    	var oldCircularID = "${circularID}";
 	    	var AttachLimit = 5;
 	    	var userID = "${userID}";
 	    	var userName = "${userName}";
@@ -37,9 +38,7 @@
 
 		    window.onload = function () {
 				if (listSize != 0) {
-					oldCircularID = "${circularID}";
-					
-		        	document.getElementById("title").value = "${result.title}";
+		        	document.getElementById("title").value = '${result.title}';
 		        	document.getElementById("receiverlist").innerHTML = "${userName}";
 		        	document.getElementById("receiverlist2").innerHTML = "${userName2}";
 		        	document.getElementById("receiverID").innerHTML = "${userID}";
@@ -49,14 +48,14 @@
 			        
 		        	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 		        	
-		        	var list = userID.split(",");
-		        	var nameList = userName.split(",");
-		        	var nameList2 = userName2.split(",");
+		        	var list = userID.split(", ");
+		        	var nameList = userName.split(", ");
+		        	var nameList2 = userName2.split(", ");
 		        	
 		        	for (var i = 0; i < listSize; i++) {
-		            	g_attendant["id"][i] = list[i].trim();
-		        		g_attendant["name"][i] = nameList[i].trim();
-		        		g_attendant["name2"][i] = nameList2[i].trim();
+		        		g_attendant["name"][i] = nameList[i];
+		        		g_attendant["id"][i] = list[i];
+		        		g_attendant["name2"][i] = nameList2[i];
 		        	}
 				}
 		    }
@@ -86,14 +85,14 @@
 		    	}
 		    }
 		    
-	    	function btn_Save() {
+	    	function btn_Save(mode) {
 	        	if (doubleSubmitCheck()){
 	        		return;
 	        	}
 	    		//회람작성 눌렀을 시
 	        	var content = message.GetEditorContent();
 				var option = 0;
-				
+
 				if ($("#title").val() == "") {
 					alert("<spring:message code='ezCircular.t52'/>");
 					return;
@@ -154,7 +153,8 @@
 	                			receiverID : receiverID,
 	                			content : content,
 	                			fileList : fileList,
-	                			oldCircularID : oldCircularID
+	                			oldCircularID : oldCircularID,
+	                			mode : mode
 	                },  
 	                cache: false,
 	                success: function(data) {	   
@@ -166,7 +166,7 @@
 	                }
 	 			});
 	    	}
-	    	
+
 	    	function btn_TempSave() {
 	    		//임시저장
 	    		if (confirm("<spring:message code='ezCircular.t72'/>")) {
@@ -220,7 +220,7 @@
 					}
 
 		    		$.ajax ({
-		 			   	url : '/ezCircular/circularSaveTemp.do',
+		 			   	url : '/ezCircular/circularSaveTemp.do?mode=temp',
 		                type : 'POST',
 		                dataType : 'text',
 		                data : {	title : document.getElementById("title").value,
@@ -248,45 +248,6 @@
 	    		}
 	    	}
 
-// 	    	function window_onUnload() {
-// 	    	}
-	    	
-// 	    	//파일업로드
-//     	    function returnvalue(strXML) {
-// 		        var pAttachXml = loadXMLString(strXML);
-// 		        var nodes = SelectNodes(pAttachXml, "ROOT/NODES/NODE");
-// 		        var extFlag = false;
-// 		        for (var i = 0; i < nodes.length; i++) {
-// 		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-// 		                if (getNodeText(GetChildNodes(nodes[i])[3]) == 0) {
-// 		                    alert(strLang6);
-// 		                    return;
-// 		                }
-// 		                /* if (document.getElementById('mode').value == "PHOTO")
-// 		                    document.getElementById('txtPhotoFile').value = getNodeText(GetChildNodes(nodes[i])[2]); */
-// 		            }
-// 		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
-// 		                extFlag = true;
-// 		            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-// 		                alert(strLang8 + AttachLimit + "MB" + strLang9);
-// 		                return;
-// 		            }
-// 		            else {
-// 		                alert("<spring:message code='ezCommunity.lhj08'/>" + "\n\n" + result);
-// 		            }
-// 		        }
-// 		        if (extFlag)
-// 		            alert(strLang54);
-		
-// 		        if (dadiframe.document.getElementById("lstAttachLink") == null)
-// 		            setTimeout(function () { AttachFileInfo(strXML); }, 500);
-// 		        else
-// 		            AttachFileInfo(strXML);
-// 			}
-	    	
-//     	    function Editor_Complete() {
-    	    	
-//     	    }
 			function Editor_Complete() {
     	    	message.SetEditorContent(sigBody.innerHTML);
     	    }
@@ -305,8 +266,18 @@
     			<td style="height:20px">
       				<div id="menu">      
         				<ul>
-          					<li><span onClick="btn_Save()"><spring:message code="ezCircular.t55"/></span></li>
-          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
+        					<c:choose>
+        						<c:when test="${mode eq 'write' || mode eq 'temp'}">
+        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t55"/></span></li>	
+		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
+        						</c:when>
+        						<c:when test="${mode eq 'modify'}">
+        							<li><span onClick="btn_Save('${mode}')">회람수정</span></li>
+        						</c:when>
+        						<c:otherwise>
+		          					<li><span onClick="btn_Save('${mode}')">재회람작성</span></li>        						
+        						</c:otherwise>
+        					</c:choose>
         				</ul>
       				</div>
       				<div id="close">
@@ -408,33 +379,33 @@
   			</table>
 		</div>
 
-	    <table id="printScreen" style="display: none;">
-  			<tr style="text-align:center">
-    			<td style="vertical-align:top">
-    				<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
-	      				<tr style="height:25px"> 
-        					<th style="padding-left:10px" width="80"><spring:message code="ezCircular.t122"/></th>
-        					<td style="padding-left:10px"> <div id="printOwner"></div></td> 
-      					</tr> 
-      					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezCircular.t115"/></th>
-        					<td style="padding-left:10px"> <div id="printImportance"></div></td> 
-      					</tr> 
-      					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezCircular.t37"/></th>
-        					<td style="padding-left:10px"> <div id="printDate"></div></td> 
-      					</tr> 
-      					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezCircular.t32"/></th>
-        					<td style="padding-left:10px"> <div id="printTitle"></div></td> 
-      					</tr> 
-      					<tr> 
-	        				<td colspan="2"><div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%;  PADDING-TOP: 5px"></div></td> 
-      					</tr> 
-   					</table>
-   				</td>
-  			</tr>
-		</table>
+<!-- 	    <table id="printScreen" style="display: none;"> -->
+<!--   			<tr style="text-align:center"> -->
+<!--     			<td style="vertical-align:top"> -->
+<!--     				<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2"> -->
+<!-- 	      				<tr style="height:25px">  -->
+<%--         					<th style="padding-left:10px" width="80"><spring:message code="ezCircular.t122"/></th> --%>
+<!--         					<td style="padding-left:10px"> <div id="printOwner"></div></td>  -->
+<!--       					</tr>  -->
+<!--       					<tr style="height:25px">  -->
+<%-- 	        				<th style="padding-left:10px"><spring:message code="ezCircular.t115"/></th> --%>
+<!--         					<td style="padding-left:10px"> <div id="printImportance"></div></td>  -->
+<!--       					</tr>  -->
+<!--       					<tr style="height:25px">  -->
+<%-- 	        				<th style="padding-left:10px"><spring:message code="ezCircular.t37"/></th> --%>
+<!--         					<td style="padding-left:10px"> <div id="printDate"></div></td>  -->
+<!--       					</tr>  -->
+<!--       					<tr style="height:25px">  -->
+<%-- 	        				<th style="padding-left:10px"><spring:message code="ezCircular.t32"/></th> --%>
+<!--         					<td style="padding-left:10px"> <div id="printTitle"></div></td>  -->
+<!--       					</tr>  -->
+<!--       					<tr>  -->
+<!-- 	        				<td colspan="2"><div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%;  PADDING-TOP: 5px"></div></td>  -->
+<!--       					</tr>  -->
+<!--    					</table> -->
+<!--    				</td> -->
+<!--   			</tr> -->
+<!-- 		</table> -->
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
