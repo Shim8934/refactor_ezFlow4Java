@@ -4149,7 +4149,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		String dirYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		String dirPath = realPath + config.getProperty("upload_approvalG.ROOT") + commonUtil.separator;
+		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
@@ -4159,8 +4159,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
 			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
 			
-			orgDocFile = dirPath + orgDocFile.replace(config.getProperty("upload_approvalG.ROOT"), "");
-			docFile = dirPath + docFile.replace(config.getProperty("upload_approvalG.ROOT"), "");
+			orgDocFile = dirPath + orgDocFile.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
 			File file = new File(dir);

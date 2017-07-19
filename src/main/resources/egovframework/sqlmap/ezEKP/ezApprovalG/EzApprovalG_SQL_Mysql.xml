@@ -18631,7 +18631,20 @@
    		AND 
    			TENANT_ID= #v_TENANTID#
    		AND
-	   		 COMPANYID = #companyID#
+	   		COMPANYID = #companyID#
+   </update>
+   
+   <update id="EzApprovalG.updateProAprDocInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			ORGDOCID = #v_ORGDOCID# 
+   		WHERE  
+   			TENANT_ID= #v_TENANTID#
+   		AND
+	   		COMPANYID = #companyID#
+	   	AND
+   			ORGDOCID = #v_DOCID#
    </update>
    
    <update id="EzApprovalG.updateReceiptPointInfo" parameterClass="Map">

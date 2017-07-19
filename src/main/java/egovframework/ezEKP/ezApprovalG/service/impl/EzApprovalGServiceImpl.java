@@ -5151,6 +5151,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					map.put("v_DOCID", orgDocID);
 					ezApprovalGDAO.updateProEndAprDocInfo(map);	
+					
+					map.put("v_DOCID", docID);
+					map.put("v_ORGDOCID", orgDocID);
+					ezApprovalGDAO.updateProAprDocInfo(map);	
 					rtn = true;
 			} else {
 				rtn = false;
