@@ -51,8 +51,13 @@
 		        	var list = userID.split(", ");
 		        	var nameList = userName.split(", ");
 		        	var nameList2 = userName2.split(", ");
-		        	
-		        	for (var i = 0; i < listSize; i++) {
+
+		        	// circularID 값이 있으면 작성자는 회람자로 무조건 추가되기때문에 -1
+		        	if (oldCircularID != 0) {
+		        		listSize = listSize - 1;
+		        	}
+
+		        	for (var i = 0; i < listSize; i++) {		        		
 		        		g_attendant["name"][i] = nameList[i];
 		        		g_attendant["id"][i] = list[i];
 		        		g_attendant["name2"][i] = nameList2[i];
