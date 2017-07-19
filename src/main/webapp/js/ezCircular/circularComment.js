@@ -263,9 +263,9 @@ function commentConfirm() {
 		},
 		success : function (result) {
 			closePopup();
+			parent.getCommentCount();
 			parent.window.opener.getLeftCount();
 			parent.window.opener.refresh_onclick();
-			parent.window.close();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert(strLang16);

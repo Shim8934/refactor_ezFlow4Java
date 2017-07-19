@@ -1034,14 +1034,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
-	public int getCommentCount(String circularID, String id, int tenantID) throws Exception {
+	public int getCommentCount(String circularID, String memberID, String type, int tenantID) throws Exception {
 		logger.debug("getCommentCount started.");
-		logger.debug("circularID = " + circularID + " || circularUserID = " + id + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || type = " + type + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
-		map.put("circularUserID", id);
+		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
+		map.put("type", type);
 		
 		int result = ezCircularDAO.getCommentCount(map);
 		

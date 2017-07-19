@@ -1638,24 +1638,48 @@
 	</select>
 
 	<select id="EzCircularDAO.getCommentCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				COUNT(B.circularcommentstateid)
-			FROM
-				TBL_CIRCULAR_COMMENT A
-			JOIN
-				TBL_CIRCULAR_COMMENTSTATE B
-			ON
-				A.circularcommentid = B.circularcommentid
-			AND
-				A.tenantid = B.tenantid
-			WHERE
-				A.circularid = #circularID#
-			AND
-				((A.status = 1 AND (A.circularuserid = #circularUserID# OR B.memberid = #circularUserID#)) OR (A.status = 0))
-			AND
-				B.tenantid = #tenantID#
-		]]>
+		<isEqual property="type" compareValue="totalComment">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(B.circularcommentstateid), 0) cnt
+				FROM
+					TBL_CIRCULAR_COMMENT A
+				JOIN
+					TBL_CIRCULAR_COMMENTSTATE B
+				ON
+					A.circularcommentid = B.circularcommentid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.circularid = #circularID#
+				AND
+					((A.status = 1 AND (A.circularuserid = #memberID# OR A.memberid = #memberID#)) OR (A.status = 0))
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="myComment">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(B.circularcommentstateid), 0) cnt
+				FROM
+					TBL_CIRCULAR_COMMENT A
+				JOIN
+					TBL_CIRCULAR_COMMENTSTATE B
+				ON
+					A.circularcommentid = B.circularcommentid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.circularid = #circularID#
+				AND
+					B.memberid = #memberID#
+				AND
+					B.status = 0
+				AND
+					B.tenantid = #tenantID#
+			]]>
+		</isEqual>
 	</select>
 
 	<select id="EzCircularDAO.getListCount" parameterClass="Map" resultClass="Integer">

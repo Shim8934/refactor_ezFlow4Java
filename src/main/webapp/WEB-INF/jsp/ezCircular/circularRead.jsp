@@ -25,12 +25,12 @@
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
 			var myCommentCount = "";
-			var totalCommentCount = "${commentCount}";
-			var comment = "";
+			var totalCommentCount = "";
 			var attachList = "";
 
 			$(document).ready(function() {
 				window.opener.getLeftCount();
+				getCommentCount();
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -61,7 +61,25 @@
 					success : function(result) {
 						window.opener.getLeftCount();
 						window.opener.refresh_onclick();
-		                window.close();
+					},error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezCircular.t102' />");
+					}
+				});
+			}
+			
+			function getCommentCount() {
+				$.ajax({
+					type : "POST",
+					url : "/ezCircular/getCommentCount.do",
+					dataType : "json",
+					data : {
+						circularID : circularID
+					},
+					success : function(result) {
+// 						result.totalCommentCount;
+// 						result.myCommentCount;
+						
+						$("#commentCount").html($("#commentCount").html() + "[" + result.myCommentCount +"]");
 					},error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezCircular.t102' />");
 					}
@@ -86,7 +104,7 @@
 						},
 						success: function() {
 							window.opener.refresh_onclick();
-			                window.close();
+			                closing();
 						},
 						error: function(err) {
 							alert("<spring:message code='ezCircular.t102' />");
@@ -104,7 +122,7 @@
 						success: function() {
 							window.opener.getLeftCount();
 							window.opener.refresh_onclick();
-			                window.close();
+			                closing();
 						},
 						error: function(err) {
 							alert("<spring:message code='ezCircular.t102' />");
@@ -211,91 +229,6 @@
 			function closing() {
 	          	window.close();
 			}
-			
-// 			function getCircularComment(circularID, userInfoID, status) {
-// 				$("#divCross").html($("#divCross").html() + '<div id = "commentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="circularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');
-	        	
-// 	        	$.ajax({
-//             		type : "POST",
-//             		url : "/ezCircular/getCircularComment.do",
-//             		dataType : "json",
-//             		data : {
-//             			circularID : circularID,
-//             			searchValue : ""
-//             		},
-//             		success : function(result) {
-//             			circularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";
-            			
-//             			list = result.circularUserList;
-//             			list.forEach(function(vo, index) {
-//             				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
-//             				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
-            				
-//             				if (vo.status == 1) {
-//             					//확인 이미지
-//             					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
-//             				} else {
-//             					//미확인 이미지
-//             					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
-//             				}
-            				
-//             				circularUserList += "</th>";
-//             				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
-//             				//확인일
-//             				if (vo.status == 1) {
-//             					circularUserList += vo.confirmDate.substring(0, 16);
-//             				}
-            				
-//             				circularUserList += "</th>";
-//             				circularUserList += "</tr>";
-//             			});
- 			
-//             			$("#circularUserList").html("");
-//             			$("#circularUserList").append(circularUserList);
-            			
-//             			var now = new Date();
-
-//             			circularCommentList = "";
-//             			list = result.circularCommentList ;
-//             			list.forEach(function(vo, index) {
-//             				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
-//            					circularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "</td>";
-//             				circularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
-            				
-//             				var arry = vo.regDate.substring(0, 10).split('-');
-//             				var d = new Date(arry[0], arry[1]-1, arry[2]);
-//             				var getDiffTime = now.getTime() - d.getTime();
-            				
-//             				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
-//             					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' />&nbsp;";
-//             				}
-            				
-//             				circularCommentList += "</td>";
-//             				circularCommentList += "<td style='text-align:right; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.regDate.substring(0, 16) + "</td>";
-//             				circularCommentList += "</tr>";
-            				
-//             				if (vo.status == 0) {
-//             					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
-//             						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
-//             					} else {
-//             						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
-//             					}
-//             				} else {//비공개
-//             					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
-//             						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
-//             							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
-//             						} else {
-//             							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
-//             						}
-//             					}
-//             				}
-//             			});
-//             		},
-//             		error : function(jqXHR, textStatus, errorThrown) {
-            			
-//             		}
-//             	});
-// 	        }
 			
 			function getCircularPrintComment(circularID, userInfoID, status) {
 				if ($("#printCommentLists").length == 0) {
@@ -470,7 +403,7 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
-               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${commentCount}]</span></li>
+               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' /></span></li>
 <!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
 	                        <li><span onclick="circularModify()">회람수정</span></li>
 	                        <li><span onclick="circularReUse()">재회람</span></li>
