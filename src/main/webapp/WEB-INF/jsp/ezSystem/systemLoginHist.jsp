@@ -313,7 +313,7 @@
 	    			,dataType: 'json'
 	    			,data: {  
 	    					  'startDate' : searchStartTime, 'endDate' : searchEndTime, 'searchKeycode' : searchKeycode
-	    					  ,'searchKeyword' : searchKeyword, 'GotoPage' : pageNum 
+	    					  ,'searchKeyword' : searchKeyword, 'pageNum' : pageNum 
 	    				   }    
 	    			,success: function(res) {
 	    				var html = "";
