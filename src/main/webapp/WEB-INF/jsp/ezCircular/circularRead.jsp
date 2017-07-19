@@ -29,7 +29,6 @@
 			var attachList = "";
 
 			$(document).ready(function() {
-				window.opener.getLeftCount();
 				getCommentCount();
 				
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML

@@ -245,18 +245,7 @@
                 DocList = null;
 
                 var tempno = 0;
-            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-                    if (CrossYN()) {
-                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
-                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-                        }
-                    }
-                    else {
-                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
-                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-                        }
-                    }
-                } */
+                
                 tempno = tempno + "";
                 
                 if (tempno.length > 10) {
@@ -451,6 +440,12 @@
 	                getBoardList();
 	            }
 	        }
+	        
+	        function getLeftCount() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		    		parent.frames["left"].getNewCircularCount();
+		    	}
+		    }
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
