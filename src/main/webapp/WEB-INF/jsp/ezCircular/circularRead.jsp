@@ -31,6 +31,7 @@
 			$(document).ready(function() {
 				window.opener.getLeftCount();
 				getCommentCount();
+				getConfirmStatus();
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -59,8 +60,33 @@
 						circularID : circularID
 					},
 					success : function(result) {
+						getConfirmStatus();
 						window.opener.getLeftCount();
 						window.opener.refresh_onclick();
+					},error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezCircular.t102' />");
+					}
+				});
+			}
+			
+			function getConfirmStatus() {
+				$.ajax({
+					type : "POST",
+					url : "/ezCircular/getConfirmStatus.do",
+					dataType : "json",
+					data : {
+						circularID : circularID
+					},
+					success : function(result) {
+						var confirmStatus = result.confirmStatus;
+						
+						if (confirmStatus == "1") {
+							confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";  
+						} else {
+							confirmStatus = "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />";
+						}
+						
+						$(".confirmStatus").html(confirmStatus);
 					},error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezCircular.t102' />");
 					}
@@ -482,7 +508,7 @@
 		        		</tr>
 		        		<tr>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" id="circularUserStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
+		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;"></td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; height:100%; overflow:auto;"></div></td>
@@ -618,7 +644,7 @@
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" id="circularUserStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
+		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;"></td>
 						</tr>
 						<tr> 
  							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 

@@ -1274,7 +1274,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 	 
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
+//		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
 		
 		result.setRegDate(result.getRegDate().substring(0, 16));
 		
@@ -1295,9 +1295,28 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);
-		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
+//		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
 		
 		return "/ezCircular/circularRead";
+	}
+	
+	/**
+	 * 회람판 상세정보 본인확인 조회
+	 */
+	@RequestMapping(value = "/ezCircular/getConfirmStatus.do")
+	public String getConfirmStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getConfirmStatus started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String circularID = request.getParameter("circularID");
+		
+		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
+		
+		model.addAttribute("confirmStatus", confirmStatus);
+		
+		logger.debug("getConfirmStatus ended.");
+		
+		return "json";
 	}
 	
 	/**
