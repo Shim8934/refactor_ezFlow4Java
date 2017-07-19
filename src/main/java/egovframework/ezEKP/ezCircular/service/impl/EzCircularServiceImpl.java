@@ -381,6 +381,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	
 	@Override
 	public void deleteCircular(String circularID, String memberID, String userID, int tenantID) throws Exception {
+		logger.debug("deleteCircular started.");
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || userID = " + userID + " || tenantID = " + tenantID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
 		map.put("memberID", memberID);
@@ -397,6 +400,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			ezCircularDAO.updateDeleteFlag(map);
 		}
 		
+		logger.debug("deleteCircular ended.");
 	}
 
 	@Override

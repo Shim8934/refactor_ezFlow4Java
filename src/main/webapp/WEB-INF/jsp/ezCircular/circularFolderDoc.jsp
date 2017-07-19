@@ -472,7 +472,7 @@
 		    }
 		    
 		    function refresh_onclick() {
-		    	window.location.href = "/ezCircular/circularFolderDoc.do";
+		    	getBoardList();
 		    }
 		
 		    function chk_onselect(obj) {
