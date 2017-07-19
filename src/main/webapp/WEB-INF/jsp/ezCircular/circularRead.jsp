@@ -403,11 +403,11 @@
 		    }
 			
 			function circularModify() {
-				
+				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=modify";
 			}
 			
 			function circularReUse() {
-				
+				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse";
 			}
 		</script>
 	</head>
@@ -431,8 +431,10 @@
                	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
                	    		<li><span onclick="openCircularComment()" id="commentCount"></span></li>
 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li>
-	                        <li><span onclick="circularModify()">회람수정</span></li>
-	                        <li><span onclick="circularReUse()">재회람</span></li>
+	                        <c:if test="${result.memberID == userInfo.id}">
+		                        <li><span onclick="circularModify()">회람수정</span></li>
+		                        <li><span onclick="circularReUse()">재회람</span></li>
+	                        </c:if>
                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>

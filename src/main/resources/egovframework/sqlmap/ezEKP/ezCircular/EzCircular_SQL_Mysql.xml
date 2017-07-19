@@ -2270,6 +2270,55 @@
 				tenantid = #tenantID#
 		]]>
 	</update>
+	
+	<update id="EzCircularDAO.updateCircular" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_CIRCULAR
+            SET
+                TITLE = #title#,
+                IMPORTANCE = #importance#,
+                OPTION = #option#,
+                CONTENT = #content#,
+                HASFILE = #hasFile#,
+                STATUS = #status#,
+                REGDATE = #regDate#
+            WHERE 
+                CIRCULARID = #circularID#
+            AND
+                TENANTID = #tenantID#      
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateStatus" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR_USER
+	        SET
+	            status = 0
+	        WHERE 
+	            circularid = #circularID#
+	        AND
+	        	updatestatus = 0
+	        AND
+	            tenantid = #tenantID#
+        ]]>
+    </update>
+    
+    <update id="EzCircularDAO.updateCircularAttach" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+	            TBL_CIRCULAR_FILE
+	        SET
+	            FILENAME = #fileName#,
+	            FILESIZE = #fileSize#,
+	            FILEPATH = #filePath#
+	        WHERE 
+	            circularid = #circularID#
+	        AND
+	            tenantid = #tenantID#
+        ]]>
+    </update>
 
     <delete id="EzCircularDAO.deleteCircular" parameterClass="Map">
         <![CDATA[

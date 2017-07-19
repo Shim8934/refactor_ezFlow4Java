@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezCircular.web;
 import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -1084,6 +1085,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		String userMyID = "";
 		String userMyName = "";
 		String userMyName2 = "";
+		String mode = req.getParameter("mode");
+		CircularListVO result = new CircularListVO();
 
 		if (user.get(0).getMemberID() != "") {	
 			userMyID = user.get(0).getMemberID();
@@ -1093,24 +1096,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		if (req.getParameter("circularID") != null && !req.getParameter("circularID").equals("")) {
 			circularID = req.getParameter("circularID");
-
-			//TODO 회람 상세정보 가져옴
-			CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "modify");
-			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId(), userInfo.getOffset());
-			
-			for (CircularListVO vo : list) {
-				if (!vo.getMemberID().equals(result.getMemberID())) {
-						userID += vo.getMemberID() + ", ";
-						userName += vo.getMemberName() + ", ";
-						userName2 += vo.getMemberName2() + ", ";
-				}
-			}
-			
-			if (list.size() > 0 && list.size() != 1) {
-				userID = userID.substring(0, userID.length() - 2);
-				userName = userName.substring(0, userName.length() - 2);
-				userName2 = userName2.substring(0, userName2.length() - 2);
-			}
 			
 			List<CircularAttachVO> attachList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
 			
@@ -1122,13 +1107,37 @@ public class EzCircularController extends EgovFileMngUtil {
 				strAttach.append("<DATA2><![CDATA[]]></DATA2>");
 				strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
 			}
-
+			
 			strAttach.append("</NODES></ROOT>");
+			
+			if (mode.equals("modify")) { // 회람수정
+				result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "modify");
+			} else if (mode.equals("reuse")) {
+				result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "reuse");
+			} else { // 임시회람 수정
+				result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "temp");
+			}
+			
+			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId(), userInfo.getOffset());
+			
+			for (CircularListVO vo : list) {
+				if (!vo.getMemberID().equals(result.getMemberID())) {
+					userID += vo.getMemberID() + ", ";
+					userName += vo.getMemberName() + ", ";
+					userName2 += vo.getMemberName2() + ", ";
+				}
+			}
+			
+			if (list.size() > 0 && list.size() != 1) {
+				userID = userID.substring(0, userID.length() - 2);
+				userName = userName.substring(0, userName.length() - 2);
+				userName2 = userName2.substring(0, userName2.length() - 2);
+			}
 
+			model.addAttribute("strAttach", strAttach.toString());
 			model.addAttribute("circularID", circularID);
 			model.addAttribute("result", result);
 			model.addAttribute("listSize", list.size());
-			model.addAttribute("strAttach", strAttach.toString());
 		}
 
 		model.addAttribute("userInfo", userInfo);
@@ -1138,6 +1147,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("userMyID", userMyID);
 		model.addAttribute("userMyName", userMyName);
 		model.addAttribute("userMyName2", userMyName2);
+		model.addAttribute("mode", mode);
 
 		return "/ezCircular/circularWrite";
 	}
@@ -1175,7 +1185,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		int updateStatus = 0;
 		circularListVO.setStatus(0);
 		
-		String oldCircularID = request.getParameter("oldCircularID");
+		String originCircularID = request.getParameter("oldCircularID");
+		String mode = request.getParameter("mode");
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
@@ -1192,14 +1203,20 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String regDate = commonUtil.getTodayUTCTime("");
 		
-		//임시회람판에서 회람등록 시 임시회람판에 있는 데이터 삭제
-		if (!oldCircularID.equals("")) {
-			ezCircularService.deleteCircular(oldCircularID, userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
+		if (mode.equals("reuse")) {
+			originCircularID = "";
 		}
 
-		ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
-										 circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
-										 receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, realPath, userInfo, loginCookie);
+		//임시회람판에서 회람등록 시 임시회람판에 있는 데이터 update
+		if (!originCircularID.equals("") && (mode.equals("temp") || mode.equals("modify"))) {
+			ezCircularService.updateCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(), originCircularID, userInfo.getTenantId(), 
+					receiverLength, circularListVO.getStatus(), regDate, circularListVO.getContent(), fileList, userInfo.getOffset());
+		} else {
+			ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
+					circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
+					receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, realPath, userInfo, loginCookie);			
+		}
+
 
 		logger.debug("saveCircular ended");
 	}
