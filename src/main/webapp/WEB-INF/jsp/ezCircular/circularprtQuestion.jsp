@@ -12,14 +12,15 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
-		    var comment = "${comment}";
 		    var attachList = "${attachList}";
 		    var rvalue = new Array();
+		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
 		        };
 		    }
+		    
 		    var ReturnFunction;
 		    window.onload = function () {
 		        try {
@@ -30,78 +31,68 @@
 		            } catch (e) {
 		            }
 		        }
-		        if (comment != "true") {
-		            opi.disabled = true;
-		        }
 		        if (attachList != "true") {
 		            att.disabled = true;
 		        }
 		    };
 		
 		    function all_click() {
-		        if (comment == "true")
-		            rvalue[0] = "Y";
-		        else
-		            rvalue[0] = "N";
-		
-		        if (attachList == "true")
-		            rvalue[1] = "Y";
-		        else
-		            rvalue[1] = "N";
-		
+	            rvalue[0] = "Y";
+	            
+				if (attachList == "true") {
+					rvalue[1] = "Y";
+				} else {
+					rvalue[1] = "N";
+				}
+				
 		        if (ReturnFunction != null) {
-		            ReturnFunction(rvalue);
-		        }
-		        else {
+					ReturnFunction(rvalue);
+		        } else {
 		            window.returnValue = rvalue;
 		            window.close();
 		        }
 		    }
 		
 		    function select_click() {
-		        if (comment == "true") {
-		            if (opi.checked == true)
-		                rvalue[0] = "Y";
-		            else
-		                rvalue[0] = "N";
-		        }
-		        else
-		            rvalue[0] = "N";
+	            if (opi.checked == true) {
+	                rvalue[0] = "Y";
+	            } else {
+	                rvalue[0] = "N";
+	            }
 		
 		        if (attachList == "true") {
-		            if (att.checked == true)
+		            if (att.checked == true) {
 		                rvalue[1] = "Y";
-		            else
+		            } else {
 		                rvalue[1] = "N";
-		        }
-		        else
+					}
+		        } else {
 		            rvalue[1] = "N";
+		        }
 
 		        if (opi.checked != true && att.checked != true) {
 		            if (CrossYN()) {
 		                confirm("선택하신 항목이 없습니다. 문서만 인쇄하시겠습니까?");
 		                return;
-		            }
-		            else {
+		            } else {
 		                if (confirm("선택하신 항목이 없습니다. 문서만 인쇄하시겠습니까?")) {
 		                    window.returnValue = rvalue;
 		                    window.close();
 		                    return;
-		                }
-		                else {
+		                } else {
 		                    return;
 		                }
 		            }
 		        }
+		        
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rvalue);
-		        }
-		        else {
+		        } else {
 		            window.returnValue = rvalue;
 		            window.close();
 		        }
 		    }
-		
+		    
 // 		    var ezapropinion_cross_dialogArguments = new Array();
 // 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 // 		        var parameter = pInformationContent;
@@ -141,8 +132,7 @@
 		
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rvalue);
-		        }
-		        else {
+		        } else {
 		            window.returnValue = rvalue;
 		            window.close();
 		        }
@@ -167,7 +157,6 @@
 		            window.returnValue = rvalue;
 		            window.close();
 		        }
-		        
 		    }
 		</script>
 	</head>
@@ -191,7 +180,7 @@
 		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezCircular.t179' /></span></a>
 		    <a id="Submit4" class="imgbtn" onClick="return Cancel()" ><span><spring:message code='ezCircular.t26' /></span></a>
 		</div>
-	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>

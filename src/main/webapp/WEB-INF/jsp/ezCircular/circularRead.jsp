@@ -24,25 +24,21 @@
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
+			var myCommentCount = "";
+			var totalCommentCount = "${commentCount}";
 			var comment = "";
 			var attachList = "";
-			
-			window.onload = function() {
-				if ("${commentCount}" != 0) {
-					comment = true;
-				}
-				
-				if ("${attachList}" != "") {
-					attachList = true;
-				}
-			}
 
-			$(document).ready(function(){
+			$(document).ready(function() {
 				window.opener.getLeftCount();
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+	            
+				if ("${attachList}" != "") {
+					attachList = true;
+				}
 	        });
 			
 			window.onresize = function () {
@@ -123,7 +119,7 @@
 	        function print_onClick() {
 	        	var parameter = "";
 	        	
-	            var url = "/ezCircular/circularprtQuestion.do?comment=" + comment + "&attachList=" + attachList;
+	            var url = "/ezCircular/circularprtQuestion.do?attachList=" + attachList;
 
 	            if (CrossYN()) {
 	                ezprtquestion_cross_dialogArguments[0] = parameter;
@@ -303,7 +299,7 @@
 			
 			function getCircularPrintComment(circularID, userInfoID, status) {
 				if ($("#printCommentLists").length == 0) {
-					$("#printDocument").html($("#printDocument").html() + '<div id = "printCommentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t82" /></p></div><table id="printCircularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');					
+					$("#printDocument").html($("#printDocument").html() + '<div id = "printCommentLists" style="border-top:1px solid; height:30px; vertical-align:middle;"><p style="font-size:15px; font-weight:bold; margin-left:10px;"><spring:message code = "ezCircular.t180" /></p></div><table id="printCircularUserList" style="width:100%;margin-top:15px;table-layout: fixed;border:1px solid #e2e2e2"></table>');					
 				}
 
 				printCircularUserList = ""
@@ -474,7 +470,7 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
-               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t180' />[${commentCount}]</span></li>
+               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${commentCount}]</span></li>
 <!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
 	                        <li><span onclick="circularModify()">회람수정</span></li>
 	                        <li><span onclick="circularReUse()">재회람</span></li>
