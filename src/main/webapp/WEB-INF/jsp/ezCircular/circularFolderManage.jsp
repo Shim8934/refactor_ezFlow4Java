@@ -123,41 +123,8 @@
 		    }
 		    
 		    function close_onclick() {
-		    	getFolderManage();
 		    	window.close();
 		    }
-		    
-		    function getFolderManage() {
-	        	$.ajax({
-					type : "POST",
-					dataType : "text",
-					async : false,
-					url : "/ezCircular/getCircularFolderList.do",
-					data : {
-						
-					},
-					success: function(result){
-						
-					}
-				});
-				PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
-                
-                var xmlHTTP = createXMLHttpRequest();
-                xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
-                xmlHTTP.send();
-                
-                var treeconfig;
-                
-                if (CrossYN()) {
-                    treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
-                }
-                else
-                    treeconfig = xmlHTTP.responseXML;
-
-                PostTreeView.config(treeconfig);
-                PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
-                PostTreeView.update();
-	        }
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">

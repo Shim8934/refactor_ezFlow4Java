@@ -171,12 +171,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("newCircular started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String listType = "newCircular";
-    	
-    	int count = ezCircularService.getListCount(listType, userInfo.getId(), userInfo.getTenantId());
-    	
-    	model.addAttribute("count", count);
+
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("newCircular ended");
@@ -287,11 +282,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		String listType = "circularComplete";
-    	
-    	int count = ezCircularService.getListCount(listType, userInfo.getId(), userInfo.getTenantId());
-    	
-    	model.addAttribute("count", count);
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("circularComplete ended");
@@ -308,11 +298,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		String listType = "myCircular";
-    	
-    	int count = ezCircularService.getListCount(listType, userInfo.getId(), userInfo.getTenantId());
-    	
-    	model.addAttribute("count", count);
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("circularMyCircular ended");
@@ -328,12 +313,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularTemp started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String listType = "circularTemp";
-    	
-    	int count = ezCircularService.getListCount(listType, userInfo.getId(), userInfo.getTenantId());
-	
-    	model.addAttribute("count", count);
+
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("circularTemp ended");
@@ -350,11 +330,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		String listType = "deleteCircular";
-    	
-    	int count = ezCircularService.getListCount(listType, userInfo.getId(), userInfo.getTenantId());
-    	
-    	model.addAttribute("count", count);
 		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("circularDelete ended");

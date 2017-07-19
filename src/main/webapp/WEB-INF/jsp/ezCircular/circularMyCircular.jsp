@@ -274,6 +274,9 @@
 	                }
 	                endtime = new Date().getTime();
 	                strListInfo = "";
+
+	                $("#lstCnt").html("");
+	                $("#lstCnt").append("(" + lstCnt + ")");
 	            }
 	        
 	
@@ -551,7 +554,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
-	    <h1><spring:message code='ezCircular.t4'/>(${count})<span id="mailBoxInfo"></span>
+	    <h1><spring:message code='ezCircular.t4'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
