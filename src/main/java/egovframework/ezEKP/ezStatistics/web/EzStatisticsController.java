@@ -84,7 +84,7 @@ public class EzStatisticsController {
 		
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
+		pFileName = strDate+"_Report";
 		sheet = workbook.createSheet("report");
 		
 		if (headerFLAG.equals("")) {
@@ -167,7 +167,7 @@ public class EzStatisticsController {
 				}
 			}		
 		}
-		
+
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		

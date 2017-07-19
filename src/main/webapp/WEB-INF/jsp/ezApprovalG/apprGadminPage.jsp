@@ -36,7 +36,7 @@
 	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/OpenSelWin_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/AdminPage_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/AdminPage_Cross.js?ver=3"></script>
 	    <script id="clientEventHandlersJS" type="text/javascript">
 	        var OrderCell = "";
 	        var xmlhttp = createXMLHttpRequest();
@@ -88,6 +88,7 @@
 	        totalPage = 0;
 	        DocDeptYN = IsDocDept(DeptID);
 	        OrganID = CompanyID;
+
 	        switch (g_InitFlag) {
 	            case "0":
 	                btnConfirmTargetCab_onclick();
@@ -1094,6 +1095,94 @@
 	        OpenAlertUI("<spring:message code='ezApprovalG.t513'/>");
 	        }
 	    }
+	
+		//페이지네이션
+		function makePageSelPage(pTotalCnt) {
+		    var strtext;
+		    var PagingHTML = "";
+		    document.getElementById("tblPageRayer").innerHTML = "";
+		    strtext = "<div class='pagenavi'>";
+		
+		    PagingHTML += strtext;
+		    totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
+		    var pageNum = curpage;
+		    if (totalPage > 1 && pageNum != 1) {
+		        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
+		        PagingHTML += strtext;
+		    }
+		    else {
+		        strtext = "<span class='btnimg'><a >";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
+		        PagingHTML += strtext;
+		    }
+		    if (totalPage > BlockSize) {
+		        if (pageNum > BlockSize) {
+		            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span class='btnimg'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		            PagingHTML += strtext;
+		        }
+		    }
+		    else {
+		        strtext = "<span class='btnimg'>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		        PagingHTML += strtext;
+		    }
+		    var MaxNum;
+		    var i;
+		    var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+		    if (totalPage >= (startNum + parseInt(BlockSize))) {
+		        MaxNum = (startNum + parseInt(BlockSize)) - 1;
+		    }
+		    else {
+		        MaxNum = totalPage;
+		    }
+		    for (i = startNum; i <= MaxNum; i++) {
+		        if (i == pageNum) {
+		            strtext = "<span class='on'>" + i + "</span>"
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span onclick = 'goToPageByNum(" + i + ")'>" + i + "</span>"
+		            PagingHTML += strtext;
+		        }
+		    }
+		    if (totalPage > BlockSize) {
+		        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg' onclick='return selafterBlock()'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' width='16' height='16'></span>";
+		            PagingHTML += strtext;
+		        }
+		        else {
+		            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		
+		            PagingHTML += strtext;
+		        }
+		    }
+		    else {
+		        strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		        PagingHTML += strtext;
+		    }
+		    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+		        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' width='16' height='16' /></span>";
+		        PagingHTML += strtext;
+		    }
+		    else {
+		        strtext = "<span class='btnimg'>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' width='16' height='16' /></span>";
+		        PagingHTML += strtext;
+		    }
+		    PagingHTML += "</div>";
+		    td_Create1(PagingHTML);
+		}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -1327,7 +1416,7 @@
 	    		<c:when test="${initFlag == '4'}">
 	    		</c:when>
 	    	</c:choose>
-	    <div class="div_scroll" style="width: 100%; HEIGHT: 350px; overflow: AUTO" id="divList">
+	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
 	    </div>
 	    <div id="tblPageRayer"></div>

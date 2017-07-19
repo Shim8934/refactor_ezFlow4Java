@@ -1280,7 +1280,7 @@
 		
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-		
+
 		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1384,6 +1384,13 @@
 		                pSummery = ret[9];
 		                tempSecurityDate = ret[14];
 		                pPublicityCode = ret[11];
+		                
+		                //tempPublic 추가
+		                if (ret[11].substring(0,1) == '1') {
+		                	tempPublic = 'Y';
+		                } else {
+		                	tempPublic = 'N';
+		                }
 		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];

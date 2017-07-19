@@ -10775,6 +10775,34 @@
         AND 
         	APRSTATE = '002'
 	</select>
+	
+		<select id="EzApprovalG.gongRamActivateCount2" parameterClass="Map" resultClass="int">
+	 	SELECT 
+	 		COUNT(DOCID)  CNT  
+        FROM 
+        	TBL_APRLINEINFO 
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        	DOCID = #v_DOCID#
+        AND 
+        	PROCESSDATE IS NULL
+	</select>
+	
+	<update id="EzApprovalG.updateGongRamDocSate" parameterClass="Map">
+		UPDATE tbl_aprdocinfo
+		SET
+			FUNCTIONTYPE = '010'
+		WHERE           
+			TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        	DOCID = #v_DOCID#
+
+	</update>
 <!-- 	<procedure id="EzApprovalG.getUncabinetedDocCount" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZSP_GETUNCABINETEDDOCCOUNT(#v_DEPTINFO#, #v_UNTILYEAR#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->

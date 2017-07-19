@@ -1581,7 +1581,49 @@
 		        $('#sel_year').val("ALL");
 		        $('#sel_year').selectmenu('refresh');
 		    }
-		
+		    
+		    var SelUserCont_dialogArgument = new Array();
+		    function btnRegUserCont_onclick() {
+		        SelUserCont_dialogArgument[0] = "";
+		        SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
+		        var url = "/ezApprovalG/selUserCont.do";
+		        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
+		        try { ContOpen.focus() } catch (e) { }
+		    }
+		    
+		    function RegUserCont_Complete(RtnVal) {
+		        ContOpen.close();
+		        var DocList = new ListView();
+		        DocList.LoadFromID("DocList");
+		        var selRow = DocList.GetSelectedRows();
+
+		        if (selRow.length <= 0) {
+		            var InformationString = strLangS385;
+		            OpenAlertUI(InformationString);
+		            return;
+		        }
+		        if (RtnVal != "cancel") {
+		            for (i = 0; i < selRow.length; i++) {
+		                var xmlhttp = createXMLHttpRequest();
+		                var xmlpara = createXmlDom();
+		                var objNode;
+		                var tr = selRow[i];
+		                createNodeInsert(xmlpara, objNode, "PARAMETER");
+		                createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
+		                createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);
+		                createNodeAndInsertText(xmlpara, objNode, "Desc", "");
+
+		                xmlhttp.open("POST", "/ezApprovalG/setUserContDoc.do", false);
+		                xmlhttp.send(xmlpara);
+		            }
+		            var InformationString
+		            if (xmlhttp.responseText.indexOf("TRUE") > -1)
+		                InformationString = strLangS386;
+		            else
+		                InformationString = strLangS1124;
+		            alert(InformationString);
+		        }
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
@@ -1596,40 +1638,41 @@
 		</h1>
 		    <div id="mainmenu">
 		  <ul>  
-				<li id="tbtnDraft"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
+		  		<li id="tbtnRegUserCont" style="DISPLAY:none"><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
+				<li id="tbtnDraft" style="DISPLAY:none"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
 				<li id="tbtnLinkDraft" style="display:none"><span id="btnLinkDraft" onclick="return btnLinkDraft_onclick()"><spring:message code='ezApprovalG.t1737'/></span></li>
-				<li id="tbtnRedraft"><span id="btnRedraft" onclick="return btnRedraft_onclick()"><spring:message code='ezApprovalG.t1738'/></span></li>
+				<li id="tbtnRedraft" style="DISPLAY:none"><span id="btnRedraft" onclick="return btnRedraft_onclick()"><spring:message code='ezApprovalG.t1738'/></span></li>
 				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li>
-				<li id="tbtnApprove"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
-				<li id="tbtnApprove1"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
+				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
+				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
 				<c:if test="${useMobile != 'YES'}">
 					<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
 					<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				</c:if>
 				<c:if test="${useMobile == 'YES'}">
-					<li id="tbtnApproveALL"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
+					<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
 					<li id="tbtnApprove2"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				</c:if>
-				<li id="tbtnReceipt"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
+				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnReturn"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
-				<li id="tbtnSimsa"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
+				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
-				<li id="tDocInfo" class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
-				<li id="tbtncallback"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
+				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
+				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
 		        
 		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btncallback_onclick('FORCECALLBACK')"><spring:message code='ezApprovalG.t2005'/></span></li>
 				
-				<li id="tbtnRemoveDoc" ><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
-				<li id="tbtnViewDoc"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
+				<li id="tbtnRemoveDoc" style="DISPLAY:none"><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 				<c:if test="${approvalFlag == 'G'}">
 					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
-					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
+					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
 				</c:if>
-		        <li id="tSearchCondi"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
-		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		        <li id="tSearchCondi" style="DISPLAY:none"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
+		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
 		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
 		        <select id="sel_year" name="sel_year" style="width:70px;" onchange="onSelect_Year(this);">    
@@ -1637,7 +1680,7 @@
 		        </select>  
 			</ul>
 			</div>
-		<div class="div_scroll" style="width:100%;HEIGHT:315px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
 		  <div id="lvDocList"></div>
 		</div>
 		
@@ -1661,7 +1704,7 @@
 		  </ul>
 		</div>
 		
-		<div style="WIDTH:100%;HEIGHT:320px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:250px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 		  <div id="lvAprLine" ></div>
 		</div>
 		<script type="text/javascript">
