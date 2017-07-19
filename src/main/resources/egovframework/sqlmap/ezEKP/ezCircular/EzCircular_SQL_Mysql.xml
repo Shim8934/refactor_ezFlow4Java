@@ -1307,6 +1307,8 @@
             WHERE
             	((B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0))
             AND
+            	B.memberID = #memberID#
+            AND
                 A.tenantid = #tenantID#
 		]]>
 		<isNotEqual property="searchValue" compareValue="">
@@ -1350,6 +1352,8 @@
 				A.tenantid = B.tenantid
             WHERE
             	((B.updatestatus = '2' AND A.memberid = #memberID#) OR (B.updatestatus = '2' AND B.memberid = #memberID# AND B.deletestatus = 0))
+            AND
+            	B.memberID = #memberID#
             AND
                 A.tenantid = #tenantID#
         ]]>
