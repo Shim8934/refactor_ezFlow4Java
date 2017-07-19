@@ -42,7 +42,8 @@
 	            else {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
 	            }	            
-	            LoadEmailTree()
+
+	            LoadEmailTree();
 	            
 	            /* 2017-05-18 장진혁 신규회람판에 클릭이벤트 생성 */ 
 	            $("#newCircular").click();
@@ -50,7 +51,19 @@
 	            getNewCircularCount();
 	        }
 	        
-	        function LoadEmailTree() {
+	        function LoadEmailTree() {	
+	        	$.ajax({
+            		type : "POST",
+            		url : "/ezCircular/getCircularFolderList.do",
+            		async : false,
+            		dataType : "json",
+            		data : {},
+            		success : function(result) {
+            			$("#RootFolderXML").html("");
+	            		$("#RootFolderXML").append(result.rootFolderXML);
+            		}
+	        	});
+	        	
 	            var PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
 	            PostTreeView.attachEvent('requestdata', requestdata);
 	            PostTreeView.attachEvent('nodeselect', selectnode);
@@ -242,8 +255,6 @@
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>
-	    <xml id="RootFolderXML" style="display: none;">
-	    	${rootFolderXML}
-	    </xml>
+	    <xml id="RootFolderXML" style="display: none;"></xml>
 	</body>
 </html>

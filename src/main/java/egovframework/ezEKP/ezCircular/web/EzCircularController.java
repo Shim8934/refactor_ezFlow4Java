@@ -107,8 +107,21 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * @throws Exception 
 	 */
 	@RequestMapping(value="/ezCircular/circularLeft.do")
-	public String circularLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+	public String circularLeft() throws Exception {
 		logger.debug("circularLeft started.");
+
+		logger.debug("circularLeft ended.");
+
+		return "/ezCircular/circularLeft";
+	}
+
+	/**
+	 * 회람문서함 폴더트리 호출 Method
+	 * @throws Exception 
+	 */
+	@RequestMapping(value="/ezCircular/getCircularFolderList.do")
+	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getCircularFolderList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -125,9 +138,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		model.addAttribute("rootFolderXML", rootFolderXML.toString());
 		
-		logger.debug("circularLeft ended.");
+		logger.debug("getCircularFolderList ended.");
 
-		return "/ezCircular/circularLeft";
+		return "json";
 	}
 	
 	/**
