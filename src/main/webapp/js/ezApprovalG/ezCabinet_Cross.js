@@ -1700,7 +1700,7 @@ function goToPage(page) {
 
 function insertSortInfoToHeader(header, listData) {
     try {
-        if (getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
+    	if (header != "" && getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
             var oXml = header;
             var nodesCell = SelectNodes(oXml, "LISTINFO/CELL");
             var header = SelectNodes(listData, "LISTVIEWDATA/HEADERS/HEADER");

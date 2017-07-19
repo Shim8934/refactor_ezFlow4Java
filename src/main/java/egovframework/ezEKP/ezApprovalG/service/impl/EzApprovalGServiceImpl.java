@@ -1173,21 +1173,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getLineInfo started.");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		
-		if (mode.equals("APR")) {
-			//결재할문서
-			listString = getListHeader("013", companyID, lang, tenantID);
-		} else if (mode.equals("END")) {
-			//기안할문서
-			listString = getListHeader("012", companyID, lang, tenantID);
-		} else if (mode.equals("COD")) {
-			//결재진행문서
-			listString = getListHeader("013", companyID, lang, tenantID);
+		if (approvalFlag.equals("S")) {
+			if (mode.equals("APR")) {
+				//결재할문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else if (mode.equals("END")) {
+				//기안할문서
+				listString = getListHeader("012", companyID, lang, tenantID);
+			} else if (mode.equals("COD")) {
+				//결재진행문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("013", companyID, lang, tenantID);
+			}
 		} else {
-			listString = getListHeader("013", companyID, lang, tenantID);
+			if (mode.equals("APR")) {
+				//결재할문서
+				listString = getListHeader("011", companyID, lang, tenantID);
+			} else if (mode.equals("END")) {
+				//기안할문서
+				listString = getListHeader("012", companyID, lang, tenantID);
+			} else if (mode.equals("COD")) {
+				//결재진행문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("011", companyID, lang, tenantID);
+			}
 		}
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
@@ -9081,19 +9097,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (!sortHeader.equals("") && sortHeader.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
 				if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().toLowerCase().equals("docstate")) {
 					if (sortOption.equals("")) {
-						orderOption1 = "TBL_APRRECEIPTPROCESSINFO." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+						orderOption1 = "TBL_APRRECEIPTPROCESSINFO." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 						orderOption2 = "a." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
 					} else {
 						orderOption1 = "TBL_APRRECEIPTPROCESSINFO." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
-						orderOption2 = "a." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+						orderOption2 = "a." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 					}
 				} else {
 					if (sortOption.equals("")) {
-						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
 					} else {
 						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
-						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "   ";
+						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 					}
 				}
 			}
