@@ -105,7 +105,7 @@
 // 						result.totalCommentCount;
 // 						result.myCommentCount;
 						
-						$("#commentCount").html($("#commentCount").html() + "[" + result.myCommentCount +"]");
+						$("#commentCount").html("<spring:message code='ezCircular.t180' />[" + result.myCommentCount +"]");
 					},error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezCircular.t102' />");
 					}
@@ -429,8 +429,8 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
-               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' /></span></li>
-<!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
+               	    		<li><span onclick="openCircularComment()" id="commentCount"></span></li>
+	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li>
 	                        <li><span onclick="circularModify()">회람수정</span></li>
 	                        <li><span onclick="circularReUse()">재회람</span></li>
                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>

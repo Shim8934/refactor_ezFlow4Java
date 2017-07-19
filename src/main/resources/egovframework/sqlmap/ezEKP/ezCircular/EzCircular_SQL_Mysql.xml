@@ -2222,7 +2222,7 @@
 									WHERE
 										circularid = #circularID#
 									AND
-										circularuserid = #circularUserID#
+										circularuserid = #memberID#
 									)
 			AND
 				status = 0
