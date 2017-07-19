@@ -5696,6 +5696,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String pageTitle = "";
 		String deptCode = userInfo.getDeptID();
 		String deptName = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("1")) {
 			deptName = userInfo.getDeptName1();
@@ -5729,6 +5730,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("deptName", deptName);
 		model.addAttribute("initFlag", initFlag);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("adminPage ended");
 		

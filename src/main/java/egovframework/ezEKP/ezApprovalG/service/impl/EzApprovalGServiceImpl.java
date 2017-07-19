@@ -1173,21 +1173,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getLineInfo started.");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		
-		if (mode.equals("APR")) {
-			//결재할문서
-			listString = getListHeader("013", companyID, lang, tenantID);
-		} else if (mode.equals("END")) {
-			//기안할문서
-			listString = getListHeader("012", companyID, lang, tenantID);
-		} else if (mode.equals("COD")) {
-			//결재진행문서
-			listString = getListHeader("013", companyID, lang, tenantID);
+		if (approvalFlag.equals("S")) {
+			if (mode.equals("APR")) {
+				//결재할문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else if (mode.equals("END")) {
+				//기안할문서
+				listString = getListHeader("012", companyID, lang, tenantID);
+			} else if (mode.equals("COD")) {
+				//결재진행문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("013", companyID, lang, tenantID);
+			}
 		} else {
-			listString = getListHeader("013", companyID, lang, tenantID);
+			if (mode.equals("APR")) {
+				//결재할문서
+				listString = getListHeader("011", companyID, lang, tenantID);
+			} else if (mode.equals("END")) {
+				//기안할문서
+				listString = getListHeader("012", companyID, lang, tenantID);
+			} else if (mode.equals("COD")) {
+				//결재진행문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("011", companyID, lang, tenantID);
+			}
 		}
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
