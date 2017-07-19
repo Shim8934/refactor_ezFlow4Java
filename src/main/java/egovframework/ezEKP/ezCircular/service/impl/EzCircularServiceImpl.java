@@ -1068,7 +1068,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("nowDate", nowDate);
 		map.put("tenantID", userInfo.getTenantId());
 		
-		updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, 0, nowDate, userInfo.getTenantId());
+		if (!vo.getCircularUserID().equals(userInfo.getId())) {
+			updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, 0, nowDate, userInfo.getTenantId());
+		}
 		
 		int circularCommentID = ezCircularDAO.insertComment(map);
 		
@@ -1406,7 +1408,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		for (String memberID : memberIDs) {
 			map.put("memberID", memberID);
-			updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+			
+			if (!memberID.equals(userInfo.getId())) {
+				updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+			}
+			
 			//이효진 commentState 테이블에 공유자 추가
 			updateCommentState(circularID, memberID, 0, nowDate, tenantID);
 			
