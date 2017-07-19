@@ -553,9 +553,6 @@ function ListView() {
                     objTd.setAttribute("writerindex", i);
                 }
 
-                /*if (strColName == "ATTACHMENTS" || strColName == "READCOUNT") {
-                    objTd.style.textAlign = "CENTER";
-                }*/
                 if (strColName == "HASFILE") {
                     var _HeaderSpanimg = document.createElement("IMG");
                     _HeaderSpanimg.setAttribute("src", "/images/newAttach.gif");
@@ -576,7 +573,8 @@ function ListView() {
                 }
                 if (strColName == "CONFIRMFLAG") {
                 	var _HeaderSpanimg = document.createElement("IMG");
-                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
+//                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-unrd.gif");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
@@ -586,18 +584,12 @@ function ListView() {
                     objTd.style.textAlign = "center";
                 }
                 if (strColName == "STATUS") {
-//                	var _HeaderSpanimg = document.createElement("IMG");
-//                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_ing.gif");
-//                    _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
-                    
-//                    _HeaderSpanimg.setAttribute("align", "absmiddle");
-//                    objTd.appendChild(_HeaderSpanimg);
                 }
                 
                 if (strColName == "UPDATESTATUS") {
         			var _HeaderSpanimg = document.createElement("IMG");
-        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_new.gif");
+        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.gif");
         			
         			_HeaderSpanimg.border = "0";
     				objTd.style.textAlign = "CENTER";
@@ -799,22 +791,17 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     objTd.style.fontWeight = "bold";
                     
-                    //공유의견등록시 새로운 상태값 추가될
-                    /*if (strValue == "new") {
-                    	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
-                    	strValue = "";
-                    } else if(strValue == "share") {
-                    	titleImage = '<img src="/images/ImgIcon/circular_share.gif"/>';
-                    	strValue = "";
-                    } else {
-                    	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
-                    	strValue = "";
-                    }*/
-                    if (strValue == "comment" || strValue == "share") {
+                    /*if (strValue == "comment" || strValue == "share") {
                     	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
                     	strValue = "";
                     } else if(strValue == "new") {
                     	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
+                    	strValue = "";
+                    }*/
+                    if (strValue == "comment" || strValue == "share") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_share2.gif"/>';
+                    	strValue = "";
+                    } else if(strValue == "new") {
                     	strValue = "";
                     }
                 }
@@ -827,11 +814,12 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMFLAG") {
                     objTd.style.textAlign = "center";
                     if (strValue == '0') {
-                    	objTd.style.fontWeight = "bold";
-                    	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
+//                    	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-unrd.gif" />';
                     	strValue = "";
                     } else {
-                    	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
+//                    	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-rd.gif" />';
                     	strValue = "";
                     }
                 }
