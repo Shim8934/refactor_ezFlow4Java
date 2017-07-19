@@ -20,6 +20,7 @@
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
 			var circularUserID = "${result.memberID}";
+			var updateStatus = "${result.updateStatus}";
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
@@ -77,23 +78,43 @@
 	                return;
 	            }
 	            
-	            $.ajax({
-					type : "POST",
-					dataType : "json",
-					async : false,
-					url : "/ezCircular/circularDeleteTemp.do",
-					data : { 
-						circularIDList : circularID + ";"
-					},
-					success: function() {
-						window.opener.getLeftCount();
-						window.opener.refresh_onclick();
-		                window.close();
-					},
-					error: function(err) {
-						alert("<spring:message code='ezCircular.t102' />");
-					}
-				});	
+	            if (updateStatus == "2") {
+	            	$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezCircular/deleteCircular.do",
+						data : { 
+							circularID : circularID,
+							memberID : circularUserID
+						},
+						success: function() {
+							window.opener.refresh_onclick();
+			                window.close();
+						},
+						error: function(err) {
+							alert("<spring:message code='ezCircular.t102' />");
+						}
+					});
+	            } else {
+	            	$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezCircular/circularDeleteTemp.do",
+						data : { 
+							circularIDList : circularID + ";"
+						},
+						success: function() {
+							window.opener.getLeftCount();
+							window.opener.refresh_onclick();
+			                window.close();
+						},
+						error: function(err) {
+							alert("<spring:message code='ezCircular.t102' />");
+						}
+					});
+	            }
 	        }
 		    
 	        var ezprtquestion_cross_dialogArguments = new Array();

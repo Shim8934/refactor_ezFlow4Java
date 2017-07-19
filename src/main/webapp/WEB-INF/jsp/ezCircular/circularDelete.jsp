@@ -517,6 +517,7 @@
 	        }
 	        
 	        function Delete_onclick() {
+	        	//완전삭제
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
@@ -538,19 +539,12 @@
 						}
 					});
 					
-					getLeftCount();
 					refresh_onclick();
 	        	}	
 	        }
 	        
-	        function getLeftCount() {
-	        	if (typeof (window.parent.frames.left) != "undefined") {
-	        		parent.frames["left"].getNewCircularCount();
-		    	}
-	        }
-	        
 	        function refresh_onclick() {
-		    	window.location.href = "/ezCircular/circularDelete.do";
+	        	getBoardList();
 	        }
 	    </script>
 	</head>

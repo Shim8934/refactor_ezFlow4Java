@@ -164,7 +164,7 @@
 					},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
-					}     			
+					}
 				});
 	        }
 	
@@ -448,7 +448,7 @@
 		    }
 		    
 		    function refresh_onclick() {
-		    	window.location.href = "/ezCircular/newCircular.do";
+		    	getBoardList();
 		    }
 		
 		    function search(type) {

@@ -455,7 +455,7 @@
 		    }
 		    
 		    function refresh_onclick() {
-		    	window.location.href = "/ezCircular/circularTemp.do";
+		    	getBoardList();
 		    }
 		
 		    function search(type) {
