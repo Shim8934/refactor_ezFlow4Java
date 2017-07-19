@@ -474,12 +474,12 @@
             	    <div id="menu">
                 	    <ul>
                	    		<li><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
-               	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
-	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
+               	    		<li><span onclick="openCircularComment()"><spring:message code='ezCircular.t180' />[${commentCount}]</span></li>
 <!-- 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li> -->
-	                        <li><span onclick="openCircularComment()"><spring:message code='ezCircular.t82' />[${commentCount}]</span></li>
 	                        <li><span onclick="circularModify()">회람수정</span></li>
 	                        <li><span onclick="circularReUse()">재회람</span></li>
+               	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
+	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>
                 	</div>
                 	<div id="close">
