@@ -17,21 +17,21 @@
 	var strLang1 = "<spring:message code='ezStatistics.t1063'/>";
 	var strLang2 = "<spring:message code='ezStatistics.t1064'/>";
 	var strLang3 = "KB";
-
 	var currPage = "";
 	var totalPage = "";
 	var totalCount = "";
 	var BlockSize = 10;
 	var searchStartTime = "";
 	var searchEndTime = "";
-
 	
+	//**/ 화면 호출시 실행 함수
 	window.onload = function() {
 		getTime();
 		getMailLogList(1, searchStartTime, searchEndTime);
 		makePageSelPage();
 	}
 
+	//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
 	function keyword_onkeydown(e) {
 		
 	    if (!window.ActiveXObject) {
@@ -126,7 +126,6 @@
 		$.datepicker.setDefaults($.datepicker.regional["ko"]);	
 			
 	});
-
 
 	//**/ 페이징처리
 	function td_Create1(strtext) {
@@ -248,7 +247,6 @@
         }
     }
     
-
     //**/ 새로고침 클릭시 이벤트
     function reload() {
     	goToPage(currPage);
@@ -280,111 +278,121 @@
 		$(function() {
 			$('#searchValue').val('');
 			getTime();
-			
 		});
 	}
 	
-
-	 //**/ 페이지네이션 클릭시
+	//**/ 페이지네이션 클릭시
 	function goToPage(pageNo) {
 		getMailLogList(pageNo, searchStartTime, searchEndTime);
 	}		
 
+	//**/ 메일 발신 로그내역 리스트 호출
     function getMailLogList(pageNo, searchStartTime, searchEndTime ){
     	$(function() {
 
     		var url = "/ezStatistics/statisticsMailLogList.do";
-			
+			var mailLogType = "sendAll"; 
 			var selectOption = document.getElementById("searchField");
 			var searchValue = document.getElementById("searchValue").value;
 			var searchField = "";
+			
 			if (searchValue != "") {
 				searchField = selectOption.options[selectOption.selectedIndex].value;
 			}
-			var mailLogType = "sendAll"; 
 			
-    		$.ajax({
-    			 url: url
-    			,type: "POST"
-    			,async: false
-    			,dataType: 'json'
-    			,data: {  
-    					  'searchStartTime' : searchStartTime, 'searchEndTime' : searchEndTime, 'searchField' : searchField
-    					  ,'searchValue' : searchValue, 'pageNo' : pageNo, 'mailLogType' : mailLogType
-    				   }    
-    			,success: function(res) {
-    				var html = "";
-   					res.mailLogList.forEach(function(i,v){
-   	    				var attStr = i.attachedFileName;
-   	    				var attStrArr = attStr.split('|');
-   	    				
-   						html += "<tr>";
-   						html += "	<td>" + i.LogTime 									    + "</td>";
-   	    				html += "	<td>" + i.senderName + " (" + i.senderEmail + ")"	    + "</td>";
-   	    				html += "	<td>" + i.senderDeptName	 						    + "</td>";
-   						
-   	    				if (i.recipientName == "") {
-	   	    				html += "	<td>" +  i.recipientEmail + "</td>";
-   	    				} else {
-	   	    				html += "	<td>" + i.recipientName + " (" + i.recipientEmail + ")" + "</td>";
-   	    				}
-   	    				
-   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+i.subject+"'>";
-   	    				html += "		<nobr>" + i.subject + "</nobr>";
-   	    				html += "   </td>";
-   	    				
-   	    				if ( attStrArr.length > 1 ) {
-							html += "<td title='";
-							
-							for ( var j=1; j<attStrArr.length; j++ ) {
-								html += attStrArr[j]; 
-								var next = j + 1;
-							
-								if (attStrArr.length > next) {
-									html += "&#10;"; //&#13;
-								}
-							}	
-							
-							var num = parseInt(attStrArr.length) - 1 ;
-							
-							html += "'>" + attStrArr[0] +" <spring:message code='ezStatistics.t1066'/> ";
-							html += num + "<spring:message code='ezStatistics.t1067'/>" + "</td>";		
-							
-   	    				} else {
-   	    					html += " 	<td>" + attStrArr[0] 							+ "</td>";
-   	    				}
-   	    				
-   	    				html += "		<td>" + i.mailSize + strLang3 					+ "</td>";
-   	    				html += "</tr>";
-       				});
-    				
-    				$('#mailLogListBody').empty().append(html);
-    				
-    				currPage = res.currentPage;
-    				totalPage = res.totalPage;
-    				totalCount = res.totalCount;
-    				
-    				if (res.searchValue != "") {
-	    				$('#searchField').val(res.searchField).prop("selected", true);
-    				} else {
-    					$('#searchField option:eq('+ 0 +')').attr('selected', "selected");
-    				}
-    				
-    				$('#searchValue').val(res.searchValue);
-    				$('#startDatepicker').val(res.startDate);
-    				$('#endDatepicker').val(res.endDate);
-    				
-    			}
-    			,error: function(err) {
-    				alert(err);
-    			}
-    		})
-    		makePageSelPage();
+			if (pageNo == "-1") {
+				var pageSize = "-1";
+				var params = 'searchStartTime=' + searchStartTime +'&searchEndTime=' + searchEndTime;
+				 	params += '&searchField=' + searchField + '&searchValue=' + searchValue ; 
+					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize;
+				var pURL = "/ezStatistics/statisticsMailLogExcelExport.do" + "?" + params;
+				
+				saveExcel.location.href = pURL;
+			
+			} else {
+	    		$.ajax({
+	    			 url: url
+	    			,type: "POST"
+	    			,async: false
+	    			,dataType: 'json'
+	    			,data: {  
+	    					  'searchStartTime' : searchStartTime, 'searchEndTime' : searchEndTime, 'searchField' : searchField
+	    					  ,'searchValue' : searchValue, 'pageNo' : pageNo, 'mailLogType' : mailLogType
+	    				   }    
+	    			,success: function(res) {
+	    				var html = "";
+	   					res.mailLogList.forEach(function(i,v){
+	   	    				var attStr = i.attachedFileName;
+	   	    				var attStrArr = attStr.split('|');
+	   	    				
+	   						html += "<tr>";
+	   						html += "	<td>" + i.LogTime 									    	+ "</td>";
+	   	    				html += "	<td>" + i.senderName + " (" + i.senderEmail + ")"	    	+ "</td>";
+	   	    				html += "	<td>" + i.senderDeptName	 						   		+ "</td>";
+	   						
+	   	    				if (i.recipientName == "") {
+		   	    				html += "	<td>" +  i.recipientEmail 								+ "</td>";
+	   	    				} else {
+		   	    				html += "	<td>" + i.recipientName + " (" + i.recipientEmail + ")" + "</td>";
+	   	    				}
+	   	    				
+	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+i.subject+"'>";
+	   	    				html += "		<nobr>" + i.subject + "</nobr>";
+	   	    				html += "   </td>";
+	   	    				
+	   	    				if (attStrArr.length > 1) {
+								html += "<td title='";
+								
+								for ( var j = 1; j < attStrArr.length; j++ ) {
+									html += attStrArr[j]; 
+									var next = j + 1;
+								
+									if (attStrArr.length > next) {
+										html += "&#10;"; //&#13;
+									}
+								}	
+								
+								var num = parseInt(attStrArr.length) - 1 ;
+								
+								html += "'>" + attStrArr[0] +" <spring:message code='ezStatistics.t1066'/> ";
+								html += num + "<spring:message code='ezStatistics.t1067'/>" + "</td>";		
+								
+	   	    				} else {
+	   	    					html += " 	<td>" + attStrArr[0] 							+ "</td>";
+	   	    				}
+	   	    				html += "		<td>" + i.mailSize + strLang3 					+ "</td>";
+	   	    				html += "</tr>";
+	       				});
+	    				
+	    				$('#mailLogListBody').empty().append(html);
+	    				
+	    				currPage = res.currentPage;
+	    				totalPage = res.totalPage;
+	    				totalCount = res.totalCount;
+	    				
+	    				if (res.searchValue != "") {
+		    				$('#searchField').val(res.searchField).prop("selected", true);
+	    				} else {
+	    					$('#searchField option:eq('+ 0 +')').attr('selected', "selected");
+	    				}
+	    				
+	    				$('#searchValue').val(res.searchValue);
+	    				$('#startDatepicker').val(res.startDate);
+	    				$('#endDatepicker').val(res.endDate);
+	    			}
+	    			,error: function(err) {
+	    				alert(err);
+	    			}
+	    		})
+    			makePageSelPage();
+			}
     	});
     }
     
+	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
     function excelExport() {
-    	var url = "";
+		var pageNo = "-1";
+    	getMailLogList(pageNo, searchStartTime, searchEndTime);
     }
 
 </script>
@@ -449,5 +457,6 @@
 		<tbody id="mailLogListBody"></tbody>
 	</table>
 	<div id="tblPageRayer" style="padding-top: 20px;"></div>
+	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 </body>
 </html>

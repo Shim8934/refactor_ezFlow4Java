@@ -1,15 +1,22 @@
+
 package egovframework.ezEKP.ezStatistics.web;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import oracle.jdbc.proxy.annotation.GetDelegate;
-
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -25,17 +33,23 @@ import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
-
-/**
- * 메일 상세 내역 컨트롤러
- * @author 김유진
- * 
+/** 
+ * @Description [Controller] 통계
+ * @author 오픈솔루션팀 김유진
+ * @Modification Information
+ *
+ *    수정일        		수정자             수정내용
+ *    ----------    ------    -------------------
+ *    2017.07.18    김유진             신규작성
+ *    2017.07.19    김유진             엑셀 내려받기 함수 구현 
+ *
+ * @see
  */
+
 @Controller
 public class EzStatisticsMailLogController {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsMailLogController.class);
-	
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -55,15 +69,31 @@ public class EzStatisticsMailLogController {
 	@Autowired
 	private EzCommonService ezCommonService;
 	
-	//**/ 수신
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
+	/**
+	 * 메일 수신 내역 메인 호출 
+	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMailRecieveLogList.do")
 	public String getStatMailRecieveLogMain()throws Exception {
 		return "/ezStatistics/statisticsMailRecieveLog";
 	}
 	
-	@SuppressWarnings("unchecked")
+	/**
+	 * 메일 발신 내역 메인 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/statisticsMailSendLogList.do")
+	public String getStatMailSendLogMain() throws Exception {
+		return "/ezStatistics/statisticsMailSendLog";
+	}
+
+	
+	/**
+	 * 메일 수발신 데이터 리스트 호출
+	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMailLogList.do")
-	public String getStatMailLogList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String getStatMailLogList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		
 		logger.debug("getStatMailLogList controller started.");
 		// 관리자 로그인 체크
@@ -111,6 +141,7 @@ public class EzStatisticsMailLogController {
 		Map<String, Object> resultMap = ezStatisticsAdminService.getMailLogList(tenantId, pageNo, String.valueOf(pageSize), 
 				mailLogType, searchStartTime, searchEndTime, searchField, searchValue, isPrimaryLang);
 		
+		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> mailLogList = (List<Map<String, Object>>) resultMap.get("mailLogList");
 		
 		int totalCount = (int) resultMap.get("totalCount");
@@ -137,20 +168,164 @@ public class EzStatisticsMailLogController {
 		return "json";
 	}
 	
-	//**/ 발신	
-	@RequestMapping(value = "/ezStatistics/statisticsMailSendLogList.do")
-	public String getStatMailSendLogMain() throws Exception {
-		return "/ezStatistics/statisticsMailSendLog";
-	}
-	
-	//**/ 엑셀내려받기
-	@RequestMapping(value = "/ezStatistics/statisticsExcelExportMailLogList.do")
-	public String excelExportMailLogList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletRequest response)  throws Exception {
-		logger.debug("excelExportMailLogList controller started.");
+
+	/**
+	 * 엑셀 내려받기 함수 
+	 */
+	@SuppressWarnings("static-access")
+	@RequestMapping(value = "/ezStatistics/statisticsMailLogExcelExport.do")
+	public void statisticsMailLogExcelExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale)  throws Exception {
+		logger.debug("statisticsMailLogExcelExport controller started.");
 		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		String tenantId = String.valueOf(userInfo.getTenantId());
+		String mailLogType = request.getParameter("mailLogType");
+		String searchStartTime = request.getParameter("searchStartTime")  + "00:00:00";
+		String searchEndTime = request.getParameter("searchEndTime") + "23:59:59";
+		String startDate = request.getParameter("searchStartTime");
+		String endDate = request.getParameter("searchEndTime");
+		String searchField = request.getParameter("searchField");
+		String searchValue = request.getParameter("searchValue");
+		String isPrimaryLang = "2";
+		String pageNo = request.getParameter("pageNo");
+		String pageSize = request.getParameter("pageSize");
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
-		logger.debug("excelExportMailLogList controller ended.");
-		return null;
+		if (!searchStartTime.isEmpty()) {
+			searchStartTime = searchStartTime.replaceAll("[^0-9]", "");
+		}
+		
+		if (!searchEndTime.isEmpty()) {
+			searchEndTime = searchEndTime.replaceAll("[^0-9]", "");
+		}
+		
+		if (userInfo.getLang().equals(sysLang)) {
+			isPrimaryLang = userInfo.getLang();
+		} else { 
+			isPrimaryLang = sysLang;
+		}
+
+		Map<String, Object> resultMap = ezStatisticsAdminService.getMailLogList(tenantId, pageNo, String.valueOf(pageSize), 
+				mailLogType, searchStartTime, searchEndTime, searchField, searchValue, isPrimaryLang);
+		
+		@SuppressWarnings("unchecked")
+		List<Map<String, Object>> mailLogList = (List<Map<String, Object>>) resultMap.get("mailLogList");
+		int totalCount = (int) resultMap.get("totalCount");
+		
+		// 엑셀 워크시트 생성 및 자동 다운로드 
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("MailLog");
+		
+		Row row = null;
+		Cell cell = null;
+		
+		String fileName = "";
+		fileName = startDate +"_"+ endDate + "_MailLogList";
+
+		HSSFCellStyle headerStyle = workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setVerticalAlignment((short)1);
+		
+		HSSFCellStyle bodyStyle = workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short)font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+		
+		row = sheet.createRow(0);
+		
+		if (mailLogType.equals("sendAll")) {
+			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1051", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1052", locale)); 
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t83", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
+			cell.setCellStyle(headerStyle);
+		} else {
+			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1050", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1052", locale)); 
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t83", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
+			cell.setCellStyle(headerStyle);
+		}
+			cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1056", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(7);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1057", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(8);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1058", locale));
+			cell.setCellStyle(headerStyle);
+		
+		for (int i = 1; i < totalCount + 1; i++) {
+			row = sheet.createRow(i);
+			row.setHeight((short)300);
+			
+			cell = row.createCell(0); cell.setCellValue((String) mailLogList.get(i-1).get("LogTime")); 
+			cell.setCellStyle(bodyStyle);
+			
+			if (mailLogType.equals("sendAll")) {
+				cell = row.createCell(1); cell.setCellValue((String) mailLogList.get(i-1).get("senderName")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(2); cell.setCellValue((String) mailLogList.get(i-1).get("senderEmail")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(3); cell.setCellValue((String) mailLogList.get(i-1).get("senderDeptName")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(4); cell.setCellValue((String) mailLogList.get(i-1).get("recipientName")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(5); cell.setCellValue((String) mailLogList.get(i-1).get("recipientEmail")); 
+				cell.setCellStyle(bodyStyle);
+			} else {
+				cell = row.createCell(1); cell.setCellValue((String) mailLogList.get(i-1).get("recipientName")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(2); cell.setCellValue((String) mailLogList.get(i-1).get("recipientEmail")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(3); cell.setCellValue((String) mailLogList.get(i-1).get("recipientDeptName")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(4); cell.setCellValue((String) mailLogList.get(i-1).get("senderName")); 
+				cell.setCellStyle(bodyStyle);
+				cell = row.createCell(5); cell.setCellValue((String) mailLogList.get(i-1).get("senderEmail")); 
+				cell.setCellStyle(bodyStyle);
+			}
+			
+			cell = row.createCell(6); cell.setCellValue((String) mailLogList.get(i-1).get("subject")); 
+			cell.setCellStyle(bodyStyle);
+			cell = row.createCell(7); cell.setCellValue((String) mailLogList.get(i-1).get("attachedFileName")); 
+			cell.setCellStyle(bodyStyle);
+			cell = row.createCell(8); cell.setCellValue((String) mailLogList.get(i-1).get("mailSize")); 
+			cell.setCellStyle(bodyStyle);
+			
+			sheet.autoSizeColumn(i-1);
+		}
+		
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Content-Disposition", "attachment; fileName=" + fileName + ".xls");
+		response.setContentType("application/vnd.ms-excel");
+		
+		workbook.write(response.getOutputStream());
+		workbook.close();
+		
+		logger.debug("statisticsMailLogExcelExport controller ended.");
 	}
 }
