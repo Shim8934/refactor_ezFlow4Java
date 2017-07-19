@@ -430,7 +430,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    	<c:if test="${result.status == '0'}">
+                	    	<c:if test="${result.confirmStatus == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
                 	    	</c:if>
                 	    	
@@ -517,7 +517,17 @@
 		        		</tr>
 		        		<tr>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
+		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            			<c:choose>
+		            				<c:when test="${result.confirmStatus == '0'}">
+		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
+		            				</c:when>
+		            				
+		            				<c:when test="${result.confirmStatus == '1'}">
+		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
+		            				</c:when>
+		            			</c:choose>
+		            		</td>
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; height:100%; overflow:auto;"></div></td>
@@ -653,7 +663,17 @@
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">${confirmStatus}</td>
+		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            			<c:choose>
+		            				<c:when test="${result.confirmStatus == '0'}">
+		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
+		            				</c:when>
+		            				
+		            				<c:when test="${result.confirmStatus == '1'}">
+		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
+		            				</c:when>
+		            			</c:choose>
+		            		</td>
 						</tr>
 						<tr> 
  							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 
