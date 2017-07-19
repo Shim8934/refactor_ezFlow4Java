@@ -29,11 +29,7 @@
 		        else
 		            return true;
 		    };
-		    
-		    window.onunload = function() {
-				opener.location.reload();
-			}
-		    
+
 			var ReturnFunction;
 			window.onload = function () {
 			    CurrentHeight = document.body.clientHeight;
@@ -89,7 +85,36 @@
 		    
 		    function onclick_Complete(szName) {
 		    	DivPopUpHidden();
-		        document.location.reload();
+		    	opener.LoadEmailTree();
+		    	
+		    	$.ajax({
+            		type : "POST",
+            		url : "/ezCircular/getCircularFolderList.do",
+            		async : false,
+            		dataType : "json",
+            		data : {},
+            		success : function(result) {
+            			$("#PostTreeView").html("");
+	            		
+            			PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
+                        
+                        var xmlHTTP = createXMLHttpRequest();
+                        xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+                        xmlHTTP.send();
+                        
+                        var treeconfig;
+                        
+                        if (CrossYN()) {
+                            treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
+                        }
+                        else
+                            treeconfig = xmlHTTP.responseXML;
+
+                        PostTreeView.config(treeconfig);
+                        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+                        PostTreeView.update();
+            		}
+	        	});
 		    }
 		    
 		    function delete_onclick() {
@@ -113,7 +138,7 @@
 						},
 						success : function() {
 							alert("<spring:message code='ezCircular.t45' />");
-							document.location.reload();
+							onclick_Complete();
 						},
 						error : function() {
 							alert("<spring:message code='ezCircular.t102' />");
