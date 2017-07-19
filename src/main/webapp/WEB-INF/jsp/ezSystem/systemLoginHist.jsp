@@ -19,7 +19,6 @@
 	var strLang4 = "<spring:message code='ezSystem.x0034'/>";
 	var strLang5 = "<spring:message code='ezSystem.x0035'/>";
 	var strLang6 = "<spring:message code='ezSystem.x0036'/>";
-	
 	var CurPage = "";
 	var totalPage = "";
 	var totalCount = "";
@@ -27,12 +26,14 @@
 	var searchStartTime = "";
 	var searchEndTime = "";
 	
+	//**/ 화면 호출시 실행 함수
 	window.onload = function(){
 		getTime();
 		getLoginHist(1, searchStartTime, searchEndTime);
 		makePageSelPage();
 	}
 		
+	//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
 	function keyword_onkeydown(e) {
 		
 	    if (!window.ActiveXObject) {
@@ -288,68 +289,86 @@
     function getLoginHist(pageNum, searchStartTime, searchEndTime){
     	$(function() {
 
-    		var url = "/admin/ezSystem/systemLoginHistList.do";
 			var selectOption = document.getElementById("searchKeycode");
 			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
 			var searchKeyword = document.getElementById("searchKeyword").value;
-			
-    		$.ajax({
-    			 url: url
-    			,type: "POST"
-    			,async: false
-    			,dataType: 'json'
-    			,data: {  
-    					  'startDate' : searchStartTime, 'endDate' : searchEndTime, 'searchKeycode' : searchKeycode
-    					  ,'searchKeyword' : searchKeyword, 'GotoPage' : pageNum 
-    				   }    
-    			,success: function(res) {
-    				var html = "";
-    				if (res.lang == 1) {
-    					res.loginHistList.forEach(function(i,v){
-    						html += "<tr>";
-    						html += "	<td>" + i.usernm 			+ "</td>";
-    						html += "	<td>" + i.deptnm 			+ "</td>";
-    						html += "	<td>" + i.connectip 		+ "</td>";
-    	    				html += "	<td>" + i.connecttime 		+ "</td>";
-    	    				html += "	<td>" + i.connectbrowser 	+ "</td>";
-    	    				html += "	<td>" + i.connectos 		+ "</td>";
-    	    				html += "</tr>";
-        				});
-					} else {
-						res.loginHistList.forEach(function(i,v){
-							html += "<tr>";
-							html += "	<td>" + i.usernm2 			+ "</td>";
-							html += "	<td>" + i.deptnm2 			+ "</td>";
-							html += "	<td>" + i.connectip 		+ "</td>";
-		    				html += "	<td>" + i.connecttime 		+ "</td>";
-		    				html += "	<td>" + i.connectbrowser 	+ "</td>";
-		    				html += "	<td>" + i.connectos 		+ "</td>";
-		    				html += "</tr>";
-	    				});
-					}
-    				
-    				$('#loginHistListBody').empty().append(html);
-    				
-    				CurPage = res.currPage;
-    				totalPage = res.totalPage;
-    				totalCount = res.itemCnt;
-    				
-    				if (res.searchKeycode != null) {
-    					var idx = parseInt(searchKeycode) - 1;
-	    				$('#searchKeycode option:eq('+idx+')').attr('selected','selected');
-    				}
-    				
-    				$('#searchKeyword').val(res.searchKeyword);
-    				$('#startDatepicker').val(res.startDate);
-    				$('#endDatepicker').val(res.endDate);
-    				
-    			}
-    			,error: function(err) {
-    				alert(err);
-    			}
-    		})
-    		makePageSelPage();
+
+			if (pageNum == "-1") {
+				
+				var pageSize = "-1";
+				var params = 'startDate=' + searchStartTime +'&endDate=' + searchEndTime;
+				 	params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword ; 
+					params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
+				var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
+
+				saveExcel.location.href = pURL;
+				
+			} else {
+	
+	    		var pURL = "/admin/ezSystem/systemLoginHistList.do";
+	    		$.ajax({
+	    			 url: pURL
+	    			,type: "POST"
+	    			,async: false
+	    			,dataType: 'json'
+	    			,data: {  
+	    					  'startDate' : searchStartTime, 'endDate' : searchEndTime, 'searchKeycode' : searchKeycode
+	    					  ,'searchKeyword' : searchKeyword, 'GotoPage' : pageNum 
+	    				   }    
+	    			,success: function(res) {
+	    				var html = "";
+	    				if (res.lang == 1) {
+	    					res.loginHistList.forEach(function(i,v){
+	    						html += "<tr>";
+	    						html += "	<td>" + i.usernm 			+ "</td>";
+	    						html += "	<td>" + i.deptnm 			+ "</td>";
+	    						html += "	<td>" + i.connectip 		+ "</td>";
+	    	    				html += "	<td>" + i.connecttime 		+ "</td>";
+	    	    				html += "	<td>" + i.connectbrowser 	+ "</td>";
+	    	    				html += "	<td>" + i.connectos 		+ "</td>";
+	    	    				html += "</tr>";
+	        				});
+						} else {
+							res.loginHistList.forEach(function(i,v){
+								html += "<tr>";
+								html += "	<td>" + i.usernm2 			+ "</td>";
+								html += "	<td>" + i.deptnm2 			+ "</td>";
+								html += "	<td>" + i.connectip 		+ "</td>";
+			    				html += "	<td>" + i.connecttime 		+ "</td>";
+			    				html += "	<td>" + i.connectbrowser 	+ "</td>";
+			    				html += "	<td>" + i.connectos 		+ "</td>";
+			    				html += "</tr>";
+		    				});
+						}
+	    				
+	    				$('#loginHistListBody').empty().append(html);
+	    				
+	    				CurPage = res.currPage;
+	    				totalPage = res.totalPage;
+	    				totalCount = res.itemCnt;
+	    				
+	    				if (res.searchKeycode != null) {
+	    					var idx = parseInt(searchKeycode) - 1;
+		    				$('#searchKeycode option:eq('+idx+')').attr('selected','selected');
+	    				}
+	    				
+	    				$('#searchKeyword').val(res.searchKeyword);
+	    				$('#startDatepicker').val(res.startDate);
+	    				$('#endDatepicker').val(res.endDate);
+	    			}
+	    			,error: function(err) {
+	    				alert(err);
+	    			}
+	    		})
+	    		makePageSelPage();
+			}
     	});
+    }
+    
+  	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
+    function excelExport() {
+		var pageNum = "-1";
+		getLoginHist(pageNum, searchStartTime, searchEndTime);
     }
     
 </script>
@@ -358,7 +377,7 @@
 	<h1><spring:message code="ezSystem.x0021"></spring:message></h1>
 	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 		<tr>
-			<td style="margin-bottom: 10px; padding: 5px 5px;">
+			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 				<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp;
 					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
 					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
@@ -384,6 +403,11 @@
 					</a>
 				</span> 
 			</td>
+			<td width="5%">
+				<a class="imgbtn">
+					<span onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span>
+				</a>
+			</td>
 		</tr>
 	</table>
 	<table class="mainlist" style="width:100%;">
@@ -400,5 +424,6 @@
 		<tbody id="loginHistListBody"></tbody>
 	</table>
 	<div id="tblPageRayer" style="padding-top: 20px;"></div>
+	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 </body>
 </html>
