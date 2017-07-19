@@ -1187,7 +1187,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("fileList : " + fileList);
-		
+
+		String confirmDate = "";
 		int circularUserId = 0;
 		int updateStatus = 0;
 		circularListVO.setStatus(0);
@@ -1216,8 +1217,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		//임시회람판에서 회람등록 시 임시회람판에 있는 데이터 update
 		if (!originCircularID.equals("") && (mode.equals("temp") || mode.equals("modify"))) {
-			ezCircularService.updateCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(), originCircularID, userInfo.getTenantId(), 
-					receiverLength, circularListVO.getStatus(), regDate, circularListVO.getContent(), fileList, userInfo.getOffset());
+			ezCircularService.updateCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(), originCircularID, userInfo.getTenantId(), userInfo.getId(), 
+					receiverLength, circularListVO.getStatus(), regDate, circularListVO.getContent(), fileList, userInfo.getOffset(), receiverID, receiverName, receiverName2, circularUserId, updateStatus);
 		} else {
 			ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
 					circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 

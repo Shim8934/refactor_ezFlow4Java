@@ -159,7 +159,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		if (fileList != null && !fileList.equals("")) {
 			hasFile = 1;
 		}
-		
+
 		map.put("circularID", circularID);
 		map.put("title", title);
 		map.put("importance", importance);
@@ -283,8 +283,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, int receiverLength,
-			int status, String regDate, String content, String fileList, String offset) throws Exception {
+	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status,
+			String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserId, int updateStatus) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
@@ -306,8 +306,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 		ezCircularDAO.updateCircular(map);
 
+		//회람자 삭제 후 등록
+		deleteCircularUser(Integer.parseInt(circularID), tenantID);
+		
 		for (int i=0; i<receiverLength; i++) {
-			updateStatus(circularID, tenantID);
+			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
+		}
+		
+		// 임시저장이 아닐 때만 실행
+		if (status != 2) {
+			confirmStatus(circularID, memberID, tenantID, "circularConfirm");			
 		}
 
 		Map<String, Object> attachMap = new HashMap<String, Object>();
