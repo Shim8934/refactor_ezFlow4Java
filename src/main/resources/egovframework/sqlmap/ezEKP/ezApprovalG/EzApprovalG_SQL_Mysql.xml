@@ -6113,6 +6113,18 @@
    			FUNCTIONTYPE IN ('002', '005')
    		AND 
    			APRMEMBERID IN ($v_USERIDS$)
+   		<isEqual property="v_FLAG" compareValue="1">
+		<![CDATA[
+   		AND
+   			DOCID < #v_DOCID#
+   		]]>
+   		</isEqual>
+   		<isEqual property="v_FLAG" compareValue="2">
+		<![CDATA[
+   		AND
+   			DOCID > #v_DOCID#
+   		]]>
+   		</isEqual>
    		ORDER BY 
    			STARTDATE $v_BASICORDER$, DOCID DESC
 	</select>
@@ -18619,7 +18631,20 @@
    		AND 
    			TENANT_ID= #v_TENANTID#
    		AND
-	   		 COMPANYID = #companyID#
+	   		COMPANYID = #companyID#
+   </update>
+   
+   <update id="EzApprovalG.updateProAprDocInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			ORGDOCID = #v_ORGDOCID# 
+   		WHERE  
+   			TENANT_ID= #v_TENANTID#
+   		AND
+	   		COMPANYID = #companyID#
+	   	AND
+   			ORGDOCID = #v_DOCID#
    </update>
    
    <update id="EzApprovalG.updateReceiptPointInfo" parameterClass="Map">

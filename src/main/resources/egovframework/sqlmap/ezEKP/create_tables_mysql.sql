@@ -70,7 +70,7 @@ DROP TABLE IF EXISTS `james_mail_blob`;
 CREATE TABLE `james_mail_blob` (
   `MAIL_BLOB_ID` bigint(20) NOT NULL,
   `MAIL_BYTES` longblob NOT NULL,
-  `MAIL_BODY_STRUCTURE` varchar(4000) DEFAULT NULL,
+  `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
   `HEADER_BYTES` mediumblob NOT NULL,
   `MAILBOX_ID` bigint(20) DEFAULT NULL,
   `MAIL_UID` bigint(20) DEFAULT NULL,
@@ -813,21 +813,15 @@ CREATE TABLE `jmocha_stat_mail_log` (
   `SENDER` varchar(100) DEFAULT NULL,
   `RECIPIENT` varchar(100) DEFAULT NULL,
   `TOTALBYTES` int(11) DEFAULT NULL,
-  `MESSAGEID` varchar(200) DEFAULT NULL,
-  `MESSAGESUBJECT` varchar(500) DEFAULT NULL,
-  `SENDER_NAME` varchar(255) DEFAULT NULL,
-  `RECIPIENT_NAME` varchar(255) DEFAULT NULL,
-  `ATTACHED_FILENAME` varchar(255) DEFAULT NULL,
+  `MESSAGEID` varchar(500) DEFAULT NULL,
+  `MESSAGESUBJECT` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDER_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `RECIPIENT_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHED_FILENAME` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
   PRIMARY KEY (`IDX`),
   KEY `IDX_TENANT_ID` (`TENANT_ID`),
   KEY `IDX_LOG_DATE` (`LOG_DATE`),
-  KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`),
-  KEY `IDX_SENDER` (`SENDER`),
-  KEY `IDX_RECIPIENT` (`RECIPIENT`),
-  KEY `IDX_MESSAGESUBJECT` (`MESSAGESUBJECT`(255)),
-  KEY `IDX_SENDER_NAME` (`SENDER_NAME`),
-  KEY `IDX_RECIPIENT_NAME` (`RECIPIENT_NAME`),
-  KEY `IDX_ATTACHED_FILENAME` (`ATTACHED_FILENAME`)
+  KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2962,6 +2956,7 @@ CREATE TABLE `tbl_circular_user` (
   `updateDate` varchar(40) DEFAULT NULL,
   `commentStatus` mediumint(5) DEFAULT '0',
   `shareStatus` mediumint(5) DEFAULT '0',
+  `deleteStatus` mediumint(5) DEFAULT '0',
   `tenantId` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)

@@ -2679,4 +2679,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateGongRamDocSate(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateGongRamDocSate", map);
 	}
+
+	public void updateProAprDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateProAprDocInfo", map);
+	}
 }

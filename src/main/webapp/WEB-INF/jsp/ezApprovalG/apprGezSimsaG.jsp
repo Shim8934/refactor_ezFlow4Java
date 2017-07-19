@@ -319,12 +319,10 @@
 		        if (isExternal) {
 		            if (isAddress) {
 		                rtnVal = SetContainer();
-		            }
-		            else {
+		            } else {
 		                is_Enc = OpenCheckUI();
 		            }
-		        }
-		        else {
+		        } else {
 		            Check_Container();
 		        }
 		    }
