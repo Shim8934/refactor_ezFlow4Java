@@ -80,7 +80,7 @@ public interface EzCircularService {
 	
 	public int getSearchAllCircularListCount(String memberID, int tenantID, String keyword, int filterVal, String startDate, String endDate) throws Exception;
 	
-	public int getCommentCount(String circularID, String id, int tenantID) throws Exception;
+	public int getCommentCount(String circularID, String memberID, String type, int tenantID) throws Exception;
 	
 	public int getListCount(String listType, String userID, int tenantID) throws Exception;
 	

@@ -1291,8 +1291,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 	 
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-		int commentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), userInfo.getTenantId());
-		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
+//		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
 		
 		result.setRegDate(result.getRegDate().substring(0, 16));
 		
@@ -1312,11 +1311,50 @@ public class EzCircularController extends EgovFileMngUtil {
         }
 
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("result", result);
-		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
+//		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
 		
 		return "/ezCircular/circularRead";
+	}
+	
+	/**
+	 * 회람판 상세정보 본인확인 조회
+	 */
+	@RequestMapping(value = "/ezCircular/getConfirmStatus.do")
+	public String getConfirmStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getConfirmStatus started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String circularID = request.getParameter("circularID");
+		
+		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
+		
+		model.addAttribute("confirmStatus", confirmStatus);
+		
+		logger.debug("getConfirmStatus ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 회람판 상세화면 의견목록 카운트 조회
+	 */
+	@RequestMapping(value = "/ezCircular/getCommentCount.do")
+	public String getCommentCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getCommentCount started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String circularID = request.getParameter("circularID");
+		
+		int totalCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "totalComment", userInfo.getTenantId());
+		int myCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "myComment", userInfo.getTenantId());
+		
+		model.addAttribute("totalCommentCount", totalCommentCount);
+		model.addAttribute("myCommentCount", myCommentCount);
+		
+		logger.debug("getCommentCount ended.");
+		
+		return "json";
 	}
 
 	/**
@@ -2314,11 +2352,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	public String circularprtQuestion(HttpServletRequest request, Model model) throws Exception{
 		logger.debug("circularprtQuestion started");
 		
-		String comment = request.getParameter("comment");
 		String attachList = request.getParameter("attachList");
 		
 		model.addAttribute("attachList", attachList);
-		model.addAttribute("comment", comment);
 		
 		logger.debug("circularprtQuestion ended");
 		

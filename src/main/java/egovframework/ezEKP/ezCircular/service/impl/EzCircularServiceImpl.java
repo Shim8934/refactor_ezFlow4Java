@@ -1086,14 +1086,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
-	public int getCommentCount(String circularID, String id, int tenantID) throws Exception {
+	public int getCommentCount(String circularID, String memberID, String type, int tenantID) throws Exception {
 		logger.debug("getCommentCount started.");
-		logger.debug("circularID = " + circularID + " || circularUserID = " + id + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || type = " + type + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
-		map.put("circularUserID", id);
+		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
+		map.put("type", type);
 		
 		int result = ezCircularDAO.getCommentCount(map);
 		
@@ -1209,11 +1210,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 		} else if (type.equals("commentConfirm")) {
 			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
+			updateCommentState(circularID, memberID, 1, nowDate, tenantID);
 		} else {
 			updateUpdateStatus(circularID, memberID, nowDate, tenantID);
 			updateConfirmStatus(circularID, memberID, 1, nowDate, tenantID);
 			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
+			updateCommentState(circularID, memberID, 1, nowDate, tenantID);
 		}
 		
 		logger.debug("confirmStatus ended.");
@@ -1297,10 +1300,17 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateCircularShareStatus ended.");
 	}
 	
-	private void updateCommentState(String circularID, String memberID, int status, String nowDate, int tenantID) throws Exception {
+	private void updateCommentState(String circularID, String memberID, int confirmStatus, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateCommentState started.");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("status", confirmStatus);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
 		
+		ezCircularDAO.updateCommentState(map);
 		
 		logger.debug("updateCommentState ended.");
 	}
