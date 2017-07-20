@@ -282,8 +282,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status,
-			String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserId) throws Exception {
+	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String loginCookie, LoginVO userInfo,
+			String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserId, int updateStatus) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
@@ -305,26 +305,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 		ezCircularDAO.updateCircular(map);
 
-		for (int i=0; i<receiverLength; i++) {
-			String updateStatus = getUpdateStatus(circularID, receiverID[i].trim(), tenantID);
-System.out.println(circularID + " / " + receiverID[i]);
-System.out.println("@@" + updateStatus);
-			if (updateStatus != null) {
-				deleteUser(circularID, receiverID[i].trim(), tenantID); //회람자 삭제 후 등록				
-			} else {
-				updateStatus = "0";				
-			}
-			
-//			deleteCircularUser(Integer.parseInt(circularID), tenantID);
-			
-System.out.println("@@" + updateStatus);
-			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", Integer.parseInt(updateStatus), tenantID);
+		deleteCircularUser(Integer.parseInt(circularID), tenantID);
+
+		for (int i=0; i<receiverLength; i++) {			
+			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
 		}
 
-		// 임시저장이 아닐 때만 실행
-		if (status != 2) {
-			confirmStatus(circularID, memberID, tenantID, "circularConfirm");			
-		}
+		confirmStatus(circularID, memberID, tenantID, "circularConfirm");
 
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
@@ -351,26 +338,31 @@ System.out.println("@@" + updateStatus);
 				ezCircularDAO.updateCircularAttach(attachMap);
 			}
 		}
-	}
-
-	private void deleteUser(String circularID, String receiverID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		map.put("circularID", circularID);
-		map.put("receiverID", receiverID);
-		map.put("tenantID", tenantID);
-
-		ezCircularDAO.deleteUser(map);
-	}
-
-	private String getUpdateStatus(String circularID, String receiverID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("circularID", circularID);
-		map.put("receiverID", receiverID);
-		map.put("tenantID", tenantID);
-		
-		return ezCircularDAO.getUpdateStatus(map);
+		// 회람자에게 메일 발송
+		if (option == 2 || option == 3) {
+			String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
+			StringBuilder bodyContent = new StringBuilder("");
+			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + title + " </br>");
+	    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getId());
+
+			for (int i=0; i<receiverLength; i++) {
+				OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				InternetAddress from = new InternetAddress();
+				from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+				from.setAddress(userInfo.getEmail());
+				
+				InternetAddress to = new InternetAddress();
+				
+				if (!receiverID[i].trim().equals(userInfo.getId())) {
+					to.setPersonal(receiverName[i].trim(), "UTF-8");
+					to.setAddress(AccessUserInfo.getMail());
+					
+					ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -437,13 +429,20 @@ System.out.println("@@" + updateStatus);
 	}
 
 	@Override
-	public void deleteCircularList(String circularIDList, String userID, int tenantID) throws Exception {
+	public void deleteCircularList(String circularIDListInfo, String strMemberListInfo, String userID, int tenantID) throws Exception {
 		logger.debug("deleteCircularList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		for (String ids : circularIDList.split(";")) {
-			String[] idsArr = ids.split("|");
+		String[] strMemberList = strMemberListInfo.split(";");
+		String[] circularIDList = circularIDListInfo.split(";");
+
+		for (int i=0; i<circularIDList.length; i++) {
+			String idInfo = circularIDList[i] + "/" + strMemberList[i];
+			
+			logger.debug("idInfo = " + idInfo);
+			
+			String[] idsArr = idInfo.split("/");
 			String circularID = idsArr[0];
 			String memberID = idsArr[1];
 			
