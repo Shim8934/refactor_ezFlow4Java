@@ -1135,10 +1135,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		String circularCommentID = ezCircularDAO.insertComment(map);
 		
-		map.put("circularCommentID", circularCommentID);
-		map.put("commentConfirmStatus", 0);
-		
-		insertCommentState(circularCommentID, userInfo.getId(), 0, userInfo.getTenantId());
+		if (!vo.getCircularUserID().equals(userInfo.getId())) {
+			map.put("circularCommentID", circularCommentID);
+			map.put("commentConfirmStatus", 0);
+			
+			insertCommentState(circularCommentID, vo.getCircularUserID(), 0, userInfo.getTenantId());
+		}
 		
 		logger.debug("editCircularComment ended.");
 	}
@@ -1479,9 +1481,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 		for (String memberID : memberIDs) {
 			if (!memberID.equals(userInfo.getId())) {
 				updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
-				//코멘트상태 잇는지 없는지 체크 후 있으면 update 없으면 insert 이효진
 				
-				insertCommentState(circularCommentID, memberID, 0, tenantID);
+				String commentStateID = getCommentStateID(circularCommentID, memberID, tenantID);
+				
+				if (commentStateID == null) {
+					insertCommentState(circularCommentID, memberID, 0, tenantID);
+				} else {
+					updateCommentState(circularID, memberID, 0, nowDate, tenantID);
+				}
 			}
 			
 			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(memberID, userInfo.getPrimary(), tenantID);
@@ -1496,6 +1503,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 		
 		logger.debug("commentShareUser ended.");
+	}
+	
+	private String getCommentStateID(String circularCommentID, String memberID, int tenantID) throws Exception {
+		logger.debug("getCommentStateID started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularCommentID", circularCommentID);
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		
+		String result = ezCircularDAO.getCommentStateID(map);
+		
+		logger.debug("getCommentStateID ended. commentStateID = " + result);
+		
+		return result;
 	}
 	
 	private void insertCommentState(String circularCommentID, String memberID, int status, int tenantID) throws Exception {

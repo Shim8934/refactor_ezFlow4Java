@@ -1636,7 +1636,21 @@
 					A.tenantid = #tenantID#
 			]]>
 		</isEqual>
-		
+	</select>
+	
+	<select id="EzCircularDAO.getCommentStateID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				circularcommentstateid
+			FROM
+				TBL_CIRCULAR_COMMENTSTATE
+			WHERE
+				circularcommentid = #circularCommentID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
 	</select>
 
 	<select id="EzCircularDAO.getCircularCommentUserList" parameterClass="Map" resultClass="CircularCommentVO">
@@ -2245,27 +2259,49 @@
 	</update>
 	
 	<update id="EzCircularDAO.updateCommentState" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_CIRCULAR_COMMENTSTATE
-			SET
-				status = 1,
-				confirmDate = #nowDate#
-			WHERE
-				circularcommentid IN (SELECT
-										circularCommentID
-									FROM
-										TBL_CIRCULAR_COMMENT
-									WHERE
-										circularid = #circularID#
-									)
-			AND
-				status = 0
-			AND
-				memberID = #memberID#
-			AND
-				tenantid = #tenantID#
-		]]>
+		<isEqual property="status" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_CIRCULAR_COMMENTSTATE
+				SET
+					status = #status#,
+					confirmDate = #nowDate#
+				WHERE
+					circularcommentid IN (SELECT
+											circularCommentID
+										FROM
+											TBL_CIRCULAR_COMMENT
+										WHERE
+											circularid = #circularID#
+										)
+				AND
+					status = 0
+				AND
+					memberID = #memberID#
+				AND
+					tenantid = #tenantID#
+			]]>
+		</isEqual>
+		<isEqual property="status" compareValue="0">
+			<![CDATA[
+				UPDATE
+					TBL_CIRCULAR_COMMENTSTATE
+				SET
+					status = #status#
+				WHERE
+					circularcommentid IN (SELECT
+											circularCommentID
+										FROM
+											TBL_CIRCULAR_COMMENT
+										WHERE
+											circularid = #circularID#
+										)
+				AND
+					memberID = #memberID#
+				AND
+					tenantid = #tenantID#
+			]]>
+		</isEqual>
 	</update>
 
 	<update id="EzCircularDAO.updateCircularShareStatus">
