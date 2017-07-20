@@ -1824,7 +1824,7 @@
 	                        <br>
 	                        <img src="/images/arr_l.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDelete" onclick="return DeleteRec();">
 	                        <br>
-	                        <img src="/images/arr_ll.gif" alt="" width="16" height="16" border="0" style="cursor:pointer;" id="imgDeleteAll" onclick="return DeleteRecAll();">
+	                        <img src="/images/arr_ll.gif" alt="" width="16" height="16" border="0" style="cursor:pointer; -webkit-margin-end: 5px;" id="imgDeleteAll" onclick="return DeleteRecAll();">
 	                    </div>
 	                </td>
 	                <td style="vertical-align: top">

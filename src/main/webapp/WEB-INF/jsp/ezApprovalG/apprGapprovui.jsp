@@ -233,11 +233,8 @@
 		            OpenAlertUI(pAlertContent);
 		            window.parent.close();
 		            btnClose_onclick();
-		        }
-		        else
-		        {
-		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht")
-		            {
+		        } else {
+		            if(NextDocExtended.substring(NextDocExtended.lastIndexOf(".")+1) != "mht") {
 		                openOtherApprovUI();
 		                return;
 		            }

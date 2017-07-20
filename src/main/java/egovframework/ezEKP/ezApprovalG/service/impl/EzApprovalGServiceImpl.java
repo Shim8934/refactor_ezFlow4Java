@@ -1173,21 +1173,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getLineInfo started.");
 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String listString = "";
 		StringBuffer resultXML = new StringBuffer();
 		String orderOption1 = "";
 		
-		if (mode.equals("APR")) {
-			//결재할문서
-			listString = getListHeader("013", companyID, lang, tenantID);
-		} else if (mode.equals("END")) {
-			//기안할문서
-			listString = getListHeader("012", companyID, lang, tenantID);
-		} else if (mode.equals("COD")) {
-			//결재진행문서
-			listString = getListHeader("013", companyID, lang, tenantID);
+		if (approvalFlag.equals("S")) {
+			if (mode.equals("APR")) {
+				//결재할문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else if (mode.equals("END")) {
+				//기안할문서
+				listString = getListHeader("012", companyID, lang, tenantID);
+			} else if (mode.equals("COD")) {
+				//결재진행문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("013", companyID, lang, tenantID);
+			}
 		} else {
-			listString = getListHeader("013", companyID, lang, tenantID);
+			if (mode.equals("APR")) {
+				//결재할문서
+				listString = getListHeader("011", companyID, lang, tenantID);
+			} else if (mode.equals("END")) {
+				//기안할문서
+				listString = getListHeader("012", companyID, lang, tenantID);
+			} else if (mode.equals("COD")) {
+				//결재진행문서
+				listString = getListHeader("013", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("011", companyID, lang, tenantID);
+			}
 		}
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
@@ -5135,6 +5151,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					map.put("v_DOCID", orgDocID);
 					ezApprovalGDAO.updateProEndAprDocInfo(map);	
+					
+					map.put("v_DOCID", docID);
+					map.put("v_ORGDOCID", orgDocID);
+					ezApprovalGDAO.updateProAprDocInfo(map);	
 					rtn = true;
 			} else {
 				rtn = false;
@@ -9081,19 +9101,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (!sortHeader.equals("") && sortHeader.equals(listXML.getElementsByTagName("NAME").item(k).getTextContent())) {
 				if (listXML.getElementsByTagName("COLNAME").item(k).getTextContent().toLowerCase().equals("docstate")) {
 					if (sortOption.equals("")) {
-						orderOption1 = "TBL_APRRECEIPTPROCESSINFO." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+						orderOption1 = "TBL_APRRECEIPTPROCESSINFO." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 						orderOption2 = "a." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
 					} else {
 						orderOption1 = "TBL_APRRECEIPTPROCESSINFO." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
-						orderOption2 = "a." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+						orderOption2 = "a." + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 					}
 				} else {
 					if (sortOption.equals("")) {
-						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
+						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
 					} else {
 						orderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
-						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "   ";
+						orderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " asc";
 					}
 				}
 			}
@@ -9419,6 +9439,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String userIDs = "'" + userID + "'";
 		String proxyOption = getIsUse("A23", "001", companyID, lang, tenantID);
 		
+		//모두결재 후 표출 순서 여부(Y 면 기존 그대로 결재 후 리스트 제일 상단 부분 표출, N 이면 다음문서 보기처럼 시간 순 먼저 기안했던 문서 표출)
+		String allApproveYN = ezCommonService.getTenantConfig("allApproveYN", tenantID);
+
 		if (proxyOption.equals("1")) {
 			userIDs = getProxyUser(userID, lang, tenantID, offset);
 		}
@@ -9426,8 +9449,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_USERIDS", userIDs);
+		map.put("v_DOCID", docID);
 		map.put("v_BASICORDER", basicOrder);
 		map.put("v_TENANTID", tenantID);
+		
+		if (allApproveYN.equals("Y")) {
+			map.put("v_FLAG", "0");
+		} else {
+			map.put("v_FLAG", "1");
+		}
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getNextDocInfo(map); 
 		
@@ -9455,34 +9485,64 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					makeXMLString(getExtendedFileName(makeListField(docXML.getElementsByTagName("HREF").item(0).getTextContent()))) + "</EXTENDEDNAME><USERNAME2>" + 
                     makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent())) + "</USERNAME2></NEXTDOCINFO>";
 			
-			boolean breakFlag = false;
-			int breakPoint = 0;
-			
-			for (int k = 0; k < docXML.getElementsByTagName("DOCID").getLength(); k++) {
-				if (!breakFlag) {
-					if (docXML.getElementsByTagName("DOCID").item(k).getTextContent().equals(docID)) {
-						breakFlag = true;
-						breakPoint = k + 1;
-					}
+			if (allApproveYN.equals("Y")) {
+				boolean breakFlag = false;
+				int breakPoint = 0;
+				
+				for (int k = 0; k < docXML.getElementsByTagName("DOCID").getLength(); k++) {
+						if (docXML.getElementsByTagName("DOCID").item(k).getTextContent().equals(docID)) {
+							breakFlag = true;
+							breakPoint = k + 1;
+						} 
 				}
-			}
-			
-			if (breakFlag && breakPoint < docXML.getElementsByTagName("DOCID").getLength()) {
-				strXML = "<NEXTDOCINFO><DOCID>" + 
-						makeListField(docXML.getElementsByTagName("DOCID").item(breakPoint).getTextContent()) + "</DOCID><USERID>" + 
-						makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERID").item(breakPoint).getTextContent())) + "</USERID><USERNAME>" +
-                        makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(breakPoint).getTextContent())) + "</USERNAME><USERNAME2>" +
-                        makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(breakPoint).getTextContent())) + "</USERNAME2><USERDEPTID>" +
-						makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(breakPoint).getTextContent())) + "</USERDEPTID><DOCTYPE>" + 
-						makeXMLString(makeListField(docXML.getElementsByTagName("DOCTYPE").item(breakPoint).getTextContent())) + "</DOCTYPE><DOCSTATE>" + 
-						makeXMLString(makeListField(docXML.getElementsByTagName("DOCSTATE").item(breakPoint).getTextContent())) + "</DOCSTATE><WRITERID>" + 
-						makeXMLString(makeListField(docXML.getElementsByTagName("WRITERID").item(breakPoint).getTextContent())) + "</WRITERID><APRTYPE>" + 
-						makeXMLString(makeListField(docXML.getElementsByTagName("APRTYPE").item(breakPoint).getTextContent())) + "</APRTYPE><HREF>" + 
-						makeXMLString(makeListField(docXML.getElementsByTagName("HREF").item(breakPoint).getTextContent())) + "</HREF><EXTENDEDNAME>" + 
-						makeXMLString(getExtendedFileName(makeListField(docXML.getElementsByTagName("HREF").item(breakPoint).getTextContent()))) + "</EXTENDEDNAME></NEXTDOCINFO>";
-			}
+				
+				if (breakFlag && breakPoint < docXML.getElementsByTagName("DOCID").getLength()) {
+					strXML = "<NEXTDOCINFO><DOCID>" + 
+							makeListField(docXML.getElementsByTagName("DOCID").item(breakPoint).getTextContent()) + "</DOCID><USERID>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERID").item(breakPoint).getTextContent())) + "</USERID><USERNAME>" +
+	                            makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(breakPoint).getTextContent())) + "</USERNAME><USERNAME2>" +
+	                        makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(breakPoint).getTextContent())) + "</USERNAME2><USERDEPTID>" +
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(breakPoint).getTextContent())) + "</USERDEPTID><DOCTYPE>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("DOCTYPE").item(breakPoint).getTextContent())) + "</DOCTYPE><DOCSTATE>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("DOCSTATE").item(breakPoint).getTextContent())) + "</DOCSTATE><WRITERID>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("WRITERID").item(breakPoint).getTextContent())) + "</WRITERID><APRTYPE>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRTYPE").item(breakPoint).getTextContent())) + "</APRTYPE><HREF>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("HREF").item(breakPoint).getTextContent())) + "</HREF><EXTENDEDNAME>" + 
+							makeXMLString(getExtendedFileName(makeListField(docXML.getElementsByTagName("HREF").item(breakPoint).getTextContent()))) + "</EXTENDEDNAME></NEXTDOCINFO>";
+				}
+			} 
 		} else {
-			strXML = "<NEXTDOCINFO><DOCID></DOCID><USERID></USERID><USERNAME></USERNAME><USERNAME2></USERNAME2><USERDEPTID></USERDEPTID><DOCTYPE></DOCTYPE><DOCSTATE></DOCSTATE><WRITERID></WRITERID><APRTYPE></APRTYPE><HREF></HREF><EXTENDEDNAME></EXTENDEDNAME></NEXTDOCINFO>";
+			if (allApproveYN.equals("N")) {
+				map.put("v_FLAG", "2");
+				apprGDocListVOList = ezApprovalGDAO.getNextDocInfo(map); 
+			    sb.setLength(0);
+				sb.append("<DATA>");
+		        
+		        for (int i = 0; i < apprGDocListVOList.size(); i++) {
+					sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+				}
+				sb.append("</DATA>");
+				
+				docXML = commonUtil.convertStringToDocument(sb.toString());
+				if (docXML.getElementsByTagName("DOCID").getLength() > 0) {
+					strXML = "<NEXTDOCINFO><DOCID>" + 
+							makeListField(docXML.getElementsByTagName("DOCID").item(0).getTextContent()) + "</DOCID><USERID>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERID").item(0).getTextContent())) + "</USERID><USERNAME>" +
+		                    makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(0).getTextContent())) + "</USERNAME><USERDEPTID>" +
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(0).getTextContent())) + "</USERDEPTID><DOCTYPE>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("DOCTYPE").item(0).getTextContent())) + "</DOCTYPE><DOCSTATE>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent())) + "</DOCSTATE><WRITERID>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("WRITERID").item(0).getTextContent())) + "</WRITERID><APRTYPE>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent())) + "</APRTYPE><HREF>" + 
+							makeXMLString(makeListField(docXML.getElementsByTagName("HREF").item(0).getTextContent())) + "</HREF><EXTENDEDNAME>" + 
+							makeXMLString(getExtendedFileName(makeListField(docXML.getElementsByTagName("HREF").item(0).getTextContent()))) + "</EXTENDEDNAME><USERNAME2>" + 
+		                    makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(0).getTextContent())) + "</USERNAME2></NEXTDOCINFO>";
+				} else {
+					strXML = "<NEXTDOCINFO><DOCID></DOCID><USERID></USERID><USERNAME></USERNAME><USERNAME2></USERNAME2><USERDEPTID></USERDEPTID><DOCTYPE></DOCTYPE><DOCSTATE></DOCSTATE><WRITERID></WRITERID><APRTYPE></APRTYPE><HREF></HREF><EXTENDEDNAME></EXTENDEDNAME></NEXTDOCINFO>";
+				} 
+			} else {
+				strXML = "<NEXTDOCINFO><DOCID></DOCID><USERID></USERID><USERNAME></USERNAME><USERNAME2></USERNAME2><USERDEPTID></USERDEPTID><DOCTYPE></DOCTYPE><DOCSTATE></DOCSTATE><WRITERID></WRITERID><APRTYPE></APRTYPE><HREF></HREF><EXTENDEDNAME></EXTENDEDNAME></NEXTDOCINFO>";
+			}
 		}
 		
 		return strXML;

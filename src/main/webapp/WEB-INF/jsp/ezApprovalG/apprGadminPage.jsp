@@ -33,7 +33,7 @@
 	    <script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfoCB_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/OpenSelWin_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/AdminPage_Cross.js?ver=3"></script>
@@ -71,6 +71,7 @@
 	        var UserLang = "${userInfo.lang}";
 	        var isPeriodYear = true;
 	        var OpenWin;
+	        var approvalFlag = "${approvalFlag}";
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
