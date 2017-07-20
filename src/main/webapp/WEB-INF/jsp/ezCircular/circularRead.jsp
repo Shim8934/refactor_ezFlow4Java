@@ -17,6 +17,33 @@
 		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
 		
+		<style>
+			#btnCircularConfirm.on {
+				display: inline-block;
+			    background: url(/images/kr/cm/btn_popup_onright.gif) no-repeat center;
+			    height: 23px;
+			    padding: 0px 6px 0px 6px;
+			    line-height: 24px;
+			    font-size: 12px;
+			    color: #333;
+			    cursor : pointer;
+			    border: 1px solid;
+			}
+			
+			#btnCircularConfirm.off {
+				display: inline-block;
+			    background: url(/images/kr/cm/btn_popup_offright.gif) no-repeat center;
+			    height: 23px;
+			    padding: 0px 6px 0px 6px;
+			    line-height: 24px;
+			    font-size: 12px;
+			    color: #fff;
+			    cursor : pointer;
+			    border: 1px solid;
+			}
+			
+		</style>
+		
 		<script type="text/javascript" >
 			var circularID = "${result.circularID}";
 			var circularUserID = "${result.memberID}";
@@ -29,8 +56,6 @@
 			var attachList = "";
 
 			$(document).ready(function() {
-				getCommentCount();
-				
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
@@ -39,6 +64,14 @@
 				if ("${attachList}" != "") {
 					attachList = true;
 				}
+				
+				$("#btnCircularConfirm").mouseover(function() {
+					$(this).attr("class", "on");
+				});
+				
+				$("#btnCircularConfirm").mouseout(function() {
+					$(this).attr("class", "off");
+				});
 	        });
 			
 			window.onresize = function () {
@@ -82,13 +115,9 @@
 						if (confirmStatus == "1") {
 							confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
 							$("#circularConfirm").hide();
-						} else {
-							confirmStatus = "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />";
-							$("#circularConfirm").show();
+							
+							$(".confirmStatus").html(confirmStatus);
 						}
-						
-						$(".confirmStatus").html(confirmStatus);
-						
 					},error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezCircular.t102' />");
 					}
@@ -430,11 +459,11 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    	<c:if test="${result.confirmStatus == '0'}">
+                	    	<%-- <c:if test="${result.confirmStatus == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
-                	    	</c:if>
+                	    	</c:if> --%>
                 	    	
-               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' /></span></li>
+               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}]</span></li>
 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
@@ -520,7 +549,7 @@
 		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
-		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
+		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />&nbsp;<span id="btnCircularConfirm" class="off" onclick='circularConfirm()'><spring:message code='ezCircular.t38' /></span>
 		            				</c:when>
 		            				
 		            				<c:when test="${result.confirmStatus == '1'}">
