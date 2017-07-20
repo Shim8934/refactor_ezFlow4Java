@@ -145,7 +145,7 @@
 					receiverList2 += ", " + userMyName2;
 					receiverID += ", " + userMyID;
 				}
-alert(oldCircularID);
+
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
 	 			   	type : 'POST',

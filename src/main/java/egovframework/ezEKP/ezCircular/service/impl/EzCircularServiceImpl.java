@@ -282,7 +282,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status,
+	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String loginCookie, LoginVO userInfo,
 			String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserId, int updateStatus) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
@@ -311,10 +311,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
 		}
 
-		// 임시저장이 아닐 때만 실행
-		if (status != 2) {
-			confirmStatus(circularID, memberID, tenantID, "circularConfirm");			
-		}
+		confirmStatus(circularID, memberID, tenantID, "circularConfirm");
 
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
@@ -339,6 +336,31 @@ public class EzCircularServiceImpl implements EzCircularService {
 				attachMap.put("tenantID", tenantID);
 				
 				ezCircularDAO.updateCircularAttach(attachMap);
+			}
+		}
+		
+		// 회람자에게 메일 발송
+		if (option == 2 || option == 3) {
+			String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
+			StringBuilder bodyContent = new StringBuilder("");
+			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + title + " </br>");
+	    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getId());
+
+			for (int i=0; i<receiverLength; i++) {
+				OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				InternetAddress from = new InternetAddress();
+				from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+				from.setAddress(userInfo.getEmail());
+				
+				InternetAddress to = new InternetAddress();
+				
+				if (!receiverID[i].trim().equals(userInfo.getId())) {
+					to.setPersonal(receiverName[i].trim(), "UTF-8");
+					to.setAddress(AccessUserInfo.getMail());
+					
+					ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+				}
 			}
 		}
 	}
