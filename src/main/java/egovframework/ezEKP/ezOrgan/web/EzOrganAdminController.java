@@ -2161,6 +2161,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("saveEmail started.");
 		
 		String returnValue = "ERROR";
+		String bizmekaResult = "ERROR";
 		
 		try {
 			//관리자 권한 체크
@@ -2182,6 +2183,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			for (int i=0; i<mailNodeList.getLength(); i++) {
 				String mail = mailNodeList.item(i).getTextContent();
 				mailList.add(mail.substring(5));
+			}
+			
+			String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+			
+			if (useBizmekaSpambox.equals("YES")) {
+				String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+				String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+				String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+				
+				bizmekaResult = ezEmailUtil.bizmekaEditEmailList(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
+												userId, primaryMail, mailList);		
+
+				logger.debug("bizmekaResult=" + bizmekaResult);
+				
+				if (!bizmekaResult.equals("OK")) {
+					throw new Exception("bizmekaEditEmailList failed");
+				}				
 			}
 			
 			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
