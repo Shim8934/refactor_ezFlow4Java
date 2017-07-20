@@ -145,10 +145,10 @@
 					receiverList2 += ", " + userMyName2;
 					receiverID += ", " + userMyID;
 				}
-
+alert(oldCircularID);
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
-	                type : 'POST',
+	 			   	type : 'POST',
 	                dataType : 'text',
 	                data : {	title : document.getElementById("title").value,
 	                			importance : document.getElementById("importance").value,
@@ -272,15 +272,15 @@
       				<div id="menu">      
         				<ul>
         					<c:choose>
-        						<c:when test="${mode eq 'write' || mode eq 'temp'}">
-        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t55"/></span></li>	
-		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>
+        						<c:when test="${mode eq 'reuse'}">
+        							<li><span onClick="btn_Save('${mode}')">복사작성</span></li>
         						</c:when>
         						<c:when test="${mode eq 'modify'}">
         							<li><span onClick="btn_Save('${mode}')">회람수정</span></li>
         						</c:when>
         						<c:otherwise>
-		          					<li><span onClick="btn_Save('${mode}')">복사작성</span></li>        						
+		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t55"/></span></li>	
+		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>       						
         						</c:otherwise>
         					</c:choose>
         				</ul>

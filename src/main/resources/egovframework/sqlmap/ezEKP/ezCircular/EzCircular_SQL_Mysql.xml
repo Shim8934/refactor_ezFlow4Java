@@ -58,7 +58,9 @@
                 IFNULL(C.confirmcount, '0') AS confirmcount,
 				D.confirmtotalcount,
 				B.commentStatus,
-				B.shareStatus
+				B.shareStatus,
+				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus,
+				(case when commentStatus = 0 and shareStatus = 0 then null else updatedate end) as updatedate2
             FROM
                 TBL_CIRCULAR A
             JOIN
@@ -106,7 +108,7 @@
 			ON
 				A.circularid = D.circularid
             WHERE
-            	(B.updatestatus = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
+            	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
             	A.status != '2'
             	
@@ -142,7 +144,7 @@
         </isNotEqual>
         <isEqual property="orderCell" compareValue="">
         	<![CDATA[    
-            	B.updatestatus DESC,
+            	totalstatus DESC,
             	B.updatedate DESC,
             	A.regdate DESC
             ]]>
@@ -393,7 +395,7 @@
             AND
                 A.tenantid = B.tenantid
             WHERE
-            	(B.updatestatus = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
+            	(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
             AND
             	A.status != 2
             AND
@@ -1747,7 +1749,7 @@
 				AND
 					A.tenantid = B.tenantid
 				WHERE
-					(B.updatestatus = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
+					(B.status = 0 OR B.commentstatus = 1 OR B.sharestatus = 1)
 				AND
 					A.status != 2
 				AND
@@ -1879,6 +1881,21 @@
 				B.memberID = #circularUserID#
 			AND
 				B.tenantid = #tenantID#
+    	]]>
+    </select>
+    
+    <select id="EzCircularDAO.getUpdateStatus" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+			SELECT
+				UPDATESTATUS
+			FROM
+				TBL_CIRCULAR_USER
+			WHERE
+				CIRCULARID = #circularID#
+			AND
+				MEMBERID = #receiverID#
+			AND
+				TENANTID = #tenantID#
     	]]>
     </select>
 
@@ -2414,7 +2431,20 @@
               TENANTID = #tenantID#
         ]]>
     </delete>
-	
+    
+    <delete id="EzCircularDAO.deleteUser" parameterClass="Map">
+        <![CDATA[
+          DELETE FROM
+              TBL_CIRCULAR_USER
+          WHERE
+              CIRCULARID = #circularID#
+          AND
+          	  MEMBERID = #receiverID#
+          AND    
+              TENANTID = #tenantID#
+        ]]>
+    </delete>
+
 	<delete id="EzCircularDAO.circularDeptDel" parameterClass="map">
 		<![CDATA[
 		  DELETE FROM

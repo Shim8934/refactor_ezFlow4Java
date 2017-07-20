@@ -243,7 +243,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("insertCircular ended.");
 	}
 
-	@Override
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception {
 		logger.debug("insertCircularUser started.");
 		logger.debug("circularUserID = " + circularUserID + " || circularID = " + circularID + " || memberID = " + memberID + " || confirmDate = " + confirmDate + " || status = " + status + " || updateStatus = " + updateStatus + " || tenantID = " + tenantID);
@@ -284,7 +283,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status,
-			String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserId, int updateStatus) throws Exception {
+			String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserId) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
@@ -306,13 +305,22 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 		ezCircularDAO.updateCircular(map);
 
-		//회람자 삭제 후 등록
-		deleteCircularUser(Integer.parseInt(circularID), tenantID);
-		
 		for (int i=0; i<receiverLength; i++) {
-			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
+			String updateStatus = getUpdateStatus(circularID, receiverID[i].trim(), tenantID);
+System.out.println(circularID + " / " + receiverID[i]);
+System.out.println("@@" + updateStatus);
+			if (updateStatus != null) {
+				deleteUser(circularID, receiverID[i].trim(), tenantID); //회람자 삭제 후 등록				
+			} else {
+				updateStatus = "0";				
+			}
+			
+//			deleteCircularUser(Integer.parseInt(circularID), tenantID);
+			
+System.out.println("@@" + updateStatus);
+			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", Integer.parseInt(updateStatus), tenantID);
 		}
-		
+
 		// 임시저장이 아닐 때만 실행
 		if (status != 2) {
 			confirmStatus(circularID, memberID, tenantID, "circularConfirm");			
@@ -343,6 +351,26 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.updateCircularAttach(attachMap);
 			}
 		}
+	}
+
+	private void deleteUser(String circularID, String receiverID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("circularID", circularID);
+		map.put("receiverID", receiverID);
+		map.put("tenantID", tenantID);
+
+		ezCircularDAO.deleteUser(map);
+	}
+
+	private String getUpdateStatus(String circularID, String receiverID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("circularID", circularID);
+		map.put("receiverID", receiverID);
+		map.put("tenantID", tenantID);
+		
+		return ezCircularDAO.getUpdateStatus(map);
 	}
 
 	@Override

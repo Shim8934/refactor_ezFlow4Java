@@ -434,7 +434,7 @@
 		    }
 			
 			function circularModify() {
-				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=modify";
+				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=modify" + "&updateStatus=" + updateStatus;
 			}
 			
 			function circularReUse() {
