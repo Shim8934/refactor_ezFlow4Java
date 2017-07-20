@@ -1477,9 +1477,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String memberIDs[] = memberIDList.split(";");
 		
 		for (String memberID : memberIDs) {
-			
 			if (!memberID.equals(userInfo.getId())) {
 				updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+				//코멘트상태 잇는지 없는지 체크 후 있으면 update 없으면 insert 이효진
+				
 				insertCommentState(circularCommentID, memberID, 0, tenantID);
 			}
 			

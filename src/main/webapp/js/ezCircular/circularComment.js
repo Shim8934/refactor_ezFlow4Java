@@ -234,6 +234,7 @@ function shareComment() {
 		dataType : "json",
 		data : {
 			circularID : circularID,
+			circularCommentID : circularCommentID,
 			memberIDList : memberIDList
 		},
 		success : function (result) {
