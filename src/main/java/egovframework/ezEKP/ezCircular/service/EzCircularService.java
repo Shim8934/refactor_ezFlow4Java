@@ -134,6 +134,6 @@ public interface EzCircularService {
 	
 	public void confirmStatus(String circularID, String memberID, int tenantID, String type) throws Exception;
 
-	public void updateCircular(String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserID) throws Exception;
+	public void updateCircular(String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserID, int updateStatus) throws Exception;
 	
 }

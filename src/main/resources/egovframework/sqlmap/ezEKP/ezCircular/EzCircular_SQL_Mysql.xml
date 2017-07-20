@@ -1883,21 +1883,6 @@
 				B.tenantid = #tenantID#
     	]]>
     </select>
-    
-    <select id="EzCircularDAO.getUpdateStatus" parameterClass="Map" resultClass="String">
-    	<![CDATA[
-			SELECT
-				UPDATESTATUS
-			FROM
-				TBL_CIRCULAR_USER
-			WHERE
-				CIRCULARID = #circularID#
-			AND
-				MEMBERID = #receiverID#
-			AND
-				TENANTID = #tenantID#
-    	]]>
-    </select>
 
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
@@ -2427,19 +2412,6 @@
               TBL_CIRCULAR_USER
           WHERE
               CIRCULARID = #circularID#
-          AND    
-              TENANTID = #tenantID#
-        ]]>
-    </delete>
-    
-    <delete id="EzCircularDAO.deleteUser" parameterClass="Map">
-        <![CDATA[
-          DELETE FROM
-              TBL_CIRCULAR_USER
-          WHERE
-              CIRCULARID = #circularID#
-          AND
-          	  MEMBERID = #receiverID#
           AND    
               TENANTID = #tenantID#
         ]]>

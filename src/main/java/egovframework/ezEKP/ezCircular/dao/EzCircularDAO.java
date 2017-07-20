@@ -187,10 +187,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	public int getConfirmStatus(Map<String, Object> map) throws Exception {
 		return (int) select("EzCircularDAO.getConfirmStatus", map);
 	}
-	
-	public String getUpdateStatus(Map<String, Object> map) throws Exception {
-		return (String) select("EzCircularDAO.getUpdateStatus", map); 
-	}
 
 	public void setCircularList_Config_I(CircularConfigVO circularConfigVO) throws Exception {
 		insert("EzCircularDAO.setCircularList_Config_I", circularConfigVO);
@@ -325,10 +321,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	
 	public void deleteCircularComment(Map<String, Object> map) throws Exception {
 		delete("EzCircularDAO.deleteCircularComment", map);
-	}
-
-	public void deleteUser(Map<String, Object> map) throws Exception {
-		delete("EzCircularDAO.deleteUser", map);
 	}
 
 	public void updateCircularStatus(Map<String, Object> map) throws Exception {
