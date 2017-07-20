@@ -77,6 +77,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var strMemberListInfo = "";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	
@@ -286,9 +287,11 @@
 	        
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += $(obj).closest("tr").attr("circularID");
+		            strListInfo += $(obj).closest("tr").attr("circularID") + ";";
+		            strMemberListInfo += $(obj).closest("tr").attr("memberID") + ";";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
+		            strMemberListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("memberID"), "");
 		        }
 		        
 		        listEventCheckbox = true;
@@ -520,14 +523,15 @@
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
-	        	
+
 	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
 					$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : false,
-						url : "/ezCircular/circularDeleteItem.do",
-						data : { circularIDList : strListInfo
+						url : "/ezCircular/deleteCircularList.do",
+						data : { circularIDList : strListInfo,
+								 strMemberListInfo : strMemberListInfo
 								},
 						success: function() {
 							alert("<spring:message code='ezCircular.t45'/>");

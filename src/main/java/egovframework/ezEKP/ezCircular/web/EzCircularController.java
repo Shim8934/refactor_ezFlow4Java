@@ -1684,8 +1684,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularIDList = request.getParameter("circularIDList");
-		
-		ezCircularService.deleteCircularList(circularIDList, userInfo.getId(), userInfo.getTenantId());
+		String strMemberListInfo = request.getParameter("strMemberListInfo");
+
+		ezCircularService.deleteCircularList(circularIDList, strMemberListInfo, userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("deleteCircularList ended");
 		
