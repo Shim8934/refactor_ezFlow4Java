@@ -1074,14 +1074,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, String searchValue, String circularUserID, String offset, int tenantID) throws Exception {
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO vo, String searchValue, String circularUserID, String commentType, String offset, int tenantID) throws Exception {
 		logger.debug("getCircularComment started.");
-		logger.debug("circularID = " + vo.getCircularID() + " || searchValue = " + searchValue + " || circularUserID = " + circularUserID + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + vo.getCircularID() + " || searchValue = " + searchValue + " || circularUserID = " + circularUserID + " || commentType = " + commentType + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", vo.getCircularID());
 		map.put("searchValue", searchValue);
 		map.put("circularUserID", circularUserID);
+		map.put("commentType", commentType);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);

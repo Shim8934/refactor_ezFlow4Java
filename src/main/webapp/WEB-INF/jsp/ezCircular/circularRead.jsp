@@ -41,7 +41,6 @@
 			    cursor : pointer;
 			    border: 1px solid;
 			}
-			
 		</style>
 		
 		<script type="text/javascript" >
@@ -300,6 +299,7 @@
             		async : false,
             		data : {
             			circularID : circularID,
+            			commentType : "totalComment",
             			searchValue : ""
             		},
             		success : function(result) {

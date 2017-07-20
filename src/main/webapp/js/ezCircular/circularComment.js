@@ -6,6 +6,7 @@ function getCircularComment() {
 		dataType : "json",
 		data : {
 			circularID : circularID,
+			commentType : commentType,
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {

@@ -42,7 +42,7 @@ public interface EzCircularService {
 	
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
 
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchValue, String circularUserID, String offset, int tenantID) throws Exception;
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchValue, String circularUserID, String commentType, String offset, int tenantID) throws Exception;
 	
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception;
 	
