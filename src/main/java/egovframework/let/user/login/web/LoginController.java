@@ -234,67 +234,7 @@ public class LoginController {
 				
 				loginService.insertLog(resultVO);
 
-				//DB에서 lang 값 가져옴
-				String lang = ezCommonService.selectUserGetLang(_uid, tenantId);				
-				String acceptLanguage = request.getHeader("Accept-Language");
-				String returnValue = "";
-				
-				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
-				
-				//userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)				
-				if (returnValue == null || returnValue.equals("")) {
-			        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-			        logger.debug("primaryLang=" + primaryLang);					
-					
-			        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
-			        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
-				        if (primaryLang.equals("1")) {
-				        	acceptLanguage = "ko";
-				        } else if (primaryLang.equals("3")) {
-				        	acceptLanguage = "ja";
-				        }
-			        }
-			        
-				    if (acceptLanguage != null) {
-				        returnValue = acceptLanguage.substring(0, 2);
-				    //이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
-				    } else {				        
-				        returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
-				    }
-					
-				    lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
-				    
-				    //브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
-				    if (lang.equals("")) {						
-						lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-					}
-					
-					logger.debug("userID="+_uid);
-					logger.debug("lang="+lang);
-					
-					ezCommonService.insertTblUserLocalInfo(_uid, "235|+09:00", lang, tenantId);
-				}
-				
-				String timeZone = ezCommonService.selectUserGetTimeZone(_uid, tenantId);
-				
-				logger.debug("_uid=" + _uid + ",lang=" + lang + ",timeZone=" + timeZone + ",acceptLanguage=" + acceptLanguage);
-				
-				//CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
-				locale = new Locale(returnValue);
-				localeResolver.setLocale(request, response, locale);
-				
-				//80 포트가 아닌 경우엔 포트 번호도 포함시킨다.
-				if (serverPort != 80) {
-				    serverName = serverName + ":" + serverPort;
-				}
-				
-				//Cookie 생성
-				String cInfo = serverName + "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId;
-				String loginCookie = egovFileScrty.encryptAES(cInfo);
-				
-	        	Cookie cookieID = new Cookie("loginCookie", loginCookie);
-	        	cookieID.setPath("/");
-	        	response.addCookie(cookieID);
+				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response);
 	        	
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
 	        	cookieName.setPath("/");
@@ -313,6 +253,75 @@ public class LoginController {
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
         }        
+    }
+    
+    public void createLoginCookie(
+    				String userId, String userPw, String encryptedUserPw, int tenantId, 
+    				HttpServletRequest request, HttpServletResponse response
+    				) throws Exception {
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String ipAddress = ClientUtil.getClientIP(request);
+    	
+		// DB에서 lang 값 가져옴
+		String lang = ezCommonService.selectUserGetLang(userId, tenantId);				
+		String acceptLanguage = request.getHeader("Accept-Language");
+		String twoLetterLang = commonUtil.getTwoLetterLangFromLangNum(lang);
+		
+		// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)				
+		if (twoLetterLang == null || twoLetterLang.equals("")) {
+	        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+	        logger.debug("primaryLang=" + primaryLang);					
+			
+	        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+	        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+		        if (primaryLang.equals("1")) {
+		        	acceptLanguage = "ko";
+		        } else if (primaryLang.equals("3")) {
+		        	acceptLanguage = "ja";
+		        }
+	        }
+	        
+		    if (acceptLanguage != null) {
+		    	twoLetterLang = acceptLanguage.substring(0, 2);
+		    // 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+		    } else {				        
+		    	twoLetterLang = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+		    }
+			
+		    lang = commonUtil.getLangNumFromTwoLetterLang(twoLetterLang);
+		    
+		    // 브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
+		    if (lang.equals("")) {						
+				lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+			}
+			
+			logger.debug("userID=" + userId);
+			logger.debug("lang=" + lang);
+			
+			ezCommonService.insertTblUserLocalInfo(userId, "235|+09:00", lang, tenantId);
+		}
+		
+		String timeZone = ezCommonService.selectUserGetTimeZone(userId, tenantId);
+		
+		logger.debug("userId=" + userId + ",ipAddress=" + ipAddress + ",lang=" + lang + ",timeZone=" + timeZone + ",acceptLanguage=" + acceptLanguage);
+		
+		// CookieLocaleResolver에 DB에서 가져온 lang값을 set해줌
+		Locale locale = new Locale(twoLetterLang);
+		localeResolver.setLocale(request, response, locale);
+		
+		// 80 포트가 아닌 경우엔 포트 번호도 포함시킨다.
+		if (serverPort != 80) {
+		    serverName = serverName + ":" + serverPort;
+		}
+		
+		// Cookie 생성
+		String cInfo = serverName + "///" + userId + "///" + encryptedUserPw + "///" + ipAddress + "///" + userPw + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId;
+		String loginCookie = egovFileScrty.encryptAES(cInfo);
+		
+    	Cookie cookieID = new Cookie("loginCookie", loginCookie);
+    	cookieID.setPath("/");
+    	response.addCookie(cookieID);    	
     }
     
     /**
