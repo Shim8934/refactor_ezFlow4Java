@@ -1187,7 +1187,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("fileList : " + fileList);
-		
+
+		String confirmDate = "";
 		int circularUserId = 0;
 		int updateStatus = 0;
 		circularListVO.setStatus(0);
@@ -1216,8 +1217,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		//임시회람판에서 회람등록 시 임시회람판에 있는 데이터 update
 		if (!originCircularID.equals("") && (mode.equals("temp") || mode.equals("modify"))) {
-			ezCircularService.updateCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(), originCircularID, userInfo.getTenantId(), 
-					receiverLength, circularListVO.getStatus(), regDate, circularListVO.getContent(), fileList, userInfo.getOffset());
+			ezCircularService.updateCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(), originCircularID, userInfo.getTenantId(), userInfo.getId(), 
+					receiverLength, circularListVO.getStatus(), regDate, circularListVO.getContent(), fileList, userInfo.getOffset(), receiverID, receiverName, receiverName2, circularUserId, updateStatus);
 		} else {
 			ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
 					circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
@@ -1298,7 +1299,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 	 
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-//		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
+		int myCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "myComment", userInfo.getTenantId());
 		
 		result.setRegDate(result.getRegDate().substring(0, 16));
 		
@@ -1319,7 +1320,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);
-//		model.addAttribute("confirmStatus", confirmStatus == 1 ? egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale()) : egovMessageSource.getMessage("ezCircular.t143", userInfo.getLocale()));
+		model.addAttribute("myCommentCount", myCommentCount);
 		
 		return "/ezCircular/circularRead";
 	}
@@ -1893,6 +1894,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		String circularIdList = request.getParameter("circularIdList");
 		String folderId = request.getParameter("folderId");
 
+		logger.debug("circularIdList : " + circularIdList);
+
 		if (folderId != null) {	
 			model.addAttribute("folderId", folderId);
 		}
@@ -2088,9 +2091,12 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	String searchValue = request.getParameter("searchValue");
+    	String commentType = request.getParameter("commentType");
+    	
+    	logger.debug("commentType = " + commentType);
     	
     	List<CircularListVO> circularUserList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchValue, userInfo.getTenantId(), userInfo.getOffset());
-    	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchValue, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
+    	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchValue, userInfo.getId(), commentType, userInfo.getOffset(), userInfo.getTenantId());
     	
     	logger.debug("getCircularComment ended.");
     	

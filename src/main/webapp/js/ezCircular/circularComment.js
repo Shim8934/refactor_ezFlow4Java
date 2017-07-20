@@ -6,6 +6,7 @@ function getCircularComment() {
 		dataType : "json",
 		data : {
 			circularID : circularID,
+			commentType : commentType,
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
@@ -54,14 +55,6 @@ function getCircularComment() {
 				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
 				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + vo.memberName + "</td>";
 				circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
-				
-				var arry = vo.regDate.substring(0, 10).split('-');
-				var d = new Date(arry[0], arry[1]-1, arry[2]);
-				var getDiffTime = now.getTime() - d.getTime();
-				
-				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
-					circularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' style='vertical-align:middle;'/>&nbsp;";
-				}
 				
 				if (vo.memberID == userInfoID && vo.status == 0) {
 //					circularCommentList += "<img src='/images/ImgIcon/circular_share1.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";

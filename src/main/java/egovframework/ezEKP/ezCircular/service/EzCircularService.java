@@ -42,7 +42,7 @@ public interface EzCircularService {
 	
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
 
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchValue, String circularUserID, String offset, int tenantID) throws Exception;
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchValue, String circularUserID, String commentType, String offset, int tenantID) throws Exception;
 	
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception;
 	
@@ -134,6 +134,6 @@ public interface EzCircularService {
 	
 	public void confirmStatus(String circularID, String memberID, int tenantID, String type) throws Exception;
 
-	public void updateCircular(String title, int importance, int option, String circularID, int tenantID, int receiverLength, int status, String regDate, String content, String fileList, String offset) throws Exception;
+	public void updateCircular(String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserID, int updateStatus) throws Exception;
 	
 }

@@ -66,6 +66,7 @@
 			var option = "${vo.option}";
 			var commentStatus = "${vo.commentStatus}";
 			var shareStatus = "${vo.shareStatus}";
+			var commentType = "totalComment";
 			
 			$(document).ready(function(){
 				getCircularComment();
@@ -80,6 +81,27 @@
 					}
 				});
 			});
+			
+			function swapTab(type) {
+		        if (type == 'totalComment') {
+		        	//전체의견 가져오면서
+		        	$("#tab1").attr("class", "on");
+		        	$("#tab2").attr("class", "off");
+		        	
+		        	commentType = type;
+		        	
+		        	getCircularComment();
+		        } else if (type == 'myComment') {
+		        	//내게 달린 의견 및 공유된 의견
+		        	//앞쪽 아이콘 삭제하고 작성자 내용 작성일
+		        	$("#tab2").attr("class", "on");
+		        	$("#tab1").attr("class", "off");
+		        	
+		        	commentType = type;
+		        	
+		        	getCircularComment();
+		        }
+		    }
 		</script>
 		
 	</head>
@@ -112,7 +134,14 @@
 				</tr>			
 			</table>
 			
-			<table id="circularUserList" style="width:99.5%;margin-top:15px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+			<div id="tabnav" style="width:99%; margin-top:15px;">
+				<ul class="on">
+					<li id="tab1" class="on"><span onclick="swapTab('totalComment')">전체의견</span></li>
+					<li id="tab2" class="off"><span onclick="swapTab('myComment')">나의의견</span></li>
+				</ul>
+			</div>
+			
+			<table id="circularUserList" style="width:99.5%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 		</div>
 		
 		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">			
