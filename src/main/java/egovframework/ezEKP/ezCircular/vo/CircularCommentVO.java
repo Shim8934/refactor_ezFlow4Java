@@ -19,6 +19,8 @@ public class CircularCommentVO {
 	String regDate;
 	/** 확인일 */
 	String confirmDate;
+	/** 확인상태 */
+	int confirmStatus;
 	/** 댓글상태 */
 	int status;
 	/** 테넌트ID */
@@ -80,6 +82,12 @@ public class CircularCommentVO {
 	}
 	public void setConfirmDate(String confirmDate) {
 		this.confirmDate = confirmDate;
+	}
+	public int getConfirmStatus() {
+		return confirmStatus;
+	}
+	public void setConfirmStatus(int confirmStatus) {
+		this.confirmStatus = confirmStatus;
 	}
 	public int getStatus() {
 		return status;

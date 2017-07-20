@@ -1588,7 +1588,7 @@
 		]]>
 	</select>
 
-	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO">
+	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO" remapResults="true">
 		<isEqual property="commentType" compareValue="totalComment">
 			<![CDATA[
 				SELECT
@@ -1621,6 +1621,7 @@
 					A.membername,
 					DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
 					A.status,
+					B.status AS confirmStatus,
 					A.tenantid
 				FROM
 					TBL_CIRCULAR_COMMENT A
@@ -1636,6 +1637,9 @@
 					B.memberid = #circularUserID#
 				AND
 					A.tenantid = #tenantID#
+				ORDER BY
+					B.status ASC,
+					A.regdate DESC
 			]]>
 		</isEqual>
 	</select>

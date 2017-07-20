@@ -1675,7 +1675,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람판 리스트 삭제 실행 Method
+	 * 회람판 휴지통 회람 리스트 삭제 실행 Method
 	 */
 	@RequestMapping(value = "/ezCircular/deleteCircularList.do")
 	public String deleteCircularList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
@@ -1693,7 +1693,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람판 삭제 실행 Method
+	 * 회람판 휴지통 회람 삭제 실행 Method
 	 */
 	@RequestMapping(value = "/ezCircular/deleteCircular.do")
 	public String deleteCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
