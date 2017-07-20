@@ -260,7 +260,7 @@ public class EzOrganController {
 		result = result.replaceAll("null", "");
 		
 		logger.debug("getSearchList ended.");
-		
+System.out.println("result : " + result);		
 		return result;
 	}
 	

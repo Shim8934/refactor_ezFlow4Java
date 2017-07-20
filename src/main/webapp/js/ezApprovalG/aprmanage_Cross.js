@@ -571,8 +571,12 @@ function getAprLine(tr) {
 //      닷넷에서는 2가지 값만 보내서 controller 에서 노드(0),노드(1) 로 빼서 사용해서  mode로 통일
     	pMode = "TMP";
     } else if (pListTypeValue == "10" || pListTypeValue == "99") {
-    	pDocID = GetAttribute(tr, "DATA2");
-    	pMode = "END";
+    	if (approvalFlag == "S") {
+    		pDocID = GetAttribute(tr, "DATA2");
+    		pMode = "END";
+    	} else {
+    		pMode = "APR";
+    	}
     } else {
     	pMode = "APR";
     }
@@ -1654,7 +1658,7 @@ function setbuttonenable() {
         document.getElementById("tbtnApproveALL").style.display = "none";
     }
 
-    if (pListTypeValue == "3" || pListTypeValue == "2" || pListTypeValue == "8" || pListTypeValue == "10")
+    if (pListTypeValue == "8" || pListTypeValue == "10")
         document.getElementById("tbar1").style.display = "none";
     else
         document.getElementById("tbar1").style.display = "";
@@ -1935,8 +1939,30 @@ function setbuttonenable() {
 	    if (pListTypeValue == "4") {
 	        document.getElementById("tbtnReturn").style.display = "none";
 	        document.getElementById("tbtnViewDoc").style.display = "none";
+	        document.getElementById("tbtnReceipt").style.display = "";
+	    }
+	    if (pListTypeValue == "10") {
+	    	document.getElementById("tbtnRegUserCont").style.display = "";
+	    } else {
+	    	document.getElementById("tbtnRegUserCont").style.display = "none";
+	    }
+	    if (pListTypeValue == "3") {
+            document.getElementById("tbtnDraft").style.display = "";   
+	    }
+	    if (pListTypeValue == "2") {
+            document.getElementById("tbtnDraft").style.display = "";      
+	    }
+	    
+	    if (pListTypeValue == "99" ) {
+	        document.getElementById("tbtnGongRam").style.display = "";      
 	    }
     }
+    
+    if (pListTypeValue != "21" ) {
+        document.getElementById("tbtnTotalSave").style.display = "";      
+    }
+    
+    document.getElementById("tSearchCondi").style.display = ""; 
     return true;
 }
 

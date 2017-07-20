@@ -347,10 +347,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommunity/goAdminOk.do")
 	@ResponseBody
-	public String goAdminOk(@RequestBody String data, @CookieValue("loginCookie") String loginCookie, CommunityClubVO communityClubVO) throws Exception {
+	public String goAdminOk(@CookieValue("loginCookie") String loginCookie, CommunityClubVO communityClubVO, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		StringBuilder resultXML = new StringBuilder();
-		
+		String data = request.getParameter("code");
 		String masterXML = ezCommunityService.goAdminOkGet2(data, userInfo);
 		
 		resultXML.append("<COMMUNITY>");

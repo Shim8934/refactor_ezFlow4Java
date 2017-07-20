@@ -76,7 +76,7 @@
          if (document.getElementsByName("rdoRecRole")[0].checked) {
         	 $('#txtKeyword').prop("disabled",true);
         	 $('.listview').prop("disabled",true);
-        	 
+        	 $('#trRecUserRole').css("display","none");
 //          document.getElementById("DataLayout").disabled = true;
             document.getElementById("OrganListView").disabled = true;
 //          document.getElementById("DataLayout").style.display = true;
@@ -86,6 +86,7 @@
         else if (document.getElementsByName("rdoRecRole")[1].checked) {
         	$('#txtKeyword').prop("disabled","");
         	$('.listview').prop("disabled","");
+        	$('#trRecUserRole').css("display","");
             document.getElementById("DataLayout").style.display = "";
             document.getElementById("DataLayout").disabled = "";
         }
@@ -538,7 +539,7 @@
 						onClick="return AddUser_onclick()"><a><img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()"></a></td>
 
 		<td style="width:200px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1167'/></h2>
-		<div class="listview" id ="listview" >
+		<div class="listview">
 		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 237px; WIDTH: 230px;margin:1px 1px 1px 1px;"></div>
 		</div></td>
 	</tr>

@@ -1,3 +1,9 @@
+-- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
+--
+-- Host: 10.0.102.8    Database: jmocha
+-- ------------------------------------------------------
+-- Server version	5.5.51-MariaDB-wsrep
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -64,7 +70,7 @@ DROP TABLE IF EXISTS `james_mail_blob`;
 CREATE TABLE `james_mail_blob` (
   `MAIL_BLOB_ID` bigint(20) NOT NULL,
   `MAIL_BYTES` longblob NOT NULL,
-  `MAIL_BODY_STRUCTURE` varchar(4000) DEFAULT NULL,
+  `MAIL_BODY_STRUCTURE` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
   `HEADER_BYTES` mediumblob NOT NULL,
   `MAILBOX_ID` bigint(20) DEFAULT NULL,
   `MAIL_UID` bigint(20) DEFAULT NULL,
@@ -807,9 +813,15 @@ CREATE TABLE `jmocha_stat_mail_log` (
   `SENDER` varchar(100) DEFAULT NULL,
   `RECIPIENT` varchar(100) DEFAULT NULL,
   `TOTALBYTES` int(11) DEFAULT NULL,
-  `MESSAGEID` varchar(200) DEFAULT NULL,
-  `MESSAGESUBJECT` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`IDX`)
+  `MESSAGEID` varchar(500) DEFAULT NULL,
+  `MESSAGESUBJECT` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `SENDER_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `RECIPIENT_NAME` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `ATTACHED_FILENAME` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
+  PRIMARY KEY (`IDX`),
+  KEY `IDX_TENANT_ID` (`TENANT_ID`),
+  KEY `IDX_LOG_DATE` (`LOG_DATE`),
+  KEY `IDX_EVENT_TYPE` (`EVENT_TYPE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1129,8 +1141,7 @@ CREATE TABLE `road_name_add_info` (
   `건축물대장건물명` varchar(40) DEFAULT NULL,
   `시군구건물명` varchar(200) DEFAULT NULL,
   `공동주택여부` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`관리번호`),
-  CONSTRAINT `부가정보_FK` FOREIGN KEY (`관리번호`) REFERENCES `road_name_address_info` (`관리번호`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`관리번호`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1192,8 +1203,7 @@ CREATE TABLE `road_name_address_info` (
   `변경전도로명주소` varchar(25) DEFAULT NULL,
   `상세주소부여여부` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`관리번호`),
-  KEY `FK_idx` (`도로명코드`,`읍면동일련번호`),
-  CONSTRAINT `주소정보_FK` FOREIGN KEY (`도로명코드`, `읍면동일련번호`) REFERENCES `road_name_code` (`도로명코드`, `읍면동일련번호`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `index` (`도로명코드`,`읍면동일련번호`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1313,8 +1323,7 @@ CREATE TABLE `road_name_jibun_info` (
   `지번본번` int(11) DEFAULT NULL,
   `지번부번` int(11) DEFAULT NULL,
   `대표여부` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`관리번호`,`일련번호`),
-  CONSTRAINT `지번정보_FK` FOREIGN KEY (`관리번호`) REFERENCES `road_name_address_info` (`관리번호`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`관리번호`,`일련번호`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2799,17 +2808,17 @@ DROP TABLE IF EXISTS `tbl_circular_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_circular_comment` (
+  `circularId` bigint(10) NOT NULL,
   `circularCommentId` bigint(10) NOT NULL AUTO_INCREMENT,
-  `circularUserId` bigint(10) DEFAULT NULL,
-  `circularComment` varchar(500) DEFAULT NULL,
+  `circularUserId` varchar(100) DEFAULT NULL,
+  `circularComment` text,
   `memberId` varchar(100) DEFAULT NULL,
   `memberName` varchar(100) DEFAULT NULL,
   `memberName2` varchar(100) DEFAULT NULL,
   `regDate` varchar(40) DEFAULT NULL,
   `status` mediumint(5) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
-  PRIMARY KEY (`circularCommentId`),
-  KEY `tenantId_memberId_circularUserId_index` (`tenantId`,`memberId`,`circularUserId`)
+  `tenantId` mediumint(5) NOT NULL,
+  PRIMARY KEY (`circularCommentId`,`circularId`,`tenantId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2852,6 +2861,63 @@ CREATE TABLE `tbl_circular_file` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_circular_folder`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_folder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_folder` (
+  `circularFolderId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularFolderName` varchar(100) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `regDate` varchar(40) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularFolderId`),
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_link`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_link`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_link` (
+  `circularLinkId` bigint(10) NOT NULL AUTO_INCREMENT,
+  `circularFolderId` bigint(10) DEFAULT NULL,
+  `circularId` bigint(10) DEFAULT NULL,
+  `memberId` varchar(100) DEFAULT NULL,
+  `tenantId` mediumint(5) DEFAULT NULL,
+  PRIMARY KEY (`circularLinkId`),
+  KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_circular_listoption`
+--
+
+DROP TABLE IF EXISTS `tbl_circular_listoption`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_circular_listoption` (
+  `LISTTYPE` varchar(4) NOT NULL,
+  `SN` bigint(10) NOT NULL,
+  `NAME1` varchar(200) DEFAULT NULL,
+  `NAME2` varchar(200) DEFAULT NULL,
+  `NAME3` varchar(200) DEFAULT NULL,
+  `NAME4` varchar(200) DEFAULT NULL,
+  `COLNAME` varchar(200) NOT NULL,
+  `WIDTH` bigint(10) NOT NULL,
+  `TENANTID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANTID`,`LISTTYPE`,`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_circular_option`
 --
 
@@ -2861,7 +2927,6 @@ DROP TABLE IF EXISTS `tbl_circular_option`;
 CREATE TABLE `tbl_circular_option` (
   `circularOptionId` bigint(10) NOT NULL AUTO_INCREMENT,
   `memberId` varchar(100) DEFAULT NULL,
-  `isMailReceive` mediumint(5) DEFAULT NULL,
   `listCnt` mediumint(5) DEFAULT NULL,
   `isPreview` mediumint(5) DEFAULT NULL,
   `previewListValue` varchar(10) DEFAULT NULL,
@@ -2885,9 +2950,13 @@ CREATE TABLE `tbl_circular_user` (
   `memberId` varchar(100) DEFAULT NULL,
   `memberName` varchar(100) DEFAULT NULL,
   `memberName2` varchar(100) DEFAULT NULL,
-  `status` mediumint(5) DEFAULT NULL,
+  `status` mediumint(5) DEFAULT '0',
   `confirmDate` varchar(40) DEFAULT NULL,
   `updateStatus` mediumint(5) DEFAULT NULL,
+  `updateDate` varchar(40) DEFAULT NULL,
+  `commentStatus` mediumint(5) DEFAULT '0',
+  `shareStatus` mediumint(5) DEFAULT '0',
+  `deleteStatus` mediumint(5) DEFAULT '0',
   `tenantId` mediumint(5) DEFAULT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
@@ -3328,6 +3397,23 @@ CREATE TABLE `tbl_dailyformcountlog` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(100) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`REGDATE`,`FORMID`,`FORMCONTID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_deletecabinetinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_deletecabinetinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_deletecabinetinfo` (
+  `CabinetID` varchar(28) NOT NULL,
+  `DelUserID` varchar(50) DEFAULT NULL,
+  `IPAddress` varchar(50) DEFAULT NULL,
+  `companyID` varchar(45) NOT NULL,
+  `tenantID` varchar(6) NOT NULL,
+  PRIMARY KEY (`CabinetID`,`tenantID`,`companyID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4525,6 +4611,25 @@ CREATE TABLE `tbl_menuitem_parameters` (
   `PARAMTYPE` bigint(10) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`UID_`,`PARAMNAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_mobileoption`
+--
+
+DROP TABLE IF EXISTS `tbl_mobileoption`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_mobileoption` (
+  `USERID` varchar(200) NOT NULL,
+  `TIMEZONE` varchar(40) NOT NULL,
+  `LANG` varchar(4) NOT NULL,
+  `MAINVIEWCOUNT` int(100) NOT NULL,
+  `RESOURCEYN` varchar(4) NOT NULL,
+  `RESOURCEDETAIL` varchar(8) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6769,7 +6874,7 @@ DROP TABLE IF EXISTS `tbl_tmpapropinioninfo`;
 CREATE TABLE `tbl_tmpapropinioninfo` (
   `OWNERID` varchar(255) NOT NULL,
   `SN` bigint(10) NOT NULL,
-  `USERID` varchar(400) DEFAULT NULL,
+  `USERID` varchar(100) NOT NULL,
   `OPINIONGB` varchar(12) DEFAULT NULL,
   `CONTENT` longtext,
   `USERNAME` varchar(200) DEFAULT NULL,
@@ -6782,7 +6887,9 @@ CREATE TABLE `tbl_tmpapropinioninfo` (
   `USERDEPTNAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`OPINIONSN`)
+
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`,`USERID`,`OPINIONSN`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7415,3 +7522,5 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-07-03 18:50:32

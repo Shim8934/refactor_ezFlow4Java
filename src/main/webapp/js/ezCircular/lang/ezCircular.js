@@ -1,1 +1,16 @@
-﻿var strLang1 = "삭제에 실패하였습니다."
+﻿var strLang1 = "삭제에 실패하였습니다.";
+var strLang2 = "굴림";
+var strLang3 = "의견작성";
+var strLang4 = "비공개";
+var strLang5 = "의견을 입력해 주세요";
+var strLang6 = "의견을 삭제했습니다.";
+var strLang7 = "공지 메일을 발송했습니다.";
+var strLang8 = "진행중";
+var strLang9 = "종료";
+var strLang10 = "임시";
+var strLang11 = "공유자를 선택해주세요.";
+var strLang12 = "공유자를 지정하였습니다.";
+var strLang13 = "공유자를 지정하시겠습니까?";
+var strLang14 = "공유자를 지정 중 오류가 발생했습니다.";
+var strLang15 = "의견을 확인하시겠습니까?";
+var strLang16 = "의견확인 중 오류가 발생했습니다.";

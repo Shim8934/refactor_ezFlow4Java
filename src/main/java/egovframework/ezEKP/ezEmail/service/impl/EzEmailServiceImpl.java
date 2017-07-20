@@ -4,23 +4,35 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.mail.FetchProfile;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
+import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.search.AndTerm;
+import javax.mail.search.DateTerm;
+import javax.mail.search.ReceivedDateTerm;
+import javax.mail.search.SearchTerm;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,6 +56,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
@@ -386,7 +399,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		
         		MailDeleteVO mailDeleteVO = new MailDeleteVO();
         		
-        		mailDeleteVO.setUserId(((String)obj.get("userId")).split("@")[0]);
+        		mailDeleteVO.setUserEmail(((String)obj.get("userId")));
         		mailDeleteVO.setPath((String)obj.get("folderPath"));
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
@@ -1116,6 +1129,7 @@ public class EzEmailServiceImpl implements EzEmailService {
             int attachIDPos3 = url.indexOf("&contentId=");
 			
             String mailbox = url.substring(attachIDPos1, attachIDPos2);
+            mailbox = URLDecoder.decode(mailbox, "utf-8");
             String uidStr = url.substring(attachIDPos2 + 5, attachIDPos3);
             String contentId = url.substring(attachIDPos3 + 11);
             contentId = URLDecoder.decode(contentId, "utf-8");
@@ -1289,6 +1303,184 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getAliasAddress ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		
 		return aliasAddressList;		
+	}
+
+	@Override
+	public List<Map<String, String>> getMailListT(LoginVO userInfo, String password, String dateTime, int count)
+			throws Exception {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, userInfo.getLocale(), 40*1000, 20*1000);
+		
+			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));		
+			folder.open(Folder.READ_ONLY);
+	        UIDFolder uidFolder = (UIDFolder)folder;
+	        
+	        SearchTerm term = new ReceivedDateTerm(DateTerm.LT, sdf.parse(dateTime));
+	        Message[] messages = folder.search(term);
+	        
+	        // sort the messages
+ 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
+	        
+ 			// set mailCount
+ 			int unreadCount = ia.getUnreadCount(egovMessageSource.getMessage("ezEmail.lhm01", userInfo.getLocale()));
+ 			if (unreadCount < count) {
+ 				count = unreadCount;
+ 			}
+ 			
+ 			messages = Arrays.copyOfRange(messages, 0, count);
+ 			
+	        // pre-fetch
+	        FetchProfile fp = new FetchProfile();
+	        fp.add(UIDFolder.FetchProfileItem.UID);
+	        fp.add(FetchProfile.Item.ENVELOPE);
+	        folder.fetch(messages, fp);
+	        
+	        for (int i=0; i<messages.length; i++) {
+	        	Message message = messages[i];
+	        	
+	        	Date receivedDate = message.getReceivedDate();
+	        	String receivedDateStr = sdf.format(receivedDate);
+	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+	        	
+	        	String subject = ezEmailUtil.getSubject(message);
+				subject = (subject != null) ? subject : "";
+	        	
+	        	Map<String, String> map = new HashMap<String, String>();
+	        	map.put("subject", subject);
+	        	map.put("sender", ezEmailUtil.getFromNameOrAddressOfMessage(message));
+	        	map.put("receivedDate", receivedDateStr);
+	        	map.put("uid", String.valueOf(uidFolder.getUID(message)));
+	        	
+	        	list.add(map);
+	        }
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		return list;
+	}
+	
+	@Override
+	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception {
+		logger.debug("getDistributionList started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionList";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("distributionName"));
+						vo.setId((String)obj.get("distributionId"));
+						vo.setMail((String)obj.get("distributionMail"));
+						
+						distributionList.add(vo);
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getDistributionList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
+	}
+	
+	@Override
+	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception {
+		logger.debug("getDistributionSearchList started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+				
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchList";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("distributionName"));
+						vo.setId((String)obj.get("distributionId"));
+						vo.setMail((String)obj.get("distributionMail"));
+						
+						distributionList.add(vo);
+					}
+				}
+			}
+		}
+		
+		logger.debug("getDistributionSearchList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
 	}
 	
 }

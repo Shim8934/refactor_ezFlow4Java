@@ -451,7 +451,7 @@ function ListView() {
         var objTr = document.createElement("TR");
         objTr.id = _thisID + "_TH";
 
-        var oHeaders = _dataSource.getElementsByTagName("HEADER");        
+        var oHeaders = _dataSource.getElementsByTagName("HEADER");
         
 
         var Chkbox = false;
@@ -524,11 +524,16 @@ function ListView() {
                 }
 
                 if (strColName == "TITLE") {
-                    objTd.style.width = "50%";
+                    objTd.style.width = "70%";
+                }
+                
+                if (strColName == "MEMBERNAME") {
+                    objTd.style.textAlign = "CENTER";
                 }
                 
                 if (strColName == "WRITEDATE") {
                 	objTd.width = "120px";
+                	objTd.style.textAlign = "CENTER";
                 }
                 
                 if (strColName == "ITEMID") {
@@ -548,9 +553,6 @@ function ListView() {
                     objTd.setAttribute("writerindex", i);
                 }
 
-                /*if (strColName == "ATTACHMENTS" || strColName == "READCOUNT") {
-                    objTd.style.textAlign = "CENTER";
-                }*/
                 if (strColName == "HASFILE") {
                     var _HeaderSpanimg = document.createElement("IMG");
                     _HeaderSpanimg.setAttribute("src", "/images/newAttach.gif");
@@ -569,11 +571,43 @@ function ListView() {
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
                 }
-                if (strColName == "STATUS") {
-                    objTd.style.textAlign = "CENTER";
+                if (strColName == "CONFIRMFLAG") {
+                	var _HeaderSpanimg = document.createElement("IMG");
+//                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-unrd.gif");
+                    _HeaderSpanimg.border = "0";
+                   	objTd.style.textAlign = "CENTER";
+                    
+                    _HeaderSpanimg.setAttribute("align", "absmiddle");
+                    objTd.appendChild(_HeaderSpanimg);
+                    
+                    objTd.style.textAlign = "center";
                 }
+                if (strColName == "STATUS") {
+                   	objTd.style.textAlign = "CENTER";
+                }
+                
+                if (strColName == "UPDATESTATUS") {
+        			var _HeaderSpanimg = document.createElement("IMG");
+        			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.gif");
+        			
+        			_HeaderSpanimg.border = "0";
+    				objTd.style.textAlign = "CENTER";
+                  
+					_HeaderSpanimg.setAttribute("align", "absmiddle");
+					objTd.appendChild(_HeaderSpanimg);
+                }
+                
+                if (strColName == "CONFIRMDATE") {
+                	objTd.style.textAlign = "CENTER";
+                }
+                
                 if (strColName == "CONFIRMSTATUS") {
-                    objTd.style.textAlign = "CENTER";
+                	objTd.style.textAlign = "CENTER";
+                }
+                
+                if (strColName == "REGDATE") {
+                	objTd.style.textAlign = "CENTER";
                 }
 
                 var oText = document.createTextNode(strName);
@@ -588,9 +622,6 @@ function ListView() {
 
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
-                }
-                if (strColName.toUpperCase() == "BOARDNAME") {
-                	objTd.style.width = "100px";
                 }
 
                 objTr.appendChild(objTd);
@@ -669,7 +700,7 @@ function ListView() {
             }
             else {
                 objTr.setAttribute("selected", "false");
-                objTr.className = "";
+                objTr.className = "circularTR";
                 objTr.style.backgroundColor = m_strColorDefault;
             }
 
@@ -704,42 +735,20 @@ function ListView() {
                     objTd.style.color = "RED";
                 }
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
-                    objTd.style.padding = "0";
+                    objTd.style.padding = "8px 4px";
                     objTd.style.margin = "0";
                     objTd.style.width = "80%";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-                    for (var k = 1; k < parseInt(getNodeText(oDatas[7])) ; k++)
-                    {
-                        titleImage = titleImage + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                        
-                        if (k == parseInt(getNodeText(oDatas[7])) - 1)
-                            titleImage = titleImage + "<img src='/images/i_rep.gif'>&nbsp;";
-                    }
-                    if (getNodeText(oDatas[3]) == "1") {
-                        titleImage = titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
-                    }
-                    if (getNodeText(oDatas[8]) == "1") {
-                        titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
-                        objTd.style.fontWeight = "BOLD";
-                    }
-                    if (getNodeText(oDatas[6]) == "Y") {
-                        titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
-                    }
-                    if (getNodeText(oDatas[4]) == "0") 
-                        objTd.style.fontWeight = "BOLD";
-
-                    if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
-                        titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
+//                    새글 new 주석처리
+//                    if (getNodeText(oDatas[2]) == "1") {
+//                    	titleImage = "&nbsp;&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
+//                    } 
                 }
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "BOARDNAME") {
-                    objTd.style.textAlign = "left";
-                    objTd.style.overflow = "hidden";
-                    objTd.style.whiteSpace = "nowrap";
-                    objTd.style.textOverflow = "ellipsis";
-                } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
+                
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
@@ -777,42 +786,81 @@ function ListView() {
                         strValue = "";
                 }
                 
+                //의견상태
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "UPDATESTATUS") {
+                    objTd.style.textAlign = "center";
+                    objTd.style.fontWeight = "bold";
+                    
+                    /*if (strValue == "comment" || strValue == "share") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_opinion.gif"/>';
+                    	strValue = "";
+                    } else if(strValue == "new") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_new.gif"/>';
+                    	strValue = "";
+                    }*/
+                    if (strValue == "comment" || strValue == "share") {
+                    	titleImage = '<img src="/images/ImgIcon/circular_share2.gif"/>';
+                    	strValue = "";
+                    } else if(strValue == "new") {
+                    	strValue = "";
+                    }
+                }
+                
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "MEMBERNAME") {
+                    objTd.style.textAlign = "CENTER";
+                }
+                
+                //본인확인
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMFLAG") {
+                    objTd.style.textAlign = "center";
+                    if (strValue == '0') {
+//                    	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-unrd.gif" />';
+                    	strValue = "";
+                    } else {
+//                    	titleImage = '<img src="/images/ImgIcon/circular_read.gif" />';
+                    	titleImage = '<img src="/images/ImgIcon/msg-rd.gif" />';
+                    	strValue = "";
+                    }
+                }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "STATUS") {
                     objTd.style.textAlign = "center";
+                    
+                    if (strValue == "0") {
+                    	strValue = strLang8;
+                    } else if (strValue == "1") {
+                    	strValue = strLang9;
+                    } else {
+                    	strValue = strLang10;
+                    }
+                }
+                
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "REGDATE") {
+                	objTd.style.textAlign = "center";
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMSTATUS") {
                     objTd.style.textAlign = "center";
                 }
-
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "APPRFLAG") {
-                    objTd.style.textAlign = "center";
-                    if (strValue == "Y") {
-                        strValue = strLang60;
-                    }
-                    else if (strValue == "N") {
-                        strValue = strLang61;
-                    }
-                    else if (strValue == "C") {
-                        strValue = strLang62;
-                    }
-                    else
-                        strValue = "";
+                
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMDATE") {
+                	objTd.style.textAlign = "center";
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT") {
                     objTd.style.textAlign = "center";
                 }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
-                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[1]) + ";";
+                    _TDCheckBox_Sub.id = strValue;
 					_TDCheckBox_Sub.setAttribute("style", "width: 13px; height: 13px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle");
 					
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
                     objTd.appendChild(_TDCheckBox_Sub);
-                }
-                else {
+                } else {
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {
                         if (getNodeText(oDatas[10]) != "0")
                             objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
@@ -821,9 +869,9 @@ function ListView() {
                     }
                     else {
                         if (getNodeText(oDatas[10]) != "0"){
-                            objTd.innerHTML = titleImage + MakeXMLString(strValue) + " " + titleOneLineCnt;
+                            objTd.innerHTML = MakeXMLString(strValue) + titleImage + " " + titleOneLineCnt;
                         }else{
-                        	objTd.innerHTML = titleImage + MakeXMLString(strValue);
+                        	objTd.innerHTML = MakeXMLString(strValue) + titleImage;
                         }
                     }
                 }
@@ -1339,7 +1387,6 @@ function tr_unselectedAll(pTableID) {
 }
 
 function event_HeaderCheckBoxClick(obj) {
-
     var SelList = new ListView();
     SelList.LoadFromID("BoardList");
 
@@ -1347,7 +1394,7 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id + ";";
         }
     }
     else {

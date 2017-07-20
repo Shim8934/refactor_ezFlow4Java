@@ -45,6 +45,21 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGDAO")
 public class EzApprovalGDAO extends EgovAbstractDAO {
+	
+	// 캐비닛 문서 정보 삭제
+	public void deleteCabInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.deleteCabInfo", map);
+	}
+	
+	// 캐비닛 문서 정보 삭제 후 로그 추가
+	public void insertDelCabInfo(Map<String, Object> map) {
+		insert("EzApprovalG.insertDelCabInfo", map);
+	}
+	
+	// 캐비닛 문서 삭제 전 진행중문서 확인
+	public String selectExpCabDocInfo(Map<String, Object> map){
+		return (String) select("EzApprovalG.selectExpCabDocInfo", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<ApprGListHeaderVO> getListHeader(Map<String, Object> map) throws Exception{
@@ -602,7 +617,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	public ApprGLineTempletVO gongRamActivateLineInfo(Map<String, Object> map) throws Exception{
-		return (ApprGLineTempletVO) list("EzApprovalG.gongRamActivateLineInfo", map);
+		return (ApprGLineTempletVO) select("EzApprovalG.gongRamActivateLineInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1213,6 +1228,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int getSearchDocListCountS(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getSearchDocListCountS", map);
+	}
+	
+	public int gongRamActivateCount2(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.gongRamActivateCount2", map);
 	}
 	
 	public String getUserContMaxID(Map<String, Object> map) throws Exception{
@@ -2639,5 +2658,29 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public String getCircularDocID(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getCircularDocID", map);
+	}
+
+	public String getLastDocDate(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getLastDocDate", map);
+	}
+	
+	public void resetSerialNo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.resetSerialNo", map);
+	}
+
+	public ApprGDocListVO setcabinetHesong(Map<String, Object> map) throws Exception {
+		return (ApprGDocListVO) select("EzApprovalG.setcabinetHesong", map);
+	}
+
+	public void updateResetDoc(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateResetDoc", map);
+	}
+
+	public void updateGongRamDocSate(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateGongRamDocSate", map);
+	}
+
+	public void updateProAprDocInfo(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateProAprDocInfo", map);
 	}
 }

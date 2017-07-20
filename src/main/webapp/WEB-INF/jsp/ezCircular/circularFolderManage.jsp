@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>회람문서함 관리</title>
+		<title><spring:message code='ezCircular.t9'/></title>
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
@@ -29,12 +29,7 @@
 		        else
 		            return true;
 		    };
-		    
-		    window.onunload = function () {
-		        if(ReturnFunction != null)
-			        ReturnFunction(EventCheck);
-			}
-		    
+
 			var ReturnFunction;
 			window.onload = function () {
 			    CurrentHeight = document.body.clientHeight;
@@ -76,7 +71,7 @@
             
 		    function modify_onclick() {
 		        if (PostTreeView.selectedIndex() == -1) {
-		            alert("<spring:message code='ezEmail.t158' />");
+		            alert("<spring:message code='ezCircular.t103' />");
 		            return;
 		        }
 		        
@@ -90,18 +85,49 @@
 		    
 		    function onclick_Complete(szName) {
 		    	DivPopUpHidden();
-		        location.reload();
+		    	opener.LoadEmailTree();
+		    	
+		    	$.ajax({
+            		type : "POST",
+            		url : "/ezCircular/getCircularFolderList.do",
+            		async : false,
+            		dataType : "json",
+            		data : {},
+            		success : function(result) {
+            			$("#PostTreeView").html("");
+	            		
+            			PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
+                        
+                        var xmlHTTP = createXMLHttpRequest();
+                        xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false);
+                        xmlHTTP.send();
+                        
+                        var treeconfig;
+                        
+                        if (CrossYN()) {
+                            treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
+                        }
+                        else
+                            treeconfig = xmlHTTP.responseXML;
+
+                        PostTreeView.config(treeconfig);
+                        PostTreeView.source("<tree><nodes>" + get_childXML("", true, false) + "</nodes></tree>");
+                        PostTreeView.update();
+            		}
+	        	});
 		    }
 		    
 		    function delete_onclick() {
+		    	var deleteFolder = "";
+		    	
 		    	if (PostTreeView.selectedIndex() == -1) {
-		            alert("<spring:message code='ezEmail.t158' />");
+		            alert("<spring:message code='ezCircular.t103' />");
 		            return;
 		        }
-		    	
-		        var deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
 
-				if (confirm("삭제하시겠습니까?")) {
+		        deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+
+				if (confirm("<spring:message code='ezCircular.t46' />")) {
 					$.ajax({
 						method : "POST",
 						dataType : "text",
@@ -111,28 +137,32 @@
 							deleteFolder : deleteFolder 
 						},
 						success : function() {
-							alert("삭제하였습니다.");
-							location.reload();
+							alert("<spring:message code='ezCircular.t45' />");
+							onclick_Complete();
 						},
 						error : function() {
-							alert("에러발생");
+							alert("<spring:message code='ezCircular.t102' />");
 						}
 					})
 				}
 		    }
+		    
+		    function close_onclick() {
+		    	window.close();
+		    }
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1 style="margin-bottom:0px;">회람문서함 관리</h1>
+		<h1 style="margin-bottom:0px;"><spring:message code='ezCircular.t9' /></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close()">닫기</span></li>
+		    <li><span onClick="close_onclick()"><spring:message code='ezCircular.t84' /></span></li>
 		  </ul>
 		</div>
 		<div style="margin-bottom:5px;">
-		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;">추가</span></a>
-		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;">수정</span></a>
-		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;">삭제</span></a>
+		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezCircular.t77' /></span></a>
+		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezCircular.t29' /></span></a>
+		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezCircular.t30' /></span></a>
 		</div>
 		<table class="popuplist" style="width:100%">
 		  <tr>

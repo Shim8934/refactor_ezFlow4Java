@@ -122,12 +122,14 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/portalMain.do")
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain Start");
+				
+		userInfo = commonUtil.userInfo(loginCookie);
 		
-        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")
+        		|| commonUtil.getPackageType(userInfo.getTenantId()).equals(CommonUtil.PT_BASIC)) {
             return "redirect:/ezEmail/mailAloneMain.do";
         }
 		
-		userInfo = commonUtil.userInfo(loginCookie);
 		String pageID = "";
 		String skinID = "1";
 		String mainUrl = "";
@@ -3106,9 +3108,17 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("help started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		String pakageType = "";
+		
+		if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_BASIC)) {
+			pakageType = commonUtil.PT_BASIC;
+		} else if (commonUtil.getPackageType(userInfo.getTenantId()).equals(commonUtil.PT_STANDARD)) {
+			pakageType = commonUtil.PT_STANDARD;
+		}
 		
 		model.addAttribute("lang", userInfo.getLang());
-
+		model.addAttribute("pakageType", pakageType);
+		
 		logger.debug("help ended");
 		return "/ezPortal/help/help";
 	}

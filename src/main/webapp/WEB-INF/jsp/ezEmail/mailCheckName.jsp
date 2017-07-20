@@ -205,14 +205,59 @@
 		    }
 			function delete_onClick()
 		    {
-			    if (ReturnFunction!=null) {
-			        Arguments["recipientTDData"] = "delete";
-			        ReturnFunction(Arguments);
-			    }
-			    else {
-			        dialogArguments["recipientTDData"] = "delete";
-			        window.close();
-			    }
+				var count1;
+		        var selectedItemCount;
+		        var selRow;
+
+		        var pListViewDL = new ListView();
+		        pListViewDL.LoadFromID("DLList");
+
+		        var arrRows = pListViewDL.GetSelectedRows();
+
+		        var listCount = arrRows.length;
+
+		        if (listCount == 0) {
+		            cancel_onClick();
+		            return;
+		        }
+		        if (ReturnFunction != null) {
+		            Arguments["recipientTDData"] = "delete";
+		            Arguments["returnedRecipientType"] = new Array();
+		            Arguments["returnedRecipientName"] = new Array();
+		            Arguments["returnedRecipientEmail"] = new Array();
+		            Arguments["returnedRecipientHref"] = new Array();
+		        }
+		        else {
+		            dialogArguments["recipientTDData"] = "delete";
+		            dialogArguments["returnedRecipientType"] = new Array();
+		            dialogArguments["returnedRecipientName"] = new Array();
+		            dialogArguments["returnedRecipientEmail"] = new Array();
+		            dialogArguments["returnedRecipientHref"] = new Array();
+		        }
+		        var emailExistsCnt = 0;
+		        for (count1 = 0; count1 < listCount; count1++) {
+		            var isexists = GetAttribute(arrRows[count1], "data2") != "" && GetAttribute(arrRows[count1], "data2").lastIndexOf("@") > 1 || trim(GetAttribute(arrRows[count1], "data3")) == "mailgroup";
+		            if (isexists) {
+		                if (ReturnFunction != null) {
+		                    Arguments["returnedRecipientType"][emailExistsCnt] = GetAttribute(arrRows[count1], "data3");
+		                    Arguments["returnedRecipientName"][emailExistsCnt] = GetAttribute(arrRows[count1], "data1");
+		                    Arguments["returnedRecipientEmail"][emailExistsCnt] = GetAttribute(arrRows[count1], "data2");
+		                    Arguments["returnedRecipientHref"][emailExistsCnt] = GetAttribute(arrRows[count1], "data4");
+		                }
+		                else {
+		                    dialogArguments["returnedRecipientType"][emailExistsCnt] = GetAttribute(arrRows[count1], "data3");
+		                    dialogArguments["returnedRecipientName"][emailExistsCnt] = GetAttribute(arrRows[count1], "data1");
+		                    dialogArguments["returnedRecipientEmail"][emailExistsCnt] = GetAttribute(arrRows[count1], "data2");
+		                    dialogArguments["returnedRecipientHref"][emailExistsCnt] = GetAttribute(arrRows[count1], "data4");
+		                }
+		                emailExistsCnt++;
+		            }
+		        }
+
+		        if (ReturnFunction != null)
+		            ReturnFunction(Arguments);
+		        else
+		            window.close();
 			}
 		
 			function cancel_onClick()
@@ -280,8 +325,7 @@
 		</xml> 
 	<h1><spring:message code='ezEmail.t331' /></h1>
 	<div class="txt"><spring:message code='ezEmail.t335' /><br>
-	      <spring:message code='ezEmail.t336' />
-	  <br><br>	  
+	  <br><br>
 	  ▒&nbsp;<spring:message code='ezEmail.t337' /><span class="point" id="unresolveName" style="padding-left:5px"><spring:message code='ezEmail.t338' /></span></div>
 	<div class="listview" style="height:200px;overflow:auto;margin-top:5px"><div id="ListViewid" STYLE="border:0px;"></div></div>
 	<div class="btnposition">

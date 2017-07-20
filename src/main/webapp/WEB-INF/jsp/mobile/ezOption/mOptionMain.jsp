@@ -36,6 +36,7 @@
                   	lang : $('input[name = radio-view]:checked').val(),
                   	dpBoardCnt: $('input[name = slider-2]').val(),
                   	resourceChk : resourceChk,
+                	resourceYN : $('input[name = radio-view2]:checked').val(),
                   	async: false
                   },
                   url: "/mobile/ezOption/saveOption.do",
@@ -185,8 +186,10 @@
 					</div>	
 					<div class="ui-corner-all custom-corners" data-position="fixed" >
 					  <div class="ui-bar ui-bar-a" >
-					    <h3>메인화면 게시물 표시</h3>
-						<a href="#popupInfo" data-rel="popup" data-transition="pop" class=" ui-btn-right ui-btn ui-alt-icon ui-shadow ui-icon-info ui-btn-icon-notext" title="Learn more">Learn more</a>
+						<div class="searchArea" id="searchArea">
+							<h3>메인화면 게시물 표시</h3>
+							<a href="#popupInfo" data-rel="popup" data-transition="pop" class=" ui-btn-right  ui-icon-info ui-shadow ui-corner-all ui-btn-icon-notext" title="Learn more">Learn more</a>														
+						</div> 
 							<div data-role="popup" id="popupInfo" class="ui-content" data-theme="a" style="max-width:350px;">
 	  							<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
 								<p>게시판의 갯수를 몇개 보여줄지 정함</p>
@@ -198,25 +201,31 @@
 					</div>
 					<div class="ui-corner-all custom-corners">
 					  <div class="ui-bar ui-bar-a">
-					    <h3>자원관리 설정</h3>
-						<a href="#popupInfo" data-rel="popup" data-transition="pop" class=" ui-btn-right ui-btn ui-alt-icon ui-shadow ui-icon-info ui-btn-icon-notext" title="Learn more">Learn more</a>
-							<div data-role="popup" id="popupInfo" class="ui-content" data-theme="a" style="max-width:350px;">
+						<div class="searchArea">
+							<h3>자원관리 설정</h3>
+							<a href="#popupInfo" data-rel="popup" data-transition="pop" class=" ui-btn-right  ui-icon-info ui-shadow ui-corner-all ui-btn-icon-notext" title="Learn more">Learn more</a>														
+						</div>    
+					  </div>
+					<div data-role="popup" id="popupInfo" class="ui-content" data-theme="a" style="max-width:350px;">
 	  							<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
 								<p>게시판의 갯수를 몇개 보여줄지 정함</p>
-							</div>
-					  </div>
-					  <div class="ui-body ui-body-a">
-						 <div data-role="fieldcontain">
-							<fieldset data-role="controlgroup" data-type="horizontal">
-							<input type="radio" name="radio-view2" id="radio-view-a1" value="basic"  onclick="javascript:addPlus('1');"/>
-							<label for="radio-view-a1">기본</label>
-							<input type="radio" name="radio-view2" id="radio-view-b1" value="setting" onclick="javascript:addPlus('2');" />
-							<label for="radio-view-b1">개인</label>
-							</fieldset>
-							<a href="#popupInfo2" data-rel="popup" data-transition="pop" class=" ui-btn-right ui-btn ui-alt-icon ui-shadow ui-icon-info ui-btn-icon-notext" title="Learn more">Learn more</a>
-						</div>
-							<div data-role="popup" id="popupInfo2" class="ui-content" data-theme="a" style="width:600px;">
-								<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
+					</div>
+					<div class="ui-body ui-body-a">
+						<fieldset class="ui-grid-a"> 
+							<div class="ui-block-a">
+								<fieldset data-role="controlgroup" data-type="horizontal">
+									<input type="radio" name="radio-view2" id="radio-view-a1" value="N"  onclick="javascript:addPlus('1');"/>
+									<label for="radio-view-a1">기본</label>
+									<input type="radio" name="radio-view2" id="radio-view-b1" value="Y" onclick="javascript:addPlus('2');" />
+									<label for="radio-view-b1">개인</label>
+								</fieldset>
+							</div> 
+							<div class="ui-block-b">
+								<a id="plus" href="#popupInfo2" data-rel="popup" data-transition="pop" class=" ui-btn ui-alt-icon ui-shadow ui-icon-plus ui-btn-icon-notext" title="Learn more">Learn more</a>
+							</div> 
+						</fieldset>
+						<div data-role="popup" id="popupInfo2" class="ui-content" data-theme="a" style="width:300px;">
+								<a href="#" data-position-to="#searchArea" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
 							<div data-role="header">
 							자원선택
 							</div>
@@ -234,6 +243,11 @@
 								</fieldset>
 						    </div>
 						    </div>
+<!-- 							<a href="#popupInfo2" data-rel="popup" data-transition="pop" class=" ui-btn-right ui-btn ui-alt-icon ui-shadow ui-icon-info ui-btn-icon-notext" title="Learn more">Learn more</a> -->
+<!-- 							<div data-role="popup" id="popupInfo2" class="ui-content" data-theme="a" style="width:600px;"> -->
+<!-- 								<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	 -->
+<!-- 		  					<p>게시판의 갯수를 몇개 보여줄지 정함</p> -->
+<!-- 						    </div> -->
 					 </div>
 					 </div>
 					<div>

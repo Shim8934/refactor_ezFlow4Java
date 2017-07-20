@@ -5,7 +5,11 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
  * @Description [Controller] 통계
@@ -25,16 +29,25 @@ public class EzStatisticsLeftMenuController {
     @Autowired
     private Properties config;
     
+	@Autowired
+	private CommonUtil commonUtil;
+    
 	/**
 	 * 통계 좌측 메뉴 화면 표시 함수
 	 */
 	@RequestMapping(value="/ezStatistics/statisticsLeftMenu.do")
-	public String statisticsLeftMenu(Model model) throws Exception {
+	public String statisticsLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 	    String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 	    String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 	    
 	    model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 	    model.addAttribute("use_approvalG", use_approvalG);
+	    
+        String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+        
+        model.addAttribute("packageType", packageType);
 	    
 		return "ezStatistics/statisticsLeftMenu";
 	}

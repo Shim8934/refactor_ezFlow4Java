@@ -59,7 +59,7 @@
 	            {}
 	            
 	            try {
-		        	$('#div_Content #body').css('overflow', 'auto');
+// 		        	$('#div_Content #body').css('overflow', 'auto');
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        } catch (e)
 		        { }
@@ -290,7 +290,7 @@
 	                    }
 	                    var CheckRows = document.getElementById('div_Content').getElementsByTagName("INPUT");
 	                    for (var i = 0; i < CheckRows.length; i++) {
-	                        if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
+	                        if (CheckRows.item(i).type == "checkbox")
 	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                    }
 	                    

@@ -150,7 +150,7 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(4)"><spring:message code='ezStatistics.t1023' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(5)"><spring:message code='ezStatistics.t1025' /></span></li>
 		    </ul>
-            <c:if test="${IsJMochaStandAlone != 'YES'}">
+            <c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
             <c:if test="${use_approvalG == 'YES'}">
             <h2><span id="APPROVAL" style="display:inline-block;width:100%;" onClick="menu_change('APPROVAL')" ><spring:message code='ezStatistics.t1030' /></span></h2>
 		    <ul>

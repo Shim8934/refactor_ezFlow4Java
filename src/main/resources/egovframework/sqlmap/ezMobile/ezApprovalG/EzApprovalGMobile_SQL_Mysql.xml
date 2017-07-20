@@ -2,6 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezApprovalGMobile">
+	<typeAlias  alias="MApprovalGTLVO" 						type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO"/>
 	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
 	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
 	<typeAlias  alias="MApprovalGOpinionInfoVO" 			type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
@@ -148,6 +149,8 @@
 		<![CDATA[
 			SELECT 
 				 CONTENT,
+				 OPINIONGB,
+				 USERID,
 				 CASE 
    					WHEN (USERNAME$lang$ = '' OR USERNAME$lang$ IS NULL) 
    					THEN USERNAME
@@ -175,4 +178,111 @@
 				OPINIONSN DESC
 		]]>
 	</select>
+	
+	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">
+		<![CDATA[
+	   		INSERT INTO TBL_APROPINIONINFO (
+	   			DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID
+	   		)
+	   		SELECT
+	   			#docID#,    CN,			#opinionGB#,  #content#,	DISPLAYNAME,  DISPLAYNAME2,  TITLE,			   TITLE2,			  DEPARTMENT,	 DESCRIPTION,	   DESCRIPTION2,	   (SELECT CASE WHEN MAX(OPINIONSN) IS NULL THEN 1 ELSE MAX(OPINIONSN) + 1 END OPINIONSN FROM TBL_APROPINIONINFO WHERE TENANT_ID = #tenantID# AND COMPANYID = #companyID# AND DOCID = #docID#), #tenantID#, #companyID#
+	   		FROM
+	   			TBL_USERMASTER
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			CN = #userID#	
+		]]>
+   </insert>
+   
+   <update id="MApprovalG.updateDocOpinionInfo" parameterClass="Map">
+   		<![CDATA[
+   			UPDATE
+	   			TBL_APRDOCINFO
+	   		SET
+	   			HASOPINIONYN = 'Y'
+	   		WHERE
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			COMPANYID = #companyID#
+	   		AND
+	   			DOCID = #docID#
+		]]>
+   </update>
+   
+   <select id="MApprovalG.getTimeLineList" parameterClass="Map" resultClass="MApprovalGTLVO">
+   		<![CDATA[
+   			(SELECT 
+				DOCTITLE as title,
+				STARTDATE,
+				'결재' as module,
+				WRITERNAME
+			FROM 
+				VAPRDOINGDOCLIST 
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND 
+				APRMEMBERID IN (#userID#) 
+			AND 
+				APRTYPE <> '015' 
+			AND
+				STARTDATE < #sessionDate#)
+			
+			UNION
+			
+			(SELECT A.TITLE,	A.STARTDATE, '게시판' as module, WRITERNAME
+			  FROM 
+				TBL_BOARD_ITEM A 
+			  INNER JOIN 
+					( SELECT 
+						BOARDID, 
+						BOARDNAME, 
+						BOARDNAME2,
+						TENANT_ID 
+					  FROM 
+						TBL_BOARD_MYBOARDS 
+					  WHERE   
+						TENANT_ID = #tenantID#
+					  AND
+						USERID = #userID# ) B 
+			  ON 
+				A.TENANT_ID = B.TENANT_ID
+			  AND
+				A.BOARDID = B.BOARDID                
+			  INNER JOIN 
+				TBL_BOARD_BOARDINFO P  
+			  ON 
+				A.TENANT_ID = P.TENANT_ID
+			  AND
+				A.BOARDID = P.BOARDID
+			  AND 
+				A.TENANT_ID = #tenantID#
+			  AND
+				(A.APPRFLAG = 'Y' 
+				 OR A.APPRFLAG IS NULL)
+			  AND
+				A.STARTDATE < #sessionDate#)
+								
+			UNION
+			
+			(select 
+				title, startdate, '일정관리' as module, OWNERNAME as writername
+			from 
+				tbl_schedule
+			where  
+				ownerid in (#userID#)
+			and 
+				tenant_id = #tenantID#
+			and
+				STARTDATE < #sessionDate#
+			and
+				STARTDATE > STR_TO_DATE(substring(now(), 1, 10),'%Y-%m-%d'))
+			ORDER BY
+				startdate desc
+			LIMIT 
+				20
+		]]>
+   </select>
 </sqlMap>

@@ -830,13 +830,30 @@ public class CommonUtil {
 	 * @throws Exception
 	 */
 	public String getPackageType(int tenantId) throws Exception {
-		String packageType;
+		String packageType = "standard";
 		
-		packageType = ezCommonService.getTenantConfig("PackageType", tenantId);
+		String licenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantId);
 		
-		if (packageType.equals("")) {
-			packageType = "standard";
+		logger.debug("licenseKey=" + licenseKey);
+		
+		if (!licenseKey.equals("")) {
+			try {
+				// 라이센스키를 복호화한다.
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				
+				logger.debug("Decrypted licenseKey=" + licenseKey);
+				
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 3) {
+					packageType = items[2];					
+				}
+			} catch (Exception e) {
+				logger.debug("License Key Decryption failed.");
+			}			
 		}
+		
+		logger.debug("packageType=" + packageType);
 		
 		return packageType;
 	}

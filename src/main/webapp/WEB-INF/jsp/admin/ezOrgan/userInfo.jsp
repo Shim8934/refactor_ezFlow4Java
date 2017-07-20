@@ -26,6 +26,7 @@
 		    var ReturnFunction;
 		    var RetValue;
 	    	var useAddressOpenAPI = "${useAddressOpenAPI}"
+	    	var useBizmekaSpambox = "${useBizmekaSpambox}";
 		    
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
@@ -267,6 +268,9 @@
 		            else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
 		                // 0-9
 		            }
+		            else if (pValue.charCodeAt(iCnt) == 45) {
+		                // -
+		            }
 		            else if (pValue.charCodeAt(iCnt) == 46) {
 		                // .
 		            }
@@ -276,6 +280,17 @@
 		        }
 		        return true;
 		    }
+		    
+			function showProgress() {
+			    document.getElementById("progressPanel").style.display = "";
+			    document.getElementById("loadingLayer").style.display = "";
+			}
+
+			function hideProgress() {
+			    document.getElementById("progressPanel").style.display = "none";
+			    document.getElementById("loadingLayer").style.display = "none";
+			}
+		    
 		    function OK_Click() {
 		        if (document.getElementById("UserID").value == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
@@ -363,40 +378,56 @@
 					birthtype = "N";
 				}
 
+				if (useBizmekaSpambox == "YES") {
+					showProgress();
+				}
+				
 				$.ajax({
 					type : "POST",
 					dataType : "html",
 					url : "/admin/ezOrgan/saveUserInfo.do",
-					async : false,
+					async : true,
 					data : {parentCn : DeptID, cn : document.getElementById("UserID").value, displayName : UserName.value, displayName2 : UserName2.value, password : Password.value,
 						    mailNickName : mailNickName, title : JobTitle.value, title2 : JobTitle2.value, extensionAttribute15 : SortNum.value, extensionAttribute6 : SecurityLevel.value,
 						    extensionAttribute14 : SocialNum.value, extensionAttribute10 : JobPosition.value, extensionAttribute102 : JobPosition2.value, telephoneNumber : PhoneNumber.value,
 						    homePhone : HomePhone.value, facsimileTelephoneNumber : FaxNum.value, mobile : Mobile.value, postalCode : ZipCode.value, streetAddress : HomeAddr.value,
 						    birthType : birthtype, birth : document.getElementById("txtBirth").value
 					},
-					success : function(result){
-						if (result == "PRE") {
-							alert("<spring:message code='ezOrgan.t119' />");
-						} else if (result == "EMAIL_ERROR") {
-							alert("<spring:message code='ezOrgan.t269' />");
-						} else if (result == "NO_LICENSE_KEY") {
-							alert("<spring:message code='ezOrgan.x0010' />");
-						} else if (result == "INVALID_LICENSE_KEY") {
-							alert("<spring:message code='ezOrgan.x0011' />");
-						} else if (result == "MAX_USER_REACHED") {
-							alert("<spring:message code='ezOrgan.x0012' />");
-						} else {
-							if (ReturnFunction != null) {
-				                ReturnFunction(DeptID);
-							} else {
-				                window.returnValue = DeptID;
-							}
-							
-				            window.close();
-						}
+					success : function(result) {
+					    if (useBizmekaSpambox == "YES") {
+					    	hideProgress();
+					    }
+					    
+					    setTimeout(function() {
+ 							if (result == "PRE") {
+ 								alert("<spring:message code='ezOrgan.t119' />");
+ 							} else if (result == "EMAIL_ERROR") {
+ 								alert("<spring:message code='ezOrgan.t269' />");
+ 							} else if (result == "NO_LICENSE_KEY") {
+ 								alert("<spring:message code='ezOrgan.x0010' />");
+ 							} else if (result == "INVALID_LICENSE_KEY") {
+ 								alert("<spring:message code='ezOrgan.x0011' />");
+ 							} else if (result == "MAX_USER_REACHED") {
+ 								alert("<spring:message code='ezOrgan.x0012' />");
+ 							} else {
+ 								if (ReturnFunction != null) {
+ 				                	ReturnFunction(DeptID);
+ 								} else {
+ 				                	window.returnValue = DeptID;
+ 								}
+ 							
+ 				            	window.close();
+ 							}
+					    }, 100);
 					},
-					error : function(){
-						alert("<spring:message code='ezOrgan.t269' />");
+					error : function() {
+					    if (useBizmekaSpambox == "YES") {
+					    	hideProgress();
+					    }
+					    
+					    setTimeout(function() {
+							alert("<spring:message code='ezOrgan.t269' />");
+					    }, 100);
 					}
 				});		        
 		    }
@@ -671,5 +702,7 @@
 	    <script type="text/javascript">
 		    Tab1_NewTabIni("tab1");
 		</script>
+     <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+     <span class="loading_layer" style="z-index:6000;position:absolute;top:250px;left:310px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
 	</body>
 </html>

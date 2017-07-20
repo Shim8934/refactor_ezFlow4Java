@@ -21,7 +21,7 @@
 	<body class="loginbody">
 		<section id="sampleList" data-role="page">
 			<!-- header import -->
-     		<c:import url="/WEB-INF/jsp/mobile/ezResource/sampleTop.jsp" />
+     		<c:import url="/WEB-INF/jsp/mobile/ezResource/mResourceTop.jsp" />
      		<!-- header import -->
      		
      		<!-- body start -->
@@ -34,11 +34,11 @@
      		<!-- body end -->
 
      		<!-- footer import -->
-     		<c:import url="/WEB-INF/jsp/mobile/sample/sampleFooter.jsp" />
+     		<c:import url="/WEB-INF/jsp/mobile/ezResource/mResourceFooter.jsp" />
      		<!-- footer import -->
      		
      		<!-- layer Popup import -->
-     		<c:import url="/WEB-INF/jsp/mobile/sample/samplePopup.jsp" />
+     		<c:import url="/WEB-INF/jsp/mobile/ezResource/mResourcePopup.jsp" />
      		<!-- layer Popup import -->
      		
      		<div id="test" class="ui-content" style="min-width: 255px; max-width: 285px; text-align:center" data-role="popup" data-overlay-theme="b" data-transition="slidedown">

@@ -15,15 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
-import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
-import egovframework.ezEKP.ezPortal.service.EzPortalService;
-import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
+import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezPortal.web.MPortalController;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -41,38 +33,14 @@ private static final Logger logger = LoggerFactory.getLogger(MPortalController.c
 	@Autowired
 	private Properties config;
 	
-	@Resource(name="EzPortalService")
-	private EzPortalService ezPortalService;
-	
-	@Resource(name="EzPortalAdminService")
-	private EzPortalAdminService ezPortalAdminService;
-	
-	@Resource(name = "EzPersonalService")
-	private EzPersonalService ezPersonalService;
-	
-	@Resource(name = "EzQuestionService")
-	private EzQuestionService ezQuestionService;
-	
-	@Resource(name = "EzOrganService")
-	private EzOrganService ezOrganService;
-	
-	@Resource(name = "EzBoardService")
-	private EzBoardService ezBoardService;
-	
-	@Resource(name = "EzApprovalGService")
-	private EzApprovalGService ezApprovalGService;
-	
 	@Resource(name="loginService")
 	private LoginService loginService;
 
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
 	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
 	
 	/**
 	 * 모바일 환경설정 페이지 호출 함수
@@ -95,13 +63,18 @@ private static final Logger logger = LoggerFactory.getLogger(MPortalController.c
 		String langFlag = req.getParameter("lang");
 		String dpBoardCnt = req.getParameter("dpBoardCnt");
 		String resourceChk = req.getParameter("resourceChk");
+		String resourceYN = req.getParameter("resourceYN");
 		
 		if (langFlag == null) {
 			langFlag = userInfo.getPrimary();
 		}
+		
 		System.out.println(langFlag);
 		System.out.println(dpBoardCnt);
 		System.out.println(resourceChk);
+		System.out.println(resourceYN);
+		
+		String result = mOptionService.saveOption(userInfo.getId(), langFlag, dpBoardCnt, resourceChk, resourceYN, userInfo.getTenantId());
 		logger.debug("saveOption End");
 		return "true";
 	}

@@ -527,7 +527,7 @@
 		<h1><spring:message code='ezApprovalG.t711'/></h1>
 		<table style="width:445px">
 		  <tr>			
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/>></h2> 
+		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2> 
 		      <table>
 		        <tr   id="trCreateCab"> 
 		          <th><a  class="imgbtn"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>

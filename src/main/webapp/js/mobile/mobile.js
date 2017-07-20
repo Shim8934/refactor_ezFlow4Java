@@ -16,6 +16,16 @@ $(document).on('pageshow', '#sampleList', function() {
 	});
 });
 
+/*$(document).on('pageshow', '#mainSlide', function() {
+	$(window).on('resize', function() {
+		var bws = $(window).width();
+		$(".listview").css("width", bws);
+		
+		carousel.reload();
+	});
+});*/
+
+
 $(document).on('pageshow', '#main', function(){
 	$(".ui-collapsible-heading-toggle").not(".animateMe1 .ui-collapsible-heading-toggle").on("click", function (e) {
 	    var current = $(this).closest(".ui-collapsible");
@@ -193,39 +203,67 @@ function goSendMail() {
 	});
 }
 
-function goTest(val01) {    
-	if (val01 == 1) {
-		var testValue = '<li class="ui-first-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;3층 소회의실</a></li>';
-		testValue += '<li data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;3층 대회의실</a></li>';
-		testValue += '<li data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;5층 소회의실</a></li>';
-		testValue += '<li class="ui-last-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;5층 대회의실</a></li>';
+function goTest(val01) {
+	if(val01 != 3) {
+		if (val01 == 1) {
+			var testValue = '<li class="ui-first-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;3층 소회의실</a></li>';
+			testValue += '<li data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;3층 대회의실</a></li>';
+			testValue += '<li data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;5층 소회의실</a></li>';
+			testValue += '<li class="ui-last-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;5층 대회의실</a></li>';
+			
+			$("#testTile").html("회의실");
+		} else {
+			var testValue = '<li class="ui-first-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>';		
+			testValue += '<li class="ui-last-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>';
+			
+			$("#testTile").html("빔프로젝터");
+		}
+		$("#testListView").html(testValue);
+			
+		$("#secondPanel").animate({
+			left: '-=238px'
+		}, 100);
 		
-		$("#testTile").html("회의실");
+		$("#firstPanel").animate({
+			left: '-=238px'
+		}, 100);
 	} else {
-		var testValue = '<li class="ui-first-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;빔프로젝트1 (경지실보관)</a></li>';		
-		testValue += '<li class="ui-last-child" data-icon="carat-r"><a class="ui-btn ui-btn-icon-right ui-icon-carat-r" href="#"><i class="fa fa-desktop" style="font-size: 15px;"></i>&nbsp;&nbsp;빔프로젝트2 (3층회의실)</a></li>';
+		$("#thirdPanel").animate({
+			left: '-=238px'
+		}, 100);
 		
-		$("#testTile").html("빔프로젝터");
+		$("#secondPanel").animate({
+			left: '-=238px'
+		}, 100);
+		
+		$("#firstPanel").animate({
+			left: '-=238px'
+		}, 100);
 	}
-	$("#testListView").html(testValue);
-		
-	$("#secondPanel").animate({
-		left: '-=238px'
-	}, 350);
-	
-	$("#firstPanel").animate({
-		left: '-=238px'
-	}, 350);	
 }
 
 function goTestBack() {
 	$("#secondPanel").animate({
 		left: '+=238px'
-	}, 350);
+	}, 100);
 	
 	$("#firstPanel").animate({
-		left: '0px'
-	}, 350);	
+		left: '+=238px'
+	}, 100);	
+}
+
+function goTestMainBack() {
+	$("#thirdPanel").animate({
+		left: '+=238px'
+	}, 100);
+	
+	$("#secondPanel").animate({
+		left: '+=238px'
+	}, 100);
+	
+	$("#firstPanel").animate({
+		left: '+=238px'
+	}, 100);
 }
 
 function logout() {
@@ -274,4 +312,22 @@ function moveMail() {
 
 function searchMail() {
 	$("#popupMailSearch").popup("open");
+}
+
+function saveEnvironment() {				
+	var status = $("#radio-view-a1").is(":checked");
+
+	if (status == "true") {
+		$.mobile.changePage( "/mobile/ezPortal/portalMain.do", {
+			type: "post",
+			transition: "pop",
+			changeHash: true
+		});
+	} else {
+		$.mobile.changePage( "/mobile/ezPortal/portalMain.do?mainOption=F", {
+			type: "post",
+			transition: "pop",
+			changeHash: true
+		});
+	}
 }

@@ -186,6 +186,16 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
+            if (g_bRecAdmin || AdminYN == "TRUE") {
+                document.getElementById("tdVeiwRecHist").style.display = "";
+                document.getElementById("tdbtnViewRecReadHist").style.display = "";
+                CheckBtnSetRecRole();
+            } else {
+                document.getElementById("tdVeiwRecHist").style.display = "none";
+                document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                document.getElementById("tdbtnSetRecRole").style.display = "none";
+            }
+            
             if (typeof (tdNotify_Rec) != "undefined" && typeof (tdNotify_Rec) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
                     if (IsUserDeptRec() == "true")
@@ -220,10 +230,12 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 if (selRow.getAttribute("DATA8") == "00") {
-                    if (IsUserDeptRec() == "true" && document.getElementById("tdbtnViewRecReadHist").style.display == "")
-                        document.getElementById("tdbtnViewRecReadHist").style.display = "";
-                    else
-                        document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                    if (IsUserDeptRec() == "true" && document.getElementById("tdbtnViewRecReadHist").style.display == "") {
+                    	document.getElementById("tdbtnViewRecReadHist").style.display = "";
+                    }
+                    else{
+                    	document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                    }
                 }
                 else {
                     document.getElementById("tdbtnViewRecReadHist").style.display = "none";
@@ -669,7 +681,11 @@ function InsertToCabListView(Resultxml) {
             xmlDoc = createXmlDom();
             xmlDoc.appendChild(ListViewData);
         }
-
+        
+        if (g_HeaderInfoXml != "") {
+        	xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
+        }
+        
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
@@ -768,7 +784,7 @@ function InsertToRecListView(Resultxml) {
             xmlDoc = createXmlDom();
             xmlDoc.appendChild(ListViewData);
         }
-
+        xmlDoc = insertSortInfoToHeader(g_HeaderInfoXml, xmlDoc);
         if (document.getElementById("lvtDoclist").innerHTML != "") document.getElementById("lvtDoclist").innerHTML = "";
         var DocList = new ListView();                           
         DocList.SetID("DocList");                               
@@ -931,9 +947,10 @@ function SortList(szField) {
 
     if (DocList_Flag == "CABINET") {
         GetCaninetList();
-    }
-    else if (DocList_Flag == "RECORD") {
+    } else if (DocList_Flag == "RECORD") {
         GetRecordList();
+    } else if (DocList_Flag == "Delivery") {
+    	idistbox_onclick();
     }
 }
 
@@ -1683,7 +1700,7 @@ function goToPage(page) {
 
 function insertSortInfoToHeader(header, listData) {
     try {
-        if (getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
+    	if (header != "" && getXmlString(header) != "" && getXmlString(header) != "<LISTINFO/>") {
             var oXml = header;
             var nodesCell = SelectNodes(oXml, "LISTINFO/CELL");
             var header = SelectNodes(listData, "LISTVIEWDATA/HEADERS/HEADER");
@@ -1697,15 +1714,18 @@ function insertSortInfoToHeader(header, listData) {
                     var colAlias = getNodeText(SelectSingleNode(nodesCell[j], "COLALIAS"));
                     var colname = getNodeText(SelectSingleNode(nodesCell[j], "COLNAME"));
                     if (i == j && colname != "") {                
-                        createNodeAndAppandNodeText(listData, header[i], objNode, "COLNAME", colAlias);
+                    	if (GetElementsByTagName(header[i], "COLNAME").length > 0) {
+                            setNodeText(GetElementsByTagName(header[i], "COLNAME")[0], colAlias);
+                        }
+                        else {
+                            createNodeAndAppandNodeText(listData, header[i], objNode, "COLNAME", colAlias);
+                        }
                         j = nodesCell.length;
-
                     }
                 }
 
             }
         }
-
         return listData;
 
     } catch (e) { }

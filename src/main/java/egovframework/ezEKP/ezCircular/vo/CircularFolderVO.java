@@ -2,22 +2,24 @@ package egovframework.ezEKP.ezCircular.vo;
 
 public class CircularFolderVO {
 	
-	private int circularFolderId;
+	private int circularFolderID;
 	
 	private String circularFolderName;
 	
-	private String memberId;
+	private String memberID;
 	
 	private String regDate;
 	
-	private int tenantId;
-	
-	public int getCircularFolderId() {
-		return circularFolderId;
+	private String originLocation;
+
+	private int tenantID;
+
+	public int getCircularFolderID() {
+		return circularFolderID;
 	}
 
-	public void setCircularFolderId(int circularFolderId) {
-		this.circularFolderId = circularFolderId;
+	public void setCircularFolderID(int circularFolderID) {
+		this.circularFolderID = circularFolderID;
 	}
 
 	public String getCircularFolderName() {
@@ -28,12 +30,12 @@ public class CircularFolderVO {
 		this.circularFolderName = circularFolderName;
 	}
 
-	public String getMemberId() {
-		return memberId;
+	public String getMemberID() {
+		return memberID;
 	}
 
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
+	public void setMemberID(String memberID) {
+		this.memberID = memberID;
 	}
 
 	public String getRegDate() {
@@ -44,12 +46,19 @@ public class CircularFolderVO {
 		this.regDate = regDate;
 	}
 
-	public int getTenantId() {
-		return tenantId;
+	public int getTenantID() {
+		return tenantID;
 	}
 
-	public void setTenantId(int tenantId) {
-		this.tenantId = tenantId;
+	public void setTenantID(int tenantID) {
+		this.tenantID = tenantID;
 	}
 	
+	public String getOriginLocation() {
+		return originLocation;
+	}
+
+	public void setOriginLocation(String originLocation) {
+		this.originLocation = originLocation;
+	}
 }

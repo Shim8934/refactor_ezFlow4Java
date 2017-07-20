@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,6 +15,7 @@
 		    var pUserID;
 		    var pFormID;
 		    var ConnectFlag = true;
+		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 		    var Resultxml = createXmlDom();
 		    var ret = new Array();
 		    function btn_SaveAprDeptTempletName_onclick() {
@@ -128,11 +131,13 @@
 		<h1><spring:message code='ezApprovalG.t25004'/></h1>		
 		<span>▒ <spring:message code='ezApprovalG.t292'/></span>		
 		<table class="content" style="margin-top: 15px">
-		  <tr style="display:none"> 
-		    <th> <spring:message code='ezApprovalG.t293'/></th>
-		    <td style="width:100%"> 
-		      <input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtPageNum">    </td>
-		  </tr>
+		  <c:if test="${approvalFlag == 'G'}">
+			  <tr> 
+			    <th> <spring:message code='ezApprovalG.t293'/></th>
+			    <td style="width:100%"> 
+			      <input type="text" name="textfield4" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id="txtPageNum">    </td>
+			  </tr>
+		  </c:if>
 		  <tr> 
 		    <th><spring:message code='ezApprovalG.t294'/></th>
 		    <td> 

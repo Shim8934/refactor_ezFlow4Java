@@ -139,7 +139,7 @@
 				    </td>
 				</tr>            
 	      	</table>
-			<div id="printDocument" style="border:1px solid #b6b6b6; margin-top:2px; padding-right:5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px; WIDTH: 95.7%; position: absolute;font-size:12px;font-family:Gulim">${printDocument}</div>
+			<div id="printDocument" style="border:1px solid #b6b6b6; margin-top:10px;padding-right:15px; PADDING-LEFT: 10px; PADDING-BOTTOM: 5px; PADDING-TOP: 10px; line-height:1.3;width:95.8%;font-size:12px;">${printDocument}</div>			
 		</div>
 	</body>
 </html>

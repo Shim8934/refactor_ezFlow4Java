@@ -313,6 +313,21 @@ public class MPortalController extends EgovFileMngUtil {
 		//model.addAttribute("list", list);
 		logger.debug("portalMain End");
 		
-		return "/mobile/ezPortal/mPortalMain";
+		
+		String mainOption = req.getParameter("mainOption");
+		
+		if (mainOption == null) {
+			mainOption = "M";
+		}
+		
+		if (mainOption.equals("F")) {
+			return "/mobile/ezPortal/mPortalFlow";
+		} else if (mainOption.equals("S")) {
+			return "/mobile/ezPortal/mPortalSlide";
+		} else if (mainOption.equals("T")) {
+			return "/mobile/ezPortal/mPortalTimeLine";
+		} else {
+			return "/mobile/ezPortal/mPortalMain";
+		}
 	}	
 }

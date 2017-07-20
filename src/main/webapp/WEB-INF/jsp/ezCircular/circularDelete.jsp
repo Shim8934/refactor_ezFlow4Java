@@ -4,9 +4,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>BoardItemList</title>
+		<title><spring:message code = 'ezCircular.t6' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -15,42 +15,43 @@
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<style>
-		#layer_Viewpopup { 
-			z-index:1000; 
-			margin:0px; 
-			padding:0px;
-		}
-		#layer_Viewpopup .popupwrap1 {
-			border:1px solid #555a64;
-			padding:0px;
-			margin:0px;
-			
-		}
-		#layer_Viewpopup .shadow {
-			height:2px;
-			background:#d7d7d7;
-			
-		}
-		#layer_Viewpopup .popupwrap2 {
-			border:2px solid #e5e5e5;
-			padding:10px;
-			
-		}
-		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		
-		#layer_Viewpopup .popupwrap3 {
-			position:relative;
-			padding:10px;
-			background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
-		}
-		#layer_Viewpopup .popupwrap3 h1 {
-			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
-		}
+		<style>
+			#layer_Viewpopup { 
+				z-index:1000; 
+				margin:0px; 
+				padding:0px;
+			}
+			#layer_Viewpopup .popupwrap1 {
+				border:1px solid #555a64;
+				padding:0px;
+				margin:0px;
+				
+			}
+			#layer_Viewpopup .shadow {
+				height:2px;
+				background:#d7d7d7;
+				
+			}
+			#layer_Viewpopup .popupwrap2 {
+				border:2px solid #e5e5e5;
+				padding:10px;
+				
+			}
+			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
+			
+			#layer_Viewpopup .popupwrap3 {
+				position:relative;
+				padding:10px;
+				background:url("../images/kr/cm/popup_layerbg.gif") repeat-x;
+			}
+			#layer_Viewpopup .popupwrap3 h1 {
+				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+			}
 		</style>
+		
 	    <script type="text/javascript">
-//  	        var ShowAdjacent = "";
-// 	        var USE_OCS = "${useOcs}";
 	        var SSUserID = "${userInfo.id}";  
 	        var pBoardType = "";
 	        var CurPage = "1";
@@ -62,28 +63,17 @@
 	        var clickPreviweType = "";
 	        var selobj = null;
 	        var previewType = "";
-// 	        var clickPreviweType = "";
+	        var clickPreviweType = "";
 	        var CurrentHeight = 0;
 	        var CurrenWidth = 0;
-// 	        var pMailListHeightW = 0;
-// 	        var pMailPreHeightW = 0;
 	        var pMailListDiv = 0;
 	        var pMailPreVDiv = 0;
 	        var pMailListDiv_H = 0;
 	        var pMailPreVDiv_H = 0;
-// 	        var pMailListWidthH = 0;
-// 	        var pMailPreWidthH = 0;
-// 	        var p_ListorderValue = "";
 	        var pPreviewShow_HOW = "OFF";
-// 	        var SmallSizeList = false;
-// 	        var OldSmallSizeList = false;
-// 	        var onclickFlag = false;
+	        var onclickFlag = false;
 	        var SQLPARADATA = "";
-// 	        var pMode = "new";
-// 	        var pAdminType = "n";
-// 	        var pUse_Editor = "${useEditor}";
-// 	        var pNoneActiveX = "YES";
-// 	        var pUse_IE11Browser = "CK";
+	        var pAdminType = "n";
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
@@ -92,11 +82,12 @@
 	
 	        window.onresize = function () {
 	            var height = parseInt(document.documentElement.clientHeight - 320);
-	            Window_resize();
-	
+	            Window_resize()
 	        };
+	        
 	        document.onselectstart = function () { return false; };
-	         window.onload = function () {
+	        
+			window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                document.body.style.MozUserSelect = 'none';
 	                document.body.style.WebkitUserSelect = 'none';
@@ -110,6 +101,7 @@
 	            window_onunload_Event = true;
 	            getBoardList();
 	        }; 
+	        
 	        var Save_unloadSave = false;
 	        function Window_onunload() {
 	            if (window_onunload_Event && !Save_unloadSave) {
@@ -120,20 +112,15 @@
 		            } else {
 		            	listCount = 20;
 		            }
-	                
-	                 if (pPreviewShow_HOW == "W") {
-	                    divStyle = parseInt(document.getElementById("divList").style.height);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else if (pPreviewShow_HOW == "H") {
-	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-	                }
-	                else {
-	                    divStyle = 0;
-	                } 
+
+					if (pPreviewShow_HOW == "W") {
+		                divStyle = Math.round(pMailListDiv);
+		            } else if (pPreviewShow_HOW == "H") {
+		                divStyle = Math.round(pMailListDiv_H)
+		            } else {
+		                divStyle = 0;
+		            }
+					
 	                if (divStyle < 24)
 	                    divStyle = 24;
 	                
@@ -174,13 +161,11 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
+	        	var searchValue = document.getElementById("txt_keyword").value;
+	        	
 		        starttime = new Date().getTime();
-		        if (SQLPARADATA != ""){
-		        	url = "/ezBoard/getSearchBoardList.do";
-		        }
-		        else{
-		        	url = "/ezCircular/getTDCircularList.do";
-		        }
+				url = "/ezCircular/getTDCircularList.do";
+				
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -190,7 +175,8 @@
 							 pageNum 	 : CurPage, 
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
-							 searchQuery : SQLPARADATA
+							 searchQuery : SQLPARADATA,
+							 searchValue : searchValue
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -200,109 +186,97 @@
 	
 	        var firstFlag = false;
 	        function getBoardList_after(xml) {
-	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
-	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
-	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-	
-	                pPreviewShow_HOW = "${config.isPreview}";
+	        	var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+                var pageNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
+                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
+                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+                
+                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+	            pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+	            pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLISTVALUE")));
+	            pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENTVALUE")));
+	            pPreviewShow_HOW = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE")));
 
-	                switch (parseInt("${config.isPreview}")) {
-					case 0:
-						pPreviewShow_HOW = "OFF";
-						break;
-					case 1:
-						pPreviewShow_HOW = "H";
-						break;
-					case 2:
-						pPreviewShow_HOW = "W";
-						break;
-					}
-	                
-	                pMailListDiv = "${config.previewListValue}";
-	                pMailPreVDiv = "${config.previewContentValue}";
-	                pMailListDiv_H = "${config.previewListValue}";
-	                pMailPreVDiv_H = "${config.previewContentValue}";
-	
-	                if (listNode == null) return;
-	
-	                var lstCnt = getNodeText(cntNode);
-	                var pstCnt = "${totalCount}";
-	                totalCount = lstCnt;
-	                var perCnt = "${config.listCnt}";
-	
-	                listcount.value = "${config.listCnt}";
+                switch (pPreviewShow_HOW) {
+				case 0:
+					pPreviewShow_HOW = "OFF";
+					break;
+				case 1:
+					pPreviewShow_HOW = "H";
+					break;
+				case 2:
+					pPreviewShow_HOW = "W";
+					break;
+				}
 
-	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
-	                pTotalCnt = lstCnt;
-	
-	                makePageSelPage();
-	
-	                var xmlDoc;
-	                if (CrossYN()) {
-	                    var xmlLIST = createXmlDom();
-	                    var nodeToImport = xmlLIST.importNode(listNode, true);
-	                    xmlLIST.appendChild(nodeToImport);
-	                    xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-	                }
-	                else {
-	                    xmlDoc = createXmlDom();
-	                    xmlDoc.appendChild(listNode);
-	                }
-	                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
-	
-	                var DocList = new ListView();
-	                DocList.SetID("BoardList");
-	                DocList.SetHeaderOnClick("SortPage");
-	                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
-	                DocList.SetRowOnClick("ItemPreviewRead_click");
-	                DocList.SetTitleIdx(0);
-	                DocList.SetSelectFlag(false);
-	                DocList.DataSource(xmlDoc);
-	                DocList.DataBind("lvBoardList");
-	                DocList = null;
-	
-	                var tempno = 0;
-	            /*     for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-	                    if (CrossYN()) {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                    else {
-	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
-	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
-	                        }
-	                    }
-	                } */
-	                tempno = tempno + "";
-	                
-	                if (tempno.length > 10) {
-	                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
-	                }
-	
-	                if ("${useOcs}" == "YES" && lstCnt > 0) {
-	                    check_presence();
-	                }
-	
-	                if (!firstFlag) {
-	                    PreviewRayerChange(pPreviewShow_HOW);
-	                    if (CrossYN()) {
-	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-	                    } else {
-	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
-	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
-	                    }
-	                    firstFlag = true;
-	                }
-	                endtime = new Date().getTime();
-	                strListInfo = "";
-	            }
+                if (listNode == null) return;
+
+                var lstCnt = getNodeText(cntNode);
+                var pageCnt = getNodeText(pageNode);
+                var perCnt = getNodeText(perNode);
+
+                listcount.value = perCnt;
+                totalPage = Math.ceil(new Number(pageCnt / perCnt));
+                pTotalCnt = lstCnt;
+                makePageSelPage();
+
+                var xmlDoc;
+                if (CrossYN()) {
+                    var xmlLIST = createXmlDom();
+                    var nodeToImport = xmlLIST.importNode(listNode, true);
+                    xmlLIST.appendChild(nodeToImport);
+                    xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+                }
+                else {
+                    xmlDoc = createXmlDom();
+                    xmlDoc.appendChild(listNode);
+                }
+                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
+
+                var DocList = new ListView();
+                DocList.SetID("BoardList");
+                DocList.SetHeaderOnClick("SortPage");
+                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
+                DocList.SetRowOnClick("ItemPreviewRead_click");
+                DocList.SetTitleIdx(0);
+                DocList.SetSelectFlag(false);
+                DocList.DataSource(xmlDoc);
+                DocList.DataBind("lvBoardList");
+                DocList = null;
+
+                var tempno = 0;
+                
+                tempno = tempno + "";
+                
+                if (tempno.length > 10) {
+                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
+                }
+
+                if ("${useOcs}" == "YES" && lstCnt > 0) {
+                    check_presence();
+                }
+
+                if (!firstFlag) {
+                    PreviewRayerChange(pPreviewShow_HOW);
+                    if (CrossYN()) {
+                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
+                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezCircular.t88'/>";
+                    } else {
+                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
+                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezCircular.t88'/>";
+                    }
+                    firstFlag = true;
+                }
+                endtime = new Date().getTime();
+                strListInfo = "";
+
+                $("#lstCnt").html("");
+                $("#lstCnt").append("(" + lstCnt + ")");
+            }
 	        
 	
 	        var BlockSize = 10;
@@ -312,9 +286,9 @@
 	        
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += obj.id;
+		            strListInfo += $(obj).closest("tr").attr("circularID");
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
 		        }
 		        
 		        listEventCheckbox = true;
@@ -466,63 +440,30 @@
 	                getBoardList();
 	            }
 	        }
+	        
+	        function getLeftCount() {
+		    	if (typeof (window.parent.frames.left) != "undefined") {
+		    		parent.frames["left"].getNewCircularCount();
+		    	}
+		    }
 			
 	        //상세보기 
 	        function ItemRead_onclick(obj) {
-				var circularId = obj.getAttribute("CIRCULARID");
+	        	var circularID = obj.getAttribute("CIRCULARID");
 
                 if (CrossYN()) {
-		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            var feature = GetOpenPosition(820, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
-	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularId, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	var feature = GetOpenPosition(790, 900);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
-                
-//                 //클릭했을때 그아이디에 해당하는 
-//                 $.ajax({
-// 					type : "POST",
-// 					dataType : "text",
-// 					async : false,
-// 					url : "/ezCircular/confirmStatus.do",
-// 					data : { circularId 	: circularId 
-// 							},
-// 					success: function(xml){
-						
-// 					}     			
-// 				});
-                
 	        }
-		
-		    function event_HeaderCheckBoxClick(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                SelList.GetDataRows()[i].setAttribute("selected", true);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                SelList.GetDataRows()[i].setAttribute("selected", false);
-		                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-		                strListInfo = "";
-		            }
-		        }
-		    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");
 		        return (orgStr.replace(re, replaceStr));
 		    }
-		
-// 		    function refresh_onclick() {
-// 		    	window.location.href = "/ezcircular/newCircular.do";
-// 		    }
 		
 // 		    function MemberInfo_onclick(pUserID) {
 // 		        if (gubun == "2") return;
@@ -531,57 +472,35 @@
 // 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 // 		    }
 		
-// 		    function window_reload() {
-// 		        window.location.href = window.location.href;
-// 		    }
-		
-		    function checkBox_checkAll(obj) {
-		        var SelList = new ListView();
-		        SelList.LoadFromID("BoardList");
-		        var oArrRows = SelList.GetSelectedRows();
-		        if (obj.checked) {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
-		                strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
-		            }
-		        }
-		        else {
-		            for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		                SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
-		                strListInfo = "";
-		            }
-		        }
-		    }
-		
 	        function search(type) {
 	            if (type == "basic") {
 	
 	                if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == "" && document.getElementById("idDatepicker").value == "") {
-	                    alert("<spring:message code='ezBoard.t192'/>");
+	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	
 	                if (document.getElementById("idDatepicker").value != "" && document.getElementById("_D2").value == "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezCircular.t89'/>");
 	                    return;
 	                }
 	                if (document.getElementById("idDatepicker").value == "" && document.getElementById("_D2").value != "") {
-	                    alert("<spring:message code='ezBoard.t189'/>");
+	                    alert("<spring:message code='ezCircular.t89'/>");
 	                    return;
 	                }
 	                if (Number(ReplaceText(document.getElementById("idDatepicker").value.substring(0, 10), "-", "")) > Number(ReplaceText(document.getElementById("_D2").value.substring(0, 10), "-", ""))) {
-	                    alert("<spring:message code='ezBoard.t191'/>");
+	                    alert("<spring:message code='ezCircular.t90'/>");
 	                    return;
 	                }
 	            }
 	            else if (type == "quick") {
 	                if (document.getElementById("txt_keyword").value == "") {
-	                    alert("<spring:message code='ezBoard.t192'/>");
+	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	            }
 	            CurPage = "1";
-	            BoardSearchOptionHidden();
+// 	            BoardSearchOptionHidden();
 	            getBoardList();
 	        }
 
@@ -596,61 +515,59 @@
 	        }
 	        
 	        function Delete_onclick() {
+	        	//완전삭제
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
 	        	
-	        	if(confirm("<spring:message code='ezCircular.t74'/>")) {
-		        	var arrList = new Array();
-			        var circularIDList = "";
-			        var i = 0;
-			        
-			        arrList = strListInfo.split(";");
-			        
-			        for (i = 0; i < arrList.length - 1; i++) {
-			        	circularIDList += arrList[i].split(",")[1] + ";";
-			        }
-			        
-			        arrList = null;
-			        
+	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
 					$.ajax({
 						type : "POST",
 						dataType : "text",
 						async : false,
 						url : "/ezCircular/circularDeleteItem.do",
-						data : { circularIDList : circularIDList
+						data : { circularIDList : strListInfo
 								},
 						success: function() {
-							alert("<spring:message code='ezCircular.t77'/>");
+							alert("<spring:message code='ezCircular.t45'/>");
 						},
 						error: function() {
-							alert("삭제실패");
+							alert("<spring:message code='ezCircular.t102'/>");
 						}
 					});
-
-		            location.href = location.href;
+					
+					refresh_onclick();
 	        	}	
+	        }
+	        
+	        function refresh_onclick() {
+	        	getBoardList();
 	        }
 	    </script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
-	    <h1><spring:message code='ezCircular.t61'/><span id="mailBoxInfo"></span>
+	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
+	    <h1><spring:message code='ezCircular.t6'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" value='제목/댓글 검색' onfocus="if(this.value == '제목/댓글 검색') this.value='';" onblur="if(this.value == '') this.value='제목/댓글 검색';" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t62'/></span></li>
-	            <li id="right"><spring:message code='ezBoard.t10020'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li>
+	            <li id="right">
+	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
+	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
+					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
+					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
+				</li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	    </script>
-	    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+	    <div id="layer_Viewpopup" style="width: 150px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 	        <div class="popupwrap1">
 	            <div class="popupwrap2">
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
@@ -660,7 +577,7 @@
 	                        <col>
 	                    </colgroup>
 	                     <tr>
-	                        <th><spring:message code='ezBoard.t10021'/></th>
+	                        <th><spring:message code='ezCircular.t18'/></th>
 	                        <td>
 	                            <select id="listcount" style="WIDTH: 40px; height: 20px;" onchange="ListCount(this.value);">
 	                                <option value="10">10</option>
@@ -670,14 +587,6 @@
 	                                <option value="50">50</option>
 	                            </select>    
 	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th><spring:message code='ezBoard.t431'/></th>
-	                        <td>
-	                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-	                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-	                            <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-                            </td>
 	                    </tr>
 	                </table>
 	            </div>
@@ -706,12 +615,12 @@
 	                <span class="previewmail_info" style="display: block; width: 100%;">
 	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
 	                        <p class="mail_title" style="margin-left: 0px;">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
+	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezBoard.t223'/>:
+	                            <dt><spring:message code='ezCircular.t169'/> :
 	                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
 	                            </dt>
 	                        </dl>
@@ -733,12 +642,12 @@
 	                <span class="previewmail_info" style="display: block; width: 100%;">
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
 	                        <p class="mail_title">
-	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
+	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezBoard.t223'/>:</dt>
+	                            <dt><spring:message code='ezCircular.t169'/> :</dt>
 	                            <dd><span id="PreW_MailReceiver" style="display: inline-block"></span>
 	                            </dd>
 	                        </dl>

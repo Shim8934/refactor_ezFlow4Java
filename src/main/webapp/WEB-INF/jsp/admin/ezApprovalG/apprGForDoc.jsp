@@ -776,7 +776,7 @@
 	        </ul>
 	    </div>
 	
-		<div class="div_scroll" style="width:100%;HEIGHT:285px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
 	  		<div id="lvtDoclist" ></div>
 		</div>
 	 	<div id="tblPageRayer" style="margin-bottom: 10px;"></div>

@@ -5,9 +5,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezCircular.t40' /></title>
+		<title><spring:message code='ezCircular.t36' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>
@@ -88,20 +89,20 @@
 	    <h1><spring:message code='ezCircular.t36' /></h1>
 	    <table class="content">
 	        <tr>
-	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t37' /></th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t32' /></th>
 	            <td>
 	                <input id="title" type="text" style="margin-bottom:2px; width:100%;"/>
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t38' /></th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t34' /></th>
 	            <td>
 	            	<input type="hidden" name="Input" id="receiverinput" style="WIDTH: 30%;-moz-box-sizing:border-box;box-sizing:border-box;" onkeyup="return _on_keydown(event)">
 	                <a href="#" id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code='ezCircular.t39' /></span></a>
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t38' /></br><spring:message code='ezCircular.t42' /></th>
+	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t34' /></br><spring:message code='ezCircular.t42' /></th>
 	        	<td>
 		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px"/></div>
 		        	<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
