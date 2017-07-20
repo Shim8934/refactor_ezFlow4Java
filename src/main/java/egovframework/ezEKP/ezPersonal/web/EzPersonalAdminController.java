@@ -912,10 +912,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		int tenantID = userInfo.getTenantId();
 		
-		ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
-
-		logger.debug("setEmployeeMonth ended");
-		return "OK";
+		try {
+			ezPersonalAdminService.setEmpMonth(type, userID, deptID, term, tenantID);
+			logger.debug("setEmployeeMonth ended");
+			return "OK";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	/**
