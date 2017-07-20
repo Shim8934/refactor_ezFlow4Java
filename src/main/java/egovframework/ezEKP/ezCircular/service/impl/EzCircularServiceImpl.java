@@ -1133,12 +1133,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 			updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, 0, nowDate, userInfo.getTenantId());
 		}
 		
-		int circularCommentID = ezCircularDAO.insertComment(map);
+		String circularCommentID = ezCircularDAO.insertComment(map);
 		
 		map.put("circularCommentID", circularCommentID);
 		map.put("commentConfirmStatus", 0);
 		
-		ezCircularDAO.insertCommentState(map);
+		insertCommentState(circularCommentID, userInfo.getId(), 0, userInfo.getTenantId());
 		
 		logger.debug("editCircularComment ended.");
 	}
@@ -1456,7 +1456,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void commentShareUser(String circularID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception {
+	public void commentShareUser(String circularID, String circularCommentID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("commentShareUser started.");
 		logger.debug("circularID = " + circularID + " || memberIDList = " + memberIDList);
 		
@@ -1464,11 +1464,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
 		int tenantID = userInfo.getTenantId();
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("circularID", circularID);
-		map.put("tenantID", tenantID);
-		map.put("nowDate", nowDate);
 		
 		String subject = egovMessageSource.getMessage("ezCircular.t123", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
@@ -1482,14 +1477,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String memberIDs[] = memberIDList.split(";");
 		
 		for (String memberID : memberIDs) {
-			map.put("memberID", memberID);
 			
 			if (!memberID.equals(userInfo.getId())) {
 				updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+				insertCommentState(circularCommentID, memberID, 0, tenantID);
 			}
-			
-			//이효진 commentState 테이블에 공유자 추가
-			updateCommentState(circularID, memberID, 0, nowDate, tenantID);
 			
 			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(memberID, userInfo.getPrimary(), tenantID);
 	    	
@@ -1503,5 +1495,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 		
 		logger.debug("commentShareUser ended.");
+	}
+	
+	private void insertCommentState(String circularCommentID, String memberID, int status, int tenantID) throws Exception {
+		logger.debug("insertCommentState started.");
+		logger.debug("circularCommentID = " + circularCommentID + " || memberID = " + memberID + " || status = " + status + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularCommentID", circularCommentID);
+		map.put("memberID", memberID);
+		map.put("status", status);
+		map.put("tenantID", tenantID);
+		
+		ezCircularDAO.insertCommentState(map);
+		
+		logger.debug("insertCommentState ended.");
 	}
 }

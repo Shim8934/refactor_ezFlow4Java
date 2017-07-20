@@ -185,7 +185,7 @@ function getCommentShareUser() {
 		dataType : "json",
 		data : {
 			circularID : circularID,
-			searchValue : $("#searchValue").val()
+			circularCommentID : circularCommentID
 		},
 		success : function(result) {
 			//본인 제외하고 회람자 목록 보여주면서 체크박스 만들고 확인버튼 눌렀을때 updateStatus 새거 하나 쓰자
@@ -276,7 +276,7 @@ function openCircularComment() {
 function openCommentSharePopup(obj) {
 	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
 	
-	DivPopUpShow(300, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID);
+	DivPopUpShow(300, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID + "&circularCommentID=" + $(obj).closest("tr").attr("circularCommentID"));
 }
 
 function closePopup() {

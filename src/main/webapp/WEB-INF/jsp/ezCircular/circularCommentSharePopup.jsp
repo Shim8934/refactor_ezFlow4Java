@@ -16,6 +16,7 @@
 		<script type="text/javascript">
 			var circularID = "${vo.circularID}";
 			var circularUserID = "${vo.circularUserID}";
+			var circularCommentID = "${vo.circularCommentID}";
 			var userInfoID = "${userInfo.id}";
 			
 			$(document).ready(function(){

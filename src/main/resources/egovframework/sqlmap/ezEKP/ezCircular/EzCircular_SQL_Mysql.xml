@@ -1587,24 +1587,56 @@
 	</select>
 
 	<select id="EzCircularDAO.getCircularComment" parameterClass="Map" resultClass="CircularCommentVO">
-		<![CDATA[
-			SELECT
-				circularid,
-				circularcommentid,
-				circularuserid,
-				circularcomment,
-				memberid,
-				membername,
-				DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
-				status,
-				tenantid
-			FROM
-				TBL_CIRCULAR_COMMENT
-			WHERE
-				circularid = #circularID#
-			AND
-				tenantid = #tenantID#
-		]]>
+		<isEqual property="commentType" compareValue="totalComment">
+			<![CDATA[
+				SELECT
+					circularid,
+					circularcommentid,
+					circularuserid,
+					circularcomment,
+					memberid,
+					membername,
+					DATE_ADD(DATE_FORMAT(regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+					status,
+					tenantid
+				FROM
+					TBL_CIRCULAR_COMMENT
+				WHERE
+					circularid = #circularID#
+				AND
+					tenantid = #tenantID#
+			]]>
+		</isEqual>
+		
+		<isEqual property="commentType" compareValue="myComment">
+			<![CDATA[
+				SELECT
+					A.circularid,
+					A.circularcommentid,
+					A.circularuserid,
+					A.circularcomment,
+					A.memberid,
+					A.membername,
+					DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
+					A.status,
+					A.tenantid
+				FROM
+					TBL_CIRCULAR_COMMENT A
+				JOIN
+					TBL_CIRCULAR_COMMENTSTATE B
+				ON
+					A.circularcommentid = B.circularcommentid
+				AND
+					A.tenantid = B.tenantid
+				WHERE
+					A.circularid = #circularID#
+				AND
+					B.memberid = #circularUserID#
+				AND
+					A.tenantid = #tenantID#
+			]]>
+		</isEqual>
+		
 	</select>
 
 	<select id="EzCircularDAO.getCircularCommentUserList" parameterClass="Map" resultClass="CircularCommentVO">
@@ -1947,7 +1979,7 @@
                 (#circularID#, #circularUserID#, #circularComment#, #memberID#, #memberName#, #memberName2#, #nowDate#, #status#, #tenantID#)
 		]]>
 		
-		<selectKey keyProperty="circularcommentid" resultClass="Integer">
+		<selectKey keyProperty="circularcommentid" resultClass="String">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
