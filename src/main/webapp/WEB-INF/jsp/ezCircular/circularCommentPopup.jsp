@@ -83,6 +83,8 @@
 			});
 			
 			function swapTab(type) {
+				$("#searchValue").val("");
+				
 		        if (type == 'totalComment') {
 		        	//전체의견 가져오면서
 		        	$("#tab1").attr("class", "on");

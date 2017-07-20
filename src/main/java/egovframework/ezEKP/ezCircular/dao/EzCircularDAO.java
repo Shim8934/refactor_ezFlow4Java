@@ -164,8 +164,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (int) select("EzCircularDAO.getFolderCircularListCount", map);
 	}
 
-	public int insertComment(Map<String, Object> map) throws Exception {
-		return (int) insert("EzCircularDAO.insertComment", map);
+	public String insertComment(Map<String, Object> map) throws Exception {
+		return (String) insert("EzCircularDAO.insertComment", map);
 	}
 
 	public int getSearchAllCircularListCount(Map<String, Object> map) throws Exception {

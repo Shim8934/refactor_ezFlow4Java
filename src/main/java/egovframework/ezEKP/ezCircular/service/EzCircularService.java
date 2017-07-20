@@ -130,7 +130,7 @@ public interface EzCircularService {
 	
 	public void circularReturn(String circularIdList, String folderID, String memberID, int tenantID) throws Exception;
 	
-	public void commentShareUser(String circularID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception;
+	public void commentShareUser(String circularID, String circularCommentID, String memberIDList, LoginVO userInfo, String loginCookie) throws Exception;
 	
 	public void confirmStatus(String circularID, String memberID, int tenantID, String type) throws Exception;
 
