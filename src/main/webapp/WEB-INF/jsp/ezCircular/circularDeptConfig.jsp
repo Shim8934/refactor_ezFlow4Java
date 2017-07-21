@@ -16,11 +16,13 @@
 		<script type="text/javascript">
 			$(function() {
 				// 전체 체크박스 선택, 해제
-				$("#checkboxAll").on("click", function(){
+				$("#checkboxAll").on("click", function(){				
 					if ($("#checkboxAll").is(":checked")) {
 						$(".myCheckbox").prop("checked", true);
+						$(".mainlist tr").css("background", "rgb(233, 241, 244)");
 					} else {
 						$(".myCheckbox").prop("checked", false);
+						$(".mainlist tr").css("background", "#FFFFFF");
 					}
 				})
 				// 개별 체크박스 선택, 해제
@@ -36,40 +38,33 @@
 			});
 			
 			function event_Mover(obj) {
-		        if (obj != _RowObject) {
-		        	obj.style.backgroundColor = "#EDEDED";
-		        }
+				if (!$("input[value=" + obj.id + "]").is(":checked")) {
+					if (obj != _RowObject) {
+			        	obj.style.backgroundColor = "#EDEDED";
+			        }					
+				}
 		    }
 			
 		    function event_Mout(obj) {
-		        if (obj != _RowObject) {
-		        	obj.style.backgroundColor = "#FFFFFF";
-		        }
+		    	if (!$("input[value=" + obj.id + "]").is(":checked")) {
+			    	if (obj != _RowObject) {
+			        	obj.style.backgroundColor = "#FFFFFF";
+			        }		    		
+		    	}
 		    }
 		    
 		    var _RowObject = null;
 		    
 		    function event_click(obj) {
-		    	if (_RowObject != null) {
-		    		_RowObject.style.backgroundColor = "#ffffff";
-		    	}
-		    	
-		    	if (_RowObject == obj) {
-		    		obj.style.backgroundColor = "#FFFFFF";
-		    	}
-
 		    	if ($("input[value=" + obj.id + "]").is(":checked")) {
 		    		$("input[value=" + obj.id + "]").prop("checked", false);
+		    		obj.style.backgroundColor = "#FFFFFF";
 		    	} else {
 		    		$("input[value=" + obj.id + "]").prop("checked", true);
-		    		$("input[value!=" + obj.id + "]").prop("checked", false);
+		    		obj.style.backgroundColor = "rgb(233, 241, 244)";
 		    	}
 
-		    	if (_RowObject != obj) {
-			    	obj.style.backgroundColor = "rgb(233, 241, 244)";		    		
-		    	}
-
-		        _RowObject = obj;
+		        _RowObject = obj;   	
 		    }
 
 		    function event_dbclick() {
