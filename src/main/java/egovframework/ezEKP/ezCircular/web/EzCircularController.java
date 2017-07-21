@@ -2461,9 +2461,8 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String circularIDList = request.getParameter("circularIDList");
-		String memberIDList = request.getParameter("memberIDList");
 		
-		ezCircularService.restoreCircular(circularIDList, memberIDList, userInfo.getId(), userInfo.getTenantId());
+		ezCircularService.restoreCircular(circularIDList, userInfo.getId(), userInfo.getTenantId());
 		
 		logger.debug("restoreCircularList ended.");
 		
