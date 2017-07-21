@@ -1158,10 +1158,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String circularCommentID = ezCircularDAO.insertComment(map);
 		
 		if (!vo.getCircularUserID().equals(userInfo.getId())) {
-			map.put("circularCommentID", circularCommentID);
-			map.put("commentConfirmStatus", 0);
-			
-			insertCommentState(circularCommentID, vo.getCircularUserID(), 0, userInfo.getTenantId());
+			insertCommentState(circularCommentID, vo.getCircularUserID(), 0, nowDate, userInfo.getTenantId());
 		}
 		
 		logger.debug("editCircularComment ended.");
@@ -1245,13 +1242,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 		} else if (type.equals("commentConfirm")) {
 			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
-			updateCommentState(circularID, memberID, 1, nowDate, tenantID);
+			updateCommentState(circularID, "", memberID, 1, nowDate, tenantID);
 		} else {
 			updateUpdateStatus(circularID, memberID, nowDate, tenantID);
 			updateConfirmStatus(circularID, memberID, 1, nowDate, tenantID);
 			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
-			updateCommentState(circularID, memberID, 1, nowDate, tenantID);
+			updateCommentState(circularID, "", memberID, 1, nowDate, tenantID);
 		}
 		
 		logger.debug("confirmStatus ended.");
@@ -1335,11 +1332,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateCircularShareStatus ended.");
 	}
 	
-	private void updateCommentState(String circularID, String memberID, int confirmStatus, String nowDate, int tenantID) throws Exception {
+	private void updateCommentState(String circularID, String circularCommentID, String memberID, int confirmStatus, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateCommentState started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
+		map.put("circularCommentID", circularCommentID);
 		map.put("memberID", memberID);
 		map.put("status", confirmStatus);
 		map.put("nowDate", nowDate);
@@ -1507,9 +1505,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String commentStateID = getCommentStateID(circularCommentID, memberID, tenantID);
 				
 				if (commentStateID == null) {
-					insertCommentState(circularCommentID, memberID, 0, tenantID);
+					insertCommentState(circularCommentID, memberID, 0, nowDate, tenantID);
 				} else {
-					updateCommentState(circularID, memberID, 0, nowDate, tenantID);
+					updateCommentState(circularID, circularCommentID, memberID, 0, nowDate, tenantID);
 				}
 			}
 			
@@ -1542,14 +1540,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return result;
 	}
 	
-	private void insertCommentState(String circularCommentID, String memberID, int status, int tenantID) throws Exception {
+	private void insertCommentState(String circularCommentID, String memberID, int status, String nowDate, int tenantID) throws Exception {
 		logger.debug("insertCommentState started.");
-		logger.debug("circularCommentID = " + circularCommentID + " || memberID = " + memberID + " || status = " + status + " || tenantID = " + tenantID);
+		logger.debug("circularCommentID = " + circularCommentID + " || memberID = " + memberID + " || status = " + status + " || nowDate = " + nowDate + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularCommentID", circularCommentID);
 		map.put("memberID", memberID);
 		map.put("status", status);
+		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
 		
 		ezCircularDAO.insertCommentState(map);
