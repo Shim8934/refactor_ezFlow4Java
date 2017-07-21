@@ -442,7 +442,7 @@
 	        		return;
 	        	}
 	        	
-	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
+	        	if (confirm("<spring:message code='ezCircular.t46'/>")) {
 					$.ajax({
 						type : "POST",
 						dataType : "json",
@@ -451,7 +451,6 @@
 						data : { circularIDList : strListInfo
 								},
 						success: function() {
-							alert("<spring:message code='ezCircular.t45'/>");
 							refresh_onclick();
 						},
 						error: function() {

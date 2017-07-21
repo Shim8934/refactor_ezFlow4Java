@@ -524,17 +524,16 @@
 	        		return;
 	        	}
 
-	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
+	        	if (confirm("<spring:message code='ezCircular.t46'/>")) {
 					$.ajax({
 						type : "POST",
-						dataType : "text",
+						dataType : "json",
 						async : false,
 						url : "/ezCircular/deleteCircularList.do",
 						data : { circularIDList : strListInfo,
 								 memberIDList : strMemberListInfo
 								},
 						success: function() {
-							alert("<spring:message code='ezCircular.t45'/>");
 						},
 						error: function() {
 							alert("<spring:message code='ezCircular.t102'/>");

@@ -507,25 +507,25 @@
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
-	        	
-	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
+
+	        	if (confirm("<spring:message code='ezCircular.t46'/>")) {
 					$.ajax({
 						type : "POST",
 						dataType : "json",
 						async : false,
-						url : "/ezCircular/circularDeleteTemp.do",
-						data : { circularIDList : strListInfo
+						url : "/ezCircular/deleteCircularList.do",
+						data : { circularIDList : strListInfo,
+								 memberIDList : strMemberListInfo
 								},
 						success: function() {
-							alert("<spring:message code='ezCircular.t45'/>");
 						},
 						error: function() {
 							alert("<spring:message code='ezCircular.t102'/>");
 						}
 					});
-
+					
 					refresh_onclick();
-	        	}	
+	        	}
 	        }
 	    </script>
 	</head>

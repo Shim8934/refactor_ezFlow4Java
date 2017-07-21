@@ -507,16 +507,15 @@
 						dataType : "text",
 						async : false,
 						url : "/ezCircular/circularConfirmStatus.do",
-						data : { circularIDList : strListInfo
-								},
-						success: function(){
-							
+						data : {
+							circularIDList : strListInfo
+						},
+						success: function() {
+							refresh_onclick();
 						},error : function(jqXHR, textStatus, errorThrown) {
 							alert("<spring:message code='ezCircular.t102' />");
 						}
 					});
-
-		            location.href = location.href;
 	        	}	        	
 	        }
 	        
