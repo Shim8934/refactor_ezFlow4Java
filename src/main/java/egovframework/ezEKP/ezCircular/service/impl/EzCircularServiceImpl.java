@@ -306,9 +306,25 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.updateCircular(map);
 
 		deleteCircularUser(Integer.parseInt(circularID), tenantID);
+		
+		String nowDate = commonUtil.getTodayUTCTime("");
+		String commentStatusList = "";
 
 		for (int i=0; i<receiverLength; i++) {			
 			insertCircularUser(circularUserId, Integer.parseInt(circularID), receiverID[i].trim(), receiverName[i].trim(), receiverName2[i].trim(), status, "", updateStatus, tenantID);
+
+			//의견을 확인 안한 회람자의 commentStatus 를 1 로 update
+			List<CircularListVO> commentStatus = getCommentStatus(circularID, receiverID[i].trim(), tenantID);
+
+			for (int j=0; j<commentStatus.size(); j++) {
+				commentStatusList += commentStatus.get(j).getCommentStatus() + ";";
+			}
+
+			if (commentStatusList.indexOf("0") != -1) {
+				updateCircularCommentStatus(circularID, receiverID[i].trim(), 1, 0, nowDate, tenantID);
+			}
+			
+			commentStatusList = "";
 		}
 
 		confirmStatus(circularID, memberID, tenantID, "circularConfirm");
@@ -363,6 +379,16 @@ public class EzCircularServiceImpl implements EzCircularService {
 				}
 			}
 		}
+	}
+
+	private List<CircularListVO> getCommentStatus(String circularID, String memberID, int tenantID) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("circularID", circularID);
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		
+		return ezCircularDAO.getCommentStatus(map);
 	}
 
 	@Override

@@ -1887,6 +1887,25 @@
     	]]>
     </select>
 
+    <select id="EzCircularDAO.getCommentStatus" parameterClass="Map" resultClass="CircularListVO">
+		<![CDATA[
+			SELECT 
+				B.STATUS AS COMMENTSTATUS
+			FROM 
+				TBL_CIRCULAR_COMMENT A
+			JOIN
+				TBL_CIRCULAR_COMMENTSTATE B
+			ON
+				A.CIRCULARCOMMENTID = B.CIRCULARCOMMENTID
+			WHERE
+				A.CIRCULARID = #circularID#
+			AND
+				B.MEMBERID = #memberID#
+			AND
+				A.TENANTID = #tenantID#	
+		]]>
+	</select>
+
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO 
