@@ -1188,7 +1188,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("fileList : " + fileList);
 
-		String confirmDate = "";
 		int circularUserId = 0;
 		int updateStatus = 0;
 		circularListVO.setStatus(0);
