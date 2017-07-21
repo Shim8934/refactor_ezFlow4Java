@@ -454,14 +454,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 			map.put("tenantID", tenantID);
 			
 			if (memberID.equals(userID)) {
-				//작성자
 				ezCircularDAO.deleteCircular(map);
 				ezCircularDAO.deleteCircularUser(map);
 				ezCircularDAO.deleteCircularAttach(map);
 			} else {
-				//회람자
 				ezCircularDAO.updateDeleteFlag(map);
-//				logger.debug("회람자 삭제 미개발");
 			}
 		}
 		
@@ -480,12 +477,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("tenantID", tenantID);
 		
 		if (memberID.equals(userID)) {
-			//작성자
 			ezCircularDAO.deleteCircular(map);
 			ezCircularDAO.deleteCircularUser(map);
 			ezCircularDAO.deleteCircularAttach(map);
 		} else {
-			//회람자
 			ezCircularDAO.updateDeleteFlag(map);
 		}
 		

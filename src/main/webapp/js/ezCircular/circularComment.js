@@ -10,81 +10,104 @@ function getCircularComment() {
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
-			circularUserList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
-			
-			list = result.circularUserList;
-			list.forEach(function(vo, index) {
-				circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
-//				circularUserList += "<th style='border-right:0px;text-align:left;background-color: #fafafa;border-color:#e2e2e2'>";
-				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+			if (commentType == 'totalComment') {
+				circularUserList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 				
-				if (vo.status == 1) {
-//					circularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
-					circularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
-				} else {
-//					circularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
-					circularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
-				}
-				
-				if (status == 0 && (option == 1 || option == 3)) {
-					circularUserList += "<img src='/images/modify2.gif' style='cursor:pointer;vertical-align:middle;'  onclick='showEdit(this)'/>&nbsp;";
-				} else {
-					circularUserList += "&nbsp;"
-				}
-				
-				circularUserList += "</th>";
-				
-				circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
-				
-				if (vo.status == 1) {
-					circularUserList += vo.confirmDate.substring(0, 16);
-				}
-				
-				circularUserList += "</th>";
-				circularUserList += "</tr>";
-			});
-			
-			$("#circularUserList").html("");
-			$("#circularUserList").append(circularUserList);
-			
-			var now = new Date();
-
-			circularCommentList = "";
-			list = result.circularCommentList ;
-			list.forEach(function(vo, index) {
-				circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
-				circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + vo.memberName + "</td>";
-				circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
-				
-				if (vo.memberID == userInfoID && vo.status == 0) {
-//					circularCommentList += "<img src='/images/ImgIcon/circular_share1.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
-					circularCommentList += "<img src='/images/ImgIcon/circular_share2.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
-				}
-				
-				if (vo.memberID == userInfoID) {
-					circularCommentList += "<img src='/images/comment_del.gif' style='cursor:pointer;vertical-align:middle;' onclick='deleteCircularComment(this)'/>";
-				}
-				
-				circularCommentList += "</td>";
-				circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 16) + "</td>";
-				circularCommentList += "</tr>";
-				
-				if (vo.status == 0) {
-					if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
-						$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+				list = result.circularUserList;
+				list.forEach(function(vo, index) {
+					circularUserList += "<tr class='circularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+					circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+					
+					if (vo.status == 1) {
+						circularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 					} else {
-						$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+						circularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
 					}
-				} else {
-					if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
+					
+					if (status == 0 && (option == 1 || option == 3)) {
+						circularUserList += "<img src='/images/modify2.gif' style='cursor:pointer;vertical-align:middle;'  onclick='showEdit(this)'/>&nbsp;";
+					} else {
+						circularUserList += "&nbsp;"
+					}
+					
+					circularUserList += "</th>";
+					
+					circularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:right;background-color:white;' colspan='2'>";
+					
+					if (vo.status == 1) {
+						circularUserList += vo.confirmDate.substring(0, 16);
+					}
+					
+					circularUserList += "</th>";
+					circularUserList += "</tr>";
+				});
+				
+				$("#circularUserList").html("");
+				$("#circularUserList").append(circularUserList);
+				
+				circularCommentList = "";
+				list = result.circularCommentList;
+				
+				list.forEach(function(vo, index) {
+					circularCommentList  = "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#fafafa;'>";
+					circularCommentList += "<td style='padding-left:3px'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle; margin-bottom:9px'/>&nbsp;" + vo.memberName + "</td>";
+					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
+					
+					if (vo.memberID == userInfoID && vo.status == 0) {
+						circularCommentList += "<img src='/images/ImgIcon/circular_share2.gif' style='cursor:pointer;vertical-align:middle;' onclick='openCommentSharePopup(this)' />&nbsp;";
+					}
+					
+					if (vo.memberID == userInfoID) {
+						circularCommentList += "<img src='/images/ImgIcon/comment_del.gif' style='cursor:pointer;vertical-align:middle;' onclick='deleteCircularComment(this)'/>";
+					}
+					
+					circularCommentList += "</td>";
+					circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 16) + "</td>";
+					circularCommentList += "</tr>";
+					
+					if (vo.status == 0) {
 						if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
 							$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
 						} else {
 							$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
 						}
+					} else {
+						if (vo.memberID == userInfoID || vo.circularUserID == userInfoID) {
+							if ($(".circularComment[circularUserID='" + vo.circularUserID + "']").length == 0) {
+								$(".circularUser[circularUserID='" + vo.circularUserID + "']").after(circularCommentList);
+							} else {
+								$(".circularComment[circularUserID='" + vo.circularUserID + "']:last").after(circularCommentList);
+							}
+						}
 					}
-				}
-			});
+				});
+			} else if (commentType == 'myComment') {
+				circularCommentList = "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
+				list = result.circularCommentList;
+				
+				list.forEach(function(vo, index) {
+					circularCommentList += "<tr class='circularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
+					circularCommentList += "<td style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+					
+					if (vo.confirmStatus == 1) {
+						circularCommentList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
+					} else if (vo.confirmStatus == 0) {
+						circularCommentList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName;
+					}
+					
+					circularCommentList += "</td>";
+					
+					circularCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;'>" + vo.circularComment + "&nbsp;&nbsp;";
+					
+					circularCommentList += "</td>";
+					circularCommentList += "<td style='text-align:right;padding-right:8px'>" + vo.regDate.substring(0, 16) + "</td>";
+					circularCommentList += "</tr>";
+				});
+				
+				$("#circularUserList").html("");
+				$("#circularUserList").append(circularCommentList);
+			}
+			
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
