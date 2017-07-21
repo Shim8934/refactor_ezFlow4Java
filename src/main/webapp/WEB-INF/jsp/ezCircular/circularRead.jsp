@@ -440,7 +440,7 @@
             	    <div id="menu">
                 	    <ul>
                 	    	<c:if test="${result.confirmStatus == '0'}">
-								<li id="circularConfirm"><span onclick="circularConfirm()" style='color:red;'><spring:message code='ezCircular.t38' /></span></li>
+								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
                 	    	</c:if>
                 	    	
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}]</span></li>
@@ -529,7 +529,7 @@
 		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
-		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />&nbsp;<span id="btnCircularConfirm" onclick='circularConfirm()'><spring:message code='ezCircular.t38' /></span>
+		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
 		            				</c:when>
 		            				
 		            				<c:when test="${result.confirmStatus == '1'}">
