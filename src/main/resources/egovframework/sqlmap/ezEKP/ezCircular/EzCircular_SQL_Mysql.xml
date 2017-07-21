@@ -115,10 +115,18 @@
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
 		
 		<isNotEqual property="sdate" compareValue="">	
@@ -405,10 +413,18 @@
         ]]>
         
         <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	
@@ -843,10 +859,18 @@
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	
@@ -899,12 +923,19 @@
                 A.tenantid = #tenantID#
         ]]>
         <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
-        
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
@@ -936,14 +967,20 @@
             AND
                 A.tenantid = #tenantID#
         ]]>
-        
         <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
-        
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
@@ -1022,10 +1059,18 @@
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	
@@ -1098,14 +1143,20 @@
 			AND
 				A.tenantid = #tenantID#
          ]]>
-         
          <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
-        
         <isNotEqual property="sdate" compareValue="">	
 			<![CDATA[
 	            AND
@@ -1190,10 +1241,18 @@
 		]]>
 		
 		<isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	
@@ -1314,10 +1373,18 @@
                 A.tenantid = #tenantID#
 		]]>
 		<isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         <![CDATA[
             GROUP BY
@@ -1359,12 +1426,19 @@
             AND
                 A.tenantid = #tenantID#
         ]]>
-        
         <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-        		AND
-        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        		AND
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        		AND
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
     </select>
 
@@ -1392,10 +1466,18 @@
 		</isNotEqual>
 		
         <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[	
-       			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-       		 AND
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        		AND
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        		AND
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	
@@ -1493,10 +1575,18 @@
 		</isNotEqual>
 		
         <isNotEqual property="searchValue" compareValue="">
-        	<![CDATA[
-       			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
-       		AND
-        	]]>
+        	<isEqual property="searchType" compareValue="subject">
+	        	<![CDATA[
+	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        		AND
+	        	]]>
+        	</isEqual>
+        	<isEqual property="searchType" compareValue="content">
+	        	<![CDATA[
+	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        		AND
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
         <isNotEqual property="sdate" compareValue="">	

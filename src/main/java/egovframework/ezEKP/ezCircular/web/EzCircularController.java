@@ -514,6 +514,7 @@ public class EzCircularController extends EgovFileMngUtil {
         int headerLength = headerList.size();
         String pageNum = "1";
         String searchValue = req.getParameter("searchValue");
+        String searchType = "";
         String orderCell = req.getParameter("orderCell");
         String orderOption = req.getParameter("orderOption");
         String orderOption1 = "";
@@ -540,15 +541,19 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
         
+        if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
+        	searchType = req.getParameter("searchType");
+        }
+        
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
 		
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), searchValue, sdate, edate, userInfo.getTenantId());
+        int totalCount = ezCircularService.getCircularListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), searchValue, sdate, edate, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
+		List<CircularListVO> list = ezCircularService.getCircularList(userInfo.getId(), searchValue, searchType, sdate, edate, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -635,7 +640,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
     		pageNum = req.getParameter("pageNum"); 
     	}
-    	
+
+    	String searchType = "";
     	String searchValue = req.getParameter("searchValue");
         String sdate = "";
         String edate = "";
@@ -645,6 +651,11 @@ public class EzCircularController extends EgovFileMngUtil {
             edate = req.getParameter("edate");
 
         }
+
+        if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
+        	searchType = req.getParameter("searchType");
+        }
+
     	userInfo = commonUtil.userInfo(loginCookie);
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
@@ -675,9 +686,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), searchValue, sdate, edate, userInfo.getTenantId());
+        int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getCircularCompleteList(userInfo.getId(), searchValue, sdate, edate, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
+		List<CircularListVO> list = ezCircularService.getCircularCompleteList(userInfo.getId(), searchValue, searchType, sdate, edate, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
         
@@ -751,7 +762,8 @@ public class EzCircularController extends EgovFileMngUtil {
     	int startRow = 1;
     	int endRow = 0;
     	String pageNum = "1";
-    	
+
+    	String searchType = "";
     	String searchValue = req.getParameter("searchValue");
         String sdate = "";
         String edate = "";
@@ -765,6 +777,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
     		pageNum = req.getParameter("pageNum"); 
     	}
+
+    	if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
+        	searchType = req.getParameter("searchType");
+        }
 
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
 
@@ -794,9 +810,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getCircularTempListCount(userInfo.getId(), searchValue, sdate, edate, userInfo.getTenantId());
+        int totalCount = ezCircularService.getCircularTempListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getCircularTempList(userInfo.getId(), searchValue, sdate, edate, startRow, endRow, userInfo.getOffset(), userInfo.getTenantId(), orderCell, orderOption1);
+		List<CircularListVO> list = ezCircularService.getCircularTempList(userInfo.getId(), searchValue, searchType, sdate, edate, startRow, endRow, userInfo.getOffset(), userInfo.getTenantId(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -874,7 +890,8 @@ public class EzCircularController extends EgovFileMngUtil {
         if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
         	pageNum = req.getParameter("pageNum"); 
     	}
-        
+
+        String searchType = "";
         String searchValue = req.getParameter("searchValue");
         String sdate = "";
         String edate = "";
@@ -884,7 +901,11 @@ public class EzCircularController extends EgovFileMngUtil {
             edate = req.getParameter("edate");
 
         }
-        
+
+        if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
+        	searchType = req.getParameter("searchType");
+        }
+
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
     	
     	headerVO.setListType("T");
@@ -913,9 +934,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), searchValue, sdate, edate, userInfo.getTenantId());
+        int totalCount = ezCircularService.getMyCircularListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), searchValue, sdate, edate, startRow, endRow, userInfo.getOffset(), userInfo.getTenantId(), orderCell, orderOption1);
+		List<CircularListVO> list = ezCircularService.getMyCircularList(userInfo.getId(), searchValue, searchType, sdate, edate, startRow, endRow, userInfo.getOffset(), userInfo.getTenantId(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -994,8 +1015,13 @@ public class EzCircularController extends EgovFileMngUtil {
         	pageNum = req.getParameter("pageNum"); 
         }
 
+        String searchType = "";
         String searchValue = req.getParameter("searchValue");
-        
+
+        if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
+        	searchType = req.getParameter("searchType");
+        }
+
     	CircularListHeaderVO headerVO = new CircularListHeaderVO();
 
     	headerVO.setListType("T");
@@ -1024,9 +1050,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getCircularTDListCount(userInfo.getId(), searchValue, userInfo.getTenantId());
+        int totalCount = ezCircularService.getCircularTDListCount(userInfo.getId(), searchValue, searchType, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getCircularTDList(userInfo.getId(), searchValue, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
+		List<CircularListVO> list = ezCircularService.getCircularTDList(userInfo.getId(), searchValue, searchType, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
 
@@ -1980,7 +2006,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	headerVO.setListType("T");
     	headerVO.setTenantID(userInfo.getTenantId());
-    	
+
+    	String searchType = "";
     	String searchValue = req.getParameter("searchValue");
         String sdate = "";
         String edate = "";
@@ -1989,7 +2016,11 @@ public class EzCircularController extends EgovFileMngUtil {
         	sdate = req.getParameter("sdate");
             edate = req.getParameter("edate");
         }
-    	
+
+        if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
+        	searchType = req.getParameter("searchType");
+        }
+
     	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
     	
     	int headerLength = headerList.size();
@@ -2027,9 +2058,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
-        int totalCount = ezCircularService.getFolderCircularListCount(folderId, userInfo.getId(), searchValue, sdate, edate, userInfo.getTenantId());
+        int totalCount = ezCircularService.getFolderCircularListCount(folderId, userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getTenantId());
         
-		List<CircularListVO> list = ezCircularService.getFolderCircularList(folderId, userInfo.getId(), startRow, endRow, searchValue, sdate, edate, userInfo.getOffset(), userInfo.getTenantId(), orderCell, orderOption1);
+		List<CircularListVO> list = ezCircularService.getFolderCircularList(folderId, userInfo.getId(), startRow, endRow, searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
 
