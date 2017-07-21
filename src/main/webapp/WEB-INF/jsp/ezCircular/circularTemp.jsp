@@ -78,6 +78,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var strMemberListInfo = "";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	
@@ -160,6 +161,7 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
+	        	var searchType = $("[type='radio']:checked").val();
 	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
@@ -176,7 +178,8 @@
 						orderCell : OrderCell, 
 						orderOption : OrderOption,
 						searchQuery : SQLPARADATA,
-						searchValue : searchValue
+						searchValue : searchValue,
+						searchType  : searchType
 					},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -286,8 +289,10 @@
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
 		            strListInfo += $(obj).closest("tr").attr("circularID") + ";";
+		            strMemberListInfo += $(obj).closest("tr").attr("memberID") + ";";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
+		            strMemberListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("memberID"), "");
 		        }
 		        
 		        listEventCheckbox = true;
@@ -515,7 +520,7 @@
 						async : false,
 						url : "/ezCircular/deleteCircularList.do",
 						data : { circularIDList : strListInfo,
-								 memberIDList : strMemberListInfo
+								 strMemberListInfo : strMemberListInfo
 								},
 						success: function() {
 						},
@@ -532,8 +537,11 @@
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezCircular.t5'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
+	        	<input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
+				<input name="searchType" id="Radio2" type="radio" value="content" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/>
+	        	&nbsp;
+				<input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				<a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">

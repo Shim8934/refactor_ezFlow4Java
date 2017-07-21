@@ -98,6 +98,7 @@
 	            var height = parseInt(document.documentElement.clientHeight - 180);
 	            document.getElementById("divList").style.height = height + "px";
 	            window_onunload_Event = true;
+
 	            getBoardList();
 	        }; 
 	        var Save_unloadSave = false;
@@ -144,8 +145,9 @@
 	        }
 
 	        function getBoardList() {
+	        	var searchType = $("[type='radio']:checked").val();
 	        	var searchValue = document.getElementById("txt_keyword").value;
-	        	
+
 		        starttime = new Date().getTime();
 				url = "/ezCircular/getCircularList.do";
 				
@@ -160,7 +162,8 @@
 						orderCell 	 : OrderCell, 
 						orderOption : OrderOption,
 						searchQuery : SQLPARADATA,
-						searchValue : searchValue
+						searchValue : searchValue,
+						searchType  : searchType
 					},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -524,8 +527,11 @@
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezCircular.t2'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-			  <input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          <a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
+	        	<input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
+				<input name="searchType" id="Radio2" type="radio" value="content" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/>
+	        	&nbsp;
+				<input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				<a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
