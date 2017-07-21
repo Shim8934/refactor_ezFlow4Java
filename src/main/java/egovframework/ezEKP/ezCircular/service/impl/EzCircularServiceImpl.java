@@ -187,6 +187,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 			int fileLength = fileList.split(",").length;
 			String[] fileLists = fileList.split(",");
 			
+			attachMap.put("circularID", circularID);
+			attachMap.put("tenantID", userInfo.getTenantId());
+			
 			for (int j=0; j<fileLength; j++) {
 				String[] files = fileLists[j].split("/");
 				String filePath = files[0];
@@ -196,12 +199,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String uploadFilePath = commonUtil.separator + "uploadFile";
 
 				filePath = uploadFilePath + commonUtil.separator + filePath;
-
-				attachMap.put("circularID", circularID);
+				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", filePath);
-				attachMap.put("tenantID", userInfo.getTenantId());
 				
 				ezCircularDAO.insertCircularAttach(attachMap);
 			}
@@ -335,6 +336,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 			int fileLength = fileList.split(",").length;
 			String[] fileLists = fileList.split(",");
 			
+			attachMap.put("circularID", circularID);
+			attachMap.put("tenantID", tenantID);
+			
 			for (int j=0; j<fileLength; j++) {
 				String[] files = fileLists[j].split("/");
 				String filePath = files[0];
@@ -345,11 +349,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 				
 				filePath = uploadFilePath + commonUtil.separator + filePath;
 				
-				attachMap.put("circularID", circularID);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", filePath);
-				attachMap.put("tenantID", tenantID);
 				
 				ezCircularDAO.updateCircularAttach(attachMap);
 			}
@@ -433,6 +435,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 			int fileLength = fileList.split(",").length;
 			String[] fileLists = fileList.split(",");
 			
+			attachMap.put("circularID", circularID);
+			attachMap.put("tenantID", tenantID);
+			
 			for (int j=0; j<fileLength; j++) {
 				String[] files = fileLists[j].split("/");
 				String filePath = files[0];
@@ -443,11 +448,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 				
 				filePath = uploadFilePath + commonUtil.separator + filePath;
 				
-				attachMap.put("circularID", circularID);
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", filePath);
-				attachMap.put("tenantID", tenantID);
 				
 				ezCircularDAO.insertCircularAttach(attachMap);
 			}
@@ -463,10 +466,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String[] strMemberList = strMemberListInfo.split(";");
 		String[] circularIDList = circularIDListInfo.split(";");
 
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		
 		for (int i=0; i<circularIDList.length; i++) {
 			String idInfo = circularIDList[i] + "/" + strMemberList[i];
-			
-			logger.debug("idInfo = " + idInfo);
 			
 			String[] idsArr = idInfo.split("/");
 			String circularID = idsArr[0];
@@ -476,8 +480,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 			
 			map.put("circularID", circularID);
 			map.put("memberID", memberID);
-			map.put("userID", userID);
-			map.put("tenantID", tenantID);
 			
 			if (memberID.equals(userID)) {
 				ezCircularDAO.deleteCircular(map);
@@ -564,12 +566,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 		int tenantId = circularDeptVO.getTenantID();
 		int circularBMId = ezCircularDAO.getCircularBMId(); // CircularBMId 값 가져옴
 		
+		map.put("CIRCULARBMID", circularBMId);
+		map.put("TENANTID", tenantId);
+		
 		for (int i=0; i<memberListStr.length; i++) {
 			String memberStr = memberListStr[i].trim();
 			
-			map.put("CIRCULARBMID", circularBMId);
 			map.put("v_MEMBERID", memberStr);
-			map.put("TENANTID", tenantId);			
 			
 			ezCircularDAO.set_circularMemberList(map);
 		}
@@ -617,11 +620,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 	public void circularDeptDel(String[] delList, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_TENANTID", tenantId);
+		
 		for (int i=0; i<delList.length; i++) {
 			String circularBMId = delList[i];
 			
 			map.put("v_CIRCULARBMID", circularBMId);
-			map.put("v_TENANTID", tenantId);
 			
 			ezCircularDAO.circularDeptDel(map);
 		}
@@ -722,12 +726,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantID", tenantID);
+		map.put("memberID", memberID);
 		
 		for (String circularID : circularIDList.split(";")) {
 			logger.debug("circularID = " + circularID + " || memberID = " + memberID);
 			
 			map.put("circularID", circularID);
-			map.put("memberID", memberID);
 			
 			confirmStatus(circularID, memberID, tenantID, "all");
 		}
@@ -894,7 +898,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public List<CircularFolderVO> getTopFolder(String memberId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("memberId", memberId);
 		map.put("tenantId", tenantId);
 		
@@ -905,9 +908,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 	public void circularClose(String[] circularIDList, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("tenantID", tenantID);
+		
 		for (String circularID : circularIDList) {
 			map.put("circularID", circularID);
-			map.put("tenantID", tenantID);
 
 			ezCircularDAO.circularClose(map);
 		}
@@ -1014,13 +1018,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		String[] circularIdArr = circularIdList.split(";");
 
+		map.put("folderId", folderId);
+		map.put("memberId", memberId);
+		map.put("updateStatus", updateStatus);
+		map.put("originLoc", originLoc);
+		map.put("tenantId", tenantId);
+		
 		for (int i=0; i<circularIdArr.length; i++) {
-			map.put("folderId", folderId);
 			map.put("circularId", circularIdArr[i]);
-			map.put("memberId", memberId);
-			map.put("updateStatus", updateStatus);
-			map.put("originLoc", originLoc);
-			map.put("tenantId", tenantId);
 
 			ezCircularDAO.moveCircular(map); // updateStatus 값 변경
 			ezCircularDAO.moveCircular2(map); // Link 테이블에 Insert
@@ -1076,11 +1081,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		String[] circularIdArr = circularIdList.split(";");
 
+		map.put("folderId", folderId);
+		map.put("memberId", memberId);
+		map.put("tenantId", tenantId);
+		
 		for (int i=0; i<circularIdArr.length; i++) {
-			map.put("folderId", folderId);
 			map.put("circularId", circularIdArr[i]);
-			map.put("memberId", memberId);
-			map.put("tenantId", tenantId);
 			
 			ezCircularDAO.updateFolderId(map);
 		}
@@ -1441,10 +1447,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		// 회람문서의 updateStatus 값을 변경
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		
 		for (String circularID : circularIdList.split(";")) {
 			map.put("circularID", circularID);
-			map.put("memberID", memberID);
-			map.put("tenantID", tenantID);
 			
 			ezCircularDAO.updateCircularStatus(map);
 			ezCircularDAO.moveCircular3(map); // LINK 테이블에서 제거
