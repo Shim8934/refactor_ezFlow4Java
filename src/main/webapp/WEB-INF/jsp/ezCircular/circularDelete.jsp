@@ -531,7 +531,7 @@
 						async : false,
 						url : "/ezCircular/deleteCircularList.do",
 						data : { circularIDList : strListInfo,
-								 strMemberListInfo : strMemberListInfo
+								 memberIDList : strMemberListInfo
 								},
 						success: function() {
 							alert("<spring:message code='ezCircular.t45'/>");
@@ -552,10 +552,10 @@
 	        		return;
 	        	}
 
-	        	/* if(confirm("<spring:message code='ezCircular.t182'/>")) {
+	        	if(confirm("<spring:message code='ezCircular.t182'/>")) {
 					$.ajax({
 						type : "POST",
-						dataType : "text",
+						dataType : "json",
 						async : false,
 						url : "/ezCircular/restoreCircularList.do",
 						data : { circularIDList : strListInfo,
@@ -566,10 +566,10 @@
 						error: function() {
 							alert("<spring:message code='ezCircular.t102'/>");
 						}
-					}); */
+					});
 					
 					refresh_onclick();
-	        	}	
+	        	}
 	        }
 	        
 	        function refresh_onclick() {
@@ -587,7 +587,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t62'/></span></li>
-	            <li><span onClick="restore()"><spring:message code='ezCircular.t181'/></span></li>
+	            <li><span onClick="restore_onclick()"><spring:message code='ezCircular.t181'/></span></li>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">

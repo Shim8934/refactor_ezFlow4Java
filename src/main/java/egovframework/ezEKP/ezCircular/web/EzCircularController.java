@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezCircular.web;
 import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -47,6 +46,19 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+
+/** 
+ * @Description [Controller] 사용자 - 회람판 
+ * @author 오픈솔루션팀 이효진, 정수현
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2017.05.17	정수현			신규작성
+ *    2017.06.19	이효진			추가작성
+ *
+ * @see
+ */
 
 @Controller
 public class EzCircularController extends EgovFileMngUtil {
@@ -1188,7 +1200,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("fileList : " + fileList);
 
-		String confirmDate = "";
 		int circularUserId = 0;
 		int updateStatus = 0;
 		circularListVO.setStatus(0);
@@ -1420,7 +1431,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String[] circularIDList = request.getParameter("circularIDList").split(";");
+		String circularIDList = request.getParameter("circularIDList");
 		
 		ezCircularService.circularConfirmStatus(circularIDList, userInfo.getId(), userInfo.getTenantId());
 		
@@ -2404,6 +2415,24 @@ public class EzCircularController extends EgovFileMngUtil {
 		ezCircularService.confirmStatus(circularID, userInfo.getId(), userInfo.getTenantId(), "commentConfirm");
 		
 		logger.debug("circularConfirm ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 회람판 휴지통 복구 실행 Method
+	 */
+	@RequestMapping(value = "/ezCircular/restoreCircularList.do")
+	public String restoreCircular(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("restoreCircularList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String circularIDList = request.getParameter("circularIDList");
+		String memberIDList = request.getParameter("memberIDList");
+		
+		ezCircularService.restoreCircular(circularIDList, memberIDList, userInfo.getId(), userInfo.getTenantId());
+		
+		logger.debug("restoreCircularList ended.");
 		
 		return "json";
 	}

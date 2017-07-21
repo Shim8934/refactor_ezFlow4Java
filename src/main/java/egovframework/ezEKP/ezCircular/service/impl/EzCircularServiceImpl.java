@@ -691,13 +691,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularConfirmStatus(String[] circularIDList, String memberID, int tenantID) throws Exception {
+	public void circularConfirmStatus(String circularIDList, String memberID, int tenantID) throws Exception {
 		logger.debug("circularConfirmStatus started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantID", tenantID);
 		
-		for (String circularID : circularIDList) {
+		for (String circularID : circularIDList.split(";")) {
 			logger.debug("circularID = " + circularID + " || memberID = " + memberID);
 			
 			map.put("circularID", circularID);
@@ -1175,24 +1175,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
-	public String getCircularStatus(String circularIdList, String memberID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		String rtnValue = "";
-		String[] circularIdArr = circularIdList.split(";");
-		
-		for (int i=0; i<circularIdArr.length; i++) {
-			map.put("circularID", circularIdArr[i]);
-			map.put("memberID", memberID);
-			map.put("tenantID", tenantID);
-			
-			rtnValue += ezCircularDAO.getCircularStatus(map) + ";";
-		}
-		
-		return rtnValue;
-	}
-
-	@Override
 	public List<CircularListVO> getSearchAllCircularList(String memberID, int startRow, int endRow, int tenantID, String offset, String keyword, int filterVal, String startDate, String endDate) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1270,7 +1252,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateReadStatus ended.");
 	}
 	
-	private void updateStatus(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
+	/*private void updateStatus(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateStatus started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1282,7 +1264,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.updateUpdateStatus(map);
 		
 		logger.debug("updateStatus ended.");
-	}
+	}*/
 	
 	private void updateUpdateStatus(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateUpdateStatus started.");
@@ -1432,24 +1414,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		String status = "";
-		String[] circularArr = circularIdList.split(";");
-
-		// 회람문서 원래 상태값을 가져옴
-		for (int i=0; i<circularArr.length; i++) {
-			map.put("circularID", circularArr[i]);
-			map.put("memberID", memberID);
-			map.put("tenantID", tenantID);
-			
-			status += ezCircularDAO.getCircularStatus(map) + ";";
-		}
-		
-		String[] statusArr = status.split(";");
-		
 		// 회람문서의 updateStatus 값을 변경
-		for (int i=0; i<statusArr.length; i++) {
-			map.put("circularID", circularArr[i]);
-			map.put("status", statusArr[i]);
+		for (String circularID : circularIdList.split(";")) {
+			map.put("circularID", circularID);
 			map.put("memberID", memberID);
 			map.put("tenantID", tenantID);
 			
@@ -1525,6 +1492,18 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("commentShareUser ended.");
 	}
 	
+	@Override
+	public void restoreCircular(String circularIDList, String memberIDList, String userID, int tenantID) throws Exception {
+		logger.debug("restoreCircular started.");
+		logger.debug("circularIDList = " + circularIDList);
+		logger.debug("memberIDList = " + memberIDList);
+		logger.debug("userID = " + userID + " || tenantID = " + tenantID);
+		
+		
+		
+		logger.debug("restoreCircular ended.");
+	}
+
 	private String getCommentStateID(String circularCommentID, String memberID, int tenantID) throws Exception {
 		logger.debug("getCommentStateID started.");
 		

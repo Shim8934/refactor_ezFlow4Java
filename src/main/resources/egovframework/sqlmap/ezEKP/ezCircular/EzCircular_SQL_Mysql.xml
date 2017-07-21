@@ -2215,11 +2215,11 @@
           UPDATE
               TBL_CIRCULAR_LINK
           SET
-              CIRCULARFOLDERID = #folderId#
+              circularfolderid = #folderId#
           WHERE 
-              CIRCULARID = #circularId#
+              circularid = #circularId#
           AND
-              TENANTID = #tenantId#
+              tenantid = #tenantId#
         ]]>
     </update>
     
@@ -2228,13 +2228,24 @@
           UPDATE
               TBL_CIRCULAR_USER
           SET
-              UPDATESTATUS = #status#
+              updatestatus = (SELECT
+              					*
+              				FROM(SELECT
+									B.status as updatestatus
+								FROM
+									TBL_CIRCULAR_USER B
+								WHERE
+									B.circularid = #circularID#
+								AND
+									B.memberid = #memberID#	
+								AND
+									B.tenantid = #tenantID#) AS B)
           WHERE 
-              CIRCULARID = #circularID#
+              circularid = #circularID#
           AND
-          	  MEMBERID = #memberID#
+          	  memberid = #memberID#
           AND
-              TENANTID = #tenantID#
+              tenantid = #tenantID#
         ]]>
     </update>
 

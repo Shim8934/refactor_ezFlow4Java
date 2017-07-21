@@ -62,8 +62,6 @@ public interface EzCircularService {
 
 	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
 
-	public String getCircularStatus(String circularIdList, String memberID, int tenantID) throws Exception;
-
 	public int getCircularListCount(String memberID, String searchValue, String sdate, String edate, int tenantID) throws Exception;
 
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception;
@@ -108,7 +106,7 @@ public interface EzCircularService {
 
 	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, String circularBMId) throws Exception;
 
-	public void circularConfirmStatus(String[] circularIDList, String memberID, int tenantID) throws Exception;
+	public void circularConfirmStatus(String circularIDList, String memberID, int tenantID) throws Exception;
 
 	public void circularClose(String[] circularIDList, int tenantId) throws Exception;
 
@@ -135,5 +133,7 @@ public interface EzCircularService {
 	public void confirmStatus(String circularID, String memberID, int tenantID, String type) throws Exception;
 
 	public void updateCircular(String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String loginCookie, LoginVO userInfo, String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserID, int updateStatus) throws Exception;
+
+	public void restoreCircular(String circularIDList, String memberIDList, String userID, int tenantID) throws Exception;
 	
 }
