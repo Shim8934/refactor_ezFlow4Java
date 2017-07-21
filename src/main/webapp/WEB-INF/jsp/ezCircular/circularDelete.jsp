@@ -545,6 +545,33 @@
 	        	}	
 	        }
 	        
+	        //복구
+	        function restore_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+
+	        	/* if(confirm("<spring:message code='ezCircular.t182'/>")) {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCircular/restoreCircularList.do",
+						data : { circularIDList : strListInfo,
+								 strMemberListInfo : strMemberListInfo
+								},
+						success: function() {
+						},
+						error: function() {
+							alert("<spring:message code='ezCircular.t102'/>");
+						}
+					}); */
+					
+					refresh_onclick();
+	        	}	
+	        }
+	        
 	        function refresh_onclick() {
 	        	getBoardList();
 	        }
@@ -560,6 +587,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t62'/></span></li>
+	            <li><span onClick="restore()"><spring:message code='ezCircular.t181'/></span></li>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">

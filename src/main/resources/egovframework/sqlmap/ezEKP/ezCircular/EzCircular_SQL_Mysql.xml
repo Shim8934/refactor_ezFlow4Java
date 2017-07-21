@@ -1638,8 +1638,7 @@
 				AND
 					A.tenantid = #tenantID#
 				ORDER BY
-					B.status ASC,
-					A.regdate DESC
+					B.updateDate DESC
 			]]>
 		</isEqual>
 	</select>
@@ -2026,9 +2025,9 @@
 	<insert id="EzCircularDAO.insertCommentState" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_COMMENTSTATE
-				(circularcommentid, memberid, status, tenantid)
+				(circularcommentid, memberid, status, updateDate, tenantid)
             VALUES
-                (#circularCommentID#, #memberID#, #status#, #tenantID#)
+                (#circularCommentID#, #memberID#, #status#, #nowDate#, #tenantID#)
 		]]>
 	</insert>
 
@@ -2312,15 +2311,10 @@
 				UPDATE
 					TBL_CIRCULAR_COMMENTSTATE
 				SET
-					status = #status#
+					status = #status#,
+					updateDate = #nowDate#
 				WHERE
-					circularcommentid IN (SELECT
-											circularCommentID
-										FROM
-											TBL_CIRCULAR_COMMENT
-										WHERE
-											circularid = #circularID#
-										)
+					circularcommentid = #circularCommentID#
 				AND
 					memberID = #memberID#
 				AND

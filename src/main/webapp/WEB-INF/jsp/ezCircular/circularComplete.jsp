@@ -436,6 +436,31 @@
 	        	}
 	        }
 	        
+	        function CircularDelete_onclick() {
+	        	if (strListInfo.length == 0) {
+	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		return;
+	        	}
+	        	
+	        	if(confirm("<spring:message code='ezCircular.t46'/>")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						async : false,
+						url : "/ezCircular/circularDeleteTemp.do",
+						data : { circularIDList : strListInfo
+								},
+						success: function() {
+							alert("<spring:message code='ezCircular.t45'/>");
+							refresh_onclick();
+						},
+						error: function() {
+							alert("<spring:message code='ezCircular.t102'/>");
+						}
+					});
+	        	}
+	        }
+	        
 	        function CircularMove_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
@@ -521,6 +546,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
+	            <li><span onClick="CircularDelete_onclick()"><spring:message code='ezCircular.t30'/></span></li>
 	            <li><span onClick="CircularMove_onclick()"><spring:message code='ezCircular.t56'/></span></li>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">

@@ -14,3 +14,4 @@ var strLang13 = "공유자를 지정하시겠습니까?";
 var strLang14 = "공유자를 지정 중 오류가 발생했습니다.";
 var strLang15 = "의견을 확인하시겠습니까?";
 var strLang16 = "의견확인 중 오류가 발생했습니다.";
+var strLang17 = "의견이 없습니다.";
