@@ -1371,8 +1371,7 @@ function tr_unselectedAll(pTableID) {
     if (!oList)
         return;
 
-    if (document.getElementById("Header" +
-    		"CheckBox").checked) {
+    if (document.getElementById("HeaderAllCheckBox").checked) {
     }
     else {
 
