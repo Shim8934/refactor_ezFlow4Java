@@ -128,7 +128,7 @@
 	                return;
 	            }
 	            
-	            if (updateStatus == "2") {
+	            if (updateStatus == "2" || status == "2") {
 	            	$.ajax({
 						type : "POST",
 						dataType : "json",
@@ -444,7 +444,7 @@
                 	    	</c:if>
                 	    	
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}]</span></li>
-	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/i_bar.gif"></li>
+	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
 		                        <li><span onclick="circularModify()">회람수정</span></li>
