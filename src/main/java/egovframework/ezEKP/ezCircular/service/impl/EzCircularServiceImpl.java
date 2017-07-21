@@ -1538,13 +1538,27 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 	
 	@Override
-	public void restoreCircular(String circularIDList, String memberIDList, String userID, int tenantID) throws Exception {
+	public void restoreCircular(String circularIDList, String memberID, int tenantID) throws Exception {
 		logger.debug("restoreCircular started.");
 		logger.debug("circularIDList = " + circularIDList);
-		logger.debug("memberIDList = " + memberIDList);
-		logger.debug("userID = " + userID + " || tenantID = " + tenantID);
+		logger.debug("memberID = " + memberID + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
 		
 		
+		for (String circularID : circularIDList.split(";")) {
+			map.put("circularID", circularID);
+			
+			
+			//delstatus 0로 update
+			//폴더냐 아니냐 - >
+				//폴더면 updatestatus 3
+				//아니면
+					//updatestatus status로 수정
+			
+		}
 		
 		logger.debug("restoreCircular ended.");
 	}
