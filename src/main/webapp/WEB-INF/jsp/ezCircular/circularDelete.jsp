@@ -533,7 +533,7 @@
 						async : false,
 						url : "/ezCircular/deleteCircularList.do",
 						data : { circularIDList : strListInfo,
-								 memberIDList : strMemberListInfo
+								 strMemberListInfo : strMemberListInfo
 								},
 						success: function() {
 						},
