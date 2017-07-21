@@ -104,6 +104,12 @@ function getCircularComment() {
 					circularCommentList += "</tr>";
 				});
 				
+				if (list.length == 0) {
+					circularCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
+					circularCommentList += "<td style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:center;background-color:white;'>" + strLang17 + "</td>";
+					circularCommentList += "</tr>";
+				}
+				
 				$("#circularUserList").html("");
 				$("#circularUserList").append(circularCommentList);
 			}
