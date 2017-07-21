@@ -106,7 +106,7 @@ function getCircularComment() {
 				
 				if (list.length == 0) {
 					circularCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
-					circularCommentList += "<td style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:center;background-color:white;'>" + strLang17 + "</td>";
+					circularCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:center;background-color:white;'>" + strLang17 + "</td>";
 					circularCommentList += "</tr>";
 				}
 				
@@ -171,6 +171,10 @@ function editCircularComment(obj) {
 function deleteCircularComment(obj) {
 	var circularCommentID = $(obj).closest("tr").attr("circularCommentID");
 	
+	if (!confirm(strLang18)) {
+		return;
+	}
+	
 	$.ajax({
 		type : "POST",
 		url : "/ezCircular/deleteCircularComment.do",
@@ -180,11 +184,10 @@ function deleteCircularComment(obj) {
 			circularCommentID : circularCommentID
 		},
 		success : function(result) {
-			alert(strLang6);
 			getCircularComment();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			
+			alert(strLang1);
 		}
 	});
 }
