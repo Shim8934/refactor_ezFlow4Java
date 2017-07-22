@@ -384,34 +384,6 @@
   			</table>
 		</div>
 
-<!-- 	    <table id="printScreen" style="display: none;"> -->
-<!--   			<tr style="text-align:center"> -->
-<!--     			<td style="vertical-align:top"> -->
-<!--     				<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2"> -->
-<!-- 	      				<tr style="height:25px">  -->
-<%--         					<th style="padding-left:10px" width="80"><spring:message code="ezCircular.t122"/></th> --%>
-<!--         					<td style="padding-left:10px"> <div id="printOwner"></div></td>  -->
-<!--       					</tr>  -->
-<!--       					<tr style="height:25px">  -->
-<%-- 	        				<th style="padding-left:10px"><spring:message code="ezCircular.t115"/></th> --%>
-<!--         					<td style="padding-left:10px"> <div id="printImportance"></div></td>  -->
-<!--       					</tr>  -->
-<!--       					<tr style="height:25px">  -->
-<%-- 	        				<th style="padding-left:10px"><spring:message code="ezCircular.t37"/></th> --%>
-<!--         					<td style="padding-left:10px"> <div id="printDate"></div></td>  -->
-<!--       					</tr>  -->
-<!--       					<tr style="height:25px">  -->
-<%-- 	        				<th style="padding-left:10px"><spring:message code="ezCircular.t32"/></th> --%>
-<!--         					<td style="padding-left:10px"> <div id="printTitle"></div></td>  -->
-<!--       					</tr>  -->
-<!--       					<tr>  -->
-<!-- 	        				<td colspan="2"><div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%;  PADDING-TOP: 5px"></div></td>  -->
-<!--       					</tr>  -->
-<!--    					</table> -->
-<!--    				</td> -->
-<!--   			</tr> -->
-<!-- 		</table> -->
-		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");

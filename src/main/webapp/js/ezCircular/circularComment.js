@@ -106,7 +106,7 @@ function getCircularComment() {
 				
 				if (list.length == 0) {
 					circularCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white;'>";
-					circularCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:center;background-color:white;'>" + strLang17 + "</td>";
+					circularCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:center;background-color:white;'>" + strLang16 + "</td>";
 					circularCommentList += "</tr>";
 				}
 				
@@ -171,7 +171,7 @@ function editCircularComment(obj) {
 function deleteCircularComment(obj) {
 	var circularCommentID = $(obj).closest("tr").attr("circularCommentID");
 	
-	if (!confirm(strLang18)) {
+	if (!confirm(strLang17)) {
 		return;
 	}
 	
@@ -252,7 +252,7 @@ function shareComment() {
 		return;
 	}
 	
-	if(!confirm(strLang13)) {
+	if(!confirm(strLang12)) {
 		return;
 	}
 	
@@ -273,13 +273,13 @@ function shareComment() {
 			closePopup();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert(strLang14);
+			alert(strLang13);
 		}
 	});
 }
 
 function commentConfirm() {
-	if (!confirm(strLang15)) {
+	if (!confirm(strLang14)) {
 		return;
 	}
 	
@@ -297,7 +297,7 @@ function commentConfirm() {
 			parent.window.opener.refresh_onclick();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert(strLang16);
+			alert(strLang15);
 		}
 	});
 }

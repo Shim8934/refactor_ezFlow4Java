@@ -1771,7 +1771,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 
     /**
-	 * 회람처 설정 이름 확인 Method
+	 * 회람판 환경설정 즐겨찾기 회람자목록 화면 호출 Method
 	 **/
 	@RequestMapping(value = "/ezCircular/circularCheckName.do")
 	public String circularCheckName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {

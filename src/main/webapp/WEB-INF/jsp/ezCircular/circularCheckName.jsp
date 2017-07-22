@@ -12,7 +12,7 @@
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
-		<title><spring:message code='ezCircular.t67'/></title>
+		<title><spring:message code='ezCircular.t82'/></title>
 		<script>
 		    /* function cancel_onClick() {
 		        if (ReturnFunction != null) {
@@ -31,7 +31,7 @@
 		</script>
 	</head>	
 	<body class="popup"> 
-		<h1><spring:message code='ezCircular.t67' /></h1>
+		<h1><spring:message code='ezCircular.t82' /></h1>
 		<div class="listview" style="height:220px; overflow:auto;">
 			<table id="List" class="mainlist" style="width:100%">
 				<thead id="List_THEAD">
