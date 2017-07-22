@@ -1095,7 +1095,13 @@
 		    var issearch = false;
 		    function search_click(type) {
 		        listContentArry = new Array();
-		        
+
+		        if ($.trim($("#keyword").val()) == "") {
+		        	alert("<spring:message code='ezOrgan.jsh1' />");
+		            document.all("keyword").focus();
+		            return;
+		        }
+
 		        if (specialChk(keyword.value)) {
 		    		alert("<spring:message code='ezCircular.t134' />");
 		    		return;

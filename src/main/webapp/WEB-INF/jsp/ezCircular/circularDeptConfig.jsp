@@ -57,12 +57,12 @@
 		    	if ($("input[value=" + obj.id + "]").is(":checked")) {
 		    		$("input[value=" + obj.id + "]").prop("checked", false);
 		    		obj.style.backgroundColor = "#FFFFFF";
+		    		_RowObject = null;
 		    	} else {
 		    		$("input[value=" + obj.id + "]").prop("checked", true);
 		    		obj.style.backgroundColor = "rgb(233, 241, 244)";
+		        	_RowObject = obj;
 		    	}
-
-		        _RowObject = obj;   	
 		    }
 
 		    function event_dbclick() {
