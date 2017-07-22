@@ -62,7 +62,7 @@ function check_time() {
     return true;
 }
 
-var SaveScheduleId = "";
+/*var SaveScheduleId = "";
 function save_schedule()
 {
     if (scheduleid == "") {
@@ -356,9 +356,9 @@ function save_schedule()
 
 	    window.close();
 	}
-}
+}*/
 
-function CheckPreviously() {
+/*function CheckPreviously() {
     var rtv = false;
 
     $.ajax({
@@ -379,7 +379,7 @@ function CheckPreviously() {
     });
 
     return rtv;    
-}
+}*/
 
 function checkFontInfo(str)
 {
@@ -486,7 +486,6 @@ function check_name(type) {
             alert("'" + names[i] + "'" + strLang21);
             continue;
         } else if (adCount == 1) {
-alert("333");
             if (g_attendant == null)
                 g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
@@ -543,7 +542,6 @@ alert("333");
 }
 
 function check_name_Complete(rgParams) {
-alert("!!!");
     DivPopUpHidden();
     if (rgParams["name"] != "") {
         if (g_attendant == null)
@@ -592,18 +590,18 @@ var g_fileList;
 var g_fileNameList = new Array();
 var g_fileInfoList = new Array();
 
-function show_progress(fileinfo)
+/*function show_progress(fileinfo)
 {
     var feature = GetShowModalPosition(390, 170);
     g_progresswin = window.showModelessDialog("/ezSchedule/scheduleProgress.do?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken" + feature);
-}
+}*/
 
-function status_change(fileinfo)
+/*function status_change(fileinfo)
 {
 	try {
 		g_progresswin.document.Script.fileinfo_change(fileinfo);
 	} catch(e) {}
-}
+}*/
 
 function attach_Delete()
 {
@@ -626,7 +624,7 @@ function attach_Delete()
 	}
 }		
 
-function allday_change()
+/*function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)
 	{
@@ -638,7 +636,7 @@ function allday_change()
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
 	}
-}
+}*/
 
 var g_sdate = null;
 var g_edate = null;
@@ -893,7 +891,7 @@ function ListOwnerID_Change()
 	}
 }
 
-var g_resource = new Array();
+/*var g_resource = new Array();
 var ApproveFlag = "0";
 var typeVal = "";
 var tmpReFlag = "0";
@@ -947,9 +945,9 @@ function manage_resource()
             }
         }
     }
-}
+}*/
 
-var g_data = new Array();
+/*var g_data = new Array();
 function manage_resource_Complete(rtn) {
     if (rtn[0].length == 0 && rtn[1].length == 0) {
         var xmlHttp = createXMLHttpRequest();
@@ -977,8 +975,8 @@ function manage_resource_Complete(rtn) {
         else
             document.getElementById("resourcelist").innerHTML += ", " + g_resource[1][i];
     }
-}
-var resourcexmlDoc;
+}*/
+/*var resourcexmlDoc;
 function config_repeat_resource() {
     if (g_resource.length > 0) {
         if (g_resource[0].length == 0) {
@@ -1060,9 +1058,9 @@ function config_repeat_resource_Complete(rgParams) {
         document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
         tmpReFlag = "1";
     }
-}
+}*/
 
-function resource_Check(resDate) {
+/*function resource_Check(resDate) {
     var check = true;
 
     if (g_resource[0].length == 0) {
@@ -1101,9 +1099,9 @@ function resource_save(resDate) {
 		}
     }
     return saveResult;
-}
+}*/
 
-function DupCheck(resItemID, resDate) {
+/*function DupCheck(resItemID, resDate) {
     var STime = "";
     var ETime = "";
     var allday = false;
@@ -1133,9 +1131,9 @@ function DupCheck(resItemID, resDate) {
     }
     
     return !isUsingResource(resItemID, STime, ETime, companyID, "", "add", allday);
-}
+}*/
 
-function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay) {
+/*function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay) {
     var xmlHTTP = createXMLHttpRequest();
     var xmlDOM = createXmlDom();
     var objNode;
@@ -1182,9 +1180,9 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
     } else {
     	return true;
     }
-}
+}*/
 
-function SaveSchedule_onClick(cmd, resItem, resDate) {
+/*function SaveSchedule_onClick(cmd, resItem, resDate) {
 	if (resDate == "") {
 		if (!document.getElementById("alldaycheck").checked) {
 	        if (!CheckStartEndDateTime()) {
@@ -1340,9 +1338,9 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
         result = "ERROR";
     }
     return result;
-}
+}*/
 
-function SaveRepetition(org_num, org_ownerID) {
+/*function SaveRepetition(org_num, org_ownerID) {
     var xmlHttp = createXMLHttpRequest();
     xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=add&num=" + org_num + "&ownerID=" + org_ownerID, false);
     xmlHttp.send(g_data["recurrence"]);
@@ -1353,7 +1351,7 @@ function SaveRepetition(org_num, org_ownerID) {
         alert("" + strLang112 + "");
         return;
     }
-}
+}*/
 
 function CheckStartEndDateTime() {
     var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
@@ -1605,7 +1603,7 @@ function EmbedContentIntoXML(xmlDoc, rootNode) {
     MakeXmlNode(xmlDoc, rootNode, "CONTENT", BodyHTMLContent);
 }
 
-function Signature_ImagePathConvert(tbContent) {
+/*function Signature_ImagePathConvert(tbContent) {
     var tempDiv = document.createElement("DIV");
     tempDiv.innerHTML = tbContent;
     var imgColl = tempDiv.getElementsByTagName("IMG");
@@ -1618,8 +1616,8 @@ function Signature_ImagePathConvert(tbContent) {
         }
     }
     return OrgBody;
-}
-function ConvertSaveImageFile(filename) {
+}*/
+/*function ConvertSaveImageFile(filename) {
     filename = unescape(filename);
     filename = ReplaceText(filename, "file:///", "");
 
@@ -1658,13 +1656,13 @@ function ConvertSaveImageFile(filename) {
         return XmlHttp.responseText;
     }
     catch (e) { }
-}
+}*/
 function ReplaceText(orgStr, findStr, replaceStr) {
     var re = new RegExp(findStr, "gi");
     return (orgStr.replace(re, replaceStr));
 }
 
-function getFirstDateInfo(startDate, endDate) {
+/*function getFirstDateInfo(startDate, endDate) {
 	var returnValue = "";
 	
 	var xmlHTTP = createXMLHttpRequest();
@@ -1690,7 +1688,7 @@ function getFirstDateInfo(startDate, endDate) {
 	}
 	
 	return returnValue;
-}
+}*/
 
 function setLength(num) {
     if (num < 10) {
@@ -1700,7 +1698,7 @@ function setLength(num) {
 }
 
 //언젠간 쓰일지도 모를 repetition->g_data["recurrence"] 변환 함수
-function makeResRepetition(startDate, endDate) {
+/*function makeResRepetition(startDate, endDate) {
 	var info = repetition.split("|");
 	
 	var recurrenceDom = createXmlDom();
@@ -1799,4 +1797,4 @@ function makeResRepetition(startDate, endDate) {
 	createNodeAndInsertText(recurrenceDom, objNode, "endDateTime", endDate);
 	
 	g_data["recurrence"] = getXmlString(recurrenceDom);
-}
+}*/
