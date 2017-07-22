@@ -1978,6 +1978,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
 		
+   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+   		
    		logger.debug("retireUserManage ended");
    		
 		return "admin/ezOrgan/retireUserManage";
