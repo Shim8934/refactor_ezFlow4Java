@@ -1102,7 +1102,7 @@
 		    	}
 		        
 		        if (keyword.value == "") {
-		            alert("<spring:message code='ezCircular.t150' />");
+		            alert("<spring:message code='ezCircular.t135' />");
 		            keyword.focus();
 		            return;
 		        }

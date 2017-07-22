@@ -548,7 +548,6 @@
 	        <ul>
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="Delete_onclick()"><spring:message code='ezCircular.t30'/></span></li>
-<%-- 	            <li id="right"><spring:message code='ezCircular.t99'/><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /></li> --%>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
@@ -621,7 +620,7 @@
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezCircular.t169'/> :
+	                            <dt><spring:message code='ezCircular.t122'/> :
 	                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
 	                            </dt>
 	                        </dl>
@@ -648,7 +647,7 @@
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezCircular.t169'/> :</dt>
+	                            <dt><spring:message code='ezCircular.t122'/> :</dt>
 	                            <dd><span id="PreW_MailReceiver" style="display: inline-block"></span>
 	                            </dd>
 	                        </dl>

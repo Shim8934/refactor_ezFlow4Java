@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.stringtemplate.v4.debug.AddAttributeEvent;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -1641,8 +1642,12 @@ public class EzCircularController extends EgovFileMngUtil {
 	public String circularSelectAttendant(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("circularSelectAttendant started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		logger.debug("circularSelectAttendant ended");
-	
+		
+		model.addAttribute(userInfo.getId());
+		
 		return "/ezCircular/circularSelectAttendant";
 	}
 
