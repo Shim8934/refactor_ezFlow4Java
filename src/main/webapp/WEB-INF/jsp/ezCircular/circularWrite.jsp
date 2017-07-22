@@ -273,10 +273,10 @@
         				<ul>
         					<c:choose>
         						<c:when test="${mode eq 'reuse'}">
-        							<li><span onClick="btn_Save('${mode}')">복사작성</span></li>
+        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t183"/></span></li>
         						</c:when>
         						<c:when test="${mode eq 'modify'}">
-        							<li><span onClick="btn_Save('${mode}')">회람수정</span></li>
+        							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t184"/></span></li>
         						</c:when>
         						<c:otherwise>
 		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t55"/></span></li>	
