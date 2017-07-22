@@ -1523,7 +1523,7 @@
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
 	                                                    <select id="search_type">
-	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t153' /></option>
+	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
 	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezCircular.t155' /></option>
@@ -1567,7 +1567,7 @@
 	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t153' /></td>
+	                                                    <td style="width: 170px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t80' /></td>
 	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t154' /></td>
 	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezCircular.t155' /></td>
 	                                                </tr>
@@ -1575,7 +1575,7 @@
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t78' /></td>
-	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t153' /></td>
+	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t80' /></td>
 	                                                    <td style="width: 90px; font-weight: bold;" class="td_gray"><spring:message code='ezCircular.t154' /></td>
 	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezCircular.t155' /></td>
 	                                                </tr>

@@ -147,7 +147,7 @@
 			    		async : false,
 			    		url : url,
 			    		success: function() {
-			    			alert("<spring:message code='ezCircular.t45' />");
+			    			//이효진 reload 대신 목록만 새로 뿌리게 수정필요함
 							window.location.reload(false);
 			    		},
 			    		error: function(err) {

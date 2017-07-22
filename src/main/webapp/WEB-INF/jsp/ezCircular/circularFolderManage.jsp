@@ -137,7 +137,6 @@
 							deleteFolder : deleteFolder 
 						},
 						success : function() {
-							alert("<spring:message code='ezCircular.t45' />");
 							onclick_Complete();
 						},
 						error : function() {
