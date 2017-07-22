@@ -66,8 +66,6 @@
 	    				memberListStr : memberListStr
 	    			},
 	    			success : function() {
-						alert("<spring:message code='ezCircular.t63' />");
-	        			
 		                if (ReturnFunction != null) {
 		                    ReturnFunction("OK");
 		                } else {
