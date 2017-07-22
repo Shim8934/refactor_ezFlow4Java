@@ -32,9 +32,7 @@
 					} else {
 						$(this).prop("checked", true);
 					}
-					
 				})
-				
 			});
 			
 			function event_Mover(obj) {
