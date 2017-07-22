@@ -1547,17 +1547,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
 		
-		
 		for (String circularID : circularIDList.split(";")) {
 			map.put("circularID", circularID);
 			
-			
-			//delstatus 0로 update
-			//폴더냐 아니냐 - >
-				//폴더면 updatestatus 3
-				//아니면
-					//updatestatus status로 수정
-			
+			ezCircularDAO.restoreCircular(map);
 		}
 		
 		logger.debug("restoreCircular ended.");

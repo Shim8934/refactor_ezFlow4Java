@@ -2512,6 +2512,43 @@
 	            tenantid = #tenantID#
         ]]>
     </update>
+    
+    <update id="EzCircularDAO.restoreCircular" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_CIRCULAR_USER
+    		SET
+    			deletestatus = 0,
+    			updatestatus = (SELECT
+    								*
+    							FROM
+    								(SELECT
+    									if (COUNT(circularID) = 0, (SELECT
+   																		status
+   																	FROM
+   																		TBL_CIRCULAR_USER
+   																	WHERE
+   																		circularID = #circularID#
+   																	AND
+   																		memberid = #memberID#
+   																	AND
+   																		tenantid = #tenantID#), 3)
+    								FROM
+    									TBL_CIRCULAR_LINK
+    								WHERE
+    									circularid = #circularID#
+    								AND
+    									memberid = #memberID#
+    								AND
+    									tenantid = #tenantID#) AS A)
+    		WHERE
+    			circularid = #circularID#
+    		AND
+    			memberID = #memberID#
+    		AND
+    			tenantid = #tenantID#
+    	]]>
+    </update>
 
     <delete id="EzCircularDAO.deleteCircular" parameterClass="Map">
         <![CDATA[

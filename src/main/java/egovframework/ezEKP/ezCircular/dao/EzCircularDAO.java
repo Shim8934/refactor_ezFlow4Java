@@ -356,4 +356,9 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		return (String) select("EzCircularDAO.getCommentStateID", map);
 	}
 
+	public void restoreCircular(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.restoreCircular", map);
+		
+	}
+
 }
