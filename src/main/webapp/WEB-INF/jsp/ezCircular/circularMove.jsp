@@ -79,7 +79,6 @@
 	                }
 	 			});
 	        }
-	        }
 	    </script>
 	</head>
 	<body scroll="no" class="popup" onload="javascript:window_onload()">
