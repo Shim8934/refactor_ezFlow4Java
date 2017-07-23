@@ -73,17 +73,12 @@
 	             	  window.close();
 	                  window.opener.getLeftCount();
 	                  window.opener.refresh_onclick();
-	                  call();
-// 	                  alert("<spring:message code='ezCircular.t110' />");
 	                },
 	                error : function() {
 	                	alert("<spring:message code='ezCircular.t102' />")
 	                }
 	 			});
 	        }
-	        
-	        function call() {
-	        	alert("<spring:message code='ezCircular.t110' />");
 	        }
 	    </script>
 	</head>

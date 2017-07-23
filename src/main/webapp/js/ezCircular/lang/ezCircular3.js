@@ -1,0 +1,17 @@
+﻿var strLang1 = "削除に失敗しました。";
+var strLang2 = "굴림";
+var strLang3 = "コメント作成";
+var strLang4 = "非公開";
+var strLang5 = "コメントを入力してください。";
+var strLang6 = "コメントを削除しました。";
+var strLang7 = "通知メールを送信しました。";
+var strLang8 = "進行中";
+var strLang9 = "終了";
+var strLang10 = "下書き";
+var strLang11 = "공유자를 선택해주세요.";
+var strLang12 = "공유자를 지정하시겠습니까?";
+var strLang13 = "공유자를 지정 중 오류가 발생했습니다.";
+var strLang14 = "의견을 확인하시겠습니까?";
+var strLang15 = "의견확인 중 오류가 발생했습니다.";
+var strLang16 = "의견이 없습니다.";
+var strLang17 = "삭제하시겠습니까?";

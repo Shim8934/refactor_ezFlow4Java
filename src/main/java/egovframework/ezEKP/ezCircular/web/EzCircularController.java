@@ -348,7 +348,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 휴지통 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDelete.do")
-	public String circularDelete(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+	public String circularDelete(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("circularDelete started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -364,22 +364,36 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 검색 화면 호출 Method
 	 */
 	@RequestMapping("/ezCircular/circularSearchView.do")
-	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO userInfo) throws Exception {
+	public String circularSearchView(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO userInfo) throws Exception {
 		logger.debug("circularSearchView started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("T", userInfo.getLang(), userInfo.getTenantId());
+		
+		StringBuffer resultXML = new StringBuffer();
 
-		String startDate = request.getParameter("sdate");
-		String endDate = request.getParameter("edate");
-		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		resultXML.append("<DOCLIST>");
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+        
+        for (CircularListHeaderVO vo : headerList) {
+        	resultXML.append("<HEADER>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+        	resultXML.append("</HEADER>");
+        }
 
-		model.addAttribute("offSetMin", offSetMin);
-		model.addAttribute("startDate", startDate);
-		model.addAttribute("endDate", endDate);
+        resultXML.append("</HEADERS>");
+        resultXML.append("<ROWS>");
+        resultXML.append("</ROWS>");
 
 		logger.debug("circularSearchView ended");
 		
-		return "/ezCircular/circularSearchView";		
+		model.addAttribute("listHeader", resultXML);
+		
+		return "/ezCircular/circularSearchView";
 	}
 
 	/**
@@ -505,31 +519,25 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	userInfo = commonUtil.userInfo(loginCookie);
     	
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("N", userInfo.getLang(), userInfo.getTenantId());
     	
-    	headerVO.setListType("N");
-    	headerVO.setTenantID(userInfo.getTenantId());
-    	
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-    	
-        int startRow = 1;
-        int endRow = 0;
-        int headerLength = headerList.size();
-        String pageNum = "1";
         String searchValue = req.getParameter("searchValue");
-        String searchType = "";
         String orderCell = req.getParameter("orderCell");
         String orderOption = req.getParameter("orderOption");
+        String searchType = "";
         String orderOption1 = "";
         String sdate = "";
         String edate = "";
+        String pageNum = "1";
+        int startRow = 1;
+        int endRow = 0;
 
-		for (int i = 0; i < headerLength; i++) {
-		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
+		for (CircularListHeaderVO vo : headerList) {
+		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
 		        if (orderOption.equals("")) {
-		            orderOption1 = headerList.get(i).getColName() + " ";
+		            orderOption1 = vo.getColName() + " ";
 		        } else {
-		            orderOption1 = headerList.get(i).getColName() + " DESC ";
+		            orderOption1 = vo.getColName() + " DESC ";
 		        }
 		    }
 		}
@@ -537,7 +545,6 @@ public class EzCircularController extends EgovFileMngUtil {
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
             edate = req.getParameter("edate");
-
         }
         
         if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
@@ -572,7 +579,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         for (CircularListHeaderVO vo : headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
         	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
@@ -652,7 +659,6 @@ public class EzCircularController extends EgovFileMngUtil {
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
             edate = req.getParameter("edate");
-
         }
 
         if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
@@ -661,24 +667,18 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	userInfo = commonUtil.userInfo(loginCookie);
 
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("T", userInfo.getLang(), userInfo.getTenantId());
     	
-    	headerVO.setListType("T");
-    	headerVO.setTenantID(userInfo.getTenantId());
-    	
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-    	
-    	int headerLength = headerList.size();
     	String orderCell = req.getParameter("orderCell");
     	String orderOption = req.getParameter("orderOption");
     	String orderOption1 = "";
 
-    	for (int i = 0; i < headerLength; i++) {
-		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
+    	for (CircularListHeaderVO vo : headerList) {
+		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
 		        if (orderOption.equals("")) {
-		            orderOption1 = headerList.get(i).getColName() + " ";
+		            orderOption1 = vo.getColName() + " ";
 		        } else {
-		            orderOption1 = headerList.get(i).getColName() + " DESC ";
+		            orderOption1 = vo.getColName() + " DESC ";
 		        }
 		    }
 		}
@@ -707,7 +707,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         for (CircularListHeaderVO vo : headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
         	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
@@ -774,7 +774,6 @@ public class EzCircularController extends EgovFileMngUtil {
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
             edate = req.getParameter("edate");
-
         }
     	
     	if (req.getParameter("pageNum") != null && !req.getParameter("pageNum").equals("")) {
@@ -785,24 +784,18 @@ public class EzCircularController extends EgovFileMngUtil {
         	searchType = req.getParameter("searchType");
         }
 
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
-
-    	headerVO.setListType("T");
-    	headerVO.setTenantID(userInfo.getTenantId());
-
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("T", userInfo.getLang(), userInfo.getTenantId());
     	
-    	int headerLength = headerList.size();
     	String orderCell = req.getParameter("orderCell");
     	String orderOption = req.getParameter("orderOption");
     	String orderOption1 = "";
 
-    	for (int i = 0; i < headerLength; i++) {
-		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
+    	for (CircularListHeaderVO vo : headerList) {
+		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
 		        if (orderOption.equals("")) {
-		            orderOption1 = headerList.get(i).getColName() + " ";
+		            orderOption1 = vo.getColName() + " ";
 		        } else {
-		            orderOption1 = headerList.get(i).getColName() + " DESC ";
+		            orderOption1 = vo.getColName() + " DESC ";
 		        }
 		    }
 		}
@@ -831,7 +824,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
         for (CircularListHeaderVO vo : headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
         	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
@@ -902,31 +895,24 @@ public class EzCircularController extends EgovFileMngUtil {
         if (req.getParameter("sdate") != null) {
         	sdate = req.getParameter("sdate");
             edate = req.getParameter("edate");
-
         }
 
         if (req.getParameter("searchType") != null && !req.getParameter("searchType").equals("")) {
         	searchType = req.getParameter("searchType");
         }
-
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
     	
-    	headerVO.setListType("T");
-    	headerVO.setTenantID(userInfo.getTenantId());
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("T", userInfo.getLang(), userInfo.getTenantId());
     	
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
-    	
-    	int headerLength = headerList.size();
     	String orderCell = req.getParameter("orderCell");
     	String orderOption = req.getParameter("orderOption");
     	String orderOption1 = "";
 
-    	for (int i = 0; i < headerLength; i++) {
-		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
+    	for (CircularListHeaderVO vo : headerList) {
+		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
 		        if (orderOption.equals("")) {
-		            orderOption1 = headerList.get(i).getColName() + " ";
+		            orderOption1 = vo.getColName() + " ";
 		        } else {
-		            orderOption1 = headerList.get(i).getColName() + " DESC ";
+		            orderOption1 = vo.getColName() + " DESC ";
 		        }
 		    }
 		}
@@ -955,7 +941,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         for (CircularListHeaderVO vo : headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
         	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
@@ -1025,24 +1011,18 @@ public class EzCircularController extends EgovFileMngUtil {
         	searchType = req.getParameter("searchType");
         }
 
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
-
-    	headerVO.setListType("T");
-    	headerVO.setTenantID(userInfo.getTenantId());
-
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("T", userInfo.getLang(), userInfo.getTenantId());
     	
-    	int headerLength = headerList.size();
     	String orderCell = req.getParameter("orderCell");
     	String orderOption = req.getParameter("orderOption");
     	String orderOption1 = "";
 
-    	for (int i = 0; i < headerLength; i++) {
-		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
+    	for (CircularListHeaderVO vo : headerList) {
+		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
 		        if (orderOption.equals("")) {
-		            orderOption1 = headerList.get(i).getColName() + " ";
+		            orderOption1 = vo.getColName() + " ";
 		        } else {
-		            orderOption1 = headerList.get(i).getColName() + " DESC ";
+		            orderOption1 = vo.getColName() + " DESC ";
 		        }
 		    }
 		}
@@ -1071,7 +1051,7 @@ public class EzCircularController extends EgovFileMngUtil {
         
         for (CircularListHeaderVO vo : headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
         	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
@@ -1690,8 +1670,12 @@ public class EzCircularController extends EgovFileMngUtil {
 	public String circularSelectAttendant(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("circularSelectAttendant started");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		logger.debug("circularSelectAttendant ended");
-	
+		
+		model.addAttribute(userInfo.getId());
+		
 		return "/ezCircular/circularSelectAttendant";
 	}
 
@@ -2053,11 +2037,6 @@ public class EzCircularController extends EgovFileMngUtil {
 
     	userInfo = commonUtil.userInfo(loginCookie);
 
-    	CircularListHeaderVO headerVO = new CircularListHeaderVO();
-
-    	headerVO.setListType("T");
-    	headerVO.setTenantID(userInfo.getTenantId());
-
     	String searchType = "";
     	String searchValue = req.getParameter("searchValue");
         String sdate = "";
@@ -2072,19 +2051,18 @@ public class EzCircularController extends EgovFileMngUtil {
         	searchType = req.getParameter("searchType");
         }
 
-    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader(headerVO);
+    	List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("T", userInfo.getLang(), userInfo.getTenantId());
     	
-    	int headerLength = headerList.size();
     	String orderCell = req.getParameter("orderCell");
     	String orderOption = req.getParameter("orderOption");
     	String orderOption1 = "";
 
-    	for (int i = 0; i < headerLength; i++) {
-		    if (!orderCell.equals("") && orderCell.equals(headerList.get(i).getName1())) {
+    	for (CircularListHeaderVO vo : headerList) {
+		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
 		        if (orderOption.equals("")) {
-		            orderOption1 = headerList.get(i).getColName() + " ";
+		            orderOption1 = vo.getColName() + " ";
 		        } else {
-		            orderOption1 = headerList.get(i).getColName() + " DESC ";
+		            orderOption1 = vo.getColName() + " DESC ";
 		        }
 		    }
 		}
@@ -2127,7 +2105,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
         for (CircularListHeaderVO vo : headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName1() + "</NAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
         	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
         	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");

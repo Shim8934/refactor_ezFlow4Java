@@ -1463,17 +1463,19 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public List<CircularListHeaderVO> getListHeader(CircularListHeaderVO headerVO) throws Exception {
+	public List<CircularListHeaderVO> getListHeader(String listType, String lang, int tenantID) throws Exception {
 		logger.debug("getUserList started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("listType", listType);
+		map.put("lang", lang);
+		map.put("tenantID", tenantID);
 
-		map.put("listType", headerVO.getListType());
-		map.put("tenantID", headerVO.getTenantID());
+		List<CircularListHeaderVO> list = ezCircularDAO.getListHeader(map);
+		
+		logger.debug("getUserList ended. listSize = " + list.size());
 
-		logger.debug("getUserList ended.");
-
-		return ezCircularDAO.getListHeader(map);
+		return list;
 	}
 
 	@Override

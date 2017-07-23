@@ -27,9 +27,8 @@
 	    	var keyword = "";
 	        var filter = "";
 	        var result = ""
-			var startdate = "<c:out value='${startDate}' />";
-			var enddate = "<c:out value='${endDate}' />";
-			var offSetMin = "<c:out value='${offSetMin}' />";
+			var startdate = "";
+			var enddate = "";
 
 		    document.onselectstart = function () { return false; };
 		    
@@ -44,7 +43,8 @@
 
 		        var height = parseInt(document.documentElement.clientHeight - 240);
 		        document.getElementById("divList").style.height = height + "px";
-		        $("keyword").text = "";
+
+		        getSearchList_after(loadXMLString("${listHeader}"));
 		    }
 			
 		    $(function () {
@@ -67,13 +67,8 @@
 		        var SDate;
 		        var EDate;
 		        
-		        if (startdate != "") {	
-		            SDate = new Date(startdate);
-		            EDate = new Date(enddate);
-		        } else {
-		            SDate = utcDate(offSetMin);
-		            EDate = utcDate(offSetMin);		            
-		        }
+	            SDate = new Date(startdate);
+	            EDate = new Date(enddate);
 		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
@@ -191,12 +186,12 @@
 		        		edate : edate,
 		        		pageNum : CurPage,
 		        		searchValue : keyword,
+		        		searchType : "subject",
 		        		orderCell : OrderCell,
 		        		orderOption : OrderOption
 		        	},
 		        	success : function(xml) {
 		        		getSearchList_after(loadXMLString(xml));
-		        		$("[name='mainlist']").css("display", "none");
 		        	}
 		        })
 		    }
@@ -404,8 +399,6 @@
 	        }
 
 		    function ItemRead_onclick(circularID) {
-		        var circularID = circularID;
-
 		        if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
@@ -415,11 +408,7 @@
 	        	}
 		    }
 			
-		    function RefreshView() {
-		        window.location.href = "/ezCircular/circularSearchView.do?sdate=" + startdate + "&edate=" + enddate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
-		    }
-			
-		    function onmouseOver(elem) {
+		    /* function onmouseOver(elem) {
 		        elem.style.color = "blue";
 		        elem.style.backgroundColor = "rgb(233, 241, 244)";
 		    }
@@ -427,7 +416,7 @@
 		    function onmouseOut(elem) {
 		        elem.style.color = "";
 		        elem.style.backgroundColor = "#FFFFFF";
-		    }
+		    } */
 			
 		    function search_keypress(evt) {
 		        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
@@ -469,22 +458,34 @@
 		 	<h2 class="h2_dot">
 		 		<spring:message code='ezCircular.t146'/>&nbsp;<span class="point"></span>&nbsp;<span id="resultCount"></span><spring:message code='ezCircular.t145'/>
 		    </h2>
-		  	<table class="mainlist" name="mainlist" style="width:100%">
-		    	<tr> 
-		      		<th style="width:20px; color: black;" nowrap title><input type="checkbox" id="Checkbox" onClick="check_change(this)"></th>
-			        <th style="width:28px; color: black;cursor:pointer;" nowrap class="image" onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
-			        <th style="width:28px; color: black;cursor:pointer;" nowrap class="image" onclick="event_HeaderClick(this)"><img src="/images/ImgIcon/circular_new.gif" border="0"></th>
-					<th style="width:28px;cursor:pointer;" class="image" onclick="event_HeaderClick(this)"><img src="/images/newAttach.gif" border="0"></th> 
-					<th style="width:350px;cursor:pointer;" id="tofromname" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t32' /></th>
-					<th style="width:150px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t122' /></th> 
-					<th style="width:60px;" align="left"><spring:message code='ezCircular.t33' /></th> 
-					<th style="width:80px;cursor:pointer;text-align:center" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t65' /></th>
-					<th style="width:20px;cursor:pointer" align="left" onclick="event_HeaderClick(this)"><spring:message code='ezCircular.t124' /></th>
-				</tr>
+		  	<%-- <table class="mainlist" style="width:100%">
+		    	<thead id="BoardList_THEAD">
+		    		<tr id="BoardList_TH">
+		    			<th id="BoardList_TH_0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;cursor:pointer;" class="h4_center" bgcolor="#CCCCCC" width="20px">
+		    				<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;">
+		    			</th>
+		    			<th id="BoardList_TH_1" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="28px">
+		    				<img src="/images/ImgIcon/view-importance.gif" border="0" align="absmiddle"></th>
+		    				<th id="BoardList_TH_2" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="28px">
+		    					<img src="/images/ImgIcon/msg-unrd.gif" border="0" align="absmiddle">
+		    				</th>
+		    				<th id="BoardList_TH_3" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="28px">
+		    					<img src="/images/ImgIcon/circular_share2.gif" border="0" align="absmiddle">
+		    				</th>
+		    				<th id="BoardList_TH_4" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="28px">
+		    					<img src="/images/newAttach.gif" border="0" align="absmiddle">
+		    				</th>
+		    				<th id="BoardList_TH_5" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70%;" class="h5_center" width="350px">제목</th>
+		    				<th id="BoardList_TH_6" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="100px">작성자</th>
+		    				<th id="BoardList_TH_7" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="140px">작성일</th>
+		    				<th id="BoardList_TH_8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="55px">확인</th>
+		    				<th id="BoardList_TH_9" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: center;" class="h5_center" width="75px">상태</th>
+		    			</tr>
+		    		</thead>
 				<tr>
 					<td colspan="9" style="text-align:center"><spring:message code='ezCircular.t144' /></td>
 				</tr>
-		  	</table>		    
+		  	</table> --%>
 		</form>
 		<span id="MailListRayer" style="border: 0px solid blue; width: 100%; height: 100%; vertical-align: top; overflow: hidden; display: inline-block;">
 	        <div style="width:100%; overflow:AUTO;" id="divList">

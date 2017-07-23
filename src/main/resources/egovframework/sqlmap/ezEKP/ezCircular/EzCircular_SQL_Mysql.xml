@@ -1666,15 +1666,17 @@
 	<select id="EzCircularDAO.getListHeader" parameterClass="Map" resultClass="CircularListHeaderVO">
 		<![CDATA[
 			SELECT 
-				IFNULL(NAME1, '') AS NAME1,
-				WIDTH,
-				COLNAME
+				IFNULL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END, '') name,
+				width,
+				colname
 			FROM 
 				TBL_CIRCULAR_LISTOPTION
 			WHERE
-				LISTTYPE = #listType# 
+				listtype = #listType#
 			AND
-				TENANTID = #tenantID#
+				tenantid = #tenantID#
+			ORDER BY
+				sn
 		]]>
 	</select>
 
