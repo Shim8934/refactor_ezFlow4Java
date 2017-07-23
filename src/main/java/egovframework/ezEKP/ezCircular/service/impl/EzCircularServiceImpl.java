@@ -1035,6 +1035,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void circularDeleteTemp(String circularIDList, String memberId, int tenantId) throws Exception {
+		logger.debug("circularDeleteTemp started.");
+		logger.debug("circularIDList = " + circularIDList + " || memberID = " + memberId + " || tenantID = " + tenantId);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberId);
 		map.put("tenantID", tenantId);
@@ -1044,6 +1047,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 			ezCircularDAO.tempDeleteCircular(map);
 		}
+		
+		logger.debug("circularDeleteTemp ended.");
 	}
 
 	@Override
