@@ -2222,6 +2222,57 @@ public class EzEmailUtil {
     	return result;
     }
     
+    public String bizmekaEditEmailList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String emailId, 
+    		String mainEmail, List<String> subEmailList) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=EDIT" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_EMAIL";
+    	
+    	StringBuilder sbMembers = new StringBuilder();    
+    	int memberCount = subEmailList.size();
+    	
+    	for (int i = 0; i < memberCount; i++) {
+    		sbMembers.append(subEmailList.get(i));
+    		
+    		if (i != memberCount - 1) {
+    			sbMembers.append(";");
+    		}
+    	}
+    	
+    	if (memberCount == 0) {
+    		sbMembers.append(mainEmail);
+    	}
+
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<EMAILID>" + commonUtil.cleanValue(emailId) + "</EMAILID>");
+    	sb.append("<EDITMAINEMAIL>" + commonUtil.cleanValue(mainEmail) + "</EDITMAINEMAIL>");    	
+    	sb.append("<EDITSUBEMAIL>" + commonUtil.cleanValue(sbMembers.toString()) + "</EDITSUBEMAIL>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
     private String toHexString(byte[] array) {
         return DatatypeConverter.printHexBinary(array);
     }    

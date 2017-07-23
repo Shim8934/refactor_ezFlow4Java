@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezStatistics.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzStatisticsAdminDAO")
 public class EzStatisticsAdminDAO extends EgovAbstractDAO{
-
+	
 	@SuppressWarnings("unchecked")
 	public List<StatDailyDocCountLogVO> getTimeList_F(StatApprVO statApprVO) {
 		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getTimeList_F", statApprVO);
