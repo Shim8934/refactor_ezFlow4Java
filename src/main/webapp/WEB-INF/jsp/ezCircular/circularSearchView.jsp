@@ -258,9 +258,9 @@
 	        
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += obj.id;
+		            strListInfo += $(obj).closest("tr").attr("circularID") + ";";
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id, "");
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID") + ";", "");
 		        }
 		        
 		        listEventCheckbox = true;
