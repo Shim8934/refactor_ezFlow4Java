@@ -180,12 +180,10 @@
 		                var is_newfile;
 		                var pNewNodeName = "";
 		                var Rtnval;
-		
 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
 // 		                is_newfile = document.getElementById("filelist").childNodes[i].getAttribute("NEWFILE");
 		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
-		                window.parent.DelAttachFileAtList(pNewNodeName);
-alert("@" + pNewNodeName);		
+// 		                window.parent.DelAttachFileAtList(pNewNodeName);
 		                var delfilesize;
 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
 		                filesize -= delfilesize;
@@ -209,7 +207,6 @@ alert("@" + pNewNodeName);
 		                strRet += "uploadFile/" + filepath + "|";
 		            }
 		        }
-alert("@" + strRet);		        
 		        window.parent.attachxml = strRet;
 		    }
 		
