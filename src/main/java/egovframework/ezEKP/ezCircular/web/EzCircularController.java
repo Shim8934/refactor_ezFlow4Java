@@ -489,8 +489,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("userID : "+userID + ", listCount : " + listCount + ", preView : " + preView);
 		
-		int tempCount = 10;
-		
+		CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
+		int tempCount = config.getListCnt();
+
 		if (listCount != null) {
 			tempCount = Integer.parseInt(listCount);
 		}
