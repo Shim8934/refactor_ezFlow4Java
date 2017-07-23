@@ -580,14 +580,6 @@
 	                            </select>    
 	                        </td>
 	                    </tr>
-	                    <%-- <tr>
-	                        <th><spring:message code='ezCircular.t19'/></th>
-	                        <td>
-	                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-	                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-	                            <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-                            </td>
-	                    </tr> --%>
 	                </table>
 	            </div>
 	        </div>
