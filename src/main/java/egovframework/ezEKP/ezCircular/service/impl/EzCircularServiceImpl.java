@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +152,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String regDate,
 							   String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName,
-							   String fileList, String[] receiverName2, String realPath, LoginVO userInfo, String loginCookie) throws Exception {
+							   String fileList, String[] receiverName2, String pDirPath, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("insertCircular started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -184,7 +185,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 		//첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
-		if (fileList != null && !fileList.equals("")) {
+		if (fileList != null && !fileList.equals("")) {		
+			File file = new File(pDirPath + commonUtil.separator + circularID + "_uploadFile");
+
+			if (!file.exists()) {
+	        	file.mkdir();
+	        }
+
 			int fileLength = fileList.split(",").length;
 			String[] fileLists = fileList.split(",");
 			
@@ -197,16 +204,19 @@ public class EzCircularServiceImpl implements EzCircularService {
 				String fileName = files[1];
 				String fileSize = files[2];
 				
-				String uploadFilePath = commonUtil.separator + "uploadFile";
+				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath;
+				String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + filePath + "_" + fileName;
+				String afterFilePath = pDirPath + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + "_" + fileName;
 
-				filePath = uploadFilePath + commonUtil.separator + filePath;
-				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", filePath);
+				attachMap.put("filePath", uploadFilePath);
 				
 				ezCircularDAO.insertCircularAttach(attachMap);
+
+				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
 			}
+			
 		}
 
 		// 임시저장이 아닐 때만 실행
@@ -243,6 +253,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 
 		logger.debug("insertCircular ended.");
+	}
+
+	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
+		logger.debug("fileMove started.");
+
+		File file = new File(beforeFilePath);
+		
+		try {
+			file.renameTo(new File(afterFilePath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("fileMove ended.");
 	}
 
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception {
@@ -384,7 +408,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 	}
 
-	private List<CircularListVO> getCommentStatus(String circularID, String memberID, int tenantID) {
+	private List<CircularListVO> getCommentStatus(String circularID, String memberID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("circularID", circularID);

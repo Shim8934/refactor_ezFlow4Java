@@ -31,6 +31,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
+import egovframework.ezEKP.ezCircular.service.impl.EzCircularServiceImpl;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
@@ -277,7 +278,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfoSimple(loginCookie);		
 
-		String filePath = request.getParameter("filePath");		
+		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");
 		String realPath = commonUtil.getRealPath(request);
 		String uploadFilePath = commonUtil.getUploadPath("upload_circular.ROOT", userInfo.getTenantId());
@@ -286,8 +287,10 @@ public class EzCircularController extends EgovFileMngUtil {
 			fileName = filePath; 
 		}
 		
-		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + commonUtil.separator + filePath;
+		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + commonUtil.separator + filePath + "_" + fileName;
 
+		logger.debug("fullFilePath : " + fullFilePath);
+		
 		downFile(request, response, fullFilePath, fileName);
 		
 		logger.debug("downloadAttach ended");
@@ -1214,14 +1217,24 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/saveCircular.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void saveCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+	public void saveCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO, LoginSimpleVO loginSimpleVO) throws Exception {
 		logger.debug("saveCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
-		
+
+		String realPath = request.getServletContext().getRealPath("");
 		String fileList = "";
+		String pDirPath = "";
+
 		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
 			fileList = request.getParameter("fileList");
+			
+			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
+
+	        pDirPath = realPath + pDirPath;
+	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+	        	pDirPath = pDirPath + commonUtil.separator;
+	        }
 		}
 		
 		logger.debug("fileList : " + fileList);
@@ -1235,7 +1248,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
-		String realPath = commonUtil.getRealPath(request);
+//		String realPath = commonUtil.getRealPath(request);
 
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
@@ -1259,7 +1272,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		} else {
 			ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
 					circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
-					receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, realPath, userInfo, loginCookie);			
+					receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, pDirPath, userInfo, loginCookie);			
 		}
 
 		logger.debug("saveCircular ended");
@@ -1516,9 +1529,14 @@ public class EzCircularController extends EgovFileMngUtil {
         	pDirPath = pDirPath + commonUtil.separator;
         }
         File file = new File(pDirPath + "uploadFile");
+        File tempFile = new File(pDirPath + "tempUploadFile");
 
         if (!file.exists()) {
-        	file.mkdir();        
+        	file.mkdir();
+        }
+        
+        if (!tempFile.exists()) {
+        	tempFile.mkdir();
         }
 
         StringBuffer strXML = new StringBuffer();
@@ -1527,17 +1545,23 @@ public class EzCircularController extends EgovFileMngUtil {
         for (int i = 0; i < cnt; i++) {        	
         	fileSize[i] = multiFile.get(i).getSize();
             String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
-            String newFileName = pUploadSN[i] + "." + extend;
+            String newFileName = pUploadSN[i];
             
             if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
-				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[denied]]></DATA3>");
+				strXML.append("<DATA><![CDATA[" + newFileName + "_" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
+//				strXML.append("<DATA6><![CDATA[" + pDirPath + "tempUploadFile" + "]]></DATA6>");
             } else {
-				writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "uploadFile");
-				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
+				writeUploadedFile(multiFile.get(i), newFileName + "_" + pFileName[i], pDirPath + "tempUploadFile");
+				strXML.append("<DATA><![CDATA[" + newFileName + "_" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
+//				strXML.append("<DATA6><![CDATA[" + pDirPath + "tempUploadFile" + "]]></DATA6>");
             }
         }
         strXML.append("</NODES></ROOT>");
@@ -1545,6 +1569,31 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("uploadCircularAttach ended");
         
         return strXML.toString();
+    }
+	
+	/**
+	 * 회람판작성 > 닫기 클릭시 임시첨부파일 삭제
+	 */
+	@RequestMapping(value = "/ezCircular/tempUploadFileDelete.do")
+	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		logger.debug("tempUploadFileDelete started");
+
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
+		String fileList = request.getParameter("fileList");
+
+		String[] data = fileList.split(","); 
+
+		for (int i=0; i<data.length; i++) {
+			String fileName = data[i].split("/")[0];
+
+			File file = new File(pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
+			
+			file.delete();
+		}
+
+        logger.debug("tempUploadFileDelete ended");
+        
+        return "json";
     }
 	
 	/**

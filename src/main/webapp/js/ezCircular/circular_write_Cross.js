@@ -1447,13 +1447,15 @@ function setAttachFileInfo(strXML) {
 
         var extCheck = false;
         for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
-            var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
-            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
+            var newFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
+            var pFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
+            var fileSize = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]);
+            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
+//            var fileLocation = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA6")[i]);
 
-            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]) == "OK") {
+            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
                 objTr = document.createElement("TR");
-                objTr.setAttribute("fileinfo", fileinfo);
-                objTr.setAttribute("attid", attid);
+                objTr.setAttribute("DATA2", newFileName + "/" + fileSize);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
@@ -1467,10 +1469,11 @@ function setAttachFileInfo(strXML) {
 
                 var objTd2 = document.createElement("TD");
 
-                objTd2.innerHTML = fileinfo.split("/")[1];
+                objTd2.setAttribute("NAME", "fileName");
+                objTd2.innerHTML = pFileName;
                 objTr.appendChild(objTd2);
 
-                var fileSize = parseInt(fileinfo.split("/")[2]);
+                var fileSize = parseInt(fileSize);
 
                 if (fileSize / 1024 / 1024 > 1) {
                     fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
@@ -1485,6 +1488,10 @@ function setAttachFileInfo(strXML) {
                 var objTd3 = document.createElement("TD");
                 setNodeText(objTd3, fileSize);
                 objTr.appendChild(objTd3);
+
+//                var objTd6 = document.createElement("TD");
+//                objTd6.innerHTML = fileLocation;
+//                objTr.appendChild(objTd6);
 
                 dadiframe.document.getElementById("filelist").appendChild(objTr);
             }

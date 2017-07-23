@@ -130,9 +130,9 @@
 
 				for (var i = 0; i < filelist.length - 1; i++) {	    
 					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "fileinfo");
+						fileList = GetAttribute(filelist[i + 1], "data2");
 					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+						fileList += "," + GetAttribute(filelist[i + 1], "data2");
             		}
 				}
 				
@@ -256,6 +256,36 @@
 			function Editor_Complete() {
     	    	message.SetEditorContent(sigBody.innerHTML);
     	    }
+			
+			function btn_Close() {
+				//파일 첨부된 목록 가져오기
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				var fileList = "";
+
+				for (var i = 0; i < filelist.length - 1; i++) {	    
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "data2");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+            		}
+				}
+
+				$.ajax({
+					url : '/ezCircular/tempUploadFileDelete.do',
+	                type : 'POST',
+	                dataType : 'json',
+	                data : {
+	                	fileList : fileList
+	                },
+	                success: function() {
+						window.close();
+	                },
+	                error: function() {
+	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                }
+				});
+			}
 		</script>
 	</head>
 	
@@ -287,7 +317,7 @@
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"><spring:message code="ezCircular.t84"/></span></li>
+          					<li><span onClick="btn_Close()"><spring:message code="ezCircular.t84"/></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">

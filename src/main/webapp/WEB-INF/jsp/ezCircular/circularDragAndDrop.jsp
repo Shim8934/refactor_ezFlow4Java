@@ -182,10 +182,10 @@
 		                var Rtnval;
 		
 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
-		                is_newfile = document.getElementById("filelist").childNodes[i].getAttribute("NEWFILE");
+// 		                is_newfile = document.getElementById("filelist").childNodes[i].getAttribute("NEWFILE");
 		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
 		                window.parent.DelAttachFileAtList(pNewNodeName);
-		
+alert("@" + pNewNodeName);		
 		                var delfilesize;
 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
 		                filesize -= delfilesize;
@@ -206,9 +206,10 @@
 		                strRet += filepath + "|";
 		            }
 		            else {
-		                strRet += pBoardID + "/uploadFile/" + filepath + "|";
+		                strRet += "uploadFile/" + filepath + "|";
 		            }
 		        }
+alert("@" + strRet);		        
 		        window.parent.attachxml = strRet;
 		    }
 		
@@ -232,7 +233,7 @@
 		            fd.append("fileToUpload", file[i]);
 		        }
 		        
-		        fd.append("boardID", window.parent.pBoardID);
+// 		        fd.append("boardID", window.parent.pBoardID);
 		        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
 		        fd.append("mode", "ATT");
 		
