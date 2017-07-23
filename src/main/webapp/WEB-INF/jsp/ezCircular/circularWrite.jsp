@@ -36,6 +36,10 @@
 	        	}
 	    	}
 
+	    	window.onbeforeunload = function () {
+	    		btn_Close();
+	    	} 
+
 		    window.onload = function () {
 				if (listSize != 0) {
 		        	document.getElementById("title").value = '${result.title}';
@@ -270,6 +274,7 @@
 				}
 
 				$.ajax({
+					async : false,
 					url : '/ezCircular/tempUploadFileDelete.do',
 	                type : 'POST',
 	                dataType : 'json',
