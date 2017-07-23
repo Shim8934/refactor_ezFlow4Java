@@ -1486,6 +1486,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void circularReturn(String circularIdList, String folderID, String memberID, int tenantID) throws Exception {
 		logger.debug("circularReturn started.");
+		logger.debug("circularIDList = " + circularIdList + " || memberID = " + memberID + " || tenantID");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 

@@ -288,7 +288,7 @@
 		        if (obj.checked) {
 		            strListInfo += $(obj).closest("tr").attr("circularID") + ";";
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID") + ";", "");
 		        }
 		        
 		        listEventCheckbox = true;

@@ -290,11 +290,11 @@
 	        
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += obj.id;
+		        	strListInfo += $(obj).closest("tr").attr("circularID") + ";";
 		            strNameInfo += $(obj).closest("td").closest("tr").attr("memberid") + ";";
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id, "");
-		            strNameInfo = ReplaceText(strNameInfo, $(obj).closest("td").closest("tr").attr("memberid") + ";", "");	            
+		        	strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID") + ";", "");
+		            strNameInfo = ReplaceText(strNameInfo, $(obj).closest("td").closest("tr").attr("memberid") + ";", "");
 		        }
 
 		        listEventCheckbox = true;
@@ -478,17 +478,7 @@
 		    function refresh_onclick() {
 		    	getBoardList();
 		    }
-		
-		    function chk_onselect(obj) {
-		        if (obj.checked) {
-		            strListInfo += $(obj).closest("tr").attr("circularID") + ";";
-		        } else {
-		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
-		        }
-		        
-		        listEventCheckbox = true;
-		    }
-		
+		    
 		    function search(type) {
 	            if (type == "basic") {
 	

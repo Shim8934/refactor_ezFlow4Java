@@ -291,8 +291,8 @@
 		            strListInfo += $(obj).closest("tr").attr("circularID") + ";";
 		            strMemberListInfo += $(obj).closest("tr").attr("memberID") + ";";
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID"), "");
-		            strMemberListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("memberID"), "");
+		            strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID") + ";", "");
+		            strMemberListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("memberID") + ";", "");
 		        }
 		        
 		        listEventCheckbox = true;
