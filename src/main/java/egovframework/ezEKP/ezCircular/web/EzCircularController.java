@@ -1674,7 +1674,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("circularSelectAttendant ended");
 		
-		model.addAttribute(userInfo.getId());
+		model.addAttribute("userID", userInfo.getId());
 		
 		return "/ezCircular/circularSelectAttendant";
 	}
