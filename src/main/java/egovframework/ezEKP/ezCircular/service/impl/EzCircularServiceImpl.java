@@ -186,7 +186,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {		
-			File file = new File(pDirPath + commonUtil.separator + circularID + "_uploadFile");
+			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
 
 			if (!file.exists()) {
 	        	file.mkdir();
@@ -199,18 +199,22 @@ public class EzCircularServiceImpl implements EzCircularService {
 			attachMap.put("tenantID", userInfo.getTenantId());
 			
 			for (int j=0; j<fileLength; j++) {
-				String[] files = fileLists[j].split("/");
+				String[] files = fileLists[j].split(";");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
 				
-				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath;
-				String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + filePath + "_" + fileName;
-				String afterFilePath = pDirPath + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + "_" + fileName;
+				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
+				
+				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
 
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFilePath);
+				
+				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezCircularDAO.insertCircularAttach(attachMap);
 
@@ -257,7 +261,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		logger.debug("fileMove started.");
-
+System.out.println("@@ " + beforeFilePath );
+System.out.println("@@ " + afterFilePath );
 		File file = new File(beforeFilePath);
 		
 		try {

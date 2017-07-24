@@ -287,7 +287,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			fileName = filePath; 
 		}
 		
-		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + commonUtil.separator + filePath + "_" + fileName;
+		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
 
 		logger.debug("fullFilePath : " + fullFilePath);
 		
@@ -1213,6 +1213,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 
 	        pDirPath = realPath + pDirPath;
+System.out.println(pDirPath);	        
 	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 	        	pDirPath = pDirPath + commonUtil.separator;
 	        }
@@ -1529,20 +1530,18 @@ public class EzCircularController extends EgovFileMngUtil {
             String newFileName = pUploadSN[i];
             
             if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
-				strXML.append("<DATA><![CDATA[" + newFileName + "_" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
 				strXML.append("<DATA4><![CDATA[]]></DATA4>");
 				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
-//				strXML.append("<DATA6><![CDATA[" + pDirPath + "tempUploadFile" + "]]></DATA6>");
             } else {
-				writeUploadedFile(multiFile.get(i), newFileName + "_" + pFileName[i], pDirPath + "tempUploadFile");
-				strXML.append("<DATA><![CDATA[" + newFileName + "_" + pFileName[i] + "]]></DATA>");
+				writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");
+				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
 				strXML.append("<DATA4><![CDATA[]]></DATA4>");
 				strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
-//				strXML.append("<DATA6><![CDATA[" + pDirPath + "tempUploadFile" + "]]></DATA6>");
             }
         }
         strXML.append("</NODES></ROOT>");
