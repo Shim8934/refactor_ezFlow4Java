@@ -15,3 +15,5 @@ var strLang14 = "コメントを確認しますか？";
 var strLang15 = "エラーが発生したため、コメントの確認ができません。";
 var strLang16 = "コメントがありません。";
 var strLang17 = "削除してよろしいですか？";
+var strLang18 = "전체의견";
+var strLang19 = "나의의견";

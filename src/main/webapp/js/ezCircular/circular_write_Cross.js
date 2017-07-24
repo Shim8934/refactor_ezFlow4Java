@@ -381,7 +381,7 @@ function save_schedule()
     return rtv;    
 }*/
 
-function checkFontInfo(str)
+/*function checkFontInfo(str)
 {
 	if (str == "")
         str = "<P> </P>"
@@ -391,7 +391,7 @@ function checkFontInfo(str)
         str = "<FONT size=2 face=" + strLang2 + ">" + str + "</FONT>";
     }
     return str;
-}
+}*/
 var g_attendant = null;
 var schedule_select_attendant_dialogArguments = new Array();
 function _manage_attendant() {
