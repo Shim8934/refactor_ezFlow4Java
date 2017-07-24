@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<!DOCTYPE html>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title><spring:message code='ezSystem.x0021'/></title>
+<title><spring:message code='ezStatistics.t1051'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
@@ -13,13 +13,11 @@
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 <script type="text/javascript">
-
-	var strLang1 = "<spring:message code='ezSystem.x0030'/>";
-	var strLang2 = "<spring:message code='ezSystem.x0031'/>";
-	var strLang4 = "<spring:message code='ezSystem.x0034'/>";
-	var strLang5 = "<spring:message code='ezSystem.x0035'/>";
-	var strLang6 = "<spring:message code='ezSystem.x0036'/>";
-	var CurPage = "";
+	
+	var strLang1 = "<spring:message code='ezStatistics.t1063'/>";
+	var strLang2 = "<spring:message code='ezStatistics.t1064'/>";
+	var strLang3 = "KB";
+	var currPage = "";
 	var totalPage = "";
 	var totalCount = "";
 	var BlockSize = 10;
@@ -27,12 +25,12 @@
 	var searchEndTime = "";
 	
 	//**/ 화면 호출시 실행 함수
-	window.onload = function(){
+	window.onload = function() {
 		getTime();
-		getLoginHist(1, searchStartTime, searchEndTime);
+		getMailLogList(1, searchStartTime, searchEndTime);
 		makePageSelPage();
 	}
-		
+
 	//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
 	function keyword_onkeydown(e) {
 		
@@ -42,16 +40,16 @@
 	        var keyCode = event.keyCode;
 	    }
 	    
-        if (keyCode == 13) {
+	    if (keyCode == 13) {
 			search();
 			return false;
 		}
-        
+	    
 		return true;
 	}
 
-	 //**/ 날짜 아이콘 적용 및 날짜 검색
-	 function getTime() {
+	//**/ 날짜 아이콘 적용 및 날짜 검색
+	function getTime() {
 		
 		var dateObj = new Date();
 		var year = dateObj.getFullYear();
@@ -73,62 +71,62 @@
 		$('#endDatepicker').val(dateObj);
 		
 	}
-	 
-    $(function() {
-    	$('#startDatepicker').datepicker({
-    		changeMonth: true,
-    		changeYear: true,
-    		autoSize: true,
-    		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-    		buttonImageOnly: true,
-    		maxDate: 0,
-    		onSelect: function(selected) {
-    			$('#endDatepicker').datepicker("option", "minDate", selected)
-    		}
-    	});
-    	$('#endDatepicker').datepicker({
-    		changeMonth: true,
-    		changeYear: true,
-    		autoSize: true,
-    		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
-    		buttonImageOnly: true,
-    		maxDate: 0,
-    		onSelect: function(selected) {
-    			$('#startDatepicker').datepicker("option", "maxDate", selected)
-    		}
-    	});    	    	
-    });
-    
-    var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
-    var monthStr = monthMsg.split(";");
-    var dayMsg = "일;월;화;수;목;금;토";
-    var dayStr = dayMsg.split(";");
-   
-    $(function() {
-    	$.datepicker.regional["ko"] = {
-    			closeText: "닫기",
-    			prevText: "이전달",
-    			nextText: "다음달",
-    			monthNames: monthStr,
-				monthNamesShort: monthStr,
-    			dayNames: dayStr,
-    			dayNamesShort: dayStr,
-    			dayNamesMin: dayStr,
-    			weekHeader: 'Wk',
-    			dateFormat: 'yy-mm-dd',
-       			firstDay:0,
-    			isRTL: false,
-    			duration: 200,
-    			showAnim: 'show',
-    			showMonthAfterYear: true
-    	};
-    	
-    	$.datepicker.setDefaults($.datepicker.regional["ko"]);	
-  		
-    });
 	
+	$(function() {
+		$('#startDatepicker').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			maxDate: 0,
+			onSelect: function(selected) {
+				$('#endDatepicker').datepicker("option", "minDate", selected);
+			}
+		});
+		$('#endDatepicker').datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			maxDate: 0,
+			onSelect: function(selected) {
+				$('#startDatepicker').datepicker("option", "maxDate", selected)
+			}
+		});    	    	
+	});
+	
+	var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
+	var monthStr = monthMsg.split(";");
+	var dayMsg = "일;월;화;수;목;금;토";
+	var dayStr = dayMsg.split(";");
+	
+	$(function() {
+		$.datepicker.regional["ko"] = {
+				closeText: "닫기",
+				prevText: "이전달",
+				nextText: "다음달",
+				monthNames: monthStr,
+				monthNamesShort: monthStr,
+				dayNames: dayStr,
+				dayNamesShort: dayStr,
+				dayNamesMin: dayStr,
+				weekHeader: 'Wk',
+				dateFormat: 'yy-mm-dd',
+	   			firstDay:0,
+				isRTL: false,
+				duration: 200,
+				showAnim: 'show',
+				showMonthAfterYear: true
+		};
+		
+		$.datepicker.setDefaults($.datepicker.regional["ko"]);	
+			
+	});
+
 	//**/ 페이징처리
 	function td_Create1(strtext) {
         document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -140,7 +138,7 @@
         document.getElementById("tblPageRayer").innerHTML = "";
         strtext = "<div class='pagenavi'>";
         PagingHTML += strtext;
-        var pageNum = CurPage;
+        var pageNum = currPage;
         
         if (totalPage > 1 && pageNum != 1) {
             strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
@@ -212,19 +210,19 @@
     }
     
     function goToPageByNum(Value) {
-        CurPage = Value;
+        currPage = Value;
         makePageSelPage();
-		goToPage(CurPage);
+		goToPage(currPage);
     }
     
     function selbeforeBlock() {
-        var pageNum = parseInt(CurPage);
+        var pageNum = parseInt(currPage);
         pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
         goToPageByNum(pageNum);    
     }
     
     function selbeforeBlock_one() {
-        var pageNum = parseInt(CurPage);
+        var pageNum = parseInt(currPage);
         
         if (parseInt(pageNum - 1) > 0) {
             goToPageByNum(parseInt(pageNum - 1));
@@ -234,13 +232,13 @@
     }
     
     function selafterBlock() {
-        var pageNum = parseInt(CurPage);
+        var pageNum = parseInt(currPage);
         pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
         goToPageByNum(pageNum);
     }
     
     function selafterBlock_one() {
-        var pageNum = parseInt(CurPage);
+        var pageNum = parseInt(currPage);
         
         if( parseInt(pageNum + 1) <= totalPage) {
             goToPageByNum(parseInt(pageNum + 1));
@@ -248,10 +246,10 @@
             return;
         }
     }
-
+    
     //**/ 새로고침 클릭시 이벤트
     function reload() {
-    	goToPage(CurPage);
+    	goToPage(currPage);
     }
     
 	//**/ 검색 버튼 클릭시 이벤트
@@ -266,9 +264,11 @@
 				alert(strLang6);
 				return false;
 			} 
+			
 			searchStartTime = $('#startDatepicker').datepicker({dateFormat: 'yyyymmdd'}).val();
         	searchEndTime = $('#endDatepicker').datepicker({dateFormat:'yyyymmdd'}).val();
-			getLoginHist(1, searchStartTime, searchEndTime);
+			
+			getMailLogList(1,searchStartTime,searchEndTime );
 			
 		});
     }
@@ -276,83 +276,107 @@
 	//**/ 초기화버튼
 	function reset() {
 		$(function() {
-			$('#searchKeyword').val('');
+			$('#searchValue').val('');
 			getTime();
 		});
 	}
 	
-    //**/ 페이지네이션 클릭시
-	function goToPage(page) {
-		getLoginHist(page, searchStartTime, searchEndTime);
+	//**/ 페이지네이션 클릭시
+	function goToPage(pageNo) {
+		getMailLogList(pageNo, searchStartTime, searchEndTime);
 	}		
 
-    function getLoginHist(pageNum, searchStartTime, searchEndTime){
+	//**/ 메일 발신 로그내역 리스트 호출
+    function getMailLogList(pageNo, searchStartTime, searchEndTime ){
     	$(function() {
 
-			var selectOption = document.getElementById("searchKeycode");
-			var searchKeycode = selectOption.options[selectOption.selectedIndex].value;
-			var searchKeyword = document.getElementById("searchKeyword").value;
-
-			if (pageNum == "-1") {
-				
+    		var url = "/ezStatistics/statisticsMailLogList.do";
+			var mailLogType = "sendAll"; 
+			var selectOption = document.getElementById("searchField");
+			var searchValue = document.getElementById("searchValue").value;
+			var searchField = "";
+			
+			if (searchValue != "") {
+				searchField = selectOption.options[selectOption.selectedIndex].value;
+			}
+			
+			if (pageNo == "-1") {
 				var pageSize = "-1";
-				var params = 'startDate=' + searchStartTime +'&endDate=' + searchEndTime;
-				 	params += '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword ; 
-					params += '&pageNum=' + pageNum + '&pageSize=' + pageSize;
-				var pURL = "/admin/ezSystem/systemLoginHistExcelExport.do" + "?" + params;
-
-				saveExcel.location.href = pURL;
+				var params = 'searchStartTime=' + searchStartTime +'&searchEndTime=' + searchEndTime;
+				 	params += '&searchField=' + searchField + '&searchValue=' + searchValue ; 
+					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize;
+				var pURL = "/ezStatistics/statisticsMailLogExcelExport.do" + "?" + params;
 				
+				saveExcel.location.href = pURL;
+			
 			} else {
-	
-	    		var pURL = "/admin/ezSystem/systemLoginHistList.do";
 	    		$.ajax({
-	    			 url: pURL
+	    			 url: url
 	    			,type: "POST"
 	    			,async: false
 	    			,dataType: 'json'
 	    			,data: {  
-	    					  'startDate' : searchStartTime, 'endDate' : searchEndTime, 'searchKeycode' : searchKeycode
-	    					  ,'searchKeyword' : searchKeyword, 'pageNum' : pageNum 
+	    					  'searchStartTime' : searchStartTime, 'searchEndTime' : searchEndTime, 'searchField' : searchField
+	    					  ,'searchValue' : searchValue, 'pageNo' : pageNo, 'mailLogType' : mailLogType
 	    				   }    
 	    			,success: function(res) {
 	    				var html = "";
-	    				if (res.lang == 1) {
-	    					res.loginHistList.forEach(function(i,v){
-	    						html += "<tr>";
-	    						html += "	<td>" + i.usernm 			+ "</td>";
-	    						html += "	<td>" + i.deptnm 			+ "</td>";
-	    						html += "	<td>" + i.connectip 		+ "</td>";
-	    	    				html += "	<td>" + i.connecttime 		+ "</td>";
-	    	    				html += "	<td>" + i.connectbrowser 	+ "</td>";
-	    	    				html += "	<td>" + i.connectos 		+ "</td>";
-	    	    				html += "</tr>";
-	        				});
-						} else {
-							res.loginHistList.forEach(function(i,v){
-								html += "<tr>";
-								html += "	<td>" + i.usernm2 			+ "</td>";
-								html += "	<td>" + i.deptnm2 			+ "</td>";
-								html += "	<td>" + i.connectip 		+ "</td>";
-			    				html += "	<td>" + i.connecttime 		+ "</td>";
-			    				html += "	<td>" + i.connectbrowser 	+ "</td>";
-			    				html += "	<td>" + i.connectos 		+ "</td>";
-			    				html += "</tr>";
-		    				});
-						}
+	   					res.mailLogList.forEach(function(i,v){
+	   	    				var attStr = i.attachedFileName;
+	   	    				var attStrArr = attStr.split('|');
+	   	    				
+	   						html += "<tr>";
+	   						html += "	<td>" + i.LogTime 									    	+ "</td>";
+	   	    				html += "	<td>" + i.senderName + " (" + i.senderEmail + ")"	    	+ "</td>";
+	   	    				html += "	<td>" + i.senderDeptName	 						   		+ "</td>";
+	   						
+	   	    				if (i.recipientName == "") {
+		   	    				html += "	<td>" +  i.recipientEmail 								+ "</td>";
+	   	    				} else {
+		   	    				html += "	<td>" + i.recipientName + " (" + i.recipientEmail + ")" + "</td>";
+	   	    				}
+	   	    				
+	   	    				html += "	<td style='width:100%;overflow:hidden;text-overflow:ellipsis;' title='"+i.subject+"'>";
+	   	    				html += "		<nobr>" + i.subject + "</nobr>";
+	   	    				html += "   </td>";
+	   	    				
+	   	    				if (attStrArr.length > 1) {
+								html += "<td title='";
+								
+								for ( var j = 1; j < attStrArr.length; j++ ) {
+									html += attStrArr[j]; 
+									var next = j + 1;
+								
+									if (attStrArr.length > next) {
+										html += "&#10;"; //&#13;
+									}
+								}	
+								
+								var num = parseInt(attStrArr.length) - 1 ;
+								
+								html += "'>" + attStrArr[0] +" <spring:message code='ezStatistics.t1066'/> ";
+								html += num + "<spring:message code='ezStatistics.t1067'/>" + "</td>";		
+								
+	   	    				} else {
+	   	    					html += " 	<td>" + attStrArr[0] 							+ "</td>";
+	   	    				}
+	   	    				html += "		<td>" + i.mailSize + strLang3 					+ "</td>";
+	   	    				html += "</tr>";
+	       				});
 	    				
-	    				$('#loginHistListBody').empty().append(html);
+	    				$('#mailLogListBody').empty().append(html);
 	    				
-	    				CurPage = res.currPage;
+	    				currPage = res.currentPage;
 	    				totalPage = res.totalPage;
-	    				totalCount = res.itemCnt;
+	    				totalCount = res.totalCount;
 	    				
-	    				if (res.searchKeycode != null) {
-	    					var idx = parseInt(searchKeycode) - 1;
-		    				$('#searchKeycode option:eq('+idx+')').attr('selected','selected');
+	    				if (res.searchValue != "") {
+		    				$('#searchField').val(res.searchField).prop("selected", true);
+	    				} else {
+	    					$('#searchField option:eq('+ 0 +')').attr('selected', "selected");
 	    				}
 	    				
-	    				$('#searchKeyword').val(res.searchKeyword);
+	    				$('#searchValue').val(res.searchValue);
 	    				$('#startDatepicker').val(res.startDate);
 	    				$('#endDatepicker').val(res.endDate);
 	    			}
@@ -360,47 +384,50 @@
 	    				alert(err);
 	    			}
 	    		})
-	    		makePageSelPage();
+    			makePageSelPage();
 			}
     	});
     }
     
-  	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
+	//**/ 엑셀내려받기 버튼 클릭시 이벤트 호출
     function excelExport() {
-		var pageNum = "-1";
-		getLoginHist(pageNum, searchStartTime, searchEndTime);
+		var pageNo = "-1";
+    	getMailLogList(pageNo, searchStartTime, searchEndTime);
     }
-    
+
 </script>
 </head>
 <body class="mainbody">
-	<h1><spring:message code="ezSystem.x0021"></spring:message></h1>
+<h1><spring:message code="ezStatistics.t1051"/><spring:message code='ezStatistics.t1052'/></h1>
 	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
-				<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp;
+				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1061'/> : &nbsp;
 					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" /> ~ 
 					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 100px; text-align: center" readonly="readonly" />
 				</span> 
 				&nbsp;&nbsp;
-				<span id="topmenu" style="width: 500px"><spring:message code="ezSystem.x0028"></spring:message> : &nbsp;
-					<select id="searchKeycode"> 
-						<option value="1"><spring:message code="ezSystem.x0022"></spring:message></option>
-						<option value="2"><spring:message code="ezSystem.x0023"></spring:message></option>
-						<option value="3"><spring:message code="ezSystem.x0024"></spring:message></option>
-						<option value="4"><spring:message code="ezSystem.x0026"></spring:message></option>
-						<option value="5"><spring:message code="ezSystem.x0027"></spring:message></option>
+				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/> : &nbsp;
+					<select id="searchField"> 
+						<option value="senderName"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t1068'/></option>
+						<option value="senderEmail"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t1055'/></option>
+						<option value="senderDeptName"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t83'/></option>
+						<option value="recipientName"><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t1068'/></option>
+						<option value="recipientEmail"><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t1055'/></option>
+						<option value="subject"><spring:message code='ezStatistics.t1056'/></option>
+						<option value="attachedFileName"><spring:message code='ezStatistics.t1057'/></option>
 					</select>
-					<input type="text" id="searchKeyword" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
+					<input type="text" id="searchValue" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
 					<a class="imgbtn" >
-						<span onclick="javascript:search();"><spring:message code="ezSystem.x0029"></spring:message></span>
+						<span onclick="javascript:search();"><spring:message code='ezStatistics.t36'/></span>
 					</a>
 					<a class="imgbtn" >
-						<span onclick="javascript:reset();"><spring:message code="ezSystem.x0033"></spring:message></span>
+						<span onclick="javascript:reset();"><spring:message code='ezStatistics.t1059'/></span>
 					</a>
 					<a class="imgbtn" >
-						<span onclick="javascript:reload();"><spring:message code="ezSystem.x0037"></spring:message></span>
+						<span onclick="javascript:reload();"><spring:message code='ezStatistics.t1060'/></span>
 					</a>
+
 				</span> 
 			</td>
 			<td width="5%">
@@ -410,18 +437,24 @@
 			</td>
 		</tr>
 	</table>
+	<table style="margin: 10px 0px;">
+		<tr>
+			<td width="98%" style="font-weight: bold; color: gray;"> ※<spring:message code='ezStatistics.t1065'/> ※	</td>
+		</tr>
+	</table>
 	<table class="mainlist" style="width:100%;">
 		<thead>
 			<tr>
-				<th><spring:message code="ezSystem.x0022"></spring:message></th>
-				<th><spring:message code="ezSystem.x0023"></spring:message></th>
-				<th><spring:message code="ezSystem.x0024"></spring:message></th>
-				<th><spring:message code="ezSystem.x0025"></spring:message></th>
-				<th><spring:message code="ezSystem.x0026"></spring:message></th>
-				<th><spring:message code="ezSystem.x0027"></spring:message></th>
+				<th width='12%' ><spring:message code='ezStatistics.t1051'/> <spring:message code='ezStatistics.t214'/></th>
+				<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
+				<th width='8%'><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t83'/></th> 
+				<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
+				<th width='17%'><spring:message code='ezStatistics.t1056'/> </th>
+				<th width='15%'><spring:message code='ezStatistics.t1057'/> </th>
+				<th width='5%'><spring:message code='ezStatistics.t1058'/> </th>
 			</tr>
 		</thead>
-		<tbody id="loginHistListBody"></tbody>
+		<tbody id="mailLogListBody"></tbody>
 	</table>
 	<div id="tblPageRayer" style="padding-top: 20px;"></div>
 	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>

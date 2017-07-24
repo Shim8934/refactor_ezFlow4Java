@@ -123,6 +123,12 @@
 	        case 21:
 	            url = "WebLog_Statistics/WebLog_Module.aspx";
 	            break;
+	        case 22:
+	        	url = "/ezStatistics/statisticsMailRecieveLogList.do";
+	        	break;
+	        case 23:
+	        	url = "/ezStatistics/statisticsMailSendLogList.do";
+	        	break;
 	    }
 
 	    window.open(url,"stat_main");
@@ -149,6 +155,8 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(2)"><spring:message code='ezStatistics.t1018' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(4)"><spring:message code='ezStatistics.t1023' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(5)"><spring:message code='ezStatistics.t1025' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(22)"><spring:message code='ezStatistics.t1050' /> <spring:message code='ezStatistics.t1052'/></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(23)"><spring:message code='ezStatistics.t1051' /> <spring:message code='ezStatistics.t1052'/></span></li>
 		    </ul>
             <c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
             <c:if test="${use_approvalG == 'YES'}">
