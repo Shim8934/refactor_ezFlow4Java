@@ -220,7 +220,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
 			}
-			
 		}
 
 		// 임시저장이 아닐 때만 실행
@@ -261,10 +260,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		logger.debug("fileMove started.");
-System.out.println("@@ " + beforeFilePath );
-System.out.println("@@ " + afterFilePath );
+
 		File file = new File(beforeFilePath);
-		
+
 		try {
 			file.renameTo(new File(afterFilePath));
 		} catch (Exception e) {
@@ -359,31 +357,39 @@ System.out.println("@@ " + afterFilePath );
 		}
 
 		confirmStatus(circularID, memberID, tenantID, "circularConfirm");
+		
+		//첨부파일 삭제 후 등록
+		ezCircularDAO.deleteCircularAttach(map);
 
 		Map<String, Object> attachMap = new HashMap<String, Object>();
-		
+
 		if (fileList != null && !fileList.equals("")) {
 			int fileLength = fileList.split(",").length;
 			String[] fileLists = fileList.split(",");
-			
+
+			logger.debug("updateCircular fileList : " + fileList);
+
 			attachMap.put("circularID", circularID);
 			attachMap.put("tenantID", tenantID);
 			
 			for (int j=0; j<fileLength; j++) {
-				String[] files = fileLists[j].split("/");
+				String[] files = fileLists[j].split(";");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
 				
-				String uploadFilePath = commonUtil.separator + "uploadFile";
+				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
 				
-				filePath = uploadFilePath + commonUtil.separator + filePath;
+				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", filePath);
-				
-				ezCircularDAO.updateCircularAttach(attachMap);
+				attachMap.put("filePath", uploadFilePath);
+
+				logger.debug("uploadFilePath : " + uploadFilePath);
+
+//				ezCircularDAO.updateCircularAttach(attachMap);
+				ezCircularDAO.insertCircularAttach(attachMap);
 			}
 		}
 		
@@ -424,7 +430,9 @@ System.out.println("@@ " + afterFilePath );
 	}
 
 	@Override
-	public void modifyCircular(String title, int importance, int option, int circularID, int tenantID, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content, String fileList, String[] receiverName, String[] receiverName2, String offset) throws Exception {
+	public void modifyCircular(String title, int importance, int option, int circularID, int tenantID, int receiverLength, String[] receiverID, int updateStatus,
+			int circularUserId, String memberName, String memberName2, int status, String confirmDate, String content, String fileList, String pDirPath,
+			String[] receiverName, String[] receiverName2, String offset) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
@@ -462,6 +470,14 @@ System.out.println("@@ " + afterFilePath );
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
 		if (fileList != null && !fileList.equals("")) {
+			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+
+			if (!file.exists()) {
+	        	file.mkdir();
+	        }
+
+			logger.debug("modify fileList : " + fileList);
+			
 			int fileLength = fileList.split(",").length;
 			String[] fileLists = fileList.split(",");
 			
@@ -469,20 +485,26 @@ System.out.println("@@ " + afterFilePath );
 			attachMap.put("tenantID", tenantID);
 			
 			for (int j=0; j<fileLength; j++) {
-				String[] files = fileLists[j].split("/");
+				String[] files = fileLists[j].split(";");
 				String filePath = files[0];
 				String fileName = files[1];
 				String fileSize = files[2];
 				
-				String uploadFilePath = commonUtil.separator + "uploadFile";
+				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
 				
-				filePath = uploadFilePath + commonUtil.separator + filePath;
-				
+				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", filePath);
+				attachMap.put("filePath", uploadFilePath);
+				
+				logger.debug("uploadFilePath : " + uploadFilePath);
 				
 				ezCircularDAO.insertCircularAttach(attachMap);
+
+				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
 			}
 		}
 	}

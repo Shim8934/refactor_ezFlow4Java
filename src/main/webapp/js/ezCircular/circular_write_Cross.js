@@ -1451,7 +1451,6 @@ function setAttachFileInfo(strXML) {
             var pFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
             var fileSize = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]);
             var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
-//            var fileLocation = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA6")[i]);
 
             if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
                 objTr = document.createElement("TR");
@@ -1488,10 +1487,6 @@ function setAttachFileInfo(strXML) {
                 var objTd3 = document.createElement("TD");
                 setNodeText(objTd3, fileSize);
                 objTr.appendChild(objTd3);
-
-//                var objTd6 = document.createElement("TD");
-//                objTd6.innerHTML = fileLocation;
-//                objTr.appendChild(objTd6);
 
                 dadiframe.document.getElementById("filelist").appendChild(objTr);
             }

@@ -1131,12 +1131,14 @@ public class EzCircularController extends EgovFileMngUtil {
 			StringBuilder strAttach = new StringBuilder();
 			strAttach.append("<ROOT><NODES>");
 			
-			for (CircularAttachVO attach : attachList) {
-				strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize()) + "]]></DATA>");
-				strAttach.append("<DATA2><![CDATA[]]></DATA2>");
-				strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
+			for (CircularAttachVO attach : attachList) {				
+				strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("/")[2]) + "]]></DATA>");
+				strAttach.append("<DATA2><![CDATA[" + attach.getFileName() + "]]></DATA2>");
+				strAttach.append("<DATA3><![CDATA[" + attach.getFileSize() + "]]></DATA3>");
+				strAttach.append("<DATA4><![CDATA[]]></DATA4>");
+				strAttach.append("<DATA5><![CDATA[OK]]></DATA5>");
 			}
-			
+
 			strAttach.append("</NODES></ROOT>");
 			
 			if (mode.equals("modify")) { // 회람수정
@@ -1185,10 +1187,20 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 draganddrop 호출 Method
 	 */
 	@RequestMapping(value = "/ezCircular/dragAndDrop.do")
-	public String dragAndDrop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String dragAndDrop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String mode = "";
+		String circularID = "";
+		
+		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+			mode = request.getParameter("mode");
+			circularID = request.getParameter("circularID");
+		}
+		
 		model.addAttribute("userInfo",userInfo);
+		model.addAttribute("mode", mode);
+		model.addAttribute("circularID", circularID);
 		
 		return "/ezCircular/circularDragAndDrop";
 	}
@@ -1265,17 +1277,28 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularSaveTemp.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void circularSaveTemp(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+	public void circularSaveTemp(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO, LoginSimpleVO loginSimpleVO) throws Exception {
 		logger.debug("saveCircular started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String realPath = request.getServletContext().getRealPath("");
 		String fileList = "";
+		String pDirPath = "";
+
 		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
 			fileList = request.getParameter("fileList");
+
+			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
+
+	        pDirPath = realPath + pDirPath;
+
+	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+	        	pDirPath = pDirPath + commonUtil.separator;
+	        }
 		}
-		
-		logger.debug("fileList : "+fileList);
+
+		logger.debug("fileList : " + fileList);
 		
 		int circularUserId = 0;
 		int updateStatus = 0;
@@ -1287,8 +1310,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String receiverIDs = request.getParameter("receiverID");
 		String receiverList = request.getParameter("receiverList");
 		String receiverList2 = request.getParameter("receiverList2");
-		String realPath = commonUtil.getRealPath(request);
-		
+
 		logger.debug("receiverIDs : " + receiverIDs);
 		logger.debug("receiverList : " + receiverList);
 		logger.debug("receiverList2 : " + receiverList2);
@@ -1303,12 +1325,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		if (circularListVO.getCircularID() == 0) {
 			ezCircularService.insertCircular(circularListVO.getCircularID(), circularListVO.getTitle(), circularListVO.getImportance(), circularListVO.getOption(), 
 					circularListVO.getContent(), circularListVO.getHasFile(), circularListVO.getStatus(), regDate, circularListVO.getEndDate(), 
-					receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, realPath, userInfo, loginCookie);			
+					receiverLength, receiverID, updateStatus, circularUserId, receiverName, fileList, receiverName2, pDirPath, userInfo, loginCookie);			
 		} else {
 			ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularID(), 
 					userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId, circularListVO.getMemberName(), 
 					circularListVO.getMemberName2(), circularListVO.getStatus(), confirmDate, circularListVO.getContent(), 
-					fileList, receiverName, receiverName2, userInfo.getOffset());
+					fileList, pDirPath, receiverName, receiverName2, userInfo.getOffset());
 		}
 
 		logger.debug("saveCircular ended");
@@ -1396,51 +1418,51 @@ public class EzCircularController extends EgovFileMngUtil {
 		return "json";
 	}
 
-	/**
-	 * 회람판 임시 회람판 수정 실행 Method
-	 */
-	@RequestMapping(value = "/ezCircular/saveModifyCircular.do", method = RequestMethod.POST)
-	@ResponseBody
-	public void saveModifyCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
-		logger.debug("saveModifyCircular started");
-		
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String fileList = "";
-		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
-			fileList = request.getParameter("fileList");
-		}
-
-		int circularUserId = 0;
-		int updateStatus = 0;
-		String confirmDate = "";
-		int receiverLength = 0;
-		circularListVO.setStatus(0);
-		
-		String receiverIDs = request.getParameter("receiverID");
-		String receiverList = request.getParameter("receiverList");
-		String receiverList2 = request.getParameter("receiverList2");
-		
-		logger.debug("receiverIDs : " + receiverIDs);
-		logger.debug("receiverList : " + receiverList);
-		logger.debug("receiverList2 : " + receiverList2);
-		
-		receiverLength = receiverList.split(",").length;
-		String[] receiverID = receiverIDs.split(", ");
-		String[] receiverName = receiverList.split(", ");
-		String[] receiverName2 = receiverList2.split(", ");
-		
-//		if (receiverID.length == 0) {
-//			#
+//	/**
+//	 * 회람판 임시 회람판 수정 실행 Method
+//	 */
+//	@RequestMapping(value = "/ezCircular/saveModifyCircular.do", method = RequestMethod.POST)
+//	@ResponseBody
+//	public void saveModifyCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularListVO circularListVO) throws Exception {
+//		logger.debug("saveModifyCircular started");
+//		
+//		userInfo = commonUtil.userInfo(loginCookie);
+//		
+//		String fileList = "";
+//		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
+//			fileList = request.getParameter("fileList");
 //		}
-
-		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularID(), 
-										userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId, circularListVO.getMemberName(), 
-										circularListVO.getMemberName2(), circularListVO.getStatus(), confirmDate, circularListVO.getContent(), 
-										fileList, receiverName, receiverName2, userInfo.getOffset());
-
-		logger.debug("saveModifyCircular ended");
-	}
+//
+//		int circularUserId = 0;
+//		int updateStatus = 0;
+//		String confirmDate = "";
+//		int receiverLength = 0;
+//		circularListVO.setStatus(0);
+//		
+//		String receiverIDs = request.getParameter("receiverID");
+//		String receiverList = request.getParameter("receiverList");
+//		String receiverList2 = request.getParameter("receiverList2");
+//		
+//		logger.debug("receiverIDs : " + receiverIDs);
+//		logger.debug("receiverList : " + receiverList);
+//		logger.debug("receiverList2 : " + receiverList2);
+//		
+//		receiverLength = receiverList.split(",").length;
+//		String[] receiverID = receiverIDs.split(", ");
+//		String[] receiverName = receiverList.split(", ");
+//		String[] receiverName2 = receiverList2.split(", ");
+//		
+////		if (receiverID.length == 0) {
+////			#
+////		}
+//
+//		ezCircularService.modifyCircular(circularListVO.getTitle(),circularListVO.getImportance(),circularListVO.getOption(),circularListVO.getCircularID(), 
+//										userInfo.getTenantId(), receiverLength, receiverID, updateStatus, circularUserId, circularListVO.getMemberName(), 
+//										circularListVO.getMemberName2(), circularListVO.getStatus(), confirmDate, circularListVO.getContent(), 
+//										fileList, receiverName, receiverName2, userInfo.getOffset());
+//
+//		logger.debug("saveModifyCircular ended");
+//	}
 	
 	/**
 	 * 회람판 신규 회람판 클릭했을때, 확인 수 증가 및 확인일 설정 실행 Method
@@ -1482,6 +1504,19 @@ public class EzCircularController extends EgovFileMngUtil {
         String[] pUploadSN = new String[cnt];
         
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
+        
+//      String mode = "";
+//		String circularID = "";
+//
+//		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+//			mode = request.getParameter("mode");
+//		}
+//		
+//		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
+//			circularID = request.getParameter("circularID");		
+//		}
+//
+//		logger.debug("mode : " + mode + " | circularID : " + circularID);
 
         for (int i = 0; i < cnt; i++) {
             resultUpload[i] = "false";
@@ -1536,7 +1571,12 @@ public class EzCircularController extends EgovFileMngUtil {
 				strXML.append("<DATA4><![CDATA[]]></DATA4>");
 				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
             } else {
-				writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");
+//            	if (mode.equals("temp")) {
+//            		writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+//            	} else {
+            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");            		
+//            	}
+            	
 				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
@@ -1560,15 +1600,37 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 		String fileList = request.getParameter("fileList");
+//		String mode = "";
+//		String circularID = "";
+		String filePath = "";
+		
+		logger.debug("fileList : " + fileList);
+		
+//		if (request.getParameter("mode") != null && !request.getParameter("mode").equals("")) {
+//			mode = request.getParameter("mode");
+//		}
+//		
+//		if (request.getParameter("circularID") != null && !request.getParameter("circularID").equals("")) {
+//			circularID = request.getParameter("circularID");
+//		}
+//
+//		if (mode.equals("temp")) {
+//			filePath = "uploadFile" + commonUtil.separator + circularID + "_uploadFile";
+//		} else {
+		filePath = "tempUploadFile";
+//		}
 
-		String[] data = fileList.split(","); 
-
-		for (int i=0; i<data.length; i++) {
-			String fileName = data[i].split("/")[0];
-
-			File file = new File(pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
+		if (fileList.length() != 0) {
+			String[] data = fileList.split(","); 
 			
-			file.delete();
+			for (int i=0; i<data.length; i++) {
+				String sGUID = data[i].split(";")[0];
+				String fileName = data[i].split(";")[1];
+				
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				
+				file.delete();
+			}			
 		}
 
         logger.debug("tempUploadFileDelete ended");

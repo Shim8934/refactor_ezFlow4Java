@@ -348,9 +348,9 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.updateCircular", map);
 	}
 
-	public void updateCircularAttach(Map<String, Object> map) throws Exception {
-		update("EzCircularDAO.updateCircularAttach", map);
-	}
+//	public void updateCircularAttach(Map<String, Object> map) throws Exception {
+//		update("EzCircularDAO.updateCircularAttach", map);
+//	}
 
 	public String getCommentStateID(Map<String, Object> map) throws Exception {
 		return (String) select("EzCircularDAO.getCommentStateID", map);
