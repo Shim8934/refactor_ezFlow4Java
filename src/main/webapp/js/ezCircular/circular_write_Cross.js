@@ -1455,7 +1455,7 @@ function setAttachFileInfo(strXML) {
 
             if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
                 objTr = document.createElement("TR");
-                objTr.setAttribute("DATA2", newFileName + "/" + fileSize);
+                objTr.setAttribute("DATA2", newFileName + ";" + fileSize);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
