@@ -13,6 +13,7 @@
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var isfileup = false;
@@ -173,17 +174,23 @@
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
+		        var fileList = "";
+
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
 		                var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
-		                var pNewNodeName = "";
 		                var Rtnval;
+
 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
-// 		                is_newfile = document.getElementById("filelist").childNodes[i].getAttribute("NEWFILE");
-		                pNewNodeName = pNewNodeName + pAttachDelFileName + "*)[_-";
-// 		                window.parent.DelAttachFileAtList(pNewNodeName);
+
+						if (fileList == "") {
+							fileList = pAttachDelFileName;
+						} else {
+							fileList += "," + pAttachDelFileName;
+						}
+
 		                var delfilesize;
 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
 		                filesize -= delfilesize;
@@ -193,21 +200,22 @@
 		                filecnt--;
 		            }
 		        }
-		        filecnt = document.getElementById("filelist").childNodes.length;
-		        for (var i = 1; i < filecnt; i++) {
-		            var filepath = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
-		            if (filepath.indexOf(pBoardID) != -1) {
-		                strRet += filepath + "|";
-		            }
-		            else if (filepath.indexOf("tempUploadFile") != -1)
-		            {
-		                strRet += filepath + "|";
-		            }
-		            else {
-		                strRet += "uploadFile/" + filepath + "|";
-		            }
-		        }
-		        window.parent.attachxml = strRet;
+
+		        // upload된 파일 tempUploadFile에서 삭제
+		        $.ajax({
+					async : false,
+					url : '/ezCircular/tempUploadFileDelete.do',
+	                type : 'POST',
+	                dataType : 'json',
+	                data : {
+	                	fileList : fileList
+	                },
+	                success: function() {
+	                },
+	                error: function() {
+	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                }
+				});
 		    }
 		
 		    function checkall() {
