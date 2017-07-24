@@ -331,3 +331,18 @@ function saveEnvironment() {
 		});
 	}
 }
+
+function restUpdate() {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		data : {
+			ip : "211.200.1.1"			
+		},
+		async : false,		    		
+		url : "/mobile/ezSchedule/testUpdate.do",
+		success: function(text){
+			alert("update!");
+		}
+	});	
+}

@@ -8,7 +8,7 @@
 		<title><spring:message code='ezCircular.t36' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
-		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circular_write_Cross.js"></script>

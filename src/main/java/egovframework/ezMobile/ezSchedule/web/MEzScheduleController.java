@@ -1,0 +1,126 @@
+package egovframework.ezMobile.ezSchedule.web;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
+import egovframework.ezMobile.ezSchedule.service.MEzScheduleService;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+
+/** 
+ * @Description [Controller] 스케쥴
+ * @author 오픈솔루션팀 지정석
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2017.06.14    지정석    신규작성
+ *
+ * @see
+ */
+
+@Controller
+public class MEzScheduleController extends EgovFileMngUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MEzScheduleController.class);
+	
+	@Autowired
+	private CommonUtil commonUtil;
+
+	@Autowired
+	private Properties config;
+		
+	@Resource(name="MEzScheduleService")
+	private MEzScheduleService mEzScheduleService;
+		
+	/*@Resource(name="loginService")
+	private LoginService loginService;*/
+
+	/*@Resource(name="crypto") 
+	private EgovFileScrty egovFileScrty;*/
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
+	/*@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;*/
+		
+	/**
+	 * 모바일 client 일정관리 [get] method sample
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/testList.do")
+	public String testList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
+		logger.debug("testList started.");
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezschedule/1/gw-testList/fomace";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("name", "장진혁")
+		        .queryParam("email", "fomace@kaoni.com")
+		        .queryParam("position", "차장")
+		        .queryParam("age", "37");
+		
+		RestTemplate rest = new RestTemplate();
+		
+		String sample = rest.getForObject(builder.build().encode().toUri(), String.class);
+		
+System.out.println(sample);		
+		
+		logger.debug("testList ended.");
+		
+		return sample.toString();
+	}
+	
+	/**
+	 * 모바일 client 일정관리 [put] method sample
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/testUpdate.do")
+	public void testUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
+		logger.debug("testUpdate started.");
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "ezschedule/{scheduleid}/gw-testUpdate/{id}";
+		
+		RestTemplate rest = new RestTemplate();
+		
+	    rest.put(url, userInfo, 1, "fomace");
+		
+		logger.debug("testUpdate ended.");		
+	}
+}

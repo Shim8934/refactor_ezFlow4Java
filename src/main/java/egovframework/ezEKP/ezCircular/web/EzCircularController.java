@@ -388,6 +388,8 @@ public class EzCircularController extends EgovFileMngUtil {
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+        resultXML.append("</DOCLIST>");
 
 		logger.debug("circularSearchView ended");
 		

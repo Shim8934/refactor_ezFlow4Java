@@ -146,14 +146,14 @@
 						        <ul data-role="listview" data-theme="a" data-divider-theme="a" data-inset="true">						        	
 						            <li data-role="list-divider">오늘의일정 </li>
 						            <li>						            	
-						            	<a href="index.html">
+						            	<a href="/mobile/ezSchedule/testList.do">
 						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
 						                	오픈솔루션 개발 세미나<br/>
 						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">15:30 ~ 16:30</span>						                    
 						            	</a>
 						            </li>
 						            <li>
-						            	<a href="index.html">
+						            	<a href="javascript:restUpdate();">
 						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
 						                	디자인팀과 오후 미팅<br/>
 						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
