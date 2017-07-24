@@ -102,40 +102,19 @@
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
-		            var tmpStartDate = BDim[3].substring(0, 16);
-		            var tmpEndDate = BDim[4].substring(0, 16);
+		            var tmpStartDate = (BDim[3] + ":" + BDim[4]).substring(0, 16);
+		            var tmpEndDate = (BDim[5] + ":" + BDim[6]).substring(0, 16);
 		
 		            tmpStartDate = tmpStartDate.replace("/", ":");
 		            tmpEndDate = tmpEndDate.replace("/", ":");
+		            
 		            if (tmpEndDate < "${nowDate}") {
 		                setBujaeOff();
+		            	checkBujaeInfo_Complete_After();
 		                return true;
 		            }
-		            else if (tmpStartDate > "${nowDate}") {
-		                return true;
-		            }
-		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate.substring(0,10) + " <spring:message code='ezApprovalG.t1722'/>" + tmpEndDate.substring(0,10) + " <spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
-		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
-		            if (Rtnval) {
-		                checkBujaeInfo_Complete(true);
-		            }
-		            else {
-		                checkBujaeInfo_Complete(false);
-		            }
-		        } else if (proxyInfo != null && proxyInfo != "") {
-		        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
-		            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
-		
-		            tmpStartDate = tmpStartDate.replace("/", ":");
-		            tmpEndDate = tmpEndDate.replace("/", ":");
-		            if (tmpEndDate < "${nowDate}") {
-		                setBujaeOff();
-		                return true;
-		            }
-		            else if (tmpStartDate > "${nowDate}") {
-		                return true;
-		            }
-		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate.substring(0,10) + " <spring:message code='ezApprovalG.t1722'/>" + tmpEndDate.substring(0,10) + " <spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate.substring(0,16) + " ~ " + tmpEndDate.substring(0,16) + " <spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
 		                checkBujaeInfo_Complete(true);
@@ -155,8 +134,11 @@
 		            setbuttonenable();
 		            return;
 		        }
-		
-		        if (beforeJob != pListTypeValue) {
+		     	checkBujaeInfo_Complete_After();
+		    }
+		    
+		    function checkBujaeInfo_Complete_After() {
+		    	if (beforeJob != pListTypeValue) {
 		            beforeJob = pListTypeValue;
 		            pageNum = 1;
 		        }
@@ -221,7 +203,7 @@
 		            parent.frames["left"].setPresentValue("");
 		        } catch (e) { }
 		    }
-		
+		        
 		    function setBujaeOff() {
 		    	var result = "";
 		    	

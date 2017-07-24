@@ -16991,7 +16991,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String[] bujae = bujaeInfo.split(":");
 				
 				if (bujae.length >= 5) {
-					if (nowDate.compareTo(bujae[3].replace("/", ":").substring(0, 16)) >= 0 && nowDate.compareTo(bujae[4].replace("/", ":").substring(0, 16)) <= 0) {
+					if (nowDate.compareTo(bujae[3] + bujae[4]) >= 0 && nowDate.compareTo(bujae[4] + bujae[5]) <= 0) {
 						if (!chkFirst) {
 							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
 							chkFirst = true;
