@@ -549,7 +549,7 @@
 	            var pAddFlag = false;
 
 	            if (_RowObjectID != null) {
-	            	if (_RowObjectName.trim() == "deptList") {        		
+	            	if (_RowObjectName.trim() == "deptList") {
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
 		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
 		                    strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
@@ -629,6 +629,7 @@
 	                    var getlistview = new ListView();
 	                    getlistview.LoadFromID(listid);
 	                    var IsInsert = CheckMailReceiver(strId, "3");
+	                    
 	                    if (strId == "<c:out value='${userID}' />") {
 	                        alert("<spring:message code='ezCircular.t149' />");
 	                        return;
@@ -694,7 +695,7 @@
 		                    var getlistview = new ListView();
 		                    getlistview.LoadFromID(listid);
 		                    var IsInsert = CheckMailReceiver(strId, "3");
-	
+		                    
 		                    if (strId == "<c:out value='${userID}' />") {
 		                        alert("<spring:message code='ezCircular.t149' />");
 		                        continue;
@@ -745,13 +746,12 @@
 		
 		                    }
 		                }
-		
-		            }
-		            else {
+		            } else {
 		                if (p_ListOrderObject == "") {
 		                    alert("<spring:message code='ezCircular.t148' />");
 		                    return;
 		                }
+		                
 		                if (p_ListOrderObject != "") {
 		                    strId = p_ListOrderObject.getAttribute("_data2");
 		                    strName = p_ListOrderObject.getAttribute("_data4");
@@ -770,8 +770,7 @@
 		
 		                    if (bFlag) {
 		                        pAddFlag = true;
-		                    }
-		                    else {
+		                    } else {
 		                        pparsingXML2 = "";
 		                        pparsingXML = "";
 		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -817,8 +816,8 @@
 		            }
 	            }
 	            
-	        var listid ="MsgToList";
-	        _RowObjectID = null;
+		        var listid ="MsgToList";
+		        _RowObjectID = null;
 		    }
 	    
 		    function CheckMailReceiver(selRow, option) {
