@@ -1213,7 +1213,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
 
 	        pDirPath = realPath + pDirPath;
-System.out.println(pDirPath);	        
+        
 	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 	        	pDirPath = pDirPath + commonUtil.separator;
 	        }
