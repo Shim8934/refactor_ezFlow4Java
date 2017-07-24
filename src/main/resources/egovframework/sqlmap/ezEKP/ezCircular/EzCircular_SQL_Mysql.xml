@@ -2500,20 +2500,20 @@
         ]]>
     </update>
     
-    <update id="EzCircularDAO.updateCircularAttach" parameterClass="Map">
-        <![CDATA[
-            UPDATE
-	            TBL_CIRCULAR_FILE
-	        SET
-	            FILENAME = #fileName#,
-	            FILESIZE = #fileSize#,
-	            FILEPATH = #filePath#
-	        WHERE 
-	            circularid = #circularID#
-	        AND
-	            tenantid = #tenantID#
-        ]]>
-    </update>
+<!--     <update id="EzCircularDAO.updateCircularAttach" parameterClass="Map"> -->
+<!--         <![CDATA[ -->
+<!--             UPDATE -->
+<!-- 	            TBL_CIRCULAR_FILE -->
+<!-- 	        SET -->
+<!-- 	            FILENAME = #fileName#, -->
+<!-- 	            FILESIZE = #fileSize#, -->
+<!-- 	            FILEPATH = #filePath# -->
+<!-- 	        WHERE  -->
+<!-- 	            circularid = #circularID# -->
+<!-- 	        AND -->
+<!-- 	            tenantid = #tenantID# -->
+<!--         ]]> -->
+<!--     </update> -->
     
     <update id="EzCircularDAO.restoreCircular" parameterClass="Map">
     	<![CDATA[

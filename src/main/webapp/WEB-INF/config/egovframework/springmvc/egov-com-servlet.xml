@@ -36,6 +36,9 @@
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 
+    <!-- DispatcherServlet이 찾지 못한 URL 들을 톰캣의 default-servlet 설정으로 넘겨준다 -->
+    <mvc:default-servlet-handler/>
+    
     <!-- 로그인 체크가 필요한 URL과 로그인 여부를 체크해준다 -->
     <mvc:interceptors>
         <mvc:interceptor>

@@ -17,6 +17,9 @@
 		<script type="text/javascript">
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var isfileup = false;
+		    var mode = "${mode}";
+		    var circularID = "${circularID}";
+
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";
 		        evt.stopPropagation();
@@ -121,7 +124,13 @@
 		
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
+		        
+		        getAttachList();
 		    };
+		    
+		    function getAttachList() {
+		    	
+		    }
 		
 		    function uploadComplete(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
@@ -200,11 +209,17 @@
 		                filecnt--;
 		            }
 		        }
+		        
+// 		        if (mode == "temp") {
+// 		        	url = "/ezCircular/tempUploadFileDelete.do?mode=temp&circularID=" + circularID;
+// 		        } else {
+		        url = "/ezCircular/tempUploadFileDelete.do";
+// 		        }
 
 		        // upload된 파일 tempUploadFile에서 삭제
 		        $.ajax({
 					async : false,
-					url : '/ezCircular/tempUploadFileDelete.do',
+					url : url,
 	                type : 'POST',
 	                dataType : 'json',
 	                data : {
@@ -233,6 +248,7 @@
 		
 		    function fileupload() {
 		        var fd = new FormData();
+		        var url = "";
 
 		        for (var i = 0; i < file.length; i++) {
 		            fd.append("fileToUpload", file[i]);
@@ -240,14 +256,21 @@
 		        
 // 		        fd.append("boardID", window.parent.pBoardID);
 		        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
-		        fd.append("mode", "ATT");
+// 		        fd.append("mode", "ATT");
 		
 		        isfileup = true;
 		        xhr.upload.addEventListener("progress", uploadProgress, false);
 		        xhr.addEventListener("load", uploadComplete, false);
 		        xhr.addEventListener("error", uploadFailed, false);
 		        xhr.addEventListener("abort", uploadCanceled, false);
-		        xhr.open("POST", "/ezCircular/uploadItemAttach.do");
+		        
+// 		        if (mode != "") {
+// 		        	url = "/ezCircular/uploadItemAttach.do?mode=temp&circularID=" + circularID;
+// 		        } else {
+		        url = "/ezCircular/uploadItemAttach.do";
+// 		        }
+
+		        xhr.open("POST", url);
 		        xhr.send(fd);
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }

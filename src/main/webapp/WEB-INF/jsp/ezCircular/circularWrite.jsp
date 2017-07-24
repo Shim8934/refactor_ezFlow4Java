@@ -104,11 +104,15 @@
 
 				if ($("#title").val() == "") {
 					alert("<spring:message code='ezCircular.t52'/>");
+					doubleSubmitFlag = false;
+					
 					return;
 				}
 				
 				if ($("#receiverlist").text() == "") {
 	    			alert("<spring:message code='ezCircular.t53'/>")
+	    			doubleSubmitFlag = false;
+	    			
 	    			return;
 	    		}
 				
@@ -206,9 +210,9 @@
 
 					for (var i = 0; i < filelist.length - 1; i++) {	    
 						if (i == 0) {
-							fileList = GetAttribute(filelist[i + 1], "fileinfo");
+							fileList = GetAttribute(filelist[i + 1], "data2");
 						} else {
-							fileList += "," + GetAttribute(filelist[i + 1], "fileinfo");
+							fileList += "," + GetAttribute(filelist[i + 1], "data2");
 	            		}
 					}
 					
@@ -382,7 +386,14 @@
   			</tr>
   			<tr>
   				<td>
-  					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do"></iframe>
+  					<c:choose>
+   						<c:when test="${mode eq 'temp'}">
+   							<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do?mode=temp&circularID=${circularID}"></iframe>
+   						</c:when>
+   						<c:otherwise>
+	       					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezCircular/dragAndDrop.do"></iframe>	
+   						</c:otherwise>
+   					</c:choose>
   				</td>
   			</tr>
 		</table>
