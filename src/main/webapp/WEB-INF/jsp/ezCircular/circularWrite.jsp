@@ -181,6 +181,13 @@
 	    	}
 
 	    	function btn_TempSave() {
+	    		if ($("#title").val() == "") {
+					alert("<spring:message code='ezCircular.t52'/>");
+					doubleSubmitFlag = false;
+					
+					return;
+				}
+
 	    		//임시저장
 	    		if (confirm("<spring:message code='ezCircular.t72'/>")) {
 		        	var content = message.GetEditorContent();
