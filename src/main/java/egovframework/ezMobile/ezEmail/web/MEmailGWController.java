@@ -216,11 +216,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					
 					logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
 					
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly);
+					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, false);
 				}
 			}
 			else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly);
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
 			}
 			
 			if (messages == null) {
