@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,28 +139,6 @@ public class MScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 
-System.out.println("startDate :" + startDate);		
-System.out.println("endDate :" + endDate);		
-		
-		/*if(startDate != null && !startDate.equals("")) {
-			String[] sDate = startDate.split("-");
-			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
-			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
-			
-			startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
-		}
-		
-		if(endDate != null && !endDate.equals("")) {
-			String[] eDate = endDate.split("-");		
-			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
-			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
-			
-			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
-		}
-		
-		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
-		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);*/
-		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezschedule/list/users/" + userInfo.getId();
 				
@@ -172,9 +151,14 @@ System.out.println("endDate :" + endDate);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		String scheduleList = rest.getForObject(builder.build().encode().toUri(), String.class);
-System.out.println(scheduleList);		
+		JSONArray scheduleList = rest.getForObject(builder.build().encode().toUri(), JSONArray.class);
+		
+		int scheduleListCnt = scheduleList.size();
+		
+System.out.println(scheduleList);
+
 		modelMap.addAttribute("scheduleList", scheduleList);
+		modelMap.addAttribute("scheduleListCnt", scheduleListCnt);
 		
 		LOGGER.debug("mScheduleList ended.");
 		
