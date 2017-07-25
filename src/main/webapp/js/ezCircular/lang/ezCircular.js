@@ -15,5 +15,3 @@ var strLang14 = "의견을 확인하시겠습니까?";
 var strLang15 = "의견확인 중 오류가 발생했습니다.";
 var strLang16 = "의견이 없습니다.";
 var strLang17 = "삭제하시겠습니까?";
-var strLang18 = "전체의견";
-var strLang19 = "나의의견";
