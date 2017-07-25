@@ -774,10 +774,10 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "IMPORTANCE") {
                     objTd.style.textAlign = "center";
                     if (strValue == "1") {
-                        titleImage = titleImage + "<img src='/images/calendar/i_h.png'>";
+                        titleImage = titleImage + "<img src='/images/ImgIcon/icon-highimportance.gif'>";
                         strValue = "";
                     } else if (strValue == "2") {
-                    	titleImage = titleImage + "<img src='/images/calendar/i_r.png'>";
+                    	titleImage = titleImage + "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
                         strValue = "";
                     } else {
                         strValue = "";
