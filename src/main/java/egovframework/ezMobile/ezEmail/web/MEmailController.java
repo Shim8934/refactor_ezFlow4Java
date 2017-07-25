@@ -32,6 +32,8 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -39,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 
 import com.sun.mail.dsn.DispositionNotification;
@@ -110,59 +114,28 @@ public class MEmailController extends EgovFileMngUtil {
 	public String getFolderList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("getFolderList started.");
 		
-		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String password  = userIdAndPassword.get(1);
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userAccount = userInfo.getId() + "@" + domainName;
-		logger.debug("userAccount=" + userAccount);
-		
-		String folderId = request.getParameter("folderId");
-		logger.debug("folderId=" + folderId);
-		
-		List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
-		
-		IMAPAccess ia = null;
-		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale);
-			
-			List<Folder> subMailFolder = null;
-			
-			if (folderId != null && !folderId.equals("")) {
-				subMailFolder = ia.getSubFolders(folderId);
-			} else {
-				subMailFolder = ia.getTopLevelFolders();
-			}
-			
-			MEmailFolderVO folder = null;
-			
-			for (int i=0; i<subMailFolder.size(); i++) {
-				Folder f = subMailFolder.get(i);
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/folders-list/users/rkd1395";
 				
-				folder = new MEmailFolderVO();
-				
-				folder.setName(f.getName());
-				folder.setFullName(f.getFullName());
-				folder.setUnReadCount(f.getUnreadMessageCount());
-				
-				mailFolderList.add(folder);
-			}
-			
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+//				.queryParam("name", "장진혁")
+//		        .queryParam("email", "fomace@kaoni.com")
+//		        .queryParam("position", "차장")
+//		        .queryParam("age", "37");
 		
-		model.addAttribute("mailFolderList", mailFolderList);
+		RestTemplate rest = new RestTemplate();
+		
+		String mailFolderList = rest.getForObject(builder.build().encode().toUri(), String.class);
+		
+		System.out.println(mailFolderList);		
+		model.addAttribute("mailFolderList", mailFolderList);		
 		
 		logger.debug("getFolderList ended.");
-		return "json";
+		
+		return mailFolderList;
 	}
 	
 	/**

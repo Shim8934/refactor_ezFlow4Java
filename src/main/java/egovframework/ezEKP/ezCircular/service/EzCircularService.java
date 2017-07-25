@@ -88,13 +88,13 @@ public interface EzCircularService {
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
 	
-	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String regDate, String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String pDirPath, LoginVO userInfo, String loginCookie) throws Exception;
+	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String regDate, String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName, String fileList, String[] receiverName2, String pDirPath, String mode, LoginVO userInfo, String loginCookie) throws Exception;
 	
 //	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception;
 	
 	public void modifyCircular(String title, int importance, int option, int circularID,int tenantID,  int receiverLength,String[] receiverID, int updateStatus, int circularUserId, String memberName, String memberName2, int status, String confirmDate,  String content, String fileList, String pDirPath, String[] receiverName, String[] receiverName2, String offset) throws Exception;
 
-	public void deleteCircularList(String circularIDList, String strMemberListInfo, String memberID, int tenantID) throws Exception;
+	public void deleteCircularList(String circularIDList, String strMemberListInfo, String memberID, String pDirpath, int tenantID) throws Exception;
 	
 	public void deleteCircular(String circularID, String memberID, String userID, int tenantID) throws Exception;
 	
@@ -132,8 +132,10 @@ public interface EzCircularService {
 	
 	public void confirmStatus(String circularID, String memberID, int tenantID, String type) throws Exception;
 
-	public void updateCircular(String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String loginCookie, LoginVO userInfo, String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserID, int updateStatus) throws Exception;
+	public void updateCircular(String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String loginCookie, LoginVO userInfo, String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserID, int updateStatus, String mode, String pDirPath) throws Exception;
 
 	public void restoreCircular(String circularIDList, String memberID, int tenantID) throws Exception;
+
+	public void copyFileList(String pDirPath, String fileName, String circularID) throws Exception;
 	
 }

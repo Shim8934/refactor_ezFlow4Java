@@ -417,7 +417,9 @@
 				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=modify" + "&updateStatus=" + updateStatus;
 			}
 			
+			var xhr = new XMLHttpRequest();
 			function circularReUse() {
+// 				xhr.open("POST","/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse");
 				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse";
 			}
 		</script>

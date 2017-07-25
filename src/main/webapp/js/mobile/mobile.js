@@ -346,3 +346,15 @@ function restUpdate() {
 		}
 	});	
 }
+
+function mScheduleList() {
+	$.mobile.changePage( "/mobile/ezSchedule/mScheduleList.do", {
+		type: "post",
+		transition: "pop",
+		changeHash: true,
+		data : {
+			startDate : "2017-07-25",
+			endDate : "2017-07-25"
+		}
+	});
+}

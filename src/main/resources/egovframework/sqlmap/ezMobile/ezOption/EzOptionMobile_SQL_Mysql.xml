@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezOptionMobile">
+
+	<typeAlias alias="MCommonVO" 					type="egovframework.ezMobile.ezOption.vo.MCommonVO"/>
+    
+    <resultMap class="MCommonVO" id="MCommonVO">
+      <result property="tenantId"			column="tenantId"         	columnIndex="1"/>
+      <result property="lang"         	 	column="lang"         		columnIndex="2"/>
+      <result property="offSet"       		column="offSet"        		columnIndex="3"/>      
+    </resultMap>
+    
+    <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
+    	SELECT
+			a.tenant_id as tenantId,
+			(SELECT lang FROM TBL_USERLOCALINFO WHERE tenant_id = a.tenant_id and userid = #userId#) as lang,
+    		(SELECT timezone FROM TBL_USERLOCALINFO WHERE tenant_id = a.tenant_id and userid = #userId#) as offSet    		
+		FROM
+			TBL_TENANT_SERVERNAME a
+		WHERE
+			server_name = #serverName#		
+  	</select>
+</sqlMap>
+
