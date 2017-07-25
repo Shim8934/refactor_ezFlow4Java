@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.web;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,6 +33,7 @@ import org.w3c.dom.Document;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -53,7 +56,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzEmailMenuController {
+public class EzEmailMenuController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailMenuController.class);
 	
@@ -573,7 +576,7 @@ public class EzEmailMenuController {
 	}
 	
 	/**
-	 * PC에 메일 저장하기 실행 함수
+	 * PC에 메일파일 저장하기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailExport.do")
 	public void mailExport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -603,36 +606,6 @@ public class EzEmailMenuController {
 			}
 		}
 		
-		String filename = request.getParameter("filename");
-		
-		logger.debug("filename=" + filename);
-		
-		filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);
-		
-		logger.debug("filename=" + filename);
-		
-		//특수문자(*|\:"<>?/.)를 밑줄(_)로 replace.
-		//점(.)은 client browser에서 replace.
-		filename = filename.replaceAll("\\*", "_");
-		filename = filename.replaceAll("%7C", "_");
-		filename = filename.replaceAll("%5C", "_");
-		filename = filename.replaceAll("%3A", "_");
-		filename = filename.replaceAll("%22", "_");
-		filename = filename.replaceAll("%3C", "_");
-		filename = filename.replaceAll("%3E", "_");
-		filename = filename.replaceAll("%3F", "_");
-		filename = filename.replaceAll("/", "_");
-		
-		filename = filename.replaceAll("\\|", "_");
-		filename = filename.replaceAll("\\\\", "_");
-		filename = filename.replaceAll(":", "_");
-		filename = filename.replaceAll("\"", "_");
-		filename = filename.replaceAll("<", "_");
-		filename = filename.replaceAll(">", "_");
-		filename = filename.replaceAll("\\?", "_");
-		
-		logger.debug("filename=" + filename);
-		
 		IMAPAccess ia = null;
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -642,7 +615,6 @@ public class EzEmailMenuController {
 			
 			String mimetype = "message/rfc822";	
 			response.setContentType(mimetype);
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			
 			if (folder == null || !folder.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
@@ -653,6 +625,17 @@ public class EzEmailMenuController {
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
 				} else {
+					String subject = ezEmailUtil.getSubject(message);
+					if(subject.trim().equals("")){
+						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+					}
+					
+					String fileName = subject + ".eml";
+					fileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), fileName);
+					logger.debug("fileName=" + fileName);
+					
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+					
 					OutputStream outputStream = null;
 					try{
 						response.setContentLength(message.getSize());
@@ -680,6 +663,125 @@ public class EzEmailMenuController {
 		}
 		
 		logger.debug("mailExport ended.");
+	}
+	
+	/**
+	 * PC에 여러개의 메일파일을 zip파일로 저장하기 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailExportZip.do")
+	public void mailExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("mailExportZip started.");
+		
+		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userIdAndPassword.get(1);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userAccount=" + userAccount);
+		
+		String[] urlArr = request.getParameterValues("url");
+		logger.debug("urlArr=" + urlArr);
+		
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		pDirPath = realPath + pDirPath;
+		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + userAccount;
+		
+		int count = 0;
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale);
+			
+			File tempFolder = new File(pDirTempPath);
+			
+			if (tempFolder.exists()) {
+				deleteDirectory(tempFolder);
+			}
+			
+			File tempFile = new File(pDirTempPath + ".zip");
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			logger.debug("creating tempFolder. path=" + tempFolder);
+			tempFolder.mkdirs();
+			
+			for (String url : urlArr) {
+				String folderPath = null;
+				String[] uidArr = null;
+				
+				int index = url.lastIndexOf("/");
+				
+				// separate the passed-in url into a folder path and message uids
+				if (index != -1) {
+					folderPath = url.substring(0, index);
+					uidArr = url.substring(index + 1).split(",");
+				}
+				
+				Folder folder = ia.getFolder(folderPath);
+				
+				if (folder == null || !folder.exists()) {
+					logger.error("Folder not found. folderPath=" + folderPath);
+				} else {
+					folder.open(Folder.READ_ONLY);
+					
+					for (String uid : uidArr) {
+						Message message = ((IMAPFolder)folder).getMessageByUID(Long.parseLong(uid));
+						
+						if (message == null) {
+							logger.error("Message not found. uid=" + uid);
+							
+						} else {
+							
+							String subject = ezEmailUtil.getSubject(message);
+							
+							if(subject.trim().equals("")){
+								subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
+							}
+							
+							logger.debug("subject=" + subject);
+							
+							//mail upload
+							FileOutputStream outputStream = null;
+							try {
+								String fileName = ++count + "_" + subject.replaceAll("[\\\\/:*?\"<>|]", "_") + ".eml";
+								
+								File file = new File(pDirTempPath + commonUtil.separator + fileName);
+								outputStream = new FileOutputStream(file);
+								message.writeTo(outputStream);
+							} finally {
+								if (outputStream != null) {
+									outputStream.close();
+								}
+							}
+						}
+					}
+					
+					folder.close(true);
+				}
+			}
+			
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		String filePath = zip(pDirTempPath, null, true);
+		
+		//TODO: 프로그래스바 보여주기, downFile은 따로 호출해야함
+		
+		downFile(request, response, filePath, userAccount + ".zip");
+		
+		File zipFile = new File(pDirTempPath + ".zip");
+		zipFile.delete();
+		
+		logger.debug("mailExportZip ended. count=" + count);
 	}
 	
 }

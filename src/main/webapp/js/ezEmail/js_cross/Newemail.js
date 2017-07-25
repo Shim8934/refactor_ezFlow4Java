@@ -1170,34 +1170,43 @@ function mail_export() {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listSubContentArry[i]);
         }
     }
-    if(PcSaveArrayList.length > 0)
-        PCMultiDownload();
-}
-var suffix = 0;
-function PCMultiDownload() {
-    if (suffix < PcSaveArrayList.length)
-        setTimeout(function () { PC_Eml_FileDownload();}, 1000);
-    else {
-        suffix = 0;
-        return;
-    }
-}
-function PC_Eml_FileDownload() {
-    if (PcSaveArrayList[suffix].getAttribute("_href") != null) {
-        var pItemID = PcSaveArrayList[suffix].getAttribute("_href");
-        var pItemSubject = ConvertEntityReferenceToChar(GetAttribute(PcSaveArrayList[suffix], "_subject"));// + ".eml";
-        pItemSubject = ReplaceText(pItemSubject, "\\.", "_") + ".eml";
-        var fullpath = "/ezEmail/mailExport.do?url=" + encodeURIComponent(pItemID) + "&filename=" + encodeURIComponent(pItemSubject);
-        AttachDownFrame.location.href = fullpath;
+    
+    if (PcSaveArrayList.length == 1) { //하나의 메일을 다운로드 할 경우
+    	var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
+    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
+    	AttachDownFrame.location.href = fullpath;
         AttachDownFrame.target = "_blank";
-        suffix++;
-        PCMultiDownload();
+        
+    } else { // 여러개의 메일을 다운로드 할 경우
+    	var folderIdAndMessageIdList = new Object();
+    	for (var i = 0; i < PcSaveArrayList.length; i++) {
+    		var folderIdAndMessageId = PcSaveArrayList[i].getAttribute("_href").split("/");
+    		
+    		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
+    			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
+    		} else {
+    			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
+    		}
+    	}
+    	
+    	var folderList = Object.keys(folderIdAndMessageIdList);
+    	var parameters = "";
+    	
+    	for (var i = 0; i < folderList.length; i++) {
+    		if (i == 0) {
+    			parameters += "url=" + encodeURIComponent(folderList[i] + "/" + folderIdAndMessageIdList[folderList[i]]);
+    		} else {
+    			parameters += "&url=" + encodeURIComponent(folderList[i] + "/" + folderIdAndMessageIdList[folderList[i]]);
+    		}
+    	}
+    	
+    	var fullpath = "/ezEmail/mailExportZip.do?" + parameters;
+    	AttachDownFrame.location.href = fullpath;
+        AttachDownFrame.target = "_blank";
     }
-    else {
-        suffix = 0;
-        return;
-    }
+    
 }
+
 function HiddenContextMenu() {
     document.getElementById("mailPanel").style.display = "none";
     document.getElementById("ContextMenuDiv").style.display = "none";
