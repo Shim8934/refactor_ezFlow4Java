@@ -132,7 +132,7 @@
 		<br />
 		<h2><spring:message code='ezApprovalG.t94'/></h2>
 		<div class="listview" >
-			<div id="SpecialList" style="BACKGROUND-COLOR: #ffffff;border:0px solid #B6B6B6;HEIGHT: 120px; WIDTH: 100%; overflow:auto;margin-left:2px;margin-top:1px;margin-right:1px;margin-bottom:1px;">
+			<div id="SpecialList" style="BACKGROUND-COLOR: #ffffff;border:0px solid #B6B6B6;HEIGHT: 120px; WIDTH: 100%; overflow:auto;">
 			</div>
 		</div>
 		<div class="btnposition" >

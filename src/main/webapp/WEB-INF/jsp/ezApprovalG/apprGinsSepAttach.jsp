@@ -139,7 +139,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
-		            DivPopUpShow(500, 350, url);
+		            DivPopUpShow(565, 390, url);
 		        }
 		        else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
@@ -351,7 +351,7 @@
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
-		                 DivPopUpShow(480, 430, url);
+		                 DivPopUpShow(475, 375, url);
 		            }
 		            else {
 		            if (url != "")
@@ -493,6 +493,9 @@
 		            window.returnValue = rtnVal;
 		    }
 		</script>
+		<style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">
 		<div id="menu">
@@ -508,7 +511,7 @@
 		
 		<h2><spring:message code='ezApprovalG.t1034'/></h2>
 		<div id="listviewdiv" class="listview" style="Width:700px; Height:225px;">
-		    <div id= "lvList" style="overflow:auto;border:0;Width:698px; Height:225px; font-size:9pt;margin:1px 1px 1px 1px;"></div>
+		    <div id= "lvList" style="overflow:auto;border:0;Width:698px; Height:225px; font-size:9pt;"></div>
 		</div>
 		
 		<div class="btnposition" >

@@ -48,7 +48,8 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        var pDraftFlag = "${draftFlag}";
-	        
+	        var approvalFlag = "${approvalFlag}";
+
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -199,6 +200,9 @@
 			    btnSearchRec_onclick("1");
 			}
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">
 	    <xml id='FORMLIST' style="display: none;">
@@ -234,14 +238,14 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 240px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow: auto;"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
 	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" width="16" height="16" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" width="16" height="16" style="cursor: pointer"></td>
 	            <td>
 	                <div class="listview">
-	                    <div id="lvTDoc" style="border: 0; width: 300px; height: 240px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto; "></div>
 	                </div>
 	            </td>
 	        </tr>

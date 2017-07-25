@@ -78,9 +78,8 @@ function SelectUser(pCabClassNo, pDeptCode) {
         selectuser_cross_dialogArguments[0] = para;
         selectuser_cross_dialogArguments[1] = SelectUsert_Complete;
 
-        DivPopUpShow(440, 330, url);
-    }
-    else {
+        DivPopUpShow(440, 340, url);
+    } else {
         var feature = "dialogWidth:512px;dialogHeight:415px;scroll:no;resizable:no;status:no;help:no;edge:sunken ";
         feature = feature + GetShowModalPosition(495, 360);
 

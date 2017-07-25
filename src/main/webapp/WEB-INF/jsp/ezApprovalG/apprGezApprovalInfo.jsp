@@ -2366,6 +2366,8 @@
 	    Tab1_NewTabIni("tab1");
 	    Tab2_NewTabIni("tab2");
 	    Tab3_NewTabIni("tab3");
-	    Tab5_NewTabIni("tab5");
+	    if (approvalFlag == "S") {
+		    Tab5_NewTabIni("tab5");
+	    }
 	</script>
 </html>
