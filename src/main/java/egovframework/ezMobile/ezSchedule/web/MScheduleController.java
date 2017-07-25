@@ -54,7 +54,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 @Controller
 public class MScheduleController extends EgovFileMngUtil {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MScheduleController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MScheduleController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -76,13 +76,15 @@ public class MScheduleController extends EgovFileMngUtil {
 	
 	/*@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;*/
-		
+	
+	/////////////////////////////////////////////// sample start ///////////////////////////////////////////////////
+	
 	/**
 	 * 모바일 client 일정관리 [get] method sample
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/testList.do")
 	public String testList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
-		logger.debug("testList started.");
+		LOGGER.debug("testList started.");
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/ezschedule/1/gw-testList/fomace";
@@ -99,10 +101,8 @@ public class MScheduleController extends EgovFileMngUtil {
 		RestTemplate rest = new RestTemplate();
 		
 		String sample = rest.getForObject(builder.build().encode().toUri(), String.class);
-		
-System.out.println(sample);		
-		
-		logger.debug("testList ended.");
+
+		LOGGER.debug("testList ended.");
 		
 		return sample.toString();
 	}
@@ -112,7 +112,7 @@ System.out.println(sample);
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/testUpdate.do")
 	public void testUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
-		logger.debug("testUpdate started.");
+		LOGGER.debug("testUpdate started.");
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "ezschedule/{scheduleid}/gw-testUpdate/{id}";
@@ -121,6 +121,63 @@ System.out.println(sample);
 		
 	    rest.put(url, userInfo, 1, "fomace");
 		
-		logger.debug("testUpdate ended.");		
+	    LOGGER.debug("testUpdate ended.");		
+	}
+	
+	///////////////////////////////////////////////// sample end /////////////////////////////////////////////////////
+	
+	/**
+	 * 모바일 client 일정관리 리스트
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/mScheduleList.do")
+	public String mScheduleList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
+		LOGGER.debug("mScheduleList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+
+System.out.println("startDate :" + startDate);		
+System.out.println("endDate :" + endDate);		
+		
+		/*if(startDate != null && !startDate.equals("")) {
+			String[] sDate = startDate.split("-");
+			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+			
+			startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+		}
+		
+		if(endDate != null && !endDate.equals("")) {
+			String[] eDate = endDate.split("-");		
+			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+			
+			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+		}
+		
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);*/
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezschedule/list/users/" + userInfo.getId();
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("startDate", startDate)
+		        .queryParam("endDate", endDate);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		String scheduleList = rest.getForObject(builder.build().encode().toUri(), String.class);
+System.out.println(scheduleList);		
+		modelMap.addAttribute("scheduleList", scheduleList);
+		
+		LOGGER.debug("mScheduleList ended.");
+		
+		return "/mobile/ezSchedule/mScheduleList";
 	}
 }

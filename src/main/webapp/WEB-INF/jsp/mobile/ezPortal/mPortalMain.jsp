@@ -160,7 +160,7 @@
 						            	</a>
 						            </li>
 						            <li data-icon="false">
-						            	<a href="#" style="text-align:center">
+						            	<a href="javascript:mScheduleList();" style="text-align:center">
 						            		<i class="fa fa-caret-down " style="font-size:15px"></i>
 						            	</a>
 						            </li>						          					            
