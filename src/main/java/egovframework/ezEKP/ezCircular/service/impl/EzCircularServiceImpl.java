@@ -1,6 +1,14 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,7 +160,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void insertCircular(int circularID, String title, int importance, int option, String content, int hasFile, int status, String regDate,
 							   String endDate, int receiverLength, String[] receiverID, int updateStatus, int circularUserId, String[] receiverName,
-							   String fileList, String[] receiverName2, String pDirPath, LoginVO userInfo, String loginCookie) throws Exception {
+							   String fileList, String[] receiverName2, String pDirPath, String mode, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("insertCircular started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -272,6 +280,44 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("fileMove ended.");
 	}
 
+	@Override
+	public void copyFileList(String pDirPath, String fileName, String circularID) throws Exception {
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+
+		try {
+			File originFile = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + fileName); // 복사할 파일의 경로
+			File copyFilePath = new File(pDirPath + "tempUploadFile" + commonUtil.separator + fileName);
+
+			fis = new FileInputStream(originFile);
+			fos = new FileOutputStream(copyFilePath);
+
+			br = new BufferedReader(new FileReader(originFile));
+			bw = new BufferedWriter(new FileWriter(copyFilePath));
+			
+			StringBuilder result = new StringBuilder();
+			
+			while (br.readLine() != null) {
+				result.append(br.readLine());
+			}
+			
+			bw.append(result.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fis.close();
+				fos.close();
+				br.close();
+				bw.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void insertCircularUser(int circularUserID, int circularID, String memberID, String memberName, String memberName2, int status, String confirmDate, int updateStatus, int tenantID) throws Exception {
 		logger.debug("insertCircularUser started.");
 		logger.debug("circularUserID = " + circularUserID + " || circularID = " + circularID + " || memberID = " + memberID + " || confirmDate = " + confirmDate + " || status = " + status + " || updateStatus = " + updateStatus + " || tenantID = " + tenantID);
@@ -311,8 +357,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status, String loginCookie, LoginVO userInfo,
-			String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName, String[] receiverName2, int circularUserId, int updateStatus) throws Exception {
+	public void updateCircular (String title, int importance, int option, String circularID, int tenantID, String memberID, int receiverLength, int status,
+			String loginCookie, LoginVO userInfo, String regDate, String content, String fileList, String offset, String[] receiverID, String[] receiverName,
+			String[] receiverName2, int circularUserId, int updateStatus, String mode, String pDirPath) throws Exception {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
@@ -390,6 +437,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 //				ezCircularDAO.updateCircularAttach(attachMap);
 				ezCircularDAO.insertCircularAttach(attachMap);
+
+				// mode = modify -> 회람수정 일 때이므로 수정 시 Temp 폴더에서 첨부파일 이동
+				if (mode.equals("modify")) {
+					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+					
+					fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동					
+				}
 			}
 		}
 		
@@ -1645,4 +1700,5 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		logger.debug("insertCommentState ended.");
 	}
+
 }
