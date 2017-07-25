@@ -14,18 +14,18 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezMobile.ezSchedule.dao.MEzScheduleDAO;
-import egovframework.ezMobile.ezSchedule.service.MEzScheduleService;
+import egovframework.ezMobile.ezSchedule.dao.MScheduleDAO;
+import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
-@Service("MEzScheduleService")
-public class MEzScheduleServiceImpl extends EgovAbstractServiceImpl implements MEzScheduleService{
+@Service("MScheduleService")
+public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
 	
-	private static final Logger logger = LoggerFactory.getLogger(MEzScheduleServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(MScheduleServiceImpl.class);
 	
-	@Resource(name="MEzScheduleDAO")
-	private MEzScheduleDAO mEzScheduleDAO;
+	@Resource(name="MScheduleDAO")
+	private MScheduleDAO mScheduleDAO;
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;

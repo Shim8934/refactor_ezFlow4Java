@@ -11,6 +11,7 @@
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
+	    <script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>	    
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezSchedule/TreeView.js"></script>

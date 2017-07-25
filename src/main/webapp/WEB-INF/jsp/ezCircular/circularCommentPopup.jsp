@@ -138,8 +138,8 @@
 			
 			<div id="tabnav" style="width:99%; margin-top:15px;">
 				<ul class="on">
-					<li id="tab1" class="on"><span onclick="swapTab('totalComment')">전체의견</span></li>
-					<li id="tab2" class="off"><span onclick="swapTab('myComment')">나의의견</span></li>
+					<li id="tab1" class="on"><span onclick="swapTab('totalComment')"><spring:message code='ezCircular.t141' /></span></li>
+					<li id="tab2" class="off"><span onclick="swapTab('myComment')"><spring:message code='ezCircular.t142' /></span></li>
 				</ul>
 			</div>
 			

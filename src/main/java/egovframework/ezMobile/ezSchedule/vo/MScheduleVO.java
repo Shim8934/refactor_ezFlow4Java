@@ -1,5 +1,5 @@
 package egovframework.ezMobile.ezSchedule.vo;
 
-public class MEzScheduleVO {
+public class MScheduleVO {
 	
 }
