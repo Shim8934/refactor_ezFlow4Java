@@ -9,10 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -118,6 +122,8 @@ public class MBoardController {
 		
 		logger.debug("type = " + mBoardInfoVO.getType() + " || boardID = " + mBoardInfoVO.getBoardID() + " || userID = " + userInfo.getId());
 		
+		mBoardInfoVO.setType("newBoardItemList");
+		mBoardInfoVO.setBoardID("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
 		//게시판정보
 		mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), primary, tenantID);
 		mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
@@ -149,7 +155,20 @@ public class MBoardController {
 //				resultXML = getBoardListItem(boardVO, userInfo, type);
 //			}
 //		}
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezboard/"+mBoardInfoVO.getType()+"/boards/"+mBoardInfoVO.getBoardID()+"/list";
 		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("loginCookie", loginCookie);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		String sample = rest.getForObject(builder.build().encode().toUri(), String.class);
+		
+System.out.println("sample:"+sample);
 		model.addAttribute("mBoardInfo", mBoardInfoVO);
 		model.addAttribute("mBoardItemList", mBoardItemList);
 		
