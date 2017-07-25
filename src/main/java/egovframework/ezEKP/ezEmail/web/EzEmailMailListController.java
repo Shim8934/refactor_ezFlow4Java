@@ -213,12 +213,13 @@ public class EzEmailMailListController {
 			
 			Message[] messages = null; 
 			boolean isUnreadOnly = false;
+			boolean isImportantOnly = false;
 			
 			if (sortType.indexOf("\"urn:schemas:httpmail:read\" = false") >= 0) {
 				isUnreadOnly = true;
 			}
 					
-			logger.debug("isUnreadOnly=" + isUnreadOnly);
+			logger.debug("isUnreadOnly=" + isUnreadOnly + ", isImportantOnly=" + isImportantOnly);
 			
 			if (!search.equals("")) {
 				int index = search.indexOf("=");
@@ -228,11 +229,15 @@ public class EzEmailMailListController {
 					
 					logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
 					
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly);
+					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
 				}
 			}
 			else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly);
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
+			}
+			
+			else if (isImportantOnly) {
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
 			}
 			
 			if (messages == null) {
@@ -1052,7 +1057,7 @@ public class EzEmailMailListController {
 			folder.open(Folder.READ_ONLY);
 	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
-	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, true);
+	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, true, false);
 	        
 	        // sort the messages
  			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
