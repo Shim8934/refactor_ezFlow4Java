@@ -565,7 +565,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void deleteCircularList(String circularIDListInfo, String strMemberListInfo, String userID, int tenantID) throws Exception {
+	public void deleteCircularList(String circularIDListInfo, String strMemberListInfo, String pDirpath, String userID, int tenantID) throws Exception {
 		logger.debug("deleteCircularList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -582,7 +582,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 			String[] idsArr = idInfo.split("/");
 			String circularID = idsArr[0];
 			String memberID = idsArr[1];
-			
+
+			deleteDirectory(circularID, pDirpath, tenantID);
+
 			logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || userID = " + userID + " || tenantID = " + tenantID);
 			
 			map.put("circularID", circularID);
@@ -600,8 +602,30 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("deleteCircularList ended.");
 	}
 	
+	private void deleteDirectory (String circularID, String pDirpath, int tenantID) throws Exception {
+		logger.debug("deleteDirectory ended.");
+		
+		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
+		File[] deleteFileList = directoryFile.listFiles();
+
+		// 디렉토리 하위의 파일을 모두 삭제 한뒤 디렉토리 삭제
+		if (deleteFileList.length >0) {
+			for (int i=0; i<deleteFileList.length; i++) {
+				if (deleteFileList[i].isFile()) {
+					deleteFileList[i].delete();
+				} else {
+					deleteDirectory(circularID, pDirpath, tenantID);
+				}
+			}
+		}
+		
+		directoryFile.delete();
+
+		logger.debug("deleteDirectory ended.");
+	}
+
 	@Override
-	public void deleteCircular(String circularID, String memberID, String userID, int tenantID) throws Exception {
+	public void deleteCircular (String circularID, String memberID, String userID, int tenantID) throws Exception {
 		logger.debug("deleteCircular started.");
 		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || userID = " + userID + " || tenantID = " + tenantID);
 		
