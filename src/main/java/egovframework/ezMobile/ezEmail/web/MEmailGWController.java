@@ -72,10 +72,71 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 편지함 목록 조회, 메일 이동 시 편지함 목록 출력
 	 */
 	@RequestMapping(value="/ezemail/folders-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void mMailFolderList() throws Exception {
+	public LoginVO mMailFolderList(@PathVariable String userId) throws Exception {
 		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] started.");
 		
+//		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+//		String password  = userIdAndPassword.get(1);
+		
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+//		String userAccount = userInfo.getId() + "@" + domainName;
+//		logger.debug("userAccount=" + userAccount);
+		
+//		String folderId = request.getParameter("folderId");
+		String folderId = "";
+		logger.debug("folderId=" + folderId);
+		
+		List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
+		
+		IMAPAccess ia = null;
+		
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					"rkd1395@jgw.kaoni.com", "!p1221612", egovMessageSource, new Locale("ko"));
+			
+			List<Folder> subMailFolder = null;
+			
+			if (folderId != null && !folderId.equals("")) {
+				subMailFolder = ia.getSubFolders(folderId);
+			} else {
+				subMailFolder = ia.getTopLevelFolders();
+			}
+			
+			MEmailFolderVO folder = null;
+			
+			for (int i=0; i<subMailFolder.size(); i++) {
+				Folder f = subMailFolder.get(i);
+				
+				folder = new MEmailFolderVO();
+				
+				folder.setName(f.getName());
+				folder.setFullName(f.getFullName());
+				folder.setUnReadCount(f.getUnreadMessageCount());
+				
+				mailFolderList.add(folder);
+			}
+			
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("getFolderList ended.");
 		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] ended.");		
+		
+		LoginVO vo = new LoginVO();
+		vo.setTenantId(0);
+		vo.setId("rkd1395@jgw.kaoni.com");
+		vo.setDn("NOPASSWORD");
+
+		LoginVO user = loginService.selectUser(vo);
+
+		
+		return user;
 	}
 	
 	/**
@@ -169,7 +230,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	}
 	
 	/**
-	 * 모바일 G/W 이메일 [PUT] 메일 이동
+	 * 모바일 G/W 이메일 [PUT] 메일 이동 , 읽은 상태 변경
 	 */
 	@RequestMapping(value="/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public void mMailMove() throws Exception {
@@ -178,15 +239,15 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		logger.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");		
 	}
 	
-	/**
-	 * 모바일 G/W 이메일 [PUT] 읽은 상태 변경
-	 */
-	@RequestMapping(value="/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void mMailStatusChange() throws Exception {
-		logger.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
-		
-		logger.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");		
-	}
+//	/**
+//	 * 모바일 G/W 이메일 [PUT] 읽은 상태 변경
+//	 */
+//	@RequestMapping(value="/ezemail/folders/{folderId}/mails/{messageId}/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+//	public void mMailStatusChange() throws Exception {
+//		logger.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] started.");
+//		
+//		logger.debug("MOBILE G/W MAIL [DELETE /ezemail/folders/{folderId}/mails/{messageId}/users/{userId}] ended.");		
+//	}
 	
 	/**
 	 * 모바일 G/W 이메일 [DELETE] 메일 삭제
