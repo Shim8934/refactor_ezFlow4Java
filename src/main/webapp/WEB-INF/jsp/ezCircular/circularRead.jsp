@@ -320,14 +320,6 @@
             				printCircularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "</td>";
             				printCircularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
             				
-            				var arry = vo.regDate.substring(0, 10).split('-');
-            				var d = new Date(arry[0], arry[1]-1, arry[2]);
-            				var getDiffTime = now.getTime() - d.getTime();
-            				
-            				if (getDiffTime / (1000 * 60 * 60 * 24) < 3) {
-            					printCircularCommentList += "<img src='/images/ImgIcon/circular_newIcon1.gif' />&nbsp;";
-            				}
-            				
             				printCircularCommentList += "</td>";
             				printCircularCommentList += "<td style='text-align:right; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.regDate.substring(0, 16) + "</td>";
             				printCircularCommentList += "</tr>";
