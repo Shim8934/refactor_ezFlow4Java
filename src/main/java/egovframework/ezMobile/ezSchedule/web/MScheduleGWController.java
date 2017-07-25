@@ -40,13 +40,13 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
- * @Description [Controller] 스케쥴
- * @author 오픈솔루션팀 지정석
+ * @Description [Controller] 모바일 G/W 일정관리
+ * @author 오픈솔루션팀 장진혁
  * @Modification Information
  *
  *    수정일        수정자         수정내용
  *    ----------    ------    -------------------
- *    2017.06.14    지정석    신규작성
+ *    2017.07.24         장진혁   	     신규작성
  *
  * @see
  */
@@ -76,6 +76,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	
 	/*@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;*/
+	
+    /////////////////////////////////////////////// sample start ///////////////////////////////////////////////////
 		
 	/**
 	 * 모바일 G/W 일정관리 [get] method sample
@@ -117,4 +119,99 @@ System.out.println(name);
 		
 		logger.debug("gw-testUpdate ended.");		
 	}
+	
+    ///////////////////////////////////////////////// sample end /////////////////////////////////////////////////////
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
+	 */
+	@RequestMapping(value="/ezschedule/list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void mScheduleList() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 카운트 (월간,주간,일정검색)
+	 */
+	@RequestMapping(value="/ezschedule/list-count/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void mScheduleListCount() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 상세데이터
+	 */
+	@RequestMapping(value="/ezschedule/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void mScheduleDetail() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 첨부파일 리스트
+	 */
+	@RequestMapping(value="/ezschedule/schedules/{scheduleId}/attach-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void mScheduleAttachList() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attach-list] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 종류 리스트 (개인/부서/회사)
+	 */
+	@RequestMapping(value="/ezschedule/schedules/{scheduleId}/type-List", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void mScheduleTypeList() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/type-List] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 참석자 리스트
+	 */
+	@RequestMapping(value="/ezschedule/schedules/{scheduleId}/attendance-List", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void mScheduleAttendanceList() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}/attendance-List] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 등록
+	 */
+	@RequestMapping(value="/ezschedule/schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public void mScheduleInsert() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 수정
+	 */
+	@RequestMapping(value="/ezschedule/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public void mScheduleUpdate() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");		
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 삭제
+	 */
+	@RequestMapping(value="/ezschedule/schedules/{scheduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public void mScheduleDelete() throws Exception {
+		logger.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] started.");
+		
+		logger.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");		
+	}
+	
 }
+
+
