@@ -800,6 +800,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public List<CircularListVO> getCircularUserList(int circularID, String searchValue, int tenantID, String offset) throws Exception {
 		logger.debug("getCircularUserList started.");
+		logger.debug("circularID = " + circularID + " || searchValue = " + searchValue + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
