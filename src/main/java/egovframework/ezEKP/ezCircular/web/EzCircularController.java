@@ -982,11 +982,13 @@ public class EzCircularController extends EgovFileMngUtil {
     		resultXML.append("<ROW>");
     		
     		if (vo.getRegDate().compareTo(newlyDate) > 0) {
-    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE>" + 
+    							 "<STATUS>" + vo.getStatus() + "</STATUS><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			} else {
-				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE>" +
+								 "<STATUS>" + vo.getStatus() + "</STATUS><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			}
-    		
+
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getHasFile() + "</VALUE></CELL>");

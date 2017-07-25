@@ -391,7 +391,7 @@
 						<tr>
 	         				<td colspan="3" id ="itemList">
 	         					<input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
-	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px"></div>
+	         					<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;"></div>
 	         					<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         					<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	         				</td>
