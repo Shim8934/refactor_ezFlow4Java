@@ -608,18 +608,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
 		File[] deleteFileList = directoryFile.listFiles();
 
-		// 디렉토리 하위의 파일을 모두 삭제 한뒤 디렉토리 삭제
-		if (deleteFileList.length >0) {
-			for (int i=0; i<deleteFileList.length; i++) {
-				if (deleteFileList[i].isFile()) {
-					deleteFileList[i].delete();
-				} else {
-					deleteDirectory(circularID, pDirpath, tenantID);
+		if (directoryFile.exists()) {
+			// 디렉토리 하위의 파일을 모두 삭제 한뒤 디렉토리 삭제
+			if (deleteFileList.length >0) {
+				for (int i=0; i<deleteFileList.length; i++) {
+					if (deleteFileList[i].isFile()) {
+						deleteFileList[i].delete();
+					} else {
+						deleteDirectory(circularID, pDirpath, tenantID);
+					}
 				}
 			}
+
+			directoryFile.delete();
 		}
-		
-		directoryFile.delete();
 
 		logger.debug("deleteDirectory ended.");
 	}
