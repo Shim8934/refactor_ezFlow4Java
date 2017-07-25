@@ -278,24 +278,42 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfoSimple(loginCookie);		
 
-		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName");
+		String circularFileID = "";
+		String filePath = "";
+		String fileName = "";
 		String realPath = commonUtil.getRealPath(request);
 		String uploadFilePath = commonUtil.getUploadPath("upload_circular.ROOT", userInfo.getTenantId());
 		
-		if (fileName == null || fileName.equals("")) {
-			fileName = filePath; 
-		}
+		if (request.getParameter("filePath") != null && !request.getParameter("filePath").equals("")) {
+			filePath = request.getParameter("filePath"); 
+        }
 		
+		if (request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")) {
+			fileName = request.getParameter("fileName"); 
+        }
+
+		if (request.getParameter("circularFileID") != null && !request.getParameter("circularFileID").equals("")) {
+			circularFileID = request.getParameter("circularFileID"); 
+        }
+
+		if (filePath.equals("") && fileName.equals("")) {
+			CircularAttachVO result = ezCircularService.getAttachInfo(circularFileID, userInfo.getTenantId());
+
+			filePath = result.getFilePath();
+			fileName = result.getFileName();
+		}
+
+		logger.debug("filePath : " + filePath + " | fileName : " + fileName);
+
 		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
 
 		logger.debug("fullFilePath : " + fullFilePath);
 		
 		downFile(request, response, fullFilePath, fileName);
-		
+
 		logger.debug("downloadAttach ended");
 	}
-	
+
 	/**
 	 * 받은회람판 회람판 호출 Method
 	 */
@@ -1665,31 +1683,36 @@ public class EzCircularController extends EgovFileMngUtil {
         return "json";
     }
 	
-	/**
-	 * 회람판 첨부관련정보 표출 Method
-	 */
-	@RequestMapping(value = "/ezCircular/getCircularAttachInfo.do")
-	public void getCircularAttachInfo(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception{
-		logger.debug("getCircularAttachInfo started");
-		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		
-		String circularFileID = request.getParameter("CircularFileID");
-		String fileName = "";
-		String filePath = "";
+//	/**
+//	 * 회람판 첨부관련정보 표출 Method
+//	 */
+//	@RequestMapping(value = "/ezCircular/getCircularAttachInfo.do")
+//	public void getCircularAttachInfo(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception{
+//		logger.debug("getCircularAttachInfo started");
+//		
+//		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+//		
+//		String circularFileID = request.getParameter("CircularFileID");
+//		String fileName = "";
+//		String filePath = "";
 //		String realPath = commonUtil.getRealPath(request);
-	
-		CircularAttachVO result = ezCircularService.getAttachInfo(circularFileID, userInfo.getTenantId());
-		
-		filePath = result.getFilePath();
-		fileName = result.getFileName();
-		
-		if (filePath != null && !filePath.equals("")) {
-			downFile(request, response, filePath, fileName);
-		}
-		
-		logger.debug("getCircularAttachInfo ended");
-	}
+//		String uploadFilePath = commonUtil.getUploadPath("upload_circular.ROOT", userInfo.getTenantId());
+//	
+//		CircularAttachVO result = ezCircularService.getAttachInfo(circularFileID, userInfo.getTenantId());
+//		
+//		filePath = result.getFilePath();
+//		fileName = result.getFileName();
+//
+//		logger.debug("filePath : " + filePath + " | fileName : " + fileName);
+//
+//		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
+//
+//		if (filePath != null && !filePath.equals("")) {
+//			downFile(request, response, fullFilePath, fileName);
+//		}
+//
+//		logger.debug("getCircularAttachInfo ended");
+//	}
 
 	/**
 	 * 회람처 목록 호출 Method
