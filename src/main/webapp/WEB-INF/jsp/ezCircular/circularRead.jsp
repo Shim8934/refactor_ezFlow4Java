@@ -417,7 +417,9 @@
 				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=modify" + "&updateStatus=" + updateStatus;
 			}
 			
+			var xhr = new XMLHttpRequest();
 			function circularReUse() {
+// 				xhr.open("POST","/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse");
 				window.location.href = "/ezCircular/circularWrite.do?circularID=" + circularID + "&mode=reuse";
 			}
 		</script>
@@ -447,8 +449,8 @@
 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
-		                        <li><span onclick="circularModify()">회람수정</span></li>
-		                        <li><span onclick="circularReUse()">복사작성</span></li>
+		                        <li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
+		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
 	                        
                	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
