@@ -4,7 +4,17 @@
 <!DOCTYPE html>
 <html style="height:100%">
 	<head>
-		<title><spring:message code="ezCircular.t55"/></title>
+		<c:choose>
+			<c:when test="${mode eq 'reuse'}">
+				<title><spring:message code="ezCircular.t183"/></title>
+			</c:when>
+			<c:when test="${mode eq 'modify'}">
+				<title><spring:message code="ezCircular.t184"/></title>
+			</c:when>
+			<c:otherwise>
+				<title><spring:message code="ezCircular.t55"/></title>
+			</c:otherwise>
+		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code="ezSchedule.e1"/>"></script>
