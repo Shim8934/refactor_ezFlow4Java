@@ -316,12 +316,12 @@ function ListView() {
     //리스트뷰 DataSource를 이용하여 DataBind 하기
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert(strLang171);
+            alert(strLang22);
             return;
         }
 
         if (_dataSource == null) {
-            alert(strLang172);
+            alert(strLang23);
             return;
         }
         //RemoveDataBody()
@@ -418,12 +418,12 @@ function ListView() {
     //헤더없이 Row만 존재하는 DataSource를 위한 메소드
     function RowDataBind() {
         if (_thisID == "") {
-            alert(strLang171);
+            alert(strLang22);
             return;
         }
 
         if (_dataSource == null) {
-            alert(strLang172);
+            alert(strLang23);
             return;
         }
 
@@ -658,7 +658,7 @@ function ListView() {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
             oTbody.appendChild(objTr);
-            var oText = document.createTextNode(strLang43);
+            var oText = document.createTextNode(strLang21);
             var objTd = document.createElement("TD");
             objTd.align = "center";
             objTd.colSpan = colCount;
@@ -826,11 +826,11 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     
                     if (strValue == "0") {
-                    	strValue = strLang8;
+                    	strValue = strLang18;
                     } else if (strValue == "1") {
-                    	strValue = strLang9;
+                    	strValue = strLang19;
                     } else {
-                    	strValue = strLang10;
+                    	strValue = strLang20;
                     }
                 }
                 
