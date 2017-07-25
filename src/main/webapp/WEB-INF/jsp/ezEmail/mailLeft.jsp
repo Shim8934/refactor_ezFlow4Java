@@ -198,7 +198,7 @@
 	                    var pageTitle = parent.frames["right"].document.title;
 
 	                    if (pageTitle == "mail_list") {
-                        	try { parent.frames["right"].mailBoxInfo.childNodes.item(1).innerText = " " + unreadcount + " "; } catch (e) { }
+                        	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
 	                    
 	                    xmlDom = null;

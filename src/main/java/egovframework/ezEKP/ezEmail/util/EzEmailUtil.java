@@ -1112,7 +1112,8 @@ public class EzEmailUtil {
 			Date endDate,
 			boolean searchSubFolder,
 			SearchTerm existingSearchTerm,
-			boolean isUnreadOnly
+			boolean isUnreadOnly,
+			boolean isImportantOnly
 			) throws Exception {
 		Message[] messages = folder.getMessages();
 		
@@ -1287,6 +1288,10 @@ public class EzEmailUtil {
 				sTerm = new AndTerm(sTerm, new FlagTerm(new Flags(Flags.Flag.SEEN), false));
 			}
 			
+			if (isImportantOnly) {
+				sTerm = new AndTerm(sTerm, new FlagTerm(new Flags(Flags.Flag.FLAGGED), true));
+			}
+			
 			messages = folder.search(sTerm);
 			
 			Folder[] subFolders = folder.list();
@@ -1295,7 +1300,7 @@ public class EzEmailUtil {
 			if (searchSubFolder) {
 				for (Folder subFolder : subFolders) {
 					subFolder.open(Folder.READ_ONLY);
-					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm, isUnreadOnly);
+					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm, isUnreadOnly, isImportantOnly);
 					
 					if (subMessages.length > 0) {
 					   int mainLen = messages.length;
@@ -1313,7 +1318,12 @@ public class EzEmailUtil {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
 			
 			messages = folder.search(sTerm);
-		}		
+		}
+		else if (isImportantOnly) {
+			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
+			
+			messages = folder.search(sTerm);
+		}
 		else {
 			return null;
 		}
