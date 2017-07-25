@@ -741,11 +741,6 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-                    
-//                    새글 new 주석처리
-//                    if (getNodeText(oDatas[2]) == "1") {
-//                    	titleImage = "&nbsp;&nbsp;<img src='/images/ImgIcon/circular_newIcon.gif'>";
-//                    } 
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
@@ -781,9 +776,12 @@ function ListView() {
                     if (strValue == "1") {
                         titleImage = titleImage + "<img src='/images/calendar/i_h.png'>";
                         strValue = "";
-                    }
-                    else
+                    } else if (strValue == "2") {
+                    	titleImage = titleImage + "<img src='/images/calendar/i_r.png'>";
                         strValue = "";
+                    } else {
+                        strValue = "";
+                    }
                 }
                 
                 //의견상태
