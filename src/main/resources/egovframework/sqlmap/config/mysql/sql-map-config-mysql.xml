@@ -59,10 +59,13 @@
     
     <!-- 3.모바일 모듈관리 SQL쿼리 XML -->
     
+    <!-- 전자결재 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezApprovalG/EzApprovalGMobile_SQL_Mysql.xml"/>
     <!-- 게시판 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezBoard/EzBoardMobile_SQL_Mysql.xml"/>
     <!-- 자원관리 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezResource/EzResourceMobile_SQL_Mysql.xml"/>
+    <!-- 옵션 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezOption/EzOptionMobile_SQL_Mysql.xml"/>
     
 </sqlMapConfig>
