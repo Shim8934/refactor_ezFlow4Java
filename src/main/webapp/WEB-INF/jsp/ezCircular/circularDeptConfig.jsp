@@ -163,7 +163,7 @@
 			<br />
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
-			        <li style=><span onClick="add_circularDept()"><spring:message code='ezCircular.t28' /></span></li>
+			        <li style=><span onClick="add_circularDept()"><spring:message code='ezCircular.t77' /></span></li>
 			        <li style=><span onClick="modify_circularDept()"><spring:message code='ezCircular.t29' /></span></li>
 			        <li style=><span onClick="delete_circularDept()"><spring:message code='ezCircular.t30' /></span></li>
 			    </ul>

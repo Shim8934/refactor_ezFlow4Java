@@ -316,7 +316,7 @@
         							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t184"/></span></li>
         						</c:when>
         						<c:otherwise>
-		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t55"/></span></li>	
+		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t28"/></span></li>	
 		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>       						
         						</c:otherwise>
         					</c:choose>
