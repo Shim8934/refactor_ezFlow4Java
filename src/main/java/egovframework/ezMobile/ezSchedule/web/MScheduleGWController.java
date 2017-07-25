@@ -33,7 +33,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
-import egovframework.ezMobile.ezSchedule.service.MEzScheduleService;
+import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -52,9 +52,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @RestController
-public class MEzScheduleGWController extends EgovFileMngUtil {
+public class MScheduleGWController extends EgovFileMngUtil {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MEzScheduleController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MScheduleGWController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -62,8 +62,8 @@ public class MEzScheduleGWController extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 		
-	@Resource(name="MEzScheduleService")
-	private MEzScheduleService mEzScheduleService;
+	@Resource(name="MScheduleService")
+	private MScheduleService mScheduleService;
 		
 	@Resource(name="loginService")
 	private LoginService loginService;
