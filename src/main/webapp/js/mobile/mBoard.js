@@ -17,6 +17,7 @@ function getBoardItemList() {
 			list = result.mBoardItemList;
 			list.forEach(function(vo, index) {
 				titleImage = "";
+				titleImage2 = "";
 				oneLineCnt = "";
 				style = "font-size:12px;";
 				
@@ -40,6 +41,11 @@ function getBoardItemList() {
 					titleImage = "<img src='/images/i_notice.gif'>";
 				}
 				
+				//긴급게시일때 제목앞에 느낌표 image
+				if (vo.importance == "1") {
+					titleImage2 = "<img src='/images/i_urgency.gif'>";
+				}
+				
 				//writeDate 오늘날짜 1일보다 작게 차이나면 new
 //				if (getNodeText(oDatas[6]) == "Y") {
 //					titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
@@ -57,7 +63,7 @@ function getBoardItemList() {
                 	oneLineCnt = "[" + vo.oneLineCnt + "]";
                 }
                 
-				contentList += "<h2 style='" + style + "'>" + titleImage + vo.title + oneLineCnt + "</h2>";
+				contentList += "<h2 style='" + style + "'>" + titleImage + titleImage2 + vo.title + oneLineCnt + "</h2>";
 				contentList += "<p class='ui-li-aside'>" + vo.writeDate + "</p>";
 				contentList += "<p>" + vo.writerName + "(" + vo.writerDeptName + ")</p>";
 				contentList += "</label>";

@@ -21,6 +21,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public List<MBoardItemVO> getBoardItemList(Map<String, Object> map) throws Exception {
 		return (List<MBoardItemVO>) list("MBoardDAO.getBoardItemList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MBoardItemVO> getNewItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardItemVO>) list("MBoardDAO.getNewItemList", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<MBoardItemVO> getNoticePostItemList(Map<String, Object> map) throws Exception {

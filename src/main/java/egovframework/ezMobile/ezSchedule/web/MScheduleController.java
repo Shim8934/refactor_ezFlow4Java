@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -143,7 +147,10 @@ public class MScheduleController extends EgovFileMngUtil {
 		String url = gwServerUrl + "/ezschedule/list/users/" + userInfo.getId();
 				
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 		        .queryParam("startDate", startDate)
@@ -151,15 +158,23 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		JSONArray scheduleList = rest.getForObject(builder.build().encode().toUri(), JSONArray.class);
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
 		
-		int scheduleListCnt = scheduleList.size();
+		JSONObject resultBody = result.getBody();
+				
+		String status = resultBody.get("status").toString();
+		JSONArray scheduleList = new JSONArray();
 		
-System.out.println(scheduleList);
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			
+			modelMap.addAttribute("scheduleListCnt", scheduleList.size());
+			modelMap.addAttribute("scheduleList", scheduleList);
+		}
+System.out.println("status :" + status);		
+System.out.println("scheduleList :" + scheduleList);
 
-		modelMap.addAttribute("scheduleList", scheduleList);
-		modelMap.addAttribute("scheduleListCnt", scheduleListCnt);
-		
 		LOGGER.debug("mScheduleList ended.");
 		
 		return "/mobile/ezSchedule/mScheduleList";

@@ -357,7 +357,25 @@ public class MBoardServiceImpl implements MBoardService {
 
 	@Override
 	public List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
-		return null;
+		String boardID = mBoardInfoVO.getBoardID();
+		String gubun = mBoardInfoVO.getGuBun();
+		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
+		String userID = userInfo.getId();
+		String offset = userInfo.getOffset();
+		int tenantID = userInfo.getTenantId();
+		
+		/** 공지사항 카운트 및 리스트 */
+		Integer noticeCount = 0;
+		if (((gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun).equals("1")) {
+			noticeCount = getNoticePostItemListCount(boardID, userID, gubun, tenantID);
+		}
+		
+		/** 전체 리스트 카운트 및 리스트 */
+		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
+        int endRow = (mobileListSize * page) - noticeCount;
+		
+        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
+		return getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
 	}
 
 	//게시판 정보조회 -> MBoardInfoVO.parentBoardID 불필요시 추후 삭제
@@ -535,6 +553,31 @@ public class MBoardServiceImpl implements MBoardService {
 		List<MBoardItemVO> list = mBoardDAO.getNoticePostItemList(map);
 		
 		logger.debug("getNoticePostItemList ended.");
+		
+		return list;
+	}
+	
+	private List<MBoardItemVO> getNewBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset) throws Exception {
+		logger.debug("getNewBoardItemList started.");
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || startRow = " + startRow + " || endRow = " + endRow + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("userID", userID);
+		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
+		//Oracle
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		//Maria
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantID", tenantID);
+		
+		List<MBoardItemVO> list = mBoardDAO.getNewItemList(map);
+		
+		logger.debug("getNewBoardItemList ended.");
 		
 		return list;
 	}

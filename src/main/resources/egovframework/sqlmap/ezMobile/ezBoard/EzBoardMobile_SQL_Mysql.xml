@@ -448,5 +448,98 @@
 	        	extensionattribute2 = '1'
         ]]>
 	</select>
+  
+    <select id="MBoardDAO.getNewItemList" parameterClass="Map" resultClass="MBoardItemVO">
+      <![CDATA[
+          SELECT
+              A.BOARDID,
+              B.BOARDNAME AS BOARDNAME,   
+              A.ITEMID,           
+              A.WRITERID,           
+              A.WRITERNAME,         
+              A.WRITERDEPTNAME,     
+              A.WRITERCOMPANYNAME,  
+              A.WRITEDATE,          
+              A.STARTDATE,          
+              A.PARENTWRITEDATE,    
+              A.IMPORTANCE,         
+              A.TITLE,            
+              A.ATTACHMENTS,       
+              A.READCOUNT,        
+              A.ITEMLEVEL,        
+              A.ABSTRACT,         
+              B.BOARDNAME2 AS BOARDNAME2,   
+              A.WRITERNAME2,          
+              A.WRITERDEPTNAME2,      
+              A.WRITERCOMPANYNAME2,   
+              (SELECT 
+                      COUNT(*)  
+               FROM 
+                  TBL_Board_OneLineReply 
+               WHERE  
+                TENANT_ID = A.TENANT_ID
+               AND
+                ITEMID = A.ItemID) ONELINECNT,
+              A.UPPERITEMIDTREE,
+              A.DOCNO,
+              '' AS NOTICE,
+              P.GUBUN,
+              A.MAINCONTENT
+              FROM 
+                TBL_BOARD_ITEM A 
+              INNER JOIN 
+                ( SELECT 
+                  BOARDID, 
+                  BOARDNAME, 
+                  BOARDNAME2,
+                  TENANT_ID 
+                  FROM 
+                    TBL_BOARD_MYBOARDS 
+                  WHERE   
+                    TENANT_ID = #tenantID#
+                  AND
+                    USERID = #userID# ) B 
+              ON 
+                A.TENANT_ID = B.TENANT_ID
+              AND
+                A.BOARDID = B.BOARDID                
+              INNER JOIN 
+                TBL_BOARD_BOARDINFO P  
+              ON 
+                A.TENANT_ID = P.TENANT_ID
+              AND
+                A.BOARDID = P.BOARDID
+              AND 
+                A.TENANT_ID = #tenantID#
+              AND
+                (A.APPRFLAG = 'Y' 
+                 OR A.APPRFLAG IS NULL)
+              AND 
+                A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+              AND 
+                A.STARTDATE <= #nowDate#
+              AND 
+                A.ENDDATE > #nowDate#         
+              AND 
+                (NOT EXISTS
+                    (SELECT 
+                      USERID 
+                     FROM 
+                      TBL_BOARD_ITEM_READ S 
+                     WHERE 
+                      S.TENANT_ID = A.TENANT_ID
+                     AND
+                      S.BOARDID = A.BOARDID 
+                     AND 
+                      S.ITEMID = A.ITEMID 
+                     AND 
+                      S.TENANT_ID = #tenantID#
+                     AND
+                      S.USERID = #userID# 
+                     AND 
+                      S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+              LIMIT #limit#, #rowCount#
+      ]]>
+  </select>
 </sqlMap>
 
