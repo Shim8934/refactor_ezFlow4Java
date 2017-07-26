@@ -139,71 +139,83 @@ System.out.println(name);
 	
     ///////////////////////////////////////////////// sample end /////////////////////////////////////////////////////
 	
+	@SuppressWarnings("unchecked")
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
 	 */
 	@RequestMapping(value="/ezschedule/list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public List<ScheduleInfoVO> mScheduleList(@PathVariable String userId, HttpServletRequest request) throws Exception {
+	public Object mScheduleList(@PathVariable String userId, HttpServletRequest request){
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
 		
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
+		JSONObject result = new JSONObject();
 		
-		if (startDate != null && !startDate.equals("")) {
-			String[] sDate = startDate.split("-");
-			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
-			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+		try {
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
 			
-			startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Calendar cal = Calendar.getInstance();
-			
-			startDate = sdf.format(cal.getTime()) + " 00:00:00";
-		}
-		
-		if (endDate != null && !endDate.equals("")) {
-			String[] eDate = endDate.split("-");
-			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
-			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
-			
-			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
-		} else {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Calendar cal = Calendar.getInstance();
-			
-			endDate = sdf.format(cal.getTime()) + " 23:59:59";
-		}
-		
-		String serverName = request.getServerName();
-		MCommonVO info = mOptionService.commonInfo(serverName, userId);
-		
-		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
-		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-		String pidList = "'" + userId + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
-		String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
-		
-		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());
-		
-		for (int i = 0; i < gList.size(); i++) {
-			if (i == 0) {
-				pidList += ",";
+			if (startDate != null && !startDate.equals("")) {
+				String[] sDate = startDate.split("-");
+				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+				String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+				
+				startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				startDate = sdf.format(cal.getTime()) + " 00:00:00";
 			}
-			ScheduleGroupListVO data = gList.get(i);
-			pidList += "'" + data.getGroupId() + "'";
 			
-			if (i != gList.size()-1) {
-				pidList += ",";
-			}	
+			if (endDate != null && !endDate.equals("")) {
+				String[] eDate = endDate.split("-");
+				String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+				String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+				
+				endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				endDate = sdf.format(cal.getTime()) + " 23:59:59";
+			}
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+			String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+			String pidList = "'" + userId + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());
+			
+			for (int i = 0; i < gList.size(); i++) {
+				if (i == 0) {
+					pidList += ",";
+				}
+				ScheduleGroupListVO data = gList.get(i);
+				pidList += "'" + data.getGroupId() + "'";
+				
+				if (i != gList.size()-1) {
+					pidList += ",";
+				}	
+			}
+	
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
+			
+			Collections.sort(sList, new EzScheduleCompareUtil());
+						
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", sList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
-
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
-		
-		Collections.sort(sList, new EzScheduleCompareUtil());
-		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] ended.");
 		
-		return sList;
+		return result;
 	}
 	
 	/**
