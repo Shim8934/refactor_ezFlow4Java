@@ -17,6 +17,7 @@
 	        var CancelFunction;
 	        var InputValue;
             var FolderId;
+            var folderNameList = "${folderNameList}";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -51,7 +52,12 @@
 	            	alert("<spring:message code='ezCircular.t58' />")
 	            	return;
 	            }
-	            
+
+	            if (folderNameList.indexOf(folderName) != -1) {
+	            	alert("<spring:message code='ezCircular.t186' />");
+	            	return;
+	            }
+
 	            if (FolderId == "") {
 	            	url = "/ezCircular/circularFolderAdd.do"; 
 	            } else {
