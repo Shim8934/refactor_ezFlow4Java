@@ -59,8 +59,7 @@
 				D.confirmtotalcount,
 				B.commentStatus,
 				B.shareStatus,
-				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus,
-				(case when commentStatus = 0 and shareStatus = 0 then null else updatedate end) as updatedate2
+				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus
             FROM
                 TBL_CIRCULAR A
             JOIN
@@ -2069,6 +2068,12 @@
 			]]>
 		</isEqual>
 		
+		<isNotEqual property="commentStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
+		
 		<![CDATA[
 			WHERE
 				circularid = #circularID#
@@ -2135,6 +2140,12 @@
 				updatedate = #nowDate#
 			]]>
 		</isEqual>
+		
+		<isNotEqual property="shareStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
 		
 		<![CDATA[
 			WHERE
