@@ -303,9 +303,12 @@
 	        
 	        var Listlen = SelListView.GetDataRows();
 	        var count = Listlen.length;
-			if (Listlen[0].textContent == strLang944) {
-				count = 0;
-			}
+	        
+	        if(count > 0) {
+				if (Listlen[0].textContent == strLang944) {
+					count = 0;
+				}
+	        }
 	        
 	        var row = "<ROW>";
 	        row += "<CELL>";

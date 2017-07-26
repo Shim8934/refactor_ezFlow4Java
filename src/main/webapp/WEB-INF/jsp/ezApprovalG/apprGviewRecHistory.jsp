@@ -92,6 +92,9 @@
         }
     }
 </script>
+<style>
+	.mainlist tr th {border-top:0px}
+</style>
 </head>
 <body class="popup">
 <h1><spring:message code='ezApprovalG.t1181'/></h1>
@@ -99,7 +102,7 @@
 
 <h2 id="tdTitle"> <spring:message code='ezApprovalG.t1179'/></h2>
 <div class="listview" style="width:592px;overflow-x:auto;">
-<div id="RecordList" style="overflow-y:auto;border:0px; HEIGHT: 200px; WIDTH: 1000px;margin:1px 1px 1px 1px;"></div>
+<div id="RecordList" style="overflow-y:auto;border:0px; HEIGHT: 200px; WIDTH: 1000px;"></div>
 </div>
 						
 <h2 style="margin-top:5px" > <spring:message code='ezApprovalG.t626'/></h2>

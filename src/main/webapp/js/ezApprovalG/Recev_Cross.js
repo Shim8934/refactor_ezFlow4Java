@@ -3,9 +3,8 @@ var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
 
 //결재선정보 Mapping하는 함수
-function GetDraftAprLineInfo(ret)
-{
-  try{
+function GetDraftAprLineInfo(ret) { 
+	try{
     DraftLastFlag = false;
     
 	var xmlKuljea;
@@ -38,17 +37,15 @@ function GetDraftAprLineInfo(ret)
 	if (ret[5] == undefined) {
 	    xmlKuljea = ret[0];
 	    xmlReDraft = ret[2];
-	}
-	else {
+	} else {
 	    xmlKuljea = ret[1];
 	    xmlReDraft = ret[5];
 	}
 
 	xmlReDraft = "R";
-	if(xmlReDraft == "C")
-	{
+	if (xmlReDraft == "C") {
 		ApplyDocCellInfo();
-	}else if(xmlReDraft == "R"){
+	} else if (xmlReDraft == "R") {
 		ClearDocCellInfo();
 	}
 
@@ -58,14 +55,11 @@ function GetDraftAprLineInfo(ret)
 	fields = message.GetFieldsList();
 	count = objNodes.length;
 
-	for(i=1;i<200;i++)
-	{
+	for(i=1; i<200; i++) {
 		name = "habyuidate" + i;
 		field = message.GetListItem(fields,name);
-		if(field)
-	  	{
-	  		if(!trim(field.textContent))
-	  		{
+		if(field) {
+	  		if(!trim(field.textContent)) {
 	  			name = "habyui" + i;
 	  			field = message.GetListItem(fields,name);
 	  			if(field)
@@ -82,21 +76,19 @@ function GetDraftAprLineInfo(ret)
 	  		    if(field)
 	  				field.textContent = "";
 	  		}
-		}else{
+		} else {
 	  		break;
 	  	}
 	}
 	
 	//공람(참석)
-	for(i=1;i < fields.Count;i++)
-	{
+	for(i=1; i < fields.Count; i++) { 
 		field = message.GetListItem(fields, "gongram" + i);
 		if(field) field.textContent = "";
 	}
 	
     //순서를 정리한다.	
-	for(i=0;i < count;i++)
-	{
+	for(i=0; i < count; i++) {
 	    var KyljeaOrder     = getNodeText(GetChildNodes(objNodes[i])[0]);
 	    var KyljeaName      = getNodeText(GetChildNodes(objNodes[i])[1]);
 	    var KyljeaDeptName  = getNodeText(GetChildNodes(objNodes[i])[3]);
@@ -124,18 +116,15 @@ function GetDraftAprLineInfo(ret)
      
     //마지막사인Index
     LastSignSN = OrderType.length;
-    for(i=1;i<OrderType.length;i++)
-    {
+    for(i=1;i<OrderType.length;i++) {
 		 
-    	if(OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40)    	
-    	{
+    	if(OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3 || OrderType[i] == strAprType40) {
     		LastSignSN = i;
         }	
     }
 
 	 
-    if (OrderType[1] == strAprType4)
-    {
+    if (OrderType[1] == strAprType4) {
 		DraftLastFlag = true;
     }
      
@@ -156,15 +145,11 @@ function GetDraftAprLineInfo(ret)
 	
 	refer = "";
 
-	for(i=0;i < OrderType.length;i ++)
-	{
-		switch (OrderType[i])
-		{
+	for(i=0;i < OrderType.length;i ++) {
+		switch (OrderType[i]) {
 			
-	  	   	 
 	  		case strAprType1:
 	  			break;
-	  			
 	  		 
 	  		case strAprType2:
 	  			//기안자확인
@@ -175,8 +160,7 @@ function GetDraftAprLineInfo(ret)
 	  			//재기안결재선변경
 	  			//R : 다시시작 
 	  			//C:계속진행
-	  			if(xmlReDraft == "R")
-	  			{
+	  			if(xmlReDraft == "R") {
 		  		    fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -194,9 +178,7 @@ function GetDraftAprLineInfo(ret)
 	  				
 	  				if(field)
 	  				field.textContent = OrderJobtitle[i];
-	  			}
-	  			else if(xmlReDraft == "C")
-	  			{
+	  			} else if(xmlReDraft == "C") {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -215,9 +197,7 @@ function GetDraftAprLineInfo(ret)
 	  				if(field && OrderStat[i] != strLang26)
 	  					field.Value = OrderJobtitle[i];
 	  				IsSkipDrafter = "TRUE";
-	  			}
-	  			else
-	  			{
+	  			} else {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -242,27 +222,21 @@ function GetDraftAprLineInfo(ret)
 	  		 
 	  		case strAprType8:
 	  			//재기안결재선변경   	  			//R : 다시시작 	//C:계속진행
-	  			if(xmlReDraft == "R")
-	  			{
+	  			if(xmlReDraft == "R") {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
 	  				if(field)
 	  					field.textContent = OrderDept[i];
 	  				IsSkipDrafter = "FALSE";
-	  			}
-	  			else if(xmlReDraft == "C")
-	  			{
+	  			} else if(xmlReDraft == "C") {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
-	  				if (field && OrderStat[i] != "" + strLang57 + "")
-	  				{
+	  				if (field && OrderStat[i] != "" + strLang57 + "") {
 	  				}
 	  				IsSkipDrafter = "TRUE"; 
-	  			}
-	  			else
-	  			{
+	  			} else {
 	  				fieldname = "habyui" + hapyuiCnt;
 	  				field = message.GetListItem(fields, fieldname);
 	  				
@@ -272,14 +246,12 @@ function GetDraftAprLineInfo(ret)
 	  			hapyuiCnt = hapyuiCnt + 1;
 	  			break;
 	  		
-	  		  	
 	  		case strAprType7:
-	  			if (referCnt == 1)
-	  			{
+	  			if (referCnt == 1) {
 	  				refer = "";			
 	  				refer = refer + OrderName[i];
 	  				referCnt = referCnt + 1;
-	  			}else{
+	  			} else {
 	  				refer = refer + ", "  + OrderName[i];
 	  			}
 	  			break;
@@ -966,9 +938,8 @@ function putJunkyulSign(signID)
 }
 
 //사인 Mapping 처리 Spec 적용 
-function SendDraftMappingSign(ret)
-{
-  try{
+function SendDraftMappingSign(ret) {
+  try {
 	var fields = message.GetFieldsList();//CKEDITOR-원본 : var fields = FormProc.Fields;
 	var field;
 	var psigncell;
@@ -1007,16 +978,14 @@ function SendDraftMappingSign(ret)
     } else {
     	if ( LastSignSN == "1") 
     		signposition = 1;
-    	else if (DraftLastFlag)		
-    	{
+    	else if (DraftLastFlag) {
     		putJunkyulSign("sign" + signposition);
-    		for(i=1;i<20;i++)
-    		{
+    		for(i=1; i<20; i++) {
     			if(pDraftFlag == "SUSIN") signID = "sign" + i;
     			else signID = "sign" + i;
     			
     			field = message.GetListItem(fields, signID);//CKEDITOR-원본 : field = fields.Item(signID)
-    			if(field){
+    			if(field) {
     				LastSignNo = i;
     			}
     		}
@@ -1024,14 +993,11 @@ function SendDraftMappingSign(ret)
     	}
     }
 	
-	if(pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU")  
-	{ 
+	if (pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU") { 
 		psigncell = pSusinSN + "sign" + signposition;
 		pseumyungcell = pSusinSN + "jikwe" + signposition;
 		pseumyungdatecell = pSusinSN + "seumyungdate" + signposition;
-	}
-	else
-	{
+	} else {
 	    psigncell = "sign" + signposition;
 	    pseumyungcell = "jikwe" + signposition;
 	    pseumyungdatecell = "seumyungdate" + signposition;
@@ -1054,11 +1020,15 @@ function SendDraftMappingSign(ret)
 	var strimg;
 	var SingFlag = true;
 	 
-	if(ret != "NAME")
-	{
+	if(ret != "NAME") {
 	    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
 	    strimg = strimg + " width=" + signWidth;
-	    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
+	    
+	    if (signImageType = "NAME") {
+	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> " + "<br>" + arr_userinfo[2];
+	    } else {
+	    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
+	    }
 	  	field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg;
 	
 	  	//사인정보를 저장한다.(Undo용)
@@ -1068,11 +1038,8 @@ function SendDraftMappingSign(ret)
 		SignContent[signCnt] = strimg;
 	  	signCnt = signCnt + 1;
 	  	SingFlag = true;
-	}
-	else
-	{
-	  	if(field)
-	  	{
+	} else {
+	  	if(field) {
 	  	    strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
 	  		field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg
 		  
@@ -1087,10 +1054,8 @@ function SendDraftMappingSign(ret)
 	}
     //서명정보를 display해주는 function
 	field = message.GetListItem(fields, pseumyungcell);//CKEDITOR-원본 : field = fields.item(pseumyungcell);
-	if(SingFlag)
-	{
-	  	if(field)
-	  	{
+	if(SingFlag) {
+	  	if(field) {
 	  		setNodeText(field , arr_userinfo[3]);
 	  		//사인정보를 저장한다.(Undo용)
 	  		signInfo[signCnt] = pseumyungcell;
@@ -1099,11 +1064,8 @@ function SendDraftMappingSign(ret)
 			SignContent[signCnt] = arr_userinfo[3];
 	  		signCnt = signCnt + 1;
 	  	}
-	}
-	else
-	{
-	  	if(field)
-	  	{
+	} else {
+	  	if(field) {
 	  		setNodeText(field , arr_userinfo[3]);
 	  		//사인정보를 저장한다.(Undo용)
 	  		signInfo[signCnt] = pseumyungcell;
@@ -1116,8 +1078,7 @@ function SendDraftMappingSign(ret)
   
 	//서명일자
 	field = message.GetListItem(fields, pseumyungdatecell);//CKEDITOR-원본 : field = fields.item(pseumyungdatecell)
-	if(field)
-	{
+	if(field) {
 		setNodeText(field , s);
 		//사인정보를 저장한다.(Undo용)
 		signInfo[signCnt] = pseumyungdatecell;
