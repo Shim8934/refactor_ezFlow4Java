@@ -24,6 +24,7 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
@@ -123,6 +124,17 @@ public class EzTalkGateController {
 		logger.debug("ezTalkGateNoticeBoardId=" + ezTalkGateNoticeBoardId);
 		
 		List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(ezTalkGateNoticeBoardId, userInfo.getId(), 1, 5, 0, "", "", "1", userInfo.getTenantId());		
+		
+		String nowDate = commonUtil.getTodayUTCTime("");
+	    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+	    
+	    for (HashMap<String, Object> item : boardItemList) {
+			if (item.get("WRITEDATE").toString().compareTo(nowDate) > 0) {
+				item.put("ISNEW", "YES");
+			} else {
+				item.put("ISNEW", "NO");
+			}
+	    }
 		
 		model.addAttribute("boardItemList", boardItemList);
 		
