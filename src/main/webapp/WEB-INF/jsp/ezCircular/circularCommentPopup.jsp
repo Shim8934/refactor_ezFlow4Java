@@ -25,7 +25,7 @@
 				display: block;
 				float:left;
 				margin:0 2px 0 0px;
-				background:url(/images/kr/cm/btn_popup_offleft.gif) no-repeat top left;
+				background:url(/images/kr/cm/btn_default_offleft.gif) no-repeat top left;
 				height:28px;
 				padding:0px 0px 0px 8px;
 				vertical-align:top;
@@ -35,26 +35,25 @@
 
 			.commentConfirmDiv span {
 				display:inline-block;
-				background:url(/images/kr/cm/btn_popup_offright.gif) no-repeat top right;
+				background:url(/images/kr/cm/btn_default_offright.gif) no-repeat top right;
 				height:28px;
 				padding:0px 8px 0px 0px;
 				line-height:28px;
 				font-size:12px;
-				color:#fff;
 			}
 			
 			.commentConfirmDiv ul li.on {
-				background:url(/images/kr/cm/btn_popup_onleft.gif) no-repeat top left;
+				background:url(/images/kr/cm/btn_default_onleft.gif) no-repeat top left;
 				color:#333;
 			}
 			
 			.commentConfirmDiv ul li.on span {
-				background:url(/images/kr/cm/btn_popup_onright.gif) no-repeat top right;
+				background:url(/images/kr/cm/btn_default_onright.gif) no-repeat top right;
 				color:#333;
 			}
 			
 			.commentConfirmDiv ul li.off {
-				background:url(/images/kr/cm/btn_popup_offleft.gif) no-repeat top left;
+				background:url(/images/kr/cm/btn_default_offleft.gif) no-repeat top left;
 			}
 		</style>
 		
@@ -146,7 +145,7 @@
 			<table id="circularUserList" style="width:99.5%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 		</div>
 		
-		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">
+		<div style="width:100%;margin-left:-10px;position: absolute; bottom: 0px; z-index: 1000;height:50px;">
 			<div class="commentConfirmDiv" style="right:330px; display:none;">
 		        <ul style="padding-top:2px">
 		            <li><span id="commentConfirm" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>
