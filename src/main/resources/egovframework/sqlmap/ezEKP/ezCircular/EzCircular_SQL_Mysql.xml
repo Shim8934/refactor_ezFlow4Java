@@ -734,13 +734,7 @@
                 A.tenantid = #tenantID#
         ]]>
     </select>
-    
-    <select id="EzCircularDAO.getCircularBMId" resultClass="int">
-        <![CDATA[
-          SELECT LAST_INSERT_ID()
-        ]]>
-    </select> 
-      
+
     <select id="EzCircularDAO.getMemberName" parameterClass="map" resultClass="CircularMemberVO">
         <![CDATA[
 			SELECT
@@ -2052,6 +2046,10 @@
             #title#, #memberID#, #regDate#, #tenantID#
           )
         ]]>
+        
+        <selectKey keyProperty="circularBMId" resultClass="String">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
     </insert>
     
     <insert id="EzCircularDAO.set_circularMemberList" parameterClass="Map">
