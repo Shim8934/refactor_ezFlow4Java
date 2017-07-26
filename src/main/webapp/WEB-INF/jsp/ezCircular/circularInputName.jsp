@@ -47,14 +47,20 @@
 	        
 	        function btn_ok_onclick() {
 	            var folderName = txt_FolderName.value;
-	            
+	            var specialChar = /[&\<>\'\"]/gi;
+
 	            if (folderName == "") {
-	            	alert("<spring:message code='ezCircular.t58' />")
+	            	alert("<spring:message code='ezCircular.t58'/>")
 	            	return;
+	            }
+	            
+	            if (specialChar.test(folderName)) {
+	            	alert("spring:message code='ezCircular.t187'/>");
+	            	return ;
 	            }
 
 	            if (folderNameList.indexOf(folderName) != -1) {
-	            	alert("<spring:message code='ezCircular.t186' />");
+	            	alert("<spring:message code='ezCircular.t186'/>");
 	            	return;
 	            }
 
