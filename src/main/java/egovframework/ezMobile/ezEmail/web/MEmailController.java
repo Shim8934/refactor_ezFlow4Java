@@ -202,11 +202,11 @@ public class MEmailController extends EgovFileMngUtil {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("start", "0")
 				.queryParam("end", "29")
-				.queryParam("search", "SUBJECT=MIME")
-				.queryParam("sorttype", "ORDER BY 'http://schemas.microsoft.com/exchange/smallicon' DESC");
+				.queryParam("search", "")
+				.queryParam("filter", "");
 		
 		//search Parameter에는 SUBJECT=검색어 라고 하면 제목으로 검색
-		//sorttype 에 "ORDER BY 'http://schemas.microsoft.com/exchange/smallicon' DESC" 안 읽은 편지 위로
+		//filter에는  isUnreadOnly(읽지 않은 메일), isImportantOnly(중요 메일) 중 1개만 전달이 가능하다.
 		
 		RestTemplate rest = new RestTemplate();
 		

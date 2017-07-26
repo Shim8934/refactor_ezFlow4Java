@@ -158,7 +158,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	public JSONArray mMailFolderMailList(@PathVariable String folderId, @PathVariable String userId, 
 			@RequestParam(value="start", required=false) String start,
 			@RequestParam(value="end", required=false) String end,
-			@RequestParam(value="search", required=false) String search) throws Exception {
+			@RequestParam(value="search", required=false) String search,
+			@RequestParam(value="filter", required=false) String filter) throws Exception {
 		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] started.");
 		
 		logger.debug("getMailList started.");				
@@ -207,7 +208,16 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        messageJsonArray.add(contentrange);
 	        
 	        boolean isUnreadOnly = false;
+	        boolean isImportantOnly = false;
 			
+	        if (filter.equals("isUnreadOnly")) {
+	        	isUnreadOnly = true;
+	        } 
+	        
+	        else if (filter.equals("isImportantOnly")) {
+	        	isImportantOnly = true;
+	        }
+	        
 			if (!search.equals("")) {
 				int index = search.indexOf("=");
 				if (index >= 0) {
@@ -216,11 +226,15 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					
 					logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
 					
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, false);
+					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
 				}
 			}
 			else if (isUnreadOnly) {
 				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
+			}
+			
+			else if (isImportantOnly) {
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, false, isImportantOnly);
 			}
 			
 			if (messages == null) {
