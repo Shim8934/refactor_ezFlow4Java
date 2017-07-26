@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezEmail.web;
 
+import java.net.URI;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -290,6 +291,37 @@ public class MEmailController extends EgovFileMngUtil {
 		logger.debug("mailMoveCopyMessage ended.");
 		
 		return returnValue;
+	}
+	
+	@RequestMapping(value="/mobile/ezEmail/mailCopyMessage.do",method=RequestMethod.GET)
+	@ResponseBody
+	public String mailCopyMessage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		logger.debug("mailCopyMessage started.");
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/219/copy/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+
+//		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("folderId", "INBOX");
+		
+		URI uri = URI.create(url);
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("toFolderID", "INBOX");
+		
+		RestTemplate rest = new RestTemplate();
+		
+		String returnVal = rest.postForObject(uri, jsonObject, String.class);
+		
+		System.out.println(returnVal);		
+		model.addAttribute("mailFolderList", returnVal);		
+						
+		logger.debug("mailMoveCopyMessage ended. returnVal = " + returnVal);
+		
+		return returnVal;
 	}
 	
 	@RequestMapping(value="/mobile/ezEmail/mailDelete.do",method=RequestMethod.POST)

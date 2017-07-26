@@ -415,10 +415,83 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [POST] 메시지 복사 (전달을 선택한 메일정보 조회)
 	 */
 	@RequestMapping(value="/ezemail/folders/{folderId}/mails/{messageId}/copy/users/{userId}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void mMailCopy() throws Exception {
+	public String mMailCopy(@PathVariable String folderId, @PathVariable String messageId, @PathVariable String userId,
+			 @RequestBody JSONObject jsonObject) throws Exception {
 		logger.debug("MOBILE G/W MAIL [POST /ezemail/folders/{folderId}/mails/{messageId}/copy/users/{userId}] started.");
 		
-		logger.debug("MOBILE G/W MAIL [POST /ezemail/folders/{folderId}/mails/{messageId}/copy/users/{userId}] ended.");		
+		String returnValue = "OK";
+		String tofolderId = "";
+		
+		tofolderId = (String) jsonObject.get("toFolderID");
+
+		IMAPAccess ia = null;
+		
+		try {
+//			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+//			String password = userIdAndPassword.get(1);
+//			
+//			String uniqueId =  data[0].split("=")[1];
+//			String mfolderId = data[1].split("=")[1];
+//			
+//			logger.debug("uniqueId, mfolderId=" + uniqueId + "," + mfolderId);
+			
+//			if (uniqueId.endsWith(",")) {
+//				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
+//			}
+			
+//			String[] folderAndMsgIdArray = uniqueId.split(",");
+//			String folderId = folderAndMsgIdArray[0].split("/")[0];			
+//			long[] uids = new long[folderAndMsgIdArray.length];
+//			
+//			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+//				String folderAndMsgId = folderAndMsgIdArray[i];
+//				String msgId = folderAndMsgId.split("/")[1];
+//				uids[i] = Long.parseLong(msgId);
+//			}
+			
+			String[] folderAndMsgIdArray = messageId.split(",");
+			long[] uids = new long[folderAndMsgIdArray.length];
+			
+			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
+				String msgId = folderAndMsgIdArray[i];
+//				String msgId = folderAndMsgId.split("/")[1];
+				uids[i] = Long.parseLong(msgId);
+			}
+			
+//			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+	        String userEmail = "rkd1395@svn.opensol2014.com";
+			String password = "qwe123!";
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, new Locale("ko_KR"));
+					
+			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
+			sourceFolder.open(Folder.READ_WRITE);
+			
+			Message[] messages = sourceFolder.getMessagesByUID(uids);
+			
+			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(tofolderId);			
+			sourceFolder.copyUIDMessages(messages, movefolder);
+			
+//			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+			
+			sourceFolder.close(true);
+		
+		} catch (Exception e) {
+			returnValue = "ERROR : " + e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("returnValue=" + returnValue);
+		
+		logger.debug("MOBILE G/W MAIL [POST /ezemail/folders/{folderId}/mails/{messageId}/copy/users/{userId}] ended.");
+		
+		return returnValue;
 	}
 	
 	/**
