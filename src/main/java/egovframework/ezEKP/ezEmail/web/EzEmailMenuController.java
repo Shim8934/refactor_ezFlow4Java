@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -695,9 +696,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		pDirPath = realPath + pDirPath;
 		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + userAccount;
 		
-		int count = 0;
 		IMAPAccess ia = null;
 		ZipOutputStream zos = null;
+		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -735,8 +736,34 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 								subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
 							}
 							
-							String fileName = ++count + "_" + subject.replaceAll("[\\\\/:*?\"<>|]", "_")
-																	 .replaceAll("\\s", "") + ".eml";
+							String fileName = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+							
+							// rename fileName if the fileName already exists
+							if (fileNameMap.containsKey(fileName)) {
+								int count = fileNameMap.get(fileName);
+								
+								if (count > -1) {
+									while (true) {
+										if (!fileNameMap.containsKey(fileName + " (" + ++count + ")")) {
+											break;
+										}
+									}
+									
+									fileNameMap.put(fileName, count);
+									
+									fileName += " (" + count + ")";
+									fileNameMap.put(fileName, -1);
+								} else {
+									fileNameMap.put(fileName, 1);
+									
+									fileName += " (1)";
+									fileNameMap.put(fileName, -1);
+								}
+							} else {
+								fileNameMap.put(fileName, 0);
+							}
+							
+							fileName += ".eml";
 							logger.debug("fileName=" + fileName);
 							
 							ZipEntry zipEntry = new ZipEntry("/" + fileName);
@@ -765,7 +792,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("mailExportZip ended. returnValue=" + returnValue + ",count=" + count);
+		logger.debug("mailExportZip ended. returnValue=" + returnValue);
 		return returnValue;
 	}
 	
