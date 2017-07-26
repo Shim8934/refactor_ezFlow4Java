@@ -458,7 +458,10 @@
         var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
             if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
     }
-</SCRIPT>
+</script>
+<style>
+	.mainlist tr th {border-top:0px}
+</style>
 </head>
 <body class="popup">
 <xml id="OrganListHeader" style="display:none">
@@ -529,7 +532,7 @@
 				</tr>
 				<tr> 
 					<td><div class="listview">
-					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 205px; WIDTH: 240px;margin:1px 1px 1px 1px; "></div>
+					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 205px; WIDTH: 370px;"></div>
 					</div></td>
 				</tr>
 			</table>
@@ -540,7 +543,7 @@
 
 		<td style="width:200px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1167'/></h2>
 		<div class="listview">
-		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 237px; WIDTH: 230px;margin:1px 1px 1px 1px;"></div>
+		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 237px; WIDTH: 300px;"></div>
 		</div></td>
 	</tr>
 </table>

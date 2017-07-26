@@ -1443,7 +1443,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
 
     setrecuserrole_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(555, 425));
+    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(720, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
 
