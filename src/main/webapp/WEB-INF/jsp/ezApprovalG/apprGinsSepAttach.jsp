@@ -449,17 +449,22 @@
 		        DelListRow("pLvList");
 		        OrderList();
 		    }
+		    
 		    function OrderList() {
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
 		
 		        var totalRows = pLvList.GetDataRows();
-		
+		        var pAttachCurSel = pLvList.GetSelectedRows();
+			    if (pAttachCurSel.length > 0)
+			    	{
 		        var i;
 		        for (i = 0; i < totalRows.length; i++) {
 		            totalRows[i].cells[0].innerHTML = i + 1;
 		        }
+			    	} 
 		    }
+		    
 		    function btnOK_onclick() {
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
