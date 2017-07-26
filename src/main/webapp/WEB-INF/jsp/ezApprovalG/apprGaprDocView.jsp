@@ -179,7 +179,7 @@
 		                            if (img.length >= 1) {
 		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
-		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2];
 		                            }
 		                            
 		                            if (seumyung) {

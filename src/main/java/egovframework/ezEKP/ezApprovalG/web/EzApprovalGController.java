@@ -749,6 +749,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		
 		String docSN = "";
@@ -865,7 +866,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("beforeUrl", beforeUrl);
-		
+		model.addAttribute("signImageType", signImageType);
+
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
@@ -2153,9 +2155,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String draftflag = request.getParameter("draftFlag");
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		model.addAttribute("draftFlag", draftflag);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("aprCabinetAttach ended.");
 		
@@ -3219,7 +3223,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String susinAdmin = "";
 		String hideCabinet = config.getProperty("config.hideCabinet");
-
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -3317,7 +3322,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
-		
+		model.addAttribute("signImageType", signImageType);
+
 		logger.debug("approvui ended");
 		
 		return "ezApprovalG/apprGapprovui";
@@ -3911,7 +3917,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String draftFlag = request.getParameter("draftFlag");
 		String retFlag = request.getParameter("retFlag");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		
+		String signImageType = ezCommonService.getTenantConfig("SignImageType", userInfo.getTenantId());
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optisSplit = "";
 		
@@ -3975,7 +3981,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
-		
+		model.addAttribute("signImageType", signImageType);
+
 		logger.debug("recevGSusin ended.");
 		
 		return "ezApprovalG/apprGrecevGSusin";
