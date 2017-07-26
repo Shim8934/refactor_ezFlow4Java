@@ -62,7 +62,7 @@ public interface EzCircularService {
 
 	public String getItemXML(String pcircularId, String pmemberId, String offset, int tenantId) throws Exception;
 
-	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, int tenantID) throws Exception;
+	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID) throws Exception;
 
 	public int checkUpdateStatus(int circularID, String memberID, int tenantID) throws Exception;
 
