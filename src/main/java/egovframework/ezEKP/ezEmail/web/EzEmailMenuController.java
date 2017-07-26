@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.mail.Folder;
@@ -666,11 +667,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * PC에 여러개의 메일파일을 zip파일로 저장하기 실행 함수
+	 * 서버에 여러개의 메일파일을 zip파일로 저장하기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailExportZip.do")
-	public void mailExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	@ResponseBody
+	public String mailExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailExportZip started.");
+		
+		String returnValue = "ERROR";
 		
 		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userIdAndPassword.get(1);
@@ -680,8 +684,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String userAccount = userInfo.getId() + "@" + domainName;
 		logger.debug("userAccount=" + userAccount);
 		
-		String[] urlArr = request.getParameterValues("url");
-		logger.debug("urlArr=" + urlArr);
+		Map<String, String[]> urlMap = request.getParameterMap();
+		Set<String> folderList = urlMap.keySet();
+		logger.debug("folderList=" + folderList.toString());
 		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -709,17 +714,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			logger.debug("creating tempFolder. path=" + tempFolder);
 			tempFolder.mkdirs();
 			
-			for (String url : urlArr) {
-				String folderPath = null;
-				String[] uidArr = null;
-				
-				int index = url.lastIndexOf("/");
-				
-				// separate the passed-in url into a folder path and message uids
-				if (index != -1) {
-					folderPath = url.substring(0, index);
-					uidArr = url.substring(index + 1).split(",");
-				}
+			for (String folderPath : folderList) {
+				String uids = urlMap.get(folderPath)[0];
+				String[] uidArr = uids.split(",");
 				
 				Folder folder = ia.getFolder(folderPath);
 				
@@ -744,7 +741,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							
 							logger.debug("subject=" + subject);
 							
-							//mail upload
 							FileOutputStream outputStream = null;
 							try {
 								String fileName = ++count + "_" + subject.replaceAll("[\\\\/:*?\"<>|]", "_") + ".eml";
@@ -764,7 +760,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 			}
 			
-		} catch (MessagingException e) {
+			String filePath = zip(pDirTempPath, null, true);
+			logger.debug("filePath=" + filePath + ",count=" + count);
+			
+			returnValue = "OK";
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -772,16 +773,35 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 		}
 		
-		String filePath = zip(pDirTempPath, null, true);
+		logger.debug("mailExportZip ended.");
+		return returnValue;
+	}
+	
+	/**
+	 * 메일 zip파일 다운로드 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/downloadMailZip.do")
+	public void downloadMailZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadMailZip started.");
 		
-		//TODO: 프로그래스바 보여주기, downFile은 따로 호출해야함
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userAccount = userInfo.getId() + "@" + domainName;
+		logger.debug("userAccount=" + userAccount);
+		
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		String filePath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + userAccount + ".zip";
+		logger.debug("filePath=" + filePath);
 		
 		downFile(request, response, filePath, userAccount + ".zip");
 		
-		File zipFile = new File(pDirTempPath + ".zip");
-		zipFile.delete();
+		File zipFile = new File(filePath);
+		if (zipFile.delete()) {
+			logger.debug(userAccount + ".zip file is deleted.");
+		}
 		
-		logger.debug("mailExportZip ended. count=" + count);
+		logger.debug("downloadMailZip ended.");
 	}
 	
 }

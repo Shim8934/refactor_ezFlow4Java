@@ -519,9 +519,10 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	/**
 	 * 폴더를 압축하여 zip파일을 생성한다.
 	 * 
-	 * @param path folder path
+	 * @param path folder path (not file)
 	 * @param fileName new zip file name. If null then folder name is default.
 	 * @param isDelete whether to delete the original folder
+	 * @return zip file's full path
 	 * @throws Exception
 	 */
 	public String zip(String path, String fileName, boolean isDelete) throws Exception {
@@ -579,7 +580,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			
 		}
 		
-		LOGGER.debug(fileName + ".zip is created.");
+		File zipFile = new File(path + ".zip");
+		LOGGER.debug(zipFile.getName() + " is created. size=" + zipFile.length() + "byte");
 		
 		if (isDelete) {
 			if (deleteDirectory(dir)) {
@@ -587,11 +589,11 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			}
 		}
 		
-		LOGGER.debug("zip ended. returnValue=" + path + ".zip");
-		return path + ".zip";
+		LOGGER.debug("zip ended. returnValue=" + zipFile.getPath());
+		return zipFile.getPath();
 	}
 	
-	private static void getAllFiles(File dir, List<File> fileList) {
+	private void getAllFiles(File dir, List<File> fileList) {
 		File[] files = dir.listFiles();
 		
 		for (File file : files) {

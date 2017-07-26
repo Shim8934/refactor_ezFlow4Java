@@ -1189,20 +1189,40 @@ function mail_export() {
     		}
     	}
     	
-    	var folderList = Object.keys(folderIdAndMessageIdList);
-    	var parameters = "";
-    	
-    	for (var i = 0; i < folderList.length; i++) {
-    		if (i == 0) {
-    			parameters += "url=" + encodeURIComponent(folderList[i] + "/" + folderIdAndMessageIdList[folderList[i]]);
-    		} else {
-    			parameters += "&url=" + encodeURIComponent(folderList[i] + "/" + folderIdAndMessageIdList[folderList[i]]);
-    		}
-    	}
-    	
-    	var fullpath = "/ezEmail/mailExportZip.do?" + parameters;
-    	AttachDownFrame.location.href = fullpath;
-        AttachDownFrame.target = "_blank";
+    	var resultText = "";
+        $.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezEmail/mailExportZip.do",
+			data : folderIdAndMessageIdList,
+			xhr: function () {
+		        var xhr = new window.XMLHttpRequest();
+		        xhr.upload.addEventListener("progress", function (evt) {
+		            if (evt.lengthComputable) {
+		                var percentComplete = evt.loaded / evt.total;
+		                console.log(percentComplete);
+		            }
+		        }, false);
+		        xhr.addEventListener("progress", function (evt) {
+		            if (evt.lengthComputable) {
+		                var percentComplete = evt.loaded / evt.total;
+		                console.log(percentComplete);
+		            }
+		        }, false);
+		        return xhr;
+		    },
+			success: function(result){
+				if (result == "OK") {
+			    	var fullpath = "/ezEmail/downloadMailZip.do?";
+			    	AttachDownFrame.location.href = fullpath;
+			        AttachDownFrame.target = "_blank";
+				} else {
+					alert("메일을 저장하는 도중 에러가 발생했습니다.");
+				}
+			}        			
+		});
+        
     }
     
 }
