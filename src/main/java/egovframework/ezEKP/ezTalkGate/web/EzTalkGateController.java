@@ -95,6 +95,8 @@ public class EzTalkGateController {
 				return "redirect:/ezPortal/portalMain.do";
 			} else if (ezTalkSsoType.equals("noticeBoard")) { 
 				return "redirect:/ezTalkGate/noticeBoard.do";
+			} else if (ezTalkSsoType.equals("mailWrite")) { 
+				return "redirect:/ezEmail/mailWrite.do?cmd=NEW";
 			} else {
 				return "";
 			}
