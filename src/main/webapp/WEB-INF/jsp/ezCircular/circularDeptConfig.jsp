@@ -138,19 +138,17 @@
 					deleteList.push($(this).val());
 				});
 
-				var url = "/ezCircular/circularDeptDel.do?deleteList=" + deleteList.join();
-				
 				if (confirm("<spring:message code='ezCircular.t46' />")) {
 					$.ajax({
 			    		type : "POST",
-			    		dataType : "text",
+			    		dataType : "json",
 			    		async : false,
-			    		url : url,
-			    		success: function() {
-			    			//이효진 reload 대신 목록만 새로 뿌리게 수정필요함
-							window.location.reload(false);
-			    		},
-			    		error: function(err) {
+			    		url : "/ezCircular/circularDeptDel.do",
+			    		data : {
+			    			circularBMIdList : deleteList.join()
+			    		}, success: function() {
+			    			window.location.reload(false);
+			    		}, error: function(err) {
 			    			alert(strLang1);
 			    		}
 			        });					
