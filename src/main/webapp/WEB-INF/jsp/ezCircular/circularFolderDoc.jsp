@@ -175,14 +175,16 @@
 					dataType : "text",
 					async : true,
 					url : url,
-					data : { boardType   : "M", 
-							 pageNum 	 : CurPage, 
-							 orderCell 	 : OrderCell, 
-							 orderOption : OrderOption,
-							 searchQuery : SQLPARADATA,
-							 folderId 	 : folderId,
-							 searchValue : searchValue,
-							 searchType  : searchType
+					data : { 
+						folderId : folderId,
+						pageNum : CurPage,
+						orderCell : OrderCell,
+						orderOption : OrderOption,
+						searchQuery : SQLPARADATA,
+						searchValue : searchValue,
+						searchType : searchType,
+						sdate : "",
+						edate : ""
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
