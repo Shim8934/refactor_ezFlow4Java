@@ -1489,21 +1489,15 @@
 		<isEqual property="type" compareValue="totalComment">
 			<![CDATA[
 				SELECT
-					IFNULL(COUNT(B.circularcommentstateid), 0) cnt
+					IFNULL(COUNT(*), 0) cnt
 				FROM
-					TBL_CIRCULAR_COMMENT A
-				JOIN
-					TBL_CIRCULAR_COMMENTSTATE B
-				ON
-					A.circularcommentid = B.circularcommentid
-				AND
-					A.tenantid = B.tenantid
+					TBL_CIRCULAR_COMMENT
 				WHERE
-					A.circularid = #circularID#
+					circularid = #circularID#
 				AND
-					((A.status = 1 AND (A.circularuserid = #memberID# OR A.memberid = #memberID#)) OR (A.status = 0))
+					((status = 1 AND (circularuserid = #memberID# OR memberid = #memberID#)) OR (status = 0))
 				AND
-					A.tenantid = #tenantID#
+					tenantid = #tenantID#
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="myComment">
