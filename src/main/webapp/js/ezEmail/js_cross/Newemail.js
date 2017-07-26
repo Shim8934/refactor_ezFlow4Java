@@ -1156,8 +1156,9 @@ function callMsgDlg(szContentClass, Href) {
 }
 
 var PcSaveArrayList = new Array();
+
 function mail_export() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0) {
+	if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang42);
         return;
     }
@@ -1170,7 +1171,7 @@ function mail_export() {
             PcSaveArrayList[PcSaveArrayList.length] = document.getElementById(listSubContentArry[i]);
         }
     }
-    
+	
     if (PcSaveArrayList.length == 1) { //하나의 메일을 다운로드 할 경우
     	var parameters = "url=" + encodeURIComponent(PcSaveArrayList[0].getAttribute("_href"));
     	var fullpath = "/ezEmail/mailExport.do?" + parameters;
@@ -1189,42 +1190,28 @@ function mail_export() {
     		}
     	}
     	
-    	var resultText = "";
+    	ShowMailProgress();
+    	
         $.ajax({
 			type : "POST",
 			dataType : "text",
-			async : false,
+			async : true,
 			url : "/ezEmail/mailExportZip.do",
 			data : folderIdAndMessageIdList,
-			xhr: function () {
-		        var xhr = new window.XMLHttpRequest();
-		        xhr.upload.addEventListener("progress", function (evt) {
-		            if (evt.lengthComputable) {
-		                var percentComplete = evt.loaded / evt.total;
-		                console.log(percentComplete);
-		            }
-		        }, false);
-		        xhr.addEventListener("progress", function (evt) {
-		            if (evt.lengthComputable) {
-		                var percentComplete = evt.loaded / evt.total;
-		                console.log(percentComplete);
-		            }
-		        }, false);
-		        return xhr;
-		    },
+			complete: function(){
+				HiddenMailProgress();
+			},
 			success: function(result){
 				if (result == "OK") {
 			    	var fullpath = "/ezEmail/downloadMailZip.do?";
 			    	AttachDownFrame.location.href = fullpath;
 			        AttachDownFrame.target = "_blank";
 				} else {
-					alert("메일을 저장하는 도중 에러가 발생했습니다.");
+					alert(strLang104);
 				}
-			}        			
+			}
 		});
-        
     }
-    
 }
 
 function HiddenContextMenu() {
