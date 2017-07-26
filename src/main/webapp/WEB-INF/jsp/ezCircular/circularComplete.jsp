@@ -468,7 +468,7 @@
 	        		return;
 	        	}
 
-	        	var feature = GetOpenPosition(820, 700);
+	        	var feature = GetOpenPosition(320, 375);
 				url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
@@ -480,7 +480,7 @@
 
 		    function MemberInfo_onclick(pUserID) {
 		        if (gubun == "2") return;
-		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		        var feature = "width=420px, height=450px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
