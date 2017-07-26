@@ -286,7 +286,13 @@
             <groupId>com.sun.xml.security</groupId>
             <artifactId>xml-security-impl</artifactId>
             <version>1.0</version>
-        </dependency>        
+        </dependency>     
+		<!-- https://mvnrepository.com/artifact/org.fusesource/sigar -->
+		<dependency>
+		    <groupId>org.fusesource</groupId>
+		    <artifactId>sigar</artifactId>
+		    <version>1.6.4</version>
+		</dependency>           
 	</dependencies>
 
     <build>
