@@ -13,12 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -138,33 +143,14 @@ public class MScheduleController extends EgovFileMngUtil {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 
-System.out.println("startDate :" + startDate);		
-System.out.println("endDate :" + endDate);		
-		
-		/*if(startDate != null && !startDate.equals("")) {
-			String[] sDate = startDate.split("-");
-			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
-			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
-			
-			startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
-		}
-		
-		if(endDate != null && !endDate.equals("")) {
-			String[] eDate = endDate.split("-");		
-			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
-			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
-			
-			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
-		}
-		
-		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
-		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);*/
-		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezschedule/list/users/" + userInfo.getId();
 				
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 		        .queryParam("startDate", startDate)
@@ -172,10 +158,23 @@ System.out.println("endDate :" + endDate);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		String scheduleList = rest.getForObject(builder.build().encode().toUri(), String.class);
-System.out.println(scheduleList);		
-		modelMap.addAttribute("scheduleList", scheduleList);
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
 		
+		JSONObject resultBody = result.getBody();
+				
+		String status = resultBody.get("status").toString();
+		JSONArray scheduleList = new JSONArray();
+		
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			
+			modelMap.addAttribute("scheduleListCnt", scheduleList.size());
+			modelMap.addAttribute("scheduleList", scheduleList);
+		}
+System.out.println("status :" + status);		
+System.out.println("scheduleList :" + scheduleList);
+
 		LOGGER.debug("mScheduleList ended.");
 		
 		return "/mobile/ezSchedule/mScheduleList";

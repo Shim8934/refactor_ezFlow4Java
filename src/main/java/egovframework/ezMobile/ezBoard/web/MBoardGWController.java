@@ -8,10 +8,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +27,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @RestController
 public class MBoardGWController {
-	private static final Logger logger = LoggerFactory.getLogger(MBoardController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MBoardController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -61,17 +58,31 @@ public class MBoardGWController {
 	 */
 	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public List<MBoardItemVO> getBoardItemList(@PathVariable String type, @PathVariable String boardId, @RequestParam(value="loginCookie", required=false) String loginCookie) throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 System.out.println(type);
 System.out.println(boardId);
 		MBoardInfoVO boardInfo = new MBoardInfoVO();
 		boardInfo.setBoardID(boardId);
-		List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo); 
-		//List<MBoardItemVO> list = null;		
-
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] ended.");
+		boardInfo.setGuBun("0");
+		
+		List<MBoardItemVO> list = null;
+		//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
+		
+		//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
+		
+		if (boardId != null && boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			//새게시물 가져오기 리스트
+			list = mBoardService.getNewBoarditemList(boardInfo, userInfo);
+		}
+		
+		if (boardId != null && !boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			//일반게시판 가져오기 리스트
+			list = mBoardService.getBoardItemList(boardInfo, userInfo);
+		}
+		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] ended.");
 		return list;
 	}
 	
@@ -80,9 +91,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void getBoardItemListCount() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] started.");
 				
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] ended.");
 	}
 	
 	/**
@@ -90,9 +101,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void getThumbBoardList() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] started.");
 				
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] ended.");
 	}
 	
 	/**
@@ -100,9 +111,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void getThumbBoardListCount() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] started.");
 				
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] ended.");
 	}
 	
 	/**
@@ -110,9 +121,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/favorite-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void getFavoriteList() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] started.");
 				
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] ended.");
 	}
 	
 	/**
@@ -120,9 +131,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void boardDetail() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] started.");
 				
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] ended.");
 	}
 	
 	/**
@@ -130,9 +141,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public void insertBoard() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] started.");
+		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] started.");
 				
-		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] ended.");
 	}
 	
 	/**
@@ -140,9 +151,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public void updateBoard() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
+		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
 				
-		logger.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] ended.");
 	}
 	
 	/**
@@ -150,9 +161,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public void deleteBoard() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] started.");
+		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] started.");
 				
-		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");
 	}
 	
 	/**
@@ -160,9 +171,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/folder-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void getLeftMenu() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] started.");
 				
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] ended.");
 	}
 	
 	/**
@@ -170,9 +181,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/favorite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public void insertFavorite() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] started.");
+		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] started.");
 				
-		logger.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
 	}
 	
 	/**
@@ -180,9 +191,9 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/favorite", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public void deleteFavorite() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] started.");
+		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] started.");
 				
-		logger.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
 	}
 	
 	/**
@@ -190,8 +201,8 @@ System.out.println(boardId);
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}/attach-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void getAttachList() throws Exception {		
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] started.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] started.");
 				
-		logger.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");
 	}
 }

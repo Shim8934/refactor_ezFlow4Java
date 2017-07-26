@@ -175,14 +175,16 @@
 					dataType : "text",
 					async : true,
 					url : url,
-					data : { boardType   : "M", 
-							 pageNum 	 : CurPage, 
-							 orderCell 	 : OrderCell, 
-							 orderOption : OrderOption,
-							 searchQuery : SQLPARADATA,
-							 folderId 	 : folderId,
-							 searchValue : searchValue,
-							 searchType  : searchType
+					data : { 
+						folderId : folderId,
+						pageNum : CurPage,
+						orderCell : OrderCell,
+						orderOption : OrderOption,
+						searchQuery : SQLPARADATA,
+						searchValue : searchValue,
+						searchType : searchType,
+						sdate : "",
+						edate : ""
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -558,7 +560,7 @@
 	        		return;
 	        	}
 	        	
-	        	var feature = GetOpenPosition(820, 700);
+	        	var feature = GetOpenPosition(320, 375);
 	        	url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo + "&folderId=" + folderId;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }

@@ -217,7 +217,8 @@ function getCommentShareUser() {
 		dataType : "json",
 		data : {
 			circularID : circularID,
-			circularCommentID : circularCommentID
+			circularCommentID : circularCommentID,
+			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
 			//본인 제외하고 회람자 목록 보여주면서 체크박스 만들고 확인버튼 눌렀을때 updateStatus 새거 하나 쓰자

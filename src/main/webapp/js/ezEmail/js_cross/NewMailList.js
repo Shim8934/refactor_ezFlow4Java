@@ -900,7 +900,7 @@ function makePageSelPage() {
     PagingHTML += strtext;
     var totalPage = parseInt(document.getElementById("MailList").getAttribute("MaxPage"));
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
-    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
     if (totalPage > 1 && pageNum != 1) {
         PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
     }

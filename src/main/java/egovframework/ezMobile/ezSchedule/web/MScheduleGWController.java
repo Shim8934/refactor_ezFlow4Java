@@ -2,6 +2,7 @@ package egovframework.ezMobile.ezSchedule.web;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +37,10 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
@@ -67,9 +72,12 @@ public class MScheduleGWController extends EgovFileMngUtil {
 
 	@Autowired
 	private Properties config;
+	
+	@Resource(name="EzScheduleService")
+	private EzScheduleService ezScheduleService;
 		
-	@Resource(name="MScheduleService")
-	private MScheduleService mScheduleService;
+	/*@Resource(name="MScheduleService")
+	private MScheduleService mScheduleService;*/
 		
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -131,59 +139,95 @@ System.out.println(name);
 	
     ///////////////////////////////////////////////// sample end /////////////////////////////////////////////////////
 	
+	@SuppressWarnings("unchecked")
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
 	 */
 	@RequestMapping(value="/ezschedule/list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void mScheduleList(@PathVariable String userId, HttpServletRequest request) throws Exception {
+	public Object mScheduleList(@PathVariable String userId, HttpServletRequest request){
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Calendar cal = Calendar.getInstance();
+		JSONObject result = new JSONObject();
 		
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
-		
-		if (startDate != null && !startDate.equals("")) {
-			String[] sDate = startDate.split("-");
-			String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
-			String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+		try {
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
 			
-			startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
-		} else {
-			startDate = sdf.format(cal.getTime()) + " 00:00:00";
-		}
-		
-		if (endDate != null && !endDate.equals("")) {
-			String[] eDate = endDate.split("-");		
-			String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
-			String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+			if (startDate != null && !startDate.equals("")) {
+				String[] sDate = startDate.split("-");
+				String sMon = (sDate[1].length() == 1 ? "0" + sDate[1] : sDate[1]);
+				String sDay = (sDate[2].length() == 1 ? "0" + sDate[2] : sDate[2]);
+				
+				startDate = sDate[0] + "-" + sMon + "-" + sDay + " 00:00:00";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				startDate = sdf.format(cal.getTime()) + " 00:00:00";
+			}
 			
-			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
-		} else {
-			endDate = sdf.format(cal.getTime()) + " 23:59:59";
+			if (endDate != null && !endDate.equals("")) {
+				String[] eDate = endDate.split("-");
+				String eMon = (eDate[1].length() == 1 ? "0" + eDate[1] : eDate[1]);
+				String eDay = (eDate[2].length() == 1 ? "0" + eDate[2] : eDate[2]);
+				
+				endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
+			} else {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Calendar cal = Calendar.getInstance();
+				
+				endDate = sdf.format(cal.getTime()) + " 23:59:59";
+			}
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+			String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+			String pidList = "'" + userId + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());
+			
+			for (int i = 0; i < gList.size(); i++) {
+				if (i == 0) {
+					pidList += ",";
+				}
+				ScheduleGroupListVO data = gList.get(i);
+				pidList += "'" + data.getGroupId() + "'";
+				
+				if (i != gList.size()-1) {
+					pidList += ",";
+				}	
+			}
+	
+			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
+			
+			Collections.sort(sList, new EzScheduleCompareUtil());
+						
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", sList);		
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] ended.");
 		
-		String serverName = request.getServerName();	
-		MCommonVO info = mOptionService.commonInfo(serverName, userId);
-		
-		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
-		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-
-System.out.println(utcStartTime);
-System.out.println(utcEndTime);
-		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] ended.");		
+		return result;
 	}
 	
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 카운트 (월간,주간,일정검색)
 	 */
 	@RequestMapping(value="/ezschedule/list-count/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void mScheduleListCount() throws Exception {
+	public int mScheduleListCount() throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] started.");
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");
+		
+		return 0;
 	}
 	
 	/**

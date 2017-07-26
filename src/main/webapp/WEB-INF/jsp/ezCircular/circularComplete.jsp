@@ -8,14 +8,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<%-- <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script> --%>
-		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
+		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/PreviewItem.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
 		
 		<style>
@@ -174,14 +174,16 @@
 					dataType : "text",
 					async : true,
 					url : url,
-					data : { boardType : "M", 
-							 pageNum : CurPage, 
-							 orderCell : OrderCell, 
-							 orderOption : OrderOption,
-							 searchQuery : SQLPARADATA,
-							 searchValue : searchValue,
-							 searchType  : searchType
-							},
+					data : {
+						pageNum : CurPage, 
+						orderCell : OrderCell, 
+						orderOption : OrderOption,
+						searchQuery : SQLPARADATA,
+						searchValue : searchValue,
+						searchType  : searchType,
+						sdate : "",
+						edate : ""
+					},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
 					}     			
@@ -312,16 +314,16 @@
 	            }
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 	                    PagingHTML += strtext;
 	                }
 	                else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 	                    PagingHTML += strtext;
 	                }
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
 	                PagingHTML += strtext;
 	            }
 	            var MaxNum;
@@ -345,18 +347,18 @@
 	            }
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
+	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                }
 	                else {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
+	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            }
 	            else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
+	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
 	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 	                PagingHTML += strtext;
 	            }
@@ -468,7 +470,7 @@
 	        		return;
 	        	}
 
-	        	var feature = GetOpenPosition(820, 700);
+	        	var feature = GetOpenPosition(320, 375);
 				url = "/ezCircular/circularMove.do?circularIdList=" + strListInfo;
 	        	var OpenWin = window.open(url, "", "width=320, height=375, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
@@ -480,7 +482,7 @@
 
 		    function MemberInfo_onclick(pUserID) {
 		        if (gubun == "2") return;
-		        var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		        var feature = "width=420px, height=450px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		        feature = feature + GetOpenPosition(420, 450);
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", feature);
 		    }
@@ -655,4 +657,5 @@
 	        </span>
 	    </span>
 	</body>
+</html></body>
 </html>

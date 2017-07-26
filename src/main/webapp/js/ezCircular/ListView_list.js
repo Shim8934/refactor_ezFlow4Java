@@ -731,9 +731,7 @@ function ListView() {
                 var objTd = document.createElement("TD");
                 var titleImage = "";
                 var titleOneLineCnt = "";
-                if (getNodeText(oDatas[3]) == "1") {
-                    objTd.style.color = "RED";
-                }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.padding = "8px 4px";
                     objTd.style.margin = "0";
@@ -826,11 +824,11 @@ function ListView() {
                     objTd.style.textAlign = "center";
                     
                     if (strValue == "0") {
-                    	strValue = strLang18;
+                    	strValue = strLang8;
                     } else if (strValue == "1") {
-                    	strValue = strLang19;
+                    	strValue = strLang9;
                     } else {
-                    	strValue = strLang20;
+                    	strValue = strLang10;
                     }
                 }
                 

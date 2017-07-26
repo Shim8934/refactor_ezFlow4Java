@@ -449,6 +449,9 @@ public class EzEmailMenuController {
 					userEmail, password);
 			
 			IMAPAccess ia = null;
+			InputStream inputStream = null;
+			MimeMessage message = null;
+			
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, password, egovMessageSource, locale);
@@ -463,9 +466,15 @@ public class EzEmailMenuController {
 					Message[] messages = new Message[multiFile.size()];
 					
 					for (int i=0; i<multiFile.size(); i++) {
-						InputStream inputStream = multiFile.get(i).getInputStream();
-						MimeMessage message = sa.readMimeMessage(inputStream);
-						inputStream.close();
+						try {
+							inputStream = multiFile.get(i).getInputStream();
+							message = sa.readMimeMessage(inputStream);
+							logger.debug("subject=" + message.getSubject());
+						} finally {
+							try {
+								inputStream.close();
+							} catch (Exception e) {} 
+						}
 						
 						if (message != null) {
 							messages[i] = message;
@@ -475,6 +484,7 @@ public class EzEmailMenuController {
 					folder.appendMessages(messages);
 					folder.close(true);
 					
+					logger.debug("mail import Success. messages size=" + messages.length);
 					strResult = "OK";
 				}
 				

@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,14 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezSchedule.web.MScheduleController;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class MBoardController {
-	private static final Logger logger = LoggerFactory.getLogger(MBoardController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MBoardController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -68,9 +70,9 @@ public class MBoardController {
 	 */
 	@RequestMapping("/mobile/ezBoard/getBoardList.do")
 	public String getBoardList() throws Exception {
-		logger.debug("getBoardList started.");
+		LOGGER.debug("getBoardList started.");
 		
-		logger.debug("getBoardList ended.");
+		LOGGER.debug("getBoardList ended.");
 		
 		return "";
 	}
@@ -80,8 +82,8 @@ public class MBoardController {
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/boardItemList.do")
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, MBoardInfoVO mBoardInfoVO, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("boardItemList started.");
-		logger.debug("boardID = " + mBoardInfoVO.getBoardID() + " || type = " + mBoardInfoVO.getType());
+		LOGGER.debug("boardItemList started.");
+		LOGGER.debug("boardID = " + mBoardInfoVO.getBoardID() + " || type = " + mBoardInfoVO.getType());
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -91,7 +93,7 @@ public class MBoardController {
 		model.addAttribute("mBoardInfo", mBoardInfoVO);
 		model.addAttribute("title", mBoardInfoVO.getBoardName());
 		
-		logger.debug("boardItemList ended.");
+		LOGGER.debug("boardItemList ended.");
 		
 		return "/mobile/ezBoard/mBoardItemList";
 	}
@@ -102,9 +104,9 @@ public class MBoardController {
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getBoardInfo.do")
 	public String getBoardInfo() throws Exception {
-		logger.debug("getBoardInfo started.");
+		LOGGER.debug("getBoardInfo started.");
 		
-		logger.debug("getBoardInfo ended.");
+		LOGGER.debug("getBoardInfo ended.");
 		
 		return "";
 	}
@@ -114,16 +116,18 @@ public class MBoardController {
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getBoardItemList.do")
 	public String getBoardItemList(@CookieValue("loginCookie") String loginCookie, MBoardInfoVO mBoardInfoVO, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getBoardItemList started.");
+		LOGGER.debug("getBoardItemList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
 		
-		logger.debug("type = " + mBoardInfoVO.getType() + " || boardID = " + mBoardInfoVO.getBoardID() + " || userID = " + userInfo.getId());
+		LOGGER.debug("type = " + mBoardInfoVO.getType() + " || boardID = " + mBoardInfoVO.getBoardID() + " || userID = " + userInfo.getId());
 		
 		mBoardInfoVO.setType("newBoardItemList");
-		mBoardInfoVO.setBoardID("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+		//mBoardInfoVO.setBoardID("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+		//mBoardInfoVO.setBoardID("{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}");
+		
 		//게시판정보
 		mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), primary, tenantID);
 		mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
@@ -166,13 +170,14 @@ public class MBoardController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		String sample = rest.getForObject(builder.build().encode().toUri(), String.class);
+		JSONArray sample = rest.getForObject(builder.build().encode().toUri(), JSONArray.class);
 		
 System.out.println("sample:"+sample);
 		model.addAttribute("mBoardInfo", mBoardInfoVO);
-		model.addAttribute("mBoardItemList", mBoardItemList);
+		//model.addAttribute("mBoardItemList", mBoardItemList);
+		model.addAttribute("mBoardItemList", sample);
 		
-		logger.debug("getBoardItemList ended.");
+		LOGGER.debug("getBoardItemList ended.");
 		
 		return "json";
 	}
@@ -183,9 +188,9 @@ System.out.println("sample:"+sample);
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getBoardItem.do")
 	public String getBoardItem() throws Exception {
-		logger.debug("getBoardItem started.");
+		LOGGER.debug("getBoardItem started.");
 		
-		logger.debug("getBoardItem ended.");
+		LOGGER.debug("getBoardItem ended.");
 		
 		return "/mobile/ezBoard/mBoardItem";
 	}
@@ -200,9 +205,9 @@ System.out.println("sample:"+sample);
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/editBoardItem.do")
 	public String editBoardItem() throws Exception {
-		logger.debug("editBoardItem started.");
+		LOGGER.debug("editBoardItem started.");
 		
-		logger.debug("editBoardItem ended.");
+		LOGGER.debug("editBoardItem ended.");
 		
 		return "";
 	}
@@ -212,7 +217,7 @@ System.out.println("sample:"+sample);
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/saveBoardItem.do")
 	public String saveBoardItem() throws Exception {
-		logger.debug("saveBoardItem started.");
+		LOGGER.debug("saveBoardItem started.");
 		
 		/*if (boardID != null) {
 			수정저장
@@ -222,7 +227,7 @@ System.out.println("sample:"+sample);
 			쓰기 저장 success 에서 알림메일 전송
 		}*/
 		
-		logger.debug("saveBoardItem ended.");
+		LOGGER.debug("saveBoardItem ended.");
 		
 		return "";
 	}
@@ -232,9 +237,9 @@ System.out.println("sample:"+sample);
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/deleteBoardItem.do")
 	public String deleteBoardItem() throws Exception {
-		logger.debug("deleteBoardItem started.");
+		LOGGER.debug("deleteBoardItem started.");
 		
-		logger.debug("deleteBoardItem ended.");
+		LOGGER.debug("deleteBoardItem ended.");
 		
 		return "";
 	}

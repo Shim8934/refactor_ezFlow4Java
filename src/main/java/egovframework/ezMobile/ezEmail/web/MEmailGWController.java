@@ -1,14 +1,28 @@
 package egovframework.ezMobile.ezEmail.web;
 
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import javax.annotation.Resource;
+import javax.mail.Address;
+import javax.mail.FetchProfile;
+import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.UIDFolder;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeUtility;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +33,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sun.mail.imap.IMAPFolder;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezMobile.ezEmail.vo.MEmailFolderVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -43,6 +60,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	static final String SUPERPASSWORD = "!p1221612";	
 	
@@ -72,7 +92,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 편지함 목록 조회, 메일 이동 시 편지함 목록 출력
 	 */
 	@RequestMapping(value="/ezemail/folders-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public LoginVO mMailFolderList(@PathVariable String userId) throws Exception {
+	public List<MEmailFolderVO> mMailFolderList(@PathVariable String userId, @RequestParam(value="folderId", required=false) String folderId) throws Exception {
 		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] started.");
 		
 //		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
@@ -84,7 +104,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 //		logger.debug("userAccount=" + userAccount);
 		
 //		String folderId = request.getParameter("folderId");
-		String folderId = "";
+
 		logger.debug("folderId=" + folderId);
 		
 		List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
@@ -93,7 +113,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					"rkd1395@jgw.kaoni.com", "!p1221612", egovMessageSource, new Locale("ko"));
+					"opensoladmin@svn.opensol2014.com", "qwe123!", egovMessageSource, new Locale("ko_KR"));
 			
 			List<Folder> subMailFolder = null;
 			
@@ -126,27 +146,269 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		}
 		
 		logger.debug("getFolderList ended.");
-		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] ended.");		
+		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders-list/users/{userId}] ended.");
 		
-		LoginVO vo = new LoginVO();
-		vo.setTenantId(0);
-		vo.setId("rkd1395@jgw.kaoni.com");
-		vo.setDn("NOPASSWORD");
-
-		LoginVO user = loginService.selectUser(vo);
-
-		
-		return user;
+		return mailFolderList;
 	}
 	
 	/**
 	 * 모바일 G/W 이메일 [GET] (받은, 보낸,임시,지운,개인,기타) 편지함 리스트
 	 */
 	@RequestMapping(value="/ezemail/folders/{folderId}/mails/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void mMailFolderMailList() throws Exception {
+	public JSONArray mMailFolderMailList(@PathVariable String folderId, @PathVariable String userId, 
+			@RequestParam(value="start", required=false) String start,
+			@RequestParam(value="end", required=false) String end,
+			@RequestParam(value="search", required=false) String search,
+			@RequestParam(value="filter", required=false) String filter) throws Exception {
 		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] started.");
 		
+		logger.debug("getMailList started.");				
+		
+		String jsonMessages = "";
+		
+		Locale locale = new Locale("ko_KR");
+			
+		JSONArray messageJsonArray = new JSONArray();
+		// get user credentials
+		
+		boolean senderReceiverFlag = false;
+		
+//		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+//		String password = userIdAndPassword.get(1);		
+//		
+//        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+//        String userEmail = userInfo.getId() + "@" + domainName;
+        
+        String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
+        String sendName = egovMessageSource.getMessage("ezEmail.t644", locale);
+        String tempName = egovMessageSource.getMessage("ezEmail.t644", locale);
+		
+        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
+        
+        senderReceiverFlag = folderId.equals(sendName) ? true : false;
+        senderReceiverFlag = folderId.equals(tempName) ? true : false;
+        
+        logger.debug("userID" + userId+ ",folderId=" + folderId + ",start=" + start + ",end=" + end + "search=" + search);
+        
+        IMAPAccess ia = null;
+        Message[] messages = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					"rkd1395@svn.opensol2014.com", "qwe123!", egovMessageSource, locale, 40*1000, 20*1000);
+					
+			Folder folder = ia.getFolder(folderId);		
+			folder.open(Folder.READ_ONLY);
+	        UIDFolder uidFolder = (UIDFolder)folder;
+	        
+	        JSONObject contentrange = new JSONObject();
+	        
+	        contentrange.put("contentrange", start + "-" + end);
+	        
+	        messageJsonArray.add(contentrange);
+	        
+	        boolean isUnreadOnly = false;
+	        boolean isImportantOnly = false;
+			
+	        if (filter.equals("isUnreadOnly")) {
+	        	isUnreadOnly = true;
+	        } 
+	        
+	        else if (filter.equals("isImportantOnly")) {
+	        	isImportantOnly = true;
+	        }
+	        
+			if (!search.equals("")) {
+				int index = search.indexOf("=");
+				if (index >= 0) {
+					String searchField = search.substring(0, index);
+					final String searchValue = search.substring(index + 1);
+					
+					logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
+					
+					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
+				}
+			}
+			else if (isUnreadOnly) {
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
+			}
+			
+			else if (isImportantOnly) {
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, false, isImportantOnly);
+			}
+			
+			if (messages == null) {
+				messages = folder.getMessages(); 
+			}
+			
+			int startNo = Integer.parseInt(start);
+			int endNo = Math.min(Integer.parseInt(end), messages.length - 1);
+			
+	
+			logger.debug("isUnreadOnly=" + isUnreadOnly);
+							
+			logger.debug("Message Length=" + messages.length);
+			
+			logger.debug("startNo=" + startNo + ",endNo=" + endNo);
+			
+			if (startNo <= endNo) {
+				Message[] fetchMessages = Arrays.copyOfRange(messages, startNo, endNo + 1);
+				FetchProfile fp = new FetchProfile();
+								
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("X-Priority");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+				fp.add(FetchProfile.Item.SIZE);
+				fp.add(FetchProfile.Item.FLAGS);
+				
+				fp.add("Subject");
+				fp.add("From");
+				fp.add("To");
+				
+				folder.fetch(fetchMessages, fp);					
+			}
+			
+			
+			
+			for (int i = startNo; i <= endNo; i++) {
+				Message message = messages[i];
+				
+				JSONObject messageJson = new JSONObject();
+				
+				messageJson.put("href",folderId+"/"+uidFolder.getUID(message));
+				messageJson.put("fromemail","");
+								
+				// importance
+				String[] headers = message.getHeader("X-Priority");
+				String header = headers != null ? headers[0] : "normal";
+				int importance = 1;
+				// startsWith is used since
+				// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
+				if (header.startsWith("1")) {
+					importance = 2;
+				}
+				else if (header.startsWith("5")) {
+					importance = 0;
+				}
+				messageJson.put("importance",importance);
+				
+				// Flagged is used for bookmark
+				int flagged = 0;
+				if (message.isSet(Flags.Flag.FLAGGED)) {
+					flagged = 1;
+				}
+				messageJson.put("flag",flagged);
+				
+				// attachment
+				boolean isAttached = IMAPAccess.hasAttachment(message);
+				int attached = isAttached ? 1 : 0;
+				messageJson.put("attach",attached);
+				
+				String addressStr = "";
+				Address[] addresses = null;
+				if (!senderReceiverFlag) {
+					addressStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
+				}
+				// in case of Sent mailbox
+				else {
+					addresses = message.getRecipients(Message.RecipientType.TO);
+					if (addresses != null) {
+						String toHeader = message.getHeader("To")[0];
+						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);
+						
+						StringBuilder addressBuilder = new StringBuilder();
+						for (Address address : addresses) {
+							addressStr = ((InternetAddress)address).getPersonal(); // name part
+							if (addressStr == null) {
+								addressStr = ((InternetAddress)address).getAddress(); // email address part
+							}
+							else {
+								if (!isAscii) {
+									byte[] rawBytes = addressStr.getBytes("iso-8859-1");
+									
+									addressStr = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
+								}
+								else {
+									// decoding is needed for the name part
+									addressStr = MimeUtility.decodeText(addressStr);
+								}
+							}						
+							addressBuilder.append(addressStr);
+							addressBuilder.append("; ");
+						}
+						addressStr = addressBuilder.toString();
+						addressStr = addressStr.substring(0, addressStr.length() - 2);
+					}								
+				}
+				messageJson.put("sender",addressStr);
+							
+				// subject
+				String subject = ezEmailUtil.getSubject(message);								
+				subject = (subject != null) ? subject : "";
+						
+				messageJson.put("subject",subject);
+				
+				// received date
+				Date receivedDate = message.getReceivedDate();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+				String receivedDateStr = sdf.format(receivedDate);
+				
+//				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
+				receivedDateStr = "";
+				
+				messageJson.put("receivedt",receivedDateStr);
+				
+				// size
+				messageJson.put("size",message.getSize());
+				
+				// read/unread
+				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
+				messageJson.put("read",readFlag);
+							
+				if (message.isSet(Flags.Flag.ANSWERED)) {
+					messageJson.put("contentclass","REPLY");
+				}
+				else {
+					boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
+					
+					if (isForwarded) {
+						messageJson.put("contentclass","FORWARD");
+					}
+					else {
+						messageJson.put("contentclass","IPM.Note");
+					}
+				}
+				
+				messageJsonArray.add(messageJson);
+			}
+			
+			JSONObject contentRange = new JSONObject();
+			
+			contentRange.put("start", start); 
+			contentRange.put("end" , end);
+			contentRange.put("total", messages.length);
+			contentRange.put("BoxTCount", folder.getMessageCount());
+			contentRange.put("BoxUCount", folder.getUnreadMessageCount());
+			
+			folder.close(false);
+			messageJsonArray.add(contentRange);
+			
+			jsonMessages = messageJsonArray.toJSONString();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
 		logger.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] ended.");		
+
+		return messageJsonArray;
 	}
 	
 	/**
