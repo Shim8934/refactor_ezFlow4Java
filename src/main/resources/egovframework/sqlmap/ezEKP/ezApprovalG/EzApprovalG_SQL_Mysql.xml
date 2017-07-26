@@ -8526,7 +8526,11 @@
 	<select id="EzApprovalG.getDocInfoHref" parameterClass="Map" resultClass="String">
 		<isEqual property="v_FLAG" compareValue="APR">
 			SELECT 
-				HREF 
+				 CASE WHEN 
+				 	COUNT(href) = 0   THEN '' 
+				 ELSE 
+				 	HREF 
+				 END HREF 
             FROM 
             	TBL_APRDOCINFO 
             WHERE  
@@ -8538,7 +8542,11 @@
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
 		   SELECT 
-		 		HREF 
+		 		CASE WHEN 
+				 	COUNT(href) = 0   THEN '' 
+				 ELSE 
+				 	HREF 
+				 END HREF  
            FROM 
            		TBL_ENDAPRDOCINFO 
            WHERE  
