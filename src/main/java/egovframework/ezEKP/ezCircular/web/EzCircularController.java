@@ -1896,6 +1896,17 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId());
+		String folderNameList = "";
+
+		for (int i=0; i<list.size(); i++) {
+			folderNameList += list.get(i).getCircularFolderName() + ";";
+		}
+
+		logger.debug("folderNameList : " + folderNameList);
+		
+		model.addAttribute("folderNameList", folderNameList);
+		
 		logger.debug("circularInputName ended");
 		
 		return "/ezCircular/circularInputName";
