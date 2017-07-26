@@ -130,8 +130,8 @@ public class EzSystemUtil {
 		logger.debug("getDiskioInfo started. : " + tenantID);
 		
 		String command = "iostat";
-/*		String filePath = "D:/test/test.txt";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));*/
+		//String filePath = "D:/test/test.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
 		ProcessBuilder builder = new ProcessBuilder(command);
 		Process process = builder.start();
 		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
@@ -170,16 +170,14 @@ public class EzSystemUtil {
 	
 	/**
 	 *  네트워크 트래픽 정보
-	 **/
-	
+	 **/	
 	@SuppressWarnings("unchecked")
 	public static String getNetByteInfo(int tenantID) throws Exception {
 		
 		logger.debug("getNetPacketInfo started. : " + tenantID);
 		
 		//String filePath = "D:/test/netInter.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
 		ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
 		Process process = builder.start();
 		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
