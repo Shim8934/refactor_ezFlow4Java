@@ -2280,9 +2280,9 @@
 			DELETE FROM
 				TBL_CIRCULAR_BM
 			WHERE
-				circularbmid = #v_CIRCULARBMID#
+				circularbmid = #circularBMId#
 			AND
-				tenantid = #v_TENANTID#
+				tenantid = #tenantID#
 		]]>
 	</delete>
   
