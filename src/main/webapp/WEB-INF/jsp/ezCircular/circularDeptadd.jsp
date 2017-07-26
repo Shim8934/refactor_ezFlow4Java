@@ -50,7 +50,7 @@
 	    		
 	    		$.ajax({
 	    			method : "POST",
-	    			dataType : "text",
+	    			dataType : "json",
 	    			async : false,
 	    			url : "/ezCircular/circularDeptSave.do",
 	    			data : {

@@ -382,7 +382,7 @@
             SELECT
                 A.circularbmid,
                 A.title,
-                A.regdate,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate, 
                 (SELECT
                 	membername 
                  FROM

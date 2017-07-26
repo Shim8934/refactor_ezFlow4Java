@@ -1680,21 +1680,23 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람처 저장 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDeptSave.do")
-	@ResponseBody
-	public void circularDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
+	public String circularDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularDeptSave started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String circularBMId = request.getParameter("circularBMId");
+		String title = request.getParameter("title");
 		String[] memberListStr = request.getParameterValues("memberListStr[]");
 		
 		if (!circularBMId.equals("")) {
-			ezCircularService.updateCircularDept(circularDeptVO.getTitle(), userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId());
+			ezCircularService.updateCircularDept(title, userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId());
 		} else {
-			ezCircularService.setCircularDeptSave(circularDeptVO.getTitle(), userInfo.getId(), memberListStr, userInfo.getTenantId());
+			ezCircularService.setCircularDeptSave(title, userInfo.getId(), memberListStr, userInfo.getTenantId());
 		}
 
 		logger.debug("circularDeptSave ended");
+		
+		return "json";
 	}
 	
 	/**
