@@ -189,7 +189,8 @@
 		        		searchValue : keyword,
 		        		searchType : "subject",
 		        		orderCell : OrderCell,
-		        		orderOption : OrderOption
+		        		orderOption : OrderOption,
+		        		folderId : ""
 		        	},
 		        	success : function(xml) {
 		        		getSearchList_after(loadXMLString(xml));

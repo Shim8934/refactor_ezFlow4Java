@@ -84,11 +84,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<CircularListVO> getSearchAllCircularList(Map<String, Object> map) throws Exception {
-		return (List<CircularListVO>) list("EzCircularDAO.getSearchAllCircularList", map);
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<CircularCommentVO> getCircularCommentUserList(Map<String, Object> map) throws Exception {
 		return (List<CircularCommentVO>) list("EzCircularDAO.getCircularCommentUserList", map);
 	}
@@ -167,10 +162,6 @@ public class EzCircularDAO extends EgovAbstractDAO{
 
 	public String insertComment(Map<String, Object> map) throws Exception {
 		return (String) insert("EzCircularDAO.insertComment", map);
-	}
-
-	public int getSearchAllCircularListCount(Map<String, Object> map) throws Exception {
-		return (int) select("EzCircularDAO.getSearchAllCircularListCount", map);
 	}
 
 	public int confirmFolderCheck(Map<String, Object> map) throws Exception {

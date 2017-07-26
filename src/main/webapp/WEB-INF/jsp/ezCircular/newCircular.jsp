@@ -158,12 +158,14 @@
 					url : url,
 					data : {
 						boardType   : "M", 
-						pageNum 	 : CurPage, 
+						pageNum 	 : CurPage,
 						orderCell 	 : OrderCell, 
 						orderOption : OrderOption,
 						searchQuery : SQLPARADATA,
 						searchValue : searchValue,
-						searchType  : searchType
+						searchType  : searchType,
+						sdate : "",
+						edate : ""
 					},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
