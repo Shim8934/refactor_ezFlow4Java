@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,10 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezStatistics.web.EzStatisticsMailMainController;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
+import egovframework.ezEKP.ezSystem.vo.FileSysInfoVO;
+import egovframework.ezEKP.ezSystem.vo.SysMonitorVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -211,6 +211,66 @@ public class EzSystemAdminController {
 		model.addAttribute("endDate", endDate);
 		
 		logger.debug("ended systemLoginHistList controller."  );
+		
+		return "json";
+	}
+	
+	/** 
+	 * 관리자->시스템 모니터링
+	 */
+	@RequestMapping(value="/admin/ezSystem/sysMonitor.do")
+	public String sysMonitor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("systemStatus started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		SysMonitorVO serverList = new SysMonitorVO();
+		serverList.setOsName(System.getProperty("os.name"));
+		serverList.setOsVer(System.getProperty("os.version"));		
+	
+		model.addAttribute("serverList", serverList);
+		logger.debug("systemStatus ended");
+		
+		return "/ezSystem/sysMonitor";
+	}
+	
+	/**
+	 *  관리자->시스템 모니터링
+	 * */
+	@RequestMapping(value="/admin/ezSystem/sysMonitorInfo.do")
+	public String sysMonitorInfo(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("sysMonitorInfo started");
+		
+		//관리자 권한체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);	
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}		
+		
+		SysMonitorVO osInfo = new SysMonitorVO();
+		osInfo.setOsName(System.getProperty("os.name"));
+		osInfo.setOsVer(System.getProperty("os.version"));
+		
+		SysMonitorVO cpuInfo = EzSystemUtil.getCpuInfo(userInfo.getTenantId());
+		SysMonitorVO memoryInfo = EzSystemUtil.getMemoryInfo(userInfo.getTenantId());
+		List<FileSysInfoVO> fileSysInfoList  = EzSystemUtil.getFileSysInfo(userInfo.getTenantId());
+		String diskioInfo = EzSystemUtil.getDiskioInfo(userInfo.getTenantId());
+		String netTrafficList = EzSystemUtil.getNetByteInfo(userInfo.getTenantId());
+		
+		model.addAttribute("osInfo", osInfo);
+		model.addAttribute("cpuInfo", cpuInfo);
+		model.addAttribute("memoryInfo", memoryInfo);
+		model.addAttribute("fileSysInfoList", fileSysInfoList);
+		model.addAttribute("diskioInfo", diskioInfo);
+		model.addAttribute("netTrafficList", netTrafficList);		
+		
+		logger.debug("sysMonitorInfo ended");
 		
 		return "json";
 	}

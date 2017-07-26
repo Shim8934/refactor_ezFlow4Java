@@ -46,6 +46,9 @@
 	    	case "LOGINHIST":
 	    		parent.frames[1].location.href = "/admin/ezSystem/systemLoginHist.do";
 	    		break;
+	    	case "SYSMONITOR":
+	    		parent.frames[1].location.href = "/admin/ezSystem/sysMonitor.do";
+	    		break;	    		
 	    }
     }
 
@@ -75,6 +78,9 @@
             <h2><span id="LOGINHIST" style="display:inline-block;width:100%;" onClick="menu_change('LOGINHIST')" ><spring:message code='ezSystem.x0021' /></span>
             <ul class="on"></ul>
             </h2>
+            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" >시스템 모니터링</span>
+            <ul class="on"></ul>
+            </h2>            
             </c:if>
       	</div>
         <script type="text/javascript">

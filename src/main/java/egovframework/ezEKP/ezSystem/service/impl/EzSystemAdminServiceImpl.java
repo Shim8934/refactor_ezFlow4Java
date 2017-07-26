@@ -184,5 +184,4 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return ezSystemAdminDAO.getLoginHistCount(params);
 	}
-
 }
