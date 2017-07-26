@@ -661,12 +661,13 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, int tenantID) throws Exception {
+	public int getCircularListCount(String memberID, String searchValue, String searchType, String sdate, String edate, String offset, int tenantID) throws Exception {
 		logger.debug("getCircularListCount started.");
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || sdate = " + sdate + " || edate = " + edate + " || tenantID = " + tenantID);
 		
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
-			edate += " 23:59:59";			
+			edate += " 23:59:59";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -675,6 +676,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("searchType", searchType);
 		map.put("sdate", sdate);
 		map.put("edate", edate);
+		map.put("offset", offset);
 		map.put("tenantID", tenantID);
 		
 		int result = ezCircularDAO.getCircularListCount(map);
