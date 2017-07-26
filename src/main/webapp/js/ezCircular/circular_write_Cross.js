@@ -402,7 +402,7 @@ function manage_attendant_after() {
     schedule_select_attendant_dialogArguments[0] = g_attendant;
     schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
-    GetOpenWindow("/ezCircular/circularSelectAttendant.do?title=" + encodeURI(strLang19), "schedule_select_attendant", 970, 680);
+    GetOpenWindow("/ezCircular/circularSelectAttendant.do", "schedule_select_attendant", 970, 680);
 }
 
 function manage_attendant_Complete(rtn) {
