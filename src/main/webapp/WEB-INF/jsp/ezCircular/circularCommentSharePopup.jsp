@@ -47,7 +47,7 @@
 		
 		
 		
-		<div style='height:230px;overflow-y:auto;'>
+		<div style='height:420px;overflow-y:auto;'>
 			<table class="mainlist" style="width:100%;">
 				<tr>
 					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<img src="/images/search.png" style="vertical-align: middle;"/>&nbsp;<spring:message code='ezCircular.t85' /></th>

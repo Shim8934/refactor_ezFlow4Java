@@ -310,7 +310,7 @@ function openCircularComment() {
 function openCommentSharePopup(obj) {
 	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
 	
-	DivPopUpShow(300, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID + "&circularCommentID=" + $(obj).closest("tr").attr("circularCommentID"));
+	DivPopUpShow(300, 490, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID + "&circularCommentID=" + $(obj).closest("tr").attr("circularCommentID"));
 }
 
 function closePopup() {
