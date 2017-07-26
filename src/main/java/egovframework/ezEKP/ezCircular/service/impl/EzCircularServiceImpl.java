@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezCircular.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -241,8 +239,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 			if (status != 2) {
 				String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 				StringBuilder bodyContent = new StringBuilder("");
+				bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + title + " </br>");
 		    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getId());
+		    	bodyContent.append("</div>");
 
 				for (int i=0; i<receiverLength; i++) {
 					OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
@@ -452,8 +452,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		if (option == 2 || option == 3) {
 			String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 			StringBuilder bodyContent = new StringBuilder("");
+			bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + title + " </br>");
 	    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getId());
+	    	bodyContent.append("</div>");
 
 			for (int i=0; i<receiverLength; i++) {
 				OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
@@ -1642,8 +1644,10 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		String subject = egovMessageSource.getMessage("ezCircular.t123", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
+    	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + circularVO.getTitle() + "</br>");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+    	bodyContent.append("</div>");
     	
     	InternetAddress from = new InternetAddress();
 		from.setPersonal(userInfo.getDisplayName(), "UTF-8");

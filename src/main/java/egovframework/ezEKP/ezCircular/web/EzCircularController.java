@@ -116,7 +116,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	
 	/**
 	 * 회람판 왼쪽화면 호출 Method
-	 * @throws Exception 
 	 */
 	@RequestMapping(value="/ezCircular/circularLeft.do")
 	public String circularLeft() throws Exception {
@@ -129,7 +128,6 @@ public class EzCircularController extends EgovFileMngUtil {
 
 	/**
 	 * 회람문서함 폴더트리 호출 Method
-	 * @throws Exception 
 	 */
 	@RequestMapping(value="/ezCircular/getCircularFolderList.do")
 	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
@@ -245,7 +243,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 
 	 * 회람판 첨부파일관련 표출 Method 
 	 */
 	public String getItemAttachmentXML(String pcircularId, int tenantId) throws Exception{
@@ -2322,8 +2319,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	String subject = egovMessageSource.getMessage("ezCircular.t163", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
+    	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + circularVO.getTitle() + "</br>");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+    	bodyContent.append("</div>");
     	
     	InternetAddress from = new InternetAddress();
 		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -2374,8 +2373,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	String subject = egovMessageSource.getMessage("ezCircular.t165", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
+    	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + circularVO.getTitle() + " </br>");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + circularVO.getMemberID());
+    	bodyContent.append("</div>");
     	
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
