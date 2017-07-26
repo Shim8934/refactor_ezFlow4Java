@@ -200,12 +200,12 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		insert("EzCircularDAO.insertCircularAttach", map);
 	}
 	
-	public String set_circularDeptSave(CircularDeptVO circularDeptVO) throws Exception {
-		return (String) insert("EzCircularDAO.set_circularDeptSave", circularDeptVO);
+	public String setCircularDeptSave(Map<String, Object> map) throws Exception {
+		return (String) insert("EzCircularDAO.setCircularDeptSave", map);
 	}
 	
-	public void set_circularMemberList(Map<String, Object> map) throws Exception {
-		insert("EzCircularDAO.set_circularMemberList", map);
+	public void setCircularMemberList(Map<String, Object> map) throws Exception {
+		insert("EzCircularDAO.setCircularMemberList", map);
 	}
 
 	public void circularFolderAdd(Map<String, Object> map) throws Exception {
@@ -239,8 +239,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.updateStatus", map);
 	}
 	
-	public void update_circularDept(Map<String, Object> map) throws Exception {
-		update("EzCircularDAO.update_circularDept", map);
+	public void updateCircularDept(Map<String, Object> map) throws Exception {
+		update("EzCircularDAO.updateCircularDept", map);
 	}
 
 	public void circularClose(Map<String, Object> map) throws Exception {
@@ -251,8 +251,8 @@ public class EzCircularDAO extends EgovAbstractDAO{
 		update("EzCircularDAO.circularFolderModify", map);
 	}
 	
-	public void delete_circularMemberList(Map<String, Object> map) throws Exception {
-		delete("EzCircularDAO.delete_circularMemberList", map);
+	public void deleteCircularMemberList(Map<String, Object> map) throws Exception {
+		delete("EzCircularDAO.deleteCircularMemberList", map);
 	}
 	
 	public void deleteCircular(Map<String, Object> map) throws Exception{

@@ -1686,17 +1686,12 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String circularBMId = request.getParameter("circularBMId");
-		
-		circularDeptVO.setMemberID(userInfo.getId());
-		circularDeptVO.setRegDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-		circularDeptVO.setTenantID(userInfo.getTenantId());
-		
 		String[] memberListStr = request.getParameterValues("memberListStr[]");
-
-		if (circularBMId != null) {
-			ezCircularService.update_circularDept(circularDeptVO, memberListStr, circularBMId);
+		
+		if (!circularBMId.equals("")) {
+			ezCircularService.updateCircularDept(circularDeptVO.getTitle(), userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId());
 		} else {
-			ezCircularService.set_circularDeptSave(circularDeptVO, memberListStr);
+			ezCircularService.setCircularDeptSave(circularDeptVO.getTitle(), userInfo.getId(), memberListStr, userInfo.getTenantId());
 		}
 
 		logger.debug("circularDeptSave ended");

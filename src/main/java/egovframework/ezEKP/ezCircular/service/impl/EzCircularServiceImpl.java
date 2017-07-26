@@ -694,24 +694,30 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void set_circularDeptSave(CircularDeptVO circularDeptVO, String[] memberListStr) throws Exception {
+	public void setCircularDeptSave(String title, String userID, String[] memberListStr, int tenantID) throws Exception {
+		logger.debug("setCircularDeptSave started.");
+		logger.debug("title = " + title + " || userID = " + userID + " || tenantID = " + tenantID);
+		
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-				
-		String circularBMId = ezCircularDAO.set_circularDeptSave(circularDeptVO); // CircularBMId 값 가져옴
-		int tenantId = circularDeptVO.getTenantID();
+		map.put("title", title);
+		map.put("userID", userID);
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
 		
-		logger.debug("circularBMId : " + circularBMId);
+		String circularBMId = ezCircularDAO.setCircularDeptSave(map);
 		
-		map.put("CIRCULARBMID", circularBMId);
-		map.put("TENANTID", tenantId);
+		map.put("circularBMId", circularBMId);
 		
-		for (int i=0; i<memberListStr.length; i++) {
-			String memberStr = memberListStr[i].trim();
+		for (String memberID : memberListStr) {
+			logger.debug("memberID = " + memberID);
+			map.put("memberID", memberID);
 			
-			map.put("v_MEMBERID", memberStr);
-			
-			ezCircularDAO.set_circularMemberList(map);
+			ezCircularDAO.setCircularMemberList(map);
 		}
+		
+		logger.debug("setCircularDeptSave ended.");
 	}
 
 	@Override
@@ -748,23 +754,29 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, String circularBMId) throws Exception {
+	public void updateCircularDept(String title, String userID, String[] memberListStr, String circularBMId, int tenantID) throws Exception {
+		logger.debug("updateCircularDept started.");
+		logger.debug("title = " + title + " || userID = " + userID + " || circularBMId = " + circularBMId + " || tenantID = " + tenantID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("TITLE", circularDeptVO.getTitle());
-		map.put("CIRCULARBMID", Integer.parseInt(circularBMId));
-		map.put("TENANTID", circularDeptVO.getTenantID());
-		map.put("MEMBERID", circularDeptVO.getMemberID());
+		map.put("title", title);
+		map.put("circularBMId", circularBMId);
+		map.put("userID", userID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantID);
 		
-		ezCircularDAO.update_circularDept(map);
-		ezCircularDAO.delete_circularMemberList(map);
+		ezCircularDAO.updateCircularDept(map);
+		ezCircularDAO.deleteCircularMemberList(map);
 		
-		for (int i=0; i<memberListStr.length; i++) {	
-			String memberStr = memberListStr[i].trim();
+		for (String memberID : memberListStr) {	
+			logger.debug("memberID = " + memberID);
 			
-			map.put("v_MEMBERID", memberStr);
+			map.put("memberID", memberID);
 			
-			ezCircularDAO.set_circularMemberList(map);
+			ezCircularDAO.setCircularMemberList(map);
 		}
+		
+		logger.debug("updateCircularDept ended.");
 	}
 
 	@Override
