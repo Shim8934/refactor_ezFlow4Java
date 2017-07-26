@@ -738,19 +738,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void circularDeptDel(String[] delList, int tenantId) throws Exception {
+	public void circularDeptDel(String circularBMIdList, int tenantID) throws Exception {
+		logger.debug("circularDeptDel started.");
+		logger.debug("circularBMIdList = " + circularBMIdList + " || tenantID = " + tenantID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantID);
 		
-		map.put("v_TENANTID", tenantId);
-		
-		for (int i=0; i<delList.length; i++) {
-			String circularBMId = delList[i];
-			
-			map.put("v_CIRCULARBMID", circularBMId);
+		for (String circularBMId : circularBMIdList.split(",")) {
+			logger.debug("circularBMId = " + circularBMId);
+			map.put("circularBMId", circularBMId);
 			
 			ezCircularDAO.circularDeptDel(map);
 		}
 		
+		logger.debug("circularDeptDel ended.");
 	}
 
 	@Override
@@ -777,16 +779,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 		
 		logger.debug("updateCircularDept ended.");
-	}
-
-	@Override
-	public List<CircularMemberVO> circularDeptModify(int circularBMId, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_CIRCULARBMID", circularBMId);
-		map.put("v_TENANTID", tenantId);
-		
-		return ezCircularDAO.getMemberName(map);
 	}
 
 	@Override
@@ -1529,6 +1521,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void deleteCircularComment(CircularCommentVO vo, LoginVO userInfo) throws Exception {
 		logger.debug("deleteCircularComment started.");
+		logger.debug("circularID = " + vo.getCircularID() + " || circularCommentID = " + vo.getCircularCommentID() + " || memberID = " + userInfo.getId() + " || tenantID = " + userInfo.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", vo.getCircularID());
@@ -1545,20 +1538,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public List<CircularListVO> getUserList(String memberID, int tenantID) throws Exception {
 		logger.debug("getUserList started.");
+		logger.debug("memberID = " + memberID + " || tenantID = " + tenantID);
 
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
 
-		logger.debug("getUserList ended.");
+		List<CircularListVO> list = ezCircularDAO.getUserList(map);
 		
-		return ezCircularDAO.getUserList(map);
+		logger.debug("getUserList ended. listSize = " + list.size());
+		
+		return list;
 	}
 
 	@Override
 	public List<CircularListHeaderVO> getListHeader(String listType, String lang, int tenantID) throws Exception {
-		logger.debug("getUserList started.");
+		logger.debug("getListHeader started.");
+		logger.debug("listType = " + listType + " || lang = " + lang + " || tenantID = " + tenantID);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("listType", listType);
@@ -1567,7 +1563,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 		List<CircularListHeaderVO> list = ezCircularDAO.getListHeader(map);
 		
-		logger.debug("getUserList ended. listSize = " + list.size());
+		logger.debug("getListHeader ended. listSize = " + list.size());
 
 		return list;
 	}
@@ -1578,12 +1574,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("circularIDList = " + circularIdList + " || memberID = " + memberID + " || tenantID");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-
-		// 회람문서의 updateStatus 값을 변경
 		map.put("memberID", memberID);
 		map.put("tenantID", tenantID);
 		
 		for (String circularID : circularIdList.split(";")) {
+			logger.debug("circularID = " + circularID);
 			map.put("circularID", circularID);
 			
 			ezCircularDAO.updateCircularStatus(map);
