@@ -272,7 +272,10 @@
 		        var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
 		            if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
 		    }
-		</SCRIPT>
+		</script>
+		<style>
+			.mainlist tr th {border-top:0px}
+		</style>
 	</head>
 	<body class="popup">
 		<xml id="OrganListHeader" style="display:none">

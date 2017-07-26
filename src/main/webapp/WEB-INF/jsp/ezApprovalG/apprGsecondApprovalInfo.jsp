@@ -36,7 +36,7 @@
 	                    <tr>
 	                        <td style='width:200px;padding-left:10px;' userid = '${result.userID}'><nobr>${result.userName}</nobr></td>
 	                        <td style='width:200px;padding-left:10px;' userid = "${temp[0]}"> <nobr>${result.pUserName}</nobr></td>
-	                        <td style='padding-left:10px;'><nobr>${temp[3].replace('/', ':')} ~ ${temp[4].replace('/', ':')}</nobr></td>
+	                        <td style='padding-left:10px;'><nobr>${temp[3]}:${temp[4]} ~ ${temp[5]}:${temp[6]}</nobr></td>
 	                    </tr>
 		    		</c:when>
 		    		<c:otherwise>
