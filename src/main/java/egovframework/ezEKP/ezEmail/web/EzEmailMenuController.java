@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.Folder;
@@ -667,7 +669,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 서버에 여러개의 메일파일을 zip파일로 저장하기 실행 함수
+	 * 여러개의 메일파일을 zip파일로 서버에 저장하기 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailExportZip.do")
 	@ResponseBody
@@ -695,24 +697,18 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		int count = 0;
 		IMAPAccess ia = null;
+		ZipOutputStream zos = null;
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale);
-			
-			File tempFolder = new File(pDirTempPath);
-			
-			if (tempFolder.exists()) {
-				deleteDirectory(tempFolder);
-			}
 			
 			File tempFile = new File(pDirTempPath + ".zip");
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
 			
-			logger.debug("creating tempFolder. path=" + tempFolder);
-			tempFolder.mkdirs();
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"));
 			
 			for (String folderPath : folderList) {
 				String uids = urlMap.get(folderPath)[0];
@@ -739,29 +735,22 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 								subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
 							}
 							
-							logger.debug("subject=" + subject);
+							String fileName = ++count + "_" + subject.replaceAll("[\\\\/:*?\"<>|]", "_")
+																	 .replaceAll("\\s", "") + ".eml";
+							logger.debug("fileName=" + fileName);
 							
-							FileOutputStream outputStream = null;
-							try {
-								String fileName = ++count + "_" + subject.replaceAll("[\\\\/:*?\"<>|]", "_") + ".eml";
-								
-								File file = new File(pDirTempPath + commonUtil.separator + fileName);
-								outputStream = new FileOutputStream(file);
-								message.writeTo(outputStream);
-							} finally {
-								if (outputStream != null) {
-									outputStream.close();
-								}
-							}
+							ZipEntry zipEntry = new ZipEntry("/" + fileName);
+							zos.putNextEntry(zipEntry);
+							
+							message.writeTo(zos);
+
+							zos.closeEntry();
 						}
 					}
 					
 					folder.close(true);
 				}
 			}
-			
-			String filePath = zip(pDirTempPath, null, true);
-			logger.debug("filePath=" + filePath + ",count=" + count);
 			
 			returnValue = "OK";
 			
@@ -771,9 +760,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			if (ia != null) {
 				ia.close();
 			}
+			if (zos != null) {
+				zos.close();
+			}
 		}
 		
-		logger.debug("mailExportZip ended.");
+		logger.debug("mailExportZip ended. returnValue=" + returnValue + ",count=" + count);
 		return returnValue;
 	}
 	

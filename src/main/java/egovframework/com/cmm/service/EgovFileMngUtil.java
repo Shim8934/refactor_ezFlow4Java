@@ -525,8 +525,8 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	 * @return zip file's full path
 	 * @throws Exception
 	 */
-	public String zip(String path, String fileName, boolean isDelete) throws Exception {
-		LOGGER.debug("zip started. path=" + path + ",fileName=" + fileName + ",isDelete=" + isDelete);
+	public String zipFolder(String path, String fileName, boolean isDelete) throws Exception {
+		LOGGER.debug("zipFolder started. path=" + path + ",fileName=" + fileName + ",isDelete=" + isDelete);
 		File dir = new File(path);
 
 		List<File> fileList = new ArrayList<File>();
@@ -589,7 +589,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			}
 		}
 		
-		LOGGER.debug("zip ended. returnValue=" + zipFile.getPath());
+		LOGGER.debug("zipFolder ended. returnValue=" + zipFile.getPath());
 		return zipFile.getPath();
 	}
 	
@@ -603,4 +603,5 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 			}
 		}
 	}
+	
 }
