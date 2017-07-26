@@ -628,7 +628,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void deleteCircular (String circularID, String memberID, String userID, int tenantID) throws Exception {
+	public void deleteCircular(String circularID, String memberID, String userID, int tenantID) throws Exception {
 		logger.debug("deleteCircular started.");
 		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || userID = " + userID + " || tenantID = " + tenantID);
 		
@@ -652,7 +652,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void deleteCircularUser(int circularID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
 		
@@ -687,7 +686,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	public void updateStatus(String circularID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		map.put("circularID", circularID);
 		map.put("tenantID", tenantID);
 		
@@ -715,42 +713,21 @@ public class EzCircularServiceImpl implements EzCircularService {
 		}
 	}
 
-//	@Override
-//	public String getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
-//		logger.debug("getcircularDeptList started.");
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		map.put("memberID", circularDeptVO.getMemberID());
-//		map.put("tenantID", userInfo.getTenantId());
-//		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
-//		
-//		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(map);
-//		
-//		StringBuilder sb = new StringBuilder("<DATA>");
-//		
-//		for (CircularDeptVO vo : list) {
-//			sb.append(commonUtil.getQueryResult(vo));
-//		}
-//		sb.append("</DATA>");
-//		
-//		logger.debug("getcircularDeptList ended.");
-//		
-//		return sb.toString();
-//	}
-	
 	@Override
-	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception {
+	public List<CircularDeptVO> getcircularDeptList(String memberID, String offset, int tenantID) throws Exception {
 		logger.debug("getcircularDeptList started.");
+		logger.debug("memberID = " + memberID + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberID", memberID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("tenantID", tenantID);
+		
+		List<CircularDeptVO> list = ezCircularDAO.getcircularDeptList(map);
+		
+		logger.debug("getcircularDeptList ended. listSize = " + list.size());
 
-		map.put("memberID", circularDeptVO.getMemberID());
-		map.put("tenantID", userInfo.getTenantId());
-		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
-
-		logger.debug("getcircularDeptList ended.");
-
-		return (List<CircularDeptVO>) ezCircularDAO.getcircularDeptList(map);
+		return list;
 	}
 
 	@Override
@@ -772,7 +749,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void update_circularDept(CircularDeptVO circularDeptVO, String[] memberListStr, String circularBMId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
 		map.put("TITLE", circularDeptVO.getTitle());
 		map.put("CIRCULARBMID", Integer.parseInt(circularBMId));
 		map.put("TENANTID", circularDeptVO.getTenantID());

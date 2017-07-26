@@ -46,7 +46,7 @@ public interface EzCircularService {
 	
 	public List<CircularListHeaderVO> getListHeader(String listType, String lang, int tenantID) throws Exception;
 	
-	public List<CircularDeptVO> getcircularDeptList(CircularDeptVO circularDeptVO, LoginVO userInfo) throws Exception;
+	public List<CircularDeptVO> getcircularDeptList(String memberID, String offset, int tenantID) throws Exception;
 	
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	
