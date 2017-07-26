@@ -48,21 +48,14 @@
 	    			memberListStr[i] = g_attendant["id"][i];
 	    		}	    
 	    		
-	    		var url = ""
-	    		
-	    		if (circularBMId != "") {
-	    			url = "/ezCircular/circularDeptSave.do?circularBMId=" + circularBMId;
-	    		} else {
-	    			url = "/ezCircular/circularDeptSave.do";
-	    		}
-	    		
 	    		$.ajax({
 	    			method : "POST",
-	    			dataType : "text",
+	    			dataType : "json",
 	    			async : false,
-	    			url : url,
+	    			url : "/ezCircular/circularDeptSave.do",
 	    			data : {
 	    				title : title,
+	    				circularBMId : circularBMId,
 	    				memberListStr : memberListStr
 	    			},
 	    			success : function() {

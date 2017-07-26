@@ -45,6 +45,8 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		MCommonVO info = mOptionDAO.commonInfo(map);
 		
+		info.setUserId(userId);
+		
 		LOGGER.debug("commonInfo ended");
 		
 		return info;
