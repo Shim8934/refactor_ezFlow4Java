@@ -366,7 +366,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
-		        DivPopUpShow(1000, 740, "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI_Cross.aspx");
+		        DivPopUpShow(1000, 740, "/ezApprovalG/ezReceiveDistributeUI.do");
 		    }
 		    function btnDistribute_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -388,7 +388,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(460, 365, "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveAssignUI_Cross.aspx");
+		        DivPopUpShow(510, 380, "/ezApprovalG/ezReceiveAssignUI.do");
 		    }
 		    function btnAssign_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -515,7 +515,7 @@
 		        SaveFile();
 		
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -536,7 +536,7 @@
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mod=new&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
 		            }
 		        }
 		    }
