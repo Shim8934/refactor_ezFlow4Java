@@ -186,14 +186,23 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
             }
 
+            
             if (g_bRecAdmin || AdminYN == "TRUE") {
+                if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
                 document.getElementById("tdVeiwRecHist").style.display = "";
+                }
                 document.getElementById("tdbtnViewRecReadHist").style.display = "";
                 CheckBtnSetRecRole();
             } else {
-                document.getElementById("tdVeiwRecHist").style.display = "none";
+                if (typeof (tdVeiwRecHist) != "undefined" && typeof (tdVeiwRecHist) != "unknown") {
+                	document.getElementById("tdVeiwRecHist").style.display = "none";
+                }
+                if (typeof (tdbtnViewRecReadHist) != "undefined" && typeof (tdbtnViewRecReadHist) != "unknown") {
                 document.getElementById("tdbtnViewRecReadHist").style.display = "none";
+                }
+                if (typeof (tdbtnSetRecRole) != "undefined" && typeof (tdbtnSetRecRole) != "unknown") {
                 document.getElementById("tdbtnSetRecRole").style.display = "none";
+                }
             }
             
             if (typeof (tdNotify_Rec) != "undefined" && typeof (tdNotify_Rec) != "unknown") {
