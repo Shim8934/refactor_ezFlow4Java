@@ -233,7 +233,6 @@
                 DocList.SetID("BoardList");
                 DocList.SetHeaderOnClick("SortPage");
                 DocList.SetRowOnDblClick("ItemRead_onclick(this)");
-                DocList.SetRowOnClick("ItemPreviewRead_click");
                 DocList.SetTitleIdx(0);
                 DocList.SetSelectFlag(false);
                 DocList.DataSource(xmlDoc);
@@ -400,7 +399,9 @@
 	            }
 	        }
 
-		    function ItemRead_onclick(circularID) {
+		    function ItemRead_onclick(obj) {
+		    	var circularID = obj.getAttribute("CIRCULARID");
+		    	
 		        if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
