@@ -532,9 +532,10 @@
 						dataType : "json",
 						async : false,
 						url : "/ezCircular/deleteCircularList.do",
-						data : { circularIDList : strListInfo,
-								 strMemberListInfo : strMemberListInfo
-								},
+						data : {
+							circularIDList : strListInfo,
+							memberIDList : strMemberListInfo
+						},
 						success: function() {
 						},
 						error: function() {
