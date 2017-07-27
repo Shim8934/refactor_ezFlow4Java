@@ -121,10 +121,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -196,10 +196,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -530,10 +530,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -599,10 +599,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -647,10 +647,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -739,10 +739,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -828,10 +828,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
 		</isNotEqual>
@@ -926,10 +926,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -1063,10 +1063,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -1122,10 +1122,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -1167,9 +1167,9 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        		AND
 	        	]]>
         	</isEqual>
@@ -1276,9 +1276,9 @@
 	        		AND
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        		AND
 	        	]]>
         	</isEqual>

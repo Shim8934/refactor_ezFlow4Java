@@ -27,6 +27,7 @@
 	    	var checkval = "f";
 	    	var keyword = "";
 	        var filter = "";
+	        var searchType = "";
 	        var result = ""
 			var startdate = "";
 			var enddate = "";
@@ -163,9 +164,10 @@
 
 		        if (document.getElementById("keyword").value != "") {
 		            filter = document.getElementsByName("search_field")[0].value;
+		            searchType = document.getElementById("search_type").value;
 		            keyword = document.getElementById("keyword").value;
 		        }
-		        
+
 		        if (filter == "circularNew") {
 		        	url = "/ezCircular/getCircularList.do"
 		        } else if (filter == "circularComplete") {
@@ -187,7 +189,7 @@
 		        		edate : edate,
 		        		pageNum : CurPage,
 		        		searchValue : keyword,
-		        		searchType : "subject",
+		        		searchType : searchType,
 		        		orderCell : OrderCell,
 		        		orderOption : OrderOption,
 		        		folderId : ""
@@ -431,12 +433,16 @@
 		    	<tr> 
 		      		<th><spring:message code='ezCircular.t139' /></th> 
 		      		<td style="width:100%">
-		      			<select name="search_field" id="search_field" style="WIDTH: 130px"> 
-		          			<option value="circularNew" ${filter == 'circularNew' ? 'selected' : ''}><spring:message code='ezCircular.t2' /></option> 
-		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}><spring:message code='ezCircular.t3' /></option>
-		          			<option value="circularMy" ${filter == 'circularMy' ? 'selected' : ''}><spring:message code='ezCircular.t4' /></option>
-		          			<option value="circularTemp" ${filter == 'circularTemp' ? 'selected' : ''}><spring:message code='ezCircular.t5' /></option>
-		          			<option value="circularFolder" ${filter == 'circularFolder' ? 'selected' : ''}><spring:message code='ezCircular.t7' /></option> 
+		      			<select name="search_field" id="search_field" style="width: 130px; height: 20px; vertical-align: middle"> 
+		          			<option value="circularNew"><spring:message code='ezCircular.t2' /></option> 
+		          			<option value="circularComplete"><spring:message code='ezCircular.t3' /></option>
+		          			<option value="circularMy"><spring:message code='ezCircular.t4' /></option>
+		          			<option value="circularTemp"><spring:message code='ezCircular.t5' /></option>
+		          			<option value="circularFolder"><spring:message code='ezCircular.t7' /></option> 
+		        		</select>
+		        		<select name="search_type" id="search_type" style="width: 65px; height: 20px; vertical-align: middle"> 
+		          			<option value="subject"><spring:message code='ezCircular.t32' /></option> 
+		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezCircular.t85' /></span></a>
