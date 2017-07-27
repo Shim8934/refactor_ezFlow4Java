@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezScheduleMobile">
+
+	<typeAlias alias="MScheduleInfoVO" 					type="egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO"/>
+    
+    <resultMap class="MScheduleInfoVO" id="MScheduleInfoVO">
+    	<result property="contentPath"			column="contentPath"         			columnIndex="1"/>    
+    </resultMap>
+    
+    <select id="MScheduleDAO.scheduleInfo" parameterClass="Map" resultMap="MScheduleInfoVO">
+    	SELECT
+    		contentpath    		
+		FROM
+			TBL_SCHEDULE
+		WHERE
+			scheduleid = #v_SCHEDULEID#
+		AND
+			tenant_id = #v_TENANTID#
+  	</select>
+</sqlMap>
+

@@ -235,10 +235,10 @@ System.out.println(gson.toJson(resultBody.get("data")));
 	}
 	
 	/**
-	 * 모바일 client 일정관리 삭제
+	 * 모바일 client 일정관리 삭제(반복포함)
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/mScheduleDelete.do")
-	public void mScheduleDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
+	public void mScheduleDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LOGGER.debug("mScheduleDelete started.");		
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
@@ -250,9 +250,8 @@ System.out.println(gson.toJson(resultBody.get("data")));
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("dateType", request.getParameter("dateType"))
-		        .queryParam("userId", request.getParameter("userId"));
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)		        
+		        .queryParam("creatorId", request.getParameter("creatorId"));
 		
 		RestTemplate rest = new RestTemplate();
 		

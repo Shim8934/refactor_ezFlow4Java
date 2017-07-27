@@ -13,6 +13,10 @@ public class MCommonVO {
 	private String companyId;		/** 회사Id  */
 	
 	private String userId;			/** 사용자Id  */
+	
+	private String userName;		/** 사용자이름  */
+	
+	private String userName2;		/** 사용자이름2  */
 
 	public int getTenantId() {
 		return tenantId;
@@ -60,6 +64,22 @@ public class MCommonVO {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserName2() {
+		return userName2;
+	}
+
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
 	}
 	
 }

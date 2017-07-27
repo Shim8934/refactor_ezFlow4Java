@@ -377,9 +377,7 @@ function mScheduleInsert() {
 			ownerId : "test",
 			ownerName : "사장님",
 			ownerName2 : "사장님",
-			creatorId : "test",
-			creatorName : "사장님",
-			creatorName2 : "sa",
+			creatorId : "test",			
 			scheduleType : "1",
 			importance : "2",
 			isPublic : "N",
@@ -409,17 +407,14 @@ function mScheduleUpdate() {
 		url : "/mobile/ezSchedule/mScheduleUpdate.do",
 		data : {
 			scheduleId : "6008",
-			creatorId : "test",
-			creatorName : "사장님",
-			creatorName2 : "sa",
+			creatorId : "test",			
 			importance : "2",
 			isPublic : "N",
 			dateType : "2",
-			startDate : "2017-07-24 15:00:00",
-			endDate : "2017-07-25 14:59:00",
+			startDate : "2017-07-24 00:00:00",
+			endDate : "2017-07-25 23:59:59",
 			title : "안녕하세요7",
-			location : "위치7",
-			contentPath : "",
+			location : "위치7",			
 			content : pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(strBody), 64)
 		},
 		success: function(text){
@@ -435,9 +430,8 @@ function mScheduleDelete() {
 		async : false,		    		
 		url : "/mobile/ezSchedule/mScheduleDelete.do",
 		data : {
-			scheduleId : "6017",
-			dateType : "2",
-			userId : 'test'	
+			scheduleId : "6017",			
+			creatorId : 'test'	
 		},
 		success: function(text){
 			alert("schedule delete complete!");

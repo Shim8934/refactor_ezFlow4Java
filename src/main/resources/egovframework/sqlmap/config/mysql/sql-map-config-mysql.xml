@@ -67,5 +67,7 @@
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezResource/EzResourceMobile_SQL_Mysql.xml"/>
     <!-- 옵션 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOption/EzOptionMobile_SQL_Mysql.xml"/>
+    <!-- 일정관리 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezSchedule/EzScheduleMobile_SQL_Mysql.xml"/>
     
 </sqlMapConfig>
