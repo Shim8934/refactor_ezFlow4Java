@@ -1394,11 +1394,11 @@ function event_HeaderCheckBoxClick(obj) {
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
             strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id + ";";
         }
+        
         $.each($(".circularTR"), function (index, obj) {
         	strMemberListInfo += $(obj).attr("memberID") + ";";
-        })
-    }
-    else {
+        });
+    } else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;

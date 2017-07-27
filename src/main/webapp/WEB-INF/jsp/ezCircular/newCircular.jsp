@@ -77,6 +77,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var strMemberListInfo = "";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	

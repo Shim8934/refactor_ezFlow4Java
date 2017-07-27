@@ -530,13 +530,12 @@
 							memberIDList : strMemberListInfo
 						},
 						success: function() {
+							refresh_onclick();
 						},
 						error: function() {
 							alert("<spring:message code='ezCircular.t102'/>");
 						}
 					});
-					
-					refresh_onclick();
 	        	}
 	        }
 	    </script>
