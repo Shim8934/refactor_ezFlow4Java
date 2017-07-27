@@ -1,54 +1,38 @@
 package egovframework.ezMobile.ezSchedule.web;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.map.HashedMap;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 모바일 G/W 일정관리
@@ -61,7 +45,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  *
  * @see
  */
-
+@SuppressWarnings("unchecked")
 @RestController
 public class MScheduleGWController extends EgovFileMngUtil {
 	
@@ -76,8 +60,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
 		
-	/*@Resource(name="MScheduleService")
-	private MScheduleService mScheduleService;*/
+	@Resource(name="MScheduleService")
+	private MScheduleService mScheduleService;
 		
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -139,10 +123,10 @@ System.out.println(name);
 	
     ///////////////////////////////////////////////// sample end /////////////////////////////////////////////////////
 	
-	@SuppressWarnings("unchecked")
+	
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
-	 */
+	 */	
 	@RequestMapping(value="/ezschedule/list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mScheduleList(@PathVariable String userId, HttpServletRequest request){
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
@@ -272,32 +256,130 @@ System.out.println(name);
 	
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 등록
-	 */
+	 */	
 	@RequestMapping(value="/ezschedule/schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void mScheduleInsert() throws Exception {
+	public JSONObject mScheduleInsert(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] started.");
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] ended.");		
+		JSONObject result = new JSONObject();
+		
+		try {
+		
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
+			
+			String startDate = jsonParam.get("startDate").toString();
+			String endDate = jsonParam.get("endDate").toString();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTime(sdf.parse(endDate));
+	    	
+	    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+	    		cal.add(Calendar.MINUTE, -1);        		
+	    		endDate = sdf.format(cal.getTime());
+	    	}
+	
+	    	startDate = sdf.format(sdf.parse(startDate));
+	    	endDate = sdf.format(sdf.parse(endDate));
+	    	
+	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);	        
+	        String defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId());
+	        	        
+	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId()); 
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", resultScheduleID);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	   			
+
+		LOGGER.debug("MOBILE G/W SCHEDULE [POST /ezschedule/schedules] ended.");
+		
+		return result;
 	}
 	
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 수정
 	 */
 	@RequestMapping(value="/ezschedule/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void mScheduleUpdate() throws Exception {
+	public void mScheduleUpdate(@PathVariable String scheduleId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+		
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
+			
+			String startDate = jsonParam.get("startDate").toString();
+			String endDate = jsonParam.get("endDate").toString();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTime(sdf.parse(endDate));
+	    	
+	    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+	    		cal.add(Calendar.MINUTE, -1);        		
+	    		endDate = sdf.format(cal.getTime());
+	    	}
+	
+	    	startDate = sdf.format(sdf.parse(startDate));
+	    	endDate = sdf.format(sdf.parse(endDate));
+	    	
+	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);	        
+	    	String defaultPath = commonUtil.getRealPath(request) + jsonParam.get("contentPath").toString();
+	        	        
+	       /* int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId());*/
+	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId());
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");		
 	}
 	
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 삭제
-	 */
+	 */	
 	@RequestMapping(value="/ezschedule/schedules/{scheduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void mScheduleDelete() throws Exception {
+	public JSONObject mScheduleDelete(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] started.");
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");		
+		JSONObject result = new JSONObject();
+						
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			
+			String dateType = request.getParameter("dateType");
+			
+			mScheduleService.deleteSchedule(scheduleId, dateType, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [DELETE /ezschedule/schedules/{scheduleId}] ended.");
+		
+		return result;
 	}
 	
 }

@@ -1070,7 +1070,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
 
 function OpenReceiveDistributeUI(pCurSelRow) {
     var parameter = pCurSelRow;
-    var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveDistributeUI_Cross.aspx";
+    var url = "/ezApprovalG/ezReceiveDistributeUI.do";
     var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(453, 410);
     var ret = window.showModalDialog(url, parameter, feature);

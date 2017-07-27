@@ -1,10 +1,5 @@
 package egovframework.ezMobile.ezSchedule.web;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -13,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +17,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -36,13 +27,10 @@ import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
-import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 스케쥴
@@ -178,5 +166,104 @@ System.out.println("scheduleList :" + scheduleList);
 		LOGGER.debug("mScheduleList ended.");
 		
 		return "/mobile/ezSchedule/mScheduleList";
+	}
+	
+	/**
+	 * 모바일 client 일정관리 등록
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/mScheduleInsert.do")
+	public void mScheduleInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
+		LOGGER.debug("mScheduleInsert started.");		
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezschedule/schedules";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		Gson gson = new Gson();
+		JSONObject jsonParam = gson.fromJson(gson.toJson(scheduleInfoVO), JSONObject.class);
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+System.out.println(status);		
+System.out.println(gson.toJson(resultBody.get("data")));
+		
+		LOGGER.debug("mScheduleInsert ended.");
+	}
+	
+	/**
+	 * 모바일 client 일정관리 수정
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/mScheduleUpdate.do")
+	public void mScheduleUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
+		LOGGER.debug("mScheduleUpdate started.");		
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		Gson gson = new Gson();
+		JSONObject jsonParam = gson.fromJson(gson.toJson(scheduleInfoVO), JSONObject.class);
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam, headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(url, HttpMethod.PUT, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+System.out.println(status);		
+System.out.println(gson.toJson(resultBody.get("data")));
+		
+		LOGGER.debug("mScheduleUpdate ended.");
+	}
+	
+	/**
+	 * 모바일 client 일정관리 삭제
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/mScheduleDelete.do")
+	public void mScheduleDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
+		LOGGER.debug("mScheduleDelete started.");		
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("dateType", request.getParameter("dateType"))
+		        .queryParam("userId", request.getParameter("userId"));
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+System.out.println(status);
+		
+		LOGGER.debug("mScheduleDelete ended.");
 	}
 }

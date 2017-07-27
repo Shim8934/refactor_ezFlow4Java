@@ -341,7 +341,7 @@
 		        parameter[1] = "999";
 		        getformcont_cross_dialogArguments[0] = parameter;
 		        getformcont_cross_dialogArguments[1] = btn_FormSelect_onclick_Complete;
-		        var retVal = window.open("/ezApprovalG/getFormCont.do", "", GetOpenWindowfeature(705, 600));
+		        var retVal = window.open("/ezApprovalG/getFormCont.do", "", GetOpenWindowfeature(710, 580));
 		    }
 		
 		    function btn_FormSelect_onclick_Complete(retVal) {

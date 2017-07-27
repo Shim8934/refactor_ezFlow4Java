@@ -44,6 +44,17 @@ function ItemRead_onclick(itemseq)
           <td width="7"></td>
           <td style="border:1px solid #e1e1e1; padding:15px; background:#fff;">
             <table width="290" border="0" cellspacing="0" cellpadding="0">	
+            <c:if test="${empty boardItemList}">
+              <tr>
+                <td width="20" height="22" align="center"><img src="images/ico_arrow02.gif" width="4" height="5"></td>
+                <td><spring:message code="ezTalkGate.ldh003" /></td>
+              </tr>
+              <tr>
+                <td colspan="2" height="1" style="background-image:url(images/dot_line01.gif)"></td>
+              </tr>
+              <tr colspan="2" height="93"><td>&nbsp;</td></tr>            
+            </c:if>
+            <c:if test="${!empty boardItemList}">
               <tr>
                 <td>	    
                   <c:forEach var="item" items="${boardItemList}">
@@ -51,7 +62,7 @@ function ItemRead_onclick(itemseq)
                     <tr style="cursor:pointer" onClick="ItemRead_onclick('${item.ITEMID}')"> 
                       <td width="20" height="22" align="center"></td>
                       <td>
-                        <img src='/images/ezTalkGate/i_commapy.gif' style="width:27px;height:17px;vertical-align:bottom;">	
+                        <c:if test="${item.ISNEW == 'YES'}"><img src='/images/ezTalkGate/new_s.gif' style="width:27px;height:17px;vertical-align:bottom;"></c:if>
                         <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:190px;display:inline-block;vertical-align:bottom;"><font color="#000000"><c:out value='${item.TITLE}' /></font></div> &nbsp;
                       </td>
                     </tr>
@@ -62,6 +73,7 @@ function ItemRead_onclick(itemseq)
                   </c:forEach>
                 </td>
               </tr>
+            </c:if>
             </table>
           </td>
           <td width="7"></td>

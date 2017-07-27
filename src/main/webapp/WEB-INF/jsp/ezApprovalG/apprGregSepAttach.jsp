@@ -433,7 +433,7 @@
 		            selectcabinetintask_cross_dialogArguments[0] = para;
 		            selectcabinetintask_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 		
-		            DivPopUpShow(475, 375, url);
+		            DivPopUpShow(510, 380, url);
 		        }
 		        else {
 		            var feature = "dialogWidth:475px;dialogHeight:425px;scroll:no;resizable:no;status:no; help:no;edge:sunken";

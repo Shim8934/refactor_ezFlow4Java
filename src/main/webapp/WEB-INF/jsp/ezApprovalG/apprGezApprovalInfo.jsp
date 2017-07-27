@@ -1895,7 +1895,7 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span style="vertical-align: middle; position: absolute; right: 20px">
+		                                <span  style="vertical-align: middle; margin-left: 200px;">
 		                                    <select id="selSearchOption" style="vertical-align: middle;">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>
@@ -2366,6 +2366,8 @@
 	    Tab1_NewTabIni("tab1");
 	    Tab2_NewTabIni("tab2");
 	    Tab3_NewTabIni("tab3");
-	    Tab5_NewTabIni("tab5");
+	    if (approvalFlag == "S") {
+		    Tab5_NewTabIni("tab5");
+	    }
 	</script>
 </html>
