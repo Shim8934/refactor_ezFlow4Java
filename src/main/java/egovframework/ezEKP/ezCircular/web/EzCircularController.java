@@ -1337,8 +1337,8 @@ public class EzCircularController extends EgovFileMngUtil {
 	    //첨부파일 정보  hasFile이 Y일때
         if (result.getHasFile() == 1) {        
         	List<CircularAttachVO> aList = ezCircularService.getAttachList(Integer.parseInt(circularID), userInfo.getTenantId());
-        	
-        	for (CircularAttachVO avo : aList) {        		
+
+        	for (CircularAttachVO avo : aList) {
         		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
         		avo.setFileType(fileType);        		
         		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
@@ -1514,8 +1514,8 @@ public class EzCircularController extends EgovFileMngUtil {
         }
 
         for (int i = 0; i < cnt; i++) {
-            pFileName[i] = pFileName[i].replace("+", "%2b");
-            pFileName[i] = pFileName[i].replace(";", "%3b");
+            pFileName[i] = pFileName[i].replace("%2b", "+");
+            pFileName[i] = pFileName[i].replace("%3b", ";");
         }
         
         String pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
