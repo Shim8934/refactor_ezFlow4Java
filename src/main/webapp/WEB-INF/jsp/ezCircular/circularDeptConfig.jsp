@@ -173,9 +173,9 @@
 		                    <table class="mainlist" style="width: 100%;">
 		                        <tr>
 		                        	<th style="width: 7%; "><input id="checkboxAll" type="checkbox"></th>
-		                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
-		                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
-		                            <th style="width: 16%; "><span><spring:message code='ezCircular.t34' /></span></th>
+		                            <th style="width: 47%; "><span><spring:message code='ezCircular.t32' /></span></th>
+		                            <th style="width: 18%; "><span><spring:message code='ezCircular.t33' /></span></th>
+		                            <th style="width: 18%; "><span><spring:message code='ezCircular.t34' /></span></th>
 		                        	<th style="width: 10%; "></th>
 		                        </tr>
 		                    </table>
@@ -184,10 +184,10 @@
 		                            <c:forEach var="item" items="${result}">
 			                            <tr id="${item.circularBMID }" title="${item.title }" style="cursor:pointer" onmouseover="event_Mover(this);" onmouseout="event_Mout(this);" onclick="event_click(this);" ondblclick="event_dbclick(this);">
 			                            	<td style='width:7%;padding-left:5px;'><input class="myCheckbox" name="myCheckbox" value="${item.circularBMID }" type='checkbox' onclick='event_statuschange(this);'></td>
-			                            	<td style="width:40%;color:gray;">${item.title }</td>
-			                            	<td style="width:27%;color:gray;">${item.regDate.substring(0,16) }</td>
+			                            	<td style="width:47%;color:gray;">${item.title }</td>
+			                            	<td style="width:18%;color:gray;">${item.regDate.substring(0,16) }</td>
 			                            	<c:if test="${item.memberNameCount != 0}">
-			                        			<td style="width: 16%;color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
+			                        			<td style="width: 18%;color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
 			                            		<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
 			                            	</c:if>
 		                            		<c:if test="${item.memberNameCount == 0}">
