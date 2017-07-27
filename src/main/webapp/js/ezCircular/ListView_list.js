@@ -1380,6 +1380,7 @@ function tr_unselectedAll(pTableID) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
+            strMemberListInfo = "";
         }
     }
 }
