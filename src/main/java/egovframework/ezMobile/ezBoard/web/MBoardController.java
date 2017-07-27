@@ -115,7 +115,7 @@ public class MBoardController {
 		JSONObject resultBody = result.getBody();
 				
 		String status = resultBody.get("status").toString();
-System.out.println("status:"+status);
+		LOGGER.debug("status : "+status);
 		
 		JSONArray list = new JSONArray();
 		if (status.equals("ok")) {
@@ -126,7 +126,6 @@ System.out.println("status:"+status);
 			model.addAttribute("title", mBoardInfoVO.getBoardName());
 			model.addAttribute("listSize", list.size());
 		}
-		
 		
 		LOGGER.debug("boardItemList ended.");
 		
@@ -220,8 +219,7 @@ System.out.println("status:"+status);
 			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			
 			model.addAttribute("mBoardInfo", mBoardInfoVO);
-			//model.addAttribute("mBoardItemList", mBoardItemList);
-			model.addAttribute("mBoardItemListSize", list.size());
+			model.addAttribute("mBoardItemList", list);
 		}
 		/*JSONArray sample = rest.getForObject(builder.build().encode().toUri(), JSONArray.class);
 System.out.println("sampleSize:"+sample.size());		
