@@ -55,7 +55,7 @@
 	            }
 	            
 	            if (specialChar.test(folderName)) {
-	            	alert("spring:message code='ezCircular.t187'/>");
+	            	alert("<spring:message code='ezCircular.t187'/>");
 	            	return ;
 	            }
 
