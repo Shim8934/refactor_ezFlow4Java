@@ -87,13 +87,42 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
+		        
+		    	var uploadSDate = "${startDate}";
+
+	        	var sYear = uploadSDate.substring(0, 4);
+				var sMonth = uploadSDate.substring(5, 7);
+				var sDay = uploadSDate.substring(8, 10);
+				var sHour = uploadSDate.substring(11, 13);
+				var sMin = uploadSDate.substring(14, 16);
+
+				var uploadEDate = "${endDate}";
+				var eYear = uploadEDate.substring(0, 4);
+				var eMonth = uploadEDate.substring(5, 7);
+				var eDay = uploadEDate.substring(8, 10);
+				var eHour = uploadEDate.substring(11, 13);
+				var eMin = uploadEDate.substring(14, 16);
+				
+	        	var SDate = new Date("");
+	        	SDate.setFullYear(sYear, sMonth-1, sDay);
+		        SDate.setHours(sHour, sMin, 0, 0);
+	        	//SDate.setHours(SDate.getHours() - 9);
+	        	
+	        	var EDate = new Date();
+		        EDate.setFullYear(eYear, eMonth-1, eDay);
+		        EDate.setHours(eHour, eMin, 0, 0);
+		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $('#Stimepicker').timepicker();
-		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
-		
-		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $('#Etimepicker').timepicker();
-		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+		        $("#Sdatepicker").datepicker('setDate', SDate);
+	    	   	$('#Stimepicker').timepicker();
+	        	$('#Stimepicker').timepicker('setTime', SDate);
+	        	$('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
+
+	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        	$("#Edatepicker").datepicker('setDate', EDate);
+	        	$('#Etimepicker').timepicker();
+	        	$('#Etimepicker').timepicker('setTime', EDate);
+	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    });
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -210,19 +239,16 @@
 				var pProxy = "";
 				var pBujae = "";
 		        // 대리 결재자 지정
-		        if (document.getElementById("TextName").value != "")
-		        {
+		        if (document.getElementById("TextName").value != "") {
 		            if (orguserid.toLowerCase() == userid.toLowerCase()) {
 		                alert("<spring:message code='ezPersonal.t16'/>");
 		                return;
 		            }
-		            pBujae = userid + ":" + document.getElementById("TextName").value + ":" + deptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00/00:" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23/59";
-		        }
-		        else if (document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
-		        	pBujae = "" + ":" + "" + ":" + "" + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00/00:" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23/59:" + document.getElementById("absentreason").value;
+		            pBujae = userid + ":" + document.getElementById("TextName").value + ":" + deptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() +  " " + $('#Etimepicker').val() + ":";
+		        } else if (document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+		        	pBujae = "" + ":" + "" + ":" + "" + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":" + document.getElementById("absentreason").value;
 		            gIsAppoint = "2";
-		        }
-		        else {
+		        } else {
 		            pBujae = "";
 		            gIsAppoint = "3";
 		        }
@@ -302,8 +328,9 @@
 						<table>
 							<tr>
 								<td>
-									<input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" />
-								</td>
+								<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	           						~
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />								</td>
 							</tr>
 						</table>
 					</td>

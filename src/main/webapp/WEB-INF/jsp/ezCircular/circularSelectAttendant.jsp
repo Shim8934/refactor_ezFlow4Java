@@ -1097,7 +1097,7 @@
 		        listContentArry = new Array();
 
 		        if ($.trim($("#keyword").val()) == "") {
-		        	alert("<spring:message code='ezOrgan.jsh1' />");
+		        	alert("<spring:message code='ezCircular.t189' />");
 		            document.all("keyword").focus();
 		            return;
 		        }

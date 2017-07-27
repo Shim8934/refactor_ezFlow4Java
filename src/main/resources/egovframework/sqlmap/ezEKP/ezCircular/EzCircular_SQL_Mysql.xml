@@ -59,8 +59,7 @@
 				D.confirmtotalcount,
 				B.commentStatus,
 				B.shareStatus,
-				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus,
-				(case when commentStatus = 0 and shareStatus = 0 then null else updatedate end) as updatedate2
+				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus
             FROM
                 TBL_CIRCULAR A
             JOIN
@@ -122,10 +121,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -197,10 +196,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -531,10 +530,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -600,10 +599,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -648,10 +647,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -740,10 +739,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -829,10 +828,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
 		</isNotEqual>
@@ -927,10 +926,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -1064,10 +1063,10 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -1123,10 +1122,10 @@
 	        			A.title LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
 	        		AND
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        	]]>
         	</isEqual>
         </isNotEqual>
@@ -1168,9 +1167,9 @@
 	        	]]>
         	</isEqual>
         	
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        		AND
 	        	]]>
         	</isEqual>
@@ -1277,9 +1276,9 @@
 	        		AND
 	        	]]>
         	</isEqual>
-        	<isEqual property="searchType" compareValue="content">
+        	<isEqual property="searchType" compareValue="writer">
 	        	<![CDATA[
-	        			A.content LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+	        			A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 	        		AND
 	        	]]>
         	</isEqual>
@@ -1489,21 +1488,15 @@
 		<isEqual property="type" compareValue="totalComment">
 			<![CDATA[
 				SELECT
-					IFNULL(COUNT(B.circularcommentstateid), 0) cnt
+					IFNULL(COUNT(*), 0) cnt
 				FROM
-					TBL_CIRCULAR_COMMENT A
-				JOIN
-					TBL_CIRCULAR_COMMENTSTATE B
-				ON
-					A.circularcommentid = B.circularcommentid
-				AND
-					A.tenantid = B.tenantid
+					TBL_CIRCULAR_COMMENT
 				WHERE
-					A.circularid = #circularID#
+					circularid = #circularID#
 				AND
-					((A.status = 1 AND (A.circularuserid = #memberID# OR A.memberid = #memberID#)) OR (A.status = 0))
+					((status = 1 AND (circularuserid = #memberID# OR memberid = #memberID#)) OR (status = 0))
 				AND
-					A.tenantid = #tenantID#
+					tenantid = #tenantID#
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="myComment">
@@ -2075,6 +2068,12 @@
 			]]>
 		</isEqual>
 		
+		<isNotEqual property="commentStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
+		
 		<![CDATA[
 			WHERE
 				circularid = #circularID#
@@ -2141,6 +2140,12 @@
 				updatedate = #nowDate#
 			]]>
 		</isEqual>
+		
+		<isNotEqual property="shareStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
 		
 		<![CDATA[
 			WHERE

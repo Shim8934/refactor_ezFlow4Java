@@ -18,8 +18,10 @@ import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("MBoardService")
 public class MBoardServiceImpl implements MBoardService {
@@ -316,15 +318,15 @@ public class MBoardServiceImpl implements MBoardService {
 //    }
 	
 	@Override
-	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
+	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception {
 		logger.debug("getBoardItemList started.");
 		
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
-		String userID = userInfo.getId();
-		String offset = userInfo.getOffset();
-		int tenantID = userInfo.getTenantId();
+		
+		String offset = info.getOffSet();
+		int tenantID = info.getTenantId();
 		
 		/** 공지사항 카운트 및 리스트 */
 		Integer noticeCount = 0;
@@ -345,6 +347,17 @@ public class MBoardServiceImpl implements MBoardService {
 		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
 		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
 		
+		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
+		String nowDate = commonUtil.getTodayUTCTime("");
+	    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+		for (MBoardItemVO vo : mBoardItemList) {
+			if (vo.getWriteDate().toString().compareTo(nowDate) > 0) {
+				vo.setNewItemFlag("Y");
+			} else {
+				vo.setNewItemFlag("N");
+			}
+		}
+		
 		for (MBoardItemVO vo : mBoardNoticeItemList) {
 			mBoardItemList.add(0, vo);
 		}
@@ -356,13 +369,13 @@ public class MBoardServiceImpl implements MBoardService {
 
 
 	@Override
-	public List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
+	public List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception {
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
-		String userID = userInfo.getId();
-		String offset = userInfo.getOffset();
-		int tenantID = userInfo.getTenantId();
+		
+		String offset = info.getOffSet();
+		int tenantID = info.getTenantId();
 		
 		/** 공지사항 카운트 및 리스트 */
 		Integer noticeCount = 0;
@@ -375,7 +388,10 @@ public class MBoardServiceImpl implements MBoardService {
         int endRow = (mobileListSize * page) - noticeCount;
 		
         int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
-		return getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
+        
+        List<MBoardItemVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
+        
+		return mBoardItemList;
 	}
 
 	//게시판 정보조회 -> MBoardInfoVO.parentBoardID 불필요시 추후 삭제

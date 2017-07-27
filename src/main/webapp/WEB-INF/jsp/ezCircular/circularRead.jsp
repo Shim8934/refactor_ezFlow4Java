@@ -38,8 +38,7 @@
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
-			var myCommentCount = "";
-			var totalCommentCount = "";
+			var type = "${type}";
 			var attachList = "";
 
 			$(document).ready(function() {
@@ -115,7 +114,7 @@
 // 						result.totalCommentCount;
 // 						result.myCommentCount;
 						
-						$("#commentCount").html("<spring:message code='ezCircular.t180' />[" + result.myCommentCount +"]");
+						$("#commentCount").html("<spring:message code='ezCircular.t180' />[" + result.myCommentCount + "/" + result.totalCommentCount + "]");
 					},error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezCircular.t102' />");
 					}
@@ -437,7 +436,7 @@
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
                 	    	</c:if>
                 	    	
-               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}]</span></li>
+               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
@@ -445,7 +444,10 @@
 		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
 	                        
-               	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
+	                        <c:if test="${type != 'new'}">
+	                        	<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
+	                        </c:if>
+               	    		
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>
                 	</div>

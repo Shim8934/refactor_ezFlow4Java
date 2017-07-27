@@ -175,10 +175,10 @@
 		                        	<th style="width: 7%; "><input id="checkboxAll" type="checkbox"></th>
 		                            <th style="width: 40%; "><span><spring:message code='ezCircular.t32' /></span></th>
 		                            <th style="width: 27%; "><span><spring:message code='ezCircular.t33' /></span></th>
-		                            <th style="width: 12%; "><span><spring:message code='ezCircular.t34' /></span></th>
-		                        	<th style="width: 14%; "></th>
+		                            <th style="width: 16%; "><span><spring:message code='ezCircular.t34' /></span></th>
+		                        	<th style="width: 10%; "></th>
 		                        </tr>
-		                    </table>   
+		                    </table>
 		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
 		                        <table class="mainlist" style="width: 100%;">
 		                            <c:forEach var="item" items="${result}">
@@ -187,11 +187,11 @@
 			                            	<td style="width:40%;color:gray;">${item.title }</td>
 			                            	<td style="width:27%;color:gray;">${item.regDate.substring(0,16) }</td>
 			                            	<c:if test="${item.memberNameCount != 0}">
-			                        			<td style="width: 12%;color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
+			                        			<td style="width: 16%;color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
 			                            		<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
 			                            	</c:if>
 		                            		<c:if test="${item.memberNameCount == 0}">
-		                            			<td style='width: 12%;color:gray;'>${item.memberName }</td>
+		                            			<td style='width: 10%;color:gray;'>${item.memberName }</td>
 		                            			<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
 		                            		</c:if>
 			                            </tr>

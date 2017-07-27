@@ -153,9 +153,23 @@
 						            	</a>
 						            </li>
 						            <li>
-						            	<a href="javascript:restUpdate();">
+						            	<a href="javascript:mScheduleInsert();">
 						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
-						                	디자인팀과 오후 미팅<br/>
+						                	스케쥴 등록<br/>
+						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="javascript:mScheduleUpdate();">
+						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
+						                	스케쥴 수정<br/>
+						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="javascript:mScheduleDelete();">
+						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
+						                	스케쥴 삭제<br/>
 						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
 						            	</a>
 						            </li>

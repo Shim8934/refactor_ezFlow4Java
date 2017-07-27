@@ -75,34 +75,30 @@
 		                else {
 		                    parent.window.returnValue = AprSign[0].getAttribute("DATA1");
 		                }
-		            }
-		            else {
+		            } else {
 		                var AprSignName = AprSign[0].cells[0].innerText;
 		                var AprSignURL = AprSign[0].getAttribute("DATA1");
 		                var AprSignInfo = BaseURL + AprSignURL;
 		
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(AprSignInfo);
-		                }
-		                else {
+		                } else {
 		                    window.returnValue = AprSignInfo;
 		                    parent.window.close();
 		                }
 		            }
-		        }
-		        else if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
+		        } else if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
 		            if (ReturnFunction != null) {
 		                ReturnFunction(AprSign[0].getAttribute("DATA1"));
-		            }
-		            else {
+		            } else {
 		                window.returnValue = AprSign[0].getAttribute("DATA1");
 		                parent.window.close();
 		            }
-		        }
-		        else {
+		        } else {
 		            alert("<spring:message code='ezApprovalG.t437'/>");
 		        }
 		    }
+		    
 		    function btn_ImageCancel_onclick() {
 		        if (ReturnFunction != null) {
 		            ReturnFunction("cancel");

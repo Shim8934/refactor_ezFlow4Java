@@ -129,9 +129,9 @@ function showEdit(obj) {
 	} else {
 		$(".circularCommentEdit").remove();
 		
-		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='height:70px;border:1px solid #e2e2e2'>";
-		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:97%;height:50px;resize:none;overflow:auto;'></textarea></td>";
-		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn'><span onclick='editCircularComment(this)';>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-right:15px;'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></div></td>";
+		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='border:1px solid #e2e2e2; padding:10px'>";
+		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:35px;resize:none;overflow:auto;'></textarea></td>";
+		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn' style='margin-left:47px;'><span onclick='editCircularComment(this)';>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-left:35px;'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></div></td>";
 		circularEdit += "</tr>";
 		
 		$(obj).closest("tr").after(circularEdit);
@@ -310,7 +310,7 @@ function openCircularComment() {
 function openCommentSharePopup(obj) {
 	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
 	
-	DivPopUpShow(300, 300, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID + "&circularCommentID=" + $(obj).closest("tr").attr("circularCommentID"));
+	DivPopUpShow(300, 490, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID + "&circularCommentID=" + $(obj).closest("tr").attr("circularCommentID"));
 }
 
 function closePopup() {

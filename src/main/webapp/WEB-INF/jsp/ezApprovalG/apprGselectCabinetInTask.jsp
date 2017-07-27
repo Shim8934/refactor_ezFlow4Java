@@ -418,7 +418,7 @@
 		                createcabinet_cross_dialogArguments[0] = para;
 		                createcabinet_cross_dialogArguments[1] = btnCreateCab_onclick_Complete;
 		
-		                DivPopUpShow(400, 310, url);
+		                DivPopUpShow(400, 360, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:370px;dialogHeight:450px;scroll:no;resizable:yes;status:no; help:no";
@@ -546,7 +546,7 @@
 		      </table>
 		    </td>
 		    <td style="width:45px;text-align:center"> 
-		      <table border="0" style="border-collapse:collapse; border-spacing:0;padding:2px;margin-left:11px">
+		      <table border="0" style="border-collapse:collapse; border-spacing:0;padding:2px;">
 		        <tr > 
 		          <td ><a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" > 
 		                  <img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
@@ -562,7 +562,7 @@
 		    <td style="width:200px;vertical-align:top">
 			<h2><spring:message code='ezApprovalG.t1120'/></h2>
 		      <div class="listview">
-			    <div id="SelCabinetList" style="border:0; HEIGHT: 242px; WIDTH: 200px;overflow:auto;" ></div>
+			    <div id="SelCabinetList" style="border:0; HEIGHT: 242px; WIDTH: 250px;overflow:auto;" ></div>
 		      </div>
 		    </td>
 		  </tr>

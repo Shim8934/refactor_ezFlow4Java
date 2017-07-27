@@ -1332,12 +1332,14 @@ function tr_select(pRowID, pTableID, callbackFunc) {
             oSourceTr.childNodes[0].childNodes[0].checked = false;
             oSourceTr.style.backgroundColor = m_strColorDefault;
             strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
+            strMemberListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].getAttribute("memberID"), "");
         }
         else {
             oSourceTr.setAttribute("selected", "true");
             oSourceTr.childNodes[0].childNodes[0].checked = true;
             oSourceTr.style.backgroundColor = m_strColorSelect;
-            strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
+            strListInfo += oSourceTr.childNodes[0].childNodes[0].id + ";";
+            strMemberListInfo += oSourceTr.childNodes[0].childNodes[0].getAttribute("memberID") + ";";
         }
 
         //각 리스트마다 마지막으로 선택한 ID를 보관한다.

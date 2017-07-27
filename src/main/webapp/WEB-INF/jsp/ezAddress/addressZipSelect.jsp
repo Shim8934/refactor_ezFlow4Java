@@ -273,8 +273,10 @@
 	        }
 
 	        function window_close() {
+	        	var ReturnValue = new Array();
+	        	ReturnValue[0] = "cancel";
 	            if (ReturnFunction != undefined)
-	                ReturnFunction("cancel");
+	                ReturnFunction(ReturnValue);
 	            window.close();
 	        }
 
