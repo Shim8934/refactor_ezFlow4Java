@@ -17,8 +17,8 @@ function getBoardItemList() {
 			list = result.mBoardItemList;
 			list.forEach(function(vo, index) {
 				titleImage = "";
-				titleImage2 = "";
 				oneLineCnt = "";
+				thumbNail = "";
 				style = "font-size:12px;";
 				
 				contentList += "<li>";
@@ -37,20 +37,14 @@ function getBoardItemList() {
 //                if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
 //                    titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
 				
-				if (vo.notice == "1") {
-					titleImage = "<img src='/images/i_notice.gif'>";
-				}
 				
-				//긴급게시일때 제목앞에 느낌표 image
-				if (vo.importance == "1") {
-					titleImage2 = "<img src='/images/i_urgency.gif'>";
-				}
 				
 				//writeDate 오늘날짜 1일보다 작게 차이나면 new
 //				if (getNodeText(oDatas[6]) == "Y") {
 //					titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
 //				}
 				
+				//리플
 				for (var i = 1; i < parseInt(vo.itemLevel); i++) {
 					titleImage += "&nbsp;";
 					
@@ -59,11 +53,34 @@ function getBoardItemList() {
 					}
 				}
 				
+				//긴급게시일때 제목앞에 느낌표 image
+				if (vo.importance == "1") {
+					titleImage= titleImage + "<img src='/images/i_urgency.gif'>&nbsp;";
+				}
+				
+				//공지사항일때 공지사항 image
+				if (vo.notice == "1") {
+					titleImage = titleImage + "<img src='/images/i_notice.gif'>&nbsp;";
+				}
+
+				//새로운게시물일때 new image
+				if (vo.newItemFlag == "Y") {
+					titleImage= titleImage + "<img src='/images/i_new.gif'>&nbsp;";
+				}
+				
+				//댓글이 있을때 댓글수
                 if (vo.oneLineCnt != 0) {
                 	oneLineCnt = "[" + vo.oneLineCnt + "]";
                 }
                 
-				contentList += "<h2 style='" + style + "'>" + titleImage + titleImage2 + vo.title + oneLineCnt + "</h2>";
+                //썸네일게시판일때, 리스트 다르게 보여주는 부분
+                if (vo.guBun == '4') {
+                	titleImage= titleImage + "[썸네일]&nbsp;";
+                }
+                
+                thumbNail
+                
+				contentList += "<h2 style='" + style + "'>" + titleImage + vo.title + "&nbsp;" +oneLineCnt + "</h2>";
 				contentList += "<p class='ui-li-aside'>" + vo.writeDate + "</p>";
 				contentList += "<p>" + vo.writerName + "(" + vo.writerDeptName + ")</p>";
 				contentList += "</label>";

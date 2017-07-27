@@ -211,8 +211,12 @@
                 var lstCnt = getNodeText(cntNode);
                 var pageCnt = getNodeText(pageNode);
                 var perCnt = getNodeText(perNode);
- 
-                $(".point").text(lstCnt);
+
+                if (lstCnt != "" && lstCnt != "0") {
+                	$("#resultCount").html(": " + "<spring:message code='main.t252' />" + lstCnt + " <spring:message code='ezCircular.t104' />");
+                } else {
+                	$("#resultCount").html("");
+                }
 
                 totalPage = Math.ceil(new Number(pageCnt / perCnt));
                 pTotalCnt = lstCnt;
@@ -413,16 +417,6 @@
 	        	}
 		    }
 			
-		    /* function onmouseOver(elem) {
-		        elem.style.color = "blue";
-		        elem.style.backgroundColor = "rgb(233, 241, 244)";
-		    }
-		
-		    function onmouseOut(elem) {
-		        elem.style.color = "";
-		        elem.style.backgroundColor = "#FFFFFF";
-		    } */
-			
 		    function search_keypress(evt) {
 		        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
 		
@@ -465,7 +459,7 @@
 		  	</table> 
 		 	<br/>
 		 	<h2 class="h2_dot">
-		 		<spring:message code='ezCircular.t146'/>&nbsp;<span class="point"></span>&nbsp;<span id="resultCount"></span><spring:message code='ezCircular.t145'/>
+		 		<spring:message code='ezCircular.t146'/>&nbsp;<span id="resultCount"></span>
 		    </h2>
 		  	<%-- <table class="mainlist" style="width:100%">
 		    	<thead id="BoardList_THEAD">

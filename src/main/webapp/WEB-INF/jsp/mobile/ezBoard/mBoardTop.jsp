@@ -16,13 +16,13 @@
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>
 			<ul data-role="listview" data-inset="false" data-theme="a">
 				<li data-position="fixed" style="height:25px">
-					<div style="margin-left:5px;float:left;font-size:15px;padding-top:2px">
+					<div style="margin-left:5px;float:left;font-size:15px;padding-top:2px"> 
 						<c:choose>
 							<c:when test="${mBoardInfo.type == 'newBoardItemList'}">
-								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>새게시물카운트</strong>
+								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>${listSize}</strong>
 							</c:when>
 							<c:when test="${mBoardInfo.type == 'boardItemList'}">
-								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>게시물카운트</strong>
+								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>${listSize}</strong>
 							</c:when>
 							<c:when test="${mBoardInfo.type == 'boardItem'}">
 								<i class="fa fa-envelope" style="font-size:16px;"></i>&nbsp;<strong>뒤로가기아이콘</strong>
@@ -39,9 +39,9 @@
 							</c:when>
 							<c:when test="${mBoardInfo.type == 'boardItemList'}">
 		<!-- 						즐겨찾기 -->
-								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
+								<i class="fa fa-star" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 		<!-- 						기간 -->
-								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
+								<!-- <i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i> -->
 		<!-- 						검색 -->
 								<i class="fa fa-search" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="javascript:searchBoardItem();"></i>
 							</c:when>

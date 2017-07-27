@@ -137,6 +137,9 @@ public class MBoardItemVO {
 	private int tenantID;
 	/** 메인이미지*/
 	private String mainImageID;
+	/** 새로운게시물 여부*/
+	private String newItemFlag;
+	
 	public String getUserID() {
 		return userID;
 	}
@@ -545,4 +548,11 @@ public class MBoardItemVO {
 	public void setMainImageID(String mainImageID) {
 		this.mainImageID = mainImageID;
 	}
+	public String getNewItemFlag() {
+		return newItemFlag;
+	}
+	public void setNewItemFlag(String newItemFlag) {
+		this.newItemFlag = newItemFlag;
+	}
+	
 }
