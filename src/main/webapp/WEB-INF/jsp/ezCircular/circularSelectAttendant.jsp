@@ -1385,10 +1385,16 @@
 
    						list.forEach(function(vo, index) {
    							circularDeptList += ("<tr id='" + vo.circularBMID + "' name='deptList' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click(this)' ondblclick='event_listDBclick(this)'>");
-   							circularDeptList += ("<td style='width:5%'>" + (index + 1) + " ");
-   							circularDeptList += ("<td style='width:35%'>" + vo.title + " ");
-   							circularDeptList += ("<td style='width:27%'>" + vo.regDate.substring(0,16) + " ");
-   							circularDeptList += ("<td style='width:19%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />");
+   							circularDeptList += ("<td style='width:5%'>" + (index + 1) + "</td>");
+   							circularDeptList += ("<td style='width:35%'>" + vo.title + "</td>");
+   							circularDeptList += ("<td style='width:27%'>" + vo.regDate.substring(0,16) + "</td>");
+   							
+   							if (vo.memberNameCount == 0) {
+   								circularDeptList += ("<td style='width:19%'>" + vo.memberName + "</td>");
+   							} else {
+   								circularDeptList += ("<td style='width:19%'>" + vo.memberName + " <spring:message code='ezCircular.t50' /> " + vo.memberNameCount + " <spring:message code='ezCircular.t51' />" + "</td>");
+   							}
+   							
    							circularDeptList += ("<td style='width:13%'>");
    							circularDeptList += ("</tr>");
    						});
@@ -1440,13 +1446,13 @@
 
    						list.forEach(function(vo, index) {
    							circularDeptNamelist += ("<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)' onclick='event_click2(this)' ondblclick='event_listDBclick(this)'>");
-   							circularDeptNamelist += ("<td id='data1' style='width:55%'>" + (index + 1) + " ");
-   							circularDeptNamelist += ("<td id='data2' style='width:15%'>" + vo.company + " ");
-   							circularDeptNamelist += ("<td id='data3' style='width:17%'>" + vo.description + " ");
-   							circularDeptNamelist += ("<td id='data4' style='width:12%'>" + vo.title + " ");
-   							circularDeptNamelist += ("<td id='data5' style='width:13%'>" + vo.memberName + " ");
-   							circularDeptNamelist += ("<td id='data6' style='width:38%'>" + vo.mail + " ");
-   							circularDeptNamelist += ("<td id='data7' style='display:none'>" + vo.memberID + " ");
+   							circularDeptNamelist += ("<td id='data1' style='width:55%'>" + (index + 1) + "</td>");
+   							circularDeptNamelist += ("<td id='data2' style='width:15%'>" + vo.company + "</td>");
+   							circularDeptNamelist += ("<td id='data3' style='width:17%'>" + vo.description + "</td>");
+   							circularDeptNamelist += ("<td id='data4' style='width:12%'>" + vo.title + "</td>");
+   							circularDeptNamelist += ("<td id='data5' style='width:13%'>" + vo.memberName + "</td>");
+   							circularDeptNamelist += ("<td id='data6' style='width:38%'>" + vo.mail + "</td>");
+   							circularDeptNamelist += ("<td id='data7' style='display:none'>" + vo.memberID + "</td>");
    							circularDeptNamelist += ("</tr>");
    						});
    						
