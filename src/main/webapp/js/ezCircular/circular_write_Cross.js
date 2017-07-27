@@ -402,7 +402,7 @@ function manage_attendant_after() {
     schedule_select_attendant_dialogArguments[0] = g_attendant;
     schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
-    GetOpenWindow("/ezCircular/circularSelectAttendant.do?title=" + encodeURI(strLang19), "schedule_select_attendant", 970, 680);
+    GetOpenWindow("/ezCircular/circularSelectAttendant.do", "schedule_select_attendant", 970, 680);
 }
 
 function manage_attendant_Complete(rtn) {
@@ -856,40 +856,40 @@ function check_length(chkstr, maxlength, fieldname)
 	return true;
 }
 
-function ListOwnerID_Change()
-{
-    var pListOwnerID = document.getElementById("ListOwnerID").value;
-	var pListOwnerID =  pListOwnerID.split(";;")[0];
-	
-	if (pListOwnerID != "1") {
-	    receiverlist.innerHTML = "";
-	    document.getElementById("publicSelect").disabled = true;
-	    document.getElementById("publicSelect").value = "Y";
-	    g_attendant = null;
-	}
-	else {
-	    document.getElementById("publicSelect").disabled = false;
-	    document.getElementById("publicSelect").value = "N";
-	}
-    //6 : 비서(대리인) 비서일 경우 참석자 초대 가능
-	if (pListOwnerID == "1" || pListOwnerID == "6") {
-	    document.getElementById("publicSelect").value = "N";
-	    document.getElementById("publicSelect").disabled = false;
-	    document.getElementById("receiverinput").disabled = false;
-	    document.getElementById("imgbutton").disabled = false;
-	    document.getElementById("imgbutton").style.display = "";
-	    document.getElementById("receiverTr1").style.display = "";
-	    document.getElementById("receiverTr2").style.display = "";
-	}
-	else {
-	    document.getElementById("publicSelect").value = "Y";
-	    document.getElementById("receiverinput").disabled = true;
-	    document.getElementById("imgbutton").disabled = true;
-	    document.getElementById("imgbutton").style.display = "none";
-	    document.getElementById("receiverTr1").style.display = "none";
-	    document.getElementById("receiverTr2").style.display = "none";
-	}
-}
+//function ListOwnerID_Change()
+//{
+//    var pListOwnerID = document.getElementById("ListOwnerID").value;
+//	var pListOwnerID =  pListOwnerID.split(";;")[0];
+//	
+//	if (pListOwnerID != "1") {
+//	    receiverlist.innerHTML = "";
+//	    document.getElementById("publicSelect").disabled = true;
+//	    document.getElementById("publicSelect").value = "Y";
+//	    g_attendant = null;
+//	}
+//	else {
+//	    document.getElementById("publicSelect").disabled = false;
+//	    document.getElementById("publicSelect").value = "N";
+//	}
+//    //6 : 비서(대리인) 비서일 경우 참석자 초대 가능
+//	if (pListOwnerID == "1" || pListOwnerID == "6") {
+//	    document.getElementById("publicSelect").value = "N";
+//	    document.getElementById("publicSelect").disabled = false;
+//	    document.getElementById("receiverinput").disabled = false;
+//	    document.getElementById("imgbutton").disabled = false;
+//	    document.getElementById("imgbutton").style.display = "";
+//	    document.getElementById("receiverTr1").style.display = "";
+//	    document.getElementById("receiverTr2").style.display = "";
+//	}
+//	else {
+//	    document.getElementById("publicSelect").value = "Y";
+//	    document.getElementById("receiverinput").disabled = true;
+//	    document.getElementById("imgbutton").disabled = true;
+//	    document.getElementById("imgbutton").style.display = "none";
+//	    document.getElementById("receiverTr1").style.display = "none";
+//	    document.getElementById("receiverTr2").style.display = "none";
+//	}
+//}
 
 /*var g_resource = new Array();
 var ApproveFlag = "0";

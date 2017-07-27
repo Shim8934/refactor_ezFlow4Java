@@ -518,6 +518,9 @@
 	        return str_temp;
 	    }
 	    </script>
+		<style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup" style="margin-left: 0px; margin-top: 0px">
 	    <h1 style="height: 39px;"><spring:message code='ezApprovalG.t711'/></h1>
@@ -543,7 +546,7 @@
 	                    </tr>
 	                </table>
 	                <div class="listview" style="margin-top: 5px">
-	                    <div id="TaskSCateList" style="border: 0; HEIGHT: 265px; WIDTH: 190px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="TaskSCateList" style="border: 0; HEIGHT: 265px; WIDTH: 200px; overflow: auto;"></div>
 	                </div>
 	            </td>
 	            <%--단위업무 선택--%>
@@ -559,7 +562,7 @@
 	                    <tr>
 	                        <td style="width: 190px">
 	                            <div class="listview">
-	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 190px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                                <div id="TaskList" style="HEIGHT: 300px; WIDTH: 190px; overflow: auto;"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -582,10 +585,10 @@
 	                        <td>
 	                            <div class="listview">
 	                            <c:if test="${initFlag == '1'}">
-	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 200px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                                <div id="CabinetList" style="border: 0; HEIGHT: 300px; WIDTH: 200px; overflow: auto;"></div>
 	                            </c:if>
 	                            <c:if test="${initFlag != '1'}">
-	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 200px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                            	<div id="CabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 200px; overflow: auto;"></div>
 	                            </c:if>
 	                            </div>
 	                        </td>
@@ -596,6 +599,7 @@
 	            <td style="height: 25px; text-align: center">
 	                <img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16"
 	                    onclick="return AddCabList_onclick()" style="cursor: pointer">
+	             <br>
 	                <img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16"
 	                    onclick="return DelCabList_onclick()" style="cursor: pointer"></td>
 	
@@ -605,7 +609,7 @@
 	                    <tr>
 	                        <td colspan="2">
 	                            <div class="listview">
-	                                <div id="SelCabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 200px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                                <div id="SelCabinetList" style="border: 0; HEIGHT: 330px; WIDTH: 220px; overflow: auto;"></div>
 	                            </div>
 	                        </td>
 	

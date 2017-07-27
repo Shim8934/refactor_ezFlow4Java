@@ -56,8 +56,8 @@
 		        TreeViewinitialize("", P_companyID, "extensionAttribute2;extensionAttribute3", "<c:out value='${serverName}'/>");
 		        getDocType();
 		        
-		        $("#btnAppdept").closest("a").hide();
-	            $("#btnDeldept").closest("a").hide();
+// 		        $("#btnAppdept").closest("a").hide();
+// 	            $("#btnDeldept").closest("a").hide();
 	            document.getElementById("selUseDept").disabled = true;
 		        
 		        if (gState == "U") {
@@ -144,8 +144,8 @@
 		            $("#btnDeldept").closest("a").show();
 		            document.getElementById("selUseDept").disabled = false;
 		        } else {
-		            $("#btnAppdept").closest("a").hide();
-		            $("#btnDeldept").closest("a").hide();
+// 		            $("#btnAppdept").closest("a").hide();
+// 		            $("#btnDeldept").closest("a").hide();
 		            document.getElementById("selUseDept").disabled = true;
 		        }
 		    }

@@ -59,8 +59,7 @@
 				D.confirmtotalcount,
 				B.commentStatus,
 				B.shareStatus,
-				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus,
-				(case when commentStatus = 0 and shareStatus = 0 then null else updatedate end) as updatedate2
+				(case when commentStatus = 1 or shareStatus = 1 then 1 else 0 end) as totalstatus
             FROM
                 TBL_CIRCULAR A
             JOIN
@@ -382,7 +381,7 @@
             SELECT
                 A.circularbmid,
                 A.title,
-                A.regdate,
+                DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate, 
                 (SELECT
                 	membername 
                  FROM
@@ -1489,21 +1488,15 @@
 		<isEqual property="type" compareValue="totalComment">
 			<![CDATA[
 				SELECT
-					IFNULL(COUNT(B.circularcommentstateid), 0) cnt
+					IFNULL(COUNT(*), 0) cnt
 				FROM
-					TBL_CIRCULAR_COMMENT A
-				JOIN
-					TBL_CIRCULAR_COMMENTSTATE B
-				ON
-					A.circularcommentid = B.circularcommentid
-				AND
-					A.tenantid = B.tenantid
+					TBL_CIRCULAR_COMMENT
 				WHERE
-					A.circularid = #circularID#
+					circularid = #circularID#
 				AND
-					((A.status = 1 AND (A.circularuserid = #memberID# OR A.memberid = #memberID#)) OR (A.status = 0))
+					((status = 1 AND (circularuserid = #memberID# OR memberid = #memberID#)) OR (status = 0))
 				AND
-					A.tenantid = #tenantID#
+					tenantid = #tenantID#
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="myComment">
@@ -1738,25 +1731,25 @@
         ]]>
     </insert>
     
-    <insert id="EzCircularDAO.set_circularDeptSave" parameterClass="CircularDeptVO">
+    <insert id="EzCircularDAO.setCircularDeptSave" parameterClass="Map">
         <![CDATA[
 			INSERT INTO TBL_CIRCULAR_BM
-				(TITLE, MEMBERID, REGDATE, TENANTID)
+				(title, memberid, regdate, tenantid)
 			VALUES 
-				(#title#, #memberID#, #regDate#, #tenantID#)
+				(#title#, #userID#, #nowDate#, #tenantID#)
         ]]>
         
-        <selectKey keyProperty="circularBMId" resultClass="String">
+        <selectKey resultClass="String">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
     </insert>
     
-    <insert id="EzCircularDAO.set_circularMemberList" parameterClass="Map">
+    <insert id="EzCircularDAO.setCircularMemberList" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_CIRCULAR_BMUSER 
 				(circularbmid, memberid, membername, membername2, tenantid)
 			SELECT
-				#CIRCULARBMID#,
+				#circularBMId#,
 				cn,
 				displayname,
 				displayname2,
@@ -1764,19 +1757,19 @@
 			FROM
 				TBL_USERMASTER
 			WHERE
-				cn = #v_MEMBERID#
+				cn = #memberID#
 			AND
-				tenant_id = #TENANTID#
+				tenant_id = #tenantID#
 		]]>
     </insert>
      
     <insert id="EzCircularDAO.setCircularConfig2" parameterClass="Map">
         <![CDATA[
-          INSERT INTO TBL_CIRCULAR_OPTION 
-              (memberid, listcnt, ispreview, previewlistvalue, previewcontentvalue, tenantid)
-          VALUES 
-              (#v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, '50', '50', #v_TENANTID#)
-    ]]>
+			INSERT INTO TBL_CIRCULAR_OPTION 
+				(memberid, listcnt, ispreview, previewlistvalue, previewcontentvalue, tenantid)
+			VALUES 
+				(#v_MEMBERID#, #v_LISTCOUNT#, #v_PREVIEW#, '50', '50', #v_TENANTID#)
+		]]>
     </insert>
     
     <insert id="EzCircularDAO.circularFolderAdd" parameterClass="map">
@@ -1945,18 +1938,19 @@
 		</isEqual>
     </update>
     
-    <update id="EzCircularDAO.update_circularDept" parameterClass="map">
+    <update id="EzCircularDAO.updateCircularDept" parameterClass="map">
         <![CDATA[
 			UPDATE
 				TBL_CIRCULAR_BM
 			SET
-				title = #TITLE#
+				title = #title#,
+				regdate = #nowDate#
 			WHERE
-				circularbmid = #CIRCULARBMID#
+				circularbmid = #circularBMId#
 			AND
-				tenantid = #TENANTID#
+				tenantid = #tenantID#
 			AND
-				memberid = #MEMBERID#
+				memberid = #userID#
         ]]>
     </update>
     
@@ -2074,6 +2068,12 @@
 			]]>
 		</isEqual>
 		
+		<isNotEqual property="commentStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
+		
 		<![CDATA[
 			WHERE
 				circularid = #circularID#
@@ -2140,6 +2140,12 @@
 				updatedate = #nowDate#
 			]]>
 		</isEqual>
+		
+		<isNotEqual property="shareStatus" compareValue="1" prepend=",">
+			<![CDATA[
+				updatedate = null
+			]]>
+		</isNotEqual>
 		
 		<![CDATA[
 			WHERE
@@ -2279,9 +2285,9 @@
 			DELETE FROM
 				TBL_CIRCULAR_BM
 			WHERE
-				circularbmid = #v_CIRCULARBMID#
+				circularbmid = #circularBMId#
 			AND
-				tenantid = #v_TENANTID#
+				tenantid = #tenantID#
 		]]>
 	</delete>
   
@@ -2296,14 +2302,14 @@
       	]]>   
   	</delete>
   
-	<delete id="EzCircularDAO.delete_circularMemberList" parameterClass="Map">
+	<delete id="EzCircularDAO.deleteCircularMemberList" parameterClass="Map">
 	  	<![CDATA[
 			DELETE FROM
 				TBL_CIRCULAR_BMUSER
 			WHERE
-				circularbmid = #CIRCULARBMID#
+				circularbmid = #circularBMId#
 			AND
-				tenantid = #TENANTID#
+				tenantid = #tenantID#
 	    ]]>
 	</delete>
 	

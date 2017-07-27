@@ -1329,6 +1329,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 	 
 		CircularListVO result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
+		int totalCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "totalComment", userInfo.getTenantId());
 		int myCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "myComment", userInfo.getTenantId());
 		
 		result.setRegDate(result.getRegDate().substring(0, 16));
@@ -1350,6 +1351,7 @@ public class EzCircularController extends EgovFileMngUtil {
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);
+		model.addAttribute("totalCommentCount", totalCommentCount);
 		model.addAttribute("myCommentCount", myCommentCount);
 		
 		return "/ezCircular/circularRead";
@@ -1680,26 +1682,23 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람처 저장 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDeptSave.do")
-	@ResponseBody
-	public void circularDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, CircularDeptVO circularDeptVO, HttpServletRequest request) throws Exception {
+	public String circularDeptSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularDeptSave started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String circularBMId = request.getParameter("circularBMId");
-		
-		circularDeptVO.setMemberID(userInfo.getId());
-		circularDeptVO.setRegDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-		circularDeptVO.setTenantID(userInfo.getTenantId());
-		
+		String title = request.getParameter("title");
 		String[] memberListStr = request.getParameterValues("memberListStr[]");
-
-		if (circularBMId != null) {
-			ezCircularService.update_circularDept(circularDeptVO, memberListStr, circularBMId);
+		
+		if (!circularBMId.equals("")) {
+			ezCircularService.updateCircularDept(title, userInfo.getId(), memberListStr, circularBMId, userInfo.getTenantId());
 		} else {
-			ezCircularService.set_circularDeptSave(circularDeptVO, memberListStr);
+			ezCircularService.setCircularDeptSave(title, userInfo.getId(), memberListStr, userInfo.getTenantId());
 		}
 
 		logger.debug("circularDeptSave ended");
+		
+		return "json";
 	}
 	
 	/**
@@ -1719,7 +1718,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 회람처 목록 수정 호출 Method
+	 * 회람처 목록 수정 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularDeptModify.do")
 	public String circularDeptModify(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularDeptVO circularDeptVO, Model model) throws Exception {
@@ -1767,21 +1766,21 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람처 삭제 호출 Method
+	 * 회람처 삭제 Method
 	 */
-	@RequestMapping(value = "/ezCircular/circularDeptDel.do", method = RequestMethod.POST)
-	@ResponseBody
-	public void circularDeptDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, CircularDeptVO circularDeptVO) throws Exception {
+	@RequestMapping(value = "/ezCircular/circularDeptDel.do")
+	public String circularDeptDel(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularDeptDel started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		int tenantId = userInfo.getTenantId();
-		String[] deleteList = request.getParameter("deleteList").split(",");
+		String circularBMIdList = request.getParameter("circularBMIdList");
 		
-		ezCircularService.circularDeptDel(deleteList, tenantId);
+		ezCircularService.circularDeptDel(circularBMIdList, userInfo.getTenantId());
 		
 		logger.debug("circularDeptDel ended");
+		
+		return "json";
 	}
 	
 	/**
@@ -1898,6 +1897,17 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularInputName started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId());
+		String folderNameList = "";
+
+		for (int i=0; i<list.size(); i++) {
+			folderNameList += list.get(i).getCircularFolderName() + ";";
+		}
+
+		logger.debug("folderNameList : " + folderNameList);
+		
+		model.addAttribute("folderNameList", folderNameList);
 		
 		logger.debug("circularInputName ended");
 		

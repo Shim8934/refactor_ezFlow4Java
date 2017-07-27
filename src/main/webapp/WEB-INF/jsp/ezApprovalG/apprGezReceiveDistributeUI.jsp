@@ -1307,6 +1307,9 @@
 	        }
 	    }
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApprovalG.t427'/></h1>
@@ -1379,7 +1382,7 @@
 	            <td style="vertical-align: top;">
 	                <h2 class="h2_dot"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div class="listview">
-	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto;"></div>
 	                </div>
 	                <div style="text-align: right;">
 	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>

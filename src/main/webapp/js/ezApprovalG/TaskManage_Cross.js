@@ -97,7 +97,7 @@ function btnViewTaskInfo_onclick() {
 
         viewtaskinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewTaskInfo", GetOpenWindowfeature(450, 705));
+        var OpenWin = window.open(url, "ViewTaskInfo", GetOpenWindowfeature(450, 710));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
