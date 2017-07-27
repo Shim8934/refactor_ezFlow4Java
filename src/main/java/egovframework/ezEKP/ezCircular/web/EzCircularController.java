@@ -1793,9 +1793,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularIDList = request.getParameter("circularIDList");
-		String strMemberListInfo = request.getParameter("strMemberListInfo");
+		String memberIDList = request.getParameter("memberIDList");
 		
-		logger.debug("circularIDList : " + circularIDList + " | strMemberListInfo : " + strMemberListInfo);
+		logger.debug("circularIDList : " + circularIDList + " | memberIDList : " + memberIDList);
 		
 		String pDirPath = "";
 		String realPath = request.getServletContext().getRealPath("");
@@ -1808,7 +1808,7 @@ public class EzCircularController extends EgovFileMngUtil {
         	pDirPath = pDirPath + commonUtil.separator;
         }
 
-		ezCircularService.deleteCircularList(circularIDList, strMemberListInfo, pDirPath, userInfo.getId(), userInfo.getTenantId());
+		ezCircularService.deleteCircularList(circularIDList, memberIDList, pDirPath, userInfo.getId(), userInfo.getTenantId());
 
 		logger.debug("deleteCircularList ended");
 		

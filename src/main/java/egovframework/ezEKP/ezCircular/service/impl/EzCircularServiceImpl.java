@@ -567,19 +567,19 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void deleteCircularList(String circularIDListInfo, String strMemberListInfo, String pDirpath, String userID, int tenantID) throws Exception {
+	public void deleteCircularList(String circularIDListInfo, String memberIDListInfo, String pDirpath, String userID, int tenantID) throws Exception {
 		logger.debug("deleteCircularList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		String[] strMemberList = strMemberListInfo.split(";");
+		String[] memberIDList = memberIDListInfo.split(";");
 		String[] circularIDList = circularIDListInfo.split(";");
 
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
 		
 		for (int i=0; i<circularIDList.length; i++) {
-			String idInfo = circularIDList[i] + "/" + strMemberList[i];
+			String idInfo = circularIDList[i] + "/" + memberIDList[i];
 			
 			String[] idsArr = idInfo.split("/");
 			String circularID = idsArr[0];
