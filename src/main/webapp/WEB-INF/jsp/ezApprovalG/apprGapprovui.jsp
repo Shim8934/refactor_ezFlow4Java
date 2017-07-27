@@ -139,6 +139,7 @@
 			var type = "ING";
 			var pGongRamDocID = "";
 			var approvalType = "DRAFT";
+			var signImageType = "${signImageType}";
 			
 		    window.onload = function () {
 		        if (allFlag == "2") {
