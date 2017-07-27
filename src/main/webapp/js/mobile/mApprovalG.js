@@ -3,6 +3,9 @@
  */
 
 $(document).ready(function() {
+	getApproveList("DO");
+	getApproveListCount("DO");
+
 	$.searchApprove = function() {
 		alert("Search!");
 	}
@@ -52,10 +55,10 @@ function searchApproveList() {
 			if (data.docList.length > 0) {
 				$.each(data.docList, function(key, value) {
 					list += "<li class='ui-first-child'>";
-					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=" + value.docID + "' >";					    		
+					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=" + value.docID + "' >";
 					list +=	"  		<h2 style='font-size:12px'>" + value.writerName + "</h2>";
 					list += "  		<p class='ui-li-aside'>" + value.startDate + "</p>";
-					list +=	"  		<p>" + value.docTitle + "</p>";						    	
+					list +=	"  		<p>" + value.docTitle + "</p>";
 					list += "  	</a>";
 					list += "</li>";
 				});
@@ -63,11 +66,76 @@ function searchApproveList() {
 				$("#apprList").html(list);
 			} else {
 				list += "<li class='ui-first-child'>";
-				list +=	"  	<p>결재할문서가 없습니다.</p>";						    	
+				list +=	"  	<p>결재할문서가 없습니다.</p>";
 				list += "</li>";
 				
 				$("#apprList").html(list);
 			}
+			
+			//리스트 카운트 업데이트
+			$("#listCount").text("(" + data.listCount + ")");
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+}
+
+function getApproveList(type) {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/mGetApproveList.do",
+		dataType : "json",
+		data : {
+			pType : type,
+			pSearchText : "",
+			pLastDate : ""
+		},
+		success : function(data) {
+			var list = "";
+			
+			//리스트 업데이트
+			if (data.approvalList.length > 0) {
+				$.each(data.approvalList, function(key, value) {
+					list += "<li class='ui-first-child'>";
+					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=" + value.docID + "' >";
+					list +=	"  		<h2 style='font-size:12px'>" + value.writerName + "</h2>";
+					list += "  		<p class='ui-li-aside'>" + value.startDate + "</p>";
+					list +=	"  		<p>" + value.docTitle + "</p>";
+					list += "  	</a>";
+					list += "</li>";
+				});
+				
+				$("#apprList").html(list);
+			} else {
+				list += "<li class='ui-first-child'>";
+				list +=	"  	<p>결재할문서가 없습니다.</p>";
+				list += "</li>";
+				
+				$("#apprList").html(list);
+			}
+			
+			//리스트 카운트 업데이트
+//			$("#listCount").text("(" + data.listCount + ")");
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
+}
+
+function getApproveListCount(type) {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/mGetApproveListCount.do",
+		dataType : "json",
+		data : {
+			pType : type,
+			pSearchText : ""
+		},
+		success : function(data) {
+			var list = "";
+			
 			
 			//리스트 카운트 업데이트
 			$("#listCount").text("(" + data.listCount + ")");

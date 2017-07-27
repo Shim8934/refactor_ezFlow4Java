@@ -11,20 +11,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.google.gson.Gson;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -45,7 +55,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
 public class MApprovalGController {
-	private static final Logger logger = LoggerFactory.getLogger(MApprovalGController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MApprovalGController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -71,50 +81,95 @@ public class MApprovalGController {
 	/**
 	 * 모바일 전자결재G 결재할문서 호출 Method
 	 */
-	@RequestMapping(value = "/mobile/ezApprovalG/doApproveList.do")
-	public String doApprovList(@CookieValue("loginCookie") String loginCookie, Model model, String pListType) throws Exception {
-		logger.debug("doApprovList started");
-		logger.debug("listType : " + pListType);
-		
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		
-		//임시로 박고 리스트타입으로 문서리스트 종류 구분 결재할,결재한,결재진행 등등 
-		pListType = "1";
-		
-		//결재할 문서 카운트
-		int listCount = MApprovalGService.getDoApproveListCount(userInfo, pListType, "");
-		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, pListType, "");
-		
-		model.addAttribute("listCount", listCount);
-		model.addAttribute("docList", approvalGDocInfoVOs);
-		
-		logger.debug("doApprovList ended"); 
+	@RequestMapping(value = "/mobile/ezApprovalG/mApproveList.do")
+	public String doApprovList() throws Exception {
+		LOGGER.debug("doApprovList started");
+		LOGGER.debug("doApprovList ended");
 		
 		return "mobile/ezApprovalG/mApprGdoApproveList";
 	}
 	
-	/**
-	 * 모바일 전자결재G 결재할문서 검색 표출 Method
-	 */
-	@RequestMapping(value = "/mobile/ezApprovalG/doSearchApproveList.do")
-	public String doSearchApproveList(@CookieValue("loginCookie") String loginCookie, Model model, String pSearchText, String pListType) throws Exception {
-		logger.debug("doSearchApproveList started");
-		logger.debug("searchText : " + pSearchText);
-		logger.debug("listType : " + pListType);
-
+	@RequestMapping(value = "/mobile/ezApprovalG/mGetApproveList.do")
+	public String mGetApproveList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pType, String pSearchText, String pLastDate) throws Exception {
+		LOGGER.debug("mGetApproveList started");
+		LOGGER.debug("listType : " + pType);
+		LOGGER.debug("searchText : " + pSearchText);
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/" + pType + "/list/users/" + userInfo.getId();
 		
-		//임시 결재할문서 타입
-		pListType = "1";
+		if (pLastDate == null || pLastDate.equals("")) {
+			pLastDate = commonUtil.getTodayUTCTime("");
+		}
 		
-		//결재할 문서 카운트
-		int listCount = MApprovalGService.getDoApproveListCount(userInfo, pListType, pSearchText);
-		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, pListType, pSearchText);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
 		
-		model.addAttribute("listCount", listCount);
-		model.addAttribute("docList", approvalGDocInfoVOs);
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("searchText", pSearchText)
+		        .queryParam("listSize", 20)
+				.queryParam("lastDate", pLastDate);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		String status = result.getBody().get("status").toString();
+		JSONArray approveList = new JSONArray();
+		
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			approveList = gson.fromJson(gson.toJson(result.getBody().get("data")), JSONArray.class);
+			
+			model.addAttribute("approvalList", approveList);
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+		
+		LOGGER.debug("mGetApproveList ended");
+		
+		return "json";
+	}
+	
+	@RequestMapping(value = "/mobile/ezApprovalG/mGetApproveListCount.do")
+	public String mGetApproveListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pType, String pSearchText) throws Exception {
+		LOGGER.debug("mGetApproveListCount started");
+		LOGGER.debug("listType : " + pType);
+		LOGGER.debug("searchText : " + pSearchText);
 
-		logger.debug("doSearchApproveList ended");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/" + pType + "/list-count/users/" + userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+		        .queryParam("searchText", pSearchText)
+		        .queryParam("listSize", 20);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		String status = result.getBody().get("status").toString();
+		
+		if (status.equals("ok")) {
+			int listCount = Integer.parseInt(result.getBody().get("data").toString());
+			
+			model.addAttribute("listCount", listCount);
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+		
+		LOGGER.debug("mGetApproveListCount ended");
 		
 		return "json";
 	}
@@ -124,9 +179,9 @@ public class MApprovalGController {
 	 */
 	@RequestMapping(value = "/mobile/ezApprovalG/doApprovalGDetail.do")
 	public String doApprovalGDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID, String pListType) throws Exception {
-		logger.debug("doApprovalGDetail started");
-		logger.debug("docID : " + pDocID);
-		logger.debug("listType : " + pListType);
+		LOGGER.debug("doApprovalGDetail started");
+		LOGGER.debug("docID : " + pDocID);
+		LOGGER.debug("listType : " + pListType);
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
@@ -151,16 +206,16 @@ public class MApprovalGController {
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("docID", pDocID);
 
-		logger.debug("doApprovalGDetail ended");
+		LOGGER.debug("doApprovalGDetail ended");
 		
 		return "mobile/ezApprovalG/mApprGdoApproveDetail";
 	}
 	
 	@RequestMapping(value = "/mobile/ezApprovalG/getOpinionInfo.do")
 	public String getOpinionInfo(@CookieValue("loginCookie") String loginCookie, Model model, String pDocID, String pListType) throws Exception {
-		logger.debug("getOpinionInfo started");
-		logger.debug("docID : " + pDocID);
-		logger.debug("listType : " + pListType);
+		LOGGER.debug("getOpinionInfo started");
+		LOGGER.debug("docID : " + pDocID);
+		LOGGER.debug("listType : " + pListType);
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 
@@ -169,28 +224,28 @@ public class MApprovalGController {
 		model.addAttribute("opinionList", approvalGOpinionInfoVOs);
 		model.addAttribute("userID", userInfo.getId());
 		
-		logger.debug("getOpinionInfo ended");
+		LOGGER.debug("getOpinionInfo ended");
 		
 		return "json";
 	}
 	
 	@RequestMapping(value = "/mobile/ezApprovalG/saveOpinionInfo.do")
 	public void saveOpinionInfo(@CookieValue("loginCookie") String loginCookie, String pDocID, String pContent, String pOpinionGB, HttpServletResponse response) throws Exception {
-		logger.debug("saveOpinionInfo started");
-		logger.debug("docID : " + pDocID);
-		logger.debug("content : " + pContent);
-		logger.debug("opinionGB : " + pOpinionGB);
+		LOGGER.debug("saveOpinionInfo started");
+		LOGGER.debug("docID : " + pDocID);
+		LOGGER.debug("content : " + pContent);
+		LOGGER.debug("opinionGB : " + pOpinionGB);
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		MApprovalGService.saveOpinionInfo(pDocID, pContent, pOpinionGB, userInfo);
 
-		logger.debug("saveOpinionInfo ended");
+		LOGGER.debug("saveOpinionInfo ended");
 	}
 	
 	@RequestMapping(value = "/mobile/ezApprovalG/getTimeLineList.do")
 	public String getTimeLineList(@CookieValue("loginCookie") String loginCookie, HttpSession session, Model model, String pTempFlag) throws Exception {
-		logger.debug("getTimeLineList started");
+		LOGGER.debug("getTimeLineList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -203,7 +258,7 @@ public class MApprovalGController {
 			sessionDate = (String) session.getAttribute("timeLineStartDate");
 		}
 		
-		logger.debug("sessionDate : " + sessionDate);
+		LOGGER.debug("sessionDate : " + sessionDate);
 		
 		List<MApprovalGTLVO> mApprovalGTLVOs = MApprovalGService.getTimeLineList(userInfo, sessionDate);
 		
@@ -240,7 +295,7 @@ public class MApprovalGController {
 
 		model.addAttribute("timeLineList", mApprovalGTLVOs);
 		
-		logger.debug("getTimeLineList ended");
+		LOGGER.debug("getTimeLineList ended");
 		
 		return "json";
 	}

@@ -24,6 +24,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -51,25 +52,26 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	private EzCommonService ezCommonService;
 	
 	@Override
-	public List<MApprovalGDocInfoVO> getDoApproveList(LoginVO userInfo, String pListType, String pSearchText) throws Exception {
+	public List<MApprovalGDocInfoVO> getDoApproveList(MCommonVO userInfo, String type, String searchText, String listSize, String lastDate) throws Exception {
 		logger.debug("getDoApproveList started");
 
-		String userIDS = "'" + userInfo.getId() + "'";
-		String proxyOption = "";
+		String userIDS = "'" + userInfo.getUserId() + "'";
+		String proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
 		
-		if (pListType.equals("1")) {
-			proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-			if (proxyOption.equals("1")) {
-				userIDS = ezApprovalGService.getProxyUser(userInfo.getId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-			}
+		if (proxyOption.equals("1")) {
+			userIDS = ezApprovalGService.getProxyUser(userInfo.getUserId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffSet());
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
 		map.put("tenantID", userInfo.getTenantId());
-		map.put("companyID", userInfo.getCompanyID());
-		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
-		map.put("searchText", pSearchText);
+		map.put("companyID", userInfo.getCompanyId());
+		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffSet()));
+		map.put("searchText", searchText);
+		map.put("listSize", listSize);
+		map.put("lastDate", lastDate);
+		map.put("type", type);
+		map.put("userId", userInfo.getUserId());
 		
 		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGDAO.getDoApproveList(map);
 
@@ -79,23 +81,23 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public int getDoApproveListCount(LoginVO userInfo, String pListType, String pSearchText) throws Exception {
+	public int getDoApproveListCount(MCommonVO userInfo, String pListType, String pSearchText) throws Exception {
 		logger.debug("getDoApproveListCount started");
 
-		String userIDS = "'" + userInfo.getId() + "'";
+		String userIDS = "'" + userInfo.getUserId() + "'";
 		String proxyOption = "";
 		
-		if (pListType.equals("1")) {
-			proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		if (pListType.equals("DO")) {
+			proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
 			if (proxyOption.equals("1")) {
-				userIDS = ezApprovalGService.getProxyUser(userInfo.getId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+				userIDS = ezApprovalGService.getProxyUser(userInfo.getUserId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffSet());
 			}
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", userIDS);
 		map.put("tenantID", userInfo.getTenantId());
-		map.put("companyID", userInfo.getCompanyID());
+		map.put("companyID", userInfo.getCompanyId());
 		map.put("searchText", pSearchText);
 
 		int listCount = MApprovalGDAO.getDoApproveListCount(map);

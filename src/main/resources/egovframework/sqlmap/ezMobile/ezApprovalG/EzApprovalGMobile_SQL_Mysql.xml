@@ -8,31 +8,146 @@
 	<typeAlias  alias="MApprovalGOpinionInfoVO" 			type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
 	
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO">
-		<![CDATA[
-			SELECT 
-				DOCID,
-				DOCTITLE,
-				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-				WRITERNAME,
-				WRITERDEPTNAME
-			FROM 
-				VAPRDOINGDOCLIST 
-   			WHERE
-   				TENANT_ID = #tenantID#
-   			AND
-   				COMPANYID = #companyID#
-   			AND 
-   				APRMEMBERID IN ($id$) 
-   			AND 
-   				APRTYPE <> '015' 
-		]]>
-			<isNotEmpty property="searchText" prepend="AND">
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
-			</isNotEmpty>
-			ORDER BY 
-				STARTDATE DESC
+		<isEqual property="type" compareValue="DO">
+			<![CDATA[
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
+					WRITERNAME,
+					WRITERDEPTNAME
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015' 
+			]]>
+				<isNotEmpty property="searchText" prepend="AND">
+					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+						OR 
+					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+				</isNotEmpty>
+				ORDER BY 
+					STARTDATE DESC
+				LIMIT
+					#listSize#
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
+					WRITERNAME,
+					WRITERDEPTNAME
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND 
+		         	APRMEMBERSN = 1 
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND 
+		         	DocState <> '017'
+			]]>
+				<isNotEmpty property="searchText" prepend="AND">
+					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+						OR 
+					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+				</isNotEmpty>
+				ORDER BY 
+					STARTDATE DESC
+				LIMIT
+					#listSize#
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
+					WRITERNAME,
+					WRITERDEPTNAME
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND
+	   				STARTDATE < #lastDate#
+	   			AND 
+		         	APRMEMBERSN = 1 
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND 
+		         	DocState <> '017'
+			]]>
+				<isNotEmpty property="searchText" prepend="AND">
+					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+						OR 
+					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+				</isNotEmpty>
+				ORDER BY 
+					STARTDATE DESC
+				LIMIT
+					#listSize#
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				SELECT 
+					DOCID,
+					DOCTITLE,
+					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
+					WRITERNAME,
+					WRITERDEPTNAME
+				FROM 
+					TBL_ENDAPRDOCINFO A
+				INNER JOIN
+					TBL_EXPENDAPRDOCINFO B
+				ON 
+			   		A.DOCID = B.DOCID
+			   	AND
+			   		A.TENANT_ID = B.TENANT_ID
+			   	AND
+			   		A.COMPANYID = B.COMPANYID
+	   			WHERE
+	   				A.TENANT_ID = #tenantID#
+	   			AND
+	   				A.COMPANYID = #companyID#
+	   			AND
+	   				B.DELFLAG IS NULL
+	   			AND
+	   				A.ENDDATE < #lastDate#
+	   			AND
+	   				APRMEMBERID = #userId# 
+			]]>
+				<isNotEmpty property="searchText" prepend="AND">
+					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+						OR 
+					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+				</isNotEmpty>
+				ORDER BY 
+					ENDDATE DESC
+				LIMIT
+					#listSize#
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer">
