@@ -38,6 +38,7 @@
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
+			var type = "${type}";
 			var attachList = "";
 
 			$(document).ready(function() {
@@ -443,7 +444,10 @@
 		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
 	                        
-               	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
+	                        <c:if test="${type != 'new'}">
+	                        	<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
+	                        </c:if>
+               	    		
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>
                 	</div>
