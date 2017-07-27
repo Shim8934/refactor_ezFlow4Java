@@ -158,7 +158,6 @@
 					async : false,
 					url : url,
 					data : {
-						boardType   : "M", 
 						pageNum 	 : CurPage,
 						orderCell 	 : OrderCell, 
 						orderOption : OrderOption,
