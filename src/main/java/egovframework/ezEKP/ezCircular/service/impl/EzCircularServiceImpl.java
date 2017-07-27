@@ -137,8 +137,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("limit", startRow-1);
@@ -671,8 +671,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -870,8 +870,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("limit", startRow-1);
@@ -900,8 +900,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -926,8 +926,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -952,8 +952,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("limit", startRow-1);
@@ -982,8 +982,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -1008,8 +1008,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchValue", searchValue);
-		map.put("searchType", searchType);
+		map.put("searchValue", searchValue.trim());
+		map.put("searchType", searchType.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("limit", startRow-1);
@@ -1098,8 +1098,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchType", searchType);
-		map.put("searchValue", searchValue);
+		map.put("searchType", searchType.trim());
+		map.put("searchValue", searchValue.trim());
 		map.put("tenantID", tenantID);
 		
 		int result = ezCircularDAO.getCircularTDListCount(map);
@@ -1116,8 +1116,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberID", memberID);
-		map.put("searchType", searchType);
-		map.put("searchValue", searchValue);
+		map.put("searchType", searchType.trim());
+		map.put("searchValue", searchValue.trim());
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
 		map.put("tenantID", tenantID);
@@ -1183,8 +1183,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("folderID", folderID);
 		map.put("memberID", memberID);
-		map.put("searchType", searchType);
-		map.put("searchValue", searchValue);
+		map.put("searchType", searchType.trim());
+		map.put("searchValue", searchValue.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
@@ -1212,8 +1212,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("memberID", memberID);
 		map.put("limit", startRow-1);
 		map.put("rowCount", endRow-(startRow-1));
-		map.put("searchType", searchType);
-		map.put("searchValue", searchValue);
+		map.put("searchType", searchType.trim());
+		map.put("searchValue", searchValue.trim());
 		map.put("sdate", sdate);
 		map.put("edate", edate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));

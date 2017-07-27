@@ -442,7 +442,7 @@
 		        		</select>
 		        		<select name="search_type" id="search_type" style="width: 65px; height: 20px; vertical-align: middle"> 
 		          			<option value="subject"><spring:message code='ezCircular.t32' /></option> 
-		          			<option value="content"><spring:message code='ezCircular.t166' /></option>
+		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezCircular.t85' /></span></a>

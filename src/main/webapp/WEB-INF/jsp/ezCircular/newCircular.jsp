@@ -479,13 +479,18 @@
 	                    alert("<spring:message code='ezCircular.t90'/>");
 	                    return;
 	                }
-	            }
-	            else if (type == "quick") {
+	            } else if (type == "quick") {
+	            	if ($.trim($("#txt_keyword").val()) == "") {
+			        	alert("<spring:message code='ezCircular.t189' />");
+			            return;
+			        }
+
 	                if (document.getElementById("txt_keyword").value == "") {
 	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	            }
+
 	            CurPage = "1";
 	            getBoardList();
 	        }
@@ -530,7 +535,7 @@
 	    <h1><spring:message code='ezCircular.t2'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
-				<input name="searchType" id="Radio2" type="radio" value="content" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/>
+				<input name="searchType" id="Radio2" type="radio" value="writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/>
 	        	&nbsp;
 				<input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				<a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
