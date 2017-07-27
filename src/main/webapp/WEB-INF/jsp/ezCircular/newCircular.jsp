@@ -77,6 +77,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var strMemberListInfo = "";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	
@@ -157,7 +158,6 @@
 					async : false,
 					url : url,
 					data : {
-						boardType   : "M", 
 						pageNum 	 : CurPage,
 						orderCell 	 : OrderCell, 
 						orderOption : OrderOption,

@@ -78,7 +78,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
-	        var strNameInfo = "";
+	        var strMemberListInfo = "";
 	        var folderId = "${folderId}";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
@@ -293,10 +293,10 @@
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
 		        	strListInfo += $(obj).closest("tr").attr("circularID") + ";";
-		            strNameInfo += $(obj).closest("td").closest("tr").attr("memberid") + ";";
+		        	strMemberListInfo += $(obj).closest("td").closest("tr").attr("memberid") + ";";
 		        } else {
 		        	strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID") + ";", "");
-		            strNameInfo = ReplaceText(strNameInfo, $(obj).closest("td").closest("tr").attr("memberid") + ";", "");
+		        	strMemberListInfo = ReplaceText(strMemberListInfo, $(obj).closest("td").closest("tr").attr("memberid") + ";", "");
 		        }
 
 		        listEventCheckbox = true;
