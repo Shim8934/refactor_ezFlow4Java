@@ -118,14 +118,21 @@
 					
 					return;
 				}
-				
+
 				if ($("#receiverlist").text() == "") {
 	    			alert("<spring:message code='ezCircular.t53'/>")
 	    			doubleSubmitFlag = false;
 	    			
 	    			return;
 	    		}
-				
+
+				if ($.trim($("#title").val()) == "") {
+		        	alert("<spring:message code='ezCircular.t190' />");
+		        	doubleSubmitFlag = false;
+
+		        	return;
+		        }
+
 				//의견
 				$(':checkbox[id=option1]:checked').each(function(){
 					option = 1;	
@@ -197,6 +204,13 @@
 					
 					return;
 				}
+
+				if ($.trim($("#title").val()) == "") {
+		        	alert("<spring:message code='ezCircular.t190' />");
+		        	doubleSubmitFlag = false;
+
+		        	return;
+		        }
 
 	    		//임시저장
 	    		if (confirm("<spring:message code='ezCircular.t72'/>")) {
