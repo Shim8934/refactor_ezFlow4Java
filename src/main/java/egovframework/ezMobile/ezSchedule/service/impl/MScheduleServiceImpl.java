@@ -19,15 +19,18 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezMobile.ezSchedule.dao.MScheduleDAO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
+import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MScheduleService")
 public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
 		
-	/*@Resource(name="MScheduleDAO")
-	private MScheduleDAO mScheduleDAO;*/
+	@Resource(name="MScheduleDAO")
+	private MScheduleDAO mScheduleDAO;
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
@@ -219,16 +222,23 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public void deleteSchedule(String scheduleId, String dateType, int tenantId) throws Exception {
+	public void deleteSchedule(String scheduleId, int tenantId) throws Exception {
 		// TODO Auto-generated method stub
-		ezScheduleService.deleteSchedule(scheduleId, tenantId);
-		/*ezScheduleService.deleteResource(scheduleId, tenantId);*/
+		ezScheduleService.deleteSchedule(scheduleId, tenantId);				
+		ezScheduleService.deleteScheduleRepe(scheduleId, tenantId);
 		
-		if (dateType.equals("3")) {
-			ezScheduleService.deleteScheduleRepe(scheduleId, tenantId);
-		}
+		/*ezScheduleService.deleteResource(scheduleId, tenantId);*/		
 	}
-	
+
+	@Override
+	public MScheduleInfoVO scheduleInfo(String scheduleId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);		
+		map.put("v_TENANTID", tenantId);
+		
+		return mScheduleDAO.scheduleInfo(map);
+	}
 	
 }
 

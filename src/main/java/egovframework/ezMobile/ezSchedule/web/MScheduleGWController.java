@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
+import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -205,14 +206,14 @@ System.out.println(name);
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 카운트 (월간,주간,일정검색)
 	 */
-	@RequestMapping(value="/ezschedule/list-count/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	/*@RequestMapping(value="/ezschedule/list-count/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public int mScheduleListCount() throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] started.");
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list-count/users/{userId}] ended.");
 		
 		return 0;
-	}
+	}*/
 	
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 상세데이터
@@ -267,6 +268,9 @@ System.out.println(name);
 		
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
+						
+			jsonParam.put("creatorName", info.getUserName());
+			jsonParam.put("creatorName2", info.getUserName2());
 			
 			String startDate = jsonParam.get("startDate").toString();
 			String endDate = jsonParam.get("endDate").toString();
@@ -307,7 +311,7 @@ System.out.println(name);
 	 * 모바일 G/W 일정관리 [GET] 일정 수정
 	 */
 	@RequestMapping(value="/ezschedule/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void mScheduleUpdate(@PathVariable String scheduleId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
+	public JSONObject mScheduleUpdate(@PathVariable String scheduleId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -316,10 +320,13 @@ System.out.println(name);
 		
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
+
+			jsonParam.put("creatorName", info.getUserName());
+			jsonParam.put("creatorName2", info.getUserName2());
 			
 			String startDate = jsonParam.get("startDate").toString();
 			String endDate = jsonParam.get("endDate").toString();
-			
+				
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	    	Calendar cal = Calendar.getInstance();
 	    	cal.setTime(sdf.parse(endDate));
@@ -328,15 +335,16 @@ System.out.println(name);
 	    		cal.add(Calendar.MINUTE, -1);        		
 	    		endDate = sdf.format(cal.getTime());
 	    	}
-	
+
 	    	startDate = sdf.format(sdf.parse(startDate));
 	    	endDate = sdf.format(sdf.parse(endDate));
-	    	
+
+	    	MScheduleInfoVO scheduleInfo = mScheduleService.scheduleInfo(scheduleId, info.getTenantId());
+
 	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
-	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);	        
-	    	String defaultPath = commonUtil.getRealPath(request) + jsonParam.get("contentPath").toString();
-	        	        
-	       /* int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId());*/
+	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+	    	String defaultPath = commonUtil.getRealPath(request) + scheduleInfo.getContentPath();
+    	
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId());
 	        
 	        result.put("status", "ok");
@@ -348,7 +356,9 @@ System.out.println(name);
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");		
+		LOGGER.debug("MOBILE G/W SCHEDULE [PUT /ezschedule/schedules/{scheduleId}] ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -362,11 +372,9 @@ System.out.println(name);
 						
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-			
-			String dateType = request.getParameter("dateType");
-			
-			mScheduleService.deleteSchedule(scheduleId, dateType, info.getTenantId());
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("creatorId"));
+						
+			mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
