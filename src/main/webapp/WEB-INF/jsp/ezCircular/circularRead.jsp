@@ -574,7 +574,7 @@
                                     		<c:if test="${item.fileType == 'ecm'}">
                                     			<c:set var="imagePath" value="/images/ecm.png" />
                                     		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>
                                     	</div>
                                     </c:forEach>
                                 </div>
