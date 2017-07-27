@@ -1,11 +1,15 @@
 package egovframework.ezMobile.ezSchedule.service;
 
-import java.util.List;
-
-import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
+import org.json.simple.JSONObject;
 
 public interface MScheduleService {
+
+	int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception;
+
+	void deleteSchedule(String scheduleId, String dateType, int tenantId) throws Exception;
+
+	void updateSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception;
 	
-	/*public List<MScheduleInfoVO> scheduleList(String parentID, String companyID, String treeType, int tenantID);*/
+	
 	
 }

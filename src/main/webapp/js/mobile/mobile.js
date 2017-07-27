@@ -1,4 +1,7 @@
-﻿$(document).on('pageshow', '#login', function(){				
+﻿document.write("<script type='text/javascript' src='/js/rsa/pidcrypt_util.js'></script>");
+document.write("<script type='text/javascript' src='/js/XmlHttpRequest.js'></script>");
+
+$(document).on('pageshow', '#login', function(){
 	$("#uid").val("");
 	$("#upw").val("");
 			
@@ -355,6 +358,89 @@ function mScheduleList() {
 		data : {
 			startDate : "2017-07-25",
 			endDate : "2017-07-25"
+		}
+	});
+}
+
+function mScheduleInsert() {
+	var Doc_ContentHtml = document.createElement("DIV");
+	var strBody = "<p>안녕하세요777</p>";
+    Doc_ContentHtml.innerHTML = strBody;
+    strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,		    		
+		url : "/mobile/ezSchedule/mScheduleInsert.do",
+		data : {
+			ownerId : "test",
+			ownerName : "사장님",
+			ownerName2 : "사장님",
+			creatorId : "test",
+			creatorName : "사장님",
+			creatorName2 : "sa",
+			scheduleType : "1",
+			importance : "2",
+			isPublic : "N",
+			dateType : "2",
+			startDate : "2017-07-24 15:00:00",
+			endDate : "2017-07-25 14:59:00",			
+			title : "안녕하세요7",
+			location : "위치7",
+			content : pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(strBody), 64)
+		},
+		success: function(text){
+			alert("schedule Insert complete!");
+		}
+	});
+}
+
+function mScheduleUpdate() {
+	var Doc_ContentHtml = document.createElement("DIV");
+	var strBody = "<p>안녕하세요777</p><p>안녕하세요777</p><p>안녕하세요777</p><p>안녕하세요777</p><p>안녕하세요777</p>";
+	Doc_ContentHtml.innerHTML = strBody;
+	strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,		    		
+		url : "/mobile/ezSchedule/mScheduleUpdate.do",
+		data : {
+			scheduleId : "6008",
+			creatorId : "test",
+			creatorName : "사장님",
+			creatorName2 : "sa",
+			importance : "2",
+			isPublic : "N",
+			dateType : "2",
+			startDate : "2017-07-24 15:00:00",
+			endDate : "2017-07-25 14:59:00",
+			title : "안녕하세요7",
+			location : "위치7",
+			contentPath : "",
+			content : pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(strBody), 64)
+		},
+		success: function(text){
+			alert("schedule Update complete!");
+		}
+	});
+}
+
+function mScheduleDelete() {
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,		    		
+		url : "/mobile/ezSchedule/mScheduleDelete.do",
+		data : {
+			scheduleId : "6017",
+			dateType : "2",
+			userId : 'test'	
+		},
+		success: function(text){
+			alert("schedule delete complete!");
 		}
 	});
 }
