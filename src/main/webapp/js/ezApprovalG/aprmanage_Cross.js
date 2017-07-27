@@ -1469,8 +1469,12 @@ function openergetDocInfo() {
         else
             getDocList();
 
-
-        parent.frames["left"].getAprCount();
+        try {
+        	parent.frames["left"].getAprCount();
+		} catch (e) {
+			// LEFT메뉴 없는 연동일시 넘어가기
+			// TODO: handle exception
+		}
     } catch (e) {
         alert("openergetDocInfo :: " + e.description);
     }
@@ -1501,34 +1505,39 @@ function makePageSelPage() {
 
     document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 
-    if (ViewLeftCount == "YES") {
-        switch (pListTypeValue) {
-            case "1":
-                parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "2":
-                parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "3":
-                parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "4":
-                parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "6":
-                parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "7":
-                parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "21":
-                parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "99":
-                parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-        }
-    }
+    try {
+    	if (ViewLeftCount == "YES") {
+    		switch (pListTypeValue) {
+    		case "1":
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "2":
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "3":
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "4":
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "6":
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "7":
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "21":
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "99":
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		}
+    	}
+	} catch (e) {
+		// LEFT메뉴 없는 연동일시 넘어가기
+		// TODO: handle exception
+	}
 
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
