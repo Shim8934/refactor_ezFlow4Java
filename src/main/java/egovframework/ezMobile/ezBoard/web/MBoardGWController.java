@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -53,37 +57,53 @@ public class MBoardGWController {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+	@Resource(name="MOptionService")
+	private MOptionService mOptionService;
+	
 	/**
 	 * 모바일 G/W 게시판 [GET] 게시판 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public List<MBoardItemVO> getBoardItemList(@PathVariable String type, @PathVariable String boardId, @RequestParam(value="loginCookie", required=false) String loginCookie) throws Exception {		
+	public Object getBoardItemList(@PathVariable String type, @PathVariable String boardId, @RequestParam(value="userID", required=false) String userID, HttpServletRequest request) {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-System.out.println(type);
-System.out.println(boardId);
-		MBoardInfoVO boardInfo = new MBoardInfoVO();
-		boardInfo.setBoardID(boardId);
-		boardInfo.setGuBun("0");
+		JSONObject result = new JSONObject();
 		
-		List<MBoardItemVO> list = null;
-		//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
-		
-		//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
-		
-		if (boardId != null && boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-			//새게시물 가져오기 리스트
-			list = mBoardService.getNewBoarditemList(boardInfo, userInfo);
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			System.out.println(type);
+			System.out.println(boardId);
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			boardInfo.setBoardID(boardId);
+			boardInfo.setGuBun("0");
+			
+			List<MBoardItemVO> list = null;
+			//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
+			
+			//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
+			
+			if (boardId != null && boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+				//새게시물 가져오기 리스트
+				list = mBoardService.getNewBoarditemList(boardInfo, info, userID);
+			}
+			
+			if (boardId != null && !boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+				//일반게시판 가져오기 리스트
+				list = mBoardService.getBoardItemList(boardInfo, info, userID);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", list);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
 		}
-		
-		if (boardId != null && !boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-			//일반게시판 가져오기 리스트
-			list = mBoardService.getBoardItemList(boardInfo, userInfo);
-		}
-		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] ended.");
-		return list;
+		return result;
 	}
 	
 	/**

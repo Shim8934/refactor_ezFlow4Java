@@ -538,6 +538,8 @@
                       S.USERID = #userID# 
                      AND 
                       S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+              ORDER BY
+                  A.writedate DESC  
               LIMIT #limit#, #rowCount#
       ]]>
   </select>
