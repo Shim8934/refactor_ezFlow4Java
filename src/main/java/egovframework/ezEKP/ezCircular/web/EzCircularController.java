@@ -662,7 +662,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String orderOption1 = "";
     	for (CircularListHeaderVO vo : headerList) {
-		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
+		    if (!orderCell.equals(egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale())) && orderCell.equals(vo.getName())) {
 		        if (orderOption.equals("")) {
 		            orderOption1 = vo.getColName() + " ";
 		        } else {

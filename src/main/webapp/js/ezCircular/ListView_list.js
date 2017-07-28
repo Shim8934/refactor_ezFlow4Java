@@ -471,7 +471,6 @@ function ListView() {
             	strStyle += "overflow: hidden; white-space: nowrap; text-overflow: ellipsis;";
                 
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
-                
 
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_" + i;
