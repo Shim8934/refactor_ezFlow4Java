@@ -3,22 +3,13 @@ package egovframework.ezEKP.ezSystem.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.hyperic.sigar.CpuPerc;
-import org.hyperic.sigar.FileSystem;
-import org.hyperic.sigar.FileSystemUsage;
-import org.hyperic.sigar.Mem;
-import org.hyperic.sigar.Sigar;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import egovframework.ezEKP.ezSystem.service.impl.EzSystemAdminServiceImpl;
-import egovframework.ezEKP.ezSystem.vo.FileSysInfoVO;
-import egovframework.ezEKP.ezSystem.vo.SysMonitorVO;
 
 /** 
  * @Description [Utility] 시스템 모니터링 관련 유틸
@@ -30,96 +21,198 @@ import egovframework.ezEKP.ezSystem.vo.SysMonitorVO;
 public class EzSystemUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzSystemAdminServiceImpl.class);
-	/**
-	 * CPU 관련 정보 
-	 **/
-	public static SysMonitorVO getCpuInfo(int tenantID) throws Exception {
-		
-		logger.debug("getCpuInfo started. : " + tenantID);
 	
-		SysMonitorVO sysMonitorVo = new SysMonitorVO();
-		Sigar sigar = new Sigar();
-		CpuPerc cpu = sigar.getCpuPerc();
+	/**
+	 * 서버 및 OS 정보 
+	 **/
+	@SuppressWarnings("unchecked")
+	public static String getSysInfo(int tenantID) throws Exception {
 		
-		sysMonitorVo.setUserUsedCpu(cpu.getUser() * 100);     // 유저 사용량
-		sysMonitorVo.setSysUsedCpu(cpu.getSys() * 100);       // 시스템 사용량
-		sysMonitorVo.setFreeCpu(cpu.getIdle() * 100);         // 미사용량
-		sysMonitorVo.setTotalUsedCpu(cpu.getCombined() * 100);// 총사용량
+		logger.debug("getSysInfo started. : " + tenantID);
 		
-		logger.debug("getUserUsedCpu : " + sysMonitorVo.getUserUsedCpu());
-		logger.debug("getSysUsedCpu : " + sysMonitorVo.getSysUsedCpu());
-		logger.debug("getFreeCpu : " + sysMonitorVo.getFreeCpu());
-		logger.debug("getTotalUsedCpu : " + sysMonitorVo.getTotalUsedCpu());
-
-		logger.debug("getCpuInfo ended.");
+		String command = "uname";
+		//String filePath = "D:/test/uname.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
+		ProcessBuilder builder = new ProcessBuilder(command, "-nro");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		JSONObject jObj = new JSONObject();
+		JSONArray jArr = new JSONArray();
 		
-		return sysMonitorVo;
+		while (true) {
+			String line = br.readLine();
+			
+			if (line == null) {
+				break;
+			} else {
+				JSONObject tmpObj = new JSONObject();
+				String[] tmp = line.trim().split("\\s+");
+				
+				tmpObj.put("hostname", tmp[0]);
+				tmpObj.put("version", tmp[1]);
+				tmpObj.put("os", tmp[2]);
+				
+				jArr.add(tmpObj);
+			}
+		}
+		br.close();
+		
+		jObj.put("getSysInfo", jArr);		
+		
+		logger.debug(jObj.toString());	
+		
+		logger.debug("getSysInfo ended");
+		
+		return jObj.toString();
 	}
 	
 	/**
+	 * CPU 관련 정보 
+	 **/
+	@SuppressWarnings("unchecked")
+	public static String getCpuInfo(int tenantID) throws Exception {
+		
+		logger.debug("getCpuInfo started. : " + tenantID);
+		
+		String command = "iostat";
+		//String filePath = "D:/test/iostat.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		JSONObject jObj = new JSONObject();
+		JSONArray jArr = new JSONArray();
+		int cnt = 0;
+
+		while (true) {
+			String line = br.readLine();
+			logger.debug("br.readLine : " + line);
+			if (line == null) {
+				break;
+			} else if (cnt == 9) {                          // 4번째 줄만 출력
+				JSONObject tmpObj = new JSONObject();
+				String[] tmp = line.trim().split("\\s+");
+				double usedPer = Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[2]);
+				logger.debug("===== CPU log start =====");
+				logger.debug("user : " + Double.parseDouble(tmp[0]));
+				logger.debug("user : " + tmp[0]);
+				logger.debug("system : " + Double.parseDouble(tmp[2]));
+				logger.debug("system : " + tmp[2]);
+				logger.debug("===== CPU log end =====");
+				tmpObj.put("user", tmp[0]);
+				tmpObj.put("system", tmp[2]);
+				tmpObj.put("iowait", tmp[3]);
+				tmpObj.put("idle", tmp[5]);
+				tmpObj.put("totalUsedPer", usedPer);        // 총사용량(%)
+				
+				jArr.add(tmpObj);
+			}
+			cnt ++;
+		}
+		br.close();
+		
+		jObj.put("getCpuInfo", jArr);		
+		
+		logger.debug(jObj.toString());
+		logger.debug("getCpuInfo ended.");
+		
+		return jObj.toString();
+	}	
+
+	/**
 	 * 메모리 관련 정보
-	 * */
-	public static SysMonitorVO getMemoryInfo(int tenantID) throws Exception {
+	 * */	
+	@SuppressWarnings("unchecked")
+	public static String getMemoryInfo(int tenantID) throws Exception {
 		
 		logger.debug("getMemoryInfo started. : " + tenantID);
 		
-		SysMonitorVO sysMonitorVo = new SysMonitorVO();
-		Sigar sigar = new Sigar();
-		Mem mem = sigar.getMem();
+		String command = "cat";
+		//String filePath = "D:/test/meminfo.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ProcessBuilder builder = new ProcessBuilder(command, "/proc/meminfo");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		JSONObject jObj = new JSONObject();
+		JSONArray jArr = new JSONArray();
+		int cnt = 0;
+		String result = "";
+
+		while (true) {
+			String line = br.readLine();
 		
-		sysMonitorVo.setTotalMemory(mem.getTotal());                    // 전체 메모리
-		sysMonitorVo.setUsedMemory(mem.getActualUsed());                // 사용중인 메모리
-		sysMonitorVo.setUsedMemPer(mem.getUsedPercent());               // 사용중인 메모리(%)
-		sysMonitorVo.setFreeMemory(mem.getActualFree());                // 미사용중인 메모리		
-		sysMonitorVo.setFreeMemPer(mem.getFreePercent());               // 미사용중인 메모리(%)
+			if (line == null) {
+				break;
+			} else if (cnt < 5) {
+				JSONObject tmpObj = new JSONObject();
+				String[] tmp = line.trim().split("\\s+");
+				
+				tmpObj.put(tmp[0].toLowerCase().replaceAll(":", ""), tmp[1]);
+			
+				jArr.add(tmpObj);
+			}
+			cnt ++;
+		}
+
+		br.close();
 		
-		logger.debug("getTotalMemory : " + sysMonitorVo.getTotalMemory());
-		logger.debug("getUsedMemory : " + sysMonitorVo.getUsedMemory());
-		logger.debug("getUsedMemory : " + sysMonitorVo.getUsedMemory());
-		logger.debug("getFreeMemory : " + sysMonitorVo.getFreeMemory());
-		logger.debug("getFreeMemPer : " + sysMonitorVo.getFreeMemPer());		
+		jObj.put("getMemoryInfo", jArr);	
+		result = jObj.toString().replaceAll("\\},\\{", ",");
 		
+		logger.debug(result);
 		logger.debug("getMemoryInfo ended.");
 		
-		return sysMonitorVo;
+		return result;
 	}
 	
 	/**
 	 * 파일 시스템 정보 관련
 	 * */
-	public static List<FileSysInfoVO> getFileSysInfo(int tenantID) throws Exception {
+	@SuppressWarnings("unchecked")
+	public static String getFileSysInfo(int tenantID) throws Exception {
 		
-		logger.debug("getFileSysInfo started. tenantID : " + tenantID);
+		logger.debug("getFileSysInfo started. : " + tenantID);
+		
+		String command = "df";
+		//String filePath = "D:/test/filesys.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ProcessBuilder builder = new ProcessBuilder(command, "-h");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		JSONObject jObj = new JSONObject();
+		JSONArray jArr = new JSONArray();
+		int cnt = 0;
 
-		Sigar sigar = new Sigar();
-		FileSystem[] fslist = sigar.getFileSystemList();
-		
-		List<FileSysInfoVO> list = new ArrayList<FileSysInfoVO>();		
-		
-		for (int i = 0; i < fslist.length; i++) {
-			FileSysInfoVO fileSysInfoVO = new FileSysInfoVO();
-			FileSystem fs = fslist[i];
-			FileSystemUsage usage = sigar.getFileSystemUsage(fs.getDirName());			
+		while (true) {
+			String line = br.readLine();
 			
-			fileSysInfoVO.setDiskName(fs.getDevName());                    // 파일시스템 이름
-			fileSysInfoVO.setTotalVolume(usage.getTotal());                // 총 용량
-			fileSysInfoVO.setUsedVolume(usage.getUsed());                  // 사용중인 용량
-			fileSysInfoVO.setFreeVolume(usage.getFree());                  // 남은 용량
-			fileSysInfoVO.setAvailVolume(usage.getAvail());                // 사용가능 용량
-			fileSysInfoVO.setUsedVolumePer(usage.getUsePercent() * 100);   // 사용중인 용량(%)
-			
-			logger.debug("getDiskName : " + fileSysInfoVO.getDiskName());
-			logger.debug("getTotalVolume : " + fileSysInfoVO.getTotalVolume());
-			logger.debug("getUsedVolume : " + fileSysInfoVO.getUsedVolume());
-			logger.debug("getUsedVolumePer : " + fileSysInfoVO.getUsedVolumePer());
-			
-			list.add(fileSysInfoVO);
+			if (line == null){
+				break;
+			} else if (cnt > 0){
+				JSONObject tmpObj = new JSONObject();
+				String[] tmp = line.trim().split("\\s+");
+				
+				if (tmp[0].contains("/dev")){
+					tmpObj.put("diskName", tmp[0]);
+					tmpObj.put("total", tmp[1]);
+					tmpObj.put("used", tmp[2]);
+					tmpObj.put("avail", tmp[3]);
+					tmpObj.put("usedPer", tmp[4]);
+					
+					jArr.add(tmpObj);
+				}
+			}
+			cnt ++;
 		}
+		br.close();
 		
+		jObj.put("getFileSysInfo", jArr);	
+		
+		logger.debug(jObj.toString());
 		logger.debug("getFileSysInfo ended.");
 		
-		return list;		
-	}		
+		return jObj.toString();
+	}
 	
 	/**
 	 * 디스크 I/O 관련 정보
@@ -130,9 +223,9 @@ public class EzSystemUtil {
 		logger.debug("getDiskioInfo started. : " + tenantID);
 		
 		String command = "iostat";
-		//String filePath = "D:/test/test.txt";
+		//String filePath = "D:/test/iostat.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		ProcessBuilder builder = new ProcessBuilder(command);
+		ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
 		Process process = builder.start();
 		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		JSONObject jObj = new JSONObject();
@@ -145,7 +238,7 @@ public class EzSystemUtil {
 
 			if (line == null) {
 				break;
-			} else if (cnt > 5) {                       // 처음 상위 5줄은 불필요
+			} else if (cnt > 11) {                       // 처음 상위 11줄은 불필요
 				JSONObject tmpObj = new JSONObject();
 				String[] tmp = line.split("\\s+");
 				
@@ -172,9 +265,9 @@ public class EzSystemUtil {
 	 *  네트워크 트래픽 정보
 	 **/	
 	@SuppressWarnings("unchecked")
-	public static String getNetByteInfo(int tenantID) throws Exception {
+	public static String getNetDataInfo(int tenantID) throws Exception {
 		
-		logger.debug("getNetPacketInfo started. : " + tenantID);
+		logger.debug("getNetDataInfo started. : " + tenantID);
 		
 		//String filePath = "D:/test/netInter.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
@@ -200,9 +293,9 @@ public class EzSystemUtil {
 				if (!tmp[0].equalsIgnoreCase("") 
 						&& !tmp[0].equalsIgnoreCase("lo:") 
 						&& !tmp[1].equalsIgnoreCase("0")) {
-					tmpObj.put("interface", tmp[0]);
-					tmpObj.put("rBytes", tmp[1].substring(0, tmp[1].length()-1));
-					tmpObj.put("tBytes", tmp[8]);
+					tmpObj.put("interface", tmp[0].substring(0, tmp[0].length()-1));
+					tmpObj.put("rBytes", tmp[1]);
+					tmpObj.put("tBytes", tmp[9]);
 					
 					jArr.add(tmpObj);
 				}
@@ -211,11 +304,11 @@ public class EzSystemUtil {
 		}
 		br.close();
 		
-		jObj.put("getNetByteInfo", jArr);
+		jObj.put("getNetDataInfo", jArr);
 		
 		logger.debug(jObj.toString());
 		
-		logger.debug("getNetPacketInfo ended.");
+		logger.debug("getNetDataInfo ended.");
 		
 		return jObj.toString();
 	}

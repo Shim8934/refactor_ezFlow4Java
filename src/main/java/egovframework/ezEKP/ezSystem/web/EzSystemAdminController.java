@@ -24,8 +24,6 @@ import egovframework.ezEKP.ezStatistics.web.EzStatisticsMailMainController;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
-import egovframework.ezEKP.ezSystem.vo.FileSysInfoVO;
-import egovframework.ezEKP.ezSystem.vo.SysMonitorVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -229,9 +227,7 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		SysMonitorVO serverList = new SysMonitorVO();
-		serverList.setOsName(System.getProperty("os.name"));
-		serverList.setOsVer(System.getProperty("os.version"));		
+		String serverList = EzSystemUtil.getSysInfo(userInfo.getTenantId());	
 	
 		model.addAttribute("serverList", serverList);
 		logger.debug("systemStatus ended");
@@ -253,15 +249,12 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}		
 		
-		SysMonitorVO osInfo = new SysMonitorVO();
-		osInfo.setOsName(System.getProperty("os.name"));
-		osInfo.setOsVer(System.getProperty("os.version"));
-		
-		SysMonitorVO cpuInfo = EzSystemUtil.getCpuInfo(userInfo.getTenantId());
-		SysMonitorVO memoryInfo = EzSystemUtil.getMemoryInfo(userInfo.getTenantId());
-		List<FileSysInfoVO> fileSysInfoList  = EzSystemUtil.getFileSysInfo(userInfo.getTenantId());
+		String osInfo = EzSystemUtil.getSysInfo(userInfo.getTenantId());
+		String cpuInfo = EzSystemUtil.getCpuInfo(userInfo.getTenantId());
+		String memoryInfo = EzSystemUtil.getMemoryInfo(userInfo.getTenantId());
+		String fileSysInfoList  = EzSystemUtil.getFileSysInfo(userInfo.getTenantId());
 		String diskioInfo = EzSystemUtil.getDiskioInfo(userInfo.getTenantId());
-		String netTrafficList = EzSystemUtil.getNetByteInfo(userInfo.getTenantId());
+		String netTrafficList = EzSystemUtil.getNetDataInfo(userInfo.getTenantId());
 		
 		model.addAttribute("osInfo", osInfo);
 		model.addAttribute("cpuInfo", cpuInfo);

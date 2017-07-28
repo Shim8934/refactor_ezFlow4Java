@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Insert title here</title>
+<title></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
@@ -15,6 +15,19 @@
 <script type="text/javascript" src="/js/jui/dist/chart.min.js"></script>
 <script type="text/javascript">
 
+	$(document).ready(function(){
+		var obj = JSON.parse('${serverList}');
+		var list = obj.getSysInfo;
+		var str = "";
+		
+		for (var i = 0; i < list.length; i++) {
+			str += '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')">' + list[i].hostname;
+		}
+
+		$("#serverList").append(str);
+		
+	});
+	
 	function chkServerList_onclick(listNum) {	
 		var checkedId = "chkVal_" + listNum;
 		var graphId = "graph_" + listNum;
@@ -57,16 +70,31 @@
 		}
 	}	
 	
+	function setColor() {
+		var colorCode = [];
+		
+		for (var i = 0; i < 10; i++) {
+			var code = "#" + Math.round(Math.random() * 0xffffff).toString(16);
+			colorCode.push(code);
+		}
+		return colorCode;
+	}	
+
 	function makingGraph(graphId) {
 		var fileSysData = [];
 		var cpuMemoryData = [];
 		var diskioData = [];
 		var networkData = [];
 		
-		var oldTx=0;
-		var curTx=0;
-		var oldRx=0;
-		var curRx=0;		
+		var cpuMemoryColor = setColor();
+		var fileSysColor = setColor();
+		var diskioColor = setColor();
+		var networkColor = setColor();
+		
+		var oldTx = 0;
+		var curTx = 0;
+		var oldRx = 0;
+		var curRx = 0;		
 		
 		jui.ready(["chart.builder"], function (builder) {
 			var current = new Date();
@@ -95,12 +123,14 @@
 					}
 				}],
 				brush: [{
-					type: "line"
+					type: "line",
+					colors: cpuMemoryColor
 				}, {
 					type: "scatter",
-					target: ["cpu", "memory"],
+					target: ["Cpu", "Memory"],
 					symbol: "circle",
-					size: 8
+					size: 8,
+					colors: cpuMemoryColor
 				}],
 				widget: [{
 					type: "legend",
@@ -110,7 +140,7 @@
 					brush: [1]
 				}, {
 					type: "title",
-					text: "CPU & Memory 사용량",
+					text: "<spring:message code='ezSystem.pjg01'/>",
 					align:"end",
 					size: 14
 				}]
@@ -129,7 +159,7 @@
 					},
 					y: {
 						type: "range",
-						domain: [0, 50],
+						domain: [0, 100],
 						step: 5,
 						line: true,
 						format: function(value) {
@@ -138,15 +168,17 @@
 					}
 				}],
 				brush: [{
-					type: "line"
+					type: "line",
+					colors: diskioColor
 				}, {
-					type: "scatter"
+					type: "scatter",
+					colors: diskioColor
 				}], 
 				widget: [{
 					type: "legend"
 				},{
 					type: "title",
-					text: "DISK I/O",
+					text: "<spring:message code='ezSystem.pjg02'/>",
 					align:"end",
 					size: 14
 				}]
@@ -169,17 +201,19 @@
 						step: 5,
 						line: true,
 						format: function(value) {
-							return value + "Mbps";
+							return value + "KBit/s";
 						}
 					},
 				}],
 				brush: [{
-					type: "line"
+					type: "line",
+					colors: networkColor
 				}, {
 					type: "scatter",
-					target: ["receive", "transfer"],
+					target: ["Receive", "Transfer"],
 					symbol: "circle",
-					size: 8
+					size: 8,
+					colors: networkColor
 				}],
 				widget: [{
 					type: "legend"
@@ -188,7 +222,7 @@
 					brush: [1]
 				}, {
 					type: "title",
-					text: "네트워크 트래픽",
+					text: "<spring:message code='ezSystem.pjg03'/>",
 					align:"end",
 					size: 14
 				}]
@@ -204,14 +238,15 @@
 				}],
 				brush : [{
 					type: "bargauge",
-					size: 40,
+					size: 20,
+					colors: fileSysColor,
 					format: function(value) {
 						return parseInt(value) + "%";
 					}
 				}],
 				widget: [{
 					type: "title",
-					text: "DISK 사용량",
+					text: "<spring:message code='ezSystem.pjg04'/>",
 					align:"end",
 					size: 14
 				}]
@@ -229,7 +264,7 @@
 		        });
 		    	cpuMemoryChart.updateBrush(0, {
 		    		type: "line",
-		    		target: ["cpu", "memory"]
+		    		target: ["Cpu", "Memory"]
 		    	});
 		    	cpuMemoryChart.render(true);
 
@@ -259,13 +294,12 @@
 		        });
 		    	networkChart.updateBrush(0, {
 		    		type: "line",
-		    		target: ["receive", "transfer"]
+		    		target: ["Receive", "Transfer"]
 		    	});
 		    	networkChart.render(true);
 		    	
 		    	filesysChart.axis(0).update(fileSysData);	   
 		    	filesysChart.render(true);
-		    	//$("#filesysUsed").html("<p>ddddddddddd</p>");
 		    }, 3000);
 	      	
 	    	function getInfo() {
@@ -285,9 +319,12 @@
 	    	};
 	    	
 	    	function setOsInfo(list) {
-	    		var serverName = "<p id='serverName'>" + list.osName + "</p>"
-	    		var osName = "<p id='osName'><strong>OS : </strong>" + list.osName + "</p>";
-	    		var osVer = "<p id='osVer'><strong>Version : </strong>" + list.osVer + "</p>";
+	    		var obj = JSON.parse(list);
+	    		var osInfo = obj.getSysInfo;
+	    		
+	    		var serverName = "<p id='serverName'>" + osInfo[0].hostname + "</p>"
+	    		var osName = "<p id='osName'><strong>OS : </strong>" + osInfo[0].os + "</p>";
+	    		var osVer = "<p id='osVer'><strong>Version : </strong>" + osInfo[0].version + "</p>";
 	    		
 	    		$("#serverName").html(serverName);
 	    		$("#osName").html(osName);
@@ -295,40 +332,39 @@
 	    	}
 	    	
 	    	// 네트워크 트래픽 속도 계산 공식
-	    	function getMbps(old, current) { 		
-	    		return result = (old - current) / 3 * 128 / 1000;
+	    	function getMbps(old, current) {
+	    		
+	    		if (old == 0) {
+	    			result = 0;
+	    		} else {
+	    			result = ( current - old ) / 3 * 8 / 1024;
+	    			// 3초간 조사한 값, Byte->bit(*8), bit->KBit(/1024)
+	    		}	    		
+	    		return result;
 	    	}
 	    	
 	    	// 네트워크 관련 데이터
 	    	function getNetworkData(str) {
 	    		var obj = JSON.parse(str);
-	    		var netInfo = obj.getNetByteInfo;
+	    		var netInfo = obj.getNetDataInfo;
 	    		var receive;
 	    		var transfer;
 	    		
 	    		if (networkData.length > 20) {
 	    			networkData.shift();
 	    		}
-	    		
+
 	    		receive = getMbps(oldRx, parseInt(netInfo[0].rBytes));
 	    		transfer = getMbps(oldTx, parseInt(netInfo[0].tBytes));
 
-	    		// 처음 시작할 경우 마이너스 값이 나오기 때문에 0으로 초기화.
-	    		if (receive < 0) {
-	    			receive = 0;
-	    		}
-	    		
-	    		if (transfer < 0) {
-	    			transfer = 0;
-	    		}
-	    		
 	    		networkData.push({
 	    			time: new Date(),
-	    			receive: receive.toFixed(2),
-	    			transfer: transfer.toFixed(2)			
-	    		});	    		
-	    		oldRx = netInfo[0].rBytes;
-	    		oldTx = netInfo[0].tBytes;
+	    			Receive: receive.toFixed(2),
+	    			Transfer: transfer.toFixed(2)			
+	    		});	    	
+	    		
+	    		oldRx = parseInt(netInfo[0].rBytes);
+	    		oldTx = parseInt(netInfo[0].tBytes);
 	    	}
 	    	
 	    	// 디스크 io 관련 데이터
@@ -341,49 +377,60 @@
 	    			diskioData.shift();
 	    		}
 	    		
-	    		for (var i = 0; i < ioInfo.length; i++) {
+ 	    		for (var i = 0; i < ioInfo.length; i++) {
 	    			diskDomain = Object.keys(ioInfo[i]);
 	    			ioInfo[i].time = current;
 	    			diskioData.push(ioInfo[i]);
 	    		}
 	    	}
 	    	
+	    	// 메모리 사용량 계산
+	    	function getUsedMemoryPer(total, free, buffer, cached) {
+	    		
+	    		var bufferCache = parseInt(free) + parseInt(buffer) + parseInt(cached);
+	    		var result = (parseInt(total) - bufferCache) / parseInt(total);
+	    		
+	    		return result;
+	    	}	    	
+	    	
+	    	// cpu & 메모리 관련 데이터 입력.
 	    	function getCpuMemoryData(cpu, memory) {
+	    		var cobj = JSON.parse(cpu);
+	    		var mobj = JSON.parse(memory);
+
+	    		var cpu = cobj.getCpuInfo;
+	    		var memory = mobj.getMemoryInfo;	 
+	    		
+	    		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memfree, memory[0].buffers, memory[0].cached);
 	    		
 	    		if (cpuMemoryData.length > 20) {
 	    			cpuMemoryData.shift();
 	    		}
 	    		
-	    		cpuMemoryData.push({
+ 	    		cpuMemoryData.push({
 	    			time: new Date(),			
-	    			cpu: parseInt(cpu.totalUsedCpu),
-	    			memory: parseInt(memory.usedMemPer)
-	    		});
-	    	}
-	    	
-	    	// 킬로바이트 - > 기가바이트
-			function getGByte(kbyte) {
-	    		return kbyte / 1024 /1024;
+	    			Cpu: parseFloat(cpu[0].totalUsedPer).toFixed(2),
+	    			Memory: (usedMemory * 100).toFixed(2)
+	    		});  	
 	    	}
 
 	    	// 그래프에 파일시스템 관련 데이터 입력.
-	    	function getFileSysData(fileSystem) {
+	    	function getFileSysData(str) {
+	    		var obj = JSON.parse(str);
+	    		var fileSystem = obj.getFileSysInfo;
 	    		fileSysData = [];
 	    		var str = "";	    		
+	    		
 	    		for (var i = 0; i < fileSystem.length; i++ ){
-		    		var total = (getGByte(fileSystem[i].totalVolume)).toFixed(2);
-		    		var used = (getGByte(fileSystem[i].usedVolume)).toFixed(2);
-		    		var avail = (getGByte(fileSystem[i].availVolume)).toFixed(2);	 
-		    		
 	    			fileSysData.push({
 	    				title : fileSystem[i].diskName,
-	    				value : parseInt(fileSystem[i].usedVolumePer)
+	    				value : parseInt(fileSystem[i].usedPer)
 	    			});
-	    			str += '<tr id="tableRow">';
+ 	    			str += '<tr id="tableRow">';
 	    			str += '<td id="tData"><strong>'+ fileSystem[i].diskName +'</strong></td>';
-	    			str += '<td id="tData">■ 총용량 '+ total + 'GB</td>';
-	    			str += '<td id="tData">■ 사용중 '+ used +'GB</td>';
-	    			str += '<td id="tData">■ 사용가능 '+ avail +'GB</td>';
+	    			str += '<td id="tData"> ■ '+"<spring:message code='ezSystem.pjg05'/>" +' '+ fileSystem[i].total + '</td>';
+	    			str += '<td id="tData"> ■ '+"<spring:message code='ezSystem.pjg06'/>" +' '+ fileSystem[i].used +'</td>';
+	    			str += '<td id="tData"> ■ '+"<spring:message code='ezSystem.pjg07'/>"+' '+ fileSystem[i].avail +'</td>';
 	    			str += '</tr>';
 	    		}
 	    		$("#filesysBody").html(str);
@@ -396,7 +443,7 @@
 .serverInfo { float : left; width : 15%; height : 100%;	color : #000000; padding-left : 10px; }
 .graphInfo  { float : left; width : 84%; height : 50%; }
 
-#serverName { color : #000000; font-weight : bold; font-size : 30px; text-align : left; }
+#serverName { color : #000000; font-weight : bold; font-size : 24px; text-align : left; }
 #cpuMemInfo { width : 50%; height: 95%;float : left; }
 #diskioInfo { width : 50%; height: 95%; display : inline-block; }
 #networkInfo { width : 50%; height: 95%; float : left; }
@@ -408,22 +455,19 @@
 </style>
 </head>
 <body class="mainbody">
- 	<h1>시스템 모니터링</h1>
+ 	<h1><spring:message code='ezSystem.pjg08'/></h1>
 	<table class="content">
 		<tbody>
 			<tr>
-				<th width="110">서버목록</th>
-				<td>
-					<input type="checkbox" name="chkValue" id="chkVal_0" onClick="chkServerList_onclick(0)">${serverList.osName}
+				<th width="110"><spring:message code='ezSystem.pjg09'/></th>
+				<td id="serverList">
+				
 				</td>
 			</tr>
 		</tbody>
 	</table>
 
 	<div id="monitoringForm">
-	</div>
-	<div id='testdiv'>
-	
 	</div>
 </body>
 </html>
