@@ -355,6 +355,55 @@
 	            }
 		        MailListRefresh();
 		    }
+		    
+		    function mailbox_export() {
+	        	ShowMailProgress();
+		        
+	            $.ajax({
+	    			type : "POST",
+	    			dataType : "text",
+	    			async : true,
+	    			url : "/ezEmail/mailboxExportZip.do",
+	    			data : {folderPath: '${url}'},
+	    			complete: function(){
+	    				HiddenMailProgress();
+	    			},
+	    			success: function(result){
+	    				if (result != "") {
+	    			    	var fullpath = "/ezEmail/downloadMailboxZip.do?folderName=" + encodeURIComponent('${folderName}') + "&temp=" + result;
+	    			    	AttachDownFrame.location.href = fullpath;
+	    			        AttachDownFrame.target = "_blank";
+	    				} else {
+	    					alert(strLang104);
+	    				}
+	    			}
+	    		});
+		    }
+		    
+		    function mailbox_import() {
+		    	//TODO
+// 	        	ShowMailProgress();
+		        
+// 	            $.ajax({
+// 	    			type : "POST",
+// 	    			dataType : "text",
+// 	    			async : true,
+// 	    			url : "/ezEmail/mailboxExportZip.do",
+// 	    			data : {folderPath: '${url}'},
+// 	    			complete: function(){
+// 	    				HiddenMailProgress();
+// 	    			},
+// 	    			success: function(result){
+// 	    				if (result == "OK") {
+// 	    			    	var fullpath = "/ezEmail/downloadMailboxZip.do?folderName=" + encodeURIComponent('${folderName}');
+// 	    			    	AttachDownFrame.location.href = fullpath;
+// 	    			        AttachDownFrame.target = "_blank";
+// 	    				} else {
+// 	    					alert(strLang104);
+// 	    				}
+// 	    			}
+// 	    		});
+		    }
 		</script>	
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
@@ -391,6 +440,8 @@
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
 		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
+		  <li><span onClick="mailbox_export()">편지함 저장</span></li>
+		  <li><span onClick="mailbox_import()">편지함 가져오기</span></li>
 		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
           </ul>
         </div>
