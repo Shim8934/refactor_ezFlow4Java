@@ -178,11 +178,11 @@
 	                ezprtquestion_cross_dialogArguments[0] = parameter;
 	                ezprtquestion_cross_dialogArguments[1] = OpenQuestionUI_Complete;
 
-	                DivPopUpShow(380, 210, url);
+	                DivPopUpShow(450, 210, url);
 	            }
 	            else {
-	                var feature = "status:no;dialogWidth:380px;dialogHeight:210px;help:no;";
-	                feature = feature + GetShowModalPosition(380, 210);
+	                var feature = "status:no;dialogWidth:450;dialogHeight:210px;help:no;";
+	                feature = feature + GetShowModalPosition(450, 210);
 	                var RtnVal = window.showModalDialog(url, parameter, feature);
 
 	                return RtnVal;
