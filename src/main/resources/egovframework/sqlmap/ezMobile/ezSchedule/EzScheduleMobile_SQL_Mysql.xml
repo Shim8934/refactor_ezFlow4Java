@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezScheduleMobile">
+
+	<typeAlias alias="MScheduleInfoVO" 					type="egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO"/>
+    
+    <resultMap class="MScheduleInfoVO" id="MScheduleInfoVO">
+    	<result property="contentPath"			column="contentPath"         			columnIndex="1"/>    
+    </resultMap>
+    
+    <select id="MScheduleDAO.scheduleContentPath" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+	    	SELECT
+	    		contentpath    		
+			FROM
+				TBL_SCHEDULE
+			WHERE
+				scheduleid = #v_SCHEDULEID#
+			AND
+				tenant_id = #v_TENANTID#
+		]]>	
+  	</select>
+  	
+    <select id="MScheduleDAO.scheduleInfo" parameterClass="Map" resultMap="MScheduleInfoVO">
+    	<![CDATA[
+			select
+				scheduleid,
+				parentid,
+	            ownerid,
+	            ownername,
+	            ownername2,	            
+	            date_add(a.createdate, interval +#v_OFFSETMIN# minute) as createdate,
+	            a.creatorid,
+	            a.creatorname,
+	            a.creatorname2,
+	            a.createdate,
+	            modifierid,
+	            modifiername,
+	            modifiername2,	            
+	            date_add(a.modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
+	            scheduletype,
+	            importance,
+	            hasattendant,
+	            hasattach,
+	            hascomment,
+	            isreadonly,
+	            ispublic,
+	            datetype,	            
+	            date_add(a.startdate, interval +#v_OFFSETMIN# minute) as startdate,				
+				date_add(a.enddate, interval +#v_OFFSETMIN# minute) as enddate,
+	            repetition,
+	            repetitiondelete,
+	            title,
+	            location,
+	            contentpath,
+	            groupname	           
+			from 
+				tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid and a.tenant_id = b.tenant_id
+	       	where  
+	       		a.scheduleid = #v_SCHEDULEID#
+	       	and
+	       		a.tenant_id = #v_TENANTID#	
+		]]>
+  	</select>
+</sqlMap>
+

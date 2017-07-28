@@ -78,6 +78,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
+	        var strMemberListInfo = "";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
 	
@@ -499,10 +500,28 @@
 	        }
 	        
 	        function CircularClose_onclick() {
+	        	var status = 0;
+	        	
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		
 	        		return;
 	        	}
+	        	
+	        	$.each(strListInfo.split(";"), function(index, value) {
+	        		if ($(".circularTR[circularid='" + value + "']").attr("status") == 1) {
+	        			status = 1;
+	        			
+	        			return false;
+	        		}
+	        	});
+	        	
+	        	if (status == 1) {
+	        		alert("<spring:message code='ezCircular.t171' />");
+	        		
+	        		return;
+	        	}
+    			
 	        	
 	        	if (confirm("<spring:message code='ezCircular.t170'/>")) {
 		        	$.ajax({
@@ -610,14 +629,6 @@
 	                            </select>    
 	                        </td>
 	                    </tr>
-	                    <%-- <tr>
-	                        <th><spring:message code='ezCircular.t19'/></th>
-	                        <td>
-	                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-	                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-	                            <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-                            </td>
-	                    </tr> --%>
 	                </table>
 	            </div>
 	        </div>
@@ -656,8 +667,8 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
-	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
+	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 	            </span>
 	        </span>
 	    </span>
@@ -683,8 +694,8 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
+	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 	            </span>
 	        </span>
 	    </span>

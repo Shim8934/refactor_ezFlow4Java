@@ -471,7 +471,6 @@ function ListView() {
             	strStyle += "overflow: hidden; white-space: nowrap; text-overflow: ellipsis;";
                 
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
-                
 
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_" + i;
@@ -1380,6 +1379,7 @@ function tr_unselectedAll(pTableID) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
+            strMemberListInfo = "";
         }
     }
 }
@@ -1394,11 +1394,11 @@ function event_HeaderCheckBoxClick(obj) {
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
             strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id + ";";
         }
+        
         $.each($(".circularTR"), function (index, obj) {
         	strMemberListInfo += $(obj).attr("memberID") + ";";
-        })
-    }
-    else {
+        });
+    } else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;

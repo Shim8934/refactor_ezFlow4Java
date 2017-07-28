@@ -226,14 +226,16 @@ function getCommentShareUser() {
 			
 			list = result.shareUserList;
 			list.forEach(function(vo, index) {
-				shareUserList += "<tr class='shareUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
-				
-				shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
-				shareUserList += "<input type='checkbox' class='chkBox' />";
-				shareUserList += "</td>";
-				shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>" + vo.memberName + "</td>";
-				
-				shareUserList += "</tr>";
+				if (vo.memberID != userInfoID) {
+					shareUserList += "<tr class='shareUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
+					
+					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+					shareUserList += "<input type='checkbox' class='chkBox' />";
+					shareUserList += "</td>";
+					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>" + vo.memberName + "</td>";
+					
+					shareUserList += "</tr>";
+				}
 			});
 			
 			$("#shareUserList").html("");
@@ -308,7 +310,7 @@ function openCircularComment() {
 }
 
 function openCommentSharePopup(obj) {
-	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
+	$("#mailPanel").css('height', $('body').prop('clientHeight') + $(".commentConfirmDiv").eq(0).closest("div").prop('height'));
 	
 	DivPopUpShow(300, 490, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID + "&circularCommentID=" + $(obj).closest("tr").attr("circularCommentID"));
 }

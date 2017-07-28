@@ -1,7 +1,9 @@
 package egovframework.ezMobile.ezBoard.service;
 
 import java.util.List;
+import java.util.Map;
 
+import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
@@ -15,7 +17,11 @@ public interface MBoardService {
 
 	List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
 	
-	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception;
+	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
+	
+	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
 	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception;
+	
+	MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception;
 }

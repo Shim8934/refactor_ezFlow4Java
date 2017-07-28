@@ -8,11 +8,12 @@
 		<title><spring:message code='ezCircular.t35' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code='ezCircular.e1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		
 		<script type="text/javascript">
 			$(function() {
 				// 전체 체크박스 선택, 해제
@@ -77,7 +78,7 @@
 		        var pTop = (pheight - 280) / 2;
 		        var pLeft = (pwidth - 450) / 2;
 		    	
-		    	window.open("/ezCircular/circularCheckName.do?id=" + circularBMId, "", "height = 300px, width = 650px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status=no, toolbar=no, menubar=no, location=no, resizable=no");
+		    	window.open("/ezCircular/circularCheckName.do?circularBMId=" + circularBMId, "", "height = 300px, width = 650px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status=no, toolbar=no, menubar=no, location=no, resizable=no");
 		    }
 			
 			var schedule_admin_popup_sharedept_dialogArguments = new Array();
@@ -171,28 +172,31 @@
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 385px; display: inline-table;">
 		                    <table class="mainlist" style="width: 100%;">
+		                    	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='18%' /><col width='10%' /></colgroup>
+		                    	
 		                        <tr>
-		                        	<th style="width: 7%; "><input id="checkboxAll" type="checkbox"></th>
-		                            <th style="width: 47%; "><span><spring:message code='ezCircular.t32' /></span></th>
-		                            <th style="width: 18%; "><span><spring:message code='ezCircular.t33' /></span></th>
-		                            <th style="width: 18%; "><span><spring:message code='ezCircular.t34' /></span></th>
-		                        	<th style="width: 10%; "></th>
+		                        	<th><input id="checkboxAll" type="checkbox"></th>
+		                            <th><span><spring:message code='ezCircular.t32' /></span></th>
+		                            <th><span><spring:message code='ezCircular.t33' /></span></th>
+		                            <th><span><spring:message code='ezCircular.t34' /></span></th>
+		                        	<th></th>
 		                        </tr>
 		                    </table>
 		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
 		                        <table class="mainlist" style="width: 100%;">
+		                        	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='18%' /><col width='10%' /></colgroup>
 		                            <c:forEach var="item" items="${result}">
-			                            <tr id="${item.circularBMID }" title="${item.title }" style="cursor:pointer" onmouseover="event_Mover(this);" onmouseout="event_Mout(this);" onclick="event_click(this);" ondblclick="event_dbclick(this);">
-			                            	<td style='width:7%;padding-left:5px;'><input class="myCheckbox" name="myCheckbox" value="${item.circularBMID }" type='checkbox' onclick='event_statuschange(this);'></td>
-			                            	<td style="width:47%;color:gray;">${item.title }</td>
-			                            	<td style="width:18%;color:gray;">${item.regDate.substring(0,16) }</td>
+			                            <tr id="${item.circularBMID }" style="cursor:pointer" onmouseover="event_Mover(this);" onmouseout="event_Mout(this);" onclick="event_click(this);" ondblclick="event_dbclick(this);">
+			                            	<td style='padding-left:5px;'><input class="myCheckbox" name="myCheckbox" value="${item.circularBMID }" type='checkbox' onclick='event_statuschange(this);'></td>
+			                            	<td style="color:gray;" title="${item.title }">${item.title }</td>
+			                            	<td style="color:gray;">${item.regDate.substring(0,16) }</td>
 			                            	<c:if test="${item.memberNameCount != 0}">
-			                        			<td style="width: 18%;color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
-			                            		<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
+			                        			<td style="color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
+			                            		<td id="pop"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
 			                            	</c:if>
 		                            		<c:if test="${item.memberNameCount == 0}">
-		                            			<td style='width: 10%;color:gray;'>${item.memberName }</td>
-		                            			<td id="pop" style="width: 14%;"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
+		                            			<td style='color:gray;'>${item.memberName }</td>
+		                            			<td id="pop"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
 		                            		</c:if>
 			                            </tr>
 		                            </c:forEach>

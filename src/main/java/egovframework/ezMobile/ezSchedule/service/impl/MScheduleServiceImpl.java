@@ -19,6 +19,8 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezMobile.ezSchedule.dao.MScheduleDAO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -26,8 +28,8 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("MScheduleService")
 public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MScheduleService{
 		
-	/*@Resource(name="MScheduleDAO")
-	private MScheduleDAO mScheduleDAO;*/
+	@Resource(name="MScheduleDAO")
+	private MScheduleDAO mScheduleDAO;
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
@@ -157,9 +159,9 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		String hasattach = "N";
 		
 		map.put("v_SCHEDULEID", jsonParam.get("scheduleId").toString());
-		map.put("v_MODIFIERID", jsonParam.get("creatorId").toString());
-		map.put("v_MODIFIERNAME", jsonParam.get("creatorName").toString());
-		map.put("v_MODIFIERNAME2", jsonParam.get("creatorName2").toString());
+		map.put("v_MODIFIERID", jsonParam.get("modifierId").toString());
+		map.put("v_MODIFIERNAME", jsonParam.get("modifierName").toString());
+		map.put("v_MODIFIERNAME2", jsonParam.get("modifierName2").toString());
 		map.put("v_IMPORTANCE", jsonParam.get("importance").toString());
 		map.put("v_HASATTACH", hasattach);
 		map.put("v_ISPUBLIC", jsonParam.get("isPublic").toString());
@@ -219,15 +221,34 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	}
 
 	@Override
-	public void deleteSchedule(String scheduleId, String dateType, int tenantId) throws Exception {
+	public void deleteSchedule(String scheduleId, int tenantId) throws Exception {
 		// TODO Auto-generated method stub
-		ezScheduleService.deleteSchedule(scheduleId, tenantId);
-		/*ezScheduleService.deleteResource(scheduleId, tenantId);*/
+		ezScheduleService.deleteSchedule(scheduleId, tenantId);				
+		ezScheduleService.deleteScheduleRepe(scheduleId, tenantId);
 		
-		if (dateType.equals("3")) {
-			ezScheduleService.deleteScheduleRepe(scheduleId, tenantId);
-		}
+		/*ezScheduleService.deleteResource(scheduleId, tenantId);*/		
 	}
+
+	@Override
+	public String scheduleContentPath(String scheduleId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);		
+		map.put("v_TENANTID", tenantId);
+		
+		return mScheduleDAO.scheduleContentPath(map);
+	}
+
+	@Override
+	public ScheduleInfoVO scheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_OFFSETMIN", offSetMin);
+		map.put("v_TENANTID", tenantId);
+		
+		return mScheduleDAO.scheduleInfo(map);
+	}
+	
 	
 	
 }

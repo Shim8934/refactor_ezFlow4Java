@@ -87,17 +87,29 @@ public class MBoardController {
 	 * 모바일 게시판 해당게시판글목록화면
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/boardItemList.do")
-	public String boardItemList(@CookieValue("loginCookie") String loginCookie, MBoardInfoVO mBoardInfoVO, HttpServletRequest request, Model model) throws Exception {
+	public String boardItemList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("boardItemList started.");
-		LOGGER.debug("boardID = " + mBoardInfoVO.getBoardID() + " || type = " + mBoardInfoVO.getType());
+		String type = "";
+		String boardID = "";
+		
+		if (request.getParameter("type") != null && !request.getParameter("type").equals("")) {
+			type = request.getParameter("type");
+		}
+		if (request.getParameter("boardID") != null && !request.getParameter("boardID").equals("")) {
+			boardID = request.getParameter("boardID");
+		}
+		LOGGER.debug("boardID = " + boardID + " || type = " + type);
+		
+		//임시
+		type ="newBoardItemList";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), userInfo.getPrimary(), userInfo.getTenantId());
-		mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
+		//mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), userInfo.getPrimary(), userInfo.getTenantId());
+		//mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezboard/"+mBoardInfoVO.getType()+"/boards/"+mBoardInfoVO.getBoardID()+"/list";
+		String url = gwServerUrl + "/ezboard/"+type+"/boards/"+boardID+"/list";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -106,7 +118,10 @@ public class MBoardController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		.queryParam("userID", userInfo.getId());
+				.queryParam("primary", userInfo.getPrimary())
+				.queryParam("userID", userInfo.getId())
+				.queryParam("rollInfo", userInfo.getRollInfo())
+				.queryParam("deptPathCode", userInfo.getDeptPathCode());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -116,14 +131,16 @@ public class MBoardController {
 				
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : "+status);
-		
+System.out.println("resultBody:"+resultBody);
 		JSONArray list = new JSONArray();
+		Object boardInfo = "";
 		if (status.equals("ok")) {
 			Gson gson = new Gson();
 			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
-			
-			model.addAttribute("mBoardInfo", mBoardInfoVO);
-			model.addAttribute("title", mBoardInfoVO.getBoardName());
+			boardInfo = resultBody.get("data2");
+System.out.println("boardInfo:"+resultBody.get("data2"));
+			model.addAttribute("mBoardInfo", boardInfo);
+			//model.addAttribute("title", mBoardInfoVO.getBoardName());
 			model.addAttribute("listSize", list.size());
 		}
 		
@@ -152,19 +169,29 @@ public class MBoardController {
 	public String getBoardItemList(@CookieValue("loginCookie") String loginCookie, MBoardInfoVO mBoardInfoVO, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getBoardItemList started.");
 		
+		String type = "";
+		String boardID = "";
+		
+		if (request.getParameter("type") != null && !request.getParameter("type").equals("")) {
+			type = request.getParameter("type");
+		}
+		if (request.getParameter("boardID") != null && !request.getParameter("boardID").equals("")) {
+			boardID = request.getParameter("boardID");
+		}
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
 		
-		LOGGER.debug("type = " + mBoardInfoVO.getType() + " || boardID = " + mBoardInfoVO.getBoardID() + " || userID = " + userInfo.getId());
+		LOGGER.debug("type = " + type + " || boardID = " + boardID + " || userID = " + userInfo.getId());
 		
 		mBoardInfoVO.setType("newBoardItemList");
-		//mBoardInfoVO.setBoardID("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+		mBoardInfoVO.setBoardID("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
 		//mBoardInfoVO.setBoardID("{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}");
 		
 		//게시판정보
-		mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), primary, tenantID);
-		mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
+		//mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), primary, tenantID);
+		//mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
 		
 		//리스트
 		/*List<MBoardItemVO> mBoardItemList = null;
@@ -202,7 +229,10 @@ public class MBoardController {
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("userID", userInfo.getId());
+		        .queryParam("primary", primary)
+				.queryParam("userID", userInfo.getId())
+				.queryParam("rollInfo", userInfo.getRollInfo())
+				.queryParam("deptPathCode", userInfo.getDeptPathCode());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -235,12 +265,88 @@ System.out.println("sample:"+sample);
 	}
 	
 	/**
+	 * 모바일 게시판 즐겨찾기에 등록된 게시판 폴더 리스트
+	 */
+	@RequestMapping(value = "/mobile/ezBoard/getFavoriteList.do")
+	public String getFavoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getFavoriteList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezboard/favorite-list/users/"+userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+				
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : "+status);
+System.out.println("resultBody:"+resultBody);
+		JSONArray list = new JSONArray();
+
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+System.out.println("list:"+list);
+			//model.addAttribute("title", mBoardInfoVO.getBoardName());
+
+		}
+		
+		LOGGER.debug("getFavoriteList ended.");
+		
+		return "";
+	}
+	
+	/**
 	 * 모바일 게시판 글 상세화면조회
 	 * 게시판종류별로 (일반, 그룹, 익명, 포토, 썸네일, Q&A)
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getBoardItem.do")
-	public String getBoardItem() throws Exception {
+	public String getBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getBoardItem started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String type = request.getParameter("type");
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String url = gwServerUrl + "/ezboard/"+type+"/boards/"+boardID+"/contents/"+itemID;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userID", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		Object mBoardItem = "";
+		if (status.equals("ok")) {
+			mBoardItem = resultBody.get("data");
+			
+			model.addAttribute("mBoardItem", mBoardItem);
+		}
 		
 		LOGGER.debug("getBoardItem ended.");
 		

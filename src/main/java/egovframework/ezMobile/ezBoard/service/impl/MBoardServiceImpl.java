@@ -15,6 +15,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
@@ -396,11 +397,11 @@ public class MBoardServiceImpl implements MBoardService {
 
 	//게시판 정보조회 -> MBoardInfoVO.parentBoardID 불필요시 추후 삭제
 	@Override
-	public MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception {
+	public MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception {
 		mBoardInfoVO.setSs_board_maxRows(mobileListSize);
 		mBoardInfoVO.setSs_searchBoard_maxRows(mobileListSize);
 		
-		String deptPath = userInfo.getDeptPathCode();
+		String deptPath = deptPathCode;
 	    String deptPathOrgan="";
 	    
 	    for (int ch=0; ch<deptPath.split(",").length; ch++) {
@@ -414,7 +415,7 @@ public class MBoardServiceImpl implements MBoardService {
 	    String userDeptPath = deptPathOrgan+",everyone";
 	    
 		for (String userDept : userDeptPath.split(",")) {
-			MBoardInfoVO aclVO = getACL(mBoardInfoVO, userDept.trim(), userInfo.getTenantId());
+			MBoardInfoVO aclVO = getACL(mBoardInfoVO, userDept.trim(), info.getTenantId());
 			
 			if (aclVO == null) {
 				break;
@@ -436,7 +437,7 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 		}
 		
-		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(mBoardInfoVO.getBoardID(), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(mBoardInfoVO.getBoardID(), info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
 		mBoardInfoVO.setBoardGroupAdmin_FG(boardGroupAdmin_FG);
 		
 	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
@@ -447,7 +448,7 @@ public class MBoardServiceImpl implements MBoardService {
 	    	mBoardInfoVO.setWrite_FG("true");
 	    	mBoardInfoVO.setReply_FG("true");
 	    	mBoardInfoVO.setDelete_FG("true");
-		} else if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
+		} else if (rollInfo != null && (rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
 			mBoardInfoVO.setAccess_FG("1");
 			mBoardInfoVO.setBoardAdmin_FG("true");
 			mBoardInfoVO.setListView_FG("true");
@@ -645,4 +646,23 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		return result;
 	}
+
+	@Override
+	public List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.getFavoriteList(map);
+	}
+
+	@Override
+	public MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		map.put("lang", lang);
+		return mBoardDAO.getBrdItemInfo(map);
+	}
+	
+	
 }

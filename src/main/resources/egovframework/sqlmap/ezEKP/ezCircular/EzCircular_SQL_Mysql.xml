@@ -425,9 +425,9 @@
 			AND
 				A.tenantid = B.tenant_id
 			WHERE
-				circularbmid = #v_CIRCULARBMID#
+				circularbmid = #circularBMId#
 			AND
-				tenantid = #v_TENANTID#
+				tenantid = #tenantID#
         ]]>
     </select>
     

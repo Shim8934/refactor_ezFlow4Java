@@ -34,7 +34,7 @@ public interface EzCircularService {
 	
 	public List<CircularAttachVO> getAttachList(int circularID, int tenantID) throws Exception;
 	
-	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception;
+	public List<CircularMemberVO> getMemberName(String circularBMId, int tenantID) throws Exception;
 	
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
 

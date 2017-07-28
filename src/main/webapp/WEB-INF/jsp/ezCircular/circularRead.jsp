@@ -178,11 +178,11 @@
 	                ezprtquestion_cross_dialogArguments[0] = parameter;
 	                ezprtquestion_cross_dialogArguments[1] = OpenQuestionUI_Complete;
 
-	                DivPopUpShow(380, 210, url);
+	                DivPopUpShow(450, 210, url);
 	            }
 	            else {
-	                var feature = "status:no;dialogWidth:380px;dialogHeight:210px;help:no;";
-	                feature = feature + GetShowModalPosition(380, 210);
+	                var feature = "status:no;dialogWidth:450;dialogHeight:210px;help:no;";
+	                feature = feature + GetShowModalPosition(450, 210);
 	                var RtnVal = window.showModalDialog(url, parameter, feature);
 
 	                return RtnVal;
@@ -547,7 +547,7 @@
                             <td class="pos1">
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
-                                    	<div style="margin-top:3px;height:20px">
+                                    	<div style="margin-top:3px;height:initial;">
                                     		<c:set var="imagePath" value="/images/file.gif" />
                                     		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
                                     		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
@@ -574,7 +574,7 @@
                                     		<c:if test="${item.fileType == 'ecm'}">
                                     			<c:set var="imagePath" value="/images/ecm.png" />
                                     		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;">${item.fileName} (${item.fileTranSize})</a>
                                     	</div>
                                     </c:forEach>
                                 </div>
