@@ -500,10 +500,28 @@
 	        }
 	        
 	        function CircularClose_onclick() {
+	        	var status = 0;
+	        	
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
+	        		
 	        		return;
 	        	}
+	        	
+	        	$.each(strListInfo.split(";"), function(index, value) {
+	        		if ($(".circularTR[circularid='" + value + "']").attr("status") == 1) {
+	        			status = 1;
+	        			
+	        			return false;
+	        		}
+	        	});
+	        	
+	        	if (status == 1) {
+	        		alert("이미 종료된 회람입니다.");
+	        		
+	        		return;
+	        	}
+    			
 	        	
 	        	if (confirm("<spring:message code='ezCircular.t170'/>")) {
 		        	$.ajax({
@@ -611,14 +629,6 @@
 	                            </select>    
 	                        </td>
 	                    </tr>
-	                    <%-- <tr>
-	                        <th><spring:message code='ezCircular.t19'/></th>
-	                        <td>
-	                            <img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-	                            <img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-	                            <img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-                            </td>
-	                    </tr> --%>
 	                </table>
 	            </div>
 	        </div>
