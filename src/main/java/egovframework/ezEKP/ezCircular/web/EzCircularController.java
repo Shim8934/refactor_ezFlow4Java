@@ -1857,12 +1857,12 @@ public class EzCircularController extends EgovFileMngUtil {
 	 * 회람판 환경설정 즐겨찾기 회람자목록 화면 호출 Method
 	 **/
 	@RequestMapping(value = "/ezCircular/circularCheckName.do")
-	public String circularCheckName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+	public String circularCheckName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("circularCheckName started");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		int circularBMId = Integer.parseInt(request.getParameter("id"));
+		String circularBMId = request.getParameter("circularBMId");
 		int tenantId = userInfo.getTenantId();
 	
 		List<CircularMemberVO> list = ezCircularService.getMemberName(circularBMId, tenantId);
@@ -2458,7 +2458,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		int circularBMId = Integer.parseInt(request.getParameter("circularBMID"));
+		String circularBMId = request.getParameter("circularBMID");
 		int tenantId = userInfo.getTenantId();
 	
 		List<CircularMemberVO> circularDeptNamelist = ezCircularService.getMemberName(circularBMId, tenantId);

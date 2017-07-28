@@ -830,13 +830,20 @@ public class EzCircularServiceImpl implements EzCircularService {
 		return ezCircularDAO.checkUpdateStatus(map);
 	}
 	
-	public List<CircularMemberVO> getMemberName(int circularBMId, int tenantId) throws Exception {
+	@Override
+	public List<CircularMemberVO> getMemberName(String circularBMId, int tenantID) throws Exception {
+		logger.debug("getMemberName started.");
+		logger.debug("circularBMId = " + circularBMId + " || tenantID = " +tenantID);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("circularBMId", circularBMId);
+		map.put("tenantID", tenantID);
 		
-		map.put("v_CIRCULARBMID", circularBMId);
-		map.put("v_TENANTID", tenantId);
+		List<CircularMemberVO> list = ezCircularDAO.getMemberName(map);
 		
-		return ezCircularDAO.getMemberName(map);
+		logger.debug("getMemberName ended.");
+		
+		return list;
 	}
 
 	@Override
