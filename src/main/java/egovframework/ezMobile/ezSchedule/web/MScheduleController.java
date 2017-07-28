@@ -126,7 +126,7 @@ public class MScheduleController extends EgovFileMngUtil {
 	public String mScheduleList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
 		LOGGER.debug("mScheduleList started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -169,11 +169,50 @@ System.out.println("scheduleList :" + scheduleList);
 	}
 	
 	/**
+	 * 모바일 client 일정관리 상세화면
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/mScheduleDetail.do")
+	public String mScheduleDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
+		LOGGER.debug("mScheduleDetail started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)		        
+		        .queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+				
+		String status = resultBody.get("status").toString();
+		
+System.out.println("status :" + status);		
+
+		LOGGER.debug("mScheduleDetail ended.");
+		
+		return "/mobile/ezSchedule/mScheduleDetail";
+	}
+	
+	/**
 	 * 모바일 client 일정관리 등록
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/mScheduleInsert.do")
 	public void mScheduleInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
-		LOGGER.debug("mScheduleInsert started.");		
+		LOGGER.debug("mScheduleInsert started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		scheduleInfoVO.setCreatorId(userInfo.getId());
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezschedule/schedules";
@@ -206,8 +245,11 @@ System.out.println(gson.toJson(resultBody.get("data")));
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/mScheduleUpdate.do")
 	public void mScheduleUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ScheduleInfoVO scheduleInfoVO) throws Exception {
-		LOGGER.debug("mScheduleUpdate started.");		
+		LOGGER.debug("mScheduleUpdate started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		scheduleInfoVO.setModifierId(userInfo.getId());
+
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
 		
@@ -239,7 +281,9 @@ System.out.println(gson.toJson(resultBody.get("data")));
 	 */
 	@RequestMapping(value="/mobile/ezSchedule/mScheduleDelete.do")
 	public void mScheduleDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LOGGER.debug("mScheduleDelete started.");		
+		LOGGER.debug("mScheduleDelete started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
@@ -251,7 +295,7 @@ System.out.println(gson.toJson(resultBody.get("data")));
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)		        
-		        .queryParam("creatorId", request.getParameter("creatorId"));
+		        .queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
 		

@@ -129,7 +129,7 @@ System.out.println(name);
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
 	 */	
 	@RequestMapping(value="/ezschedule/list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object mScheduleList(@PathVariable String userId, HttpServletRequest request){
+	public JSONObject mScheduleList(@PathVariable String userId, HttpServletRequest request){
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/list/users/{userId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -219,10 +219,30 @@ System.out.println(name);
 	 * 모바일 G/W 일정관리 [GET] 일정 상세데이터
 	 */
 	@RequestMapping(value="/ezschedule/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void mScheduleDetail() throws Exception {
+	public JSONObject mScheduleDetail(@PathVariable String scheduleId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] started.");
 		
-		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] ended.");		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());			
+			ScheduleInfoVO vo = mScheduleService.scheduleInfo(scheduleId, offSetMin, info.getTenantId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}				
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/{scheduleId}] ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -319,10 +339,10 @@ System.out.println(name);
 		try {
 		
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("creatorId").toString());
-
-			jsonParam.put("creatorName", info.getUserName());
-			jsonParam.put("creatorName2", info.getUserName2());
+			MCommonVO info = mOptionService.commonInfo(serverName, jsonParam.get("modifierId").toString());
+			
+			jsonParam.put("modifierName", info.getUserName());
+			jsonParam.put("modifierName2", info.getUserName2());
 			
 			String startDate = jsonParam.get("startDate").toString();
 			String endDate = jsonParam.get("endDate").toString();
@@ -339,11 +359,10 @@ System.out.println(name);
 	    	startDate = sdf.format(sdf.parse(startDate));
 	    	endDate = sdf.format(sdf.parse(endDate));
 
-	    	MScheduleInfoVO scheduleInfo = mScheduleService.scheduleInfo(scheduleId, info.getTenantId());
-
+	    	String contentPath = mScheduleService.scheduleContentPath(scheduleId, info.getTenantId());
 	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-	    	String defaultPath = commonUtil.getRealPath(request) + scheduleInfo.getContentPath();
+	    	String defaultPath = commonUtil.getRealPath(request) + contentPath;
     	
 	        mScheduleService.updateSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId());
 	        
@@ -372,7 +391,7 @@ System.out.println(name);
 						
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("creatorId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
 						
 			mScheduleService.deleteSchedule(scheduleId, info.getTenantId());
 			
