@@ -15,7 +15,7 @@ public interface MBoardService {
 
 	List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
 	
-	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, LoginVO userInfo) throws Exception;
+	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
 	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception;
 }
