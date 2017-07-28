@@ -308,7 +308,7 @@ function openCircularComment() {
 }
 
 function openCommentSharePopup(obj) {
-	$("#mailPanel").css('height', $('body').prop('scrollHeight'));
+	$("#mailPanel").css('height', $('body').prop('scrollHeight') + 43);
 	
 	DivPopUpShow(300, 490, "/ezCircular/circularCommentSharePopup.do?circularID=" + circularID + "&circularCommentID=" + $(obj).closest("tr").attr("circularCommentID"));
 }
