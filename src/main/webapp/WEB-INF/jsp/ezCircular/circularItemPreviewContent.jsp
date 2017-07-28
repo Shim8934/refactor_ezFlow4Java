@@ -4,20 +4,8 @@
 <html>
 	<head>
 	    <title><spring:message code='ezCircular.t19'/></title>
+	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-	    <style type="text/css">
-	    	.list {
-	    		font-size:12px;
-				font-family: 'Gulim', 'arial', 'verdana';
-				text-decoration: none;
-	    	}
-	    	
-	    	table th, td {
-	    		font-size:12px;
-				font-family: 'Gulim', 'arial', 'verdana';
-				text-decoration: none;
-	    	}
-	    </style>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    
