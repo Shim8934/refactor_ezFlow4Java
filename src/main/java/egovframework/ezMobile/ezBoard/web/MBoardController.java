@@ -265,12 +265,88 @@ System.out.println("sample:"+sample);
 	}
 	
 	/**
+	 * 모바일 게시판 즐겨찾기에 등록된 게시판 폴더 리스트
+	 */
+	@RequestMapping(value = "/mobile/ezBoard/getFavoriteList.do")
+	public String getFavoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getFavoriteList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezboard/favorite-list/users/"+userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+				
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : "+status);
+System.out.println("resultBody:"+resultBody);
+		JSONArray list = new JSONArray();
+
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+System.out.println("list:"+list);
+			//model.addAttribute("title", mBoardInfoVO.getBoardName());
+
+		}
+		
+		LOGGER.debug("getFavoriteList ended.");
+		
+		return "";
+	}
+	
+	/**
 	 * 모바일 게시판 글 상세화면조회
 	 * 게시판종류별로 (일반, 그룹, 익명, 포토, 썸네일, Q&A)
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getBoardItem.do")
-	public String getBoardItem() throws Exception {
+	public String getBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getBoardItem started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String type = request.getParameter("type");
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String url = gwServerUrl + "/ezboard/"+type+"/boards/"+boardID+"/contents/"+itemID;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userID", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		Object mBoardItem = "";
+		if (status.equals("ok")) {
+			mBoardItem = resultBody.get("data");
+			
+			model.addAttribute("mBoardItem", mBoardItem);
+		}
 		
 		LOGGER.debug("getBoardItem ended.");
 		
