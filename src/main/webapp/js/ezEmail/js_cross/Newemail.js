@@ -1202,8 +1202,8 @@ function mail_export() {
 				HiddenMailProgress();
 			},
 			success: function(result){
-				if (result == "OK") {
-			    	var fullpath = "/ezEmail/downloadMailZip.do?";
+				if (result != "") {
+			    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result;
 			    	AttachDownFrame.location.href = fullpath;
 			        AttachDownFrame.target = "_blank";
 				} else {
