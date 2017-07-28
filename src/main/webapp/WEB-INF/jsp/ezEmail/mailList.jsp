@@ -374,35 +374,47 @@
 	    			    	AttachDownFrame.location.href = fullpath;
 	    			        AttachDownFrame.target = "_blank";
 	    				} else {
-	    					alert(strLang104);
+	    					alert("편지함 내보내기 도중 에러가 발생했습니다.");
 	    				}
 	    			}
 	    		});
 		    }
 		    
 		    function mailbox_import() {
-		    	//TODO
-// 	        	ShowMailProgress();
+		    	document.getElementById("file1").click();
+		    }
+		    
+		    function mailbox_attach_import() {
+	            var tempname = document.importMailboxform.file1.value;
+	        	if (tempname == "") {
+		            return;
+	            }
+	        	
+	            var last = tempname.split(".").length;
+	            var extension = tempname.split(".")[last - 1];
+
+	            if (extension.toUpperCase() != "ZIP") {
+	                alert("파일의 포맷이 올바르지 않습니다.");
+	                return;
+	            }
+	            
+				ShowMailProgress();
 		        
-// 	            $.ajax({
-// 	    			type : "POST",
-// 	    			dataType : "text",
-// 	    			async : true,
-// 	    			url : "/ezEmail/mailboxExportZip.do",
-// 	    			data : {folderPath: '${url}'},
-// 	    			complete: function(){
-// 	    				HiddenMailProgress();
-// 	    			},
-// 	    			success: function(result){
-// 	    				if (result == "OK") {
-// 	    			    	var fullpath = "/ezEmail/downloadMailboxZip.do?folderName=" + encodeURIComponent('${folderName}');
-// 	    			    	AttachDownFrame.location.href = fullpath;
-// 	    			        AttachDownFrame.target = "_blank";
-// 	    				} else {
-// 	    					alert(strLang104);
-// 	    				}
-// 	    			}
-// 	    		});
+				var frm = document.getElementById("importMailboxform");
+		        frm.action = "/ezEmail/mailboxImportZip.do?folderPath=" + encodeURIComponent('${url}');
+		        frm.submit();
+		    }
+		    
+		    function mailboxImportComplete(result) {
+		    	document.importMailboxform.file1.value = "";
+		    	HiddenMailProgress();
+		    	
+		    	if (result == "OK") {
+		    		alert("편지함 가져오기 완료.");
+		    		MailListRefresh();
+		    	} else {
+		    		alert("편지함 가져오기 도중 에러가 발생했습니다.");
+		    	}
 		    }
 		</script>	
 	</head>
@@ -440,7 +452,7 @@
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
 		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-		  <li><span onClick="mailbox_export()">편지함 저장</span></li>
+		  <li><span onClick="mailbox_export()">편지함 내보내기</span></li>
 		  <li><span onClick="mailbox_import()">편지함 가져오기</span></li>
 		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
           </ul>
@@ -612,6 +624,10 @@
 		<form name="PrevViewFormW" action="mailPreviewContent.do" method="post" target="ifrmPreViewW">
 		<input  type="hidden"  name="iptURL" value="">
 		<input  type="hidden" name="iSecurity" value="">
-		</form>               
+		</form>
+		<iframe name="importMailboxIframe" src="about:blank" style="display: none"></iframe>
+		<form method="post" id="importMailboxform" name="importMailboxform" enctype="multipart/form-data" action="/ezAddress/excelImport.do" target="importMailboxIframe">
+	        <input type="file" name="file1" id="file1" accept=".zip" onchange="mailbox_attach_import()" style="display: none"/>
+	    </form>
 	</body>
 </html>

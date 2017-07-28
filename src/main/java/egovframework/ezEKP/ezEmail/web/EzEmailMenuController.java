@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +14,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
@@ -784,6 +786,16 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			returnValue = guid;
 			
 		} catch (Exception e) {
+			if (zos != null) {
+				zos.close();
+				zos = null;
+			}
+			
+			File file = new File(pDirTempPath + ".zip");
+			if (file.exists()) {
+				file.delete();
+			}
+			
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -796,6 +808,97 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		logger.debug("mailExportZip ended. returnValue=" + returnValue);
 		return returnValue;
+	}
+	
+	/**
+	 * PC에서 메일함(메일파일묶음) 가져오기 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailboxImportZip.do")
+	public String mailboxImportZip(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception{
+		logger.debug("mailboxImportZip started.");
+
+		String returnValue = "OK";
+		ZipInputStream zis = null;
+		IMAPAccess ia = null;
+		
+		try {
+			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+			String password  = userIdAndPassword.get(1);
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			String userAccount = userInfo.getId() + "@" + domainName;
+			
+			String folderPath = request.getParameter("folderPath");
+			logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath);
+			
+			List<MultipartFile> multiFile = request.getFiles("file1");
+
+			if (multiFile == null || multiFile.get(0) == null) {
+				logger.error("Cannot find file.");
+				throw new Exception("Cannot find file.");
+			}
+
+			zis = new ZipInputStream(multiFile.get(0).getInputStream());	
+			ZipEntry ze = zis.getNextEntry();
+			
+			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+					userAccount, password);
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale);
+			
+			Folder folder = ia.getFolder(folderPath);
+			
+			if (folder == null || !folder.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				folder.open(Folder.READ_WRITE);
+				
+				List<Message> messageList = new ArrayList<Message>();
+				Message message = null;
+				int count = 0;
+				
+				while(ze != null){
+					count++;
+					
+					if (count % 50 == 0) {
+						folder.appendMessages(messageList.toArray(new Message[0]));
+						messageList = new ArrayList<Message>();
+						
+						System.gc();
+					}
+					
+					message = sa.readMimeMessage(zis);
+					messageList.add(message);
+					
+					ze = zis.getNextEntry();
+				}
+				
+				logger.debug("count=" + count);
+				
+				folder.appendMessages(messageList.toArray(new Message[0]));
+				folder.close(true);
+			}
+			
+			zis.closeEntry();
+			
+		} catch (Exception e) {
+			returnValue = "ERROR";
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+			if (zis != null) {
+				zis.close();
+			}
+		}
+
+		model.addAttribute("result", returnValue);
+
+		logger.debug("mailboxImportZip ended.");
+		return "ezEmail/mailboxImportZip";
 	}
 	
 	/**
@@ -930,6 +1033,16 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			returnValue = guid;
 			
 		} catch (Exception e) {
+			if (zos != null) {
+				zos.close();
+				zos = null;
+			}
+			
+			File file = new File(pDirTempPath + ".zip");
+			if (file.exists()) {
+				file.delete();
+			}
+			
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {
@@ -974,4 +1087,27 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		logger.debug("downloadMailboxZip ended.");
 	}
+	
+	/**
+	 * zip파일 삭제 실행 함수
+	 */
+	@RequestMapping(value="/ezEmail/deleteZipFile.do")
+	public void deleteZipFile(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("deleteZipFile started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String temp = request.getParameter("temp");
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+		pDirPath = realPath + pDirPath;
+		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + temp;
+		
+		File file = new File(pDirTempPath + ".zip");
+		if (file.exists()) {
+			file.delete();
+		}
+		
+		logger.debug("deleteZipFile ended.");
+	}
+	
 }
