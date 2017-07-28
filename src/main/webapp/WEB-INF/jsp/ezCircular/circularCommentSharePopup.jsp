@@ -50,7 +50,7 @@
 		<div style='height:420px;overflow-y:auto;'>
 			<table class="mainlist" style="width:98%;">
 				<tr>
-					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<spring:message code='ezCircular.t85' /></th>
+					<th style="width:10%;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<spring:message code='ezCircular.t85' /></th>
 					<th style="text-align:right;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
 						<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCommentShareUser()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
 					</th>
