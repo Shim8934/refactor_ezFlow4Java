@@ -1032,7 +1032,7 @@
 				selectedSubCell = "";
 			}
 	
-			function removecell()
+			function removecell(type)
 			{
 				if (!bCanModify)
 				{
@@ -1046,10 +1046,12 @@
 					return;
 				}
 	
-				if (selectedCell == "")
-				{	
-					alert("<spring:message code='ezPortal.t297' />");
-					return;
+				if (selectedCell == "") {	
+					if (type == 'field') {
+						alert("<spring:message code='ezPortal.jjs12' />");	
+					} else {
+						alert("<spring:message code='ezPortal.t297' />");	
+					}
 				}
 				
 				// 선택된 cell의 table
@@ -1696,7 +1698,7 @@
   						<li style="display:none"><span onClick="inherit()"><spring:message code="ezPortal.t324" /></span></li>
 					</c:if>
   					<li><span onClick="insertpage()"><spring:message code="ezPortal.t325" /></span></li>
-  					<li><span onClick="removecell()"><spring:message code="ezPortal.t326" /></span></li>
+  					<li><span onClick="removecell('field')"><spring:message code="ezPortal.t326" /></span></li>
   					<li><span onClick="insertcell()"><spring:message code="ezPortal.t327" /></span></li>
   					<li><span onClick="removecell()"><spring:message code="ezPortal.t328" /></span></li>
   					<li><span onClick="insertrow()"><spring:message code="ezPortal.t329" /></span></li>

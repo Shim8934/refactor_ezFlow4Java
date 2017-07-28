@@ -116,6 +116,7 @@
 		    var junGyulFlag = "${junGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
+		    var signImageType = "${signImageType}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
