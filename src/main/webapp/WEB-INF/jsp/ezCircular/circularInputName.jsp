@@ -17,6 +17,7 @@
 	        var CancelFunction;
 	        var InputValue;
             var FolderId;
+            var folderNameList = "${folderNameList}";
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -46,12 +47,26 @@
 	        
 	        function btn_ok_onclick() {
 	            var folderName = txt_FolderName.value;
-	            
+	            var specialChar = /[&\<>\'\"]/gi;
+	            var folderNameArr = folderNameList.split(";");
+
 	            if (folderName == "") {
-	            	alert("<spring:message code='ezCircular.t58' />")
+	            	alert("<spring:message code='ezCircular.t58'/>")
 	            	return;
 	            }
 	            
+	            if (specialChar.test(folderName)) {
+	            	alert("<spring:message code='ezCircular.t187'/>");
+	            	return ;
+	            }
+
+	            for (var i=0; i<folderNameArr.length; i++) {
+	            	if (folderNameArr[i] == folderName) {
+	            		alert("<spring:message code='ezCircular.t186'/>");
+		            	return;	
+	            	}
+	            }
+
 	            if (FolderId == "") {
 	            	url = "/ezCircular/circularFolderAdd.do"; 
 	            } else {

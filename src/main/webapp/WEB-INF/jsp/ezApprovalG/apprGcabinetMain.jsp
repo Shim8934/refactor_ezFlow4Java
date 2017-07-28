@@ -627,7 +627,7 @@
 		        var OpenWin;
 		
 		        if (UserLang == "1")
-		            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(855, 445));
+		            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(900, 445));
 		        else
 		            OpenWin = window.open(url, "RegCabinet_Cross", GetOpenWindowfeature(905, 435));
 		
@@ -705,7 +705,7 @@
 		
 		            settaskchrger_cross_dialogArguments[0] = para;
 		
-		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(520, 415));
+		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(600, 415));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -911,19 +911,16 @@
 		                var left = "";
 		                var top = "";
 		
-		                if ("${userInfo.lang}" == "1")
-		              { 
-		                wWeight = 855;
-		                wHeight = 625;
-		                left = (width - wWeight) / 2;
-		                top = (heigth - wHeight) / 2;
-		                }
-		              else
-		              { 
-		                wWeight = 855;
-		                wHeight = 625;
-		                left = (width - wWeight) / 2;
-		                top = (heigth - wHeight) / 2;
+		                if ("${userInfo.lang}" == "1") { 
+			                wWeight = 855;
+			                wHeight = 625;
+			                left = (width - wWeight) / 2;
+			                top = (heigth - wHeight) / 2;
+		                } else { 
+			                wWeight = 855;
+			                wHeight = 625;
+			                left = (width - wWeight) / 2;
+			                top = (heigth - wHeight) / 2;
 		                } 
 		                if (url != "")
 		                    var ret = window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
@@ -988,7 +985,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(870, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(900, 500));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1019,7 +1016,7 @@
 		            selectcabinet_cross_dialogArguments[0] = para;
 		            selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(870, 500));
+		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(900, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		           

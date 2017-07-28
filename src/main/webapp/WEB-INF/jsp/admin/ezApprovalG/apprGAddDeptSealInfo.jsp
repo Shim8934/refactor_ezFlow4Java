@@ -216,10 +216,10 @@
 		        		},
 		        		error : function() {
 // 		        			"FALSE";
-		        	});
-		        }
-		    };
-		    
+		        		}
+		        });
+		    }
+		    }
 		    function btn_AttachAdd_onclick() {
 		        if (document.form.file1.value != "") {
 		            var frm = document.getElementById('form');
@@ -306,7 +306,7 @@
 	            <th><spring:message code = 'ezApprovalG.t00010' /></th>
 	            <td style="vertical-align:middle;">
 	                <input type="text" readonly id="filename" style="width:180px;">
-	                <a class="imgbtn"><span onclick="return btnFileUp_onclick()"><spring:message code = 'ezApprovalG.t1251' /></span></a>
+	                <a class="imgbtn"><label for="file1"><span><spring:message code = 'ezApprovalG.t1251' /></span></label></a>
 	                <a class="imgbtn"><span onclick="return btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
 	            </td>
 	        </tr>

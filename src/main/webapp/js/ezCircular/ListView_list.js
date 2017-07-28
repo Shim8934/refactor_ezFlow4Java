@@ -471,7 +471,6 @@ function ListView() {
             	strStyle += "overflow: hidden; white-space: nowrap; text-overflow: ellipsis;";
                 
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
-                
 
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_" + i;
@@ -1332,12 +1331,14 @@ function tr_select(pRowID, pTableID, callbackFunc) {
             oSourceTr.childNodes[0].childNodes[0].checked = false;
             oSourceTr.style.backgroundColor = m_strColorDefault;
             strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
+            strMemberListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].getAttribute("memberID"), "");
         }
         else {
             oSourceTr.setAttribute("selected", "true");
             oSourceTr.childNodes[0].childNodes[0].checked = true;
             oSourceTr.style.backgroundColor = m_strColorSelect;
-            strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
+            strListInfo += oSourceTr.childNodes[0].childNodes[0].id + ";";
+            strMemberListInfo += oSourceTr.childNodes[0].childNodes[0].getAttribute("memberID") + ";";
         }
 
         //각 리스트마다 마지막으로 선택한 ID를 보관한다.
@@ -1378,6 +1379,7 @@ function tr_unselectedAll(pTableID) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
+            strMemberListInfo = "";
         }
     }
 }
@@ -1392,11 +1394,11 @@ function event_HeaderCheckBoxClick(obj) {
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
             strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id + ";";
         }
+        
         $.each($(".circularTR"), function (index, obj) {
         	strMemberListInfo += $(obj).attr("memberID") + ";";
-        })
-    }
-    else {
+        });
+    } else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;

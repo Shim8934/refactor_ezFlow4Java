@@ -123,12 +123,12 @@ function InitializeTab(strTabNum) {
                 break;
 
             case "2":
-                if (g_SCFlag == "1")	
-                {
+                if (g_SCFlag == "1") {
                     InitSCInfo();	
-                }
-                else {
+                } else {
                     tdSCInfo.innerHTML = strLang711;
+                    tdSCInfo.style.textAlign  = "center";
+                    tdSCInfo.style.height  = "215px";
                 }
                 g_arrayTabXMLInitialized[strTabNum] = true;
                 break;

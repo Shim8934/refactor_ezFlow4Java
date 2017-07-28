@@ -16795,46 +16795,46 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "1");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + ",";
 				} if(pCode.substring(2,3).equals("Y")) {
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "2");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + ",";
 				} if(pCode.substring(3,4).equals("Y")) {
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "3");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + ",";
 				} if(pCode.substring(4,5).equals("Y")) {
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "4");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + ",";
 				} if(pCode.substring(5,6).equals("Y")) {
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "5");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + ",";
 				} if(pCode.substring(6,7).equals("Y")) {
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "6");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + ",";
 				} if(pCode.substring(7,8).equals("Y")) {
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "7");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + "','";
 				} if(pCode.substring(8,9).equals("Y")) {
 					map.put("v_CodeType", "006");
 					map.put("v_Code", "8");
 					codeName = ezApprovalGDAO.getCabCodeList(map);
-					rtn = rtn + codeName + "u','";
+					rtn = rtn + codeName + ",";
 				}
 				
-				rtn = rtn + "u')'";
-				rtn.replace("u',)'", ")");
+				rtn = rtn + ")";
+				rtn.replace(",)", ")");
 			}
 			
 			if(rtn == null) {
@@ -16991,7 +16991,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String[] bujae = bujaeInfo.split(":");
 				
 				if (bujae.length >= 5) {
-					if (nowDate.compareTo(bujae[3].replace("/", ":").substring(0, 16)) >= 0 && nowDate.compareTo(bujae[4].replace("/", ":").substring(0, 16)) <= 0) {
+					if (nowDate.compareTo(bujae[5] + bujae[6]) <= 0) {
 						if (!chkFirst) {
 							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
 							chkFirst = true;

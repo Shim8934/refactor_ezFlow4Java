@@ -301,6 +301,9 @@
 	
 	}
 	</script>
+	<style>
+	   .mainlist tr th {border-top:0px}
+	</style>
 	</head>
 	<body class="popup">
 	    <xml id="listviewheader" style="display: none">
@@ -336,7 +339,7 @@
 	            <td style="vertical-align: top;padding-left:10px;">
 	                <h2><spring:message code='ezApprovalG.t233'/></h2>
 	                <div class="listview">
-	                    <div id="OrganListView" style="border: 0; Width: 225px; Height: 218px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
+	                    <div id="OrganListView" style="border: 0; Width: 280px; Height: 218px; overflow: auto;"></div>
 	                </div>
 	                <table style="width: 100%;">
 	                    <tr>

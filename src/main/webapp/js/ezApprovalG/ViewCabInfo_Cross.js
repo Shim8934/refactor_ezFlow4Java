@@ -228,6 +228,8 @@ function InitializeTab(strTabNum) {
                 else {
                     document.getElementById("tdSCInfo").innerHTML = strLang711;
                     document.getElementById("tdSCInfo").style.width = "610px";
+                    tdSCInfo.style.textAlign  = "center";
+                    tdSCInfo.style.height  = "215px";
                 }
                 g_arrayTabXMLInitialized[strTabNum] = true;
                 break;

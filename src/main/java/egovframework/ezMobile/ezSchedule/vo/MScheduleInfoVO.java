@@ -26,6 +26,8 @@ public class MScheduleInfoVO {
 	private String title;			/** 일정제목 */
 	
 	private String location;		/** 일정위치 */
+	
+	private String contentPath;		/** content 경로 */
 
 	public String getScheduleId() {
 		return scheduleId;
@@ -130,7 +132,13 @@ public class MScheduleInfoVO {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	
-	
+
+	public String getContentPath() {
+		return contentPath;
+	}
+
+	public void setContentPath(String contentPath) {
+		this.contentPath = contentPath;
+	}
 	
 }

@@ -38,8 +38,7 @@
 			var status = "${result.status}";
 			var userInfoID = "${userInfo.id}";
 			var option = "${result.option}";
-			var myCommentCount = "";
-			var totalCommentCount = "";
+			var type = "${type}";
 			var attachList = "";
 
 			$(document).ready(function() {
@@ -115,7 +114,7 @@
 // 						result.totalCommentCount;
 // 						result.myCommentCount;
 						
-						$("#commentCount").html("<spring:message code='ezCircular.t180' />[" + result.myCommentCount +"]");
+						$("#commentCount").html("<spring:message code='ezCircular.t180' />[" + result.myCommentCount + "/" + result.totalCommentCount + "]");
 					},error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezCircular.t102' />");
 					}
@@ -437,7 +436,7 @@
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
                 	    	</c:if>
                 	    	
-               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}]</span></li>
+               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
 	                        <li style="background:none; padding-right:2px;" class="off"><img src="/images/ImgIcon/circular_bar.gif"></li>
 	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
@@ -445,7 +444,10 @@
 		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
 	                        
-               	    		<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
+	                        <c:if test="${type != 'new'}">
+	                        	<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
+	                        </c:if>
+               	    		
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
                     	</ul>
                 	</div>
@@ -545,7 +547,7 @@
                             <td class="pos1">
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
-                                    	<div style="margin-top:3px;height:20px">
+                                    	<div style="margin-top:3px;height:initial;">
                                     		<c:set var="imagePath" value="/images/file.gif" />
                                     		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
                                     		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
@@ -572,7 +574,7 @@
                                     		<c:if test="${item.fileType == 'ecm'}">
                                     			<c:set var="imagePath" value="/images/ecm.png" />
                                     		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;">${item.fileName} (${item.fileTranSize})</a>
                                     	</div>
                                     </c:forEach>
                                 </div>

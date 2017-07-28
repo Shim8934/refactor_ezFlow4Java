@@ -78,7 +78,7 @@
 	        var starttime;
 	        var endtime;
 	        var strListInfo = "";
-	        var strNameInfo = "";
+	        var strMemberListInfo = "";
 	        var folderId = "${folderId}";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
@@ -293,10 +293,10 @@
 	        function chk_onselect(obj) {
 		        if (obj.checked) {
 		        	strListInfo += $(obj).closest("tr").attr("circularID") + ";";
-		            strNameInfo += $(obj).closest("td").closest("tr").attr("memberid") + ";";
+		        	strMemberListInfo += $(obj).closest("td").closest("tr").attr("memberid") + ";";
 		        } else {
 		        	strListInfo = ReplaceText(strListInfo, $(obj).closest("tr").attr("circularID") + ";", "");
-		            strNameInfo = ReplaceText(strNameInfo, $(obj).closest("td").closest("tr").attr("memberid") + ";", "");
+		        	strMemberListInfo = ReplaceText(strMemberListInfo, $(obj).closest("td").closest("tr").attr("memberid") + ";", "");
 		        }
 
 		        listEventCheckbox = true;
@@ -480,13 +480,18 @@
 	                    alert("<spring:message code='ezCircular.t90'/>");
 	                    return;
 	                }
-	            }
-	            else if (type == "quick") {
+	            } else if (type == "quick") {
+	            	if ($.trim($("#txt_keyword").val()) == "") {
+			        	alert("<spring:message code='ezCircular.t189' />");
+			            return;
+			        }
+
 	                if (document.getElementById("txt_keyword").value == "") {
 	                    alert("<spring:message code='ezCircular.t91'/>");
 	                    return;
 	                }
 	            }
+
 	            CurPage = "1";
 	            getBoardList();
 	        }
@@ -599,7 +604,7 @@
 	    <h1>${folderName}<span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
-				<input name="searchType" id="Radio2" type="radio" value="content" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/>
+				<input name="searchType" id="Radio2" type="radio" value="writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/>
 	        	&nbsp;
 				<input id="txt_keyword" style="width:150px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				<a href="#"><img src="../../images/sub/bsearch.gif" border="0" style="vertical-align:middle" onClick="search('quick')"></a>
@@ -681,8 +686,8 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
-	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
+	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
 	            </span>
 	        </span>
 	    </span>
@@ -708,8 +713,8 @@
 	                        </dl>
 	                    </div>
 	                </span>
-	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="/blank.htm" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
+	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
 	            </span>
 	        </span>
 	    </span>

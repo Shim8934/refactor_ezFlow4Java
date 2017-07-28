@@ -27,6 +27,7 @@
 	    	var checkval = "f";
 	    	var keyword = "";
 	        var filter = "";
+	        var searchType = "";
 	        var result = ""
 			var startdate = "";
 			var enddate = "";
@@ -84,25 +85,38 @@
 		    var dayStr = dayMsg.split(";");
 		    
 		    $(function () {
-		        $.datepicker.regional["<spring:message code='ezCircular.t130' />"] = {
-		        	closeText: "<spring:message code='ezCircular.t84' />",
-		            prevText: "<spring:message code='ezCircular.t131' />",
-		            nextText: "<spring:message code='ezCircular.t132' />",
-					currentText: "<spring:message code='ezCircular.t133' />",
-		            monthNames: monthStr,
-		            monthNamesShort: monthStr,
-		            dayNames: dayStr,
-		            dayNamesShort: dayStr,
-		            dayNamesMin: dayStr,
-		            weekHeader: 'Wk',
-		            dateFormat: 'yy-mm-dd',
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: 'show',
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='ezCircular.t130' />"]);
+		    	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+					           "<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					                "<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					              "<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+				};
+				
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		    
 		    var usepostDate = false;
@@ -163,9 +177,10 @@
 
 		        if (document.getElementById("keyword").value != "") {
 		            filter = document.getElementsByName("search_field")[0].value;
+		            searchType = document.getElementById("search_type").value;
 		            keyword = document.getElementById("keyword").value;
 		        }
-		        
+
 		        if (filter == "circularNew") {
 		        	url = "/ezCircular/getCircularList.do"
 		        } else if (filter == "circularComplete") {
@@ -187,7 +202,7 @@
 		        		edate : edate,
 		        		pageNum : CurPage,
 		        		searchValue : keyword,
-		        		searchType : "subject",
+		        		searchType : searchType,
 		        		orderCell : OrderCell,
 		        		orderOption : OrderOption,
 		        		folderId : ""
@@ -209,8 +224,12 @@
                 var lstCnt = getNodeText(cntNode);
                 var pageCnt = getNodeText(pageNode);
                 var perCnt = getNodeText(perNode);
- 
-                $(".point").text(lstCnt);
+
+                if (lstCnt != "" && lstCnt != "0") {
+                	$("#resultCount").html(": " + "<spring:message code='main.t252' />" + lstCnt + " <spring:message code='ezCircular.t104' />");
+                } else {
+                	$("#resultCount").html("");
+                }
 
                 totalPage = Math.ceil(new Number(pageCnt / perCnt));
                 pTotalCnt = lstCnt;
@@ -233,7 +252,6 @@
                 DocList.SetID("BoardList");
                 DocList.SetHeaderOnClick("SortPage");
                 DocList.SetRowOnDblClick("ItemRead_onclick(this)");
-                DocList.SetRowOnClick("ItemPreviewRead_click");
                 DocList.SetTitleIdx(0);
                 DocList.SetSelectFlag(false);
                 DocList.DataSource(xmlDoc);
@@ -400,7 +418,9 @@
 	            }
 	        }
 
-		    function ItemRead_onclick(circularID) {
+		    function ItemRead_onclick(obj) {
+		    	var circularID = obj.getAttribute("CIRCULARID");
+		    	
 		        if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
@@ -409,16 +429,6 @@
 	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 		    }
-			
-		    /* function onmouseOver(elem) {
-		        elem.style.color = "blue";
-		        elem.style.backgroundColor = "rgb(233, 241, 244)";
-		    }
-		
-		    function onmouseOut(elem) {
-		        elem.style.color = "";
-		        elem.style.backgroundColor = "#FFFFFF";
-		    } */
 			
 		    function search_keypress(evt) {
 		        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
@@ -436,12 +446,16 @@
 		    	<tr> 
 		      		<th><spring:message code='ezCircular.t139' /></th> 
 		      		<td style="width:100%">
-		      			<select name="search_field" id="search_field" style="WIDTH: 130px"> 
-		          			<option value="circularNew" ${filter == 'circularNew' ? 'selected' : ''}><spring:message code='ezCircular.t2' /></option> 
-		          			<option value="circularComplete" ${filter == 'circularComplete' ? 'selected' : ''}><spring:message code='ezCircular.t3' /></option>
-		          			<option value="circularMy" ${filter == 'circularMy' ? 'selected' : ''}><spring:message code='ezCircular.t4' /></option>
-		          			<option value="circularTemp" ${filter == 'circularTemp' ? 'selected' : ''}><spring:message code='ezCircular.t5' /></option>
-		          			<option value="circularFolder" ${filter == 'circularFolder' ? 'selected' : ''}><spring:message code='ezCircular.t7' /></option> 
+		      			<select name="search_field" id="search_field" style="width: 130px; height: 20px; vertical-align: middle"> 
+		          			<option value="circularNew"><spring:message code='ezCircular.t2' /></option> 
+		          			<option value="circularComplete"><spring:message code='ezCircular.t3' /></option>
+		          			<option value="circularMy"><spring:message code='ezCircular.t4' /></option>
+		          			<option value="circularTemp"><spring:message code='ezCircular.t5' /></option>
+		          			<option value="circularFolder"><spring:message code='ezCircular.t7' /></option> 
+		        		</select>
+		        		<select name="search_type" id="search_type" style="width: 65px; height: 20px; vertical-align: middle"> 
+		          			<option value="subject"><spring:message code='ezCircular.t32' /></option> 
+		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
 		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezCircular.t85' /></span></a>
@@ -458,7 +472,7 @@
 		  	</table> 
 		 	<br/>
 		 	<h2 class="h2_dot">
-		 		<spring:message code='ezCircular.t146'/>&nbsp;<span class="point"></span>&nbsp;<span id="resultCount"></span><spring:message code='ezCircular.t145'/>
+		 		<spring:message code='ezCircular.t146'/>&nbsp;<span id="resultCount"></span>
 		    </h2>
 		  	<%-- <table class="mainlist" style="width:100%">
 		    	<thead id="BoardList_THEAD">

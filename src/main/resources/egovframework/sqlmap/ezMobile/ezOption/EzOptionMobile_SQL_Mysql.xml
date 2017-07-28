@@ -11,6 +11,9 @@
       <result property="offSet"       		column="timeZone"        					columnIndex="3"/>
       <result property="deptId"	       		column="department"        					columnIndex="4"/>
       <result property="companyId"       	column="physicaldeliveryofficename"        	columnIndex="5"/>
+      <result property="userId"       		column="cn"        							columnIndex="5"/>
+      <result property="userName"       	column="displayName"        				columnIndex="6"/>
+      <result property="userName2"       	column="displayName2"        				columnIndex="7"/>
     </resultMap>
     
     <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
@@ -19,7 +22,10 @@
     		a.lang,    	
 			a.timeZone,		    
 		    b.department,
-		    b.physicaldeliveryofficename
+		    b.physicaldeliveryofficename,
+		    b.cn,
+		    b.displayName,
+		    b.displayName2
 		from
 			TBL_USERLOCALINFO a inner join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 		WHERE

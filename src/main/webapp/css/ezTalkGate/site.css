@@ -1,0 +1,73 @@
+
+th {  font-family: "굴림"; font-size: 9pt; color: #000000; font-weight: bold}
+td {  font-family: "굴림"; font-size: 9pt; color: #525252}
+.txt{  font-family: "굴림"; font-size: 9pt; color: #B97C42;line-height:15px}
+
+ol
+{
+    list-style-type: decimal;
+}
+ul
+{
+    list-style-type: disc;
+}
+
+li.a {list-style-image: url(../images/dot_01.gif);}
+li.b {list-style-image: url(../images/dot_03.gif);}
+li.c {list-style-image: url(../images/dot_04.gif);line-height:18px }
+li.d {list-style-image: url(../images/dot_05.gif);line-height:18px }
+li.e {list-style-image: url(../images/dot_06.gif);}
+li.f {list-style-image: url(../images/speaker.gif);}
+li.g{list-style-image: url(../images/dot_07.gif);color:#000000 ;line-height:18px }
+
+
+a:link {color: #525252;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:굴림
+}
+
+a:visited {
+	color: #525252;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:굴림
+}
+a:active { color:#678000; text-decoration: none; font-size:9pt; font-family:굴림}
+
+a:hover {
+	color: #CD3301;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:굴림
+}
+
+a.i:link {color: #333399;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:굴림
+}
+
+a.i:visited {
+	color: #333399;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:굴림
+}
+a.i:active { color:#333399; text-decoration: none; font-size:9pt; font-family:굴림}
+
+a.i:hover {
+	color: #BC5E00;
+	text-decoration: none ;
+	font-size:9pt;
+	font-family:굴림
+}
+input {  font-family: "굴림"; font-size: 9pt;}
+text {  font-family: "굴림"; font-size: 9pt;}
+select {  font-family: "굴림"; font-size: 9pt;}
+
+
+.settit { background-color:#F0F7D4; font-size: 12pt; font-family: 'Dotum' 'Verdana' ; font-weight: bold; color:404040; padding-left: 30; }
+.settit01 { font-size: 11pt; font-family:'Dotum' 'Verdana' ; font-weight: bold; color:404040; }
+.setex {background-color: #FBFBFB; border-bottom: 1 dotted #B5B5B5; border-top: 1 dotted #B5B5B5; padding-left: 15; padding-right: 15; padding-top:10; padding-bottom:10;}
+.setex01 { border-top: 1 dotted #B5B5B5; padding-left: 15; padding-top:10; }

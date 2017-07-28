@@ -214,7 +214,7 @@
 						<tr>
 							<td>
 								<div class="listview">
-									<div class="listView" style="overflow:auto; border:0;Width:300px; Height:271px">
+									<div class="listView" style="overflow:auto; border:0;Width:340px; Height:271px">
 										<div id="TaskList"  onRowDblClick="" onSelDblClick="" onSelClick=""	onClick="TaskList_rowclick()"> </div>
 									</div>
 								</div>

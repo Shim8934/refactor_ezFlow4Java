@@ -723,14 +723,13 @@
 			}
 			
 			//지정
-			function btnAssign_onclick() 
-			{
+			function btnAssign_onclick() {
 				var parameter = new Array();
 				parameter[0] = pDocID;						//문서ID
 				parameter[1] = pSusinSN;					//수발신SN
 				parameter[2] = pAprState;					//결재상태
 			  
-				var url = "/myoffice/ezApprovalG/ezAPRRECEIVE/ezReceiveAssignUI_Cross.aspx";
+				var url = "/ezApprovalG/ezReceiveAssignUI.do";
 				var feature = "status:no;dialogWidth:388px;dialogHeight:345px;edge:sunken;scroll:no";
 				 	
 				feature =  feature + GetShowModalPosition(388, 345);
