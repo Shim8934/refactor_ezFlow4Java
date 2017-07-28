@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
@@ -45,13 +46,22 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		insert("MApprovalG.insertOpinionInfo", map);
 	}
 
-	public void updateDocOpinionInfo(Map<String, Object> map) throws Exception {
-		update("MApprovalG.updateDocOpinionInfo", map);
+	public int updateDocOpinionInfo(Map<String, Object> map) throws Exception {
+		return update("MApprovalG.updateDocOpinionInfo", map);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<MApprovalGTLVO> getTimeLineList(Map<String, Object> map) throws Exception {
 		return (List<MApprovalGTLVO>) list("MApprovalG.getTimeLineList", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MApprovalGAttachInfoVO> getAttachList(Map<String, Object> map) throws Exception {
+		return (List<MApprovalGAttachInfoVO>) list("MApprovalG.getAttachList", map);
+	}
+
+	public int deleteOpinionInfo(Map<String, Object> map) throws Exception {
+		return delete("MApprovalG.deleteOpinionInfo", map);
 	}
 
 }

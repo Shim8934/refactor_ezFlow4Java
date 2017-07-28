@@ -2,15 +2,6 @@
  * 
  */
 
-$(document).ready(function() {
-	getApproveList("DO");
-	getApproveListCount("DO");
-
-	$.searchApprove = function() {
-		alert("Search!");
-	}
-});
-
 $(document).on('pageshow', '#doApproveDetail', function() {
 	$('.writeButton').css('bottom', 60);
 	$('.writeButton').css('left', $(window).width() - 60 );
@@ -43,10 +34,12 @@ function searchApproveList() {
 	
 	$.ajax({
 		type : "POST",
-		url : "/mobile/ezApprovalG/doSearchApproveList.do",
+		url : "/mobile/ezApprovalG/mGetApproveList.do",
 		dataType : "json",
 		data : {
-			pSearchText : searchText
+			pType : type,
+			pSearchText : searchText,
+			pLastDate : ""
 		},
 		success : function(data) {
 			var list = "";
@@ -55,7 +48,7 @@ function searchApproveList() {
 			if (data.docList.length > 0) {
 				$.each(data.docList, function(key, value) {
 					list += "<li class='ui-first-child'>";
-					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=" + value.docID + "' >";
+					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/mApproveDoc.do?pDocID=" + value.docID + "' >";
 					list +=	"  		<h2 style='font-size:12px'>" + value.writerName + "</h2>";
 					list += "  		<p class='ui-li-aside'>" + value.startDate + "</p>";
 					list +=	"  		<p>" + value.docTitle + "</p>";
@@ -98,7 +91,7 @@ function getApproveList(type) {
 			if (data.approvalList.length > 0) {
 				$.each(data.approvalList, function(key, value) {
 					list += "<li class='ui-first-child'>";
-					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=" + value.docID + "' >";
+					list += "  	<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezApprovalG/mApproveDoc.do?pDocID=" + value.docID + "&pType=" + type + "' >";
 					list +=	"  		<h2 style='font-size:12px'>" + value.writerName + "</h2>";
 					list += "  		<p class='ui-li-aside'>" + value.startDate + "</p>";
 					list +=	"  		<p>" + value.docTitle + "</p>";
@@ -114,9 +107,6 @@ function getApproveList(type) {
 				
 				$("#apprList").html(list);
 			}
-			
-			//리스트 카운트 업데이트
-//			$("#listCount").text("(" + data.listCount + ")");
 		},
 		error : function(xhr, status, error) {
 			
@@ -157,11 +147,10 @@ function showOriginal() {
 function showComment(docID, listType) {
 	$.ajax({
 		type : "POST",
-		url : "/mobile/ezApprovalG/getOpinionInfo.do",
+		url : "/mobile/ezApprovalG/mGetOpinionInfo.do",
 		dataType : "json",
 		data : {
-			pDocID : docID,
-			pListType : listType
+			pDocID : docID
 		},
 		success : function(data) {
 			var list = "";
@@ -194,11 +183,10 @@ function showComment(docID, listType) {
 function writeComment(docID, listType) {
 	$.ajax({
 		type : "POST",
-		url : "/mobile/ezApprovalG/getOpinionInfo.do",
+		url : "/mobile/ezApprovalG/mGetOpinionInfo.do",
 		dataType : "json",
 		data : {
-			pDocID : docID,
-			pListType : listType
+			pDocID : docID
 		},
 		success : function(data) {
 			var list = "";
@@ -222,12 +210,13 @@ function writeComment(docID, listType) {
 function commentSave(docID) {
 	$.ajax({
 		type : "POST",
-		url : "/mobile/ezApprovalG/saveOpinionInfo.do",
+		url : "/mobile/ezApprovalG/mSetOpinionInfo.do",
 		dataType : "json",
 		data : {
 			pDocID    : docID,
 			pContent  : $("#writeComment").val(), 
-			pOpinionGB: "001"
+			pOpinionGB: "001",
+			pType     : "INSERT"
 		},
 		success : function() {
 		},

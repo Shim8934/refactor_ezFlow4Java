@@ -17,7 +17,17 @@
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>			
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>	
+		<script type="text/javascript">
+			$(document).ready(function() {
+				getApproveList("DRAFT");
+				getApproveListCount("DRAFT");
+	
+				$.searchApprove = function() {
+					alert("Search!");
+				}
+			});
+		</script>		
 	</head>
 	<body class="loginbody">
 		<section id="doApproveList" data-role="page">

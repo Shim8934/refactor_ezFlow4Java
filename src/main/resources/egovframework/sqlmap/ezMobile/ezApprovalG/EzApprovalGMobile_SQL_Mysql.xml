@@ -4,8 +4,9 @@
 <sqlMap namespace="ezApprovalGMobile">
 	<typeAlias  alias="MApprovalGTLVO" 						type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO"/>
 	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
+	<typeAlias  alias="MApprGAttachInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO"/>
 	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
-	<typeAlias  alias="MApprovalGOpinionInfoVO" 			type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
+	<typeAlias  alias="MApprGOpinionInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
 	
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO">
 		<isEqual property="type" compareValue="DO">
@@ -14,8 +15,8 @@
 					DOCID,
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-					WRITERNAME,
-					WRITERDEPTNAME
+					WRITERNAME$lang$,
+					WRITERDEPTNAME$lang$
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -29,11 +30,11 @@
 	   			AND 
 	   				APRTYPE <> '015' 
 			]]>
-				<isNotEmpty property="searchText" prepend="AND">
-					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-						OR 
-					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
-				</isNotEmpty>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
@@ -45,8 +46,8 @@
 					DOCID,
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-					WRITERNAME,
-					WRITERDEPTNAME
+					WRITERNAME$lang$,
+					WRITERDEPTNAME$lang$
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -64,11 +65,11 @@
 	   			AND 
 		         	DocState <> '017'
 			]]>
-				<isNotEmpty property="searchText" prepend="AND">
-					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-						OR 
-					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
-				</isNotEmpty>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
@@ -80,8 +81,8 @@
 					DOCID,
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-					WRITERNAME,
-					WRITERDEPTNAME
+					WRITERNAME$lang$,
+					WRITERDEPTNAME$lang$
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -96,80 +97,243 @@
 	   				APRMEMBERID = #userId# 
 	   			AND 
 	   				APRTYPE <> '015'
-	   			AND 
-		         	DocState <> '017'
 			]]>
-				<isNotEmpty property="searchText" prepend="AND">
-					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-						OR 
-					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
-				</isNotEmpty>
+			<isEqual property="mainViewYN" compareValue="YES">
+				AND	    
+					AprState != '001'
+		    </isEqual>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
 					#listSize#
 		</isEqual>
 		<isEqual property="type" compareValue="END">
-			<![CDATA[
-				SELECT 
-					DOCID,
-					DOCTITLE,
-					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-					WRITERNAME,
-					WRITERDEPTNAME
-				FROM 
-					TBL_ENDAPRDOCINFO A
-				INNER JOIN
-					TBL_EXPENDAPRDOCINFO B
-				ON 
-			   		A.DOCID = B.DOCID
-			   	AND
-			   		A.TENANT_ID = B.TENANT_ID
-			   	AND
-			   		A.COMPANYID = B.COMPANYID
+			SELECT
+				DISTINCT A.DOCID,
+				A.DOCTITLE,
+				DATE_ADD(DATE_FORMAT(A.ENDDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
+				A.WRITERNAME$lang$,
+				A.WRITERDEPTNAME$lang$
+			FROM
+				TBL_ENDAPRDOCINFO A
+			LEFT OUTER JOIN
+	   			TBL_ENDAPRLINEINFO B
+		   	ON
+	   			A.DOCID = B.DOCID
+		   	AND
+	   			A.TENANT_ID = B.TENANT_ID
+		   	AND
+	   			A.COMPANYID = B.COMPANYID
+			INNER JOIN
+				TBL_EXPENDAPRDOCINFO C
+			ON
+		   		A.DOCID = B.DOCID
+		   	AND
+		   		A.TENANT_ID = C.TENANT_ID
+		   	AND
+		   		A.COMPANYID = C.COMPANYID
+		   	<isEqual property="approvalFlag" compareValue="S">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+    	        INNER JOIN 
+    			 	TBL_CODELIST F
+    		    ON 
+    			 	A.FUNCTIONTYPE = F.CODE2 
+			    AND 
+				 	A.TENANT_ID = F.TENANT_ID
+                AND 
+                 	A.COMPANYID = F.COMPANYID 
+                LEFT OUTER JOIN  
+              		TBL_ENDRECEIPTPOINTINFO G 
+              	ON 
+              		A.DOCID = G.DocID 
+			    AND 
+			  		A.TENANT_ID = G.TENANT_ID
+                AND 
+                	A.COMPANYID = G.COMPANYID              
+		   	</isEqual>
+		   	<![CDATA[
 	   			WHERE
 	   				A.TENANT_ID = #tenantID#
 	   			AND
 	   				A.COMPANYID = #companyID#
 	   			AND
-	   				B.DELFLAG IS NULL
+	   				C.DELFLAG IS NULL
 	   			AND
 	   				A.ENDDATE < #lastDate#
 	   			AND
-	   				APRMEMBERID = #userId# 
+	   				B.APRMEMBERID = #userId# 
 			]]>
-				<isNotEmpty property="searchText" prepend="AND">
-					(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-						OR 
-					WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
-				</isNotEmpty>
-				ORDER BY 
-					ENDDATE DESC
-				LIMIT
-					#listSize#
-		</isEqual>
-	</select>
-	
-	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT 
-				COUNT(*)
-			FROM 
-				VAPRDOINGDOCLIST 
-   			WHERE
-   				TENANT_ID = #tenantID#
-   			AND
-   				COMPANYID = #companyID#
-   			AND 
-   				APRMEMBERID IN ($id$) 
-   			AND 
-   				APRTYPE <> '015' 
-		]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				AND  
+					E.CODE1 ='SA02'
+				AND  
+					F.CODE1 ='A04'
+		   	</isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
 					OR 
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
+			ORDER BY 
+				ENDDATE DESC
+			LIMIT
+				#listSize#
+		</isEqual>
+	</select>
+	
+	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="type" compareValue="DO">
+			<![CDATA[
+				SELECT 
+					COUNT(*)
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND 
+	   				APRMEMBERID IN ($id$) 
+	   			AND 
+	   				APRTYPE <> '015' 
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+				SELECT 
+					COUNT(*)
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND 
+		         	APRMEMBERSN = 1 
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND 
+		         	DocState <> '017'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+				SELECT 
+					COUNT(*)
+				FROM 
+					VAPRDOINGDOCLIST 
+	   			WHERE
+	   				TENANT_ID = #tenantID#
+	   			AND
+	   				COMPANYID = #companyID#
+	   			AND 
+		         	APRMEMBERSN = 1 
+	   			AND
+	   				APRMEMBERID = #userId# 
+	   			AND 
+	   				APRTYPE <> '015'
+	   			AND 
+		         	DocState <> '017'
+			]]>
+			<isNotEmpty property="searchText" prepend="AND">
+				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+		</isEqual>
+		<isEqual property="type" compareValue="END">
+			SELECT
+				COUNT(DISTINCT A.DOCID)
+			FROM
+				TBL_ENDAPRDOCINFO A
+			LEFT OUTER JOIN
+	   			TBL_ENDAPRLINEINFO B
+		   	ON
+	   			A.DOCID = B.DOCID
+		   	AND
+	   			A.TENANT_ID = B.TENANT_ID
+		   	AND
+	   			A.COMPANYID = B.COMPANYID
+			INNER JOIN
+				TBL_EXPENDAPRDOCINFO C
+			ON
+		   		A.DOCID = B.DOCID
+		   	AND
+		   		A.TENANT_ID = C.TENANT_ID
+		   	AND
+		   		A.COMPANYID = C.COMPANYID
+		   	<isEqual property="approvalFlag" compareValue="S">
+		   		INNER JOIN
+		   			TBL_CODELIST E
+		   		ON
+		   			A.DOCSTATE = E.CODE2 
+			    AND 
+				 	A.TENANT_ID = E.TENANT_ID
+                AND 
+                 	A.COMPANYID = E.COMPANYID
+    	        INNER JOIN 
+    			 	TBL_CODELIST F
+    		    ON 
+    			 	A.FUNCTIONTYPE = F.CODE2 
+			    AND 
+				 	A.TENANT_ID = F.TENANT_ID
+                AND 
+                 	A.COMPANYID = F.COMPANYID 
+                LEFT OUTER JOIN  
+              		TBL_ENDRECEIPTPOINTINFO G 
+              	ON 
+              		A.DOCID = G.DocID 
+			    AND 
+			  		A.TENANT_ID = G.TENANT_ID
+                AND 
+                	A.COMPANYID = G.COMPANYID              
+		   	</isEqual>
+		   	<![CDATA[
+	   			WHERE
+	   				A.TENANT_ID = #tenantID#
+	   			AND
+	   				A.COMPANYID = #companyID#
+	   			AND
+	   				C.DELFLAG IS NULL
+	   			AND
+	   				B.APRMEMBERID = #userId# 
+			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				AND  
+					E.CODE1 ='SA02'
+				AND  
+					F.CODE1 ='A04'
+		   	</isEqual>
+			<isNotEmpty property="searchText" prepend="AND">
+				(A.DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
+					OR 
+				A.WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
+			</isNotEmpty>
+		</isEqual>
 	</select>
 	
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
@@ -260,7 +424,7 @@
 		]]>
 	</select>
 	
-	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprovalGOpinionInfoVO">
+	<select id="MApprovalG.getOpinionInfo" parameterClass="Map" resultClass="MApprGOpinionInfoVO">
 		<![CDATA[
 			SELECT 
 				 CONTENT,
@@ -294,6 +458,79 @@
 		]]>
 	</select>
 	
+	<select id="MApprovalG.getAttachList" parameterClass="Map" resultClass="MApprGAttachInfoVO">
+		<isNotEqual property="type" compareValue="END">
+			<![CDATA[
+				(SELECT
+					DISPLAYNAME attachName,
+					ATTACHFILEHREF attachHref,
+					ATTACHFILESIZE attachFileSize
+				FROM
+					TBL_APRATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID# 
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				ORDER BY
+					ATTACHFILESN)
+					
+				UNION ALL
+				
+				(SELECT
+					ATTACHDOCNAME attachName,
+					ATTACHDOCURL attachHref,
+					0 attachFileSize
+				FROM
+					TBL_APRDOCATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID# 
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				ORDER BY
+					ATTACHSN)
+			]]>
+		</isNotEqual>
+		<isEqual property="type" compareValue="END">
+			<![CDATA[
+				(SELECT
+					DISPLAYNAME attachName,
+					ATTACHFILEHREF attachHref,
+					ATTACHFILESIZE attachFileSize
+				FROM
+					TBL_ENDATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID# 
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				ORDER BY
+					ATTACHFILESN)
+					
+				UNION ALL
+				
+				(SELECT
+					ATTACHDOCNAME attachName,
+					ATTACHDOCURL attachHref,
+					0 attachFileSize
+				FROM
+					TBL_ENDAPRDOCATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				ORDER BY
+					ATTACHSN)
+			]]>
+		</isEqual>
+	</select>
+	
 	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">
 		<![CDATA[
 	   		INSERT INTO TBL_APROPINIONINFO (
@@ -315,7 +552,7 @@
    			UPDATE
 	   			TBL_APRDOCINFO
 	   		SET
-	   			HASOPINIONYN = 'Y'
+	   			HASOPINIONYN = #hasOpinionYN#
 	   		WHERE
 	   			TENANT_ID = #tenantID#
 	   		AND
@@ -324,6 +561,19 @@
 	   			DOCID = #docID#
 		]]>
    </update>
+   
+   <delete id="MApprovalG.deleteOpinionInfo" parameterClass="Map">
+   		<![CDATA[
+   			DELETE FROM 
+		  		TBL_APROPINIONINFO
+	    	WHERE  
+	    		DOCID = #docID#
+	    	AND
+	    		TENANT_ID = #tenantID#
+	    	AND
+	    		COMPANYID = #companyID#
+		]]>
+   </delete>
    
    <select id="MApprovalG.getTimeLineList" parameterClass="Map" resultClass="MApprovalGTLVO">
    		<![CDATA[

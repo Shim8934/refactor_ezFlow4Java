@@ -92,10 +92,12 @@ public class MApprovalGController {
 	@RequestMapping(value = "/mobile/ezApprovalG/mGetApproveList.do")
 	public String mGetApproveList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pType, String pSearchText, String pLastDate) throws Exception {
 		LOGGER.debug("mGetApproveList started");
-		LOGGER.debug("listType : " + pType);
+		LOGGER.debug("type : " + pType);
 		LOGGER.debug("searchText : " + pSearchText);
 		
+		//세션 대신 임시
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezapproval/" + pType + "/list/users/" + userInfo.getId();
 		
@@ -138,10 +140,12 @@ public class MApprovalGController {
 	@RequestMapping(value = "/mobile/ezApprovalG/mGetApproveListCount.do")
 	public String mGetApproveListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pType, String pSearchText) throws Exception {
 		LOGGER.debug("mGetApproveListCount started");
-		LOGGER.debug("listType : " + pType);
+		LOGGER.debug("type : " + pType);
 		LOGGER.debug("searchText : " + pSearchText);
 
+		//세션 대신 임시
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezapproval/" + pType + "/list-count/users/" + userInfo.getId();
 		
@@ -152,8 +156,7 @@ public class MApprovalGController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("searchText", pSearchText)
-		        .queryParam("listSize", 20);
+		        .queryParam("searchText", pSearchText);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -177,70 +180,173 @@ public class MApprovalGController {
 	/**
 	 * 모바일 전자결재G 문서보기 호출 Method
 	 */
-	@RequestMapping(value = "/mobile/ezApprovalG/doApprovalGDetail.do")
-	public String doApprovalGDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID, String pListType) throws Exception {
+	@RequestMapping(value = "/mobile/ezApprovalG/mApproveDoc.do")
+	public String doApprovalGDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID, String pType) throws Exception {
 		LOGGER.debug("doApprovalGDetail started");
 		LOGGER.debug("docID : " + pDocID);
-		LOGGER.debug("listType : " + pListType);
+		LOGGER.debug("type : " + pType);
 		
+		//세션 대신 임시
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String realPath = commonUtil.getRealPath(request);
 		
-		//임시 결재할문서 타입
-		pListType = "1";
-
-		//결재선
-		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = MApprovalGService.getAprLineInfo(pDocID, pListType, userInfo);
-		String photoPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId());
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url1 = gwServerUrl + "/ezapproval/docs/" + pDocID;
+		String url2 = gwServerUrl + "/ezapproval/docs/" + pDocID + "/line-list";
+		String url3 = gwServerUrl + "/ezapproval/docs/" + pDocID + "/attach-list";
+		String url4 = gwServerUrl + "/ezapproval/docs/" + pDocID + "/opinion-count";
 		
-		//본문
-		String domain = request.getServerName() + ":" + request.getServerPort();
-		String bodyHTML = MApprovalGService.getMHTBody(pDocID, pListType, realPath, domain, userInfo);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
 		
-		//의견갯수
-		String commentCount = MApprovalGService.getAprCommentCount(pDocID, pListType, userInfo);
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		model.addAttribute("aprLineList", approvalGAprLineInfoVOs);
-		model.addAttribute("photoPath", photoPath);
-		model.addAttribute("bodyHTML", bodyHTML);
-		model.addAttribute("commentCount", commentCount);
-		model.addAttribute("docID", pDocID);
+		UriComponentsBuilder builder1 = UriComponentsBuilder.fromHttpUrl(url1)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("docID", pDocID);
+		UriComponentsBuilder builder2 = UriComponentsBuilder.fromHttpUrl(url2)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("docID", pDocID);
+		UriComponentsBuilder builder3 = UriComponentsBuilder.fromHttpUrl(url3)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("docID", pDocID);
+		UriComponentsBuilder builder4 = UriComponentsBuilder.fromHttpUrl(url4)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("type", pType)
+				.queryParam("docID", pDocID);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result1 = rest.exchange(builder1.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<JSONObject> result2 = rest.exchange(builder2.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<JSONObject> result3 = rest.exchange(builder3.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<JSONObject> result4 = rest.exchange(builder4.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		String status1 = result1.getBody().get("status").toString();
+		String status2 = result2.getBody().get("status").toString();
+		String status3 = result3.getBody().get("status").toString();
+		String status4 = result4.getBody().get("status").toString();
+		
+		if (status1.equals("ok") && status2.equals("ok") && status3.equals("ok") && status4.equals("ok")) {
+			String bodyHTML = result1.getBody().get("data").toString();
+			String photoPath = result2.getBody().get("photoPath").toString();
+			String opinionCount = result3.getBody().get("data").toString();
+			
+			JSONArray approveLineList = new JSONArray();
+			Gson gson = new Gson();
+			approveLineList = gson.fromJson(gson.toJson(result2.getBody().get("data")), JSONArray.class);
+			
+			JSONArray approveAttachList = new JSONArray();
+			approveAttachList = gson.fromJson(gson.toJson(result4.getBody().get("data")), JSONArray.class);
+			
+			model.addAttribute("aprAttachList", approveAttachList);
+			model.addAttribute("aprLineList", approveLineList);
+			model.addAttribute("photoPath", photoPath);
+			model.addAttribute("opinionCount", opinionCount);
+			model.addAttribute("docID", pDocID);
+			model.addAttribute("bodyHTML", bodyHTML);
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
 
 		LOGGER.debug("doApprovalGDetail ended");
 		
 		return "mobile/ezApprovalG/mApprGdoApproveDetail";
 	}
 	
-	@RequestMapping(value = "/mobile/ezApprovalG/getOpinionInfo.do")
-	public String getOpinionInfo(@CookieValue("loginCookie") String loginCookie, Model model, String pDocID, String pListType) throws Exception {
-		LOGGER.debug("getOpinionInfo started");
+	@RequestMapping(value = "/mobile/ezApprovalG/mGetOpinionInfo.do")
+	public String getOpinionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID) throws Exception {
+		LOGGER.debug("mGetOpinionInfo started");
 		LOGGER.debug("docID : " + pDocID);
-		LOGGER.debug("listType : " + pListType);
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-
-		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = MApprovalGService.getOpinionInfo(pDocID, pListType, userInfo);
-
-		model.addAttribute("opinionList", approvalGOpinionInfoVOs);
-		model.addAttribute("userID", userInfo.getId());
 		
-		LOGGER.debug("getOpinionInfo ended");
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/docs/" + pDocID + "/opinion";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("docID", pDocID);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		String status = result.getBody().get("status").toString();
+		
+		if (status.equals("ok")) {
+			JSONArray approveOpinionList = new JSONArray();
+			Gson gson = new Gson();
+			approveOpinionList = gson.fromJson(gson.toJson(result.getBody().get("data")), JSONArray.class);
+			
+			model.addAttribute("opinionList", approveOpinionList);
+			model.addAttribute("userID", userInfo.getId());
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+
+		LOGGER.debug("mGetOpinionInfo ended");
 		
 		return "json";
 	}
 	
-	@RequestMapping(value = "/mobile/ezApprovalG/saveOpinionInfo.do")
-	public void saveOpinionInfo(@CookieValue("loginCookie") String loginCookie, String pDocID, String pContent, String pOpinionGB, HttpServletResponse response) throws Exception {
-		LOGGER.debug("saveOpinionInfo started");
+	@RequestMapping(value = "/mobile/ezApprovalG/mSetOpinionInfo.do")
+	public String mSetOpinionInfo(@CookieValue("loginCookie") String loginCookie, String pDocID, String pContent, String pOpinionGB, String pType, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("mSetOpinionInfo started");
 		LOGGER.debug("docID : " + pDocID);
 		LOGGER.debug("content : " + pContent);
 		LOGGER.debug("opinionGB : " + pOpinionGB);
+		LOGGER.debug("type : " + pType);
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		MApprovalGService.saveOpinionInfo(pDocID, pContent, pOpinionGB, userInfo);
-
-		LOGGER.debug("saveOpinionInfo ended");
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/docs/" + pDocID + "/opinion";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId())
+				.queryParam("docID", pDocID)
+				.queryParam("opinionGB", pOpinionGB)
+				.queryParam("content", pContent);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = null;
+		
+		if (pType.equals("INSERT")) {
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		} else if (pType.equals("UPDATE")) {
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+		} else if (pType.equals("DELETE")) {
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, JSONObject.class);
+		}
+		
+		String status = result.getBody().get("status").toString();
+		
+		if (status.equals("ok")) {
+			String code = result.getBody().get("code").toString();
+			
+			//code로 삽입, 삭제, 수정이 잘되었는지 확인하기
+			model.addAttribute("code", code);
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+		
+		LOGGER.debug("mSetOpinionInfo ended");
+		
+		return "json";
 	}
 	
 	@RequestMapping(value = "/mobile/ezApprovalG/getTimeLineList.do")
