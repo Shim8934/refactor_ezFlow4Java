@@ -118,7 +118,10 @@ public class MBoardController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		.queryParam("userID", userInfo.getId());
+				.queryParam("primary", userInfo.getPrimary())
+				.queryParam("userID", userInfo.getId())
+				.queryParam("rollInfo", userInfo.getRollInfo())
+				.queryParam("deptPathCode", userInfo.getDeptPathCode());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -128,15 +131,15 @@ public class MBoardController {
 				
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : "+status);
-		
+System.out.println("resultBody:"+resultBody);
 		JSONArray list = new JSONArray();
-		//JSONArray boardInfo = new JSONArray();
+		Object boardInfo = "";
 		if (status.equals("ok")) {
 			Gson gson = new Gson();
 			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
-			//boardInfo = gson.fromJson(gson.toJson(resultBody.get("data2")), JSONArray.class);
-			
-			//model.addAttribute("mBoardInfo", boardInfo);
+			boardInfo = resultBody.get("data2");
+System.out.println("boardInfo:"+resultBody.get("data2"));
+			model.addAttribute("mBoardInfo", boardInfo);
 			//model.addAttribute("title", mBoardInfoVO.getBoardName());
 			model.addAttribute("listSize", list.size());
 		}
@@ -183,7 +186,7 @@ public class MBoardController {
 		LOGGER.debug("type = " + type + " || boardID = " + boardID + " || userID = " + userInfo.getId());
 		
 		mBoardInfoVO.setType("newBoardItemList");
-		//mBoardInfoVO.setBoardID("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
+		mBoardInfoVO.setBoardID("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
 		//mBoardInfoVO.setBoardID("{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}");
 		
 		//게시판정보
@@ -218,7 +221,7 @@ public class MBoardController {
 //			}
 //		}
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/ezboard/"+mBoardInfoVO.getType()+"/boards/"+boardID+"/list";
+		String url = gwServerUrl + "/ezboard/"+mBoardInfoVO.getType()+"/boards/"+mBoardInfoVO.getBoardID()+"/list";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
