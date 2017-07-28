@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezTalkGate.web;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 
@@ -97,7 +98,19 @@ public class EzTalkGateController {
 			} else if (ezTalkSsoType.equals("noticeBoard")) { 
 				return "redirect:/ezTalkGate/noticeBoard.do";
 			} else if (ezTalkSsoType.equals("mailWrite")) { 
-				return "redirect:/ezEmail/mailWrite.do?cmd=NEW";
+				String emailAddress = request.getParameter("emailAddress") == null ? "" : request.getParameter("emailAddress");
+				String name = request.getParameter("name") == null ? "" : request.getParameter("name");
+				
+				if (!emailAddress.equals("")) {
+					name = name.equals("") ? emailAddress : name;
+					String msgTo = String.format("%s <%s>", name, emailAddress);
+					
+					logger.debug("msgTo=" + msgTo);
+					
+					return "redirect:/ezEmail/mailWrite.do?cmd=NEW&msgto=" + URLEncoder.encode(msgTo, "UTF-8");
+				} else {
+					return "redirect:/ezEmail/mailWrite.do?cmd=NEW";
+				}
 			} else {
 				return "";
 			}
