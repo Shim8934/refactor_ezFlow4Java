@@ -343,7 +343,7 @@
 	    </script>
 	</head>
 	<body>
-		<div id="txtContent" name="txtContent" style="margin-left:5px;margin-right:5px;word-wrap:break-word;">
+		<div id="txtContent" name="txtContent" style="margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
 		</div>
 	</body>
