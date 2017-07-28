@@ -147,7 +147,7 @@
 	        }
 	
 	        function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
+	            if (strHeaderName != "<spring:message code='ezCircular.t65' />") {
 	                if (OrderCell == strHeaderName) {
 	                    if (OrderOption == "")
 	                        OrderOption = "DESC";
@@ -169,7 +169,6 @@
 	        	
 		        starttime = new Date().getTime();
 				url = "/ezCircular/getCircularCompleteList.do";
-				
 		        $.ajax({
 					type : "POST",
 					dataType : "text",

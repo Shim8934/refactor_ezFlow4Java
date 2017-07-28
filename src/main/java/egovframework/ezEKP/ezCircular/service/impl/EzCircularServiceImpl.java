@@ -868,7 +868,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantID, String offset, String orderCell, String orderOption1) throws Exception {
 		logger.debug("getCircularCompleteList started.");
-		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType =  " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID);
+		logger.debug("memberID = " + memberID + " || searchValue = " + searchValue + " || searchType = " + searchType + " || startRow = " + startRow + " || endRow = " + endRow + " || orderCell = " + orderCell + " || orderOption1 = " + orderOption1 + " || tenantID = " + tenantID);
 
 		if (!sdate.equals("")) {
 			sdate += " 00:00:00";
