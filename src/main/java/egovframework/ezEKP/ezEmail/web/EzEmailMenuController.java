@@ -784,6 +784,16 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			returnValue = guid;
 			
 		} catch (Exception e) {
+			if (zos != null) {
+				zos.close();
+				zos = null;
+			}
+			
+			File file = new File(pDirTempPath + ".zip");
+			if (file.exists()) {
+				file.delete();
+			}
+			
 			e.printStackTrace();
 		} finally {
 			if (ia != null) {

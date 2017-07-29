@@ -13,10 +13,10 @@
  * (1) http://ckeditor.com/builder
  *     Visit online builder to build CKEditor from scratch.
  *
- * (2) http://ckeditor.com/builder/21fda0e65565bcab24518e95f8b4a2e6
+ * (2) http://ckeditor.com/builder/7a1e76e8320dbd210f698a135334676a
  *     Visit online builder to build CKEditor, starting with the same setup as before.
  *
- * (3) http://ckeditor.com/builder/download/21fda0e65565bcab24518e95f8b4a2e6
+ * (3) http://ckeditor.com/builder/download/7a1e76e8320dbd210f698a135334676a
  *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
  *
  * NOTE:
@@ -38,8 +38,10 @@ var CKBUILDER_CONFIG = {
 		'.jshintignore',
 		'.jshintrc',
 		'.mailmap',
+		'.travis.yml',
 		'bender-err.log',
 		'bender-out.log',
+		'bender.ci.js',
 		'bender.js',
 		'dev',
 		'gruntfile.js',
@@ -53,7 +55,6 @@ var CKBUILDER_CONFIG = {
 		'about' : 1,
 		'basicstyles' : 1,
 		'blockquote' : 1,
-		'ckeditortablecellsselection' : 1,
 		'clipboard' : 1,
 		'colorbutton' : 1,
 		'colordialog' : 1,
@@ -69,7 +70,6 @@ var CKBUILDER_CONFIG = {
 		'htmlwriter' : 1,
 		'image' : 1,
 		'imageresize' : 1,
-		'imagerotate' : 1,
 		'indentlist' : 1,
 		'justify' : 1,
 		'lineheight' : 1,
@@ -84,6 +84,7 @@ var CKBUILDER_CONFIG = {
 		'removeformat' : 1,
 		'resize' : 1,
 		'scayt' : 1,
+		'selectall' : 1,
 		'showborders' : 1,
 		'sourcearea' : 1,
 		'specialchar' : 1,
@@ -91,9 +92,12 @@ var CKBUILDER_CONFIG = {
 		'tab' : 1,
 		'table' : 1,
 		'tableresize' : 1,
+		'tableselection' : 1,
 		'tabletools' : 1,
+		'toolbar' : 1,
 		'undo' : 1,
 		'uploadimage' : 1,
+		'widget' : 1,
 		'wsc' : 1,
 		'wysiwygarea' : 1
 	},
