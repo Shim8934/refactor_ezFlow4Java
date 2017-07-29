@@ -1273,6 +1273,26 @@
 	            	}
 	            });				
 			}
+		    
+		    function syncWithBizmekaTalkAccounts() {
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezOrgan/syncWithBizmekaTalkAccounts.do",
+	            	async : true,
+	            	success : function(result) {
+	            	    if (result == "OK") {
+	            	        alert("<spring:message code='ezTalkGate.ldh004' />");
+	            	    } else {
+	            	        alert("<spring:message code='ezQuestion.t263' />");
+	            	    }
+	            	},
+	            	error : function(error) {
+	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
+	            	}
+	            });		        
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -1392,16 +1412,11 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='ezOrgan.t92' /></span></a></td>
 						</tr>		                
-		                <c:if test="${useOCS == 'YES'}">
+						<c:if test="${useBizmekaTalk == 'YES'}">			
 						<tr>
-							<td><a class="imgbtn" id="usermenusipuri"><span onClick="ocssip_manage()">Lync <spring:message code='ezOrgan.t1012' /></span></a></td>
-						</tr>
-						</c:if>			
-						<!--			
-						<tr>
-		                	<td><a class="imgbtn" id="usermenu21"><span onClick="SettingMsn()"><spring:message code='ezOrgan.t1002' /></span></a></td>
+		                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 		                </tr>
-		                -->
+		                </c:if>
 					</table>
 				</th>
 			</tr>
