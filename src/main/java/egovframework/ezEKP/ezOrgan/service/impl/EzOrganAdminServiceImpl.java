@@ -987,6 +987,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	// 지정된 부서에 속한 사원의 수를 반환한다.
 	@Override
 	public int userCountCheck(String cn, int tenantID) throws Exception {
-		return  ezOrganAdminDao.userCountCheck(cn, tenantID);
+		return ezOrganAdminDao.userCountCheck(cn, tenantID);
 	}
+	
+	/**
+	 * 그룹웨어 계정으로 비즈메카톡 계정을 동기화한다.
+	 */
+	@Override
+	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception {
+		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
+	}
+	
 }
