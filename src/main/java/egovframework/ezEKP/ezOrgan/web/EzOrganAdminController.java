@@ -595,9 +595,35 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
         logger.debug("parentCn=" + parentCn + ",cn=" + cn);
         
-        String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
-
-        logger.debug("moveEntry result=" + result);
+        String result = "OK";
+		String bizmekaResult = "ERROR";
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);		
+        
+		if (useBizmekaSpambox.equals("YES")) {
+			String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+			String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+			String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+			String parentDeptId = parentCn;
+			
+			// 비즈메카에서는 조직도 최상위 회사의 ID가 Top이 아닌 companyId를 사용하므로 상위부서가 Top인 경우 변경한다.
+			if (parentDeptId.equals("Top")) {
+				parentDeptId = bizmekaCompanyId;
+			}
+			
+			bizmekaResult = ezEmailUtil.bizmekaMoveDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn, parentDeptId);		
+			
+			logger.debug("bizmekaResult=" + bizmekaResult);
+			
+			if (!bizmekaResult.equals("OK")) {
+				result = "EMAIL_ERROR";
+			}
+		}
+		
+		if (result.equals("OK")) {
+	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
+	
+	        logger.debug("moveEntry result=" + result);
+		}
         
 		logger.debug("movDept ended.");
 		
@@ -871,8 +897,32 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("parentCn=" + parentCn);
 		
+		String bizmekaResult = "ERROR";
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);		
+		
 		for (int i=0; i < cn.length; i++) {
-		    logger.debug("cn[" + i + "]=" + cn[i]);
+		    logger.debug("cn[" + i + "]=" + cn[i]);		    
+			
+			if (useBizmekaSpambox.equals("YES")) {
+				String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+				String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+				String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+				String parentDeptId = parentCn;
+				
+				// 비즈메카에서는 조직도 최상위 회사의 ID가 Top이 아닌 companyId를 사용하므로 상위부서가 Top인 경우 변경한다.
+				if (parentDeptId.equals("Top")) {
+					parentDeptId = bizmekaCompanyId;
+				}
+				
+				bizmekaResult = ezEmailUtil.bizmekaMoveUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn[i], parentDeptId);		
+				
+				logger.debug("bizmekaResult=" + bizmekaResult);
+				
+				if (!bizmekaResult.equals("OK")) {
+					result = "EMAIL_ERROR";
+					break;
+				}
+			}
 		    
 			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", tenantID);
 		
