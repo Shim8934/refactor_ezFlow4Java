@@ -143,7 +143,7 @@ function editCircularComment(obj) {
 	var circularComment = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > textarea").val();
 	var circularCommentStatus = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > div > input:checked").length;
 	
-	if (circularComment == "") {
+	if (trim(circularComment)== "") {
 		alert(strLang5);
 		return ;
 	}
