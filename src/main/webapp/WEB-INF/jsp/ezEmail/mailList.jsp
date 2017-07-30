@@ -374,7 +374,7 @@
 	    			    	AttachDownFrame.location.href = fullpath;
 	    			        AttachDownFrame.target = "_blank";
 	    				} else {
-	    					alert("편지함 내보내기 도중 에러가 발생했습니다.");
+	    					alert("<spring:message code='ezEmail.lhm33' />");
 	    				}
 	    			}
 	    		});
@@ -394,7 +394,7 @@
 	            var extension = tempname.split(".")[last - 1];
 
 	            if (extension.toUpperCase() != "ZIP") {
-	                alert("파일의 포맷이 올바르지 않습니다.");
+	                alert("<spring:message code='ezEmail.lhm34' />");
 	                return;
 	            }
 	            
@@ -410,10 +410,9 @@
 		    	HiddenMailProgress();
 		    	
 		    	if (result == "OK") {
-		    		alert("편지함 가져오기 완료.");
 		    		MailListRefresh();
 		    	} else {
-		    		alert("편지함 가져오기 도중 에러가 발생했습니다.");
+		    		alert("<spring:message code='ezEmail.lhm35' />");
 		    	}
 		    }
 		</script>	
@@ -452,8 +451,8 @@
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
 		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-		  <li><span onClick="mailbox_export()">편지함 내보내기</span></li>
-		  <li><span onClick="mailbox_import()">편지함 가져오기</span></li>
+		  <li><span onClick="mailbox_export()"><spring:message code="ezEmail.lhm31" /></span></li>
+		  <li><span onClick="mailbox_import()"><spring:message code="ezEmail.lhm32" /></span></li>
 		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
           </ul>
         </div>
