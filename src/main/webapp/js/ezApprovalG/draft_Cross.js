@@ -1600,8 +1600,7 @@ function SendDraftMappingSign(ret) {
                 sn = LastSignNo;
             }
         } else {
-        	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) 
-        	{
+        	if (LastSignSN == 1 || CurAprType == strAprType4 || CurAprType == strAprType16) {
         		OpinionText = getSignDate() + "<br>";
         	}
         }
@@ -1615,6 +1614,13 @@ function SendDraftMappingSign(ret) {
         var s = CurrentDate[1] + "." + CurrentDate[2];
 
         field = message.GetListItem(fields, psigncell);
+        
+        if (singImageType == "NAME") {
+        	if (message.GetListItem(fields, "1sign1")) {
+        		message.GetListItem(fields, "1sign1").height = "65";
+        	}
+        }
+        
         var signWidth = parseInt(field.offsetWidth) - 4;
         var signHeight = parseInt(field.offsetHeight) - 4;
 
@@ -1638,17 +1644,30 @@ function SendDraftMappingSign(ret) {
             signHeight = 28;
         }
 
-        if (CurAprType == strAprType16)  
-        {
+        if (CurAprType == strAprType16) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
-
-                    field.innerHTML = strLang7 + OpinionText + strimg;
-
+                    
+                    if (message.GetListItem(fields, pseumyungdatecell)) {
+                    	signHeight = "28";
+                    }
+                    
+					if (singImageType == "NAME") {
+						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+					} else {
+						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+					}
+					 
+				   //대결 시 서명 데이트 입력란 없으면 날짜 표시
+					if (!message.GetListItem(fields, pseumyungdatecell)) {
+						 field.innerHTML  = strLang7 + OpinionText + strimg;
+					} else {
+						 field.innerHTML  = strLang7 + strimg;
+					}
+					
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
                     SignName[signCnt] = psigncell;
@@ -1657,8 +1676,7 @@ function SendDraftMappingSign(ret) {
                     message.DocumentBodySetAttribute(psigncell, ret);
                     signCnt = signCnt + 1;
                     SingFlag = true;
-                }
-                else {
+                } else {
                     strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
                     field.innerHTML = strLang7 + OpinionText + strimg;
                     signInfo[signCnt] = psigncell;
@@ -1676,8 +1694,8 @@ function SendDraftMappingSign(ret) {
             pseumyungcell = "jikwe" + sn;
             pseumyungdatecell = "seumyungdate" + sn;
         }
-        if (DekyulFlag && NextAprType == strAprType4)
-        {
+        
+        if (DekyulFlag && NextAprType == strAprType4) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
                 field.innerHTML = strLangAprType4;
@@ -1688,18 +1706,19 @@ function SendDraftMappingSign(ret) {
                 signCnt = signCnt + 1;
                 SingFlag = false;
             }
-        }
-        else if (DekyulFlag) {
-        }
-        else {
+        } else if (DekyulFlag) {
+        } else {
             var field = message.GetListItem(fields, psigncell);
 
             if (field) {
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
-                    
+                   	if (singImageType == "NAME") {
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    } else {
+                        strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    }
                     if (message.GetListItem(fields, pseumyungdatecell)) {
                         OpinionText = "";
                     }
@@ -1742,7 +1761,6 @@ function SendDraftMappingSign(ret) {
                 }
             }
         }
-        
         return signInfo;
     } catch (e) {
         alert("SendDraftMappingSign(ret)" + e.description);
@@ -1787,8 +1805,7 @@ function getDraftInfo() {
 
             pDocType = ConvertDocType(pDocType);
             pDocState = ConvertDocState(pDocState);
-        }
-        else if (pDraftFlag == "HAPYUI") {
+        } else if (pDraftFlag == "HAPYUI") {
             pDocType = DocType;
             pDocState = DocState;
 
@@ -1799,6 +1816,7 @@ function getDraftInfo() {
         alert("getDraftInfo()" + e.description);
     }
 }
+
 function ConvertDocType(pDocType) {
     var result = "";
     
@@ -1851,8 +1869,7 @@ function openFormUI() {
         getformcont_cross_dialogArguments[1] = openFormUI_Complete;
 
         DivPopUpShow(713, 570, "/ezApprovalG/getFormCont.do");
-    }
-    catch (e) {
+    } catch (e) {
         alert("openFormUI()" + e.description);
     }
 }
@@ -1897,8 +1914,7 @@ function openFormUI_Complete(ret) {
 
             tempSecurityDate = "";
         }
-    }
-    else {
+    } else {
         if (pFormHref != "cancel") {
             pReadPC = false;
 
@@ -2305,6 +2321,7 @@ function SetAutoPropertyValue() {
         alert("SetAutoPropertyValue()" + e.description);
     }
 }
+
 function SetAutoPropFinal() {
     try {
         var fields = message.GetFieldsList();
@@ -2393,8 +2410,7 @@ function makeOpinionList(OpinionXML) {
             }
         }
         field.innerHTML = strOpinion;
-    }
-    else {
+    } else {
         field.innerHTML = " ";
     }
 }
@@ -2428,12 +2444,11 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(800, 370, url);
+            	DivPopUpShow(820, 500, url);
             } else {
             	DivPopUpShow(1050, 660, url);
             }
-        }
-        else {
+        } else {
         	var feature;
         	if(approvalFlag == "G") {
         		feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
@@ -2459,6 +2474,7 @@ function openAaprDocAttachUI_Complete(ret) {
         setAttachInfo(pDocID, "APR", lstAttachLink);
     }
 }
+
 function SaveDraftDocInfo() {
     var rtnVal;
     SaveFile();
@@ -2493,8 +2509,7 @@ function SaveDraftDocInfo_ilban(pState) {
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pDocID);
             createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", pDocType);
             createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", pDocState);
-        }
-        else {
+        } else {
             createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", "");
             createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", "");
             createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
@@ -2510,11 +2525,9 @@ function SaveDraftDocInfo_ilban(pState) {
         var deptfield = message.GetListItem(fields, "deptshortedname");
         if (deptfield) {
             createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(deptfield));
-        }
-        else if (field) {
+        } else if (field) {
             createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-        }
-        else {
+        } else {
             var field = message.GetListItem(fields, "bedocnumber");
             if (field)
                 createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
@@ -2569,8 +2582,7 @@ function SaveDraftDocInfo_ilban(pState) {
         g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
         if (!g_SepAttachLVXml){
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
-        }
-        else{
+        } else{
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
         }
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
@@ -2599,6 +2611,7 @@ function SaveDraftDocInfo_ilban(pState) {
         alert("SaveDraftDocInfo_ilban(pState)" + e.description);
     }
 }
+
 function getfieldValue(pfield) {
     var rtnVal = "";
     if (pfield) {
@@ -2719,12 +2732,14 @@ function GetAprDocFormID() {
         alert("GetAprDocFormID()" + e.description);
     }
 }
+
 function trim(parm_str) {
     if (parm_str == "")
         return "";
     else
         return rtrim(ltrim(parm_str));
 }
+
 function ltrim(parm_str) {
     var str_temp = parm_str;
     while (str_temp.length != 0) {
@@ -2736,6 +2751,7 @@ function ltrim(parm_str) {
     }
     return str_temp;
 }
+
 function rtrim(parm_str) {
     var str_temp = parm_str;
     while (str_temp.length != 0) {
@@ -2762,6 +2778,7 @@ function getGyulJeDate() {
         alert("getGyulJeDate()" + e.description);
     }
 }
+
 function getGyulJeFullDate() {
     try {
 
@@ -2776,6 +2793,7 @@ function getGyulJeFullDate() {
         alert("getGyulJeFullDate()" + e.description);
     }
 }
+
 function setSusinUpdataDocID() {
     try {
         var xmlhttp = createXMLHttpRequest();
@@ -2795,6 +2813,7 @@ function setSusinUpdataDocID() {
         alert("setSusinUpdataDocID()" + e.description);
     }
 }
+
 function setInitLoadDocCellInfo() {
     try {
         var i;

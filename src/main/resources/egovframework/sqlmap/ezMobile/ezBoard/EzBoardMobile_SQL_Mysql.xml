@@ -2,10 +2,11 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezBoardMobile">
-	<typeAlias  alias="userInfo"					type="egovframework.let.user.login.vo.LoginVO"/>
-	<typeAlias  alias="MBoardInfoVO"				type="egovframework.ezMobile.ezBoard.vo.MBoardInfoVO"/>
-	<typeAlias  alias="MBoardListHeaderVO"			type="egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO"/>
-	<typeAlias  alias="MBoardItemVO"				type="egovframework.ezMobile.ezBoard.vo.MBoardItemVO"/>
+	<typeAlias  alias="userInfo"					     type="egovframework.let.user.login.vo.LoginVO"/>
+	<typeAlias  alias="MBoardInfoVO"				 type="egovframework.ezMobile.ezBoard.vo.MBoardInfoVO"/>
+	<typeAlias  alias="MBoardListHeaderVO"		 type="egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO"/>
+	<typeAlias  alias="MBoardItemVO"				 type="egovframework.ezMobile.ezBoard.vo.MBoardItemVO"/>
+    <typeAlias  alias="MBoardFavoriteVO"         type="egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO"/>
 	
 	<!-- <typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
@@ -542,6 +543,83 @@
                   A.writedate DESC  
               LIMIT #limit#, #rowCount#
       ]]>
+  </select>
+  
+  <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
+      <![CDATA[
+          SELECT 
+              A.BOARDID ,
+              A.BOARDNAME ,
+              A.BOARDNAME2 ,
+              TABUSED ,
+              B.GUBUN 
+          FROM 
+              TBL_Board_MyBoards A
+          JOIN 
+              TBL_Board_BoardInfo B   
+          ON 
+              A.BoardID = B.BoardID
+          AND
+              A.TENANT_ID = B.TENANT_ID
+          WHERE
+              A.TENANT_ID = #tenantID#
+          AND  
+              ( USERID = #userID# OR USERID = 'everyone' )
+          AND 
+              TABUSED = 'Y'
+          ORDER BY 
+              VIEWORDER ASC
+      ]]>
+  </select>
+  
+  <select id="MBoardDAO.getBrdItemInfo" parameterClass="Map" resultClass="MBoardItemVO">
+    <![CDATA[
+          SELECT
+              ITEMID ,
+              WRITERID ,
+              WRITERNAME$lang$ WRITERNAME,
+              WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+              WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
+              WRITEDATE ,
+              PARENTWRITEDATE ,
+              IMPORTANCE ,
+              TITLE ,
+              CONTENTLOCATION ,
+              STARTDATE ,
+              ENDDATE ,
+              ABSTRACT ,
+              ATTACHMENTS ,
+              UPPERITEMIDTREE ,
+              ITEMLEVEL ,
+              COPIEDITEM ,
+              EXTENSIONATTRIBUTE1 ,
+              EXTENSIONATTRIBUTE2 ,
+              EXTENSIONATTRIBUTE3$lang$ EXTENSIONATTRIBUTE3,
+              EXTENSIONATTRIBUTE4 ,
+              EXTENSIONATTRIBUTE5 ,
+              MAINCONTENT ,
+              A.APPRFLAG  ,
+              B.GUBUN ,
+              EXTENSIONATTRIBUTE6 ,
+              EXTENSIONATTRIBUTE7 ,
+              EXTENSIONATTRIBUTE8 ,
+              EXTENSIONATTRIBUTE9 ,
+              EXTENSIONATTRIBUTE10 ,
+              A.BOARDID ,
+              A.DOCNO
+          FROM 
+              TBL_Board_Item A
+          JOIN 
+              TBL_Board_BoardInfo B   
+          ON 
+              A.TENANT_ID = B.TENANT_ID
+          AND
+              A.BoardID = B.BoardID
+          WHERE
+              A.TENANT_ID = #tenantID#
+          AND  
+              ItemID = #itemID#
+    ]]>
   </select>
 </sqlMap>
 

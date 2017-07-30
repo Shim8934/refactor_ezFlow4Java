@@ -35,6 +35,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -50,7 +51,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Component
-public class EzEmailScheduler {
+public class EzEmailScheduler extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailScheduler.class);
 
@@ -464,26 +465,6 @@ public class EzEmailScheduler {
 		}
 		
 		logger.debug("deleteExpireAttach ended.");
-	}
-	
-	/**
-	 * recursive하게 파일/폴더 삭제하는 함수
-	 */
-	private boolean deleteDirectory(File path) {
-		if (path.isDirectory()) {
-			File[] files = path.listFiles();
-			
-			for (int i=0; i<files.length; i++) {
-				if (files[i].isDirectory()) {
-					deleteDirectory(files[i]);
-				}
-				else {
-					files[i].delete();
-				}
-			}
-		}
-		
-		return path.delete();
 	}
 	
 	public boolean preScheduler(String scheduler) {
