@@ -82,26 +82,10 @@
 			}
 			
 			function getConfirmStatus() {
-				$.ajax({
-					type : "POST",
-					url : "/ezCircular/getConfirmStatus.do",
-					dataType : "json",
-					data : {
-						circularID : circularID
-					},
-					success : function(result) {
-						var confirmStatus = result.confirmStatus;
-						
-						if (confirmStatus == "1") {
-							confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
-							$("#circularConfirm").hide();
-							
-							$(".confirmStatus").html(confirmStatus);
-						}
-					},error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezCircular.t102' />");
-					}
-				});
+				confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
+				$("#circularConfirm").hide();
+				
+				$(".confirmStatus").html(confirmStatus);
 			}
 			
 			function getCommentCount() {
