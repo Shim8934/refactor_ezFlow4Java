@@ -31,11 +31,11 @@ public class EzSystemUtil {
 		logger.debug("getSysInfo started. : " + tenantID);
 		
 		String command = "uname";
-		String filePath = "D:/test/uname.txt";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));		
-		//ProcessBuilder builder = new ProcessBuilder(command, "-nro");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//String filePath = "D:/test/uname.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
+		ProcessBuilder builder = new ProcessBuilder(command, "-nro");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		
@@ -75,11 +75,11 @@ public class EzSystemUtil {
 		logger.debug("getCpuInfo started. : " + tenantID);
 		
 		String command = "iostat";
-		String filePath = "D:/test/iostat.txt";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//String filePath = "D:/test/iostat.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -128,11 +128,11 @@ public class EzSystemUtil {
 		logger.debug("getMemoryInfo started. : " + tenantID);
 		
 		String command = "cat";
-		String filePath = "D:/test/meminfo.txt";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "/proc/meminfo");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//String filePath = "D:/test/meminfo.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ProcessBuilder builder = new ProcessBuilder(command, "/proc/meminfo");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -174,11 +174,11 @@ public class EzSystemUtil {
 		logger.debug("getFileSysInfo started. : " + tenantID);
 		
 		String command = "df";
-		String filePath = "D:/test/filesys.txt";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "-h");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//String filePath = "D:/test/filesys.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ProcessBuilder builder = new ProcessBuilder(command, "-h");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -223,11 +223,11 @@ public class EzSystemUtil {
 		logger.debug("getDiskioInfo started. : " + tenantID);
 		
 		String command = "iostat";
-		String filePath = "D:/test/iostat.txt";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//String filePath = "D:/test/iostat.txt";
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -270,10 +270,10 @@ public class EzSystemUtil {
 		logger.debug("getNetDataInfo started. : " + tenantID);
 		
 		String filePath = "D:/test/netInter.txt";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));		
-		//ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
+		ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
+		Process process = builder.start();
+		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;		
