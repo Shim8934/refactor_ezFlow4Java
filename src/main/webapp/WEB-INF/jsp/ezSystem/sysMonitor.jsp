@@ -23,9 +23,7 @@
 		for (var i = 0; i < list.length; i++) {
 			str += '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')">' + list[i].hostname;
 		}
-
 		$("#serverList").append(str);
-		
 	});
 	
 	function chkServerList_onclick(listNum) {	
@@ -62,22 +60,11 @@
 			str += "	</div>";
 			str += "</div>";				
 			
-			$("#monitoringForm").append(str);
-			
+			$("#monitoringForm").append(str);			
 			makingGraph(graphId);
 		} else {
 			document.getElementById(graphId).remove();
 		}
-	}	
-	
-	function setColor() {
-		var colorCode = [];
-		
-		for (var i = 0; i < 10; i++) {
-			var code = "#" + Math.round(Math.random() * 0xffffff).toString(16);
-			colorCode.push(code);
-		}
-		return colorCode;
 	}	
 
 	function makingGraph(graphId) {
@@ -86,27 +73,35 @@
 		var diskioData = [];
 		var networkData = [];
 		
-		var cpuMemoryColor = setColor();
-		var fileSysColor = setColor();
-		var diskioColor = setColor();
-		var networkColor = setColor();
+		var cpuMemoryColor = ['#77B0A8', '#E96359'];
+		var diskioColor = ['#4641D9', '#2F9D27', '#FF5E00', '#FFBB00', '#99004C', '#000093', '#FF0000'];
+		var networkColor = ['#000093', '#FF0000'];
 		
 		var oldTx = 0;
 		var curTx = 0;
 		var oldRx = 0;
 		var curRx = 0;		
 		
+		var current;
+		var start;
+		
 		jui.ready(["chart.builder"], function (builder) {
-			var current = new Date();
-			var start = current - 1000 * 60;
-			var diskDomain = [];
+			//var current = new Date();
+			//var start = current - 1000 * 60;
+			var diskTarget = [];
+			
+			//var netX = 0;
+			//var netY = 50;
+			
+			//var netYDomain = [netX, netY];			
 			
 			// CPU & Memory 관련 그래프
 			var cpuMemoryChart = builder ("#cpuMemInfo", {		
 				axis: [{
 					x: {
 						type: "date",
-						domain: [new Date() - 1000 * 60, new Date()],
+						//domain: [new Date() - 1000 * 60, new Date()],
+						domain: [start, current],
 						realtime: "seconds",
 						interval: 10,
 						format: "hh:mm:ss",
@@ -151,7 +146,8 @@
 				axis: [{
 					x: {
 						type: "date",
-						domain: [new Date() - 1000 * 60, new Date()],
+						//domain: [new Date() - 1000 * 60, new Date()],
+						domain: [start, current],
 						realtime: "seconds",
 						interval: 10,
 						format: "hh:mm:ss",
@@ -189,7 +185,8 @@
 				axis: [{
 					x: {
 						type: "date",
-						domain: [new Date() - 1000 * 60, new Date()],
+						//domain: [new Date() - 1000 * 60, new Date()],
+						domain: [start, current],
 						realtime: "seconds",
 						interval : 10,
 						format: "hh:mm:ss",
@@ -201,7 +198,8 @@
 						step: 5,
 						line: true,
 						format: function(value) {
-							return value + "KBit/s";
+							//return value + "KBit/s";
+							return value + "Mbps";
 						}
 					},
 				}],
@@ -239,7 +237,6 @@
 				brush : [{
 					type: "bargauge",
 					size: 20,
-					colors: fileSysColor,
 					format: function(value) {
 						return parseInt(value) + "%";
 					}
@@ -252,10 +249,14 @@
 				}]
 			});
 			
-	      	var intervalId =  setInterval(function() {
-	   	    	var current = new Date();
-	   	    	var start = new Date - 1000 * 60;
+	      	setInterval(function() {
+	   	    	current = new Date();
+	   	    	start = new Date - 1000 * 60;
 	   	    	var domain = [start , current];
+	   	    	var networkMax = 0;
+	   	    	var networkDomain;
+	   	    	var networkStep;
+	   	    	var tmp = 0;
 		    	getInfo();
 
 		    	cpuMemoryChart.axis(0).update(cpuMemoryData);   	    	
@@ -274,11 +275,11 @@
 		        });
 		    	diskioChart.updateBrush(0, {
 		    		type: "line",
-		    		target: diskDomain
+		    		target: diskTarget
 		    	})
  		    	diskioChart.updateBrush(1, {
 		    		type: "scatter",
-		    		target: diskDomain,
+		    		target: diskTarget,
 		    		symbol: "circle",
 		    		size: 8
 		    	})
@@ -292,6 +293,35 @@
 		    	networkChart.axis(0).updateGrid("x", {
 		    		domain : domain
 		        });
+	    		
+	    		for (var i = 0; i < networkData.length; i++) {
+	    			
+	    			if (networkData[i].Receive > networkData[i].Transfer) {
+	    				tmp = networkData[i].Receive;
+	    			} else {
+	    				tmp = networkData[i].Transfer;
+	    			}	    			
+	    			if (tmp > networkMax) {
+	    				networkMax = tmp;
+	    			}
+	    		}	
+		    	
+		    	if (networkMax > 50) {
+		    		networkDomain = [0, 100];
+		    		networkStep = 10;   		
+		    	} else {
+		    		networkDomain = [0, 50];
+		    		networkStep = 5;	    		
+		    	}
+		    	networkChart.axis(0).updateGrid("y", {
+					type: "range",
+					domain: networkDomain,
+					step: networkStep,
+					line: true,
+					format: function(value) {
+						return value + "Mbps";
+					}			
+    			});	 
 		    	networkChart.updateBrush(0, {
 		    		type: "line",
 		    		target: ["Receive", "Transfer"]
@@ -300,13 +330,12 @@
 		    	
 		    	filesysChart.axis(0).update(fileSysData);	   
 		    	filesysChart.render(true);
-		    }, 3000);
+		    }, 2000);
 	      	
 	    	function getInfo() {
 	    		$.ajax ({
 	    			url : "/admin/ezSystem/sysMonitorInfo.do",
 	    			type : "POST",
-	    			async : false,
 	    			dataType : "json",
 	    			success : function (data) {
 	    				getFileSysData(data.fileSysInfoList);
@@ -316,7 +345,7 @@
 	    				setOsInfo(data.osInfo);
 	    			}
 	    		});
-	    	};
+	    	}; 
 	    	
 	    	function setOsInfo(list) {
 	    		var obj = JSON.parse(list);
@@ -337,8 +366,8 @@
 	    		if (old == 0) {
 	    			result = 0;
 	    		} else {
-	    			result = ( current - old ) / 3 * 8 / 1024;
-	    			// 3초간 조사한 값, Byte->bit(*8), bit->KBit(/1024)
+	    			result = ( current - old ) / 3 * 8 / 1024 / 1024;
+	    			// 3초간 조사한 값, Byte->bit(*8), bit->KBit(/1024)->Mbit(/1024)
 	    		}	    		
 	    		return result;
 	    	}
@@ -350,19 +379,22 @@
 	    		var receive;
 	    		var transfer;
 	    		
-	    		if (networkData.length > 20) {
+	    		if (networkData.length >= 30) {
 	    			networkData.shift();
 	    		}
 
 	    		receive = getMbps(oldRx, parseInt(netInfo[0].rBytes));
 	    		transfer = getMbps(oldTx, parseInt(netInfo[0].tBytes));
-
+	    		
 	    		networkData.push({
 	    			time: new Date(),
-	    			Receive: receive.toFixed(2),
-	    			Transfer: transfer.toFixed(2)			
+	    			Receive: receive.toFixed(4),
+	    			Transfer: transfer.toFixed(4)			
 	    		});	    	
 	    		
+/* 	    		if (networkData.length > 5) {
+	    			netY = 100;
+	    		} */
 	    		oldRx = parseInt(netInfo[0].rBytes);
 	    		oldTx = parseInt(netInfo[0].tBytes);
 	    	}
@@ -373,12 +405,12 @@
 	    		var ioInfo = obj.getDiskioInfo;
 	    		var current = new Date();
 
-	    		if (diskioData.length > 20) {
+	    		if (diskioData.length >= 30) {
 	    			diskioData.shift();
 	    		}
 	    		
  	    		for (var i = 0; i < ioInfo.length; i++) {
-	    			diskDomain = Object.keys(ioInfo[i]);
+	    			diskTarget = Object.keys(ioInfo[i]);
 	    			ioInfo[i].time = current;
 	    			diskioData.push(ioInfo[i]);
 	    		}
@@ -403,7 +435,7 @@
 	    		
 	    		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memfree, memory[0].buffers, memory[0].cached);
 	    		
-	    		if (cpuMemoryData.length > 20) {
+	    		if (cpuMemoryData.length >= 30) {
 	    			cpuMemoryData.shift();
 	    		}
 	    		
@@ -448,8 +480,8 @@
 #diskioInfo { width : 50%; height: 95%; display : inline-block; }
 #networkInfo { width : 50%; height: 95%; float : left; }
 #filesysInfo { width : 50%; height: 95%; display : inline-block; }
-#filesysGraph { height: 70%; }
-#filesysUsed { padding-left: 5%; }
+#filesysGraph { height: auto; overflow: hidden; }
+#filesysUsed { height: auto; padding-left: 5%; }
 #tableRow {padding-left:5px;}
 #tData { padding-bottom: 2%; padding-right: 5px; }
 </style>
