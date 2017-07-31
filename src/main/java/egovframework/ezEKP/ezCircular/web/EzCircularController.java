@@ -1357,25 +1357,6 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 회람판 상세정보 본인확인 조회
-	 */
-	@RequestMapping(value = "/ezCircular/getConfirmStatus.do")
-	public String getConfirmStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getConfirmStatus started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String circularID = request.getParameter("circularID");
-		
-		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
-		
-		model.addAttribute("confirmStatus", confirmStatus);
-		
-		logger.debug("getConfirmStatus ended.");
-		
-		return "json";
-	}
-	
-	/**
 	 * 회람판 상세화면 의견목록 카운트 조회
 	 */
 	@RequestMapping(value = "/ezCircular/getCommentCount.do")

@@ -46,6 +46,7 @@
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
 	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+// 	            document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 	            
 				if ("${attachList}" != "") {
 					attachList = true;
@@ -55,6 +56,7 @@
 			window.onresize = function () {
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+// 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 			};
 			
 			function circularConfirm() {
@@ -80,26 +82,10 @@
 			}
 			
 			function getConfirmStatus() {
-				$.ajax({
-					type : "POST",
-					url : "/ezCircular/getConfirmStatus.do",
-					dataType : "json",
-					data : {
-						circularID : circularID
-					},
-					success : function(result) {
-						var confirmStatus = result.confirmStatus;
-						
-						if (confirmStatus == "1") {
-							confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
-							$("#circularConfirm").hide();
-							
-							$(".confirmStatus").html(confirmStatus);
-						}
-					},error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezCircular.t102' />");
-					}
-				});
+				confirmStatus = "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />";
+				$("#circularConfirm").hide();
+				
+				$(".confirmStatus").html(confirmStatus);
 			}
 			
 			function getCommentCount() {
@@ -432,7 +418,7 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                	    	<c:if test="${result.confirmStatus == '0'}">
+                	    	<c:if test="${result.confirmStatus == '0' && result.status == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
                 	    	</c:if>
                 	    	

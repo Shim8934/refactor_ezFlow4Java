@@ -136,12 +136,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
 		
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -2337,4 +2339,35 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         return returnValue;
     }
+    
+	/**
+	 * 그룹웨어 계정으로 비즈메카톡 계정을 동기화한다.
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/syncWithBizmekaTalkAccounts.do")
+	@ResponseBody
+	public String syncWithBizmekaTalkAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("syncWithBizmekaTalkAccounts started.");
+		
+		String returnValue = "ERROR";
+		
+		try {
+			// 관리자 권한 체크
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+				return returnValue;
+			}
+			
+			ezOrganAdminService.syncWithBizmekaTalkAccounts(userInfo.getTenantId());
+			
+			returnValue = "OK";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("syncWithBizmekaTalkAccounts ended.");
+		
+		return returnValue;
+	}
+	
 }

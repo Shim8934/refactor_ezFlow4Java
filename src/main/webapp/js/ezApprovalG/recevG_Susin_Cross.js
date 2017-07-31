@@ -975,17 +975,29 @@ function SendDraftMappingSign(ret) {
             setNodeText(field , getNodeText(field) + PositionText);
         }
 
-        if (CurAprType == strAprType16)  
-        {
+        if (CurAprType == strAprType16) {
             var field = message.GetListItem(fields, psigncell);
             if (field) {
-                
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
-
-                    field.innerHTML = strLang7 + OpinionText + strimg;
+                    
+                    if (message.GetListItem(fields, pseumyungdatecell)) {
+                    	signHeight = 28;
+                    }
+                   
+                    if (signImageType = "NAME") {
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    } else {
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" ;
+                    }
+                    
+                    //대결 시 서명 데이트 입력란 없으면 날짜 표시
+					if (!message.GetListItem(fields, pseumyungdatecell)) {
+						 field.innerHTML  = strLang7 + OpinionText + strimg;
+					} else {
+						 field.innerHTML  = strLang7 + strimg;
+					}
 
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";
@@ -1041,7 +1053,11 @@ function SendDraftMappingSign(ret) {
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    if (signImageType = "NAME") {
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    } else {
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    }
 
                     if (message.GetListItem(fields, pseumyungdatecell))
                         OpinionText = "";

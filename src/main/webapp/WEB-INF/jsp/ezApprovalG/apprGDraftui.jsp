@@ -145,7 +145,8 @@
 			//회람
 			var type = "ING";
 			var pGongRamDocID = "";
-		    	
+			var singImageType = "${signImageType}";
+
 		    window.onload = function ()
 		    {
 		        try {

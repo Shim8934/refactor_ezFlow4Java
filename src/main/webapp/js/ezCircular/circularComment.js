@@ -143,10 +143,12 @@ function editCircularComment(obj) {
 	var circularComment = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > textarea").val();
 	var circularCommentStatus = $("tr.circularCommentEdit[circularUserID='" + circularUserID + "'] > td > div > input:checked").length;
 	
-	if (circularComment == "") {
+	if (trim(ReplaceText(circularComment, "\n", "")) == "") {
 		alert(strLang5);
 		return ;
 	}
+	
+	circularComment = trim(ReplaceText(circularComment, "\n", "<br>"));
 	
 	$.ajax({
 		type : "POST",
