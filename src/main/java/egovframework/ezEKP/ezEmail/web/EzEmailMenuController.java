@@ -741,34 +741,35 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							}
 							
 							String fileName = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+							String fileNameLowerCase = fileName.toLowerCase();
 							
 							// rename fileName if the fileName already exists
-							if (fileNameMap.containsKey(fileName)) {
-								int count = fileNameMap.get(fileName);
+							if (fileNameMap.containsKey(fileNameLowerCase)) {
+								int count = fileNameMap.get(fileNameLowerCase);
 								
 								if (count > -1) {
 									while (true) {
-										if (!fileNameMap.containsKey(fileName + " (" + ++count + ")")) {
+										if (!fileNameMap.containsKey(fileNameLowerCase + " (" + ++count + ")")) {
 											break;
 										}
 									}
 									
-									fileNameMap.put(fileName, count);
+									fileNameMap.put(fileNameLowerCase, count);
 									
 									fileName += " (" + count + ")";
-									fileNameMap.put(fileName, -1);
+									fileNameMap.put(fileName.toLowerCase(), -1);
 								} else {
-									fileNameMap.put(fileName, 1);
+									fileNameMap.put(fileNameLowerCase, 1);
 									
 									fileName += " (1)";
-									fileNameMap.put(fileName, -1);
+									fileNameMap.put(fileName.toLowerCase(), -1);
 								}
 							} else {
-								fileNameMap.put(fileName, 0);
+								fileNameMap.put(fileNameLowerCase, 0);
 							}
 							
 							fileName += ".eml";
-							logger.debug("fileName=" + fileName);
+//							logger.debug("fileName=" + fileName);
 							
 							ZipEntry zipEntry = new ZipEntry("/" + fileName);
 							zos.putNextEntry(zipEntry);
