@@ -517,7 +517,7 @@
                 </span>
             </span>
         </span>   
-		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display:none"></iframe>  
 		<div id="GroupSubObject" style="display:none;">
 			<table style="width:100%;" id="GroupSubHeader" class="mainlist_depth" >               
 			</table>

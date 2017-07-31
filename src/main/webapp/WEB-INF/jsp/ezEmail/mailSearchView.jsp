@@ -488,78 +488,61 @@
 				    start_search();
 				}
 			}
-		
-			function mail_export()
-			{
-				var selcheck = new Array();
-				var count = 0;
 			
+			function mail_export() {
+				var selcheck = new Array();
 				var mailcount = document.getElementById("maillist").childNodes[0].childNodes.length;
+				var count = 0;
 		        		
 				for (var i = 0; i < mailcount; i++) {
 				    if (document.getElementById("checklol" + i + "").checked == true) {
-				        selcheck[count] = document.getElementById("checklol" + i + "");
-				        count++;
+				        selcheck[count++] = document.getElementById("checklol" + i + "");
 				    }
 				}
 		
-				if (count == 0) 
-				{
+				if (count == 0) {
 					alert('<spring:message code="ezEmail.t640" />');
 					return;
-				}	
-		
-				var param = {"href":new Array(), "parent":new Object(), "date":new Array(), "subject":new Array()};
-		
-				for(i=0; i <count; i++)
-				{
-				    param["href"][i] = ReplaceText(selcheck[i].parentElement.parentElement.getAttribute("targetURL"), "%25", "%");
-				    if (CrossYN() || (pNoneActiveX == "YES")) {
-				        href[i] = ReplaceText(selcheck[i].parentElement.parentElement.getAttribute("targetURL"), "%25", "%");
-				        subject[i] = selcheck[i].parentElement.parentElement.childNodes[6].textContent;
-				    }
-				    else {
-				        param["subject"][i] = selcheck[i].parentElement.parentElement.childNodes[6].innerText;
-				        param["date"][i] = selcheck[i].parentElement.parentElement.childNodes[7].innerText;
-				    }
-				}
-				if (CrossYN() || (pNoneActiveX=="YES")) {
-				    PCMultiDownload();
-				    return;
-				}
-				else {
-				    param["parent"] = window;
-				    var feature = "dialogWidth:480px; dialogHeight:240px; scroll:no; status:no; help:no; scroll:no; edge:sunken";
-				    feature = feature + GetShowModalPosition(480, 240);
-				    window.showModalDialog("/myoffice/ezEmail/htm/mail_export.aspx", param, feature);
+				} else if (count == 1) { // 하나의 메일을 다운로드 할 경우
+					var parameters = "url=" + encodeURIComponent(selcheck[0].parentElement.parentElement.getAttribute("targetURL"));
+			    	var fullpath = "/ezEmail/mailExport.do?" + parameters;
+			    	AttachDownFrame.location.href = fullpath;
+			        AttachDownFrame.target = "_blank";
+				} else { // 여러개의 메일을 다운로드 할 경우
+					var folderIdAndMessageIdList = new Object();
+			    	for (var i = 0; i < count; i++) {
+			    		var folderIdAndMessageId = selcheck[i].parentElement.parentElement.getAttribute("targetURL").split("/");
+			    		
+			    		if (folderIdAndMessageIdList[folderIdAndMessageId[0]] == undefined) {
+			    			folderIdAndMessageIdList[folderIdAndMessageId[0]] = folderIdAndMessageId[1];
+			    		} else {
+			    			folderIdAndMessageIdList[folderIdAndMessageId[0]] += "," + folderIdAndMessageId[1];
+			    		}
+			    	}
+			    	
+			    	ShowMailProgress();
+			    	
+			    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : true,
+						url : "/ezEmail/mailExportZip.do",
+						data : folderIdAndMessageIdList,
+						complete: function(){
+							HiddenMailProgress();
+						},
+						success: function(result){
+							if (result != "") {
+						    	var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result;
+						    	AttachDownFrame.location.href = fullpath;
+						        AttachDownFrame.target = "_blank";
+							} else {
+								alert(strLang104);
+							}
+						}
+					});
 				}
 			}
-		
-		    var suffix = 0;
-		    var href = new Array();
-		    var subject = new Array();
-		    function PCMultiDownload() {
-		        if (suffix < href.length)
-		            setTimeout(function () { PC_Eml_FileDownload(href[suffix], subject[suffix]); }, 1000);
-		        else {
-		            suffix = 0;
-		            return;
-		        }
-		    }
-		    
-		    function PC_Eml_FileDownload(href, subject) {
-		        if (href != null) {
-		            subject = subject + ".eml";
-		            var fullpath = "/ezEmail/mailExport.do?url=" + encodeURIComponent(href) + "&filename=" + encodeURIComponent(subject);
-		            location.href = fullpath;
-		            suffix++;
-		            PCMultiDownload();
-		        }
-		        else {
-		            suffix = 0;
-		            return;
-		        }
-		    }
 		
 			function window_onbeforeprint()
 			{
@@ -717,6 +700,7 @@
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display:none"></iframe>
 	</body>
 </HTML>
 
