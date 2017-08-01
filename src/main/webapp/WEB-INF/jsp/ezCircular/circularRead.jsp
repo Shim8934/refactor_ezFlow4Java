@@ -29,6 +29,12 @@
 			    cursor : pointer;
 			    border: 1px solid;
 			}
+			
+			#divCross p a {
+				color: blue;
+				text-decoration: underline;
+				cursor: pointer;
+			}
 		</style>
 		
 		<script type="text/javascript" >
@@ -50,6 +56,11 @@
 	            
 				if ("${attachList}" != "") {
 					attachList = true;
+				}
+
+				// 상세보기 창에서 링크 새창으로 띄우기 위해 추가
+				if ($("#divCross p a").length > 0) {
+					$("#divCross p a").attr("target", "_blank")
 				}
 	        });
 			
