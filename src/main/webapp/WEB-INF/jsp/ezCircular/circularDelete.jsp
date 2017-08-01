@@ -145,7 +145,7 @@
 	        }
 	
 	        function SortPage(strHeaderName) {
-	        	if (strHeaderName != "CHECK" && strHeaderName != "CONFIRM") {
+	        	if (strHeaderName != "ITEMID" && strHeaderName != "CONFIRM") {
 	                if (OrderCell == strHeaderName) {
 	                    if (OrderOption == "")
 	                        OrderOption = "DESC";
@@ -430,22 +430,6 @@
 	            }
 	        }
 	
-	        function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
-	                if (OrderCell == strHeaderName) {
-	                    if (OrderOption == "")
-	                        OrderOption = "DESC";
-	                    else
-	                        OrderOption = "";
-	                }
-	                else {
-	                    OrderCell = strHeaderName;
-	                    OrderOption = "";
-	                }
-	                getBoardList();
-	            }
-	        }
-	        
 	        function getLeftCount() {
 		    	if (typeof (window.parent.frames.left) != "undefined") {
 		    		parent.frames["left"].getNewCircularCount();

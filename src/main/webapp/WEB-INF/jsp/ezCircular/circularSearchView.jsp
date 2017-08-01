@@ -134,7 +134,7 @@
 		    }
 		    
 		    function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
+		    	if (strHeaderName != "ITEMID" && strHeaderName != "CONFIRM") {
 	                if (OrderCell == strHeaderName) {
 	                    if (OrderOption == "")
 	                        OrderOption = "DESC";
