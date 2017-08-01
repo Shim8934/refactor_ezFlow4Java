@@ -585,7 +585,7 @@ function ListView() {
                    	objTd.style.textAlign = "CENTER";
                 }
                 
-                if (strColName == "UPDATESTATUS") {
+                if (strColName == "COMMENTSTATUS") {
         			var _HeaderSpanimg = document.createElement("IMG");
         			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.gif");
         			
@@ -781,7 +781,7 @@ function ListView() {
                 }
                 
                 //의견상태
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "UPDATESTATUS") {
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "COMMENTSTATUS") {
                     objTd.style.textAlign = "center";
                     objTd.style.fontWeight = "bold";
                     
