@@ -6,8 +6,35 @@
 	<typeAlias alias="MScheduleInfoVO" 					type="egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO"/>
     
     <resultMap class="MScheduleInfoVO" id="MScheduleInfoVO">
-    	<result property="contentPath"			column="contentPath"         			columnIndex="1"/>    
-    </resultMap>
+		<result property="scheduleId"		column="SCHEDULEID"			columnIndex="1"/>
+		<result property="parentId"			column="PARENTID"			columnIndex="2"/>
+		<result property="ownerId"			column="OWNERID"			columnIndex="3"/>
+		<result property="ownerName"		column="OWNERNAME"			columnIndex="4"/>
+		<result property="ownerName2"		column="OWNERNAME2"			columnIndex="5"/>
+		<result property="creatorId"		column="CREATORID"			columnIndex="6"/>
+		<result property="creatorName"		column="CREATORNAME"		columnIndex="7"/>
+		<result property="creatorName2"		column="CREATORNAME2"		columnIndex="8"/>
+		<result property="createDate"		column="CREATEDATE"			columnIndex="9"/>
+		<result property="modifierId"		column="MODIFIERID"			columnIndex="10"/>
+		<result property="modifierName"		column="MODIFIERNAME"		columnIndex="11"/>
+		<result property="modifierName2"	column="MODIFIERNAME2"		columnIndex="12"/>
+		<result property="modifyDate"		column="MODIFYDATE"			columnIndex="13"/>
+		<result property="scheduleType"		column="SCHEDULETYPE"		columnIndex="14"/>
+		<result property="importance"		column="IMPORTANCE"			columnIndex="15"/>
+		<result property="hasAttendant"		column="HASATTENDANT"		columnIndex="16"/>
+		<result property="hasAttach"		column="HASATTACH"			columnIndex="17"/>
+		<result property="hasComment"		column="HASCOMMENT"			columnIndex="18"/>
+		<result property="isReadOnly"		column="ISREADONLY"			columnIndex="19"/>
+		<result property="isPublic"			column="ISPUBLIC"			columnIndex="20"/>
+		<result property="dateType"			column="DATETYPE"			columnIndex="21"/>
+		<result property="startDate"		column="STARTDATE"			columnIndex="22"/>
+		<result property="endDate"			column="ENDDATE"			columnIndex="23"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="24"/>
+		<result property="repetitionDel"	column="REPETITIONDELETE"	columnIndex="25"/>
+		<result property="title"			column="TITLE"				columnIndex="26"/>
+		<result property="location"			column="LOCATION"			columnIndex="27"/>
+		<result property="contentPath"		column="CONTENTPATH"		columnIndex="28"/>		
+	</resultMap>
     
     <select id="MScheduleDAO.scheduleContentPath" parameterClass="Map" resultClass="String">
     	<![CDATA[
@@ -30,15 +57,14 @@
 	            ownerid,
 	            ownername,
 	            ownername2,	            
-	            date_add(a.createdate, interval +#v_OFFSETMIN# minute) as createdate,
-	            a.creatorid,
-	            a.creatorname,
-	            a.creatorname2,
-	            a.createdate,
+	            creatorid,
+	            creatorname,
+	            creatorname2,
+	            date_add(createdate, interval +#v_OFFSETMIN# minute) as createdate,	            
 	            modifierid,
 	            modifiername,
 	            modifiername2,	            
-	            date_add(a.modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
+	            date_add(modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
 	            scheduletype,
 	            importance,
 	            hasattendant,
@@ -46,21 +72,20 @@
 	            hascomment,
 	            isreadonly,
 	            ispublic,
-	            datetype,	            
-	            date_add(a.startdate, interval +#v_OFFSETMIN# minute) as startdate,				
-				date_add(a.enddate, interval +#v_OFFSETMIN# minute) as enddate,
+	            datetype,
+	            date_add(startdate, interval +#v_OFFSETMIN# minute) as startdate,				
+				date_add(enddate, interval +#v_OFFSETMIN# minute) as enddate,
 	            repetition,
 	            repetitiondelete,
 	            title,
 	            location,
-	            contentpath,
-	            groupname	           
+	            contentpath
 			from 
-				tbl_schedule a left join tbl_schedulegroup b on a.ownerid = b.groupid and a.tenant_id = b.tenant_id
+				tbl_schedule
 	       	where  
-	       		a.scheduleid = #v_SCHEDULEID#
+	       		scheduleid = #v_SCHEDULEID#
 	       	and
-	       		a.tenant_id = #v_TENANTID#	
+	       		tenant_id = #v_TENANTID#
 		]]>
   	</select>
 </sqlMap>

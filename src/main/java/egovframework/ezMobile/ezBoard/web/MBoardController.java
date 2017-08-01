@@ -2,9 +2,11 @@ package egovframework.ezMobile.ezBoard.web;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -31,8 +33,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
-import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
-import egovframework.ezMobile.ezSchedule.web.MScheduleController;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -105,9 +106,6 @@ public class MBoardController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		//mBoardInfoVO = mBoardService.getBoardProperty(mBoardInfoVO.getBoardID(), userInfo.getPrimary(), userInfo.getTenantId());
-		//mBoardInfoVO = mBoardService.getBoardInfo(mBoardInfoVO, userInfo);
-		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		String url = gwServerUrl + "/ezboard/"+type+"/boards/"+boardID+"/list";
 		
@@ -131,16 +129,15 @@ public class MBoardController {
 				
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : "+status);
-System.out.println("resultBody:"+resultBody);
+
 		JSONArray list = new JSONArray();
 		Object boardInfo = "";
 		if (status.equals("ok")) {
 			Gson gson = new Gson();
 			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			boardInfo = resultBody.get("data2");
-System.out.println("boardInfo:"+resultBody.get("data2"));
+
 			model.addAttribute("mBoardInfo", boardInfo);
-			//model.addAttribute("title", mBoardInfoVO.getBoardName());
 			model.addAttribute("listSize", list.size());
 		}
 		
@@ -181,7 +178,6 @@ System.out.println("boardInfo:"+resultBody.get("data2"));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String primary = userInfo.getPrimary();
-		int tenantID = userInfo.getTenantId();
 		
 		LOGGER.debug("type = " + type + " || boardID = " + boardID + " || userID = " + userInfo.getId());
 		
@@ -252,8 +248,7 @@ System.out.println("boardInfo:"+resultBody.get("data2"));
 			model.addAttribute("mBoardItemList", list);
 		}
 		/*JSONArray sample = rest.getForObject(builder.build().encode().toUri(), JSONArray.class);
-System.out.println("sampleSize:"+sample.size());		
-System.out.println("sample:"+sample);
+
 		model.addAttribute("mBoardInfo", mBoardInfoVO);
 		//model.addAttribute("mBoardItemList", mBoardItemList);
 		model.addAttribute("mBoardItemList", sample);
@@ -268,7 +263,7 @@ System.out.println("sample:"+sample);
 	 * 모바일 게시판 즐겨찾기에 등록된 게시판 폴더 리스트
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getFavoriteList.do")
-	public String getFavoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String getFavoriteList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("getFavoriteList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -292,20 +287,19 @@ System.out.println("sample:"+sample);
 				
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : "+status);
-System.out.println("resultBody:"+resultBody);
+
 		JSONArray list = new JSONArray();
 
 		if (status.equals("ok")) {
 			Gson gson = new Gson();
 			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
-System.out.println("list:"+list);
-			//model.addAttribute("title", mBoardInfoVO.getBoardName());
 
+			model.addAttribute("favoriteList", list);
 		}
 		
 		LOGGER.debug("getFavoriteList ended.");
 		
-		return "";
+		return "json";
 	}
 	
 	/**
@@ -374,7 +368,7 @@ System.out.println("list:"+list);
 	 * 모바일 게시판 글 쓰기/수정 저장
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/saveBoardItem.do")
-	public String saveBoardItem() throws Exception {
+	public void saveBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response,MBoardListVO boardListVO) throws Exception {
 		LOGGER.debug("saveBoardItem started.");
 		
 		/*if (boardID != null) {
@@ -384,21 +378,91 @@ System.out.println("list:"+list);
 			
 			쓰기 저장 success 에서 알림메일 전송
 		}*/
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String type = request.getParameter("type");
+		String itemID = request.getParameter("itemID");
+		String url = "";
+		
+		//String boardID = request.getParameter("boardID");
+		
+		String boardID = "{c2a62f97-263c-d60a-2c2f-c20815843514}";
+		
+		//String mode = request.getParameter("mode");
+		String mode = "new";
+		String guBun = request.getParameter("guBun");
+		
+		if (type != null && type.equals("modify")) {
+			url = gwServerUrl + "/ezboard/boards/"+boardID+"/contents"+itemID; 
+		} else {
+			url = gwServerUrl + "/ezboard/boards/contents";
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		boardListVO.setTitle("테스트제목");
+		boardListVO.setTenantID(userInfo.getTenantId());
+		boardListVO.setUserID(userInfo.getId());
+		boardListVO.setBoardID(boardID);
+		boardListVO.setItemID("{"+UUID.randomUUID().toString()+"}");
+		Gson gson = new Gson();
+		JSONObject jsonParam = gson.fromJson(gson.toJson(boardListVO), JSONObject.class);
+		
+		HttpEntity<?> entity = new HttpEntity<>(jsonParam,headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.postForEntity(url, entity, JSONObject.class);
+		//ResponseEntity<JSONObject> result = rest.exchange(url, HttpMethod.PUT, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("status : "+status);
 		
 		LOGGER.debug("saveBoardItem ended.");
 		
-		return "";
 	}
 	
 	/**
 	 * 모바일 게시판 글 삭제
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/deleteBoardItem.do")
-	public String deleteBoardItem() throws Exception {
+	public void deleteBoardItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LOGGER.debug("deleteBoardItem started.");
 		
-		LOGGER.debug("deleteBoardItem ended.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		return "";
+		String boardId = request.getParameter("boardID");
+		String contentId = request.getParameter("itemID");
+		
+		boardId = "{6d7b50a2-4777-96a3-4b3a-a670dcd703f1}";
+		contentId = "{e0110954-7485-4613-8638-85a31377a3be}";
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezboard/boards/"+boardId+"/contents/"+contentId;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)		        
+		        .queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		LOGGER.debug("deleteBoardItem ended.");
 	}
 }

@@ -8,7 +8,13 @@
 	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    
+	    <style>
+			#divContent p a {
+				color: blue;
+				text-decoration: underline;
+				cursor: pointer;
+			}
+		</style>
 	    <script type="text/javascript">
 	        var nowZoom = 100;
 	        var maxZoom = 200;
@@ -23,7 +29,6 @@
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
 	            window.parent.previewItemSet();
-
 	        };
 	
 	        function Bigger() {
@@ -141,6 +146,11 @@
 	                _div.id = "divContent";
 	                _div.innerHTML = responseText;
 	                document.getElementById("txtContent").appendChild(_div);
+
+		         	// 미리보기 창에서 링크 새창으로 띄우기 위해 추가
+					if ($("#divContent p a").length > 0) {
+						$("#divContent p a").attr("target", "_blank")
+					}
 	            } catch (e) {}
 	        }
 	
