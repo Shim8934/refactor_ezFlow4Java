@@ -1271,7 +1271,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
 			sb.append("<HasFile>" + itemInfo.getHasFile() + "</HasFile>");
 			sb.append("<Status>" + itemInfo.getStatus() + "</Status>");
-			sb.append("<Title>" + itemInfo.getTitle() + "</Title>");
+			sb.append("<Title><![CDATA[" + itemInfo.getTitle() + "]]></Title>");
 			sb.append("<MemberId>" + itemInfo.getMemberID() + "</MemberId>");
 			sb.append("<MemberName>" + itemInfo.getMemberName() + "</MemberName>");
 			sb.append("<RegDate>" + itemInfo.getRegDate() + "</RegDate>");
