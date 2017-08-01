@@ -78,29 +78,19 @@
 		var networkColor = ['#000093', '#FF0000'];
 		
 		var oldTx = 0;
-		var curTx = 0;
-		var oldRx = 0;
-		var curRx = 0;		
+		var oldRx = 0;		
 		
 		var current;
 		var start;
 		
 		jui.ready(["chart.builder"], function (builder) {
-			//var current = new Date();
-			//var start = current - 1000 * 60;
-			var diskTarget = [];
-			
-			//var netX = 0;
-			//var netY = 50;
-			
-			//var netYDomain = [netX, netY];			
+			var diskTarget = [];		
 			
 			// CPU & Memory 관련 그래프
 			var cpuMemoryChart = builder ("#cpuMemInfo", {		
 				axis: [{
 					x: {
 						type: "date",
-						//domain: [new Date() - 1000 * 60, new Date()],
 						domain: [start, current],
 						realtime: "seconds",
 						interval: 10,
@@ -146,7 +136,6 @@
 				axis: [{
 					x: {
 						type: "date",
-						//domain: [new Date() - 1000 * 60, new Date()],
 						domain: [start, current],
 						realtime: "seconds",
 						interval: 10,
@@ -185,7 +174,6 @@
 				axis: [{
 					x: {
 						type: "date",
-						//domain: [new Date() - 1000 * 60, new Date()],
 						domain: [start, current],
 						realtime: "seconds",
 						interval : 10,
@@ -198,7 +186,6 @@
 						step: 5,
 						line: true,
 						format: function(value) {
-							//return value + "KBit/s";
 							return value + "Mbps";
 						}
 					},
@@ -366,8 +353,8 @@
 	    		if (old == 0) {
 	    			result = 0;
 	    		} else {
-	    			result = ( current - old ) / 3 * 8 / 1024 / 1024;
-	    			// 3초간 조사한 값, Byte->bit(*8), bit->KBit(/1024)->Mbit(/1024)
+	    			result = ( current - old ) / 2 * 8 / 1024 / 1024;
+	    			// 2초간 조사한 값, Byte->bit(*8), bit->KBit(/1024)->Mbit(/1024)
 	    		}	    		
 	    		return result;
 	    	}
@@ -391,10 +378,7 @@
 	    			Receive: receive.toFixed(4),
 	    			Transfer: transfer.toFixed(4)			
 	    		});	    	
-	    		
-/* 	    		if (networkData.length > 5) {
-	    			netY = 100;
-	    		} */
+
 	    		oldRx = parseInt(netInfo[0].rBytes);
 	    		oldTx = parseInt(netInfo[0].tBytes);
 	    	}
