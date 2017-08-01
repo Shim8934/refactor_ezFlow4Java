@@ -3064,7 +3064,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-      <delete id="EzOrganAdminDAO.deleteCompany_D18" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D18" parameterClass="Map">
         DELETE FROM
             TBL_RS_BRD    
         WHERE  
@@ -3081,5 +3081,29 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
+ 
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
+       {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
+     </procedure>
+ 
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_DEPT" parameterClass="Map">
+       {CALL talk_SP_CONN_DEPT(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_USER" parameterClass="Map">
+       {CALL talk_SP_CONN_USER(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_ADDJOB" parameterClass="Map">
+       {CALL talk_SP_CONN_ADDJOB(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_DEFAULTSVRID" parameterClass="Map">
+       {CALL talk_SP_CONN_DEFAULTSVRID(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE" parameterClass="Map">
+       {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
+     </procedure>
  
 </sqlMap>

@@ -1351,14 +1351,12 @@ function GetDraftAprLineInfo(ret) {
             xmlReDraft = ret[5];
         }
 
-
         setAprLinesXML(xmlKuljea);
 
         ClearDocCellInfo();
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
-        }
-        else if (xmlReDraft == "R") {
+        } else if (xmlReDraft == "R") {
             ClearDocCellInfo();
         }
 
@@ -1420,11 +1418,9 @@ function GetDraftAprLineInfo(ret) {
         field = message.GetListItem(fields, "refer");
         if (field) setNodeText(field, "");
 
-
         field = message.GetListItem(fields, "hgamsa");
 
         if (field) setNodeText(field, "");
-
 
         for (i = 1; i < fields.Count; i++) {
             field = message.GetListItem(fields, "gongram" + i);
@@ -2068,7 +2064,7 @@ function SendDraftMappingSign(ret) {
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
 
-                    field.innerHTML = strLang7 + OpinionText + strimg;
+                    field.innerHTML = strLang7 + OpinionText + strimg + "<br>" + arr_userinfo[2];
 
                     signInfo[signCnt] = psigncell;
                     SignType[signCnt] = "IMAGE";

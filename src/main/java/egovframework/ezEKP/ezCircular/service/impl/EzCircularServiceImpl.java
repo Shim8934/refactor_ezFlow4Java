@@ -1271,7 +1271,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
 			sb.append("<HasFile>" + itemInfo.getHasFile() + "</HasFile>");
 			sb.append("<Status>" + itemInfo.getStatus() + "</Status>");
-			sb.append("<Title>" + itemInfo.getTitle() + "</Title>");
+			sb.append("<Title><![CDATA[" + itemInfo.getTitle() + "]]></Title>");
 			sb.append("<MemberId>" + itemInfo.getMemberID() + "</MemberId>");
 			sb.append("<MemberName>" + itemInfo.getMemberName() + "</MemberName>");
 			sb.append("<RegDate>" + itemInfo.getRegDate() + "</RegDate>");
@@ -1415,20 +1415,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateReadStatus ended.");
 	}
 	
-	/*private void updateStatus(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
-		logger.debug("updateStatus started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("circularID", circularID);
-		map.put("memberID", memberID);
-		map.put("nowDate", nowDate);
-		map.put("tenantID", tenantID);
-		
-		ezCircularDAO.updateUpdateStatus(map);
-		
-		logger.debug("updateStatus ended.");
-	}*/
-	
 	private void updateUpdateStatus(String circularID, String memberID, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateUpdateStatus started.");
 		
@@ -1445,7 +1431,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 	
 	private void updateCircularCommentStatus(String circularID, String memberID, int commentStatus, int deleteStatus, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateCircularCommentStatus started.");
-		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || commentStatus = " + " || tenantID = " + tenantID);
+		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || commentStatus = " + commentStatus + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("circularID", circularID);
@@ -1493,22 +1479,6 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateCommentState ended.");
 	}
 	
-	@Override
-	public int getConfirmStatus(String circularID, String circularUserID, int tenantID) throws Exception {
-		logger.debug("getConfirmStatus started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("circularID", circularID);
-		map.put("circularUserID", circularUserID);
-		map.put("tenantID", tenantID);
-		
-		int confirmStatus = ezCircularDAO.getConfirmStatus(map);
-		
-		logger.debug("getConfirmStatus ended. confirmStatus = " + confirmStatus);
-		
-		return confirmStatus;
-	}
-
 	@Override
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception {
 		logger.debug("getCircularCommentUserList started.");

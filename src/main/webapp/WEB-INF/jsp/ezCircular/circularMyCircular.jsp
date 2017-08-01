@@ -146,7 +146,7 @@
 	        }
 	
 	        function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
+	        	if (strHeaderName != "ITEMID" && strHeaderName != "CONFIRM") {
 	                if (OrderCell == strHeaderName) {
 	                    if (OrderOption == "")
 	                        OrderOption = "DESC";
@@ -517,7 +517,7 @@
 	        	});
 	        	
 	        	if (status == 1) {
-	        		alert("이미 종료된 회람입니다.");
+	        		alert("<spring:message code='ezCircular.t171' />");
 	        		
 	        		return;
 	        	}

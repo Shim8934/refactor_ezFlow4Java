@@ -477,9 +477,8 @@ function ListView() {
 
                 if (_headeronclick != null && _headeronclick != "" ) {
                     objTd.style.cursor = "pointer";
-                    objTd.onclick = new Function(_headeronclick + "('" + strName + "');");
+                    objTd.onclick = new Function(_headeronclick + "('" + strColName + "');");
                 }
-
 
                 if (strStyle != "") {
                     if (_headeronclick != null && _headeronclick != ""  ) {
@@ -570,7 +569,7 @@ function ListView() {
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
                 }
-                if (strColName == "CONFIRMFLAG") {
+                if (strColName == "CONFIRMSTATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
 //                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
                     _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-unrd.gif");
@@ -586,7 +585,7 @@ function ListView() {
                    	objTd.style.textAlign = "CENTER";
                 }
                 
-                if (strColName == "UPDATESTATUS") {
+                if (strColName == "COMMENTSTATUS") {
         			var _HeaderSpanimg = document.createElement("IMG");
         			_HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_share2.gif");
         			
@@ -601,7 +600,7 @@ function ListView() {
                 	objTd.style.textAlign = "CENTER";
                 }
                 
-                if (strColName == "CONFIRMSTATUS") {
+                if (strColName == "CONFIRM") {
                 	objTd.style.textAlign = "CENTER";
                 }
                 
@@ -782,7 +781,7 @@ function ListView() {
                 }
                 
                 //의견상태
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "UPDATESTATUS") {
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "COMMENTSTATUS") {
                     objTd.style.textAlign = "center";
                     objTd.style.fontWeight = "bold";
                     
@@ -806,7 +805,7 @@ function ListView() {
                 }
                 
                 //본인확인
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMFLAG") {
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMSTATUS") {
                     objTd.style.textAlign = "center";
                     if (strValue == '0') {
 //                    	titleImage = '<img src="/images/ImgIcon/circular_unread.gif" />';
@@ -835,7 +834,7 @@ function ListView() {
                 	objTd.style.textAlign = "center";
                 }
                 
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRMSTATUS") {
+                if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CONFIRM") {
                     objTd.style.textAlign = "center";
                 }
                 

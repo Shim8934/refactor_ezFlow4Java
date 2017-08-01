@@ -550,7 +550,7 @@ public class EzCircularController extends EgovFileMngUtil {
         List<CircularListHeaderVO> headerList = ezCircularService.getListHeader("N", userInfo.getLang(), userInfo.getTenantId());
 
 		for (CircularListHeaderVO vo : headerList) {
-		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
+			if (!orderCell.equals("") && orderCell.equals(vo.getColName())) {
 		        if (orderOption.equals("")) {
 		            orderOption1 = vo.getColName() + " ";
 		        } else {
@@ -662,7 +662,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		String orderOption1 = "";
     	for (CircularListHeaderVO vo : headerList) {
-		    if (!orderCell.equals(egovMessageSource.getMessage("ezCircular.t65", userInfo.getLocale())) && orderCell.equals(vo.getName())) {
+    		if (!orderCell.equals("") && orderCell.equals(vo.getColName())) {
 		        if (orderOption.equals("")) {
 		            orderOption1 = vo.getColName() + " ";
 		        } else {
@@ -765,7 +765,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	String orderOption1 = "";
 
     	for (CircularListHeaderVO vo : headerList) {
-		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
+    		if (!orderCell.equals("") && orderCell.equals(vo.getColName())) {
 		        if (orderOption.equals("")) {
 		            orderOption1 = vo.getColName() + " ";
 		        } else {
@@ -868,7 +868,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	String orderOption1 = "";
 
     	for (CircularListHeaderVO vo : headerList) {
-		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
+    		if (!orderCell.equals("") && orderCell.equals(vo.getColName())) {
 		        if (orderOption.equals("")) {
 		            orderOption1 = vo.getColName() + " ";
 		        } else {
@@ -971,7 +971,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	String orderOption1 = "";
 
     	for (CircularListHeaderVO vo : headerList) {
-		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
+    		if (!orderCell.equals("") && orderCell.equals(vo.getColName())) {
 		        if (orderOption.equals("")) {
 		            orderOption1 = vo.getColName() + " ";
 		        } else {
@@ -1354,25 +1354,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		
 		return "/ezCircular/circularRead";
-	}
-	
-	/**
-	 * 회람판 상세정보 본인확인 조회
-	 */
-	@RequestMapping(value = "/ezCircular/getConfirmStatus.do")
-	public String getConfirmStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("getConfirmStatus started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String circularID = request.getParameter("circularID");
-		
-		int confirmStatus = ezCircularService.getConfirmStatus(circularID, userInfo.getId(), userInfo.getTenantId());
-		
-		model.addAttribute("confirmStatus", confirmStatus);
-		
-		logger.debug("getConfirmStatus ended.");
-		
-		return "json";
 	}
 	
 	/**
@@ -2112,7 +2093,7 @@ public class EzCircularController extends EgovFileMngUtil {
     	String orderOption1 = "";
 
     	for (CircularListHeaderVO vo : headerList) {
-		    if (!orderCell.equals("") && orderCell.equals(vo.getName())) {
+    		if (!orderCell.equals("") && orderCell.equals(vo.getColName())) {
 		        if (orderOption.equals("")) {
 		            orderOption1 = vo.getColName() + " ";
 		        } else {

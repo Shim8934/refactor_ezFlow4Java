@@ -15,6 +15,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
@@ -645,4 +646,23 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		return result;
 	}
+
+	@Override
+	public List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.getFavoriteList(map);
+	}
+
+	@Override
+	public MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		map.put("lang", lang);
+		return mBoardDAO.getBrdItemInfo(map);
+	}
+	
+	
 }

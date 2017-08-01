@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -110,6 +112,7 @@ public class MBoardGWController {
 			result.put("data2", boardInfo);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -151,28 +154,72 @@ public class MBoardGWController {
 	/**
 	 * 모바일 G/W 게시판 [GET] 즐겨찾기에 등록된 게시판 폴더 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezboard/favorite-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getFavoriteList() throws Exception {		
+	public Object getFavoriteList(@PathVariable String userId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId());
+System.out.println("resultList:"+resultList.size());
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", resultList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/favorite-list/users/{userId}] ended.");
+		return result;
 	}
 	
 	/**
 	 * 모바일 G/W 게시판 [GET] 게시물 상세정보
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void boardDetail() throws Exception {		
+	public Object boardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			
+			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", boardItem);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}		
+		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] ended.");
+		return result;
 	}
 	
 	/**
 	 * 모바일 G/W 게시판 [GET] 게시물 등록
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertBoard() throws Exception {		
+	public void insertBoard(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] started.");
 				
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] ended.");
@@ -182,7 +229,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 게시물 수정
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void updateBoard() throws Exception {		
+	public void updateBoard(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
 				
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] ended.");
@@ -192,7 +239,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 게시물 삭제
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteBoard() throws Exception {		
+	public void deleteBoard(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] started.");
 				
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");
@@ -202,7 +249,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 좌측메뉴 리스트
 	 */
 	@RequestMapping(value="/ezboard/folder-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getLeftMenu() throws Exception {		
+	public void getLeftMenu(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] started.");
 				
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] ended.");
@@ -212,7 +259,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 즐겨찾기 설정
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/favorite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertFavorite() throws Exception {		
+	public void insertFavorite(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] started.");
 				
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
@@ -222,7 +269,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 즐겨찾기 해제
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/favorite", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteFavorite() throws Exception {		
+	public void deleteFavorite(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] started.");
 				
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
@@ -232,7 +279,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 게시물 첨부파일 리스트
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}/attach-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getAttachList() throws Exception {		
+	public void getAttachList(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] started.");
 				
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");

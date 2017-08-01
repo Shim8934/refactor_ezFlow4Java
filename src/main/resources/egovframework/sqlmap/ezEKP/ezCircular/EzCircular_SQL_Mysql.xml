@@ -675,6 +675,7 @@
                 A.title,
                 A.memberid,
                 A.membername,
+                B.status AS confirmstatus,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,
@@ -1651,27 +1652,6 @@
     	]]>
     </select>
     
-    <select id="EzCircularDAO.getConfirmStatus" parameterClass="Map" resultClass="Integer">
-    	<![CDATA[
-			SELECT
-				B.status
-			FROM
-				TBL_CIRCULAR A
-			JOIN
-				TBL_CIRCULAR_USER B
-			ON
-				A.circularid = B.circularid
-			AND
-				A.tenantid = B.tenantid
-			WHERE
-				A.circularID = #circularID#
-			AND
-				B.memberID = #circularUserID#
-			AND
-				B.tenantid = #tenantID#
-    	]]>
-    </select>
-
     <select id="EzCircularDAO.getCommentStatus" parameterClass="Map" resultClass="CircularListVO">
 		<![CDATA[
 			SELECT 
