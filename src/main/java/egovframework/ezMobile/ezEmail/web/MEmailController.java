@@ -4,13 +4,13 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -20,7 +20,6 @@ import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.UIDFolder;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeMessage;
@@ -33,10 +32,14 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +47,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.w3c.dom.Document;
 
+import com.google.gson.Gson;
 import com.sun.mail.dsn.DispositionNotification;
 import com.sun.mail.dsn.MultipartReport;
 import com.sun.mail.imap.IMAPFolder;
@@ -111,29 +114,48 @@ public class MEmailController extends EgovFileMngUtil {
 	/**
 	 * 모바일 메인 > 편지함 리스트 정보 표출 함수
 	 */
-	@RequestMapping(value = "/mobile/ezEmail/getFolderList.do")
-	public String getFolderList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response, Locale locale) throws Exception {
+	@RequestMapping(value = "/mobile/ezEmail/getFolderList.do", produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String getFolderList(HttpServletRequest request, ModelMap modelMap, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("getFolderList started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/ezemail/folders-list/users/rkd1395";
+		String url = gwServerUrl + "/ezemail/folders-list/users/" + userInfo.getId();
 				
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
 
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("folderId", "INBOX");
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("folderId", "");
+		//folderId가 ""이면 전체 폴더 조회. 있으면 하위폴더 조회 ex)INBOX -> 받은 편지함 하위 폴더 전체 리턴.
 		RestTemplate rest = new RestTemplate();
 		
-		String mailFolderList = rest.getForObject(builder.build().encode().toUri(), String.class);
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+
+		JSONObject resultBody = result.getBody();
 		
-		System.out.println(mailFolderList);		
-		model.addAttribute("mailFolderList", mailFolderList);		
+		String status = resultBody.get("status").toString();
 		
+		JSONArray mailFolderList = new JSONArray();
+		
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			mailFolderList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			
+			modelMap.addAttribute("scheduleListCnt", mailFolderList.size());
+			modelMap.addAttribute("scheduleList", mailFolderList);
+		}
+
+		
+		System.out.println(mailFolderList);			
 		logger.debug("getFolderList ended.");
 		
-		return mailFolderList;
+		return mailFolderList.toJSONString();
 	}
 	
 	/**
@@ -189,8 +211,9 @@ public class MEmailController extends EgovFileMngUtil {
 		return "/mobile/ezEmail/mMailMain";
 	}
 	
-	@RequestMapping(value="/mobile/ezEmail/mailGetList.do",method=RequestMethod.GET)
-	public String getMobileMailList(@CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, Model model) throws Exception {
+	@RequestMapping(value="/mobile/ezEmail/mailGetList.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, ModelMap modelMap) throws Exception {
 		
 		logger.debug("getMailList started.");
 		
@@ -198,8 +221,10 @@ public class MEmailController extends EgovFileMngUtil {
 		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/users/rkd1395";
 				
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
 
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("start", "0")
 				.queryParam("end", "29")
@@ -210,99 +235,82 @@ public class MEmailController extends EgovFileMngUtil {
 		//filter에는  isUnreadOnly(읽지 않은 메일), isImportantOnly(중요 메일) 중 1개만 전달이 가능하다.
 		
 		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+
+		JSONObject resultBody = result.getBody();
+
+		String status = resultBody.get("status").toString();
+
+		JSONArray messages = new JSONArray();
 		
-		String Messages = rest.getForObject(builder.build().encode().toUri(), String.class);
-		
-		System.out.println(Messages);		
-		model.addAttribute("mailFolderList", Messages);		
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			messages = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			
+			modelMap.addAttribute("MessagesListCnt", messages.size());
+			modelMap.addAttribute("MessagesList", messages);
+		}
+				
+		modelMap.addAttribute("MessageList", messages);		
 		
 		logger.debug("getMailList ended.");
 		
-		return Messages;
+		return messages.toJSONString();
 	}
 	
-	@RequestMapping(value="/mobile/ezEmail/mailMoveMessage.do",method=RequestMethod.POST)
+	@RequestMapping(value="/mobile/ezEmail/mailMoveMessage.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailMoveMessage(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+	public String mailMoveMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
 			Locale locale, Model model) throws Exception {
 		logger.debug("mailMoveMessage started.");
-		logger.debug("bodyData=" + bodyData);
 		
-		bodyData = URLDecoder.decode(bodyData, "UTF-8");
+		String returnValue = "ERROR";
+
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/221/move/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+
+//		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("folderId", "INBOX");
 		
-		String[] data = bodyData.split("&");
+		URI uri = URI.create(url);
 		
-		String returnValue = "OK";
+		RestTemplate rest = new RestTemplate();
 		
-		IMAPAccess ia = null;
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("mfolderId", "보낸 편지함");
+
+	    HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
+
+	    ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.PUT, entity, JSONObject.class);
+//		returnValue = rest.put(uri, jsonObject, String.class);
 		
-		try {
-			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-			String password = userIdAndPassword.get(1);
-			
-			String uniqueId =  data[0].split("=")[1];
-			String mfolderId = data[1].split("=")[1];
-			
-			logger.debug("uniqueId, mfolderId=" + uniqueId + "," + mfolderId);
-			
-			if (uniqueId.endsWith(",")) {
-				uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-			}
-			
-			String[] folderAndMsgIdArray = uniqueId.split(",");
-			String folderId = folderAndMsgIdArray[0].split("/")[0];			
-			long[] uids = new long[folderAndMsgIdArray.length];
-			
-			for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-				String folderAndMsgId = folderAndMsgIdArray[i];
-				String msgId = folderAndMsgId.split("/")[1];
-				uids[i] = Long.parseLong(msgId);
-			}
-			
-			LoginVO userInfo = commonUtil.userInfo(loginCookie);
-	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-	        String userEmail = userInfo.getId() + "@" + domainName;
-			
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-					
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);
-			
-			Message[] messages = sourceFolder.getMessagesByUID(uids);
-			
-			IMAPFolder movefolder = (IMAPFolder)ia.getFolder(mfolderId);			
-			sourceFolder.copyUIDMessages(messages, movefolder);
-			
-			sourceFolder.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-			
-			sourceFolder.close(true);
+		System.out.println(responseEntity.getBody());
 		
-		} catch (Exception e) {
-			returnValue = "ERROR : " + e.getMessage();
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
+		JSONObject resultBody = responseEntity.getBody();
+				
+		model.addAttribute("returnValue", returnValue);		
+						
+		logger.debug("mailMoveCopyMessage ended. returnVal = " + returnValue);
 		
-		logger.debug("returnValue=" + returnValue);
-		logger.debug("mailMoveCopyMessage ended.");
-		
-		return returnValue;
+		return resultBody.toJSONString();
 	}
 	
-	@RequestMapping(value="/mobile/ezEmail/mailCopyMessage.do",method=RequestMethod.GET)
+	@RequestMapping(value="/mobile/ezEmail/mailCopyMessage.do",method=RequestMethod.GET , produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailCopyMessage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+	public String mailCopyMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
 		logger.debug("mailCopyMessage started.");
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/219/copy/users/rkd1395";
+		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/223/copy/users/rkd1395";
 				
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
 
 //		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 //				.queryParam("folderId", "INBOX");
@@ -310,435 +318,151 @@ public class MEmailController extends EgovFileMngUtil {
 		URI uri = URI.create(url);
 		
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("toFolderID", "INBOX");
+		jsonObject.put("toFolderID", "보낸 편지함");
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		String returnVal = rest.postForObject(uri, jsonObject, String.class);
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class);
 		
-		System.out.println(returnVal);		
-		model.addAttribute("mailFolderList", returnVal);		
+		JSONObject resultBody = responseEntity.getBody();
+		
+		model.addAttribute("mailFolderList", resultBody);		
 						
-		logger.debug("mailMoveCopyMessage ended. returnVal = " + returnVal);
+		logger.debug("mailMoveCopyMessage ended. returnVal = " + resultBody);
 		
-		return returnVal;
+		return resultBody.toJSONString();
 	}
 	
-	@RequestMapping(value="/mobile/ezEmail/mailDelete.do",method=RequestMethod.POST)
+	@RequestMapping(value="/mobile/ezEmail/mailDownloadFile.do",method=RequestMethod.GET , produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailDelete(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData,
-			Locale locale, Model model) throws Exception {
-		logger.debug("mailDelete started.");
-		logger.debug("bodyData=" + bodyData);
+	public String mailDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		logger.debug("mailDownloadFile started.");
 		
-		bodyData = URLDecoder.decode(bodyData, "UTF-8");
-		
-		String[] data = bodyData.split("&");
-		String uniqueId =  data[0].split("=")[1];
-		String folderId = data[1].split("=")[1];
-		String returnData = "OK";
-		
-		boolean permanentlyDelete = false;
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/230/attach/1/users/rkd1395";
 				
-		// get user credentials
-		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String password = userIdAndPassword.get(1);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+//		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+//				.queryParam("folderId", "INBOX");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-				
-		long[] uids = null;
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("filename", "antlr-2.7.7.jar");
+		//folderId가 ""이면 전체 폴더 조회. 있으면 하위폴더 조회 ex)INBOX -> 받은 편지함 하위 폴더 전체 리턴.
+		RestTemplate rest = new RestTemplate();
 		
-		if(folderId.equals(egovMessageSource.getMessage("ezEmail.t647", locale))){
-			permanentlyDelete = true;
-		}
-		
-		if (uniqueId.endsWith(",")) {
-			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-		}
-		String[] folderAndMsgIdArray = uniqueId.split(",");
-		
-		uids = new long[folderAndMsgIdArray.length];
-		for (int i = 0; i < folderAndMsgIdArray.length; i++) {
-			String folderAndMsgId = folderAndMsgIdArray[i];
-			String msgId = folderAndMsgId.split("/")[1];
-			logger.debug("msgId=" + msgId);
-			uids[i] = Long.parseLong(msgId);
-		}	
+		ResponseEntity<Object> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, Object.class);
 	
-		logger.debug("folderId=" + folderId);
-		
-		IMAPAccess ia = null;
-		
-		try {
-	        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-	        String userEmail = userInfo.getId() + "@" + domainName;
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-					
-			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
-			sourceFolder.open(Folder.READ_WRITE);		
-	        
-	        Message[] deleteMsgs = null;
-
-	        deleteMsgs = sourceFolder.getMessagesByUID(uids);
-	        
-			if (!permanentlyDelete) {
-				IMAPFolder deletedFolder = (IMAPFolder)ia.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));			
-				sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
-			}
-			
-			sourceFolder.setFlags(deleteMsgs, new Flags(Flags.Flag.DELETED), true);
-
-			sourceFolder.close(true);
-		
-		} catch (Exception e) {
-			returnData = "ERROR : " + e.getMessage();
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();		
-			}
-		}
-		
-		logger.debug("returnData=" + returnData);
-		logger.debug("mailDelete ended.");
-		
-		return returnData;				
+//		JSONObject resultBody = result.getBody();
+//		
+//		model.addAttribute("download", resultBody);		
+//						
+//		logger.debug("mailDownloadFile ended. returnVal = " + resultBody);
+//		
+		return "승공";
 	}
 	
-	@RequestMapping(value="/mobile/ezEmail/mailRead.do")
-	public String mobileReadMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("readMail started.");
+	@RequestMapping(value = "/mobile/ezEmail/getSignList.do", produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String getSignList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("getFolderList started.");
 		
-		// get user credentials
-		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
-		String password = userInfo.get(1);
-		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
-		String userEmail = loginInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
-		
-		// retrieve the passed in parameters
-		String url = request.getParameter("iptURL");
-		if (url == null) {
-			url = request.getParameter("URL");
-		}
-		
-		logger.debug("url=" + url);
-		
-		long uid = 0;
-		String folderPath = null;
-		if (url != null) {
-			int index = url.lastIndexOf("/");
-			
-			// separate the passed-in url into a folder path and a message uid
-			if (index != -1) {
-				folderPath = url.substring(0, index);
-				uid = Long.parseLong(url.substring(index + 1));
-			}
-		}
-		
-		String pnFlag = "N";
-		if (request.getParameter("PNFlag") != null) {
-			pnFlag = request.getParameter("PNFlag");
-		}
-		
-		String contentClass = request.getParameter("CONTENTCLASS");
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/sign/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());		
 
-		Address[] arrFroms = null;
-		Address[] arrRecipientsTo = null;
-		Address[] arrRecipientsCC = null;
-		Address[] arrRecipientsBCC = null;
-		Date date = null;
-		String fromStr = null;
-		String fromEmail = null;
-		String toStr = null;
-		String toHiddenStr = null;
-		String ccStr = null;
-		String ccHiddenStr = null;
-		String bccStr = "";
-		String subject = null;
-		String dateStr = null;
-		String title = null;
-		String pReadFlag = "Y";
-		String isDelete = "BMOVE";
-		boolean isSentItems = false;
-		String pIsCCFg = "Y";
-		IMAPAccess ia = null;
+		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-			Folder f = ia.getFolder(folderPath);
-			
-			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
-			} else {
-				f.open(Folder.READ_WRITE);
-				
-				Message message = null;
-				if(f.isOpen() && f instanceof IMAPFolder){
-					message = ((IMAPFolder)f).getMessageByUID(uid);
-				}
-				
-				if (message == null) {
-					logger.error("Message not found. uid=" + uid);
-				} else {
-					FetchProfile fp = new FetchProfile();
-					
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);
-					fp.add("Subject");
-					fp.add("From");
-					fp.add("To");
-					fp.add("Cc");
-					fp.add("Bcc");
-					
-					Message[] fetchMessages = new Message[] {message};
-					f.fetch(fetchMessages, fp);
-					
-					// From
-					arrFroms = message.getFrom();
-					
-					if (arrFroms != null) {
-						fromStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-						fromStr = commonUtil.trimDoubleQuotes(fromStr);
-								
-						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-					} else {
-						String[] fromHeaders = message.getHeader("From");
-						if (fromHeaders != null) {
-							fromStr = MimeUtility.decodeText(message.getHeader("From")[0]);
-						}
-					}
-					
-					logger.debug("From=" + fromStr);
-					
-					// TO
-					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
-					if(arrRecipientsTo != null){
-						boolean toListme = false;
-						for(int i=0; i<arrRecipientsTo.length; i++){
-							if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
-								toListme = true;
-								break;
-							}
-						}
-						
-						String toHeader = message.getHeader("To")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);						
-						String name = null;
-						
-						for(int i=0; i<arrRecipientsTo.length; i++){
-							name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
-							if(name == null){
-								name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
-							}
-							else{
-								if (!isAscii) {
-									byte[] rawBytes = name.getBytes("iso-8859-1");
-									
-									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {
-									name = MimeUtility.decodeText(name);
-								}
-								
-								name = commonUtil.trimDoubleQuotes(name);
-							}
-							
-							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
-							
-							if(toListme){
-								if(((InternetAddress)arrRecipientsTo[i]).getAddress().equals(userEmail)){
-									if(arrRecipientsTo.length > 1){
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-									} else {
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-									}
-								}
-								if(toHiddenStr == null){
-									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-								} else{
-									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-								}
-							} else {
-								if(i == 0){
-									if(arrRecipientsTo.length > 1){
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsTo.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenTo(this);' align='absmiddle'></span>";
-									} else {
-										toStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-									}
-								}
-								if(toHiddenStr == null){
-									toHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-								} else {
-									toHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsTo[i]).getAddress());
-								}
-							}
-						}
-					}
-					
-					// CC
-					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
-					if(arrRecipientsCC != null){
-						boolean ccListme = false;
-						for(int i=0; i<arrRecipientsCC.length; i++){
-							if(((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)){
-								ccListme = true;
-								break;
-							}
-						}
-						
-						String ccHeader = message.getHeader("Cc")[0];
-						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
-						String name = null;
-						
-						for(int i=0; i<arrRecipientsCC.length; i++){
-							name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-							if(name == null) {
-								name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
-							} else {
-								if (!isAscii) {
-									byte[] rawBytes = name.getBytes("iso-8859-1");
-									
-									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {								
-									name = MimeUtility.decodeText(name);
-								}
-								
-								name = commonUtil.trimDoubleQuotes(name);
-							}
-							
-							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
-							
-							if (ccListme) {
-								if (((InternetAddress)arrRecipientsCC[i]).getAddress().equals(userEmail)) {
-									if (arrRecipientsCC.length > 1) {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
-									} else {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
-									}
-								}
-								if (ccHiddenStr == null) {
-									ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
-								} else {
-									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
-								}
-							} else {
-								if (i == 0) {
-									if (arrRecipientsCC.length > 1) {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress()) + "<span>&nbsp;(" + egovMessageSource.getMessage("ezEmail.t10000", locale) + arrRecipientsCC.length + egovMessageSource.getMessage("ezEmail.t10001", locale) + ")&nbsp;<img src='/images/expnd.gif'  style='cursor:pointer;' onclick='ShowHiddenCc(this);' align='absmiddle'></span>";
-									} else {
-										ccStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
-									}
-								}
-								if (ccHiddenStr == null) {
-									ccHiddenStr = getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
-								} else {
-									ccHiddenStr += " , " + getReceiverHTML(name, ((InternetAddress)arrRecipientsCC[i]).getAddress());
-								}
-							}
-						}
-					}
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+//				.queryParam("folderId", "INBOX");
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		//signList가 1개도 없으면  null
+
+		JSONObject resultBody = result.getBody();
+		
+		model.addAttribute("mailSignList", resultBody);		
+		
+		logger.debug("getFolderList ended.");
+
+		return resultBody.toJSONString();
+	}
 	
-					// BCC
-					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
-					if (arrRecipientsBCC != null) {
-						String name = null;
-						for (int i=0; i<arrRecipientsBCC.length; i++){
-							name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
-							if (name == null) {
-								name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
-							} else {
-								name = MimeUtility.decodeText(name);
-								name = commonUtil.trimDoubleQuotes(name);
-							}
-							
-							logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
-							
-							if (i != 0) {
-								bccStr += ", ";
-							}
-							bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress());
-						}
-					}
-					
-					if (ccStr == null || ccStr.equals("")) {
-						pIsCCFg = "N";
-					}
-					
-					// received date
-					date = message.getReceivedDate();
-					if (date != null) {
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-						String receivedDateStr = sdf.format(date);
+	@RequestMapping(value="/mobile/ezEmail/mailDelete.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
+		logger.debug("mailDeleteMessage started.");
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/224/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
+		
+		URI uri = URI.create(url);
+		
+		JSONObject jsonobject = new JSONObject();
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonobject, headers);
+//		HttpEntity entity = new HttpEntity(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.DELETE, entity, JSONObject.class);
+		
+		JSONObject resultBody = responseEntity.getBody();
+		
+		model.addAttribute("mailFolderList", resultBody);		
 						
-						dateStr = commonUtil.getDateStringInUTC(receivedDateStr, loginInfo.getOffset(), false);
-					}
-					logger.debug("dateStr=" + dateStr);
-					
-					// subject
-					subject = ezEmailUtil.getSubject(message);
-					
-					logger.debug("subject=" + subject);
-					
-					if (subject != null) {
-						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
-					}
-					
-					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-						isSentItems = true;
-					}
-					
-					if (message.getFolder().getFullName().equals(egovMessageSource.getMessage("ezEmail.t99000028", locale))) {
-						isDelete = "BDELETE";
-					}
-					
-					if (!message.isSet(Flag.SEEN)) {
-						pReadFlag = "N";
-						message.setFlag(Flag.SEEN, true);
-						logger.debug("Message's seen flag changed to true.");
-					}
-				}
-				f.close(true);
-			}
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
+		logger.debug("mailDeleteMessage ended.");
 		
-		model.addAttribute("fromStr", fromStr);
-		model.addAttribute("fromEmail", fromEmail);
-		model.addAttribute("url", url);
-		model.addAttribute("toStr", toStr);
-		model.addAttribute("toHiddenStr", toHiddenStr);
-		model.addAttribute("ccStr", ccStr);
-		model.addAttribute("ccHiddenStr", ccHiddenStr);
-		model.addAttribute("bccStr", bccStr);
-		model.addAttribute("dateStr", dateStr);
-		model.addAttribute("subject", subject);
-		model.addAttribute("title", title);
-		model.addAttribute("folderPath", folderPath);
-		model.addAttribute("uid", uid);
-		model.addAttribute("pReadFlag", pReadFlag);
-		model.addAttribute("isDelete", isDelete);
-		model.addAttribute("isSentItems", isSentItems);
-		model.addAttribute("pnFlag", pnFlag);
-		model.addAttribute("pIsCCFg", pIsCCFg);
-		model.addAttribute("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
+		return resultBody.toJSONString();
+	}
+	
+	@RequestMapping(value="/mobile/ezEmail/mailRead.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String mobileReadMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+logger.debug("mailDeleteMessage started.");
 		
-		logger.debug("readMail ended.");
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/226/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
 		
-		return "/mobile/ezEmail/mMailRead";
+		URI uri = URI.create(url);
+		
+		JSONObject jsonobject = new JSONObject();
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonobject, headers);
+//		HttpEntity entity = new HttpEntity(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = responseEntity.getBody();
+		
+		model.addAttribute("mailFolderList", resultBody);		
+						
+		logger.debug("mailDeleteMessage ended.");
+		
+		return resultBody.toJSONString();
+	
 	}
 	
 	@RequestMapping(value="/mobile/ezEmail/mailReadContent.do")
@@ -1071,6 +795,123 @@ public class MEmailController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/ezEmail/mMailWrite.do")
 	public String mailWrite(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		return "/mobile/ezEmail/mMailWrite";
+	}
+	
+	@RequestMapping(value="/mobile/ezEmail/mailSetStatus.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailSetReadStatus(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/folders/INBOX/mails/222/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
+		
+		URI uri = URI.create(url);
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("isRead", "TRUE");
+		//TRUE면 읽은 상태 FALSE면 읽지 않은 상태로 변경.
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.PUT, entity, JSONObject.class);
+		
+		JSONObject resultBody = responseEntity.getBody();
+		
+		model.addAttribute("mailFolderList", resultBody);		
+						
+		logger.debug("mailMoveCopyMessage ended. returnVal = " + resultBody);
+		
+		return resultBody.toJSONString();
+
+	}
+	
+	@RequestMapping(value="/mobile/ezEmail/mailSendMessage.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailSendMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
+		logger.debug("mailSend started");
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/mail-send/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
+		
+		URI uri = URI.create(url);
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		jsonObject.put("subject", "테스트 메일");
+		jsonObject.put("to", "강민석' <rkd1395@svn.opensol2014.com>");
+		jsonObject.put("cc", "강민석 <rkd1395@svn.opensol2014.com>");
+		jsonObject.put("bcc", "");
+		jsonObject.put("textbody", "메일 전송 테스트");
+		jsonObject.put("from", "강민석 <rkd1395@svn.opensol2014.com>");
+//		jsonObject.put("displayName", "'강민석' <rkd1395@svn.opensol2014.com>");
+		jsonObject.put("stateName", UUID.randomUUID().toString());
+		//jsonObject.put("charsert", "");
+		//jsonObject.put("htmlbody", "");
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
+		logger.debug("mailSend jsonObject = " + jsonObject.toJSONString());
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class);
+		
+		JSONObject resultBody = responseEntity.getBody();
+								
+		logger.debug("mailSend ended. returnVal = " + resultBody);
+		
+		return resultBody.toJSONString();
+
+	}
+	
+	@RequestMapping(value="/mobile/ezEmail/mailSaveMessage.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailSaveMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
+		
+		logger.debug("mailSend started");
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/ezemail/mail-save/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
+		
+		URI uri = URI.create(url);
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		jsonObject.put("subject", "테스트 메일");
+		jsonObject.put("to", "강민석' <rkd1395@svn.opensol2014.com>");
+		jsonObject.put("cc", "강민석 <rkd1395@svn.opensol2014.com>");
+		jsonObject.put("bcc", "");
+		jsonObject.put("textbody", "메일 저장 테스트");
+		jsonObject.put("from", "강민석 <rkd1395@svn.opensol2014.com>");
+//		jsonObject.put("displayName", "'강민석' <rkd1395@svn.opensol2014.com>");
+		jsonObject.put("stateName", UUID.randomUUID().toString());
+		//jsonObject.put("charsert", "");
+		//jsonObject.put("htmlbody", "");
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
+		logger.debug("mailSend jsonObject = " + jsonObject.toJSONString());
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class);
+		
+		JSONObject resultBody = responseEntity.getBody();
+								
+		logger.debug("mailSend ended. returnVal = " + resultBody);
+		
+		return resultBody.toJSONString();
+
 	}
 	
 	private String getReceiverHTML(String name, String address){
