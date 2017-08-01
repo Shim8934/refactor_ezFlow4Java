@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -662,6 +662,128 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		map.put("lang", lang);
 		return mBoardDAO.getBrdItemInfo(map);
+	}
+
+	@Override
+	public void insertBrdItem(JSONObject boardListVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", boardListVO.get("itemID"));
+		map.put("boardID", boardListVO.get("boardID"));
+		map.put("writerID", boardListVO.get("writerID"));
+		map.put("writerName", boardListVO.get("writerName"));
+		map.put("writerName2", boardListVO.get("writerName2"));
+		map.put("writerDeptID", boardListVO.get("writerDeptID"));
+		map.put("writerDeptName", boardListVO.get("writerDeptName"));
+		map.put("writerDeptName2", boardListVO.get("writerDeptName2"));
+		map.put("writerCompanyID", boardListVO.get("writerCompanyID"));
+		map.put("writerCompanyName", boardListVO.get("writerCompanyName"));
+		map.put("writerCompanyName2", boardListVO.get("writerCompanyName2"));
+		map.put("writeDate", boardListVO.get("writeDate"));
+		map.put("tenantID", boardListVO.get("tenantID"));
+		map.put("importance", boardListVO.get("importance"));
+		map.put("title", boardListVO.get("title"));
+		map.put("contentLocation", boardListVO.get("contentLocation"));
+		map.put("startDate", boardListVO.get("startDate"));
+		map.put("endDate", boardListVO.get("endDate"));
+		map.put("abstract", boardListVO.get("abstract"));
+		map.put("hasAttach", boardListVO.get("hasAttach"));
+		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
+		map.put("itemLevel", boardListVO.get("itemLevel"));
+		map.put("extensionAttribute1", boardListVO.get("extensionAttribute1"));
+		map.put("extensionAttribute2", boardListVO.get("extensionAttribute2"));
+		map.put("extensionAttribute3", boardListVO.get("extensionAttribute3"));
+		map.put("extensionAttribute32", boardListVO.get("extensionAttribute32"));
+		map.put("extensionAttribute4", boardListVO.get("extensionAttribute4"));
+		map.put("extensionAttribute5", boardListVO.get("extensionAttribute5"));
+		map.put("docPassword", boardListVO.get("docPassword"));
+		map.put("topWriterID", boardListVO.get("topWriterID"));
+		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
+		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
+		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
+		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
+		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		mBoardDAO.insertBrdItem(map);
+	}
+	
+	@Override
+	public void insertBrdItem2(JSONObject boardListVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", boardListVO.get("itemID"));
+		map.put("boardID", boardListVO.get("boardID"));
+		map.put("writerID", boardListVO.get("writerID"));
+		map.put("writerName", boardListVO.get("writerName"));
+		map.put("writerName2", boardListVO.get("writerName2"));
+		map.put("writerDeptID", boardListVO.get("writerDeptID"));
+		map.put("writerDeptName", boardListVO.get("writerDeptName"));
+		map.put("writerDeptName2", boardListVO.get("writerDeptName2"));
+		map.put("writerCompanyID", boardListVO.get("writerCompanyID"));
+		map.put("writerCompanyName", boardListVO.get("writerCompanyName"));
+		map.put("writerCompanyName2", boardListVO.get("writerCompanyName2"));
+		map.put("writeDate", boardListVO.get("writeDate"));
+		map.put("parentWriteDate", boardListVO.get("parentWriteDate"));
+		map.put("tenantID", boardListVO.get("tenantID"));
+		map.put("importance", boardListVO.get("importance"));
+		map.put("title", boardListVO.get("title"));
+		map.put("contentLocation", boardListVO.get("contentLocation"));
+		map.put("startDate", boardListVO.get("startDate"));
+		map.put("endDate", boardListVO.get("endDate"));
+		map.put("abstract", boardListVO.get("abstract"));
+		map.put("hasAttach", boardListVO.get("hasAttach"));
+		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
+		map.put("itemLevel", boardListVO.get("itemLevel"));
+		map.put("extensionAttribute1", boardListVO.get("extensionAttribute1"));
+		map.put("extensionAttribute2", boardListVO.get("extensionAttribute2"));
+		map.put("extensionAttribute3", boardListVO.get("extensionAttribute3"));
+		map.put("extensionAttribute32", boardListVO.get("extensionAttribute32"));
+		map.put("extensionAttribute4", boardListVO.get("extensionAttribute4"));
+		map.put("extensionAttribute5", boardListVO.get("extensionAttribute5"));
+		map.put("docPassword", boardListVO.get("docPassword"));
+		map.put("topWriterID", boardListVO.get("topWriterID"));
+		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
+		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
+		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
+		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
+		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		mBoardDAO.insertBrdItem2(map);
+	}
+
+	@Override
+	public void updateItem(JSONObject boardListVO) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("writeDate", boardListVO.get("writeDate"));
+		map.put("importance", boardListVO.get("importance"));
+		map.put("title", boardListVO.get("title"));
+		map.put("startDate", boardListVO.get("startDate"));
+		map.put("endDate", boardListVO.get("endDate"));
+		map.put("abstract", boardListVO.get("abstract"));
+		map.put("hasAttach", boardListVO.get("hasAttach"));
+		map.put("writerName", boardListVO.get("writerName"));
+		map.put("writerName2", boardListVO.get("writerName2"));
+		map.put("extensionAttribute2", boardListVO.get("extensionAttribute2"));
+		map.put("extensionAttribute5", boardListVO.get("extensionAttribute5"));
+		map.put("docPassword", boardListVO.get("docPassword"));
+		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
+		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
+		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
+		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
+		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		map.put("tenantID", boardListVO.get("tenantID"));
+		map.put("itemID", boardListVO.get("itemID"));
+		mBoardDAO.updateItem(map);
+	}
+
+	@Override
+	public void deleteItem(String itemID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		
+		mBoardDAO.deleteBoardItem(map);
+		mBoardDAO.deleteBoardReply(map);
+		mBoardDAO.deleteBoardItemRead2(map);
+		
+		mBoardDAO.insertDeleteReservedItem(map);
 	}
 	
 	
