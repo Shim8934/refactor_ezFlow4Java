@@ -1008,7 +1008,8 @@
 		</script>
 		<style>
 			.mainlist_free tr th {text-align:center}
-			.mainlist_free tr td {text-align:center}	    	
+			.mainlist_free tr td {text-align:center}	   
+			.mainlist tr th {border-top:0px} 	
 		</style>
 	</head>
 	<body class="popup" style="overflow-y: hidden;">
@@ -1122,7 +1123,12 @@
 	                	</div>
 	                </h2>
 	                <div class="listview" style="margin-top: 4px; margin-left: 1px">
-	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 710px; height: 550px; background-color: #ffffff; margin: 1px 1px 1px 1px;"></div>
+	                <c:if test="${approvalFlag == 'S'}">
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 710px; height: 550px; background-color: #ffffff;"></div>
+	                </c:if>
+	                <c:if test="${approvalFlag == 'G'}">
+	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 750px; height: 550px; background-color: #ffffff;"></div>
+	                </c:if>
 	                </div>
 	                <div style="text-align: right;">
 	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;">
