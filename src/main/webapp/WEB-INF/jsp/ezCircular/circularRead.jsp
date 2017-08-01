@@ -451,7 +451,7 @@
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
-        	                <td colspan="3" style="padding-left: 4px;">${result.title}</td>
+        	                <td colspan="3" style="padding-left: 4px;"><c:out value = '${result.title}' /></td>
                     	</tr>
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
