@@ -60,6 +60,13 @@
 	            	return ;
 	            }
 
+	            if ($.trim($("#title").val()) == "") {
+		        	alert("<spring:message code='ezCircular.t191' />");
+		        	doubleSubmitFlag = false;
+
+		        	return;
+		        }
+
 	            for (var i=0; i<folderNameArr.length; i++) {
 	            	if (folderNameArr[i] == folderName) {
 	            		alert("<spring:message code='ezCircular.t186'/>");
