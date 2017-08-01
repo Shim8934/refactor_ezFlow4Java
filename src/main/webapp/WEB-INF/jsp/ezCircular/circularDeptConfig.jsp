@@ -55,7 +55,7 @@
 		    var _RowObject = null;
 		    
 		    function event_click(obj) {
-		    	if ($("input[value=" + obj.id + "]").is(":checked")) {
+		    	if ($("input[value=" + obj.id + "]").is(":checked") && _RowObject != obj) {
 		    		$("input[value=" + obj.id + "]").prop("checked", false);
 		    		obj.style.backgroundColor = "#FFFFFF";
 		    		_RowObject = null;
