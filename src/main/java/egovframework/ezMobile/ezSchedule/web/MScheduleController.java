@@ -151,17 +151,19 @@ public class MScheduleController extends EgovFileMngUtil {
 		JSONObject resultBody = result.getBody();
 				
 		String status = resultBody.get("status").toString();
-		JSONArray scheduleList = new JSONArray();
-		
+				
 		if (status.equals("ok")) {
+			JSONArray scheduleList = new JSONArray();
+			
 			Gson gson = new Gson();
 			scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			
 			modelMap.addAttribute("scheduleListCnt", scheduleList.size());
 			modelMap.addAttribute("scheduleList", scheduleList);
-		}
-System.out.println("status :" + status);		
+			
 System.out.println("scheduleList :" + scheduleList);
+		}
+System.out.println("status :" + status);
 
 		LOGGER.debug("mScheduleList ended.");
 		
@@ -197,8 +199,40 @@ System.out.println("scheduleList :" + scheduleList);
 				
 		String status = resultBody.get("status").toString();
 		
-System.out.println("status :" + status);		
-
+System.out.println("status :" + status);
+		
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			JSONObject dataObject = gson.fromJson(gson.toJson(resultBody.get("data")),JSONObject.class);
+			
+			String scheduleInfo = gson.toJson(dataObject.get("scheduleInfo"));
+			String resourceCnt = "";
+			String attendantList = "";
+			String attachList = "";
+			
+			if(dataObject.get("resourceCnt") != null) {
+				resourceCnt = dataObject.get("resourceCnt").toString();
+			}
+			
+			if(dataObject.get("attendantList") != null) {
+				attendantList = gson.toJson(dataObject.get("attendantList"));
+			}		
+			
+			if(dataObject.get("attachList") != null) {
+				attachList = gson.toJson(dataObject.get("attachList"));
+			}
+						
+System.out.println(scheduleInfo);			
+System.out.println(resourceCnt);			
+System.out.println(attendantList);			
+System.out.println(attachList);
+			
+			modelMap.addAttribute("scheduleInfo", scheduleInfo);
+			modelMap.addAttribute("resourceCnt", resourceCnt);
+			modelMap.addAttribute("attendantList", attendantList);
+			modelMap.addAttribute("attachList", attachList);			
+		}
+		
 		LOGGER.debug("mScheduleDetail ended.");
 		
 		return "/mobile/ezSchedule/mScheduleDetail";
@@ -308,5 +342,45 @@ System.out.println(gson.toJson(resultBody.get("data")));
 System.out.println(status);
 		
 		LOGGER.debug("mScheduleDelete ended.");
+	}
+	
+	/**
+	 * 모바일 client 일정관리 등록화면
+	 */
+	@RequestMapping(value="/mobile/ezSchedule/mScheduleInsertForm.do")
+	public String mScheduleInsertForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
+		LOGGER.debug("mScheduleInsertForm started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezschedule/type-List/users/" + userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		//Gson gson = new Gson();
+		
+System.out.println(status);
+System.out.println(resultBody.get("data").toString());
+
+		modelMap.addAttribute("scheduleType", resultBody.get("data").toString());
+		
+		LOGGER.debug("mScheduleInsertForm ended.");
+		
+		return "/mobile/ezSchedule/mScheduleInsert";
 	}
 }

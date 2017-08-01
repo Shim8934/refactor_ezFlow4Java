@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MScheduleDAO")
@@ -14,8 +14,8 @@ public class MScheduleDAO extends EgovAbstractDAO {
 		return (String) select("MScheduleDAO.scheduleContentPath", map);
 	}
 
-	public ScheduleInfoVO scheduleInfo(Map<String, Object> map) throws Exception{
-		return (ScheduleInfoVO) select("MScheduleDAO.scheduleInfo", map);
+	public MScheduleInfoVO scheduleInfo(Map<String, Object> map) throws Exception{
+		return (MScheduleInfoVO) select("MScheduleDAO.scheduleInfo", map);
 	}
 }
 

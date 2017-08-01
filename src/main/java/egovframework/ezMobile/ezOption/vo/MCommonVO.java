@@ -10,7 +10,15 @@ public class MCommonVO {
 	
 	private String deptId;			/** 부서Id  */
 	
+	private String deptName;		/** 부서이름    */
+	
+	private String deptName2;		/** 부서이름2  */
+	
 	private String companyId;		/** 회사Id  */
+	
+	private String companyName;		/** 회사이름    */
+	
+	private String companyName2;	/** 회사이름2  */
 	
 	private String userId;			/** 사용자Id  */
 	
@@ -81,5 +89,38 @@ public class MCommonVO {
 	public void setUserName2(String userName2) {
 		this.userName2 = userName2;
 	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+	public String getDeptName2() {
+		return deptName2;
+	}
+
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getCompanyName2() {
+		return companyName2;
+	}
+
+	public void setCompanyName2(String companyName2) {
+		this.companyName2 = companyName2;
+	}
+	
 	
 }

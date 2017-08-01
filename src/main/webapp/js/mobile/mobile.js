@@ -368,7 +368,7 @@ function mScheduleDetail() {
 		transition: "pop",
 		changeHash: true,
 		data : {
-			scheduleId : "6017"
+			scheduleId : "6024"
 		}
 	});
 }
@@ -443,6 +443,17 @@ function mScheduleDelete() {
 		},
 		success: function(text){
 			alert("schedule delete complete!");
+		}
+	});
+}
+
+function mScheduleInsertForm() {
+	$.mobile.changePage( "/mobile/ezSchedule/mScheduleInsertForm.do", {
+		type: "post",
+		transition: "pop",
+		changeHash: true,
+		data : {
+			scheduleId : "6024"
 		}
 	});
 }
