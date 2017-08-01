@@ -416,7 +416,7 @@
 	        }
 	
 	        function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
+	            if (strHeaderName != "CHECK" && strHeaderName != "<spring:message code='ezCircular.t65'/>") {
 	                if (OrderCell == strHeaderName) {
 	                    if (OrderOption == "")
 	                        OrderOption = "DESC";
