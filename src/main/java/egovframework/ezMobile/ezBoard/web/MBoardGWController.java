@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -79,22 +80,13 @@ public class MBoardGWController {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
-			System.out.println(type);
-			System.out.println(boardId);
+			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, rollInfo, deptPathCode, info);
 			
-			//boardInfo.setBoardID(boardId);
-			//boardInfo.setGuBun("0");
-			
-			
-			
 			List<MBoardItemVO> list = null;
-			//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
-			
-			//List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, userInfo);
 			
 			if (boardId != null && boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 				//새게시물 가져오기 리스트
@@ -121,35 +113,6 @@ public class MBoardGWController {
 		return result;
 	}
 	
-	/**
-	 * 모바일 G/W 게시판 [GET] 게시판 리스트 카운트
-	 */
-	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getBoardItemListCount() throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] started.");
-				
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] ended.");
-	}
-	
-	/**
-	 * 모바일 G/W 게시판 [GET] 섬네일게시판 리스트
-	 */
-	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getThumbBoardList() throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] started.");
-				
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] ended.");
-	}
-	
-	/**
-	 * 모바일 G/W 게시판 [GET] 섬네일게시판 리스트 카운트
-	 */
-	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getThumbBoardListCount() throws Exception {		
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] started.");
-				
-		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] ended.");
-	}
 	
 	/**
 	 * 모바일 G/W 게시판 [GET] 즐겨찾기에 등록된 게시판 폴더 리스트
@@ -167,7 +130,7 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getTenantId());
-System.out.println("resultList:"+resultList.size());
+
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", resultList);
@@ -216,32 +179,90 @@ System.out.println("resultList:"+resultList.size());
 	}
 	
 	/**
-	 * 모바일 G/W 게시판 [GET] 게시물 등록
+	 * 모바일 G/W 게시판 [POST] 게시물 등록
 	 */
-	@RequestMapping(value="/ezboard/boards/{boardId}/contents", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertBoard(HttpServletRequest request) throws Exception {		
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezboard/boards/contents", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public void insertBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
+			
+			mBoardService.insertBrdItem(jsonParam);
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] ended.");
 	}
 	
 	/**
-	 * 모바일 G/W 게시판 [GET] 게시물 수정
+	 * 모바일 G/W 게시판 [PUT] 게시물 수정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void updateBoard(HttpServletRequest request) throws Exception {		
+	public void updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
+			
+			mBoardService.updateItem(jsonParam);
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] ended.");
 	}
 	
 	/**
-	 * 모바일 G/W 게시판 [GET] 게시물 삭제
+	 * 모바일 G/W 게시판 [DELETE] 게시물 삭제
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteBoard(HttpServletRequest request) throws Exception {		
+	public void deleteBoard(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			mBoardService.deleteItem(contentId, boardId, info.getTenantId());
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");
 	}
 	
@@ -256,7 +277,7 @@ System.out.println("resultList:"+resultList.size());
 	}
 	
 	/**
-	 * 모바일 G/W 게시판 [GET] 즐겨찾기 설정
+	 * 모바일 G/W 게시판 [POST] 즐겨찾기 설정
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/favorite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public void insertFavorite(HttpServletRequest request) throws Exception {		
@@ -266,7 +287,7 @@ System.out.println("resultList:"+resultList.size());
 	}
 	
 	/**
-	 * 모바일 G/W 게시판 [GET] 즐겨찾기 해제
+	 * 모바일 G/W 게시판 [DELETE] 즐겨찾기 해제
 	 */
 	@RequestMapping(value="/ezboard/boards/{boardId}/favorite", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public void deleteFavorite(HttpServletRequest request) throws Exception {		
@@ -284,4 +305,34 @@ System.out.println("resultList:"+resultList.size());
 				
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");
 	}
+	
+/*	*//**
+	 * 모바일 G/W 게시판 [GET] 게시판 리스트 카운트
+	 *//*
+	@RequestMapping(value="/ezboard/{type}/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void getBoardItemListCount() throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] started.");
+				
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list-count] ended.");
+	}
+	
+	*//**
+	 * 모바일 G/W 게시판 [GET] 섬네일게시판 리스트
+	 *//*
+	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void getThumbBoardList() throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] started.");
+				
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list] ended.");
+	}
+	
+	*//**
+	 * 모바일 G/W 게시판 [GET] 섬네일게시판 리스트 카운트
+	 *//*
+	@RequestMapping(value="/ezboard/thumbnail/boards/{boardId}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public void getThumbBoardListCount() throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] started.");
+				
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/thumbnail/boards/{boardId}/list-count] ended.");
+	}*/
 }

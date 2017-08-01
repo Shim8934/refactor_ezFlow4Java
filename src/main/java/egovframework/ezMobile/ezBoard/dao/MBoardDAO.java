@@ -9,6 +9,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MBoardDAO")
@@ -61,4 +62,33 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public Integer getNoticePostItemListCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("MBoardDAO.getNoticePostItemListCount", map);
 	}
+	
+	public void insertBrdItem(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.insertBrdItem", map);
+	}
+	
+	public void insertBrdItem2(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.insertBrdItem2", map);
+	}
+	
+	public void updateItem(Map<String, Object> map) throws Exception{
+		update("MBoardDAO.updateItem", map);
+	}
+	
+	public void deleteBoardItem(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.deleteBoardItem", map);
+	}
+	
+	public void deleteBoardReply(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.deleteBoardReply", map);
+	}
+	
+	public void deleteBoardItemRead2(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.deleteBoardItemRead2", map);
+	}
+	
+	public void insertDeleteReservedItem(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.insertDeleteReservedItem", map);
+	}
+	
 }
