@@ -444,15 +444,27 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				to.setPersonal((String)recipient.get("USERNAME"), "UTF-8");
 				to.setAddress((String)recipient.get("EMAIL"));
 				
-				String subject = egovMessageSource.getMessage("ezCommunity.t51", locale)
+				StringBuilder subject = new StringBuilder();
+				subject.append(egovMessageSource.getMessage("ezCommunity.t51", locale));
+				subject.append("[\"");
+				subject.append((String)recipient.get("C_CLUBNAME"));
+				subject.append("\"] ");
+				
+				if (isAdmit == true) {
+					subject.append(egovMessageSource.getMessage("ezCommunity.lhj09", locale));
+				} else {
+					subject.append(egovMessageSource.getMessage("ezCommunity.lhj10", locale));
+				}
+				
+				/*String subject = egovMessageSource.getMessage("ezCommunity.t51", locale)
 						+ "[\"" + (String)recipient.get("C_CLUBNAME") + "\"] "
 						+ egovMessageSource.getMessage("ezCommunity.t52", locale) 
 						+ pDivi 
-						+ egovMessageSource.getMessage("ezCommunity.t54", locale);
+						+ egovMessageSource.getMessage("ezCommunity.t54", locale);*/
 				
-				String content = subject;
+				String content = subject.toString();
 				
-				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject.toString(), content, false);
 			}
 		}
 		
