@@ -34,16 +34,15 @@
 		        if (p_AprLineTempletName == "") {
 		        	var pAlertContent;
 		        	if (type == "") {
-	                    pAlertContent = "<spring:message code='ezApprovalG.t387'/>";
+	                    alert("<spring:message code='ezApprovalG.t387'/>");
 		        	} else {
 		        		if (approvalFlag == "G") {
-			        		pAlertContent = "<spring:message code='ezApprovalG.t6003'/>";
+			        		alert("<spring:message code='ezApprovalG.t6003'/>");
 		        		} else {
-			        		pAlertContent = "<spring:message code='ezApprovalG.hyj10'/>";
+			        		alert("<spring:message code='ezApprovalG.hyj10'/>");
 		        		}
 		        	}
 		        	
-		            OpenAlertUI(pAlertContent);
 		            if (!CrossYN())
 		                document.getElementById("TxtAprLineTempletName").focus();
 		
