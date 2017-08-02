@@ -17187,7 +17187,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String GetRecordInfo(Document xmlDom, String lang, int tenantID)throws Exception {
+	public String GetRecordInfo(Document xmlDom, String lang, int tenantID, String offSet)throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		
         String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
@@ -17230,7 +17230,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("<APRMEMBER>" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "</APRMEMBER>");
 		resultXML.append("<DRAFTER>" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "</DRAFTER>");
-		resultXML.append("<REGDATE>" + formatDateForView(makeListField(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent()),0) + "</REGDATE>");
+		resultXML.append("<REGDATE>" + formatDateForView(makeListField(commonUtil.getDateStringInUTC(docXML.getElementsByTagName("REGISTERDATE").item(0).getTextContent().substring(0,18), offSet, false)),0) + "</REGDATE>");
 		resultXML.append("<SPECIALFLAG>" + makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(0).getTextContent()) + "</SPECIALFLAG>");
 		resultXML.append("</BASICINFO>");
 

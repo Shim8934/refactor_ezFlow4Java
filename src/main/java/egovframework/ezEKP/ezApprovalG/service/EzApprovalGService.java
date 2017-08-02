@@ -324,7 +324,7 @@ public interface EzApprovalGService {
 
 	public String sendOfferCheck(String docID, String userID, String string, String companyID, String lang, int tenantID) throws Exception;
 
-	public String GetRecordInfo(Document xmlDom, String lang, int tenantID)throws Exception;
+	public String GetRecordInfo(Document xmlDom, String lang, int tenantID, String offSet)throws Exception;
 
 	public String getRecViewer(Document xmlDom,String lang, int tenantID)throws Exception;
 
