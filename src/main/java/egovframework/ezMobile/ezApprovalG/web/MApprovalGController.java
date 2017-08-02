@@ -97,7 +97,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/" + pType + "/list/users/" + userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezapproval/" + pType + "/list/users/" + userInfo.getId();
 		
 		if (pLastDate == null || pLastDate.equals("")) {
 			pLastDate = commonUtil.getTodayUTCTime("");
@@ -145,7 +145,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/" + pType + "/list-count/users/" + userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezapproval/" + pType + "/list-count/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -188,10 +188,10 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url1 = gwServerUrl + "/ezapproval/docs/" + pDocID;
-		String url2 = gwServerUrl + "/ezapproval/docs/" + pDocID + "/line-list";
-		String url3 = gwServerUrl + "/ezapproval/docs/" + pDocID + "/attach-list";
-		String url4 = gwServerUrl + "/ezapproval/docs/" + pDocID + "/opinion-count";
+		String url1 = gwServerUrl + "/mobile/ezapproval/docs/" + pDocID;
+		String url2 = gwServerUrl + "/mobile/ezapproval/docs/" + pDocID + "/line-list";
+		String url3 = gwServerUrl + "/mobile/ezapproval/docs/" + pDocID + "/attach-list";
+		String url4 = gwServerUrl + "/mobile/ezapproval/docs/" + pDocID + "/opinion-count";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -261,7 +261,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/docs/" + pDocID + "/opinion";
+		String url = gwServerUrl + "/mobile/ezapproval/docs/" + pDocID + "/opinion";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -305,7 +305,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/docs/" + pDocID + "/opinion";
+		String url = gwServerUrl + "/mobile/ezapproval/docs/" + pDocID + "/opinion";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -367,7 +367,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/absentee/users/" + userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezapproval/absentee/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -417,7 +417,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/absentee/users/" + userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezapproval/absentee/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -469,7 +469,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/pwd-check/users/" + userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezapproval/pwd-check/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -510,7 +510,7 @@ public class MApprovalGController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezapproval/docs/" + docId + "/approve/" + type;
+		String url = gwServerUrl + "/mobile/ezapproval/docs/" + docId + "/approve/" + type;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

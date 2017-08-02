@@ -29,6 +29,7 @@ import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -73,11 +74,43 @@ public class MApprovalGGWController {
 	private MOptionService MOptionService;
 
 	/**
+	 * 모바일 G/W 전자결재 [GET] 결재문서 메인 리스트
+	 */
+	@RequestMapping(value = "/mobile/ezapproval/main-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")	
+	public JSONObject mApprovalMainList(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String listSize = "10"; //리스트사이즈 임시로 10개 차후 디비에서 가져와야함
+			String lastDate = commonUtil.getTodayUTCTime("");
+			
+			LOGGER.debug("listSize : " + listSize);
+			
+			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			
+			List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, "DO", "", listSize, lastDate);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", approvalGDocInfoVOs);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/main-list/users/" + userId + "] ended.");
+		
+		return result;
+	}
+	/**
 	 * 모바일 G/W 전자결재 [GET] 결재문서 리스트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT))
 	 */
-	@RequestMapping(value = "/ezapproval/{type}/list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/{type}/list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalList(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/" + type + "/list/users/" + userId + "] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -91,6 +124,14 @@ public class MApprovalGGWController {
 			LOGGER.debug("listSize : " + listSize);
 			LOGGER.debug("lastDate : " + lastDate);
 			
+			if (listSize == null || listSize.equals("")) {
+				listSize = "20";
+			}
+			
+			if (lastDate == null || lastDate.equals("")) {
+				lastDate = commonUtil.getTodayUTCTime("");
+			}
+			
 			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
 			
 			List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, type, searchText, listSize, lastDate);
@@ -103,7 +144,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/" + type + "/list/users/" + userId + "] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -111,9 +152,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 결재문서 카운트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT))
 	 */
-	@RequestMapping(value = "/ezapproval/{type}/list-count/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/{type}/list-count/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalListCount(@PathVariable String type, @PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/" + type + "/list-count/users/" + userId + "] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -136,7 +177,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/" + type + "/list-count/users/" + userId + "] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + type + "/list-count/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -144,9 +185,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 문서보기
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDoc(@PathVariable String docId, HttpServletRequest request, Locale locale) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -172,7 +213,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "] ended.");
 		
 		return result;
 	}
@@ -180,9 +221,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 결재라인 리스트
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}/line-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/line-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalLineList(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/line-list] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/line-list] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -208,7 +249,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/line-list] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/line-list] ended.");
 		
 		return result;
 	}
@@ -216,9 +257,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 의견 카운트
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion-count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalOpinionCount(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion-count] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion-count] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -242,7 +283,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion-count] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion-count] ended.");
 		
 		return result;
 	}
@@ -250,9 +291,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 첨부파일 리스트
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}/attach-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/attach-list", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalAttachList(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/attach-list] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/attach-list] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -277,7 +318,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/attach-list] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/attach-list] ended.");
 		
 		return result;
 	}
@@ -285,9 +326,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 의견보기
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -310,7 +351,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -318,9 +359,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [POST] 의견쓰기
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalInsertOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [POST /ezapproval/docs/" + docId + "/opinion] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -355,7 +396,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [POST /ezapproval/docs/" + docId + "/opinion] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [POST /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -363,9 +404,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [PUT] 의견수정
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalUpdateOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/docs/" + docId + "/opinion] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -392,7 +433,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/docs/" + docId + "/opinion] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -400,9 +441,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [DELETE] 의견삭제
 	 */
-	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/opinion", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDeleteOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /ezapproval/docs/" + docId + "/opinion] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -425,7 +466,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /ezapproval/docs/" + docId + "/opinion] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /mobile/ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -433,9 +474,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 부재자설정 보기
 	 */
-	@RequestMapping(value = "/ezapproval/absentee/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalAbsenteeInfo(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/absentee/users/" + userId + "] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -463,7 +504,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}	
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/absentee/users/" + userId + "] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/absentee/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -471,9 +512,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [PUT] 부재자설정 등록
 	 */
-	@RequestMapping(value = "/ezapproval/absentee/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, @RequestParam MApprovalGAbsenteeInfoVO absenteeInfoVO) {
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/absentee/users/" + userId + "] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -505,7 +546,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/absentee/users/" + userId + "] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] ended.");
 		
 		return result;
 	}
@@ -513,9 +554,9 @@ public class MApprovalGGWController {
 	/**
 	 * 모바일 G/W 전자결재 [GET] 비밀번호 확인
 	 */
-	@RequestMapping(value = "/ezapproval/pwd-check/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/mobile/ezapproval/pwd-check/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalCheckPassword(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/pwd-check/users/" + userId + "] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -546,7 +587,73 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/pwd-check/users/" + userId + "] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/pwd-check/users/" + userId + "] ended.");
+		
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 전자결재 [PUT] 결재(APR), 반송(BAN), 보류(BO), 회수(HWE), 확인(CHECK)
+	 */
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/approve/{type}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject mApprovalDoApprove(@PathVariable String docId, @PathVariable String type, HttpServletRequest request, Locale locale) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			
+			String rtnVal = "";
+			String formID = "";
+			String orgUID = "";
+			String dirPath = "";
+			LoginVO loginVO = new LoginVO();
+			
+			loginVO.setId(userId);
+			loginVO.setCompanyID(userInfo.getCompanyId());
+			loginVO.setTenantId(userInfo.getTenantId());
+			loginVO.setOffset(userInfo.getOffSet());
+			loginVO.setLocale(locale);
+			loginVO.setLang(userInfo.getLang());
+			loginVO.setDeptID(userInfo.getDeptId());
+			
+			if (type.equals("APR")) {
+				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", formID, "", docId, orgUID, userInfo.getLang(), userInfo.getCompanyId(), request, loginVO);
+			} else if (type.equals("BAN")) {
+				rtnVal = ezApprovalGService.doBansong(docId, userId, "004", dirPath, userInfo.getDeptId(), userInfo.getCompanyId(), userInfo.getLang(), loginVO);
+			} else if (type.equals("BO")) {
+				
+			} else if (type.equals("HWE")) {
+				
+			} else if (type.equals("CHECK")) {
+				
+			} else {
+				//오류
+			}
+			
+			if (rtnVal != null && !rtnVal.equals("ERROR")) {
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", "SUCCESS");
+			} else {
+				result.put("status", "ok");
+				result.put("code", "2");
+				result.put("data", "FAIL");
+			}
+			
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/approve/" + type + "] ended.");
 		
 		return result;
 	}
