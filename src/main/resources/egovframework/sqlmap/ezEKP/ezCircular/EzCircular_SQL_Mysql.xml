@@ -327,10 +327,12 @@
         ]]>
         
        	<isNotEqual property="searchValue" compareValue="">
-			<![CDATA[
-				AND
-					B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
-			]]>
+       		<isEqual property="searchType" compareValue="userID">
+       			<![CDATA[
+					AND
+						B.displayname LIKE CONCAT(CONCAT('%', #searchValue#),'%')
+				]]>
+       		</isEqual>
 		</isNotEqual>
 		
 		<![CDATA[
@@ -1400,6 +1402,14 @@
 				AND
 					tenantid = #tenantID#
 			]]>
+			
+			<isNotEqual property="searchValue" compareValue="">
+				<isEqual property="searchType" compareValue="content" prepend="AND ">
+					<![CDATA[
+						circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+			</isNotEqual>
 		</isEqual>
 		
 		<isEqual property="commentType" compareValue="myComment">
@@ -1429,9 +1439,27 @@
 					B.memberid = #circularUserID#
 				AND
 					A.tenantid = #tenantID#
+			]]>
+			
+			<isNotEqual property="searchValue" compareValue="">
+				<isEqual property="searchType" compareValue="userID" prepend="AND ">
+					<![CDATA[
+						A.membername LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+				
+				<isEqual property="searchType" compareValue="content" prepend="AND ">
+					<![CDATA[
+						A.circularcomment LIKE CONCAT(CONCAT('%', #searchValue#), '%')
+					]]>
+				</isEqual>
+			</isNotEqual>
+			
+			<![CDATA[
 				ORDER BY
 					B.updateDate DESC
 			]]>
+			
 		</isEqual>
 	</select>
 	
