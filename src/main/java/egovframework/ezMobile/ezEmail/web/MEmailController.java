@@ -466,6 +466,39 @@ public class MEmailController extends EgovFileMngUtil {
 		return resultBody.toJSONString();
 	}
 	
+	@RequestMapping(value="/mobile/ezEmail/mailMailList.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
+		logger.debug("mailDeleteMessage started.");
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/mobile/ezemail/main/mail-list/users/"+"rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
+		
+		URI uri = URI.create(url);
+		
+		JSONObject jsonobject = new JSONObject();
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonobject, headers);
+//		HttpEntity entity = new HttpEntity(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = responseEntity.getBody();
+		
+		model.addAttribute("mailFolderList", resultBody);		
+						
+		logger.debug("mailDeleteMessage ended.");
+		
+		return resultBody.toJSONString();
+	}
+	
 	@RequestMapping(value="/mobile/ezEmail/mailRead.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
 	@ResponseBody
 	public String mobileReadMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
