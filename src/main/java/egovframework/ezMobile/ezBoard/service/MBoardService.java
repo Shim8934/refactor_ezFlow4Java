@@ -8,6 +8,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface MBoardService {
@@ -19,13 +20,19 @@ public interface MBoardService {
 	
 	List<MBoardFavoriteVO> getFavoriteList(String userID, int tenantID) throws Exception;
 	
+	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception;
+	
+	List<MBoardItemVO> getBoardMainList(String userID, int tenantID) throws Exception;
+	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
 	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception;
 	
 	MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception;
 	
-	public void insertBrdItem(JSONObject boardListVO) throws Exception;
+	String checkIfBoardGroupAdmin(String rootBoardID, String userID, String deptID, String companyID, int tenantID) throws Exception;
+	
+	public void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception;
 	
 	public void insertBrdItem2(JSONObject boardListVO) throws Exception;
 	

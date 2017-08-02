@@ -20,6 +20,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -665,7 +666,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public void insertBrdItem(JSONObject boardListVO) throws Exception {
+	public void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", boardListVO.get("itemID"));
 		map.put("boardID", boardListVO.get("boardID"));
@@ -678,15 +679,24 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("writerCompanyID", boardListVO.get("writerCompanyID"));
 		map.put("writerCompanyName", boardListVO.get("writerCompanyName"));
 		map.put("writerCompanyName2", boardListVO.get("writerCompanyName2"));
-		map.put("writeDate", boardListVO.get("writeDate"));
-		map.put("tenantID", boardListVO.get("tenantID"));
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantID);
 		map.put("importance", boardListVO.get("importance"));
 		map.put("title", boardListVO.get("title"));
-		map.put("contentLocation", boardListVO.get("contentLocation"));
-		map.put("startDate", boardListVO.get("startDate"));
-		map.put("endDate", boardListVO.get("endDate"));
+		map.put("contentLocation", commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + boardListVO.get("boardID") + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.separator + boardListVO.get("itemID") + ".mht");
+		
+		if (boardListVO.get("startDate") != null && !boardListVO.get("startDate").equals("")) {
+			map.put("startDate", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("startDate")), offset, true));
+			map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		} else {
+			map.put("startDate", commonUtil.getTodayUTCTime(""));
+		}
+		
+		map.put("endDate", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("endDate")), offset, true));
 		map.put("abstract", boardListVO.get("abstract"));
 		map.put("hasAttach", boardListVO.get("hasAttach"));
+		
+		
 		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
 		map.put("itemLevel", boardListVO.get("itemLevel"));
 		map.put("extensionAttribute1", boardListVO.get("extensionAttribute1"));
@@ -784,6 +794,44 @@ public class MBoardServiceImpl implements MBoardService {
 		mBoardDAO.deleteBoardItemRead2(map);
 		
 		mBoardDAO.insertDeleteReservedItem(map);
+	}
+
+	@Override
+	public List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rootBoardID", rootBoardID);
+		map.put("userID", accessID);
+		map.put("deptID", "");
+		map.put("companyID","");
+		map.put("mode", mode);
+		map.put("selectBy", selectBy);
+		map.put("excludeBoardID", excludeBoardID);
+		map.put("tenantID", tenantID);
+		
+		return mBoardDAO.brdBoardTree(map);
+	}
+
+	@Override
+	public String checkIfBoardGroupAdmin(String rootBoardID, String userID, String deptID, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", rootBoardID);
+		map.put("userID", userID);
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.checkIfBoardGroupAdmin(map);
+	}
+
+	@Override
+	public List<MBoardItemVO> getBoardMainList(String userID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		//mainList 임시 10까지
+		map.put("rowCount", 10);
+		map.put("limit", 0);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantID);
+		return mBoardDAO.getNewItemList(map);
 	}
 	
 	
