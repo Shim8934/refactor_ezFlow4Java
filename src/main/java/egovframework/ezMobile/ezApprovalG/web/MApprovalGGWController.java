@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezApprovalG.web;
 
+import java.security.PrivateKey;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -14,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
@@ -317,7 +320,7 @@ public class MApprovalGGWController {
 	 */
 	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalInsertOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [POST /ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -352,7 +355,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [POST /ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -362,7 +365,7 @@ public class MApprovalGGWController {
 	 */
 	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalUpdateOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -389,7 +392,7 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/docs/" + docId + "/opinion] ended.");
 		
 		return result;
 	}
@@ -399,7 +402,7 @@ public class MApprovalGGWController {
 	 */
 	@RequestMapping(value = "/ezapproval/docs/{docId}/opinion", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject mApprovalDeleteOpinionInfo(@PathVariable String docId, HttpServletRequest request) {
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] started.");
+		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /ezapproval/docs/" + docId + "/opinion] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -422,7 +425,128 @@ public class MApprovalGGWController {
 			result.put("code", "1");
 		}
 		
-		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/docs/" + docId + "/opinion] ended.");
+		LOGGER.debug("MOBILE G/W APPROVAL [DELETE /ezapproval/docs/" + docId + "/opinion] ended.");
+		
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 전자결재 [GET] 부재자설정 보기
+	 */
+	@RequestMapping(value = "/ezapproval/absentee/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mApprovalAbsenteeInfo(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/absentee/users/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			
+			MApprovalGAbsenteeInfoVO absenteeInfoVO = MApprovalGService.getAbsenteeInfo(userInfo);
+			
+			if (absenteeInfoVO.getAbsenteeId() != null && !absenteeInfoVO.getAbsenteeId().equals("")) {
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", absenteeInfoVO);
+			} else {
+				result.put("status", "ok");
+				result.put("code", "2");
+				result.put("data", "");
+			}
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}	
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/absentee/users/" + userId + "] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 전자결재 [PUT] 부재자설정 등록
+	 */
+	@RequestMapping(value = "/ezapproval/absentee/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, @RequestParam MApprovalGAbsenteeInfoVO absenteeInfoVO) {
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/absentee/users/" + userId + "] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			
+			absenteeInfoVO.setUserId(userInfo.getUserId());
+			absenteeInfoVO.setTenantId(userInfo.getTenantId());
+			
+			int resultCode = MApprovalGService.setAbsenteeInfo(absenteeInfoVO);
+			
+			//resultCode 가 0이면 업데이트를 했는데 업데이트가 안된 경우 잘못된 경우지만 흐름은 정상적으로 흘러가기에 코드로 구분 프론트단에서 업데이트가 안됐다고 알려줘야하는데 안될리가 없을듯 하지만 한치앞을 내다볼수없는 세상이라 만들어놓음
+			if (resultCode == 0) {
+				result.put("status", "ok");
+				result.put("code", "2");
+				result.put("data", "");
+			} else {
+				result.put("status", "ok");
+				result.put("code", "0");
+				result.put("data", "");
+			}
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+		
+		LOGGER.debug("MOBILE G/W APPROVAL [PUT /ezapproval/absentee/users/" + userId + "] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 전자결재 [GET] 비밀번호 확인
+	 */
+	@RequestMapping(value = "/ezapproval/pwd-check/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mApprovalCheckPassword(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/pwd-check/users/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+		
+		try {
+			String rsaEncPassword = request.getParameter("password");
+			String serverName = request.getHeader("x-user-host");
+			
+			LOGGER.debug("serverName : " + serverName);
+			LOGGER.debug("userId : " + userId);
+			
+			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			
+			String prm = egovFileScrty.getPrm();
+	    	String pre = egovFileScrty.getPre();
+	    	
+			PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+			
+			String password = EgovFileScrty.decryptRsa(pk, rsaEncPassword);
+			String shaEncPassword = EgovFileScrty.encryptPassword(password, userId);
+			
+			int resultCode = MApprovalGService.checkPass(userInfo, shaEncPassword);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", resultCode);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		LOGGER.debug("MOBILE G/W APPROVAL [GET /ezapproval/pwd-check/users/" + userId + "] ended.");
 		
 		return result;
 	}

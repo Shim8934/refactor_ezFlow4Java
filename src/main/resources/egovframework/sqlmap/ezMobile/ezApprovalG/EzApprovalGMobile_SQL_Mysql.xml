@@ -2,11 +2,13 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezApprovalGMobile">
+	<typeAlias  alias="MCommonVO"	 						type="egovframework.ezMobile.ezOption.vo.MCommonVO"/>
 	<typeAlias  alias="MApprovalGTLVO" 						type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO"/>
 	<typeAlias  alias="MApprGDocInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO"/>
 	<typeAlias  alias="MApprGAttachInfoVO" 					type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO"/>
 	<typeAlias  alias="MApprGAprLineInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO"/>
 	<typeAlias  alias="MApprGOpinionInfoVO" 				type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO"/>
+	<typeAlias  alias="MApprovalGAbsenteeInfoVO"			type="egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO"/>
 	
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO">
 		<isEqual property="type" compareValue="DO">
@@ -531,6 +533,34 @@
 		</isEqual>
 	</select>
 	
+	<select id="MApprovalG.getAbsenteeInfo" parameterClass="MCommonVO" resultClass="String">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE5
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				CN = #userId#
+		]]>
+	</select>
+	
+	<select id="MApprovalG.checkPass" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				cn = #userId#
+			AND
+				password = #password#
+		]]>
+	</select>
+	
 	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">
 		<![CDATA[
 	   		INSERT INTO TBL_APROPINIONINFO (
@@ -559,6 +589,19 @@
 	   			COMPANYID = #companyID#
 	   		AND
 	   			DOCID = #docID#
+		]]>
+   </update>
+   
+   <update id="MApprovalG.setAbsenteeInfo" parameterClass="MApprovalGAbsenteeInfoVO">
+   		<![CDATA[
+   			UPDATE
+   				TBL_USERMASTER
+   			SET
+   				EXTENSIONATTRIBUTE5 = #absenteeInfo#
+   			WHERE
+   				TENANT_ID = #tenantId#
+   			AND
+   				CN = #userId#
 		]]>
    </update>
    

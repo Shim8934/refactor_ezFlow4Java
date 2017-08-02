@@ -8,11 +8,11 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +34,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
-import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -82,9 +80,9 @@ public class MApprovalGController {
 	 * 모바일 전자결재G 결재할문서 호출 Method
 	 */
 	@RequestMapping(value = "/mobile/ezApprovalG/mApproveList.do")
-	public String doApprovList() throws Exception {
-		LOGGER.debug("doApprovList started");
-		LOGGER.debug("doApprovList ended");
+	public String mApproveList() throws Exception {
+		LOGGER.debug("mApproveList started");
+		LOGGER.debug("mApproveList ended");
 		
 		return "mobile/ezApprovalG/mApprGdoApproveList";
 	}
@@ -181,8 +179,8 @@ public class MApprovalGController {
 	 * 모바일 전자결재G 문서보기 호출 Method
 	 */
 	@RequestMapping(value = "/mobile/ezApprovalG/mApproveDoc.do")
-	public String doApprovalGDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID, String pType) throws Exception {
-		LOGGER.debug("doApprovalGDetail started");
+	public String mApproveDoc(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID, String pType) throws Exception {
+		LOGGER.debug("mApproveDoc started");
 		LOGGER.debug("docID : " + pDocID);
 		LOGGER.debug("type : " + pType);
 		
@@ -209,6 +207,7 @@ public class MApprovalGController {
 				.queryParam("docID", pDocID);
 		UriComponentsBuilder builder3 = UriComponentsBuilder.fromHttpUrl(url3)
 				.queryParam("userId", userInfo.getId())
+				.queryParam("type", pType)
 				.queryParam("docID", pDocID);
 		UriComponentsBuilder builder4 = UriComponentsBuilder.fromHttpUrl(url4)
 				.queryParam("userId", userInfo.getId())
@@ -230,15 +229,15 @@ public class MApprovalGController {
 		if (status1.equals("ok") && status2.equals("ok") && status3.equals("ok") && status4.equals("ok")) {
 			String bodyHTML = result1.getBody().get("data").toString();
 			String photoPath = result2.getBody().get("photoPath").toString();
-			String opinionCount = result3.getBody().get("data").toString();
+			String opinionCount = result4.getBody().get("data").toString();
 			
 			JSONArray approveLineList = new JSONArray();
 			Gson gson = new Gson();
 			approveLineList = gson.fromJson(gson.toJson(result2.getBody().get("data")), JSONArray.class);
 			
 			JSONArray approveAttachList = new JSONArray();
-			approveAttachList = gson.fromJson(gson.toJson(result4.getBody().get("data")), JSONArray.class);
-			
+			approveAttachList = gson.fromJson(gson.toJson(result3.getBody().get("data")), JSONArray.class);
+				
 			model.addAttribute("aprAttachList", approveAttachList);
 			model.addAttribute("aprLineList", approveLineList);
 			model.addAttribute("photoPath", photoPath);
@@ -249,13 +248,13 @@ public class MApprovalGController {
 			return "에러페이지라고 하면 될려나";
 		}
 
-		LOGGER.debug("doApprovalGDetail ended");
+		LOGGER.debug("mApproveDoc ended");
 		
 		return "mobile/ezApprovalG/mApprGdoApproveDetail";
 	}
 	
 	@RequestMapping(value = "/mobile/ezApprovalG/mGetOpinionInfo.do")
-	public String getOpinionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID) throws Exception {
+	public String mGetOpinionInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String pDocID) throws Exception {
 		LOGGER.debug("mGetOpinionInfo started");
 		LOGGER.debug("docID : " + pDocID);
 		
@@ -271,8 +270,7 @@ public class MApprovalGController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId())
-				.queryParam("docID", pDocID);
+				.queryParam("userId", userInfo.getId());
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -317,7 +315,6 @@ public class MApprovalGController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
-				.queryParam("docID", pDocID)
 				.queryParam("opinionGB", pOpinionGB)
 				.queryParam("content", pContent);
 		
@@ -345,6 +342,204 @@ public class MApprovalGController {
 		}
 		
 		LOGGER.debug("mSetOpinionInfo ended");
+		
+		return "json";
+	}
+
+	/**
+	 * 모바일 전자결재G 부재자설정 호출 Method
+	 */
+	@RequestMapping(value = "/mobile/ezApprovalG/mAbsenteeInfo.do")
+	public String mAbsenteeInfo() throws Exception {
+		LOGGER.debug("mAbsenteeInfo started");
+		LOGGER.debug("mAbsenteeInfo ended");
+		
+		return "mobile/ezApprovalG/mApprGAbsenteeInfo";
+	}
+
+	/**
+	 * 모바일 전자결재G 부재자설정 표출 Method
+	 */
+	@RequestMapping(value = "/mobile/ezApprovalG/mGetAbsenteeInfo.do")
+	public String mGetAbsenteeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("mGetAbsenteeInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/absentee/users/" + userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(url, HttpMethod.GET, entity, JSONObject.class);
+		
+		String status = result.getBody().get("status").toString();
+		
+		if (status.equals("ok")) {
+			String code = result.getBody().get("code").toString();
+			
+			if (code != null && code.equals("0")) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser.parse(result.getBody().get("data").toString());
+				
+				String absenteeId = jsonObject.get("absenteeId").toString();
+				String absenteeName = jsonObject.get("absenteeName").toString();
+				String startDate = jsonObject.get("startDate").toString();
+				String endDate = jsonObject.get("endDate").toString();
+				
+				model.addAttribute("absenteeId", absenteeId);
+				model.addAttribute("absenteeName", absenteeName);
+				model.addAttribute("startDate", startDate);
+				model.addAttribute("endDate", endDate);
+			}
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+
+		LOGGER.debug("mGetAbsenteeInfo ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 모바일 전자결재G 부재자설정 셋 Method
+	 */
+	@RequestMapping(value = "/mobile/ezApprovalG/mSetAbsenteeInfo.do")
+	public String mSetAbsenteeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String absenteeId, String absenteeName, String startDate, String endDate) {
+		LOGGER.debug("mSetAbsenteeInfo started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/absentee/users/" + userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("absenteeId", absenteeId)
+				.queryParam("absenteeName", absenteeName)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+		
+		String status = result.getBody().get("status").toString();
+		
+		if (status.equals("ok")) {
+			
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+
+		LOGGER.debug("mSetAbsenteeInfo ended");
+		
+		return "json";
+	}
+
+	/**
+	 * 모바일 전자결재G 비밀번호확인 호출 Method
+	 */
+	@RequestMapping(value = "/mobile/ezApprovalG/mPWCheck.do")
+	public String mPWCheck() throws Exception {
+		LOGGER.debug("mPWCheck started");
+		LOGGER.debug("mPWCheck ended");
+		
+		return "mobile/ezApprovalG/mApprGPWCheck";
+	}
+	
+	/**
+	 * 모바일 전자결재G 비밀번호확인 표출 Method
+	 */
+	@RequestMapping(value = "/mobile/ezApprovalG/mCheckPassword.do")
+	public String checkPassword(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String password) throws Exception {
+		LOGGER.debug("mCheckPassword started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/pwd-check/users/" + userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("password", password);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		String status = result.getBody().get("status").toString();
+		
+		if (status.equals("ok")) {
+			String resultCode = result.getBody().get("data").toString();
+			
+			if (resultCode != null && resultCode.equals("1")) {
+				model.addAttribute("resultCode", "SUCCESS");
+			} else {
+				model.addAttribute("resultCode", "FAIL");
+			}
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+
+		LOGGER.debug("mCheckPassword ended");
+		
+		return "json";
+	}
+	
+	@RequestMapping(value = "/mobile/ezApprovalG/mDoApprove.do")
+	public String mDoApprove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String type, String docId) throws Exception {
+		LOGGER.debug("mDoApprove started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/ezapproval/docs/" + docId + "/approve/" + type;
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, JSONObject.class);
+		
+		String status = result.getBody().get("status").toString();
+		
+		if (status.equals("ok")) {
+			String resultCode = result.getBody().get("data").toString();
+			
+			if (resultCode != null && resultCode.equals("1")) {
+				model.addAttribute("resultCode", "SUCCESS");
+			} else {
+				model.addAttribute("resultCode", "FAIL");
+			}
+		} else {
+			return "에러페이지라고 하면 될려나";
+		}
+
+		LOGGER.debug("mDoApprove ended");
 		
 		return "json";
 	}

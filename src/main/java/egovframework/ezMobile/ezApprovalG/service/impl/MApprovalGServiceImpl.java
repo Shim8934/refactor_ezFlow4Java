@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezApprovalG.dao.MApprovalGDAO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
@@ -52,6 +54,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Override
 	public List<MApprovalGDocInfoVO> getDoApproveList(MCommonVO userInfo, String type, String searchText, String listSize, String lastDate) throws Exception {
@@ -221,19 +226,17 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		int result = 0;
 		int resultRow = MApprovalGDAO.deleteOpinionInfo(map);
 		
-		if (pType.equals("INERT")) {
-			if (resultRow > 0) {
-				if (pContent != null && !pContent.equals("")) {
-					map.put("hasOpinionYN", "Y");
-					
-					MApprovalGDAO.insertOpinionInfo(map);
-					
-					result = MApprovalGDAO.updateDocOpinionInfo(map);
-				} else {
-					map.put("hasOpinionYN", "N");
-					
-					result = MApprovalGDAO.updateDocOpinionInfo(map);
-				}
+		if (pType.equals("INSERT")) {
+			if (pContent != null && !pContent.equals("")) {
+				map.put("hasOpinionYN", "Y");
+				
+				MApprovalGDAO.insertOpinionInfo(map);
+				
+				result = MApprovalGDAO.updateDocOpinionInfo(map);
+			} else {
+				map.put("hasOpinionYN", "N");
+				
+				result = MApprovalGDAO.updateDocOpinionInfo(map);
 			}
 		} else if (pType.equals("UPDATE")) {
 			if (resultRow > 0) {
@@ -269,6 +272,56 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		return approvalGAttachInfoVOs;
 	}
 	
+	@Override
+	public MApprovalGAbsenteeInfoVO getAbsenteeInfo(MCommonVO userInfo) throws Exception {
+		LOGGER.debug("getAbsenteeInfo started");
+
+		String absenteeInfo = MApprovalGDAO.getAbsenteeInfo(userInfo);
+		
+		MApprovalGAbsenteeInfoVO absenteeInfoVO = new MApprovalGAbsenteeInfoVO();
+		
+		if (absenteeInfo != null && !absenteeInfo.equals("")) {
+			String[] absenteeInfoArry = absenteeInfo.split(":");
+			
+			absenteeInfoVO.setAbsenteeId(absenteeInfoArry[0]);
+			absenteeInfoVO.setAbsenteeName(absenteeInfoArry[1]);
+			absenteeInfoVO.setAbsenteeDeptId(absenteeInfoArry[2]);
+			absenteeInfoVO.setStartDate(absenteeInfoArry[3] + ":" + absenteeInfoArry[4]);
+			absenteeInfoVO.setEndDate(absenteeInfoArry[5] + ":" + absenteeInfoArry[6]);
+		}
+
+		LOGGER.debug("getAbsenteeInfo ended");
+		
+		return absenteeInfoVO;
+	}
+
+	@Override
+	public int setAbsenteeInfo(MApprovalGAbsenteeInfoVO absenteeInfoVO) throws Exception {
+		LOGGER.debug("setAbsenteeInfo started");
+
+		int result = MApprovalGDAO.setAbsenteeInfo(absenteeInfoVO);
+
+		LOGGER.debug("setAbsenteeInfo ended");
+		
+		return result;
+	}
+
+	@Override
+	public int checkPass(MCommonVO userInfo, String shaEncPassword) throws Exception {
+		LOGGER.debug("checkPass started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("password", shaEncPassword);
+		map.put("userID", userInfo.getUserId());
+		map.put("tenantID", userInfo.getTenantId());
+		
+		int resultCode = MApprovalGDAO.checkPass(map);
+
+		LOGGER.debug("checkPass ended");
+		
+		return resultCode;
+	}
+
 	@Override
 	public List<MApprovalGTLVO> getTimeLineList(LoginVO userInfo, String sessionDate) throws Exception {
 		LOGGER.debug("getTimeLineList started");

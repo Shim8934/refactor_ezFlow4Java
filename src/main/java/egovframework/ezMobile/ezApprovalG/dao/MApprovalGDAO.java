@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGOpinionInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGTLVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MApprovalGDAO")
@@ -62,6 +64,18 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 
 	public int deleteOpinionInfo(Map<String, Object> map) throws Exception {
 		return delete("MApprovalG.deleteOpinionInfo", map);
+	}
+
+	public String getAbsenteeInfo(MCommonVO userInfo) throws Exception {
+		return (String) select("MApprovalG.getAbsenteeInfo", userInfo);
+	}
+
+	public int setAbsenteeInfo(MApprovalGAbsenteeInfoVO absenteeInfoVO) throws Exception {
+		return update("MApprovalG.setAbsenteeInfo", absenteeInfoVO);
+	}
+
+	public int checkPass(Map<String, Object> map) throws Exception {
+		return (int) select("MApprovalG.checkPass", map);
 	}
 
 }

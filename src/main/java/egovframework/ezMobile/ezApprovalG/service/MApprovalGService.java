@@ -3,6 +3,7 @@ package egovframework.ezMobile.ezApprovalG.service;
 import java.util.List;
 import java.util.Locale;
 
+import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAbsenteeInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAprLineInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGAttachInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
@@ -30,5 +31,11 @@ public interface MApprovalGService {
 	public List<MApprovalGTLVO> getTimeLineList(LoginVO userInfo, String sessionDate) throws Exception;
 
 	public List<MApprovalGAttachInfoVO> getAttachList(String docId, String type, MCommonVO userInfo) throws Exception;
+
+	public MApprovalGAbsenteeInfoVO getAbsenteeInfo(MCommonVO userInfo) throws Exception;
+
+	public int setAbsenteeInfo(MApprovalGAbsenteeInfoVO absenteeInfoVO) throws Exception;
+
+	public int checkPass(MCommonVO userInfo, String shaEncPassword) throws Exception;
 
 }
