@@ -4,6 +4,7 @@
 <sqlMap namespace="ezOptionMobile">
 
 	<typeAlias alias="MCommonVO" 					type="egovframework.ezMobile.ezOption.vo.MCommonVO"/>
+	<typeAlias alias="MOptionVO" 					type="egovframework.ezMobile.ezOption.vo.MOptionVO"/>
     
     <resultMap class="MCommonVO" id="MCommonVO">
       <result property="tenantId"			column="tenant_id"         					columnIndex="1"/>
@@ -20,26 +21,69 @@
       <result property="userName2"       	column="displayName2"        				columnIndex="12"/>
     </resultMap>
     
+    <resultMap class="MOptionVO" id="MOptionVO">
+      <result property="userId"				column="userId"         					columnIndex="1"/>
+      <result property="timeZone"          	column="timeZone"         					columnIndex="2"/>
+      <result property="lang"       		column="lang"        						columnIndex="3"/>
+      <result property="mainType"	      	column="mainType"        					columnIndex="4"/>
+      <result property="listCnt"	     	column="listCnt"        					columnIndex="5"/>
+      <result property="useSearch"	       	column="useSearch"      					columnIndex="6"/>
+      <result property="useSecurity"       	column="useSecurity"        				columnIndex="7"/>
+      <result property="tenantId"       	column="tenant_id"        					columnIndex="8"/>     
+    </resultMap>
+    
     <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
-    	select
-    		a.tenant_id,
-    		a.lang,    	
-			a.timeZone,		    
-		    b.department,
-		    b.description,
-		    b.description2,
-		    b.physicaldeliveryofficename,
-		    b.company,
-		    b.company2,
-		    b.cn,
-		    b.displayName,
-		    b.displayName2
-		from
-			TBL_USERLOCALINFO a inner join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
-		WHERE
-			a.userid = #userId#
-		AND
-			a.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
+    	<![CDATA[
+	    	SELECT
+	    		a.tenant_id,
+	    		a.lang,    	
+				a.timeZone,		    
+			    b.department,
+			    b.description,
+			    b.description2,
+			    b.physicaldeliveryofficename,
+			    b.company,
+			    b.company2,
+			    b.cn,
+			    b.displayName,
+			    b.displayName2
+			FROM
+				TBL_USERLOCALINFO a inner join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
+			WHERE
+				a.userid = #userId#
+			AND
+				a.tenant_id = (select tenant_id from TBL_TENANT_SERVERNAME WHERE server_name = #serverName#)
+		]]>		
   	</select>
+  	
+    <select id="EzOptionDAO.optionInfo" parameterClass="Map" resultMap="MOptionVO">
+    	<![CDATA[
+	    	SELECT
+	    		userId,
+	    		timeZone, 	
+				lang,
+			  	mainType,
+			    listCnt,
+			    useSearch,
+			    useSecurity,
+			    tenant_id
+			FROM
+				TBL_USERMOBILEINFO
+			WHERE
+				userid = #userId#
+			AND
+				tenant_id = #tenantId#
+		]]>		
+  	</select>
+  	
+  	<insert id="EzOptionDAO.insertOption" parameterClass="Map">
+  		<![CDATA[
+			INSERT INTO TBL_USERMOBILEINFO(
+				userId,			timeZone, 			lang, 			mainType,			listCnt,		useSearch,		useSecurity,		tenant_id
+			) values (
+				#userId#,		#timeZone#,			#lang#,			#mainType#,			#listCnt#,		#useSearch#,	#useSecurity#,		#tenantId#
+			)
+   		]]>
+  	</insert>
 </sqlMap>
 

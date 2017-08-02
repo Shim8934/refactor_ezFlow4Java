@@ -18,7 +18,7 @@ public interface EzCircularService {
 
 	public List<CircularListVO> getCircularCompleteList(String memberID, String searchValue, String searchType, String sdate, String edate, int startRow, int endRow, int tenantId, String offset, String orderCell, String orderOption1) throws Exception;
 	
-	public List<CircularListVO> getCircularUserList(int circularID, String searchValue, int tenantID, String offset) throws Exception;
+	public List<CircularListVO> getCircularUserList(int circularID, String searchType, String searchValue, int tenantID, String offset) throws Exception;
 	
 	public List<CircularListVO> getCircularDeptUserList(int circularBMId, int tenantId) throws Exception;
 	
@@ -38,7 +38,7 @@ public interface EzCircularService {
 	
 	public List<CircularFolderVO> getTopFolder(String id, int tenantId) throws Exception;
 
-	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchValue, String circularUserID, String commentType, String offset, int tenantID) throws Exception;
+	public List<CircularCommentVO> getCircularComment(CircularCommentVO circularCommentVO, String searchType, String searchValue, String circularUserID, String commentType, String offset, int tenantID) throws Exception;
 	
 	public List<CircularCommentVO> getCircularCommentUserList(String circularID, String circularUserID, int tenantID, String type) throws Exception;
 	
