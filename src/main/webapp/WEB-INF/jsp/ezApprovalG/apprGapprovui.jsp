@@ -889,8 +889,7 @@
 		                var pAlertContent = "<spring:message code='ezApprovalG.t37'/>";
 		                OpenAlertUI(pAlertContent);
 		                return;
-		            }
-		            else {
+		            } else {
 		                var rtnVal = ExcuteInfo("BANSONG_AFTER", "");
 		                if (!rtnVal) {
 		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
