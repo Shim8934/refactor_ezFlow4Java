@@ -2367,86 +2367,85 @@ function SaveDraftDocInfo()
 		
 //        var fieldValue = getfieldValue(field);//pzFormProc.editor.DOM.body.getAttribute("orgdocnum");
         var fieldValue = message2.DocumentBodyGetAttribute("orgdocnum", 0);
-        Arr_Header = fieldValue.split("@");
-	   
-        for(i=1;i<Arr_Header.length;i++)
-        {
-            Header = Arr_Header[i].substr(0,2);
-            Tail   = Arr_Header[i].substr(2);
-				
-            switch(Header)
-            {
-                case "DP":
-                    numHeader = numHeader + DeptSymbol + Tail;
-                    break;			
-
-                case "dp":
-                    numHeader = numHeader + DeptSymbol + Tail;
-                    break;
-
-                case "YY":
-                    numHeader = numHeader + szYear + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    break;
-
-                case "yy":
-                    var yyear = szYear;//20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    numHeader = numHeader + yyear.toString().substr(2) + Tail; 
-                    break;
-
-                case "MM":
-                    numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    break;
-
-                case "mm":			    
-                    if(szMonth.substr(0,1) == "0")
-                    {
-                        numHeader = numHeader + szMonth.substr(1) + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    }
-                    else
-                    {
-                        numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    }
-                    break;
-
-                case "NN":
-                    break;
-
-                case "nn":
-                    break;
-
-                case "cs":
-                    if (tempItemCode != "")
-                        numHeader = numHeader + tempItemCode + Tail;
-                    else
-                        numHeader = numHeader + tempdocnumcode + Tail;
-                    break;
-
-                case "FT":
-                	numHeader += "FT" + Tail;
-                	break;
-                	
-                case "MV":
-                	numHeader += "MV" + Tail;
-                	break;
-                	
-                case "YM":
-                	numHeader = numHeader + szYear.toString().substr(2);
-                	numHeader = numHeader + szMonth;
-                	numHeader = numHeader + szDay + Tail;
-                	
-                	break;
-                	
-                default:
-                    numHeader = numHeader + fieldValue;
-                    break;
-            }
+      
+        if (fieldValue != null) {
+	        if (fieldValue.indexOf("@")) {
+	        	Arr_Header = fieldValue.split("@");
+	        
+		        for (i=1; i<Arr_Header.length; i++) {
+		            Header = Arr_Header[i].substr(0,2);
+		            Tail   = Arr_Header[i].substr(2);
+						
+		            switch(Header) {
+		                case "DP":
+		                    numHeader = numHeader + DeptSymbol + Tail;
+		                    break;			
+		
+		                case "dp":
+		                    numHeader = numHeader + DeptSymbol + Tail;
+		                    break;
+		
+		                case "YY":
+		                    numHeader = numHeader + szYear + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    break;
+		
+		                case "yy":
+		                    var yyear = szYear;//20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    numHeader = numHeader + yyear.toString().substr(2) + Tail; 
+		                    break;
+		
+		                case "MM":
+		                    numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    break;
+		
+		                case "mm":			    
+		                    if(szMonth.substr(0,1) == "0") {
+		                        numHeader = numHeader + szMonth.substr(1) + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    } else {
+		                        numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    }
+		                    break;
+		
+		                case "NN":
+		                    break;
+		
+		                case "nn":
+		                    break;
+		
+		                case "cs":
+		                    if (tempItemCode != "") {
+		                        numHeader = numHeader + tempItemCode + Tail;
+		                    } else {
+		                        numHeader = numHeader + tempdocnumcode + Tail;
+		                    }
+		                    break;
+		
+		                case "FT":
+		                	numHeader += "FT" + Tail;
+		                	break;
+		                	
+		                case "MV":
+		                	numHeader += "MV" + Tail;
+		                	break;
+		                	
+		                case "YM":
+		                	numHeader = numHeader + szYear.toString().substr(2);
+		                	numHeader = numHeader + szMonth;
+		                	numHeader = numHeader + szDay + Tail;
+		                	
+		                	break;
+		                	
+		                default:
+		                    numHeader = numHeader + fieldValue;
+		                    break;
+		            }
+		        }
+	        }
         }
-        
         message.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
         message2.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
 //        field.textContent = numHeader;
     }
-
 
     //파일정보를 저장한다. 
     function SaveFile()
