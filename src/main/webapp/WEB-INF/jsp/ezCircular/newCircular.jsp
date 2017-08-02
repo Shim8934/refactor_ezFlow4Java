@@ -416,7 +416,7 @@
 	        }
 	
 	        function SortPage(strHeaderName) {
-	            if (strHeaderName != "CHECK") {
+	            if (strHeaderName != "ITEMID" && strHeaderName != "CONFIRM") {
 	                if (OrderCell == strHeaderName) {
 	                    if (OrderOption == "")
 	                        OrderOption = "DESC";
@@ -546,7 +546,9 @@
 	            <li><span onClick="CircularWrite_onclick()"><spring:message code='ezCircular.t55'/></span></li>
 	            <li><span onClick="Confirm_onclick()"><spring:message code='ezCircular.t38'/></span></li>
 	            <li><span onClick="refresh_onclick()"><spring:message code='ezCircular.t173'/></span></li>
-
+				<li style="background:none;"><span style="display:inline-block; width:14px; height:14px; background:url(/images/ImgIcon/msg-rd.gif); overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezCircular.t65'/></li>
+	            <li style="background:none;"><span style="display:inline-block; width:14px; height:14px; background:url(/images/ImgIcon/msg-unrd.gif); overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezCircular.t143'/></li>
+	            <li style="background:none;"><span style="display:inline-block; width:14px; height:14px; background:url(/images/ImgIcon/circular_share2.gif); overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;"></span>&nbsp;<spring:message code='ezCircular.t188'/></li>
 	            <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">

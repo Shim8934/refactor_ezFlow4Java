@@ -1470,6 +1470,7 @@ function setAttachFileInfo(strXML) {
 
                 objTd2.setAttribute("NAME", "fileName");
                 objTd2.innerHTML = pFileName;
+                objTd2.style.wordWrap = "break-word";
                 objTr.appendChild(objTd2);
 
                 var fileSize = parseInt(fileSize);

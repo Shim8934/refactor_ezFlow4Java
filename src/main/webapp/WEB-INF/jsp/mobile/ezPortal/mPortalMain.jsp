@@ -160,6 +160,13 @@
 						            	</a>
 						            </li>
 						            <li>
+						            	<a href="javascript:mScheduleDetail();">
+						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
+						                	스케쥴 상세<br/>
+						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
+						            	</a>
+						            </li>
+						            <li>
 						            	<a href="javascript:mScheduleUpdate();">
 						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
 						                	스케쥴 수정<br/>
@@ -170,6 +177,13 @@
 						            	<a href="javascript:mScheduleDelete();">
 						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
 						                	스케쥴 삭제<br/>
+						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
+						            	</a>
+						            </li>
+						            <li>
+						            	<a href="javascript:mScheduleInsertForm();">
+						            		<i class="fa fa-calendar-check-o" style="font-size:15px"></i>
+						                	스케쥴 등록화면<br/>
 						                	<span style="font-weight: normal;margin-left:20px;margin-top:3px">09:30 ~ 11:00</span>
 						            	</a>
 						            </li>

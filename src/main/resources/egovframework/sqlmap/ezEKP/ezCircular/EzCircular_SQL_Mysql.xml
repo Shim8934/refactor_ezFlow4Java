@@ -675,6 +675,7 @@
                 A.title,
                 A.memberid,
                 A.membername,
+                B.status AS confirmstatus,
                 DATE_ADD(DATE_FORMAT(A.regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS regdate,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
                 IFNULL(DATE_ADD(DATE_FORMAT(B.updatedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS updatedate,

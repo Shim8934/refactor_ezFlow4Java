@@ -7,7 +7,8 @@
 	<typeAlias  alias="MBoardListHeaderVO"		 type="egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO"/>
 	<typeAlias  alias="MBoardItemVO"				 type="egovframework.ezMobile.ezBoard.vo.MBoardItemVO"/>
     <typeAlias  alias="MBoardFavoriteVO"         type="egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO"/>
-	
+	<typeAlias  alias="MBoardListVO"         type="egovframework.ezMobile.ezBoard.vo.MBoardListVO"/>
+  
 	<!-- <typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 	<typeAlias  alias="BoardReadVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardReadVO"/>
@@ -621,5 +622,111 @@
               ItemID = #itemID#
     ]]>
   </select>
+  
+    <insert id="MBoardDAO.insertBrdItem" parameterClass="Map">
+        <isEqual property="parentWriteDate" compareValue="docNO">
+            INSERT INTO TBL_Board_Item ( 
+              ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+          ) VALUES ( 
+              #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+          )
+    </isEqual>
+    <isNotEqual property="parentWriteDate" compareValue="docNO">
+           INSERT INTO TBL_Board_Item ( 
+              ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+          ) VALUES ( 
+              #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+          )
+    </isNotEqual>
+  </insert>
+  
+    <insert id="MBoardDAO.insertBrdItem2" parameterClass="Map">
+        <isEqual property="parentWriteDate" compareValue="docNO">
+            INSERT INTO TBL_Board_Item ( 
+                ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+            ) VALUES ( 
+                #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+            )
+    </isEqual>
+    <isNotEqual property="parentWriteDate" compareValue="docNO">
+           INSERT INTO TBL_Board_Item ( 
+               ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+          ) VALUES ( 
+               #itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #abstract#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+          )
+    </isNotEqual>
+  </insert>
+  
+  <update id="MBoardDAO.updateItem" parameterClass="Map">
+        UPDATE
+            TBL_Board_Item
+        SET 
+            UpdateDate = #writeDate#,
+            Importance = #importance#,
+            Title = #title#,
+            StartDate = #startDate#,
+            EndDate = #endDate#,
+            Abstract = #abstract#,
+            Attachments = #hasAttach#,
+            <isEqual property="guBun" compareValue="2">
+                WriterName = #writerName#,
+                WriterName2 = #writerName2#,
+              </isEqual>
+            ExtensionAttribute2 = #extensionAttribute2#,
+            ExtensionAttribute5 = #extensionAttribute5#,
+            DocPassWord = #docPassword#,
+            extensionAttribute6 = #extensionAttribute6#,
+            extensionAttribute7 = #extensionAttribute7#,
+            extensionAttribute8 = #extensionAttribute8#,
+            extensionAttribute9 = #extensionAttribute9#,
+            extensionAttribute10 = #extensionAttribute10#
+        WHERE  
+          TENANT_ID = #tenantID#
+        AND
+          ItemID = #itemID#
+  </update>
+  
+  <delete id="MBoardDAO.deleteBoardItem" parameterClass="Map">
+    <![CDATA[
+      DELETE FROM
+          TBL_Board_Item
+      WHERE  
+          TENANT_ID = #tenantID#
+      AND
+          ITEMID = #itemID#
+    ]]>
+  </delete>
+  
+  <delete id="MBoardDAO.deleteBoardReply" parameterClass="Map">
+    <![CDATA[
+      DELETE FROM
+          TBL_Board_OneLineReply
+      WHERE  
+          TENANT_ID = #tenantID#
+      AND
+          ITEMID = #itemID#
+    ]]>
+  </delete>
+  
+  <delete id="MBoardDAO.deleteBoardItemRead2" parameterClass="Map">
+    <![CDATA[
+      DELETE FROM
+          TBL_Board_Item_Read
+      WHERE
+          TENANT_ID = #tenantID#
+      AND  
+          ItemID = #itemID#
+    ]]>
+  </delete>
+  
+  <insert id="MBoardDAO.insertDeleteReservedItem" parameterClass="Map">
+    <![CDATA[
+        INSERT INTO TBL_Board_DeleteReservedItem (
+            BOARDID,   ITEMID,   TENANT_ID 
+        ) VALUES ( 
+            #boardID#, #itemID#, #tenantID# 
+        )
+    ]]>
+  </insert>
 </sqlMap>
 

@@ -10,10 +10,14 @@
       <result property="lang"         	 	column="lang"         						columnIndex="2"/>
       <result property="offSet"       		column="timeZone"        					columnIndex="3"/>
       <result property="deptId"	       		column="department"        					columnIndex="4"/>
-      <result property="companyId"       	column="physicaldeliveryofficename"        	columnIndex="5"/>
-      <result property="userId"       		column="cn"        							columnIndex="5"/>
-      <result property="userName"       	column="displayName"        				columnIndex="6"/>
-      <result property="userName2"       	column="displayName2"        				columnIndex="7"/>
+      <result property="deptName"	     	column="description"        				columnIndex="5"/>
+      <result property="deptName2"	       	column="description2"      					columnIndex="6"/>
+      <result property="companyId"       	column="physicaldeliveryofficename"        	columnIndex="7"/>
+      <result property="companyName"       	column="company"        					columnIndex="8"/>
+      <result property="companyName2"      	column="company2"        					columnIndex="9"/>
+      <result property="userId"       		column="cn"        							columnIndex="10"/>
+      <result property="userName"       	column="displayName"        				columnIndex="11"/>
+      <result property="userName2"       	column="displayName2"        				columnIndex="12"/>
     </resultMap>
     
     <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
@@ -22,7 +26,11 @@
     		a.lang,    	
 			a.timeZone,		    
 		    b.department,
+		    b.description,
+		    b.description2,
 		    b.physicaldeliveryofficename,
+		    b.company,
+		    b.company2,
 		    b.cn,
 		    b.displayName,
 		    b.displayName2
