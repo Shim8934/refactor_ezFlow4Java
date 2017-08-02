@@ -221,6 +221,10 @@ public class EzCircularController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezCircular/circularItemPreviewContent.do")
 	public String circularItemPreviewContent() throws Exception{
+		logger.debug("circularItemPreviewContent started.");
+		
+		logger.debug("circularItemPreviewContent ended.");
+		
 		return "/ezCircular/circularItemPreviewContent";
 	}
 	
