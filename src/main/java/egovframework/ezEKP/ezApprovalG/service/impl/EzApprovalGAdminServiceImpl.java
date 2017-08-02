@@ -418,7 +418,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			duplicated = "";
 		}
 		
-		if (duplicated.equals("1")) {
+
+		
+		if (duplicated == null) {
 			logger.debug("insertContainer duplicated.");
 			
 			return "FALSE";

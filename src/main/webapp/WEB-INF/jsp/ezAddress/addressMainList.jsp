@@ -678,7 +678,7 @@
 				<li><span onClick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
 				<li><span onclick="ShowQuickAddres();"><spring:message code='ezAddress.t2002' /></span></li>
 				<li style="background:none">
-					<select style="margin-top:-3px;width:100px" id="ListViewType" onchange="View_Change();">
+					<select style="margin-top:-3px;" id="ListViewType" onchange="View_Change();">
 						<option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
 						<option value="list" <c:if test="${pListType == 'list'}"> selected</c:if>><spring:message code='ezAddress.t2001' /></option>
 				    </select>
@@ -686,7 +686,17 @@
 			</ul>
 		</div>
 		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:0px;">
-			<li style="width:40px"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+			<c:choose>
+				<c:when test="${userInfo.lang eq '1'}">
+					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+				</c:when>
+				<c:when test="${userInfo.lang eq '3'}">
+					<li style="width:60px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+				</c:when>
+				<c:otherwise>
+					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+				</c:otherwise>
+			</c:choose>
 			<span id="address_wordmenu_korea">
 				<li><span onClick="pFilterDB='INDEX_KO,ㄱ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄱ</span></li>
 				<li><span onClick="pFilterDB='INDEX_KO,ㄴ';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">ㄴ</span></li>

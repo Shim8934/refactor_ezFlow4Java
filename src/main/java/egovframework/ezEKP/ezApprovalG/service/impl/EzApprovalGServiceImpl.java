@@ -12536,6 +12536,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_DOCID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);
         
         String writerDeptID = ezApprovalGDAO.setCabinetRecvAprMemberDeptId(map);
         
