@@ -1120,7 +1120,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "temp");
 			}
 			
-			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", userInfo.getTenantId(), userInfo.getOffset());
+			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", "", userInfo.getTenantId(), userInfo.getOffset());
 
 			for (CircularListVO vo : list) {
 				if (!vo.getMemberID().equals(result.getMemberID())) {
@@ -2189,11 +2189,13 @@ public class EzCircularController extends EgovFileMngUtil {
     	logger.debug("getCircularComment started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+    	String searchType = request.getParameter("searchType");
     	String searchValue = request.getParameter("searchValue");
     	String commentType = request.getParameter("commentType");
     	
-    	List<CircularListVO> circularUserList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchValue, userInfo.getTenantId(), userInfo.getOffset());
-    	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchValue, userInfo.getId(), commentType, userInfo.getOffset(), userInfo.getTenantId());
+logger.debug("searchType = " + searchType);
+    	List<CircularListVO> circularUserList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchType, searchValue, userInfo.getTenantId(), userInfo.getOffset());
+    	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getId(), commentType, userInfo.getOffset(), userInfo.getTenantId());
     	
     	logger.debug("getCircularComment ended.");
     	
@@ -2364,11 +2366,12 @@ public class EzCircularController extends EgovFileMngUtil {
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	
+    	String searchType = request.getParameter("searchType");
     	String searchValue = request.getParameter("searchValue");
     	
-    	logger.debug("searchValue = " + searchValue.equals(""));
+    	logger.debug("searchValue = " + searchValue.equals("") + " || searchType = " + searchType);
     	
-    	List<CircularListVO> shareUserList = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), searchValue, userInfo.getTenantId(), userInfo.getOffset());
+    	List<CircularListVO> shareUserList = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), searchType, searchValue, userInfo.getTenantId(), userInfo.getOffset());
     	
     	model.addAttribute("shareUserList", shareUserList);
     	

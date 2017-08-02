@@ -66,59 +66,7 @@ public class MScheduleController extends EgovFileMngUtil {
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
-	
-	/*@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;*/
-	
-	/////////////////////////////////////////////// sample start ///////////////////////////////////////////////////
-	
-	/**
-	 * 모바일 client 일정관리 [get] method sample
-	 */
-	@RequestMapping(value="/mobile/ezSchedule/testList.do")
-	public String testList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
-		LOGGER.debug("testList started.");
 		
-		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/ezschedule/1/gw-testList/fomace";
-				
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);	
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("name", "장진혁")
-		        .queryParam("email", "fomace@kaoni.com")
-		        .queryParam("position", "차장")
-		        .queryParam("age", "37");
-		
-		RestTemplate rest = new RestTemplate();
-		
-		String sample = rest.getForObject(builder.build().encode().toUri(), String.class);
-
-		LOGGER.debug("testList ended.");
-		
-		return sample.toString();
-	}
-	
-	/**
-	 * 모바일 client 일정관리 [put] method sample
-	 */
-	@RequestMapping(value="/mobile/ezSchedule/testUpdate.do")
-	public void testUpdate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap modelMap, LoginVO userInfo, HttpServletResponse response) throws Exception {
-		LOGGER.debug("testUpdate started.");
-		
-		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "ezschedule/{scheduleid}/gw-testUpdate/{id}";
-		
-		RestTemplate rest = new RestTemplate();
-		
-	    rest.put(url, userInfo, 1, "fomace");
-		
-	    LOGGER.debug("testUpdate ended.");		
-	}
-	
-	///////////////////////////////////////////////// sample end /////////////////////////////////////////////////////
-	
 	/**
 	 * 모바일 client 일정관리 리스트
 	 */
@@ -132,7 +80,7 @@ public class MScheduleController extends EgovFileMngUtil {
 		String endDate = request.getParameter("endDate");
 
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezschedule/list/users/" + userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezschedule/list/users/" + userInfo.getId();
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -180,7 +128,7 @@ System.out.println("status :" + status);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
+		String url = gwServerUrl + "/mobile/ezschedule/schedules/" + request.getParameter("scheduleId");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -249,7 +197,7 @@ System.out.println(attachList);
 		scheduleInfoVO.setCreatorId(userInfo.getId());
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezschedule/schedules";
+		String url = gwServerUrl + "/mobile/ezschedule/schedules";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -285,7 +233,7 @@ System.out.println(gson.toJson(resultBody.get("data")));
 		scheduleInfoVO.setModifierId(userInfo.getId());
 
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
+		String url = gwServerUrl + "/mobile/ezschedule/schedules/" + request.getParameter("scheduleId");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -320,7 +268,7 @@ System.out.println(gson.toJson(resultBody.get("data")));
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezschedule/schedules/" + request.getParameter("scheduleId");
+		String url = gwServerUrl + "/mobile/ezschedule/schedules/" + request.getParameter("scheduleId");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -354,7 +302,7 @@ System.out.println(status);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezschedule/type-List/users/" + userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezschedule/type-List/users/" + userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

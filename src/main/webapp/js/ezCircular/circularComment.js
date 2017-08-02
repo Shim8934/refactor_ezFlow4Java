@@ -7,6 +7,7 @@ function getCircularComment() {
 		data : {
 			circularID : circularID,
 			commentType : commentType,
+			searchType : $(".searchType:checked").val(),
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
@@ -220,6 +221,7 @@ function getCommentShareUser() {
 		data : {
 			circularID : circularID,
 			circularCommentID : circularCommentID,
+			searchType : "userID",
 			searchValue : $("#searchValue").val()
 		},
 		success : function(result) {
