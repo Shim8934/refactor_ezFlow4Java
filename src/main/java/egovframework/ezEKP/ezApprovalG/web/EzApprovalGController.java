@@ -3250,7 +3250,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docDir = "0";
 		}
 		
-		dirPath = dirPath + docDir + "." + docID + ".mht";
+		dirPath = dirPath + docDir + "/" + docID + ".mht";
 		
 		if (!allFlag.equals("1") && !allFlag.equals("2")) {
 			allFlag = "0";
@@ -5507,7 +5507,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
 				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "&nbsp;</p></td>       ");
 			}
 			resultExcel.append("</tr>");
 		}

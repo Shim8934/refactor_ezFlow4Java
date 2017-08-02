@@ -107,7 +107,7 @@ public class MBoardController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezboard/"+type+"/boards/"+boardID+"/list";
+		String url = gwServerUrl + "/mobile/ezboard/"+type+"/boards/"+boardID+"/list";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -136,7 +136,9 @@ public class MBoardController {
 			Gson gson = new Gson();
 			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			boardInfo = resultBody.get("data2");
-
+			
+			LOGGER.debug("listSize:"+list.size());
+			
 			model.addAttribute("mBoardInfo", boardInfo);
 			model.addAttribute("listSize", list.size());
 		}
@@ -217,7 +219,7 @@ public class MBoardController {
 //			}
 //		}
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/ezboard/"+mBoardInfoVO.getType()+"/boards/"+mBoardInfoVO.getBoardID()+"/list";
+		String url = gwServerUrl + "/mobile/ezboard/"+mBoardInfoVO.getType()+"/boards/"+mBoardInfoVO.getBoardID()+"/list";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -269,7 +271,7 @@ public class MBoardController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezboard/favorite-list/users/"+userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezboard/favorite-list/users/"+userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -316,7 +318,7 @@ public class MBoardController {
 		String type = request.getParameter("type");
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
-		String url = gwServerUrl + "/ezboard/"+type+"/boards/"+boardID+"/contents/"+itemID;
+		String url = gwServerUrl + "/mobile/ezboard/"+type+"/boards/"+boardID+"/contents/"+itemID;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -394,9 +396,9 @@ public class MBoardController {
 		String guBun = request.getParameter("guBun");
 		
 		if (type != null && type.equals("modify")) {
-			url = gwServerUrl + "/ezboard/boards/"+boardID+"/contents"+itemID; 
+			url = gwServerUrl + "/mobile/ezboard/boards/"+boardID+"/contents"+itemID; 
 		} else {
-			url = gwServerUrl + "/ezboard/boards/contents";
+			url = gwServerUrl + "/mobile/ezboard/boards/contents";
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -444,7 +446,7 @@ public class MBoardController {
 		contentId = "{e0110954-7485-4613-8638-85a31377a3be}";
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/ezboard/boards/"+boardId+"/contents/"+contentId;
+		String url = gwServerUrl + "/mobile/ezboard/boards/"+boardId+"/contents/"+contentId;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -464,5 +466,63 @@ public class MBoardController {
 		String status = resultBody.get("status").toString();
 		
 		LOGGER.debug("deleteBoardItem ended.");
+	}
+	
+	/**
+	 * 모바일 게시판 좌측메뉴 리스트
+	 */
+	@RequestMapping(value = "/mobile/ezBoard/getLeftMenu.do")
+	public String getLeftMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		LOGGER.debug("getBoardInfo started.");
+		
+		LOGGER.debug("getBoardInfo ended.");
+		
+		return "";
+	}
+	
+	/**
+	 * 모바일 게시판 메인리스트 호출 테스트
+	 */
+	@RequestMapping(value = "/mobile/ezBoard/mainList.do")
+	public String mainList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("boardItemList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String url = gwServerUrl + "/mobile/ezboard/mainList/"+userInfo.getId();
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+				
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+				
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : "+status);
+
+		JSONArray list = new JSONArray();
+		Object boardInfo = "";
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			
+			LOGGER.debug("listSize:"+list.size());
+			
+			model.addAttribute("mBoardInfo", boardInfo);
+			model.addAttribute("listSize", list.size());
+		}
+		
+		LOGGER.debug("boardItemList ended.");
+		
+		return "";
 	}
 }
