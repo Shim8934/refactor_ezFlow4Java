@@ -68,6 +68,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezEmail.vo.MEmailFolderVO;
+import egovframework.ezMobile.ezEmail.vo.MEmailMessageVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
@@ -109,29 +110,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@Resource(name = "MEmailService")
 	private MEmailService MEmailService;
 	
-	static final String SUPERPASSWORD = "!p1221612";	
-	
-	/**
-	 * 모바일 G/W 이메일 [put] method sample
-	 */
-	/*
-	 * @RequestMapping(value="/ezMAIL/{MAILid}/gw-testUpdate/{id}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void testUpdate(@PathVariable String MAILid, @PathVariable String id, @RequestBody LoginVO loginVO) throws Exception {		
-		LOGGER.debug("gw-testUpdate started.");
-		
-		System.out.println(loginVO.getIp());
-				
-		LoginVO vo = new LoginVO();
-		vo.setTenantId(0);
-		vo.setId(id);
-		vo.setIp(loginVO.getIp());
-		
-		loginService.updateUser(vo);
-		
-		LOGGER.debug("gw-testUpdate ended.");		
-	}
-	*/
-    ///////////////////////////////////////////////// sample end /////////////////////////////////////////////////////
+	static final String SUPERPASSWORD = "_jmocha_101";	
 	
 	/**
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 편지함 목록 조회, 메일 이동 시 편지함 목록 출력
@@ -156,7 +135,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, "qwe123!", egovMessageSource, locale);
+					userEmail, SUPERPASSWORD, egovMessageSource, locale);
 			
 			List<Folder> subMailFolder = null;
 			
@@ -244,7 +223,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, "qwe123!", egovMessageSource, locale);
+					userEmail, SUPERPASSWORD, egovMessageSource, locale);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -464,51 +443,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] ended.");		
 
-		return result;
-	}
-	/**
-	 * 메인 받은 편지함 전용 함수
-	 */
-	@RequestMapping(value="/mobile/ezemail/main/mail-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object mMailMainMailList(HttpServletRequest request, @PathVariable String userId, Locale locale) {
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] started.");
-
-		JSONObject result = new JSONObject();
-		JSONArray messageJsonArray = new JSONArray();
-		
-		try {
-       
-			String folderId = "INBOX";
-	        String listLength = "10";			
-			String start = "0";
-			String end = (Integer.parseInt(start) + Integer.parseInt(listLength) - 1) + "";
-	        
-	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",listLength : " + listLength
-	        		+"start : " + start+ ",end : " + end); 
-	        
-	        Message[] messages = null;
-			
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
-			String userEmail = info.getUserId() + "@" + domainName;
-			
-			messageJsonArray = MEmailService.getMainMailList(info, locale, "isUnreadOnly", "10");
-		
-			result.put("status", "ok");
-			result.put("code", 0);			
-			result.put("data", messageJsonArray);
-			
-		} catch (Exception e) {
-			
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");
-			
-		}
-				
-		LOGGER.debug("MOBILE G/W MAIL [POST /ezemail/folders/{folderId}/mails/{messageId}/copy/users/{userId}] ended.");
-		
 		return result;
 	}
 	
@@ -854,7 +788,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 		
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, "qwe123!");
+					userEmail, "SUPERPASSWORD");
 		
 			String pResult = null;
 			IMAPAccess ia = null;
@@ -862,7 +796,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			do {
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, "qwe123!", egovMessageSource, locale);
+							userEmail, "SUPERPASSWORD", egovMessageSource, locale);
 					
 					//메일 발송 재시도일 경우 draftUID의 메일을 지우고 retryFlag와 draftUID를 초기화한다.
 //					if (retryFlag) {
@@ -1697,7 +1631,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                     Thread.sleep(1000);
                     
                     ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                            userEmail, "qwe123!", egovMessageSource, locale);                
+                            userEmail, "SUPERPASSWORD", egovMessageSource, locale);                
                     
                     sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
                     sentFolder.open(Folder.READ_WRITE);
@@ -1798,7 +1732,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 		
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-					userEmail, "qwe123!");
+					userEmail, "SUPERPASSWORD");
 		
 			String pResult = null;
 			IMAPAccess ia = null;
@@ -1806,7 +1740,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			do {
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, "qwe123!", egovMessageSource, locale);
+							userEmail, "SUPERPASSWORD", egovMessageSource, locale);
 					
 					//메일 발송 재시도일 경우 draftUID의 메일을 지우고 retryFlag와 draftUID를 초기화한다.
 					if (retryFlag) {
@@ -2641,7 +2575,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                     Thread.sleep(1000);
                     
                     ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                            userEmail, "qwe123!", egovMessageSource, locale);                
+                            userEmail, "SUPERPASSWORD", egovMessageSource, locale);                
                     
                     sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
                     sentFolder.open(Folder.READ_WRITE);
@@ -2761,7 +2695,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		String pIsCCFg = "Y";
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, "qwe123!", egovMessageSource, locale);
+					userEmail, "SUPERPASSWORD", egovMessageSource, locale);
 			Folder f = ia.getFolder(folderId);
 			
 			if (f == null || !f.exists()) {
@@ -3020,7 +2954,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							OrganUserVO userVO = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 							
 							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, "qwe123!");
+									userEmail, "SUPERPASSWORD");
 							
 							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
 						}
@@ -3133,7 +3067,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		byte[]out = null;
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, "qwe123!", egovMessageSource, locale);
+					userEmail, "SUPERPASSWORD", egovMessageSource, locale);
 	
 			Folder f = ia.getFolder(folderPath);
 			
@@ -3259,7 +3193,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String userEmail = info.getUserId() + "@" + domainName;
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, "qwe123!", egovMessageSource, locale);
+					userEmail, "SUPERPASSWORD", egovMessageSource, locale);
 					
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);
@@ -3332,7 +3266,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-							userEmail, "qwe123!", egovMessageSource, locale);
+							userEmail, "SUPERPASSWORD", egovMessageSource, locale);
 							
 					IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 					sourceFolder.open(Folder.READ_WRITE);		
@@ -3411,7 +3345,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("folderId=" + folderId);
 
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, "qwe123!", egovMessageSource, locale);
+					userEmail, "SUPERPASSWORD", egovMessageSource, locale);
 						
 			IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 			sourceFolder.open(Folder.READ_WRITE);		
