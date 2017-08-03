@@ -20,7 +20,7 @@
 				$("#checkboxAll").on("click", function() {
 					if ($("#checkboxAll").is(":checked")) {
 						$(".myCheckbox").prop("checked", true);
-						$("#circularDeptList tr").css("background", "rgb(233, 241, 244)");
+						$("#circularDeptList tr").css("background", "#EDEDED");
 					} else {
 						$(".myCheckbox").prop("checked", false);
 						$("#circularDeptList tr").css("background", "#FFFFFF");
@@ -99,19 +99,19 @@
 		    
 		    function event_click(obj) {
             	if (_RowObject != null) {
-                	_RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
-                	_RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
-                	_RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
-                	_RowObject.childNodes.item(3).style.backgroundColor = "#ffffff";
-                	_RowObject.childNodes.item(4).style.backgroundColor = "#ffffff";
+                	_RowObject.childNodes.item(0).style.backgroundColor = "#FFFFFF";
+                	_RowObject.childNodes.item(1).style.backgroundColor = "#FFFFFF";
+                	_RowObject.childNodes.item(2).style.backgroundColor = "#FFFFFF";
+                	_RowObject.childNodes.item(3).style.backgroundColor = "#FFFFFF";
+                	_RowObject.childNodes.item(4).style.backgroundColor = "#FFFFFF";
             	}
             	
             	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 244)";
-            	obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
+            	obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
+            	obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
+            	obj.childNodes.item(3).style.backgroundColor = "#EDEDED";
+            	obj.childNodes.item(4).style.backgroundColor = "#EDEDED";
         	}
 
 		    function memberList() {
