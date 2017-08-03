@@ -46,4 +46,8 @@ public interface MBoardService {
 	public void updateItem(JSONObject boardListVO) throws Exception;
 	
 	public void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
+	
+	public void insertFavorite(String userID, String boardID, int tenantID) throws Exception;
+	
+	public void deleteFavorite(String userID, String boardID, int tenantID) throws Exception;
 }

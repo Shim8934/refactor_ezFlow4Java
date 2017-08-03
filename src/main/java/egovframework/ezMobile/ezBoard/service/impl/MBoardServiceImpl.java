@@ -941,5 +941,23 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		return mBoardDAO.getNewBoardListCount(map);
 	}
-	
+
+	@Override
+	public void insertFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("boardID", boardID);
+		mBoardDAO.insertFavorite(map);
+	}
+
+	@Override
+	public void deleteFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("boardID", boardID);
+		mBoardDAO.deleteFavorite(map);
+	}
+
 }

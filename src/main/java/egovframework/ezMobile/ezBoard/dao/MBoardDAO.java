@@ -95,6 +95,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 		insert("MBoardDAO.insertBrdItem2", map);
 	}
 	
+	public void insertFavorite(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.insertFavorite", map);
+	}
+	
 	public void updateItem(Map<String, Object> map) throws Exception{
 		update("MBoardDAO.updateItem", map);
 	}
@@ -113,6 +117,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void insertDeleteReservedItem(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.insertDeleteReservedItem", map);
+	}
+	
+	public void deleteFavorite(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.deleteFavorite", map);
 	}
 	
 }

@@ -959,5 +959,58 @@
 <!--    테스트해보고 안되면 이걸로 대체 -->
 <!--              A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
   </select>
+  
+    <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
+        <![CDATA[
+          INSERT INTO TBL_Board_MyBoards ( 
+            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
+          )
+              ( SELECT 
+                #userID# USERID ,
+                    BOARDID ,
+                    BOARDNAME ,
+                    BOARDNAME2 ,
+                    ( SELECT 
+                      COUNT(BOARDID) + 1
+                FROM 
+                  TBL_Board_MyBoards 
+                WHERE
+                  TENANT_ID = #tenantID#
+                AND  
+                  USERID = #userID# ),
+                    ( SELECT
+                      CASE 
+                        WHEN MAX(VIEWORDER) IS NULL 
+                        THEN 2 
+                        ELSE MAX(VIEWORDER) + 1 
+                      END 
+                      FROM 
+                        TBL_Board_MyBoards 
+                      WHERE  
+                        TENANT_ID = #tenantID#
+                      AND
+                        USERID = #userID# ),
+                    TENANT_ID
+                  FROM 
+                    TBL_Board_BoardInfo 
+                  WHERE
+                    TENANT_ID = #tenantID#
+                  AND
+                    BOARDID = #boardID# )
+        ]]>
+      </insert>
+      
+      <delete id="MBoardDAO.deleteFavorite" parameterClass="Map">
+           <![CDATA[
+              DELETE FROM
+                  TBL_Board_MyBoards
+              WHERE
+                  USERID = #userID#
+              AND
+                  BOARDID = #boardID#
+              AND    
+                  TENANT_ID = #tenantID#    
+           ]]>
+      </delete>
 </sqlMap>
 

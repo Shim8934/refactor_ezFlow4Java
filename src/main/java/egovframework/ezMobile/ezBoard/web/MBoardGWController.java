@@ -342,20 +342,60 @@ public class MBoardGWController {
 	/**
 	 * 모바일 G/W 게시판 [POST] 즐겨찾기 설정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/favorite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertFavorite(HttpServletRequest request) throws Exception {		
+	public void insertFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			mBoardService.insertFavorite(info.getUserId(), boardId, info.getTenantId());
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
 	}
 	
 	/**
 	 * 모바일 G/W 게시판 [DELETE] 즐겨찾기 해제
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/favorite", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteFavorite(HttpServletRequest request) throws Exception {		
+	public void deleteFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			mBoardService.deleteFavorite(info.getUserId(), boardId, info.getTenantId());
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
 	}
 	
