@@ -224,10 +224,7 @@ public class MEmailController extends EgovFileMngUtil {
 		String end = "";
 		String search = "";
 		String filter = "";
-		
-		logger.debug("folderId = " + folderId + "start = " + start + "end = " + end 
-				+ "search = " + search + "filter = " + filter);
-		
+	
 		//search Parameter에는 SUBJECT=검색어 라고 하면 제목으로 검색
 		//filter에는  isUnreadOnly(읽지 않은 메일), isImportantOnly(중요 메일) 중 1개만 전달이 가능하다.
 		if (request.getParameter("FolderId") != null) {
@@ -251,6 +248,9 @@ public class MEmailController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("getMailList started.");
+		
+		logger.debug("folderId = " + folderId + "start = " + start + "end = " + end 
+				+ "search = " + search + "filter = " + filter);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/users/rkd1395";

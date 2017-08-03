@@ -78,14 +78,17 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			List<MBoardItemVO> list = mBoardService.getBoardMainList(userId, info.getTenantId()); 
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
+			result.put("listSize", list.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			result.put("listSize", "");
 		}
 		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] ended.");
 		return result;

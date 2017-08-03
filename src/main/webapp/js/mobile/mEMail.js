@@ -40,7 +40,8 @@ var obj = new Object();
     obj.start = 0;
     obj.end = 29;
     obj.search = "";
-    obj.filter = "";
+    obj.filter = $("#filter option:selected").val();
+
 	  $.ajax({
 	            type : 'get',
 	            url : '/mobile/ezEmail/mailGetList.do',
