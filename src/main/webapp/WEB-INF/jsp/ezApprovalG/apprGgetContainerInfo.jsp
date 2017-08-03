@@ -762,21 +762,19 @@
   		      		ContainerID = LoadContID;
         	 		subCondition = "";
            	  		GetUserContListSave(AllFG);
-               	 
-                }else{
-		        
-		        if (GamSaFlag)
-		            url = "../excelExportOutGS.aspx";
-		        else
-		            url = "/ezApprovalG/excelExportOut.do";
-		
-		        if (DocListType == "DocList") {
-		            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
-		                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
-		                "&OO=" + encodeURI(OrderOption);
-		        }
-		        else {
-		            url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
+                } else {
+			        if (GamSaFlag) {
+			            url = "../excelExportOutGS.aspx";
+			        } else {
+			            url = "/ezApprovalG/excelExportOut.do";
+			        }
+			
+			        if (DocListType == "DocList") {
+			            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
+			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
+			                "&OO=" + encodeURI(OrderOption);
+		        	} else {
+		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
 		                "&P4=" + encodeURI(condition[4]) + "&P5=" + encodeURI(condition[5]) + "&P6=" + encodeURI(condition[6]) +
 		                "&P7=" + encodeURI(condition[7]) + "&P8=" + encodeURI(condition[8]) + "&P9=" + encodeURI(condition[9]) +
@@ -787,10 +785,11 @@
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition);
-		        }
-		        window.frames["saveExcel"].location.href = url;
+		             }
+		        	window.frames["saveExcel"].location.href = url;
                 }
 		    }
+		    
 		    function SelEDMFolder_onclick() {
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
