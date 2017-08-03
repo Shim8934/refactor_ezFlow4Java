@@ -14,6 +14,13 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+	<select id="filter">
+		<option value="">모두보기</option>
+		<option value="isImportantOnly">중요 메일</option>
+		<option value="isUnreadOnly">읽지 않은 메일</option>
+	</select>
+		
 	<table>
       <th>name</th>
       <th>fullName</th>
