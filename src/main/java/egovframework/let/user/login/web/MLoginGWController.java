@@ -168,9 +168,12 @@ public class MLoginGWController {
     				MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
     				
     				String acceptLanguage = request.getHeader("Accept-Language");    				
-    				String lang = "";
-    				String timeZone = "";
-    				String returnValue = "";
+    				String lang = mOptionVO.getLang();
+    				String timeZone = mOptionVO.getTimeZone();
+    				String maintype = mOptionVO.getMainType();
+    				String listCnt = mOptionVO.getListCnt();
+					
+    				String returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
     				
     				//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
     				if (mOptionVO == null || mOptionVO.equals("")) {
@@ -200,19 +203,19 @@ public class MLoginGWController {
     					}
     					
     				    timeZone = "235|+09:00";
-    					mOptionService.insertOption(uid, timeZone, lang, "D", 10, "Y", "N", tenantId);
-    					
-    				} else {
-    					lang = mOptionVO.getLang();
-    					timeZone = mOptionVO.getTimeZone();    					
-    					returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+    				    maintype = "D";
+    				    listCnt = "10";
+    				    
+    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, "Y", "N", tenantId);    					
     				}
     				
-    				String cookieInfo = "{\"uid\" : \"" + uid + "\", \"ip\" : \"" + ip + "\", \"locale\" : \"" + returnValue + "\", \"lang\" : \"" + lang + "\", \"timeZone\" : \"" + timeZone + "\", \"tenantId\" : " + tenantId + "}";
+    				StringBuilder cookieInfo = new StringBuilder();
+    				cookieInfo.append("{\"uid\" : \"" + uid + "\", \"ip\" : \"" + ip + "\", \"locale\" : \"" + returnValue + "\", \"lang\" : \"" + lang + "\", \"timeZone\" : \"" + timeZone + "\", \"tenantId\" : " + tenantId);
+    				cookieInfo.append("\"mainType\" : \"" + maintype + "\", \"listCnt\" : \"" + listCnt + "\" }");
     				
     				result.put("status", "ok");
     				result.put("code", "0");
-    				result.put("data", cookieInfo);
+    				result.put("data", cookieInfo.toString());
     				
     				return result;
     			}			

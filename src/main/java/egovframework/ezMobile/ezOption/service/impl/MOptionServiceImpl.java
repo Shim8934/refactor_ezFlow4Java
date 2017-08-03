@@ -67,7 +67,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public void insertOption(String uid, String timeZone, String lang, String mainType, int listCnt, String useSearch, String useSecurity, int tenantId) throws Exception {
+	public void insertOption(String uid, String timeZone, String lang, String mainType, String listCnt, String useSearch, String useSecurity, int tenantId) throws Exception {
 		LOGGER.debug("insertOption started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();

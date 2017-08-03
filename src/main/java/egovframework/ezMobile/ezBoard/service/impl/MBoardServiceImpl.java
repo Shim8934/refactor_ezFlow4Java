@@ -1,5 +1,8 @@
 package egovframework.ezMobile.ezBoard.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
@@ -40,6 +45,9 @@ public class MBoardServiceImpl implements MBoardService {
 	
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -823,7 +831,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<MBoardItemVO> getBoardMainList(String userID, int tenantID) throws Exception {
+	public List<MBoardItemVO> getNewBoardList(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		//mainList 임시 10까지
@@ -833,6 +841,123 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getNewItemList(map);
 	}
-	
-	
+
+	@Override
+	public List<MBoardItemVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("rowCount", listCnt);
+		map.put("limit", 0);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantID);
+		return mBoardDAO.getNewItemList(map);
+	}
+
+	@Override
+	public List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception {
+		String rollInfo = info.getRollInfo();
+		int tenantID = info.getTenantId();
+		String strForbiddenBoardIDList = "";
+		String boardGroupAdminFg = checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
+		
+	    if (rollInfo != null && (boardGroupAdminFg.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+	    	mode = 0;
+	    } else {
+	    	mode = 1;
+	    }
+	    
+	    String accessID = info.getUserId() + "," + ezOrganService.getDeptFullPath(info.getDeptId(), tenantID) + ",everyone";
+	    String strLang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+		
+	    
+	    //String pAccessID = userId + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
+        //String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
+	    
+		//List<MBoardTreeVO> list = brdBoardTree(rootBoardID, userId, mode, selectBy, excludeBoardID, info.getTenantId());
+	    
+	    List<MBoardTreeVO> brdBoardTreeList = new ArrayList<MBoardTreeVO>();
+	    for (int i = 0; i < accessID.split(",").length; i++) {
+            String boardID = "";
+            
+            if (mode == 0) {
+            	brdBoardTreeList = brdBoardTree(rootBoardID, "everyone", mode, selectBy, excludeBoardID, tenantID);            
+            } else {
+            	List<MBoardTreeVO> tempBrdBoardTreeList = brdBoardTree(rootBoardID, accessID.split(",")[i].trim(), mode, selectBy, excludeBoardID, tenantID);
+            	
+            	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
+            		for (MBoardTreeVO k : tempBrdBoardTreeList) {
+            			if (brdBoardTreeList.size() > 0) {
+            				int tempCnt = 0;
+            				
+            				for (MBoardTreeVO h : brdBoardTreeList) {
+            					if (h.equals(k)) {
+            						tempCnt++;
+            					}
+            				}
+            				
+            				if (tempCnt == 0) {
+            					brdBoardTreeList.add(k);
+            				}
+            			} else {
+            				brdBoardTreeList.add(k);
+            			}
+            		}
+            	}
+            }
+            
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("accessID", accessID.split(",")[i].trim());
+            map.put("rootBoardID", rootBoardID);
+            map.put("tenantID", tenantID);
+            List<MBoardInfoVO> boardTreeList = mBoardDAO.getBoardTreeGet2(map);
+            
+            if (boardTreeList.size() > 0) {
+                for (int r = 0; r < boardTreeList.size(); r++) {
+            		boardID = boardTreeList.get(r).getBoardID().split(",")[0];
+        			strForbiddenBoardIDList += boardID.trim();
+                }
+            }
+        }
+	    
+	    //오름차순 정렬
+	    Collections.sort(brdBoardTreeList, new Comparator<MBoardTreeVO>() {
+			@Override
+			public int compare(MBoardTreeVO o1, MBoardTreeVO o2) {
+				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
+			}
+		});
+	    
+	    
+
+		return brdBoardTreeList;
+	}
+
+	@Override
+	public Integer getNewBoardListCount(String userID, String startDate,int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("startDate", startDate);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		return mBoardDAO.getNewBoardListCount(map);
+	}
+
+	@Override
+	public void insertFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("boardID", boardID);
+		mBoardDAO.insertFavorite(map);
+	}
+
+	@Override
+	public void deleteFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("boardID", boardID);
+		mBoardDAO.deleteFavorite(map);
+	}
+
 }

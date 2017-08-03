@@ -166,68 +166,15 @@ public class MEmailController extends EgovFileMngUtil {
 	 * 모바일 편지함 > 편지함 정보 표출 함수
 	 */
 	@RequestMapping(value = "/mobile/ezEmail/mailMain.do")
-	public String mailMain(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response, Locale locale) throws Exception {
+	public String mailMain(HttpServletRequest request, ModelMap modelMap, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("mailMain started.");
 		
-		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String password  = userIdAndPassword.get(1);
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userAccount = userInfo.getId() + "@" + domainName;
-		logger.debug("userAccount=" + userAccount);
-		
-		String folderId = request.getParameter("folderId");
-		logger.debug("folderId=" + folderId);
-		
-		MEmailFolderVO folderInfo = new MEmailFolderVO();
-		
-		IMAPAccess ia = null;
-		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userAccount, password, egovMessageSource, locale);
-			
-			Folder folder = ia.getFolder(folderId);
-			
-			folderInfo.setName(folder.getName());
-			folderInfo.setFullName(folder.getFullName());
-			folderInfo.setUnReadCount(folder.getUnreadMessageCount());
-			
-			if (folder.list().length > 0) {
-				folderInfo.setHasSub(true);
-			} else {
-				folderInfo.setHasSub(false);
-			}
-			
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
-
-		model.addAttribute("folderInfo", folderInfo);
-		
-		logger.debug("mailMain ended.");
-		
-		return "/mobile/ezEmail/mMailMain";
-	}
-	
-	@RequestMapping(value="/mobile/ezEmail/mailGetList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
-	@ResponseBody
-	public JSONArray getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, ModelMap modelMap) throws Exception {
-		
-		String folderId = "";
-		String start = "";
-		String end = "";
+		String folderId = "INBOX";
+		String start = "0";
+		String end = "10";
 		String search = "";
 		String filter = "";
-		
-		logger.debug("folderId = " + folderId + "start = " + start + "end = " + end 
-				+ "search = " + search + "filter = " + filter);
-		
+		int unReadCount = 0;
 		//search Parameter에는 SUBJECT=검색어 라고 하면 제목으로 검색
 		//filter에는  isUnreadOnly(읽지 않은 메일), isImportantOnly(중요 메일) 중 1개만 전달이 가능하다.
 		if (request.getParameter("FolderId") != null) {
@@ -251,6 +198,95 @@ public class MEmailController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("getMailList started.");
+		
+		logger.debug("folderId = " + folderId + "start = " + start + "end = " + end 
+				+ "search = " + search + "filter = " + filter);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/users/rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+			
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("start", start)
+				.queryParam("end", end)
+				.queryParam("search", search)
+				.queryParam("filter", filter)
+				.queryParam("folderId4sub", filter);
+		
+		//search Parameter에는 SUBJECT=검색어 라고 하면 제목으로 검색
+		//filter에는  isUnreadOnly(읽지 않은 메일), isImportantOnly(중요 메일) 중 1개만 전달이 가능하다.
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+
+		JSONObject resultBody = result.getBody();
+
+		String status = resultBody.get("status").toString();
+
+		JSONArray messages = new JSONArray();
+		int unreadCount = 0;
+		JSONArray folderList = new JSONArray();
+	
+		if (status.equals("ok")) {
+			Gson gson = new Gson();
+			
+			messages = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			unreadCount = gson.fromJson(gson.toJson(resultBody.get("unreadCount")), Integer.class);
+			folderList = gson.fromJson(gson.toJson(resultBody.get("folderList")), JSONArray.class);
+					
+			modelMap.addAttribute("MessagesListCnt", messages.size());
+			modelMap.addAttribute("MessagesList", messages);
+			modelMap.addAttribute("unReadCount", unreadCount);
+			modelMap.addAttribute("folderList", folderList);
+			
+		}
+						
+		logger.debug("getMailList ended.");
+		
+		return "/mobile/ezEmail/mMailMain";
+	}
+	
+	@RequestMapping(value="/mobile/ezEmail/mailGetList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONArray getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, ModelMap modelMap) throws Exception {
+		
+		String folderId = "";
+		String start = "";
+		String end = "";
+		String search = "";
+		String filter = "";
+	
+		//search Parameter에는 SUBJECT=검색어 라고 하면 제목으로 검색
+		//filter에는  isUnreadOnly(읽지 않은 메일), isImportantOnly(중요 메일) 중 1개만 전달이 가능하다.
+		if (request.getParameter("FolderId") != null) {
+			folderId = request.getParameter("FolderId");
+		}
+		
+		if (request.getParameter("start") != null) {
+			start = request.getParameter("start");
+		}
+		
+		if (request.getParameter("end") != null) {
+			end = request.getParameter("end");
+		}
+		
+		if (request.getParameter("search") != null) {
+			search = request.getParameter("search");
+		}
+		
+		if (request.getParameter("filter") != null) {
+			filter = request.getParameter("filter");
+		}
+		
+		logger.debug("getMailList started.");
+		
+		logger.debug("folderId = " + folderId + "start = " + start + "end = " + end 
+				+ "search = " + search + "filter = " + filter);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/users/rkd1395";
@@ -456,6 +492,39 @@ public class MEmailController extends EgovFileMngUtil {
 		RestTemplate rest = new RestTemplate();
 		
 		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.DELETE, entity, JSONObject.class);
+		
+		JSONObject resultBody = responseEntity.getBody();
+		
+		model.addAttribute("mailFolderList", resultBody);		
+						
+		logger.debug("mailDeleteMessage ended.");
+		
+		return resultBody.toJSONString();
+	}
+	
+	@RequestMapping(value="/mobile/ezEmail/mailMailList.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
+	@ResponseBody
+	public String mailMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+			Locale locale, Model model) throws Exception {
+		logger.debug("mailDeleteMessage started.");
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
+		String url = gwServerUrl + "/mobile/ezemail/main/mail-list/users/"+"rkd1395";
+				
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());	
+		
+		URI uri = URI.create(url);
+		
+		JSONObject jsonobject = new JSONObject();
+		
+		HttpEntity<JSONObject> entity = new HttpEntity(jsonobject, headers);
+//		HttpEntity entity = new HttpEntity(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.GET, entity, JSONObject.class);
 		
 		JSONObject resultBody = responseEntity.getBody();
 		

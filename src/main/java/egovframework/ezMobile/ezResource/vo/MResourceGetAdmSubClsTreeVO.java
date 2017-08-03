@@ -5,6 +5,13 @@ public class MResourceGetAdmSubClsTreeVO {
 	private int brdID;
 	/** 자원 이름*/
 	private String brdNm;
+	
+	public int getBrdID() {
+		return brdID;
+	}
+	public void setBrdID(int brdID) {
+		this.brdID = brdID;
+	}
 	/** 자원 번호 2*/
 	private String brdNm2;
 	/** 자원 레벨*/

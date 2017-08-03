@@ -79,7 +79,7 @@
 						            	</a>
 						            </li>						            
 						            <li data-icon="false">
-						            	<a href="/mobile/ezApprovalG/doApproveList.do?type=DO" style="text-align:center">
+						            	<a href="/mobile/ezApprovalG/mApproveList.do" style="text-align:center">
 						            		<i class="fa fa-caret-down " style="font-size:15px"></i>
 						            	</a>
 						            </li>						            						          					            

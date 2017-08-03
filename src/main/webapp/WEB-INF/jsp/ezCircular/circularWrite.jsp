@@ -369,24 +369,24 @@
 	          					<select id="importance" class="select">
 	          						<c:choose>
 	          							<c:when test="${result.importance eq '0' }">
-	          								<option value="1" ><spring:message code="ezCircular.t117"/></option>
-			          						<option value="0" selected><spring:message code="ezCircular.t116"/></option>
-		   									<option value="2" ><spring:message code="ezCircular.t185"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
+			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
+		   									<option value="0" selected><spring:message code="ezCircular.t185"/></option>
 	          							</c:when>
 	          							<c:when test="${result.importance eq '1' }">
-	          								<option value="1" selected><spring:message code="ezCircular.t117"/></option>
-	          								<option value="0" ><spring:message code="ezCircular.t116"/></option>
-   											<option value="2" ><spring:message code="ezCircular.t185"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
+	          								<option value="1" selected><spring:message code="ezCircular.t116"/></option>
+   											<option value="0" ><spring:message code="ezCircular.t185"/></option>
 	          							</c:when>
 	          							<c:when test="${result.importance eq '2' }">
-	          								<option value="1" ><spring:message code="ezCircular.t117"/></option>
-			          						<option value="0" ><spring:message code="ezCircular.t116"/></option>
-		   									<option value="2" selected><spring:message code="ezCircular.t185"/></option>
+	          								<option value="2" selected><spring:message code="ezCircular.t117"/></option>
+			          						<option value="1" ><spring:message code="ezCircular.t116"/></option>
+		   									<option value="0" ><spring:message code="ezCircular.t185"/></option>
 	          							</c:when>
 	          							<c:otherwise>
-	          								<option value="1" ><spring:message code="ezCircular.t117"/></option>
-			          						<option value="0" selected><spring:message code="ezCircular.t116"/></option>
-		   									<option value="2" ><spring:message code="ezCircular.t185"/></option>
+	          								<option value="2" ><spring:message code="ezCircular.t117"/></option>
+			          						<option value="1" selected><spring:message code="ezCircular.t116"/></option>
+		   									<option value="0" ><spring:message code="ezCircular.t185"/></option>
 	          							</c:otherwise>
 	          						</c:choose>
    								</select>	

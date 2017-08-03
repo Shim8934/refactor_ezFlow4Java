@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>회람문서 인쇄</title>
+		<title><spring:message code='ezCircular.t192'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -71,18 +71,8 @@
 		        }
 
 		        if (opi.checked != true && att.checked != true) {
-		            if (CrossYN()) {
-		                confirm("선택하신 항목이 없습니다. 문서만 인쇄하시겠습니까?");
-		                return;
-		            } else {
-		                if (confirm("선택하신 항목이 없습니다. 문서만 인쇄하시겠습니까?")) {
-		                    window.returnValue = rvalue;
-		                    window.close();
-		                    return;
-		                } else {
-		                    return;
-		                }
-		            }
+					alert("<spring:message code='ezCircular.t193'/>");
+					return;
 		        }
 		        
 		        if (ReturnFunction != null) {

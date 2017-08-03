@@ -59,7 +59,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
@@ -262,6 +261,7 @@ public class CommonUtil {
 			
 			return user;
 		}catch(Exception e){
+			e.printStackTrace();
 			return null;
 		}
 	}

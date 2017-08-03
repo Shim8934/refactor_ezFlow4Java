@@ -75,9 +75,9 @@
 	            var treeconfig;
 	            if (CrossYN()) {
 	                treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
-	            }
-	            else
+	            } else {
 	                treeconfig = xmlHTTP.responseXML;
+	            }
 
 	            PostTreeView.config(treeconfig);
 	            PostTreeView.source("<tree><nodes>" + document.getElementById("RootFolderXML").innerHTML + "</nodes></tree>");

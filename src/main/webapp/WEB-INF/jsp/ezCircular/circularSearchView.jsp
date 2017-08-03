@@ -125,8 +125,7 @@
 		            usepostDate = false;
 		            $("#Sdatepicker").datepicker('disable');
 		            $("#Edatepicker").datepicker('disable');
-		        }
-		        else {
+		        } else {
 		            usepostDate = true;
 		            $("#Sdatepicker").datepicker('enable');
 		            $("#Edatepicker").datepicker('enable');
@@ -140,16 +139,16 @@
 	                        OrderOption = "DESC";
 	                    else
 	                        OrderOption = "";
-	                }
-	                else {
+	                } else {
 	                    OrderCell = strHeaderName;
 	                    OrderOption = "";
 	                }
-	                search();
+
+	                search("");        
 	            }
 	        }
 		
-		    function search() {		    	
+		    function search(type) {		    	
 		    	if (specialChk(document.getElementById("keyword").value)) {
 		    		alert("<spring:message code='ezCircular.t134' />");
 		    		return;
@@ -160,7 +159,11 @@
 		            document.getElementById("keyword").focus();
 		            return;
 		        }
-		        		
+
+				if (type == "new") {
+					CurPage = "1";
+				}
+
 		        var sdate = "";
 		        var edate = "";
 		        var url = "";
@@ -192,7 +195,7 @@
 		        } else {
 		        	url = "/ezCircular/getFolderCircularList.do"
 		        }
-
+		        
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -333,6 +336,11 @@
 	                }
 	            }
 	            
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
@@ -398,7 +406,7 @@
 	        function movePage(newPage) {
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 	                CurPage = newPage;
-	                search();
+	                search("");
 	            }
 	        }
 	
@@ -406,7 +414,7 @@
 	            newPage = parseInt(CurPage) - 1;
 	            if (newPage > 0) {
 	                CurPage = newPage;
-	                search();
+	                search("");
 	            }
 	        }
 	
@@ -414,7 +422,7 @@
 	            newPage = parseInt(CurPage) + 1;
 	            if (newPage <= parseInt(totalPage)) {
 	                CurPage = newPage;
-	                search();
+	                search("");
 	            }
 	        }
 
@@ -434,7 +442,7 @@
 		        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
 		
 		        if (evtKeyCode == "13") {
-		            search();
+		            search("new");
 		        }
 		    }
 		</script>
@@ -458,7 +466,7 @@
 		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
-		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezCircular.t85' /></span></a>
+		        		<a href="#" class="imgbtn"><span onClick="search('new')"><spring:message code='ezCircular.t85' /></span></a>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 

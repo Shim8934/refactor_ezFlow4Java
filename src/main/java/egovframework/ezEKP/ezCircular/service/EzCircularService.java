@@ -114,7 +114,7 @@ public interface EzCircularService {
 
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception;
 
-	public void editCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
+	public void editCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo, String loginCookie) throws Exception;
 	
 	public void deleteCircularComment(CircularCommentVO circularCommentVO, LoginVO userInfo) throws Exception;
 	

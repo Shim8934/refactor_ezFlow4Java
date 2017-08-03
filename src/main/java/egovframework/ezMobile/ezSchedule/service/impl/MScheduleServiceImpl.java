@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,10 +19,15 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ibm.icu.util.Calendar;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.dao.MScheduleDAO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
@@ -248,7 +257,76 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		
 		return mScheduleDAO.scheduleInfo(map);
 	}
+
+	@Override
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate) throws Exception {								
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+		
+		String pidList = "'" + info.getUserId() + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
+		String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+		
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(info.getUserId(), info.getTenantId());
+		
+		for (int i = 0; i < gList.size(); i++) {
+			if (i == 0) {
+				pidList += ",";
+			}
+			ScheduleGroupListVO data = gList.get(i);
+			pidList += "'" + data.getGroupId() + "'";
+			
+			if (i != gList.size()-1) {
+				pidList += ",";
+			}	
+		}
+
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
+		
+		Collections.sort(sList, new EzScheduleCompareUtil());
+		
+		return sList;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject scheduleMainList(MCommonVO info, String listCnt) throws Exception {
+		JSONObject jo = new JSONObject();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		String startDate = sdf.format(cal.getTime()) + " 00:00:00";
+		String endDate = sdf.format(cal.getTime()) + " 23:59:59";
+		
+		List<ScheduleInfoVO> sList = scheduleList(info, startDate, endDate);
+		int listSize = sList.size();
+		
+		jo.put("cnt", listSize);
+		
+		if (listCnt != null && !listCnt.equals("")) {
+			List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();						
+			
+			int parseCnt = Integer.parseInt(listCnt);
+			
+			int cnt = 0;
+			
+			if (parseCnt > listSize) {
+				cnt = listSize;
+			} else {
+				cnt = parseCnt;
+			}
+			
+			for (int i = 0; i < cnt; i++) {
+				resultList.add(sList.get(i));
+			}
 	
+			jo.put("list", resultList);
+		} else {
+			jo.put("list", sList);
+		}
+		
+		return jo;
+	}
 	
 	
 }
