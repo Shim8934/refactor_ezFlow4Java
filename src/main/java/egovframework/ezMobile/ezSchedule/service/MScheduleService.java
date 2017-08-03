@@ -1,8 +1,11 @@
 package egovframework.ezMobile.ezSchedule.service;
 
+import java.util.List;
 import org.json.simple.JSONObject;
 
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 
 public interface MScheduleService {
 
@@ -16,6 +19,8 @@ public interface MScheduleService {
 
 	public MScheduleInfoVO scheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception;
 	
+	public List<ScheduleInfoVO> scheduleList(MCommonVO info, String startDate, String endDate) throws Exception;
 	
+	public JSONObject scheduleMainList(MCommonVO info, String listCnt) throws Exception;	
 	
 }

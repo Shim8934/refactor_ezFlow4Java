@@ -2,7 +2,6 @@ package egovframework.ezMobile.ezSchedule.web;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,7 +23,6 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
-import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
@@ -110,28 +108,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
-			String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-			String pidList = "'" + userId + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
-			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
-			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());
-			
-			for (int i = 0; i < gList.size(); i++) {
-				if (i == 0) {
-					pidList += ",";
-				}
-				ScheduleGroupListVO data = gList.get(i);
-				pidList += "'" + data.getGroupId() + "'";
-				
-				if (i != gList.size()-1) {
-					pidList += ",";
-				}	
-			}
-	
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
-			
-			Collections.sort(sList, new EzScheduleCompareUtil());
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate);
 						
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -188,26 +165,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String utcStartTime = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
-			String utcEndTime = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-			String pidList = "'" + userId + "'," + "'" + info.getDeptId() + "'," + "'" + info.getCompanyId() + "'";
-			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
-			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());
-			
-			for (int i = 0; i < gList.size(); i++) {
-				if (i == 0) {
-					pidList += ",";
-				}
-				ScheduleGroupListVO data = gList.get(i);
-				pidList += "'" + data.getGroupId() + "'";
-				
-				if (i != gList.size()-1) {
-					pidList += ",";
-				}	
-			}
-	
-			List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, startDate, endDate, "", offSetMin, info.getTenantId());
+			List<ScheduleInfoVO> sList = mScheduleService.scheduleList(info, startDate, endDate);
 						
 			result.put("status", "ok");
 			result.put("code", 0);			
