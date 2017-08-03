@@ -125,8 +125,7 @@
 		            usepostDate = false;
 		            $("#Sdatepicker").datepicker('disable');
 		            $("#Edatepicker").datepicker('disable');
-		        }
-		        else {
+		        } else {
 		            usepostDate = true;
 		            $("#Sdatepicker").datepicker('enable');
 		            $("#Edatepicker").datepicker('enable');
@@ -140,14 +139,12 @@
 	                        OrderOption = "DESC";
 	                    else
 	                        OrderOption = "";
-	                }
-	                else {
+	                } else {
 	                    OrderCell = strHeaderName;
 	                    OrderOption = "";
 	                }
-alert("1");	                
-	                search("");
-alert("2");	                
+
+	                search("");        
 	            }
 	        }
 		

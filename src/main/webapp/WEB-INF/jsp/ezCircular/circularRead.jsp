@@ -29,7 +29,11 @@
 			    cursor : pointer;
 			    border: 1px solid;
 			}
-			
+
+			#divCross p {
+				overflow: auto;
+			}
+
 			#divCross p a {
 				color: blue;
 				text-decoration: underline;
@@ -218,6 +222,7 @@
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
+	            strContent = strContent + "<style> #printDocument p {overflow: auto;}</style>";
 	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
 	            strContent = strContent + "<div style='width:100%'>";
 	            strContent = strContent + "<table id='printScreen' class='layout'>";
@@ -535,7 +540,7 @@
 		            		</td>
 		        		</tr>
 	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; height:100%; overflow:auto;"></div></td>
+	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; display:inline-grid; height:100%; overflow:auto;"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
@@ -683,8 +688,8 @@
 		            			</c:choose>
 		            		</td>
 						</tr>
-						<tr> 
- 							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 
+						<tr>
+ 							<td colspan="4"><div align="left" id="printDocument" style="padding: 5px; margin: 8px; height: 100%; display:inline-grid; overflow:auto;"></div></td> 
 						</tr>
 					</table>
 				</td>
