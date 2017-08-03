@@ -25,6 +25,8 @@ public class MCommonVO {
 	private String userName;		/** 사용자이름  */
 	
 	private String userName2;		/** 사용자이름2  */
+	
+	private String rollInfo;		/** 사용자 권한  */
 
 	public int getTenantId() {
 		return tenantId;
@@ -120,6 +122,14 @@ public class MCommonVO {
 
 	public void setCompanyName2(String companyName2) {
 		this.companyName2 = companyName2;
+	}
+
+	public String getRollInfo() {
+		return rollInfo;
+	}
+
+	public void setRollInfo(String rollInfo) {
+		this.rollInfo = rollInfo;
 	}
 	
 	

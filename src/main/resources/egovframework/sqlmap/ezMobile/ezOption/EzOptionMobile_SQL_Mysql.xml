@@ -46,7 +46,8 @@
 			    b.company2,
 			    b.cn,
 			    b.displayName,
-			    b.displayName2
+			    b.displayName2,
+                b.extensionattribute1 as rollinfo
 			FROM
 				TBL_USERLOCALINFO a inner join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE

@@ -8,7 +8,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
 		<link rel="stylesheet" type="text/css" href="/css/font-awesome-4.7.0/css/font-awesome.min.css" />
-		<script type="text/javascript" src="/js/mobile/mApprovalG.js"></script>
 	</head>
 	<body>
 		<header data-role="header" data-position="fixed">
@@ -21,7 +20,7 @@
 						<i class="fa fa-long-arrow-left" style="font-size:24px; cursor: pointer;" onclick="backApproveList()"></i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
-						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showComment('${docID}', 1)">${commentCount}</i>
+						<i class="fa fa-comment-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showComment('${docID}', 1)">${opinionCount}</i>
 					</div>
 					<div style="margin-right:6px;float:right;padding-top:8px">
 						<i class="fa fa-file-text-o" style="font-size:24px;cursor: pointer;margin-left:20px" onclick="showOriginal()"></i>

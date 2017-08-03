@@ -9,7 +9,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
-import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MBoardDAO")
@@ -39,6 +39,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (List<MBoardFavoriteVO>) list("MBoardDAO.getFavoriteList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MBoardTreeVO> brdBoardTree(Map<String, Object> map) throws Exception{		
+		return (List<MBoardTreeVO>) list("MBoardDAO.brdBoardTree", map);
+	}
+	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {
 		return (MBoardItemVO) select("MBoardDAO.getBrdItemInfo", map);
 	}
@@ -54,6 +59,16 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public String getBoardApprFlag(Map<String, Object> map) throws Exception {
 		return (String) select("MBoardDAO.getBoardApprFlag", map);
 	}
+	
+	public String checkIfBoardGroupAdmin(Map<String, Object> map) throws Exception{
+		int ret = (int) select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
+		
+		if (ret > 0 ) {
+			return "OK";
+		} else {
+			return "NO";
+		}
+	}	
 
 	public Integer getBoardItemListCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("MBoardDAO.getBoardItemListCount", map);

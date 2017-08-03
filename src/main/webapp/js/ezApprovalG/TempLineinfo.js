@@ -98,15 +98,13 @@ function event_GetAprLineTempletInfo(text)
 //#############################################################################################################################################즐겨찾기 관련 소스
 //#############################################################################################################################################즐겨찾기 저장
 var aprlinetempletname_cross_dialogArguments = new Array();
-function btn_SaveAprLineTemplet_onclick()
-{
+function btn_SaveAprLineTemplet_onclick() {
     var pAPRLINE = new ListView();    
     pAPRLINE.LoadFromID("lvAPRLINE");
    
 	var ListViewLen = pAPRLINE.GetDataRows();
 	
-	if(ListViewLen.length != "0")
-	{
+	if(ListViewLen.length != "0") {
 	    var windowName = "/ezApprovalG/aprLineTempletName.do";
 	    var dialogValue = new Array();
 	    dialogValue[0] = pUserID;
@@ -119,18 +117,16 @@ function btn_SaveAprLineTemplet_onclick()
 	        aprlinetempletname_cross_dialogArguments[0] = dialogValue;
 	        aprlinetempletname_cross_dialogArguments[1] = btn_SaveAprLineTemplet_onclick_Complete;
 	        DivPopUpShow(360, 185, windowName);
-	    }
-	    else {
+	    } else {
 	        var parameter = "status:no;dialogWidth:340px;dialogHeight:185px;scroll:no;edge:sunken";
 	       
-
 	        parameter = parameter + GetShowModalPosition(340, 185);
 	        var ret = window.showModalDialog(windowName, dialogValue, parameter);
 	        if (ret != "cancel") {
 	            CreateNewAprLineTemplet(ret);
 	        }
 	    }
-	}else{
+	} else {
 	    var pAlertContent = linealt5;
 		OpenAlertUI(pAlertContent);
 	}

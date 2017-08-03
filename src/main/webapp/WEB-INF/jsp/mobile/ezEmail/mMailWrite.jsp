@@ -8,6 +8,13 @@
 <script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>		
 <script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript" src="/js/mobile/mEMail.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$("#signList option[value='${mailSignList.data.useFlag}']").attr("selected", true);
+});
+
+</script>
 <title>Insert title here</title>
 </head>
 <body>
@@ -21,10 +28,10 @@
 	</div>
 	</div>
 	<div class="write_area">
-		<div class="sender" style="display:none;">
+		<div class="sender" style="display:;">
 			<h4>보낸사람</h4>
 			<div class="ip">
-				<select id="sender_address"><option selected="">rkd1395@naver.com</option></select>
+				<select id="sender_address"><option selected="">${sender}</option></select>
 				<select id="sender_name"><option selected="">강민석</option></select>
 			</div>
 		</div>
@@ -71,17 +78,29 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="sign">
+		<h4><label for="sbj">서명</label></h4>
+		<select id="signList">
+		<option value=1>${mailSignList.data.content1}</option>
+		<option value=2>${mailSignList.data.content2}</option>
+		<option value=3>${mailSignList.data.content3}</option>
+		</select>
+		</div>
 		<div class="subject">
 			<h4><label for="sbj">제목</label></h4>
-			<div class="ip"><input type="text" value="" id="sbj" class="text"></div>
+			<div class="ip"><input type="text" value="" id="subject" name="subject" class="text"></div>
 		</div>
+		
+		<textarea id=textbody name=textbody placeholder="내용을 입력해 주세요." cols="30" rows="7"></textarea>
+		
 		<div class="attach">
 			<h4>첨부파일</h4>
 			<div class="slct">
 			<button id="upload_btn" onclick="upload()")>파일</button>
 			</div>
 		</div>
-		<textarea onfocus="mWrite.fixScrollTop(this, event);" onkeyup="mWrite.textHeightChange()" placeholder="내용을 입력해 주세요." cols="30" rows="7"></textarea>
+		
 	</div>
 </body>
 </html>

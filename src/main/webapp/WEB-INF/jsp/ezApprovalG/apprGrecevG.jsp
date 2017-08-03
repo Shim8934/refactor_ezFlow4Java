@@ -408,12 +408,12 @@
 		    function btnCabinet_onclick() {
 		        var para = new Array();
 		        para[0] = cabinetID;
-		        var url = "../ezCabinet/SelectCabinet_Cross.aspx?initFlag=1";
+		        var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
 		
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = btnCabinet_onclick_Complete;
 		
-		        DivPopUpShow(850, 455, "/myoffice/ezApprovalG/ezCabinet/SelectCabinet_Cross.aspx?initFlag=1");
+		        DivPopUpShow(880, 465, "/ezApprovalG/selectCabinet.do?initFlag=1");
 		    }
 		
 		    function btnCabinet_onclick_Complete(rtn) {
@@ -1181,7 +1181,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/myoffice/ezApprovalG/TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=APR");
+		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();

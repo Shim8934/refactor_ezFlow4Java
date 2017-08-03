@@ -1226,9 +1226,8 @@ function getDeptSymbol(DeptID, DeptName)
 }
 
 //자동입력Field에 값을 입력하는 함수
-function SetAutoPropertyValue()
-{
-  try{
+function SetAutoPropertyValue() {
+  try {
     //var fields = FormProc.Fields;
     var fields = message.GetFieldsList();
     if(!fields) return;
@@ -1246,15 +1245,12 @@ function SetAutoPropertyValue()
     hapyuiCount = 0;
     SignCount = 0;
   
-	for (i = 0 ; i < fields.length ; i ++)
-	{
+	for (i = 0 ; i < fields.length ; i ++) {
 		var field = fields[i];
 		if(!fields) return;
 		
-		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL")
-		{
-	  		switch (field.id)
-	  		{
+		if(pDraftFlag == "HAPYUI" || (pDraftFlag == "GAMSABU" && ConvertYN == "Y") || pDraftFlag == "WHOKYUL") {
+	  		switch (field.id) {
 	  			case "bedocnumber" :
 	  				setDocNumFormat("be");
 	  				break;
@@ -1331,11 +1327,8 @@ function SetAutoPropertyValue()
 		  			field.textContent = arr_userinfo[2];//CKEDITOR-원본 : field.Value = arr_userinfo[2];
 		  			break;	
  			}	  	
-	  	}
-	  	else
-	  	{
-	  	    switch (field.id)
-	  	    {
+	  	} else {
+	  	    switch (field.id) {
 	  	     	case pSusinSN + "receiptdate" :	 
 	  				field.textContent = CurrentDate;//CKEDITOR-원본 : field.Value = CurrentDate;
 	  				break;
@@ -1343,49 +1336,37 @@ function SetAutoPropertyValue()
 	  	}
 	  	
 	  	//일반결재
-	  	if(pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU")
-	  	{
+	  	if(pDraftFlag == "SUSIN" ||  pDocState == strDocState11 || pDraftFlag == "GAMSABU") {
 	  		var pSignSusin = pSusinSN + "sign";
 	  		if (field.id.substr(0, pSignSusin.length) == pSignSusin)
 	  	  		SignCount = SignCount + 1;
-	  	}
-	  	else
-	  	{
+	  	} else {
 	  		if (field.id.substr(0, 4) == "sign")
 	  	  		SignCount = SignCount + 1;
 	  	} 
       
 		//합의
-	    if (field.id.substr(0, 10) == "habyuidate")
-	    {
+	    if (field.id.substr(0, 10) == "habyuidate") {
 	    	hapyuiCount = hapyuiCount + 1;
 	    }
 	    
 	    //공람칸
-	    if (field.id.substr(0, 7) == "gongram")
-	    {
+	    if (field.id.substr(0, 7) == "gongram") {
 	    	gongramCount = gongramCount + 1;
 	    }
 	  	
 	    //직위정보
-	    if(pDraftFlag == "SUSIN" || pSusinSN != "0" || pDraftFlag == "GAMSABU")
-	    {
+	    if(pDraftFlag == "SUSIN" || pSusinSN != "0" || pDraftFlag == "GAMSABU") {
 			var pSignInfoSusin = pSusinSN + "jikwe";
-			if(field.id.substr(0,pSignInfoSusin.length) == pSignInfoSusin)
-			{
-				if(SignInfoFlag)
-				{
+			if(field.id.substr(0,pSignInfoSusin.length) == pSignInfoSusin) {
+				if(SignInfoFlag) {
 					SignInfo = field.textContent;//CKEDITOR-원본 : SignInfo = field.value;
 					SignInfoFlag = false;
-				}
-				else
-				{
+				} else {
 					SignInfo = field.textContent + ";" + SignInfo ;//CKEDITOR-원본 : SignInfo = field.value + ";" + SignInfo ;
 				}
 			}
-	    }
-	    else
-	    {
+	    } else {
 			if(field.id.substr(0,5) == "jikwe")
 			{
 				if(SignInfoFlag)
@@ -2328,86 +2309,85 @@ function SaveDraftDocInfo()
 		
 //        var fieldValue = getfieldValue(field);//pzFormProc.editor.DOM.body.getAttribute("orgdocnum");
         var fieldValue = message2.DocumentBodyGetAttribute("orgdocnum", 0);
-        Arr_Header = fieldValue.split("@");
-	   
-        for(i=1;i<Arr_Header.length;i++)
-        {
-            Header = Arr_Header[i].substr(0,2);
-            Tail   = Arr_Header[i].substr(2);
-				
-            switch(Header)
-            {
-                case "DP":
-                    numHeader = numHeader + DeptSymbol + Tail;
-                    break;			
-
-                case "dp":
-                    numHeader = numHeader + DeptSymbol + Tail;
-                    break;
-
-                case "YY":
-                    numHeader = numHeader + szYear + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    break;
-
-                case "yy":
-                    var yyear = szYear;//20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    numHeader = numHeader + yyear.toString().substr(2) + Tail; 
-                    break;
-
-                case "MM":
-                    numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    break;
-
-                case "mm":			    
-                    if(szMonth.substr(0,1) == "0")
-                    {
-                        numHeader = numHeader + szMonth.substr(1) + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    }
-                    else
-                    {
-                        numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
-                    }
-                    break;
-
-                case "NN":
-                    break;
-
-                case "nn":
-                    break;
-
-                case "cs":
-                    if (tempItemCode != "")
-                        numHeader = numHeader + tempItemCode + Tail;
-                    else
-                        numHeader = numHeader + tempdocnumcode + Tail;
-                    break;
-
-                case "FT":
-                	numHeader += "FT" + Tail;
-                	break;
-                	
-                case "MV":
-                	numHeader += "MV" + Tail;
-                	break;
-                	
-                case "YM":
-                	numHeader = numHeader + szYear.toString().substr(2);
-                	numHeader = numHeader + szMonth;
-                	numHeader = numHeader + szDay + Tail;
-                	
-                	break;
-                	
-                default:
-                    numHeader = numHeader + fieldValue;
-                    break;
-            }
+      
+        if (fieldValue != null) {
+	        if (fieldValue.indexOf("@")) {
+	        	Arr_Header = fieldValue.split("@");
+	        
+		        for (i=1; i<Arr_Header.length; i++) {
+		            Header = Arr_Header[i].substr(0,2);
+		            Tail   = Arr_Header[i].substr(2);
+						
+		            switch(Header) {
+		                case "DP":
+		                    numHeader = numHeader + DeptSymbol + Tail;
+		                    break;			
+		
+		                case "dp":
+		                    numHeader = numHeader + DeptSymbol + Tail;
+		                    break;
+		
+		                case "YY":
+		                    numHeader = numHeader + szYear + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    break;
+		
+		                case "yy":
+		                    var yyear = szYear;//20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    numHeader = numHeader + yyear.toString().substr(2) + Tail; 
+		                    break;
+		
+		                case "MM":
+		                    numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    break;
+		
+		                case "mm":			    
+		                    if(szMonth.substr(0,1) == "0") {
+		                        numHeader = numHeader + szMonth.substr(1) + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    } else {
+		                        numHeader = numHeader + szMonth + Tail; //20110105 문서번호 기안자 PC  시간을 가져오는 오류 처리
+		                    }
+		                    break;
+		
+		                case "NN":
+		                    break;
+		
+		                case "nn":
+		                    break;
+		
+		                case "cs":
+		                    if (tempItemCode != "") {
+		                        numHeader = numHeader + tempItemCode + Tail;
+		                    } else {
+		                        numHeader = numHeader + tempdocnumcode + Tail;
+		                    }
+		                    break;
+		
+		                case "FT":
+		                	numHeader += "FT" + Tail;
+		                	break;
+		                	
+		                case "MV":
+		                	numHeader += "MV" + Tail;
+		                	break;
+		                	
+		                case "YM":
+		                	numHeader = numHeader + szYear.toString().substr(2);
+		                	numHeader = numHeader + szMonth;
+		                	numHeader = numHeader + szDay + Tail;
+		                	
+		                	break;
+		                	
+		                default:
+		                    numHeader = numHeader + fieldValue;
+		                    break;
+		            }
+		        }
+	        }
         }
-        
         message.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
         message2.DocumentSetFildeValue(pPrefix + "docnumber", numHeader);
 //        field.textContent = numHeader;
     }
-
 
     //파일정보를 저장한다. 
     function SaveFile()

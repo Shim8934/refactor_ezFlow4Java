@@ -3250,7 +3250,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docDir = "0";
 		}
 		
-		dirPath = dirPath + docDir + "." + docID + ".mht";
+		dirPath = dirPath + docDir + "/" + docID + ".mht";
 		
 		if (!allFlag.equals("1") && !allFlag.equals("2")) {
 			allFlag = "0";
@@ -4931,7 +4931,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 							cnt++;
 							
 						    sbStr.append("<tr>");
-                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(17).getTextContent() + "|" + mhtOrHwp + "\")'></td>");
+                            sbStr.append("<TD style='padding:0;background-color:White' align='center'><input type='checkbox' name='chk' id='chk' value = \""+ docListNode.item(k).getChildNodes().item(0).getChildNodes().item(1).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent() + "|" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(20).getTextContent() + "|" + mhtOrHwp + "\")'></td>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(0).getChildNodes().item(0).getTextContent() +"</TD>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(1).getChildNodes().item(0).getTextContent() + "</TD>");
                             sbStr.append("<TD style='padding:0;background-color:White' align='left'>" + docListNode.item(k).getChildNodes().item(2).getChildNodes().item(0).getTextContent() + "</TD>");
@@ -5507,7 +5507,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
 				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "&nbsp;</p></td>       ");
 			}
 			resultExcel.append("</tr>");
 		}
@@ -5982,7 +5982,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
-		String pw = xmlDom.getElementsByTagName("PASSWD").item(0).getTextContent().trim();
 		String langType = xmlDom.getElementsByTagName("LANGTYPE").item(0).getTextContent().trim();
 		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		String orgUID = "";
@@ -5996,12 +5995,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (xmlDom.getElementsByTagName("TYPE").getLength() > 0) {
 					if (xmlDom.getElementsByTagName("TYPE").item(k).getTextContent().equals("MHT")) {
 						logger.debug("type = MHT");
-						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+						rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo);
 					} else {
-						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo);
 					}
 				} else {
-					rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, pw, request, userInfo);
+					rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo);
 				}
 				
 				if (rtnVal.equals("ERROR")) {

@@ -17,7 +17,17 @@
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>			
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>	
+		<script type="text/javascript">
+			$(document).ready(function() {
+				getApproveList("DO");
+				getApproveListCount("DO");
+	
+				$.searchApprove = function() {
+					alert("Search!");
+				}
+			});
+		</script>		
 	</head>
 	<body class="loginbody">
 		<section id="doApproveList" data-role="page">
@@ -27,17 +37,7 @@
      		
      		<!-- body start -->
 			<div class="content" data-role="content">				
-				<ul data-role="listview" data-inset="false" data-theme="a" id="apprList">
-					<c:forEach var="docList" items="${docList}" varStatus="status">
-					    <li>
-					    	<a href="/mobile/ezApprovalG/doApprovalGDetail.do?pDocID=${docList.docID}">					    		
-						    	<h2 style="font-size:12px">${docList.writerName}</h2>
-						    	<p class="ui-li-aside">${docList.startDate}</p>
-						    	<p>${docList.docTitle}</p>						    	
-					    	</a>
-					    </li>
-					</c:forEach>
-				</ul>
+				<ul data-role="listview" data-inset="false" data-theme="a" id="apprList"></ul>
      		</div>     		
      		<!-- body end -->
 
