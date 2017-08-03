@@ -293,10 +293,10 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
-                            _TDColum.innerHTML = p_Subject;
+                            _TDColum.innerText = p_Subject;
                             p_Subject = p_Subject.trim();
                             if(p_Subject == ""){
-                            	_TDColum.innerHTML = strLang97;
+                            	_TDColum.innerText = strLang97;
                             }
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function () { event_listclick(this); };
