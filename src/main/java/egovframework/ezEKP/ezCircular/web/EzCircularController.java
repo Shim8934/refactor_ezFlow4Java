@@ -1637,10 +1637,6 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		List<CircularDeptVO> result = ezCircularService.getcircularDeptList(userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
-		
-		model.addAttribute("result", result);
-		
 		logger.debug("circularDeptConfig ended");
 		
 		return "/ezCircular/circularDeptConfig";

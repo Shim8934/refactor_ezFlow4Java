@@ -17,62 +17,105 @@
 		<script type="text/javascript">
 			$(function() {
 				// 전체 체크박스 선택, 해제
-				$("#checkboxAll").on("click", function(){				
+				$("#checkboxAll").on("click", function() {
 					if ($("#checkboxAll").is(":checked")) {
 						$(".myCheckbox").prop("checked", true);
-						$(".mainlist tr").css("background", "rgb(233, 241, 244)");
+						$("#circularDeptList tr").css("background", "rgb(233, 241, 244)");
 					} else {
 						$(".myCheckbox").prop("checked", false);
-						$(".mainlist tr").css("background", "#FFFFFF");
+						$("#circularDeptList tr").css("background", "#FFFFFF");
 					}
 				})
-				// 개별 체크박스 선택, 해제
-				$(".myCheckbox").on("click", function(){
-					if ($(this).is(":checked")) {
-						$(this).prop("checked", false);
-					} else {
-						$(this).prop("checked", true);
-					}
-				})
+				
+				getCircularDeptList();
 			});
 			
-			function event_Mover(obj) {
-				if (!$("input[value=" + obj.id + "]").is(":checked")) {
-					if (obj != _RowObject) {
-			        	obj.style.backgroundColor = "#EDEDED";
-			        }					
-				}
-		    }
+			function getCircularDeptList() {
+				$.ajax({
+					type : "POST",
+					url : "/ezCircular/getcircularDeptList.do",
+					dataType : "json",
+					data : {
+						
+					},
+					success : function(result) {
+						var list = result.circularDeptList;
+						
+						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='18%' /><col width='10%' /></colgroup>";
+						
+						list.forEach(function(vo, index) {
+							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
+							circularDeptList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + vo.circularBMID + " type='checkbox'></td>";
+							circularDeptList += "<td style='color:gray;' title=" + vo.title + ">" + vo.title + "</td>";
+							circularDeptList += "<td style='color:gray;'>" + vo.regDate.substring(0,16) + "</td>";
+							
+							if (vo.memberNameCount == 0) {
+								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "</td>";
+								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t92' />]</a></td>";
+							} else {
+								circularDeptList += "<td style='color:gray;'>" + vo.memberName + "<spring:message code='ezCircular.t50' />" + vo.memberNameCount + "<spring:message code='ezCircular.t51' /></td>"
+								circularDeptList += "<td id='pop'><a href='javascript:memberList();' style='color:gray;'>[<spring:message code='ezCircular.t92' />]</a></td>";
+							}
+								
+							circularDeptList += "</tr>";
+						});
+						
+						if (list.length == 0) {
+							circularDeptList += "<tr>";
+							circularDeptList += "<td style='text-align: center;'><spring:message code='ezCircular.t47'/></td>";
+							circularDeptList += "</tr>";
+						}
+						
+						$("#circularDeptList").html(circularDeptList);
+						
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				});
+			}
 			
-		    function event_Mout(obj) {
-		    	if (!$("input[value=" + obj.id + "]").is(":checked")) {
-			    	if (obj != _RowObject) {
-			        	obj.style.backgroundColor = "#FFFFFF";
-			        }		    		
-		    	}
-		    }
+			function event_Mover(obj) {
+	            if (obj != _RowObject) {
+    	            obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
+        	        obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
+            	    obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
+            	    obj.childNodes.item(3).style.backgroundColor = "#EDEDED";
+            	    obj.childNodes.item(4).style.backgroundColor = "#EDEDED";
+            	}	
+        	}
+			
+        	function event_Mout(obj) {
+            	if (obj != _RowObject) {
+                	obj.childNodes.item(0).style.backgroundColor = "#FFFFFF";
+                	obj.childNodes.item(1).style.backgroundColor = "#FFFFFF";
+                	obj.childNodes.item(2).style.backgroundColor = "#FFFFFF";
+                	obj.childNodes.item(3).style.backgroundColor = "#FFFFFF";
+                	obj.childNodes.item(4).style.backgroundColor = "#FFFFFF";
+            	}
+        	}
 		    
 		    var _RowObject = null;
 		    
 		    function event_click(obj) {
-		    	if ($("input[value=" + obj.id + "]").is(":checked") && _RowObject != obj) {
-		    		$("input[value=" + obj.id + "]").prop("checked", false);
-		    		obj.style.backgroundColor = "#FFFFFF";
-		    		_RowObject = null;
-		    	} else {
-		    		$("input[value=" + obj.id + "]").prop("checked", true);
-		    		obj.style.backgroundColor = "rgb(233, 241, 244)";
-		        	_RowObject = obj;
-		    	}
-		    }
-
-		    function event_dbclick() {
-		    	modify_circularDept();
-		    }
+            	if (_RowObject != null) {
+                	_RowObject.childNodes.item(0).style.backgroundColor = "#ffffff";
+                	_RowObject.childNodes.item(1).style.backgroundColor = "#ffffff";
+                	_RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
+                	_RowObject.childNodes.item(3).style.backgroundColor = "#ffffff";
+                	_RowObject.childNodes.item(4).style.backgroundColor = "#ffffff";
+            	}
+            	
+            	_RowObject = obj;
+            	obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 244)";
+        	}
 
 		    function memberList() {
 		    	var circularBMId = _RowObject.id;
-		    	
 		    	var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 280) / 2;
@@ -93,34 +136,24 @@
 	                var rtnValue = window.showModalDialog("/ezCircular/circularDeptadd.do", "","dialogHeight:180px;dialogwidth:360px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	                
 	                if (typeof (rtnValue) != "unlimited" && rtnValue == "OK") {
-	                    window.location.reload(false);
+	                	getCircularDeptList();
 	                }
 	            }
 			}
 
 			function share_new_Complete(retVal) {
 	            if (typeof (retVal) != "unlimited" && retVal == "OK") {
-	                window.location.reload(false);
+	            	getCircularDeptList();
 	            }
 	        }
 
-			function modify_circularDept() {
-				if (_RowObject == null) {
-		        	alert("<spring:message code='ezCircular.t44' />");
-		            return;
-		        }
-
-				if ($(".myCheckbox:checked").length > 1) {
-					alert("<spring:message code='ezCircular.t49' />");
-					return;
-				}
-
+			function modify_circularDept(obj) {
 				var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 280) / 2;
 		        var pLeft = (pwidth - 450) / 2;
 
-		        var circularBMId = _RowObject.id;
+		        var circularBMId = obj.id;
 
 		        window.open("/ezCircular/circularDeptModify.do?id=" + circularBMId, "", "height = 280px, width = 450px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status=no, toolbar=no, menubar=no, location=no, resizable=no");		        			        
 			}
@@ -130,14 +163,14 @@
 			function delete_circularDept() {
 				var deleteList = [];
 				
-				if (_RowObject == null) {
-		        	alert("<spring:message code='ezCircular.t44' />");
-		            return;
-		        }
-				
 				$(":checkbox[name=myCheckbox]:checked").each(function(){
 					deleteList.push($(this).val());
 				});
+				
+				if (deleteList.length == 0) {
+		        	alert("<spring:message code='ezCircular.t44' />");
+		            return;
+		        }
 
 				if (confirm("<spring:message code='ezCircular.t46' />")) {
 					$.ajax({
@@ -148,7 +181,7 @@
 			    		data : {
 			    			circularBMIdList : deleteList.join()
 			    		}, success: function() {
-			    			window.location.reload(false);
+			    			getCircularDeptList();
 			    		}, error: function(err) {
 			    			alert(strLang1);
 			    		}
@@ -163,7 +196,6 @@
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
 			        <li style=><span onClick="add_circularDept()"><spring:message code='ezCircular.t77' /></span></li>
-			        <li style=><span onClick="modify_circularDept()"><spring:message code='ezCircular.t29' /></span></li>
 			        <li style=><span onClick="delete_circularDept()"><spring:message code='ezCircular.t30' /></span></li>
 			    </ul>
 			</div>
@@ -176,37 +208,14 @@
 		                    	
 		                        <tr>
 		                        	<th><input id="checkboxAll" type="checkbox"></th>
-		                            <th><span><spring:message code='ezCircular.t32' /></span></th>
-		                            <th><span><spring:message code='ezCircular.t33' /></span></th>
-		                            <th><span><spring:message code='ezCircular.t34' /></span></th>
+		                            <th><spring:message code='ezCircular.t32' /></th>
+		                            <th><spring:message code='ezCircular.t33' /></th>
+		                            <th><spring:message code='ezCircular.t34' /></th>
 		                        	<th></th>
 		                        </tr>
 		                    </table>
-		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
-		                        <table class="mainlist" style="width: 100%;">
-		                        	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='18%' /><col width='10%' /></colgroup>
-		                            <c:forEach var="item" items="${result}">
-			                            <tr id="${item.circularBMID }" style="cursor:pointer" onmouseover="event_Mover(this);" onmouseout="event_Mout(this);" onclick="event_click(this);" ondblclick="event_dbclick(this);">
-			                            	<td style='padding-left:5px;'><input class="myCheckbox" name="myCheckbox" value="${item.circularBMID }" type='checkbox' onclick='event_statuschange(this);'></td>
-			                            	<td style="color:gray;" title="${item.title }">${item.title }</td>
-			                            	<td style="color:gray;">${item.regDate.substring(0,16) }</td>
-			                            	<c:if test="${item.memberNameCount != 0}">
-			                        			<td style="color:gray;">${item.memberName } <spring:message code='ezCircular.t50' /> ${item.memberNameCount } <spring:message code='ezCircular.t51' /></td>    		
-			                            		<td id="pop"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
-			                            	</c:if>
-		                            		<c:if test="${item.memberNameCount == 0}">
-		                            			<td style='color:gray;'>${item.memberName }</td>
-		                            			<td id="pop"><a href="javascript:memberList();" style="color:gray;">[<spring:message code='ezCircular.t92' />]</a></td>
-		                            		</c:if>
-			                            </tr>
-		                            </c:forEach>
-		                            <c:if test="${circularbmid == 0 }">
-			                            <tr>
-			                                <td style="text-align: center;">
-			                                    <spring:message code='ezCircular.t47'/>
-			                                </td>
-			                            </tr>	                            
-		                            </c:if>
+		                    <div id="contentlist" style="height: 365px; overflow-y: auto;">
+		                        <table id="circularDeptList" class="mainlist" style="width: 100%;">
 		                        </table>
 		                    </div>
 		                </div>
