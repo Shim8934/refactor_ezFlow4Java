@@ -8,4 +8,5 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 public interface MEmailService {
 	public JSONArray getMainMailList(MCommonVO info, Locale locale, String filter, String listSize);
+	public int getMainMailUnreadCount(MCommonVO info, Locale locale);
 }

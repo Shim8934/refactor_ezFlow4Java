@@ -60,7 +60,7 @@
 	            	return ;
 	            }
 
-	            if ($.trim($("#title").val()) == "") {
+	            if ($.trim($("#txt_FolderName").val()) == "") {
 		        	alert("<spring:message code='ezCircular.t191' />");
 		        	doubleSubmitFlag = false;
 

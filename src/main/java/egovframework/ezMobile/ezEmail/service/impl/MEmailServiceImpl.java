@@ -1,6 +1,7 @@
 package egovframework.ezMobile.ezEmail.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
+import egovframework.ezMobile.ezEmail.vo.MEmailMessageVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -52,15 +54,15 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	@Autowired
 	private Properties config;
 	
+	static final String SUPERPASSWORD = "_jmocha_101";
 	@Override
 	public JSONArray getMainMailList(MCommonVO info, Locale locale, String filter, String listSize) {
-//		JSONObject result = new JSONObject();
-        IMAPAccess ia = null;
+        
+		IMAPAccess ia = null;
         JSONArray messageJsonArray = new JSONArray();
+        
 		try {
-				
-			
-       
+
 			String folderId = "INBOX";
 			String start = "0";
 			String end = (Integer.parseInt(start) + Integer.parseInt(listSize) - 1) + "";
@@ -76,7 +78,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			String userEmail = info.getUserId() + "@" + domainName;
 			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, "qwe123!", egovMessageSource, locale);
+					userEmail, SUPERPASSWORD, egovMessageSource, locale);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -197,7 +199,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 						addressStr = addressStr.substring(0, addressStr.length() - 2);
 					}								
 				
-				messageJson.put("sender",addressStr);
+					messageJson.put("sender",addressStr);
 							
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
@@ -224,8 +226,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				messageJson.put("read",readFlag);
 							
 				if (message.isSet(Flags.Flag.ANSWERED)) {
-					messageJson.put("contentclass","REPLY");
-				}
+					messageJson.put("contentclass","REPLY");				}
 				else {
 					boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
 					
@@ -238,27 +239,12 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				}
 				messageJsonArray.add(messageJson);
 			}
-			
-			JSONObject contentRange = new JSONObject();
-			
-			contentRange.put("start", start); 
-			contentRange.put("end" , end);
-			contentRange.put("total", messages.length);
-			contentRange.put("BoxTCount", folder.getMessageCount());
-			contentRange.put("BoxUCount", folder.getUnreadMessageCount());
-			
+					
 			folder.close(false);
-			messageJsonArray.add(contentRange);
-			
-//			result.put("status", "ok");
-//			result.put("code", 0);			
-//			result.put("data", messageJsonArray);
-			
+		
 		} catch (Exception e) {
+			
 			e.printStackTrace();
-//			result.put("status", "error");
-//			result.put("code", 1);			
-//			result.put("data", "");
 			
 		} finally {
 			if (ia != null) {
@@ -266,6 +252,29 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			}
 		}
 		return messageJsonArray;
+	}
+
+	@Override
+	public int getMainMailUnreadCount(MCommonVO info, Locale locale) {
+		IMAPAccess ia = null;
+		
+		String folderId = "INBOX";
+		try {
+		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+		String userEmail = info.getUserId() + "@" + domainName;
+		
+		ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userEmail, SUPERPASSWORD, egovMessageSource, locale);
+				
+		Folder folder = ia.getFolder(folderId);	
+		return folder.getUnreadMessageCount();
+		} catch (Exception e) { 
+		return -1;	
+		}  finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
 	}
 
 }
