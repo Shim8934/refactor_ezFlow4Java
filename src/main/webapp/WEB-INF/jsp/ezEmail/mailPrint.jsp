@@ -64,7 +64,7 @@
 	        <tr>
 	            <th style="white-space:nowrap; text-align:center; padding:0px 10px; font-size:12px; color:#666666; background:#f3f3f3; border:1px solid #b6b6b6;"><spring:message code='ezEmail.t556' /></th>
 	            <td colspan="3" style="font-size:12px; color:#393939; border:1px solid #b6b6b6; vertical-align:middle; padding:7px 7px 7px 7px;">
-	                ${pSubject}
+	                <c:out value='${pSubject}' />
 	            </td>
 	        </tr>
 	        <c:if test="${isAttach == 'OK'}">

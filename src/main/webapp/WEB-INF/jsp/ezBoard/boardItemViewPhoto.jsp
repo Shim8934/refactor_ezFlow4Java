@@ -1218,12 +1218,12 @@
 		            </tr>
 		            <tr>
 		              <th style="width:100px; text-align:center"><spring:message code='ezBoard.t291'/></th>
-		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666">${boardItem.title}</div></td>
+		              <td id="cTitle" colspan="7"><div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle; color:#666"><c:out value="${boardItem.title}"/></div></td>
 		            </tr>
 		            <tr>
 		                <th ><spring:message code='ezBoard.t1008'/></th>
 		                <td id="cimagecontent" colspan="7">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;" >${boardItem.mainContent}</div>
+		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>

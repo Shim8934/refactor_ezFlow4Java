@@ -1485,7 +1485,13 @@
 		            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApproval.t335'/></span></p>
 		           	</c:if>
 	            </c:if>
-	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4"><c:if test="${approvalFlag eq 'G' }"><spring:message code='ezApprovalG.t1204'/></c:if><c:if test="${approvalFlag eq 'S' }"><spring:message code='ezApproval.t62'/></c:if></span></p>
+	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4">
+	            <c:if test="${approvalFlag eq 'G' }">
+	            	<spring:message code='ezApprovalG.t1204'/>
+	            </c:if>
+	            <c:if test="${approvalFlag eq 'S' }">
+	            	<spring:message code='ezApproval.t62'/>
+	            </c:if></span></p>
 	            <c:if test="${approvalFlag eq 'S' }">
 		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
 	            </c:if>
