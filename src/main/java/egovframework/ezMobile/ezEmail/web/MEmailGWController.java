@@ -231,10 +231,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        
 	        JSONObject contentrange = new JSONObject();
 	        
-	        contentrange.put("contentrange", start + "-" + end);
-	        
-	        messageJsonArray.add(contentrange);
-	        
 	        boolean isUnreadOnly = false;
 	        boolean isImportantOnly = false;
 			
@@ -413,21 +409,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				messageJsonArray.add(messageJson);
 			}
+			JSONArray folderList = MEmailService.getFolderList(info, locale, "");
 			
-			JSONObject contentRange = new JSONObject();
-			
-			contentRange.put("start", start); 
-			contentRange.put("end" , end);
-			contentRange.put("total", messages.length);
-			contentRange.put("BoxTCount", folder.getMessageCount());
-			contentRange.put("BoxUCount", folder.getUnreadMessageCount());
-			
+			LOGGER.debug("@@@@@@@@@@@@@@@" + folderList.toString());
 			folder.close(false);
-			messageJsonArray.add(contentRange);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", messageJsonArray);
+			result.put("unreadCount", folder.getUnreadMessageCount());
+			result.put("folderList", folderList);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

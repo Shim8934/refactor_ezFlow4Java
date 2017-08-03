@@ -1,7 +1,6 @@
 package egovframework.ezMobile.ezEmail.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +32,6 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
-import egovframework.ezMobile.ezEmail.vo.MEmailMessageVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -275,6 +273,72 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				ia.close();
 			}
 		}
+	}
+
+	@Override
+	public JSONArray getFolderList(MCommonVO info, Locale locale, String folderId) {
+		LOGGER.debug("MEmailServiceImpl getFolderList started.");
+		
+		IMAPAccess ia = null;
+//		List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
+		JSONArray malFolderList = new JSONArray();
+		
+		try {
+		
+			LOGGER.debug("folderId=" + folderId);
+		
+	
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, SUPERPASSWORD, egovMessageSource, locale);
+			
+			List<Folder> subMailFolder = null;
+			
+			if (folderId != null && !folderId.equals("")) {
+				subMailFolder = ia.getSubFolders(folderId);
+			} else {
+				subMailFolder = ia.getTopLevelFolders();
+			}
+			
+//			MEmailFolderVO folder = null;
+			JSONObject folder = null;
+
+			for (int i=0; i<subMailFolder.size(); i++) {
+				Folder f = subMailFolder.get(i);
+				folder = new JSONObject();	
+//				folder = new MEmailFolderVO();
+				folder.put("name", f.getName());
+				folder.put("fullName", f.getFullName());
+				folder.put("unreadCount", f.getUnreadMessageCount());
+//				folder.setName(f.getName());
+//				folder.setFullName(f.getFullName());
+//				folder.setUnReadCount(f.getUnreadMessageCount());
+				if (f.list().length > 0) {
+					folder.put("hasSub", true);
+//					folder.setHasSub(true);
+				} else {
+					folder.put("hasSub", false);
+//					folder.setHasSub(false);
+				}
+//				mailFolderList.add(folder);
+				malFolderList.add(folder);
+			}
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		LOGGER.debug("MEmailServiceImpl getFolderList ended.");
+		
+		return malFolderList;
 	}
 
 }
