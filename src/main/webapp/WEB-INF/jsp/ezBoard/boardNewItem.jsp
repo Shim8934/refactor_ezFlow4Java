@@ -118,7 +118,6 @@
 		    var pUseBackGround = "${useBackGround}";
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
-		    var strTitle = "${fn:replace(strTitle, '\"', '\\\"' )}";
 		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
 		            document.getElementById("pUseBackGroundTR").style.display = "";
@@ -211,7 +210,7 @@
 			    	document.getElementById('Makedate').style.display = "none";
 			    }
 			    if (pMode == "modify" || pMode == "temp") {
-			        document.getElementById("txtTitle").value = strTitle;
+			        document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
 				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
 				    if (gubun == "3") {
 				        document.getElementById("txtPhotoFile").value = ConvMakeXMLString("${boardListVO.extensionAttribute4}");
@@ -221,7 +220,7 @@
 			        }
 			    }
 			    if (pMode == "reply") {
-			    	document.getElementById("txtTitle").value = strTitle;
+			    	document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
 				}
 			    if (pReservedItem != "true") {
 			        //var nowDate = new Date();
@@ -382,7 +381,7 @@
 					data : { itemID : strItemID, 
 							 mode   : pMode,
 							 conLocation : strContentLocation,
-							 title : strTitle
+							 title : ConvMakeXMLString("<c:out value='${boardListVO.title}'/>")
 						   },
 					success: function(result){
 						resText = result;
@@ -1261,6 +1260,8 @@
 		        str = ReplaceText(str, "&gt;", ">");
 		        str = ReplaceText(str, "&quot;", "\"");
 		        str = ReplaceText(str, "&#39;", "'");
+		        str = ReplaceText(str, "&#039;", "'");
+		        str = ReplaceText(str, "&#034;", "\'");
 		        return str;
 		    }
 		    function GetSmallUrl() {
@@ -2030,7 +2031,7 @@
              					</c:choose>
              				</tr>
              			</c:forEach>
-	          <!-- 추가 항목이 있을 경우 끝--> 
+	          <!-- 추가 항목이 있을 경우 끝-->
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">
