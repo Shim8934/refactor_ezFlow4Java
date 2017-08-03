@@ -142,7 +142,7 @@ function InsValueIntoTD(objTD, szValue) {
 }
 
 function InsYNIntoTD(objTD, szValue) {
-    if (szValue == "0") {
+    if (szValue.indexOf("0") > 0) {
         objTD.innerHTML = "N";
     }
     else if (szValue == "1") {
