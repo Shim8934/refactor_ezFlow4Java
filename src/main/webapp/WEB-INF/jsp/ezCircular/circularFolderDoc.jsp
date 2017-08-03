@@ -334,12 +334,13 @@
 	            var MaxNum;
 	            var i;
 	            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	            
 	            if (totalPage >= (startNum + parseInt(BlockSize))) {
 	                MaxNum = (startNum + parseInt(BlockSize)) - 1;
-	            }
-	            else {
+	            } else {
 	                MaxNum = totalPage;
 	            }
+	            
 	            for (i = startNum; i <= MaxNum; i++) {
 	                if (i == pageNum) {
 	                    strtext = "<span class='on'>" + i + "</span>";
@@ -350,6 +351,12 @@
 	                    PagingHTML += strtext;
 	                }
 	            }
+	            
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
