@@ -11,6 +11,6 @@ public interface MOptionService {
 	
 	public MOptionVO optionInfo(String userId, int tenantId) throws Exception;
 
-	public void insertOption(String uid, String timeZone, String lang, String mainType, int listCnt, String useSearch, String useSecurity, int tenantId) throws Exception;
+	public void insertOption(String uid, String timeZone, String lang, String mainType, String listCnt, String useSearch, String useSecurity, int tenantId) throws Exception;
 
 }
