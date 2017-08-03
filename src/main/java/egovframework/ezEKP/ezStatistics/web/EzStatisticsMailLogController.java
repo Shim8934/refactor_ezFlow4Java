@@ -34,7 +34,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
- * @Description [Controller] 통계
+ * @Description [Controller] 메일 수발신 로그내역
  * @author 오픈솔루션팀 김유진
  * @Modification Information
  *
