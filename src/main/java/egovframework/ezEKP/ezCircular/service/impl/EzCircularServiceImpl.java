@@ -241,7 +241,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				StringBuilder bodyContent = new StringBuilder("");
 
 				bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "', '', 'width=820, height=900')\">" + title + "</span></br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
 		    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 		    	bodyContent.append("</div>");
 
@@ -454,7 +454,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 			StringBuilder bodyContent = new StringBuilder("");
 			bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "', '', 'width=820, height=900')\">" + title + "</span></br>");
+			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
 	    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 	    	bodyContent.append("</div>");
 
@@ -1332,8 +1332,9 @@ public class EzCircularServiceImpl implements EzCircularService {
 	}
 
 	@Override
-	public void editCircularComment(CircularCommentVO vo, LoginVO userInfo) throws Exception {
+	public void editCircularComment(CircularCommentVO vo, LoginVO userInfo, String loginCookie) throws Exception {
 		logger.debug("editCircularComment started.");
+		logger.debug("circularID = " + vo.getCircularID() + " || circularUserID = " + vo.getCircularUserID() + " || circularComment = " + vo.getCircularComment() + " || memberID = " + userInfo.getId() + " || memberName = " + userInfo.getDisplayName() + " || memberName2 = " + userInfo.getDisplayName2() + " || status = " + vo.getStatus());
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
 		
@@ -1347,15 +1348,45 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("status", vo.getStatus());// 0공개, 1비공개
 		map.put("nowDate", nowDate);
 		map.put("tenantID", userInfo.getTenantId());
-		
-		if (!vo.getCircularUserID().equals(userInfo.getId())) {
-			updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, 0, nowDate, userInfo.getTenantId());
-		}
-		
+    	
+		CircularListVO circularVO = getCircular(vo.getCircularID(), vo.getCircularUserID(), userInfo.getOffset(), userInfo.getTenantId(), "comment");
+    	List<CircularCommentVO> list = getCircularCommentUserList(vo.getCircularID(), vo.getCircularUserID(), userInfo.getTenantId(), "circularComment");
+    	
 		String circularCommentID = ezCircularDAO.insertComment(map);
 		
 		if (!vo.getCircularUserID().equals(userInfo.getId())) {
+			updateCircularCommentStatus(vo.getCircularID(), vo.getCircularUserID(), 1, 0, nowDate, userInfo.getTenantId());
 			insertCommentState(circularCommentID, vo.getCircularUserID(), 0, nowDate, userInfo.getTenantId());
+			
+			if (circularVO.getUpdateStatus() == 2) {
+				map = new HashMap<String, Object>();
+				map.put("circularID", vo.getCircularID());
+				map.put("memberID", vo.getCircularUserID());
+				map.put("tenantID", userInfo.getTenantId());
+				
+				ezCircularDAO.updateCircularStatus(map);
+			}
+		}
+    	
+    	String subject = egovMessageSource.getMessage("ezCircular.t163", userInfo.getLocale());
+    	StringBuilder bodyContent = new StringBuilder("");
+    	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularVO.getCircularID() + "', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+    	bodyContent.append("</div>");
+    	
+    	InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		
+    	for (CircularCommentVO commentVO : list) {
+			if (vo.getCircularUserID().equals(commentVO.getMemberID())) {
+				InternetAddress to = new InternetAddress();
+				to.setPersonal(commentVO.getMemberName(), "UTF-8");
+				to.setAddress(commentVO.getMail());
+				
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+			}
 		}
 		
 		logger.debug("editCircularComment ended.");
@@ -1591,6 +1622,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("commentShareUser started.");
 		logger.debug("circularID = " + circularID + " || memberIDList = " + memberIDList);
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		CircularListVO circularVO = getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "comment");
 		
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -1599,7 +1632,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String subject = egovMessageSource.getMessage("ezCircular.t123", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
     	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "', '', 'width=820, height=900')\">" + circularVO.getTitle() + "</span></br>");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
     	bodyContent.append("</div>");
     	
@@ -1610,16 +1643,25 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String memberIDs[] = memberIDList.split(";");
 		
 		for (String memberID : memberIDs) {
-			if (!memberID.equals(userInfo.getId())) {
-				updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+			updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+			
+			String commentStateID = getCommentStateID(circularCommentID, memberID, tenantID);
+			
+			if (commentStateID == null) {
+				insertCommentState(circularCommentID, memberID, 0, nowDate, tenantID);
+			} else {
+				updateCommentState(circularID, circularCommentID, memberID, 0, nowDate, tenantID);
+			}
+			
+			circularVO = getCircular(circularID, memberID, userInfo.getOffset(), userInfo.getTenantId(), "comment");
+			
+			if (circularVO.getUpdateStatus() == 2) {
+				map = new HashMap<String, Object>();
+				map.put("circularID", circularID);
+				map.put("memberID", memberID);
+				map.put("tenantID", userInfo.getTenantId());
 				
-				String commentStateID = getCommentStateID(circularCommentID, memberID, tenantID);
-				
-				if (commentStateID == null) {
-					insertCommentState(circularCommentID, memberID, 0, nowDate, tenantID);
-				} else {
-					updateCommentState(circularID, circularCommentID, memberID, 0, nowDate, tenantID);
-				}
+				ezCircularDAO.updateCircularStatus(map);
 			}
 			
 			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(memberID, userInfo.getPrimary(), tenantID);
