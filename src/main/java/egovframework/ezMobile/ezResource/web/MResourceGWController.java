@@ -113,26 +113,48 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String deptId = info.getDeptId();
 			String offset = info.getOffSet();
+			String writerNm = info.getUserName();
+			String writerDt = info.getDeptId();
 			int tenantId = info.getTenantId();
-			String firstWriteDay = request.getParameter("firstWriteDay");
-			String lastWriteDay = request.getParameter("lastWriteDay");
 			String companyId = request.getParameter("companyId");
 	    	String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			String utcStartDate = today.substring(0,10) + " 00:00:00";
-	    	String utcEndDate = today.substring(0,10)+ " 23:59:59";
+			String utcStartDate = today.substring(0,10);
+	    	String utcEndDate = today.substring(0,10);
+	    	//utcStartDate = "2017-07-05";
+	    	//utcEndDate = "2017-08-30";
+	    	String ownerId = "";
+	    	String groupId = "";
+	    	String gubun = "";
+	    	String pType = "";
 	        
 	    	LOGGER.debug("utcStartDate: " + utcStartDate);
 	    	LOGGER.debug("utcEndDate: " + utcEndDate);
 	    	
 	    	int page = 10;
 	    	
-			List<MResourceScheduleVO> list = mResourceService.getResScheduleMainList(utcStartDate, utcEndDate, companyId, page, firstWriteDay, lastWriteDay,  tenantId);
+	    	LOGGER.debug("ownerId: " + ownerId);
+	    	LOGGER.debug("companyId: " + companyId);
+	    	LOGGER.debug("groupId: " + groupId);
+	    	LOGGER.debug("gubun: " + gubun);
+	    	LOGGER.debug("utcStartDate: " + utcStartDate);
+	    	LOGGER.debug("utcEndDate: " + utcEndDate);
+	    	LOGGER.debug("writerNm: " + writerNm);
+	    	LOGGER.debug("writerDt: " + writerDt);
+	    	LOGGER.debug("tenantId: " + tenantId);
+	    	LOGGER.debug("offset: " + offset);
+	    	
+	    	
+			//List<MResourceScheduleVO> list = mResourceService.getResScheduleMainList(utcStartDate, utcEndDate, companyId, page, firstWriteDay, lastWriteDay,  tenantId);
 			
-			LOGGER.debug("size of result: " + list.size());
+			Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset);
+			
+			//LOGGER.debug("size of result: " + list.size());
+			
+			LOGGER.debug("resultMap: " + resultMap);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			

@@ -728,14 +728,14 @@
 				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
 			AND 
 				COMPANYID = #v_PCOMPANYID#
+				]]>
+			<isNotEmpty property="v_POWNERID">				
 			AND 
 				A.OWNERID = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				REFLAG = '0'
-			AND 
-                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
-			AND 
-				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -793,16 +793,16 @@
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
+			        	]]>
+			<isNotEmpty property="v_POWNERID">				
 			AND
 				A.OWNERID = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				REFLAG = '1'
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
-			AND
-				( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
-			AND
-				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND 
 				A.TENANT_ID = #tenantID#	
         	ORDER BY
@@ -852,8 +852,12 @@
         		COMPANYID = #v_pCompanyID#
         	AND 
         		REFLAG = '0'
+        	]]>
+			<isNotEmpty property="v_pOwnerID">				
 			AND
 				BRD.BRD_UPPER = #v_pOwnerID#
+			</isNotEmpty>	
+			<![CDATA[		
 			AND
 				SCH.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -899,8 +903,12 @@
         		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 
 				COMPANYID = #v_PCOMPANYID#
+							]]>
+			<isNotEmpty property="v_POWNERID">				
 			AND
 				BRD.Brd_Upper = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				REFLAG = '1'
 			AND
@@ -921,8 +929,12 @@
 				PNUM = #v_P_pNum#
 			AND
 				COMPANYID = #v_P_companyID#
+				]]>
+			<isNotEmpty property="v_pOwnerID">				
 			AND
 				OWNERID = #v_P_ownerID#
+			</isNotEmpty>	
+			<![CDATA[		
 			AND
 				REFLAG = '4'
 			AND
@@ -951,8 +963,12 @@
 				TBL_RS_SCHEDULEREPETITION 
 			WHERE
 				COMPANYID = #v_pCompanyID#
+				]]>
+			<isNotEmpty property="v_pOwnerID">				
 			AND
 				OWNERID = #v_pOwnerID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				NUM = #v_pNum#
 			AND

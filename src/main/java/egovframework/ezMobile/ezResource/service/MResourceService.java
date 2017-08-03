@@ -14,7 +14,7 @@ public interface MResourceService {
 	
 	public List<MResourceGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType, int tenantID);
 	
-	public List<MResourceScheduleVO> getScheduleList(Map<String,Object> map);
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception;
 	
 	public List<MResourceScheduleVO> getResScheduleMainList(String utcStartDate, String utcEndDate, String companyId, int page, String firstWriteDay, String lastWriteDay,int tenantId);
 	
