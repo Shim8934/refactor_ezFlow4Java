@@ -2982,9 +2982,6 @@ public class EzBoardController extends EgovFileMngUtil{
         			boardListVO.setItemLevel(String.valueOf((Integer.parseInt(boardListVO.getItemLevel()) + 1)));
         			boardListVO.setABSTRACT("");
         		}
-        		strTitle = boardListVO.getTitle();
-        		boardListVO.setTitle(boardListVO.getTitle());
-        		boardListVO.setABSTRACT(boardListVO.getABSTRACT());
         		
         		if (Integer.parseInt(boardListVO.getAttachments()) > 0) {
         			hasAttach = "YES";
@@ -3503,7 +3500,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<NODES>");
 		
 		if (pMode.equals("boardAttach")) {
-            File file = new File(filePath + commonUtil.separator + pConLocation);
+            File file = new File(filePath + pConLocation);
             String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
             String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
             File fileMove = new File(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + newFilePath);

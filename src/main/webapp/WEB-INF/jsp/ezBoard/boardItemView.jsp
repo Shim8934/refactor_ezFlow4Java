@@ -1153,7 +1153,7 @@
 			        <tr>
 			          <th><spring:message code='ezBoard.t323' /></th>
 			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5>
-			             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle">${boardItem.title}</div>
+			             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
 			             </td>
 			        </tr>
 			      </table>
@@ -1172,7 +1172,7 @@
 				        </tr>
 				        <tr>
 				          <th><spring:message code='ezBoard.t291' /></th>
-				          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;">${boardItem.title}</div></td>
+				          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;"><c:out value="${boardItem.title}"/></div></td>
 				        </tr>
 				      </table>
 				    </td>
