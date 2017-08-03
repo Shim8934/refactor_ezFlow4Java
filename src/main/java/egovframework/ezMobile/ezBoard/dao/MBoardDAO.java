@@ -44,6 +44,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (List<MBoardTreeVO>) list("MBoardDAO.brdBoardTree", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MBoardInfoVO> getBoardTreeGet2(Map<String, Object> map) throws Exception{		
+		return (List<MBoardInfoVO>) list("MBoardDAO.getBoardTreeGet2", map);
+	}
+	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {
 		return (MBoardItemVO) select("MBoardDAO.getBrdItemInfo", map);
 	}
@@ -78,12 +83,20 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (Integer) select("MBoardDAO.getNoticePostItemListCount", map);
 	}
 	
+	public Integer getNewBoardListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.getNewBoardListCount", map);
+	}
+	
 	public void insertBrdItem(Map<String, Object> map) throws Exception{
 		insert("MBoardDAO.insertBrdItem", map);
 	}
 	
 	public void insertBrdItem2(Map<String, Object> map) throws Exception{
 		insert("MBoardDAO.insertBrdItem2", map);
+	}
+	
+	public void insertFavorite(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.insertFavorite", map);
 	}
 	
 	public void updateItem(Map<String, Object> map) throws Exception{
@@ -104,6 +117,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void insertDeleteReservedItem(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.insertDeleteReservedItem", map);
+	}
+	
+	public void deleteFavorite(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.deleteFavorite", map);
 	}
 	
 }

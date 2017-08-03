@@ -67,7 +67,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 새게시물 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/mainList/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/new-List/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getBoardMainList(@PathVariable String userId, HttpServletRequest request, Model model) {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] started.");
 		
@@ -77,7 +77,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<MBoardItemVO> list = mBoardService.getBoardMainList(userId, info.getTenantId()); 
+			List<MBoardItemVO> list = mBoardService.getNewBoardList(userId, info.getTenantId()); 
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -108,7 +108,6 @@ public class MBoardGWController {
 		try {
 			String userID = request.getParameter("userID");
 			String primary = request.getParameter("primary");
-			String rollInfo = request.getParameter("rollInfo");
 			String deptPathCode = request.getParameter("deptPathCode");
 			
 			String serverName = request.getHeader("x-user-host");
@@ -117,7 +116,7 @@ public class MBoardGWController {
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
-			boardInfo = mBoardService.getBoardInfo(boardInfo, rollInfo, deptPathCode, info);
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			List<MBoardItemVO> list = null;
 			
@@ -304,36 +303,28 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/folder-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getLeftMenu(HttpServletRequest request) throws Exception {		
+	public Object getLeftMenu(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			String rootBoardID = request.getParameter("rootBoardId");
+			//String rootBoardID = request.getParameter("rootBoardId");
 			int mode = 0;
-			String selectBy = request.getParameter("selectBy");
-			String excludeBoardID = request.getParameter("excludeBoardID");
-			String rollInfo = request.getParameter("rollInfo");
+			//String selectBy = request.getParameter("selectBy");
+			//String excludeBoardID = request.getParameter("excludeBoardId");
+			//String subFlag = request.getParameter("subFlag");
+			String rootBoardID = "top";
+			String selectBy = "0";
+			String excludeBoardID = "";
+			String subFlag = "0";
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String boardGroupAdminFg = mBoardService.checkIfBoardGroupAdmin(rootBoardID, userId, info.getDeptId(), info.getCompanyId(), info.getTenantId());
+			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
 			
-		    if (rollInfo != null && (boardGroupAdminFg.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
-		    	mode = 0;
-		    } else {
-		    	mode = 1;
-		    }
-		    
-		    String strLang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-		    //String pAccessID = userId + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
-	        //String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
-		    
-			List<MBoardTreeVO> list = mBoardService.brdBoardTree(rootBoardID, userId, mode, Integer.parseInt(selectBy), excludeBoardID, info.getTenantId());
-
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
@@ -345,25 +336,66 @@ public class MBoardGWController {
 			result.put("data", "");
 		}				
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/folder-list] ended.");
+		return result;
 	}
 	
 	/**
 	 * 모바일 G/W 게시판 [POST] 즐겨찾기 설정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/favorite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertFavorite(HttpServletRequest request) throws Exception {		
+	public void insertFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			mBoardService.insertFavorite(info.getUserId(), boardId, info.getTenantId());
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
 	}
 	
 	/**
 	 * 모바일 G/W 게시판 [DELETE] 즐겨찾기 해제
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/favorite", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteFavorite(HttpServletRequest request) throws Exception {		
+	public void deleteFavorite(@PathVariable String boardId,HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			mBoardService.deleteFavorite(info.getUserId(), boardId, info.getTenantId());
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
 	}
 	

@@ -1,13 +1,14 @@
 package egovframework.ezMobile.ezPortal.web;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ibm.icu.util.Calendar;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
+import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
@@ -56,6 +57,12 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name="MScheduleService")
 	private MScheduleService mScheduleService;
+	
+	@Resource(name = "MEmailService")
+	private MEmailService mEmailService;
+	
+	@Resource(name = "MBoardService")
+	private MBoardService mBoardService;
 		
 	/**
 	 * 모바일 G/W 포탈 [GET] 메인 리스트 (일반/폴더/포탈/타임라인)
@@ -90,10 +97,33 @@ public class MPortalGWController extends EgovFileMngUtil {
 			//오늘의일정 리스트 카운트
 			Object scheduleCnt = scheduleInfo.get("cnt");
 			
+			//안읽은메일 리스트
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+			JSONArray mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
+			
+			//안읽은메일 리스트 카운트
+			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+			
+			//새게시물 리스트
+			List<MBoardItemVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId());
+			
+			//새게시물 리스트 카운트
+			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			
+			
 			dataObject.put("apprList", apprList);
 			dataObject.put("apprListCnt", apprListCnt+"");
+			
 			dataObject.put("scheduleList", scheduleList);
-			dataObject.put("scheduleCnt", scheduleCnt+"");						
+			dataObject.put("scheduleCnt", scheduleCnt+"");
+			
+			dataObject.put("mailList", mailList);
+			dataObject.put("mailCnt", mailCnt+"");
+			
+			dataObject.put("boardList", boardList);
+			dataObject.put("boardCnt", boardCnt+"");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
