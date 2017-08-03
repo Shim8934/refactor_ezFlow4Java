@@ -1120,6 +1120,8 @@ public class EzCircularController extends EgovFileMngUtil {
 				result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "temp");
 			}
 			
+			result.setTitle(result.getTitle().replaceAll("\\\\", "\\\\\\\\"));
+			
 			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", "", userInfo.getTenantId(), userInfo.getOffset());
 
 			for (CircularListVO vo : list) {
