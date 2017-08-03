@@ -843,7 +843,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<MBoardItemVO> getBoardMainList(String userID, int listCnt, int tenantID) throws Exception {
+	public List<MBoardItemVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("rowCount", listCnt);

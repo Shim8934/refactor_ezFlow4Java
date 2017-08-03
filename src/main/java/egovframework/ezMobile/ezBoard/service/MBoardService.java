@@ -23,7 +23,7 @@ public interface MBoardService {
 	
 	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception;
 	
-	List<MBoardItemVO> getBoardMainList(String userID, int listCnt, int tenantID) throws Exception;
+	List<MBoardItemVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception;
 	
 	List<MBoardItemVO> getNewBoardList(String userID, int tenantID) throws Exception;
 	
