@@ -44,6 +44,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (List<MBoardTreeVO>) list("MBoardDAO.brdBoardTree", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MBoardInfoVO> getBoardTreeGet2(Map<String, Object> map) throws Exception{		
+		return (List<MBoardInfoVO>) list("MBoardDAO.getBoardTreeGet2", map);
+	}
+	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {
 		return (MBoardItemVO) select("MBoardDAO.getBrdItemInfo", map);
 	}
@@ -76,6 +81,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 
 	public Integer getNoticePostItemListCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("MBoardDAO.getNoticePostItemListCount", map);
+	}
+	
+	public Integer getNewBoardListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.getNewBoardListCount", map);
 	}
 	
 	public void insertBrdItem(Map<String, Object> map) throws Exception{

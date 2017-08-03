@@ -1,6 +1,7 @@
 package egovframework.ezMobile.ezBoard.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -22,7 +23,11 @@ public interface MBoardService {
 	
 	List<MBoardTreeVO> brdBoardTree(String rootBoardID, String accessID, int mode, int selectBy, String excludeBoardID, int tenantID) throws Exception;
 	
-	List<MBoardItemVO> getBoardMainList(String userID, int tenantID) throws Exception;
+	List<MBoardItemVO> getBoardMainList(String userID, int listCnt, int tenantID) throws Exception;
+	
+	List<MBoardItemVO> getNewBoardList(String userID, int tenantID) throws Exception;
+	
+	List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception;
 	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
@@ -31,6 +36,8 @@ public interface MBoardService {
 	MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception;
 	
 	String checkIfBoardGroupAdmin(String rootBoardID, String userID, String deptID, String companyID, int tenantID) throws Exception;
+	
+	public Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
 	public void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception;
 	
