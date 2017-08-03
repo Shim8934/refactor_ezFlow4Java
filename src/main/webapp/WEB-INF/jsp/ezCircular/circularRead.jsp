@@ -474,9 +474,12 @@
 	                        <th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t115' /></th>
     	                    <td id="Td_Importance" style="padding-left: 4px;">
     	                    	<c:if test="${result.importance == '0' }">
-	    	                    	<span><spring:message code='ezCircular.t116' /></span>  	                    	
+	    	                    	<span><spring:message code='ezCircular.t185' /></span>  	                    	
     	                    	</c:if>
     	                    	<c:if test="${result.importance == '1' }">
+	    	                    	<span><spring:message code='ezCircular.t116' /></span>  	                    	
+    	                    	</c:if>
+    	                    	<c:if test="${result.importance == '2' }">
 	    	                    	<span><spring:message code='ezCircular.t117' /></span>  	                    	
     	                    	</c:if>
     	                    </td>
@@ -616,9 +619,12 @@
  							<th style="padding-left:10px"><spring:message code='ezCircular.t115' /></th> 
  							<td style="padding-left: 4px; width:200px">
     	                    	<c:if test="${result.importance == '0' }">
-	    	                    	<span><spring:message code='ezCircular.t116' /></span>  	                    	
+	    	                    	<span><spring:message code='ezCircular.t185' /></span>  	                    	
     	                    	</c:if>
     	                    	<c:if test="${result.importance == '1' }">
+	    	                    	<span><spring:message code='ezCircular.t116' /></span>  	                    	
+    	                    	</c:if>
+    	                    	<c:if test="${result.importance == '2' }">
 	    	                    	<span><spring:message code='ezCircular.t117' /></span>  	                    	
     	                    	</c:if>
     	                    </td>

@@ -145,11 +145,13 @@
 	                    OrderCell = strHeaderName;
 	                    OrderOption = "";
 	                }
-	                search();
+alert("1");	                
+	                search("");
+alert("2");	                
 	            }
 	        }
 		
-		    function search() {		    	
+		    function search(type) {		    	
 		    	if (specialChk(document.getElementById("keyword").value)) {
 		    		alert("<spring:message code='ezCircular.t134' />");
 		    		return;
@@ -160,7 +162,11 @@
 		            document.getElementById("keyword").focus();
 		            return;
 		        }
-		        		
+
+				if (type == "new") {
+					CurPage = "1";
+				}
+
 		        var sdate = "";
 		        var edate = "";
 		        var url = "";
@@ -192,7 +198,7 @@
 		        } else {
 		        	url = "/ezCircular/getFolderCircularList.do"
 		        }
-
+		        
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -398,7 +404,7 @@
 	        function movePage(newPage) {
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 	                CurPage = newPage;
-	                search();
+	                search("");
 	            }
 	        }
 	
@@ -406,7 +412,7 @@
 	            newPage = parseInt(CurPage) - 1;
 	            if (newPage > 0) {
 	                CurPage = newPage;
-	                search();
+	                search("");
 	            }
 	        }
 	
@@ -414,7 +420,7 @@
 	            newPage = parseInt(CurPage) + 1;
 	            if (newPage <= parseInt(totalPage)) {
 	                CurPage = newPage;
-	                search();
+	                search("");
 	            }
 	        }
 
@@ -434,7 +440,7 @@
 		        var evtKeyCode = (window.event) ? event.keyCode : evt.which;
 		
 		        if (evtKeyCode == "13") {
-		            search();
+		            search("new");
 		        }
 		    }
 		</script>
@@ -458,7 +464,7 @@
 		          			<option value="writer"><spring:message code='ezCircular.t166' /></option>
 		        		</select>
 		        		<input type="text" id="keyword" size="21" onkeypress="return search_keypress(event)" /> 
-		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezCircular.t85' /></span></a>
+		        		<a href="#" class="imgbtn"><span onClick="search('new')"><spring:message code='ezCircular.t85' /></span></a>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 

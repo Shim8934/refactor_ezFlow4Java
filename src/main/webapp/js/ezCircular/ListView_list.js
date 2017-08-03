@@ -769,13 +769,13 @@ function ListView() {
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "IMPORTANCE") {
                     objTd.style.textAlign = "center";
-                    if (strValue == "1") {
-                        titleImage = titleImage + "<img src='/images/ImgIcon/icon-highimportance.gif'>";
-                        strValue = "";
-                    } else if (strValue == "2") {
+                    if (strValue == "0") {
                     	titleImage = titleImage + "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
                         strValue = "";
+                    } else if (strValue == "1") {
+                        strValue = "";
                     } else {
+                    	titleImage = titleImage + "<img src='/images/ImgIcon/icon-highimportance.gif'>";
                         strValue = "";
                     }
                 }
