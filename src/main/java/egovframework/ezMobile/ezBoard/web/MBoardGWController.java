@@ -22,6 +22,7 @@ import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
@@ -358,12 +359,10 @@ public class MBoardGWController {
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/favorite] ended.");
@@ -388,12 +387,10 @@ public class MBoardGWController {
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
-			result.put("data", "");
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/favorite] ended.");
@@ -402,10 +399,30 @@ public class MBoardGWController {
 	/**
 	 * 모바일 G/W 게시판 [GET] 게시물 첨부파일 리스트
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}/attach-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public void getAttachList(HttpServletRequest request) throws Exception {		
+	public void getAttachList(@PathVariable String contentId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] started.");
-				
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userId = request.getParameter("userId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			List<MBoardAttachVO> list = mBoardService.getAttachList(contentId, info.getTenantId());
+			
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}	
+		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/boards/{boardId}/contents/{contentId}/attach-list] ended.");
 	}
 	

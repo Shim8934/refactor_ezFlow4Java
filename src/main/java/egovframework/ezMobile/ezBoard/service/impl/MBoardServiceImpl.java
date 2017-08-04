@@ -21,6 +21,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
@@ -960,4 +961,13 @@ public class MBoardServiceImpl implements MBoardService {
 		mBoardDAO.deleteFavorite(map);
 	}
 
+	@Override
+	public List<MBoardAttachVO> getAttachList(String itemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.getAttachList(map);
+	}
+	
+	
 }

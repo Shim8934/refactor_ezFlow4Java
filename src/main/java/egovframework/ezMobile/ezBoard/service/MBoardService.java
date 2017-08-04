@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
@@ -29,6 +30,8 @@ public interface MBoardService {
 	
 	List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception;
 	
+	List<MBoardAttachVO> getAttachList(String itemID, int tenantID) throws Exception;
+	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
 	MBoardInfoVO getBoardProperty(String boardID, String primary, int tenantID) throws Exception;
@@ -37,17 +40,17 @@ public interface MBoardService {
 	
 	String checkIfBoardGroupAdmin(String rootBoardID, String userID, String deptID, String companyID, int tenantID) throws Exception;
 	
-	public Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
+	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
-	public void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception;
+	void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception;
 	
-	public void insertBrdItem2(JSONObject boardListVO) throws Exception;
+	void insertBrdItem2(JSONObject boardListVO) throws Exception;
 	
-	public void updateItem(JSONObject boardListVO) throws Exception;
+	void updateItem(JSONObject boardListVO) throws Exception;
 	
-	public void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
+	void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
 	
-	public void insertFavorite(String userID, String boardID, int tenantID) throws Exception;
+	void insertFavorite(String userID, String boardID, int tenantID) throws Exception;
 	
-	public void deleteFavorite(String userID, String boardID, int tenantID) throws Exception;
+	void deleteFavorite(String userID, String boardID, int tenantID) throws Exception;
 }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -234,17 +235,19 @@ public class MBoardController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
 		
 		JSONArray list = new JSONArray();
 		
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			
+			list = (JSONArray)resultBody.get("data");
 			
 			model.addAttribute("mBoardInfo", mBoardInfoVO);
 			model.addAttribute("mBoardItemList", list);
@@ -283,9 +286,10 @@ public class MBoardController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
 				
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : "+status);
@@ -293,8 +297,7 @@ public class MBoardController {
 		JSONArray list = new JSONArray();
 
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			list = (JSONArray)resultBody.get("data");
 
 			model.addAttribute("favoriteList", list);
 		}
