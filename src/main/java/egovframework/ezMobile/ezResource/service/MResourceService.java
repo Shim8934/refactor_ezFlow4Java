@@ -15,7 +15,7 @@ public interface MResourceService {
 	
 	public List<MResourceGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType, int tenantID);
 	
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception;
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception;
 	
 	public Map<String, Object> getScheduleMainList(MCommonVO info, String listCnt) throws Exception;
 		
