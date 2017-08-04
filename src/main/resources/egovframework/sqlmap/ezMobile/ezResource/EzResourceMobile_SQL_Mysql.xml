@@ -736,6 +736,8 @@
 			<![CDATA[	
 			AND
 				REFLAG = '0'
+			AND 
+			    B.DEPARTMENT = #v_WRITERDEPT#	
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -803,6 +805,8 @@
 				REFLAG = '1'
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+			AND 
+			    B.DEPARTMENT = #v_WRITERDEPT#
 			AND 
 				A.TENANT_ID = #tenantID#	
         	ORDER BY

@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
+import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
@@ -355,7 +356,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			}
 		}
 		
-		LOGGER.debug("getScheduleList: " + getScheduleList);
+		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
 		result.put("getScheduleList", getScheduleList);
 		result.put("count", getScheduleList.size());
