@@ -6,6 +6,7 @@ import java.util.List;
 
 import java.util.Map;
 
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
@@ -14,8 +15,10 @@ public interface MResourceService {
 	
 	public List<MResourceGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType, int tenantID);
 	
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception;
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception;
 	
+	public Map<String, Object> getScheduleMainList(MCommonVO info, String listCnt) throws Exception;
+		
 	public List<MResourceScheduleVO> getResScheduleMainList(String utcStartDate, String utcEndDate, String companyId, int page, String firstWriteDay, String lastWriteDay,int tenantId);
 	
 	public List<MResourceScheduleVO> getResScheduleList(String startDate, String endDate, String companyId, String ownerId, int tenantId);

@@ -9,6 +9,7 @@
     <typeAlias  alias="MBoardFavoriteVO"         type="egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO"/>
 	<typeAlias  alias="MBoardListVO"               type="egovframework.ezMobile.ezBoard.vo.MBoardListVO"/>
     <typeAlias  alias="MBoardTreeVO"              type="egovframework.ezMobile.ezBoard.vo.MBoardTreeVO"/>
+    <typeAlias  alias="MBoardAttachVO"           type="egovframework.ezMobile.ezBoard.vo.MBoardAttachVO"/>
   
 	<!-- <typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
@@ -1012,5 +1013,20 @@
                   TENANT_ID = #tenantID#    
            ]]>
       </delete>
+      
+      <select id="MBoardDAO.getAttachList" parameterClass="Map" resultClass="MBoardAttachVO">
+          <![CDATA[
+              SELECT 
+                  * 
+              FROM 
+                  TBL_BOARD_ITEM_ATTACHMENTS 
+              WHERE  
+                  tenant_id = #tenantID#
+              AND
+                  itemid = #itemID#
+              ORDER BY
+                  GUID
+              ]]>
+  </select>
 </sqlMap>
 

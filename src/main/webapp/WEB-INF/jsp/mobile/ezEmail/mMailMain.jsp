@@ -30,7 +30,7 @@
 				<ul data-role="listview" data-inset="false" data-theme="a">
 				<c:forEach items="${MessagesList}" var="message">
 				<li>
-					<a href="${message.href}">
+					<a href="/mobile/ezEmail/mailRead.do?folderId=${message.folderId}&messageId=${message.messageId}">
 					<h2 style="font-size:12px"><i class="fa fa-envelope" style="font-size:12px;">${message.sender}</i></h2>
 					<p class="ui-li-aside">${message.receivedt}</p>
 					<p>${message.subject}</p>

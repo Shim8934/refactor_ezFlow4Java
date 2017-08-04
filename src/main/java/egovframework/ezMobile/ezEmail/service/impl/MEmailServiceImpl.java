@@ -33,12 +33,16 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("MEmailService")
 public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmailService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MEmailServiceImpl.class);
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
@@ -52,7 +56,9 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	@Autowired
 	private Properties config;
 	
-	static final String SUPERPASSWORD = "_jmocha_101";
+	@Resource(name = "jspw")
+    private String jspw;
+	
 	@Override
 	public JSONArray getMainMailList(MCommonVO info, Locale locale, String filter, String listSize) {
         
@@ -74,9 +80,10 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
-			
+			String password = jspw;
+
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, SUPERPASSWORD, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
@@ -209,10 +216,9 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				Date receivedDate = message.getReceivedDate();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String receivedDateStr = sdf.format(receivedDate);
 				
-//				receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, userInfo.getOffset(), false);
-				receivedDateStr = "";
+				String receivedDateStr = sdf.format(receivedDate);
+	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffSet(), false);
 				
 				messageJson.put("receivedt",receivedDateStr);
 				
@@ -260,9 +266,10 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 		try {
 		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 		String userEmail = info.getUserId() + "@" + domainName;
-		
+		String password = jspw;
+
 		ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-				userEmail, SUPERPASSWORD, egovMessageSource, locale);
+				userEmail, password, egovMessageSource, locale);
 				
 		Folder folder = ia.getFolder(folderId);	
 		return folder.getUnreadMessageCount();
@@ -290,9 +297,10 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 	
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
-			
+			String password = jspw;
+
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, SUPERPASSWORD, egovMessageSource, locale);
+					userEmail, password, egovMessageSource, locale);
 			
 			List<Folder> subMailFolder = null;
 			

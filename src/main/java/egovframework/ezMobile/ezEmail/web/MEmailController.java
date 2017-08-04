@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,6 @@ import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezMobile.ezEmail.vo.MEmailFolderVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -139,17 +139,18 @@ public class MEmailController extends EgovFileMngUtil {
 		//folderId가 ""이면 전체 폴더 조회. 있으면 하위폴더 조회 ex)INBOX -> 받은 편지함 하위 폴더 전체 리턴.
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
 
-		JSONObject resultBody = result.getBody();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
 		
 		JSONArray mailFolderList = new JSONArray();
 		
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			mailFolderList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			mailFolderList = (JSONArray) resultBody.get("data");
 			
 			modelMap.addAttribute("folderListCnt", mailFolderList.size());
 			modelMap.addAttribute("folderList", mailFolderList);
@@ -171,7 +172,7 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		String folderId = "INBOX";
 		String start = "0";
-		String end = "10";
+		String end = "9";
 		String search = "";
 		String filter = "";
 		int unReadCount = 0;
@@ -222,9 +223,11 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 
 		String status = resultBody.get("status").toString();
 
@@ -233,16 +236,17 @@ public class MEmailController extends EgovFileMngUtil {
 		JSONArray folderList = new JSONArray();
 	
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
 			
-			messages = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
-			unreadCount = gson.fromJson(gson.toJson(resultBody.get("unreadCount")), Integer.class);
-			folderList = gson.fromJson(gson.toJson(resultBody.get("folderList")), JSONArray.class);
-					
+			messages = (JSONArray) resultBody.get("data");
+			unreadCount = Integer.parseInt(resultBody.get("unreadCount").toString());
+			folderList = (JSONArray) resultBody.get("folderList");
+			String title = (String) resultBody.get("folderId");
+			
 			modelMap.addAttribute("MessagesListCnt", messages.size());
 			modelMap.addAttribute("MessagesList", messages);
 			modelMap.addAttribute("unReadCount", unreadCount);
 			modelMap.addAttribute("folderList", folderList);
+			modelMap.addAttribute("title", title);
 			
 		}
 						
@@ -253,7 +257,7 @@ public class MEmailController extends EgovFileMngUtil {
 	
 	@RequestMapping(value="/mobile/ezEmail/mailGetList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
 	@ResponseBody
-	public JSONArray getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, ModelMap modelMap) throws Exception {
+	public JSONObject getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, ModelMap modelMap) throws Exception {
 		
 		String folderId = "";
 		String start = "";
@@ -307,17 +311,19 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 
 		String status = resultBody.get("status").toString();
 
 		JSONArray messages = new JSONArray();
-		
+		int unReadCount = 0;
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			messages = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			messages = (JSONArray) resultBody.get("data");
+			unReadCount = Integer.parseInt(resultBody.get("unreadCount").toString());
 			
 			modelMap.addAttribute("MessagesListCnt", messages.size());
 			modelMap.addAttribute("MessagesList", messages);
@@ -326,8 +332,12 @@ public class MEmailController extends EgovFileMngUtil {
 		modelMap.addAttribute("MessageList", messages);		
 		
 		logger.debug("getMailList ended.");
+		JSONObject MessageAndCount = new JSONObject();
+		MessageAndCount.put("messages", messages);
+		MessageAndCount.put("unReadCount", unReadCount);
+		MessageAndCount.put("folderId", folderId);
 		
-		return messages;
+		return MessageAndCount;
 	}
 	
 	@RequestMapping(value="/mobile/ezEmail/mailMoveMessage.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
@@ -357,12 +367,13 @@ public class MEmailController extends EgovFileMngUtil {
 
 	    HttpEntity<JSONObject> entity = new HttpEntity(jsonObject, headers);
 
-	    ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.PUT, entity, JSONObject.class);
-//		returnValue = rest.put(uri, jsonObject, String.class);
+	    ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.PUT, entity, String.class);
 		
+	    JSONParser jp = new JSONParser();
+	    
 		System.out.println(responseEntity.getBody());
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 				
 		model.addAttribute("returnValue", returnValue);		
 						
@@ -395,9 +406,11 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class);
+		ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, String.class);
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 		
 		model.addAttribute("mailFolderList", resultBody);		
 						
@@ -427,8 +440,10 @@ public class MEmailController extends EgovFileMngUtil {
 
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
-	
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
 //		JSONObject resultBody = result.getBody();
 //		
 //		model.addAttribute("download", resultBody);		
@@ -457,10 +472,12 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		//signList가 1개도 없으면  null
 
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 		
 		model.addAttribute("mailSignList", resultBody);		
 		
@@ -491,9 +508,11 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.DELETE, entity, JSONObject.class);
+		ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.DELETE, entity, String.class);
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 		
 		model.addAttribute("mailFolderList", resultBody);		
 						
@@ -524,9 +543,11 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 		
 		model.addAttribute("mailFolderList", resultBody);		
 						
@@ -544,8 +565,6 @@ public class MEmailController extends EgovFileMngUtil {
 		String messageId = "";
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-        String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-        String userEmail = userInfo.getId() + "@" + domainName;
 		
 		if (request.getParameter("folderId") != null) {
 			folderId = request.getParameter("folderId");
@@ -577,9 +596,11 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 		
 		model.addAttribute("mailFolderList", resultBody);		
 						
@@ -970,9 +991,11 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.PUT, entity, JSONObject.class);
+		ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.PUT, entity, String.class);
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 		
 		model.addAttribute("mailFolderList", resultBody);		
 						
@@ -1013,9 +1036,11 @@ public class MEmailController extends EgovFileMngUtil {
 		logger.debug("mailSend jsonObject = " + jsonObject.toJSONString());
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class);
+		ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, String.class);
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 								
 		logger.debug("mailSend ended. returnVal = " + resultBody);
 		
@@ -1055,9 +1080,11 @@ public class MEmailController extends EgovFileMngUtil {
 		logger.debug("mailSend jsonObject = " + jsonObject.toJSONString());
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, JSONObject.class);
+		ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.POST, entity, String.class);
 		
-		JSONObject resultBody = responseEntity.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 								
 		logger.debug("mailSend ended. returnVal = " + resultBody);
 		

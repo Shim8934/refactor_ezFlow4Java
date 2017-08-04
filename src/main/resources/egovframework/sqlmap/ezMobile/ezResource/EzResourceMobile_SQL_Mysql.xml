@@ -736,8 +736,12 @@
 			<![CDATA[	
 			AND
 				REFLAG = '0'
+						]]>
+			<isEmpty property="v_POWNERID">
 			AND 
-			    B.DEPARTMENT = #v_WRITERDEPT#	
+			    B.DEPARTMENT = #v_WRITERDEPT#
+			</isEmpty>	
+			<![CDATA[   	
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -805,8 +809,12 @@
 				REFLAG = '1'
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+						]]>
+			<isEmpty property="v_POWNERID">
 			AND 
 			    B.DEPARTMENT = #v_WRITERDEPT#
+			</isEmpty>	
+			<![CDATA[    
 			AND 
 				A.TENANT_ID = #tenantID#	
         	ORDER BY

@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
@@ -232,7 +233,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception {
 		LOGGER.debug("getScheduleList Start");
 
 		Map<String, Object> result = new HashMap<>();
@@ -358,9 +359,23 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
-		result.put("getScheduleList", getScheduleList);
-		result.put("count", getScheduleList.size());
+		List<ResGetScheduleVO> resultList = new ArrayList();
 		
+		int index = Integer.parseInt(listCnt);
+		int count = getScheduleList.size();
+		
+		if(count > index){
+			for (int k = 0; k < index; k++) {
+				resultList.add(getScheduleList.get(k));
+			}
+		}else{
+			resultList = getScheduleList;
+		}
+		
+		LOGGER.debug("resultList: " + resultList);
+		
+		result.put("scheduleList", resultList);
+		result.put("count", count);
 		LOGGER.debug("getScheduleList End");
 		return result;
 	}
@@ -1106,6 +1121,55 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		LOGGER.debug("resStruct ended");
 		return result;
 	}
+
+
+
+	@Override
+	public Map<String, Object> getScheduleMainList(MCommonVO info,
+			String listCnt) throws Exception {
+		String ownerId = "";
+		String groupId = "";
+		String gubun = "";
+		String utcStartDate = "";
+		String utcEndDate = "";
+		String companyId = "";
+		String pType = "";
+		String writerNm = "";
+		String writerDt = "";
+		int tenantId = 0;
+		String offset = "";
+		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+
+		companyId = info.getCompanyId();
+		offset = info.getOffSet();
+		writerNm = info.getUserName();
+		writerDt = info.getDeptId();
+		tenantId = info.getTenantId();
+		utcStartDate = today.substring(0,10);
+    	utcEndDate = today.substring(0,10);
+		
+    	LOGGER.debug("ownerId: " + ownerId);
+    	LOGGER.debug("companyId: " + companyId);
+    	LOGGER.debug("groupId: " + groupId);
+    	LOGGER.debug("gubun: " + gubun);
+    	LOGGER.debug("utcStartDate: " + utcStartDate);
+    	LOGGER.debug("utcEndDate: " + utcEndDate);
+    	LOGGER.debug("writerNm: " + writerNm);
+    	LOGGER.debug("writerDt: " + writerDt);
+    	LOGGER.debug("tenantId: " + tenantId);
+    	LOGGER.debug("offset: " + offset);
+    	
+		
+		Map<String, Object> result = getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset, listCnt);
+
+		LOGGER.debug("result: " + result);
+	
+		LOGGER.debug("in MainList");
+		
+		return result;
+	}
+	
+	
 	
 }
 

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
@@ -47,6 +48,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MBoardInfoVO> getBoardTreeGet2(Map<String, Object> map) throws Exception{		
 		return (List<MBoardInfoVO>) list("MBoardDAO.getBoardTreeGet2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MBoardAttachVO> getAttachList(Map<String, Object> map) throws Exception{		
+		return (List<MBoardAttachVO>) list("MBoardDAO.getAttachList", map);
 	}
 	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {

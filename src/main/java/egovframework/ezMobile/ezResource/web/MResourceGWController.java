@@ -130,7 +130,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	LOGGER.debug("utcStartDate: " + utcStartDate);
 	    	LOGGER.debug("utcEndDate: " + utcEndDate);
 	    	
-	    	int page = 10;
+	    	int pageNum = 1;
+	    	
+	    	int pageSize = 10;
+	    	int firstIndex = 0;
+	    	int lastIndex = 0;
 	    	
 	    	LOGGER.debug("ownerId: " + ownerId);
 	    	LOGGER.debug("companyId: " + companyId);
@@ -143,11 +147,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	LOGGER.debug("tenantId: " + tenantId);
 	    	LOGGER.debug("offset: " + offset);
 	    	
+	    	String listCnt = "10";
 	    	
 			//List<MResourceScheduleVO> list = mResourceService.getResScheduleMainList(utcStartDate, utcEndDate, companyId, page, firstWriteDay, lastWriteDay,  tenantId);
 			
-			Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset);
-			
+			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt);
 			//LOGGER.debug("size of result: " + list.size());
 			
 			LOGGER.debug("resultMap: " + resultMap);
