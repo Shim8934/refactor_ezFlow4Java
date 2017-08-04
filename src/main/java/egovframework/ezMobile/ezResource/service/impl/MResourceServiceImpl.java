@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
@@ -358,7 +359,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
-		result.put("getScheduleList", getScheduleList);
+		result.put("scheduleList", getScheduleList);
 		result.put("count", getScheduleList.size());
 		
 		LOGGER.debug("getScheduleList End");
@@ -1106,6 +1107,85 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		LOGGER.debug("resStruct ended");
 		return result;
 	}
+
+
+
+	@Override
+	public Map<String, Object> getScheduleMainList(MCommonVO info,
+			String listCnt) throws Exception {
+		String ownerId = "";
+		String groupId = "";
+		String gubun = "";
+		String utcStartDate = "";
+		String utcEndDate = "";
+		String companyId = "";
+		String pType = "";
+		String writerNm = "";
+		String writerDt = "";
+		int tenantId = 0;
+		String offset = "";
+		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+
+		companyId = info.getCompanyId();
+		offset = info.getOffSet();
+		writerNm = info.getUserName();
+		writerDt = info.getDeptId();
+		tenantId = info.getTenantId();
+		utcStartDate = today.substring(0,10);
+    	utcEndDate = today.substring(0,10);
+		
+    	LOGGER.debug("ownerId: " + ownerId);
+    	LOGGER.debug("companyId: " + companyId);
+    	LOGGER.debug("groupId: " + groupId);
+    	LOGGER.debug("gubun: " + gubun);
+    	LOGGER.debug("utcStartDate: " + utcStartDate);
+    	LOGGER.debug("utcEndDate: " + utcEndDate);
+    	LOGGER.debug("writerNm: " + writerNm);
+    	LOGGER.debug("writerDt: " + writerDt);
+    	LOGGER.debug("tenantId: " + tenantId);
+    	LOGGER.debug("offset: " + offset);
+    	
+		
+		Map<String, Object> result = getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset);
+
+		LOGGER.debug("result: " + result);
+	
+		LOGGER.debug("in MainList");
+		
+/*		List<ResGetScheduleVO> temp = (List<ResGetScheduleVO>) result.get("scheduleList");
+		String count = (String) result.get("count");
+		
+		LOGGER.debug("temp: " + temp);
+		LOGGER.debug("count: " + count);*/
+		
+		
+/*		List<ResGetScheduleVO> scheduleList = new ArrayList();
+		
+		int index = Integer.parseInt(listCnt);
+		
+		LOGGER.debug("index: " + index);
+		
+		int countTemp = Integer.parseInt(count);
+		
+		if(countTemp < index){
+			for(int i = 0 ; i < index; i++ ){
+				scheduleList.add(temp.get(i));
+			}
+			LOGGER.debug("scheduleList: " + scheduleList);
+			LOGGER.debug("count: " + count);
+			
+			Map<String, Object> toGW = new HashMap<>();
+			
+			toGW.put("scheduleList", scheduleList);
+			toGW.put("count", count);
+			result = toGW;
+		}*/
+		
+		
+		return result;
+	}
+	
+	
 	
 }
 
