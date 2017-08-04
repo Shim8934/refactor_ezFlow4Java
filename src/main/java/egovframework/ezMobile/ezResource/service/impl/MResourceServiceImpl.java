@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -241,17 +241,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		String endDateLimit = sDate + " 00:00:01";
 
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
-/*		if (pType.equals("")) {
-			List<ResGetScheduleVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
-			LOGGER.debug("getScheduleListSize=" + getScheduleList.size());
-			
-
-		} else if (pType.equals("MAIN")) {
-			List<ResGetScheduleVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
-			LOGGER.debug("getScheduleListMainSize=" + getScheduleListMain.size());
-
-		}*/
-
 		List<ResGetScheduleVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);
@@ -259,36 +248,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
 			
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
-/*		if (pType.equals("")) {
-			List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
-			
-			if(getScheduleListRept.size() > 0){
-				getRepeatResult.addAll(getScheduleListRept);
-			}
-			
-			for(int j=0; j<getScheduleListRept.size(); j++) {
-				
-			}
-		} else {
-			List<ResGetScheduleVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
-			
-			if(getScheduleListReptMain.size() > 0){
-				getRepeatResult.addAll(getScheduleListReptMain);
-			}
-			
-			for(int j=0; j<getScheduleListReptMain.size(); j++) {
-				
-			}
-		}
-		*/
-		
 		List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
 		
 		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
 		
 		getRepeatResult.addAll(getScheduleListRept);
 		
-		// return할 xml string 생성(반복예약)
+		// return할 ResGetScheduleVO getScheduleList 에 추가(반복예약)
 		if (getRepeatResult.size() > 0 ) {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -348,6 +314,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setApproveFlag(getRepeatResult.get(i).getApproveFlag());
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
+						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
 						
 						getScheduleList.add(temp);
 					}
@@ -359,7 +326,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
-		List<ResGetScheduleVO> resultList = new ArrayList();
+		List<ResGetScheduleVO> resultList = new ArrayList<ResGetScheduleVO>();
 		
 		int index = Integer.parseInt(listCnt);
 		int count = getScheduleList.size();
@@ -1122,11 +1089,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return result;
 	}
 
-
-
 	@Override
 	public Map<String, Object> getScheduleMainList(MCommonVO info,
 			String listCnt) throws Exception {
+		
 		String ownerId = "";
 		String groupId = "";
 		String gubun = "";
@@ -1158,8 +1124,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
     	LOGGER.debug("writerDt: " + writerDt);
     	LOGGER.debug("tenantId: " + tenantId);
     	LOGGER.debug("offset: " + offset);
-    	
-		
+    			
 		Map<String, Object> result = getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset, listCnt);
 
 		LOGGER.debug("result: " + result);
