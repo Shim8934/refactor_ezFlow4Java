@@ -233,7 +233,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception {
 		LOGGER.debug("getScheduleList Start");
 
 		Map<String, Object> result = new HashMap<>();
@@ -359,9 +359,23 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
-		result.put("scheduleList", getScheduleList);
-		result.put("count", getScheduleList.size());
+		List<ResGetScheduleVO> resultList = new ArrayList();
 		
+		int index = Integer.parseInt(listCnt);
+		int count = getScheduleList.size();
+		
+		if(count > index){
+			for (int k = 0; k < index; k++) {
+				resultList.add(getScheduleList.get(k));
+			}
+		}else{
+			resultList = getScheduleList;
+		}
+		
+		LOGGER.debug("resultList: " + resultList);
+		
+		result.put("scheduleList", resultList);
+		result.put("count", count);
 		LOGGER.debug("getScheduleList End");
 		return result;
 	}
@@ -1146,41 +1160,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
     	LOGGER.debug("offset: " + offset);
     	
 		
-		Map<String, Object> result = getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset);
+		Map<String, Object> result = getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset, listCnt);
 
 		LOGGER.debug("result: " + result);
 	
 		LOGGER.debug("in MainList");
-		
-/*		List<ResGetScheduleVO> temp = (List<ResGetScheduleVO>) result.get("scheduleList");
-		String count = (String) result.get("count");
-		
-		LOGGER.debug("temp: " + temp);
-		LOGGER.debug("count: " + count);*/
-		
-		
-/*		List<ResGetScheduleVO> scheduleList = new ArrayList();
-		
-		int index = Integer.parseInt(listCnt);
-		
-		LOGGER.debug("index: " + index);
-		
-		int countTemp = Integer.parseInt(count);
-		
-		if(countTemp < index){
-			for(int i = 0 ; i < index; i++ ){
-				scheduleList.add(temp.get(i));
-			}
-			LOGGER.debug("scheduleList: " + scheduleList);
-			LOGGER.debug("count: " + count);
-			
-			Map<String, Object> toGW = new HashMap<>();
-			
-			toGW.put("scheduleList", scheduleList);
-			toGW.put("count", count);
-			result = toGW;
-		}*/
-		
 		
 		return result;
 	}
