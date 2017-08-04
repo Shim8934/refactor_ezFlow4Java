@@ -83,32 +83,39 @@ public class EzSystemUtil {
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
-
+		int cpuCnt = 0;
+		
 		while (true) {
-			String line = br.readLine();
-			logger.debug("br.readLine : " + line);
-			if (line == null) {
+		String line = br.readLine();
+		if (line == null) {
 				break;
-			} else if (cnt == 9) {                          // 4번째 줄만 출력
+			} else {                          
 				JSONObject tmpObj = new JSONObject();
-				String[] tmp = line.trim().split("\\s+");
-				double usedPer = Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[2]);
-				logger.debug("===== CPU log start =====");
-				logger.debug("user : " + Double.parseDouble(tmp[0]));
-				logger.debug("user : " + tmp[0]);
-				logger.debug("system : " + Double.parseDouble(tmp[2]));
-				logger.debug("system : " + tmp[2]);
-				logger.debug("===== CPU log end =====");
-				tmpObj.put("user", tmp[0]);
-				tmpObj.put("system", tmp[2]);
-				tmpObj.put("iowait", tmp[3]);
-				tmpObj.put("idle", tmp[5]);
-				tmpObj.put("totalUsedPer", usedPer);        // 총사용량(%)
 				
-				jArr.add(tmpObj);
+				if (line.contains("avg")) {
+					cpuCnt++;
+				}
+				
+				if ( cpuCnt == 2 ) {	
+					if ( cnt == 1 ) {
+						logger.debug(line);
+						String[] tmp = line.trim().split("\\s+");
+						logger.debug("tmp[0] : " + tmp[0]);
+						logger.debug("tmp[2] : " + tmp[2]);
+						double usedPer = Double.parseDouble(tmp[0]) + Double.parseDouble(tmp[2]);
+						tmpObj.put("user", tmp[0]);
+						tmpObj.put("system", tmp[2]);
+						tmpObj.put("iowait", tmp[3]);
+						tmpObj.put("idle", tmp[5]);
+						tmpObj.put("totalUsedPer", usedPer);        // 총사용량(%)
+						
+						jArr.add(tmpObj);
+					}
+					cnt ++;
+				}
 			}
-			cnt ++;
-		}
+		}		
+
 		br.close();
 		
 		jObj.put("getCpuInfo", jArr);		
@@ -231,25 +238,35 @@ public class EzSystemUtil {
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
+		int cpuCnt = 0;
 		String result ="";
 
 		while (true) {
-			String line = br.readLine();
-
-			if (line == null) {
+		String line = br.readLine();
+		if (line == null) {
 				break;
-			} else if (cnt > 11) {                       // 처음 상위 11줄은 불필요
+			} else {                          
 				JSONObject tmpObj = new JSONObject();
-				String[] tmp = line.split("\\s+");
 				
-				if (!tmp[0].equalsIgnoreCase("")) {        // 마지막 줄은 공백이라 불필요					
-					tmpObj.put("read_" + tmp[0], tmp[2]);
-					tmpObj.put("write_"+ tmp[0], tmp[3]);					
-					jArr.add(tmpObj);
+				if (line.contains("avg")) {
+					cpuCnt++;
+				}
+				
+				if ( cpuCnt == 2 ) {	
+					if ( cnt > 3 ) {
+						logger.debug(line);
+						String[] tmp = line.trim().split("\\s+");
+
+						if (!tmp[0].equalsIgnoreCase("")) {        // 마지막 줄은 공백이라 불필요					
+							tmpObj.put("read_" + tmp[0], tmp[2]);
+							tmpObj.put("write_"+ tmp[0], tmp[3]);					
+							jArr.add(tmpObj);	
+						}
+					}
+					cnt ++;
 				}
 			}
-			cnt ++;
-		}
+		}			
 		br.close();
 		
 		jObj.put("getDiskioInfo", jArr);		
@@ -269,7 +286,7 @@ public class EzSystemUtil {
 		
 		logger.debug("getNetDataInfo started. : " + tenantID);
 		
-		String filePath = "D:/test/netInter.txt";
+		//String filePath = "D:/test/netInter.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
 		ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
 		Process process = builder.start();
