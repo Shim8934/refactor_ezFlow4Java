@@ -47,7 +47,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	private EgovMessageSource egovMessageSource;
 	
 	@Resource(name = "MApprovalGDAO")
-	private MApprovalGDAO MApprovalGDAO;
+	private MApprovalGDAO mApprovalGDAO;
 	
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
@@ -85,7 +85,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("mainViewYN", mainViewYN);
 		
-		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGDAO.getDoApproveList(map);
+		List<MApprovalGDocInfoVO> approvalGDocInfoVOs = mApprovalGDAO.getDoApproveList(map);
 
 		LOGGER.debug("getDoApproveList ended");
 		
@@ -113,7 +113,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("type", type);
 		map.put("approvalFlag", approvalFlag);
 
-		int listCount = MApprovalGDAO.getDoApproveListCount(map);
+		int listCount = mApprovalGDAO.getDoApproveListCount(map);
 		
 		LOGGER.debug("getDoApproveListCount ended");
 		
@@ -131,7 +131,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
-		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = MApprovalGDAO.getAprLineInfo(map);
+		List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGDAO.getAprLineInfo(map);
 
 		LOGGER.debug("getAprLineInfo ended");
 		
@@ -147,7 +147,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
-		String docHref = MApprovalGDAO.getAprDocHref(map);
+		String docHref = mApprovalGDAO.getAprDocHref(map);
 		LOGGER.debug("docHref : " + docHref);
 		String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator;
 		String filePath = realPath + uploadModule;
@@ -187,7 +187,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
-		String commentCount = MApprovalGDAO.getAprCommentCount(map);
+		String commentCount = mApprovalGDAO.getAprCommentCount(map);
 
 		LOGGER.debug("getAprCommentCount ended");
 		
@@ -204,7 +204,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
-		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = MApprovalGDAO.getOpinionInfo(map);
+		List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGDAO.getOpinionInfo(map);
 
 		LOGGER.debug("getOpinionInfo ended");
 		
@@ -224,29 +224,29 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("companyID", userInfo.getCompanyId());
 		
 		int result = 0;
-		int resultRow = MApprovalGDAO.deleteOpinionInfo(map);
+		int resultRow = mApprovalGDAO.deleteOpinionInfo(map);
 		
 		if (pType.equals("INSERT")) {
 			if (pContent != null && !pContent.equals("")) {
 				map.put("hasOpinionYN", "Y");
 				
-				MApprovalGDAO.insertOpinionInfo(map);
+				mApprovalGDAO.insertOpinionInfo(map);
 				
-				result = MApprovalGDAO.updateDocOpinionInfo(map);
+				result = mApprovalGDAO.updateDocOpinionInfo(map);
 			} else {
 				map.put("hasOpinionYN", "N");
 				
-				result = MApprovalGDAO.updateDocOpinionInfo(map);
+				result = mApprovalGDAO.updateDocOpinionInfo(map);
 			}
 		} else if (pType.equals("UPDATE")) {
 			if (resultRow > 0) {
-				MApprovalGDAO.insertOpinionInfo(map);
+				mApprovalGDAO.insertOpinionInfo(map);
 			}
 		} else if (pType.equals("DELETE")) {
 			if (resultRow > 0) {
 				map.put("hasOpinionYN", "N");
 				
-				result = MApprovalGDAO.updateDocOpinionInfo(map);
+				result = mApprovalGDAO.updateDocOpinionInfo(map);
 			}
 		}
 
@@ -265,7 +265,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyId());
 		
-		List<MApprovalGAttachInfoVO> approvalGAttachInfoVOs = MApprovalGDAO.getAttachList(map);
+		List<MApprovalGAttachInfoVO> approvalGAttachInfoVOs = mApprovalGDAO.getAttachList(map);
 
 		LOGGER.debug("getAttachList ended");
 		
@@ -276,7 +276,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	public MApprovalGAbsenteeInfoVO getAbsenteeInfo(MCommonVO userInfo) throws Exception {
 		LOGGER.debug("getAbsenteeInfo started");
 
-		String absenteeInfo = MApprovalGDAO.getAbsenteeInfo(userInfo);
+		String absenteeInfo = mApprovalGDAO.getAbsenteeInfo(userInfo);
 		
 		MApprovalGAbsenteeInfoVO absenteeInfoVO = new MApprovalGAbsenteeInfoVO();
 		
@@ -299,7 +299,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	public int setAbsenteeInfo(MApprovalGAbsenteeInfoVO absenteeInfoVO) throws Exception {
 		LOGGER.debug("setAbsenteeInfo started");
 
-		int result = MApprovalGDAO.setAbsenteeInfo(absenteeInfoVO);
+		int result = mApprovalGDAO.setAbsenteeInfo(absenteeInfoVO);
 
 		LOGGER.debug("setAbsenteeInfo ended");
 		
@@ -315,7 +315,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("userID", userInfo.getUserId());
 		map.put("tenantID", userInfo.getTenantId());
 		
-		int resultCode = MApprovalGDAO.checkPass(map);
+		int resultCode = mApprovalGDAO.checkPass(map);
 
 		LOGGER.debug("checkPass ended");
 		
@@ -336,10 +336,31 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
 		
-		List<MApprovalGTLVO> approvalGTLVOs = MApprovalGDAO.getTimeLineList(map);
+		List<MApprovalGTLVO> approvalGTLVOs = mApprovalGDAO.getTimeLineList(map);
 
 		LOGGER.debug("getTimeLineList ended");
 		
 		return approvalGTLVOs;
 	}
+
+	@Override
+	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getAprDocInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docId);
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		
+		MApprovalGDocInfoVO approvalGDocInfoVO = new MApprovalGDocInfoVO();
+		
+		if (type.equals("DO")) {
+			approvalGDocInfoVO = mApprovalGDAO.getAprDocInfo(map);
+		}
+
+		LOGGER.debug("getAprDocInfo ended");
+		
+		return approvalGDocInfoVO;
+	}
+	
 }

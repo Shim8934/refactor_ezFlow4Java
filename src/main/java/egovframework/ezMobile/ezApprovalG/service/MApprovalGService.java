@@ -38,4 +38,6 @@ public interface MApprovalGService {
 
 	public int checkPass(MCommonVO userInfo, String shaEncPassword) throws Exception;
 
+	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String companyId, int tenantId) throws Exception;
+
 }

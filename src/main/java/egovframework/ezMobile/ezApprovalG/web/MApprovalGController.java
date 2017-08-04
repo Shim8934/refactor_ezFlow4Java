@@ -116,14 +116,16 @@ public class MApprovalGController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		String status = result.getBody().get("status").toString();
+		JSONParser jp = new JSONParser();
+		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		
 		JSONArray approveList = new JSONArray();
+		String status = jsonResult.get("status").toString();
 		
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			approveList = gson.fromJson(gson.toJson(result.getBody().get("data")), JSONArray.class);
+			approveList = (JSONArray) jsonResult.get("data");
 			
 			model.addAttribute("approvalList", approveList);
 		} else {
@@ -217,26 +219,35 @@ public class MApprovalGController {
 		RestTemplate rest = new RestTemplate();
 		
 		ResponseEntity<JSONObject> result1 = rest.exchange(builder1.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
-		ResponseEntity<JSONObject> result2 = rest.exchange(builder2.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
-		ResponseEntity<JSONObject> result3 = rest.exchange(builder3.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result2 = rest.exchange(builder2.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		ResponseEntity<String> result3 = rest.exchange(builder3.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		ResponseEntity<JSONObject> result4 = rest.exchange(builder4.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
 		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject jsonResult2 = (JSONObject) jp.parse(result2.getBody());
+		JSONObject jsonResult3 = (JSONObject) jp.parse(result3.getBody());
+		
 		String status1 = result1.getBody().get("status").toString();
-		String status2 = result2.getBody().get("status").toString();
-		String status3 = result3.getBody().get("status").toString();
+		String status2 = jsonResult2.get("status").toString();
+		String status3 = jsonResult3.get("status").toString();
 		String status4 = result4.getBody().get("status").toString();
+		
+		LOGGER.debug("status1 : " + status1);
+		LOGGER.debug("status2 : " + status2);
+		LOGGER.debug("status3 : " + status3);
+		LOGGER.debug("status4 : " + status4);
 		
 		if (status1.equals("ok") && status2.equals("ok") && status3.equals("ok") && status4.equals("ok")) {
 			String bodyHTML = result1.getBody().get("data").toString();
-			String photoPath = result2.getBody().get("photoPath").toString();
+			String photoPath = jsonResult2.get("photoPath").toString();
 			String opinionCount = result4.getBody().get("data").toString();
 			
 			JSONArray approveLineList = new JSONArray();
-			Gson gson = new Gson();
-			approveLineList = gson.fromJson(gson.toJson(result2.getBody().get("data")), JSONArray.class);
+			approveLineList = (JSONArray) jsonResult2.get("data");
 			
 			JSONArray approveAttachList = new JSONArray();
-			approveAttachList = gson.fromJson(gson.toJson(result3.getBody().get("data")), JSONArray.class);
+			approveAttachList = (JSONArray) jsonResult3.get("data");
 				
 			model.addAttribute("aprAttachList", approveAttachList);
 			model.addAttribute("aprLineList", approveLineList);
@@ -274,14 +285,17 @@ public class MApprovalGController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		String status = result.getBody().get("status").toString();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject jsonResult = (JSONObject) jp.parse(result.getBody());
+		
+		String status = jsonResult.get("status").toString();
 		
 		if (status.equals("ok")) {
 			JSONArray approveOpinionList = new JSONArray();
-			Gson gson = new Gson();
-			approveOpinionList = gson.fromJson(gson.toJson(result.getBody().get("data")), JSONArray.class);
+			approveOpinionList = (JSONArray) jsonResult.get("data");
 			
 			model.addAttribute("opinionList", approveOpinionList);
 			model.addAttribute("userID", userInfo.getId());

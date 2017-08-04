@@ -11,6 +11,22 @@ public class MApprovalGDocInfoVO {
 	private String writerName;
 	/** 기안자부서명*/
 	private String wirterDeptName;
+	/** 원본 문서번호*/
+	private String orgDocID;
+	/** 첨부여부*/
+	private String hasAttachYN;
+	/** 결재자아이디*/
+	private String aprMemberID;
+	/** 결재자 이름*/
+	private String aprMemberName;
+	/** 결재자 이름(다국어)*/
+	private String aprMemberName2;
+	/** 결재자 부서아이디*/
+	private String aprMemberDeptID;
+	/** 문서경로*/
+	private String href;
+	/** 양식 아이디*/
+	private String formID;
 	
 	public String getDocID() {
 		return docID;
@@ -42,5 +58,52 @@ public class MApprovalGDocInfoVO {
 	public void setWirterDeptName(String wirterDeptName) {
 		this.wirterDeptName = wirterDeptName;
 	}
-
+	public String getOrgDocID() {
+		return orgDocID;
+	}
+	public void setOrgDocID(String orgDocID) {
+		this.orgDocID = orgDocID;
+	}
+	public String getHasAttachYN() {
+		return hasAttachYN;
+	}
+	public void setHasAttachYN(String hasAttachYN) {
+		this.hasAttachYN = hasAttachYN;
+	}
+	public String getAprMemberID() {
+		return aprMemberID;
+	}
+	public void setAprMemberID(String aprMemberID) {
+		this.aprMemberID = aprMemberID;
+	}
+	public String getHref() {
+		return href;
+	}
+	public void setHref(String href) {
+		this.href = href;
+	}
+	public String getFormID() {
+		return formID;
+	}
+	public void setFormID(String formID) {
+		this.formID = formID;
+	}
+	public String getAprMemberName() {
+		return aprMemberName;
+	}
+	public void setAprMemberName(String aprMemberName) {
+		this.aprMemberName = aprMemberName;
+	}
+	public String getAprMemberName2() {
+		return aprMemberName2;
+	}
+	public void setAprMemberName2(String aprMemberName2) {
+		this.aprMemberName2 = aprMemberName2;
+	}
+	public String getAprMemberDeptID() {
+		return aprMemberDeptID;
+	}
+	public void setAprMemberDeptID(String aprMemberDeptID) {
+		this.aprMemberDeptID = aprMemberDeptID;
+	}
 }

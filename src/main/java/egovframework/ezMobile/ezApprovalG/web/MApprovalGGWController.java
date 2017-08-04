@@ -68,10 +68,10 @@ public class MApprovalGGWController {
 	private EzEmailService ezEmailService;
 	
 	@Resource(name = "MApprovalGService")
-	private MApprovalGService MApprovalGService;
+	private MApprovalGService mApprovalGService;
 	
 	@Resource(name = "MOptionService")
-	private MOptionService MOptionService;
+	private MOptionService mOptionService;
 
 	/**
 	 * 모바일 G/W 전자결재 [GET] 결재문서 메인 리스트
@@ -89,9 +89,9 @@ public class MApprovalGGWController {
 			
 			LOGGER.debug("listSize : " + listSize);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, "DO", "", listSize, lastDate);
+			List<MApprovalGDocInfoVO> approvalGDocInfoVOs = mApprovalGService.getDoApproveList(userInfo, "DO", "", listSize, lastDate);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -105,6 +105,7 @@ public class MApprovalGGWController {
 		
 		return result;
 	}
+	
 	/**
 	 * 모바일 G/W 전자결재 [GET] 결재문서 리스트 (결재할(DO), 결재한(END), 결재진행(ING), 기안한(DRAFT))
 	 */
@@ -132,9 +133,9 @@ public class MApprovalGGWController {
 				lastDate = commonUtil.getTodayUTCTime("");
 			}
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MApprovalGDocInfoVO> approvalGDocInfoVOs = MApprovalGService.getDoApproveList(userInfo, type, searchText, listSize, lastDate);
+			List<MApprovalGDocInfoVO> approvalGDocInfoVOs = mApprovalGService.getDoApproveList(userInfo, type, searchText, listSize, lastDate);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -165,9 +166,11 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("searchText : " + searchText);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			int listCount = MApprovalGService.getDoApproveListCount(userInfo, type, searchText);
+			userInfo.setUserId("test");
+			
+			int listCount = mApprovalGService.getDoApproveListCount(userInfo, type, searchText);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -198,12 +201,12 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			//본문
 			String realPath = commonUtil.getRealPath(request);
 			String domain = request.getServerName() + ":" + request.getServerPort();
-			String bodyHTML = MApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale);
+			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -234,10 +237,10 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			//결재선
-			List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = MApprovalGService.getAprLineInfo(docId, userInfo);
+			List<MApprovalGAprLineInfoVO> approvalGAprLineInfoVOs = mApprovalGService.getAprLineInfo(docId, userInfo);
 			String photoPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId());
 			
 			result.put("status", "ok");
@@ -270,10 +273,10 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			//의견갯수
-			String commentCount = MApprovalGService.getOpinionCount(docId, userInfo);
+			String commentCount = mApprovalGService.getOpinionCount(docId, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -306,9 +309,9 @@ public class MApprovalGGWController {
 			LOGGER.debug("userId : " + userId);
 			LOGGER.debug("type : " + type);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MApprovalGAttachInfoVO> approvalGAttachInfoVOs = MApprovalGService.getAttachList(docId, type, userInfo);
+			List<MApprovalGAttachInfoVO> approvalGAttachInfoVOs = mApprovalGService.getAttachList(docId, type, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -339,9 +342,9 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = MApprovalGService.getOpinionInfo(docId, userInfo);
+			List<MApprovalGOpinionInfoVO> approvalGOpinionInfoVOs = mApprovalGService.getOpinionInfo(docId, userInfo);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -376,9 +379,9 @@ public class MApprovalGGWController {
 			LOGGER.debug("content : " + content);
 			LOGGER.debug("opinionGB : " + opinionGB);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			int resultCode = MApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "INSERT");
+			int resultCode = mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "INSERT");
 			
 			//resultCode 가 0이면 업데이트를 했는데 업데이트가 안된 경우 잘못된 경우지만 흐름은 정상적으로 흘러가기에 코드로 구분 프론트단에서 업데이트가 안됐다고 알려줘야하는데 안될리가 없을듯 하지만 한치앞을 내다볼수없는 세상이라 만들어놓음
 			if (resultCode == 0) {
@@ -421,9 +424,9 @@ public class MApprovalGGWController {
 			LOGGER.debug("content : " + content);
 			LOGGER.debug("opinionGB : " + opinionGB);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			MApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "UPDATE");
+			mApprovalGService.mSetOpinionInfo(docId, content, opinionGB, userInfo, "UPDATE");
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -454,9 +457,9 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			MApprovalGService.mSetOpinionInfo(docId, "", "", userInfo, "DELETE");
+			mApprovalGService.mSetOpinionInfo(docId, "", "", userInfo, "DELETE");
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -486,9 +489,9 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			MApprovalGAbsenteeInfoVO absenteeInfoVO = MApprovalGService.getAbsenteeInfo(userInfo);
+			MApprovalGAbsenteeInfoVO absenteeInfoVO = mApprovalGService.getAbsenteeInfo(userInfo);
 			
 			if (absenteeInfoVO.getAbsenteeId() != null && !absenteeInfoVO.getAbsenteeId().equals("")) {
 				result.put("status", "ok");
@@ -524,12 +527,12 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			absenteeInfoVO.setUserId(userInfo.getUserId());
 			absenteeInfoVO.setTenantId(userInfo.getTenantId());
 			
-			int resultCode = MApprovalGService.setAbsenteeInfo(absenteeInfoVO);
+			int resultCode = mApprovalGService.setAbsenteeInfo(absenteeInfoVO);
 			
 			//resultCode 가 0이면 업데이트를 했는데 업데이트가 안된 경우 잘못된 경우지만 흐름은 정상적으로 흘러가기에 코드로 구분 프론트단에서 업데이트가 안됐다고 알려줘야하는데 안될리가 없을듯 하지만 한치앞을 내다볼수없는 세상이라 만들어놓음
 			if (resultCode == 0) {
@@ -567,7 +570,7 @@ public class MApprovalGGWController {
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			String prm = egovFileScrty.getPrm();
 	    	String pre = egovFileScrty.getPre();
@@ -577,7 +580,7 @@ public class MApprovalGGWController {
 			String password = EgovFileScrty.decryptRsa(pk, rsaEncPassword);
 			String shaEncPassword = EgovFileScrty.encryptPassword(password, userId);
 			
-			int resultCode = MApprovalGService.checkPass(userInfo, shaEncPassword);
+			int resultCode = mApprovalGService.checkPass(userInfo, shaEncPassword);
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -604,16 +607,18 @@ public class MApprovalGGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
+			String realPath = commonUtil.getRealPath(request);
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
 			
-			MCommonVO userInfo = MOptionService.commonInfo(serverName, userId);
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			String rtnVal = "";
-			String formID = "";
-			String orgUID = "";
-			String dirPath = "";
+			
+			//docId로만 정보 가져오기
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, userInfo.getCompanyId(), userInfo.getTenantId());
+			
 			LoginVO loginVO = new LoginVO();
 			
 			loginVO.setId(userId);
@@ -625,29 +630,70 @@ public class MApprovalGGWController {
 			loginVO.setDeptID(userInfo.getDeptId());
 			
 			if (type.equals("APR")) {
-				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", formID, "", docId, orgUID, userInfo.getLang(), userInfo.getCompanyId(), request, loginVO);
+				rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", approvalGDocInfoVO.getFormID(), "", docId, approvalGDocInfoVO.getAprMemberID(), userInfo.getLang(), userInfo.getCompanyId(), request, loginVO);
+				
+				if (rtnVal != null && !rtnVal.equals("ERROR")) {
+					result.put("status", "ok");
+					result.put("code", "0");
+					result.put("data", "SUCCESS");
+				} else {
+					result.put("status", "ok");
+					result.put("code", "2");
+					result.put("data", "FAIL");
+				}
 			} else if (type.equals("BAN")) {
-				rtnVal = ezApprovalGService.doBansong(docId, userId, "004", dirPath, userInfo.getDeptId(), userInfo.getCompanyId(), userInfo.getLang(), loginVO);
+				rtnVal = ezApprovalGService.doBansong(docId, userId, "004", realPath + approvalGDocInfoVO.getHref(), userInfo.getDeptId(), userInfo.getCompanyId(), userInfo.getLang(), loginVO);
+				
+				if (rtnVal != null && !rtnVal.equals("FALSE")) {
+					result.put("status", "ok");
+					result.put("code", "0");
+					result.put("data", "SUCCESS");
+				} else {
+					result.put("status", "ok");
+					result.put("code", "2");
+					result.put("data", "FAIL");
+				}
 			} else if (type.equals("BO")) {
+				rtnVal = ezApprovalGService.doBoryu(docId, userId, "005", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
 				
+				if (rtnVal != null && !rtnVal.equals("FALSE")) {
+					result.put("status", "ok");
+					result.put("code", "0");
+					result.put("data", "SUCCESS");
+				} else {
+					result.put("status", "ok");
+					result.put("code", "2");
+					result.put("data", "FAIL");
+				}
 			} else if (type.equals("HWE")) {
+				rtnVal = ezApprovalGService.doCallBack(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 				
+				if (rtnVal != null && !rtnVal.equals("<RESULT>FALSE</RESULT>")) {
+					result.put("status", "ok");
+					result.put("code", "0");
+					result.put("data", "SUCCESS");
+				} else {
+					result.put("status", "ok");
+					result.put("code", "2");
+					result.put("data", "FAIL");
+				}
 			} else if (type.equals("CHECK")) {
+				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), userInfo.getLang(), loginVO);
 				
+				if (rtnVal != null && !rtnVal.equals("FALSE")) {
+					result.put("status", "ok");
+					result.put("code", "0");
+					result.put("data", "SUCCESS");
+				} else {
+					result.put("status", "ok");
+					result.put("code", "2");
+					result.put("data", "FAIL");
+				}
 			} else {
 				//오류
+				result.put("status", "error");
+				result.put("code", "1");
 			}
-			
-			if (rtnVal != null && !rtnVal.equals("ERROR")) {
-				result.put("status", "ok");
-				result.put("code", "0");
-				result.put("data", "SUCCESS");
-			} else {
-				result.put("status", "ok");
-				result.put("code", "2");
-				result.put("data", "FAIL");
-			}
-			
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");

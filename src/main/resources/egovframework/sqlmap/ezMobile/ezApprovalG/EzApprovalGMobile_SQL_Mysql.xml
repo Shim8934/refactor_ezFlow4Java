@@ -408,6 +408,8 @@
    				COMPANYID = #companyID#
    			AND
    				DOCID = #docID#
+   			LIMIT
+   				1
 		]]>
 	</select>
 	
@@ -558,6 +560,31 @@
 				cn = #userId#
 			AND
 				password = #password#
+		]]>
+	</select>
+	
+	<select id="MApprovalG.getAprDocInfo" parameterClass="Map" resultClass="MApprGDocInfoVO">
+		<![CDATA[
+			SELECT
+				DOCID,
+				ORGDOCID,
+				FORMID,
+				HREF,
+				HASATTACHYN,
+				APRMEMBERID,
+				APRMEMBERNAME,
+				APRMEMBERNAME2,
+				APRMEMBERDEPTID
+			FROM
+				VAPRDOINGDOCLIST
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #docID#
+			LIMIT
+				1
 		]]>
 	</select>
 	
