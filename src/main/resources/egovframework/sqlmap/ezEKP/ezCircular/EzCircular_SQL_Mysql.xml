@@ -1152,6 +1152,8 @@
 				TBL_CIRCULAR_USER D
 			ON
 				A.circularid = D.circularid
+			AND
+				D.memberid = #memberID#	
 			WHERE
 		]]> 
 		

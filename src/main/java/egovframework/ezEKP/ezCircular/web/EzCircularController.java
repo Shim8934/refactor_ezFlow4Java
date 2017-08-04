@@ -2104,10 +2104,9 @@ public class EzCircularController extends EgovFileMngUtil {
 
         int startRow = 1;
         int endRow = 0;
-        
 
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
-		
+
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
