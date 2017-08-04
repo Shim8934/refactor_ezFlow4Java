@@ -10,6 +10,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -26,8 +27,8 @@ public class MBoardDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MBoardItemVO> getNewItemList(Map<String, Object> map) throws Exception {
-		return (List<MBoardItemVO>) list("MBoardDAO.getNewItemList", map);
+	public List<MBoardNewListVO> getNewItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardNewListVO>) list("MBoardDAO.getNewItemList", map);
 	}
 
 	@SuppressWarnings("unchecked")
