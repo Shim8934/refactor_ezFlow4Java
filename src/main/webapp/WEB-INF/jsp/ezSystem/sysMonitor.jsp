@@ -401,10 +401,11 @@
 	    	}
 	    	
 	    	// 메모리 사용량 계산
-	    	function getUsedMemoryPer(total, free, buffer, cached) {
+	    	function getUsedMemoryPer(total, avail) {
 	    		
-	    		var bufferCache = parseInt(free) + parseInt(buffer) + parseInt(cached);
-	    		var result = (parseInt(total) - bufferCache) / parseInt(total);
+	    		//var bufferCache = parseInt(free) + parseInt(buffer) + parseInt(cached);
+	    		//var result = (parseInt(total) - bufferCache) / parseInt(total);
+	    		var result = ( parseInt(total) - parseInt(avail) ) / parseInt(total);
 	    		
 	    		return result;
 	    	}	    	
@@ -417,7 +418,8 @@
 	    		var cpu = cobj.getCpuInfo;
 	    		var memory = mobj.getMemoryInfo;	 
 	    		
-	    		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memfree, memory[0].buffers, memory[0].cached);
+	    		//var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memfree, memory[0].buffers, memory[0].cached);
+	    		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memavailable);
 	    		
 	    		if (cpuMemoryData.length >= 30) {
 	    			cpuMemoryData.shift();
