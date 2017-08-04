@@ -23,7 +23,7 @@
 					</div>							
 					<div style="margin-left:16px;float:left;padding-top:12px;height:32px">
 						<c:if test="${type != 'mailRead'}">
-							<i class="fa fa-envelope" style="font-size:18px;"></i>&nbsp;<strong style="font-size:18px;">${unReadCount}</strong>
+							<i class="fa fa-envelope" style="font-size:18px;"></i>&nbsp;<strong id="unReadCount" style="font-size:18px;">${unReadCount}</strong>
 						</c:if>
 						<c:if test="${type == 'mailRead'}">
 							<a href="/mobile/sample/sampleList.do?type=mailReceive"><i class="fa fa-step-backward" style="font-size:20px;padding-right:15px"></i></a>
