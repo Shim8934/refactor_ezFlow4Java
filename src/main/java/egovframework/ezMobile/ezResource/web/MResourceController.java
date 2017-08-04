@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
@@ -124,13 +126,9 @@ public class MResourceController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String serverName = request.getServerName();
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String firstWriteDay = searchVO.getFirstWriteDay();
-		String lastWriteDay = searchVO.getLastWriteDay();
 		String userId = "";
 		String companyId = "";
 		
-		LOGGER.debug("firstWriteDay: " + firstWriteDay);
-		LOGGER.debug("lastWriteDay: " + lastWriteDay);
 		
 		
 		if(userInfo != null){
@@ -142,36 +140,34 @@ public class MResourceController extends EgovFileMngUtil {
 		String url = gwServerUrl + "/mobile/ezresource/main-list/users/" + userId;
 				
 		RestTemplate rest = new RestTemplate();	
-		ResponseEntity<JSONObject> result = null;
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);		
 		HttpHeaders headers = new HttpHeaders();
-		HttpEntity<Object> entity = null;		
+		HttpEntity<String> entity = null;		
 			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 			headers.set("x-user-host", serverName);
-	     entity = new HttpEntity<Object>(headers);	
-		builder = builder.queryParam("firstWriteDay", firstWriteDay)
-						 .queryParam("lastWriteDay", lastWriteDay)
-						 .queryParam("companyId", companyId); 
+	     entity = new HttpEntity<String>(headers);	
+		builder = builder.queryParam("companyId", companyId); 
 						
 	     
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
 		LOGGER.debug("result: " + result);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 				
 		String status = resultBody.get("status").toString();
-		JSONArray scheduleList = new JSONArray();
-		
 
-	
-			scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+		if (status.equals("ok")) {
+			JSONObject dataObject = (JSONObject) resultBody.get("data");
 			
-			LOGGER.debug("scheduleList" + scheduleList);
-			
-			model.addAttribute("scheduleListCnt", scheduleList.size());
-			model.addAttribute("scheduleList", scheduleList);
-
+			List<ResGetScheduleVO> getScheduleList = (List<ResGetScheduleVO>) dataObject.get("getScheduleList");
+			String count = dataObject.get("count").toString();
+			model.addAttribute("getScheduleList", getScheduleList);
+			model.addAttribute("count", count);
+		}
 		
 		LOGGER.debug("getResSchList ended.");
 		return "json";

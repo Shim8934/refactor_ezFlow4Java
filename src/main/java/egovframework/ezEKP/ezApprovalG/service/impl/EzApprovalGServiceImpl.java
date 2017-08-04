@@ -18886,16 +18886,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CABINETID", cabinetID.trim());
+		map.put("v_CABINETCLASSNO", cabinetID.substring(0, cabinetID.trim().length()-3));
 		map.put("v_TENANTID", tenantID);
 
-		String userName = null;
+		StringBuilder userName = new StringBuilder() ;
 		List<ApprGRecordVO> userNameList = ezApprovalGDAO.selectUserName(map);
 		if ( userNameList.size() > 0 ) {
 			for(int j=0; j<userNameList.size(); j++ ) {
-				userName += userNameList.get(j).getUserName() + ",";
+				userName.append(userNameList.get(j).getUserName() + ",");
 			}
 		}
-		map.put("v_userName", userName);
+		map.put("v_userName", userName.toString().substring(0, userName.length()-1));
 		int cabID = ezApprovalGDAO.selectCabID(map);
 		int cabID2 = ezApprovalGDAO.selectCabID2(map);
 		map.put("v_cabID", cabID + cabID2);

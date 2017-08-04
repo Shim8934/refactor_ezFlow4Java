@@ -88,7 +88,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			List<MApprovalGDocInfoVO> apprList = mApprovalGService.getDoApproveList(info, "DO", "", listCnt, today);
 		
 			//받은결재함 리스트 카운트
-			int apprListCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
+			int apprCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
 			
 			//오늘의일정 리스트			
 			JSONObject scheduleInfo = mScheduleService.scheduleMainList(info, listCnt);
@@ -114,7 +114,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			
 			
 			dataObject.put("apprList", apprList);
-			dataObject.put("apprListCnt", apprListCnt+"");
+			dataObject.put("apprCnt", apprCnt+"");
 			
 			dataObject.put("scheduleList", scheduleList);
 			dataObject.put("scheduleCnt", scheduleCnt+"");
