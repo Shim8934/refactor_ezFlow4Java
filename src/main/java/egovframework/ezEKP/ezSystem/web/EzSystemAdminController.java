@@ -153,7 +153,7 @@ public class EzSystemAdminController {
 	 * 로그인 로그내역 메인 호출
 	 */
 	@RequestMapping(value="/admin/ezSystem/systemLoginHist.do")
-	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie)throws Exception {
+	public String systemLoginHist(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
 		
 		logger.debug("started systemLoginHistMain controller.");
 		
@@ -162,6 +162,13 @@ public class EzSystemAdminController {
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
+		
+		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", userInfo.getTenantId());
+		
+		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
+		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
+		
+		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
 		
 		logger.debug("ended systemLoginHistMain controller.");
 		

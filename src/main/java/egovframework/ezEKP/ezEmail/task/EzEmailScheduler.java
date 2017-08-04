@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -78,6 +79,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
 	
 	@Resource(name = "jspw")
     private String jspw;
@@ -298,7 +302,25 @@ public class EzEmailScheduler extends EgovFileMngUtil {
         
             String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", tenant.getTenantId());
             
+            int keepLogPeriodNum = 3; // Default 3개월
+            
+            if (!LoginMailLogKeepPeriod.equals("")) {
+	            try {
+	            	keepLogPeriodNum = Integer.parseInt(LoginMailLogKeepPeriod);
+	            } catch (Exception e) {            	
+	            	e.printStackTrace();
+	            }
+            }
+            
+            try {
+	            // 보존 기간이 지난 로그인 히스토리 로그를 삭제한다.
+	            ezSystemAdminService.deleteLoginHist(keepLogPeriodNum, tenant.getTenantId());
+            } catch (Exception e) {           
+            	e.printStackTrace();
+            }
+            
             // 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
+            // 보존 기간이 지난 메일 수발신 로그를 삭제하는 기능도 수행한다.
             String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";
             
             String param1 = "tenantId=" + tenant.getTenantId();        

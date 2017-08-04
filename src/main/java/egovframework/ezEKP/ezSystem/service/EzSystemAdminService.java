@@ -17,4 +17,5 @@ public interface EzSystemAdminService {
 			String keyword, String keycode, String lang, String startDate, String endDate) throws Exception;
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
 			String lang, String startDate, String endDate) throws Exception;
+	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception;
 }
