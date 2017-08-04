@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class MBoardController {
 	 * 모바일 게시판 해당게시판글목록화면
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/boardItemList.do")
-	public String boardItemList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String boardItemList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp,Model model) throws Exception {
 		LOGGER.debug("boardItemList started.");
 		String type = "";
 		String boardID = "";
@@ -107,7 +108,7 @@ public class MBoardController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/mobile/ezboard/"+type+"/boards/"+boardID+"/list";
+		String url = gwServerUrl + "/mobile/ezboard/boards/"+boardID+"/list";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -116,16 +117,15 @@ public class MBoardController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("primary", userInfo.getPrimary())
 				.queryParam("userID", userInfo.getId())
-				.queryParam("rollInfo", userInfo.getRollInfo())
 				.queryParam("deptPathCode", userInfo.getDeptPathCode());
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
 				
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : "+status);
@@ -133,8 +133,7 @@ public class MBoardController {
 		JSONArray list = new JSONArray();
 		Object boardInfo = "";
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			list = (JSONArray)resultBody.get("data");
 			boardInfo = resultBody.get("data2");
 			
 			LOGGER.debug("listSize:"+list.size());
@@ -179,7 +178,6 @@ public class MBoardController {
 		}
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String primary = userInfo.getPrimary();
 		
 		LOGGER.debug("type = " + type + " || boardID = " + boardID + " || userID = " + userInfo.getId());
 		
@@ -219,7 +217,7 @@ public class MBoardController {
 //			}
 //		}
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/mobile/ezboard/"+mBoardInfoVO.getType()+"/boards/"+mBoardInfoVO.getBoardID()+"/list";
+		String url = gwServerUrl + "/mobile/ezboard/boards/"+mBoardInfoVO.getBoardID()+"/list";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -227,24 +225,24 @@ public class MBoardController {
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-		        .queryParam("primary", primary)
 				.queryParam("userID", userInfo.getId())
-				.queryParam("rollInfo", userInfo.getRollInfo())
 				.queryParam("deptPathCode", userInfo.getDeptPathCode());
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
 		
 		String status = resultBody.get("status").toString();
 		
 		JSONArray list = new JSONArray();
 		
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			
+			list = (JSONArray)resultBody.get("data");
 			
 			model.addAttribute("mBoardInfo", mBoardInfoVO);
 			model.addAttribute("mBoardItemList", list);
@@ -283,9 +281,10 @@ public class MBoardController {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject)jp.parse(result.getBody());
 				
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : "+status);
@@ -293,8 +292,7 @@ public class MBoardController {
 		JSONArray list = new JSONArray();
 
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+			list = (JSONArray)resultBody.get("data");
 
 			model.addAttribute("favoriteList", list);
 		}
@@ -343,7 +341,7 @@ public class MBoardController {
 			
 			model.addAttribute("mBoardItem", mBoardItem);
 		}
-		
+System.out.println("mBoardItem:"+mBoardItem);
 		LOGGER.debug("getBoardItem ended.");
 		
 		return "/mobile/ezBoard/mBoardItem";
@@ -472,10 +470,48 @@ public class MBoardController {
 	 * 모바일 게시판 좌측메뉴 리스트
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getLeftMenu.do")
-	public String getLeftMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("getBoardInfo started.");
+	public String getLeftMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp) throws Exception {
+		LOGGER.debug("getLeftMenu started.");
 		
-		LOGGER.debug("getBoardInfo ended.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		String boardID = request.getParameter("rootBoardID");
+		String excludeBoardID = request.getParameter("excludeBoardID");
+		String selectBy = request.getParameter("selectBy");
+		String url = gwServerUrl + "/mobile/ezboard/folder-list";
+		
+		selectBy = "0";
+		boardID = "top";
+		excludeBoardID="";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userInfo.getId());
+				//.queryParam("rootBoardId", boardID)
+				//.queryParam("selectBy", selectBy)
+				//.queryParam("excludeBoardId", excludeBoardID);
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		
+		JSONObject resultBody = result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		
+		Object mBoardItem = "";
+		if (status.equals("ok")) {
+			mBoardItem = resultBody.get("data");
+System.out.println("mBoardItem:"+mBoardItem);
+			//model.addAttribute("mBoardItem", mBoardItem);
+		}
+		
+		LOGGER.debug("getLeftMenu ended.");
 		
 		return "";
 	}
@@ -490,7 +526,7 @@ public class MBoardController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String url = gwServerUrl + "/mobile/ezboard/mainList/"+userInfo.getId();
+		String url = gwServerUrl + "/mobile/ezboard/new-list/"+userInfo.getId();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -512,6 +548,7 @@ public class MBoardController {
 		JSONArray list = new JSONArray();
 		Object boardInfo = "";
 		if (status.equals("ok")) {
+System.out.println("newList:"+resultBody.get("data"));
 			Gson gson = new Gson();
 			list = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
 			

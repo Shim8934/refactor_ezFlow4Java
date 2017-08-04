@@ -125,8 +125,7 @@
 		            usepostDate = false;
 		            $("#Sdatepicker").datepicker('disable');
 		            $("#Edatepicker").datepicker('disable');
-		        }
-		        else {
+		        } else {
 		            usepostDate = true;
 		            $("#Sdatepicker").datepicker('enable');
 		            $("#Edatepicker").datepicker('enable');
@@ -140,14 +139,12 @@
 	                        OrderOption = "DESC";
 	                    else
 	                        OrderOption = "";
-	                }
-	                else {
+	                } else {
 	                    OrderCell = strHeaderName;
 	                    OrderOption = "";
 	                }
-alert("1");	                
-	                search("");
-alert("2");	                
+
+	                search("");        
 	            }
 	        }
 		
@@ -337,6 +334,11 @@ alert("2");
 	                    strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
 	                    PagingHTML += strtext;
 	                }
+	            }
+	            
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {

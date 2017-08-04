@@ -13,6 +13,7 @@
 		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>		
 		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
+		<script type="text/javascript" src="/js/mobile/mResource.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
@@ -27,7 +28,17 @@
      		<!-- body start -->
 			<div class="content" data-role="content">				
 				<ul data-role="listview" data-inset="false" data-theme="a">
-					
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchResSchMainList();">자원예약메인리스트</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchResSchList();">자원예약리스트</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchResFolderList();">자원폴더리스트</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchResFavoriteList();">자원즐겨찾기리스트</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchResSchDetail();">자원예약상세</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:checkResSchRepeat();">자원예약중복체크</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:insertResSchedule();">자원예약등록</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:updateResSchedule();">자원예약수정</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:deleteResSchedule();">자원예약삭제</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:insertResFavorite();">즐겨찾기추가</li>
+					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:deleteResFavorite();">즐겨찾기삭제</li>
 				</ul>
 				<div class="writeButton" onclick="alert('write!')" style="display:none"></div>				
      		</div>     		
@@ -49,5 +60,6 @@
 			</div>			
 		</div>
      	</section>
+
 	</body>	
 </html>

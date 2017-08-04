@@ -9,23 +9,13 @@
     <typeAlias  alias="MBoardFavoriteVO"         type="egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO"/>
 	<typeAlias  alias="MBoardListVO"               type="egovframework.ezMobile.ezBoard.vo.MBoardListVO"/>
     <typeAlias  alias="MBoardTreeVO"              type="egovframework.ezMobile.ezBoard.vo.MBoardTreeVO"/>
-  
-	<!-- <typeAlias  alias="BoardVO" 					type="egovframework.ezEKP.ezBoard.vo.BoardVO"/>
-	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
-	<typeAlias  alias="BoardReadVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardReadVO"/>
-	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
-	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO"/>
-	<typeAlias  alias="BoardAccessVO"	 			type="egovframework.ezEKP.ezBoard.vo.BoardAccessVO"/>
-	<typeAlias  alias="BoardPropertyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
-	<typeAlias  alias="BoardLineReplyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO"/>
-	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
-	<typeAlias  alias="BoardMyFavoriteVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
-	<typeAlias  alias="BoardDeleteItemVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO"/> -->
-	
+    <typeAlias  alias="MBoardAttachVO"           type="egovframework.ezMobile.ezBoard.vo.MBoardAttachVO"/>
+    <typeAlias  alias="MBoardNewListVO"           type="egovframework.ezMobile.ezBoard.vo.MBoardNewListVO"/>
+    
 	<select id="MBoardDAO.getListHeader" parameterClass="Map" resultClass="MBoardListHeaderVO">
-		<![CDATA[
-			SELECT
-				CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END name,
+        <![CDATA[
+            SELECT
+                CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END name,
 				width,
 				colname
 			FROM
@@ -38,15 +28,15 @@
 				VIEW_FG = 'Y'
 			ORDER BY
 				SN
-		]]>
-	</select>
+        ]]>
+    </select>
 	
-	<select id="MBoardDAO.getBoardProperty" parameterClass="Map" resultClass="MBoardInfoVO">
-		<![CDATA[
-			SELECT 
-				boardid,
-				CASE #primary# WHEN '1' THEN boardname ELSE boardname2 END boardname,
-				treevieworder,
+    <select id="MBoardDAO.getBoardProperty" parameterClass="Map" resultClass="MBoardInfoVO">
+	   <![CDATA[
+            SELECT 
+                boardid,
+                CASE #primary# WHEN '1' THEN boardname ELSE boardname2 END boardname,
+                treevieworder,
 				boardlevel,
 				parentboardid,
 				boarddescription,
@@ -68,19 +58,19 @@
 				apprmailflag,
 				attributeyn,
 				tenant_id
-			FROM 
-				TBL_BOARD_BOARDINFO 
+            FROM 
+                TBL_BOARD_BOARDINFO 
 			WHERE  
-				tenant_id = #tenantID#
+                tenant_id = #tenantID#
 			AND
 				boardid = #boardID#
-		]]>
+        ]]>
 	</select>
 	
 	<select id="MBoardDAO.getACL" parameterClass="Map" resultClass="MBoardInfoVO">
-		<![CDATA[
-			SELECT 
-				boardid,
+        <![CDATA[
+            SELECT 
+                boardid,
 				accessid,
 				accesslevel,
 				access_,
@@ -94,10 +84,10 @@
 				inherit_fg,
 				postnotice,
 				boardgroupacl
-			FROM 
-				TBL_BOARD_BOARDMANAGE 
-			WHERE  
-				TENANT_ID = #tenantID#
+            FROM 
+                TBL_BOARD_BOARDMANAGE 
+            WHERE  
+                TENANT_ID = #tenantID#
 			AND
 				boardid = #boardID# 
 			AND 
@@ -452,7 +442,7 @@
         ]]>
 	</select>
   
-    <select id="MBoardDAO.getNewItemList" parameterClass="Map" resultClass="MBoardItemVO">
+    <select id="MBoardDAO.getNewItemList" parameterClass="Map" resultClass="MBoardNewListVO">
       <![CDATA[
           SELECT
               A.BOARDID,
@@ -542,8 +532,8 @@
                      AND 
                       S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
               ORDER BY
-                  A.writedate DESC  
-              LIMIT #limit#, #rowCount#
+                  A.writedate DESC
+              LIMIT #rowCount#
       ]]>
   </select>
   
@@ -785,8 +775,8 @@
               <!--        접근 권한이 있는 게시판만 가져옴(DEFAULT) -->
                   <![CDATA[
                       SELECT 
-                        DISTINCT A.BoardID BoardID  ,
-                                  A.BoardName BoardName  ,
+                        DISTINCT A.BoardID BoardID,
+                                      A.BoardName BoardName,
                                   CASE
                           WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
                           THEN A.boardname
@@ -834,7 +824,7 @@
                       ]]>
                 </isNotEqual>
             </isEqual>
-            <isNotEqual property="v_pMode" compareValue="1">
+            <isNotEqual property="mode" compareValue="1">
             <!--      ADMIN권한 -->
               <![CDATA[
                   SELECT 
@@ -889,5 +879,141 @@
                                       BoardID = #boardID# )
           ]]>
       </select>
+      
+      <select id="MBoardDAO.getBoardTreeGet2" parameterClass="Map" resultClass="MBoardInfoVO" remapResults="true">
+          <![CDATA[
+                SELECT 
+                     CONCAT(BOARDID, ';') BOARDID  
+                FROM 
+                     TBL_Board_BoardManage 
+                WHERE
+                     TENANT_ID = #tenantID#
+                AND  
+                     ACCESS_ = 0
+                AND 
+                     ACCESSID = #accessID#
+                AND 
+                     PARENTBOARDID = #rootBoardID#
+          ]]>
+  </select>
+  
+    <select id="MBoardDAO.getNewBoardListCount" parameterClass="Map" resultClass="Integer">
+    <![CDATA[
+      SELECT 
+        COUNT(A.ITEMID) CNT
+          FROM 
+            TBL_Board_Item A
+            JOIN 
+              ( SELECT 
+                BOARDID,
+                TENANT_ID
+                  FROM 
+                    TBL_Board_MyBoards 
+                  WHERE  
+                    TENANT_ID = #tenantID#
+                  AND
+                    UserID = #userID# ) B   
+            ON 
+              A.TENANT_ID = B.TENANT_ID
+            AND
+              A.BoardID = B.boardid
+            JOIN 
+              TBL_Board_BoardInfo P   
+            ON 
+              P.TENANT_ID = B.TENANT_ID
+            AND
+              P.BoardID = B.boardid
+          WHERE  
+            ( NOT EXISTS ( SELECT 
+                      USERID
+                               FROM 
+                                  TBL_Board_Item_Read 
+                               WHERE
+                                  tenant_id = #tenantID#
+                               AND  
+                                  userid = #userID#
+                               AND 
+                                  itemid = A.itemid
+                               AND 
+                                  ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY) ) )
+            AND 
+              A.StartDate < #nowDate#
+            AND 
+              A.StartDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+            AND 
+              A.EndDate > #nowDate#
+            AND 
+              ( A.APPRFLAG = 'Y'
+                  OR A.APPRFLAG IS NULL )
+    ]]>
+  </select>
+  
+    <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
+        <![CDATA[
+          INSERT INTO TBL_Board_MyBoards ( 
+            USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
+          )
+              ( SELECT 
+                #userID# USERID ,
+                    BOARDID ,
+                    BOARDNAME ,
+                    BOARDNAME2 ,
+                    ( SELECT 
+                      COUNT(BOARDID) + 1
+                FROM 
+                  TBL_Board_MyBoards 
+                WHERE
+                  TENANT_ID = #tenantID#
+                AND  
+                  USERID = #userID# ),
+                    ( SELECT
+                      CASE 
+                        WHEN MAX(VIEWORDER) IS NULL 
+                        THEN 2 
+                        ELSE MAX(VIEWORDER) + 1 
+                      END 
+                      FROM 
+                        TBL_Board_MyBoards 
+                      WHERE  
+                        TENANT_ID = #tenantID#
+                      AND
+                        USERID = #userID# ),
+                    TENANT_ID
+                  FROM 
+                    TBL_Board_BoardInfo 
+                  WHERE
+                    TENANT_ID = #tenantID#
+                  AND
+                    BOARDID = #boardID# )
+        ]]>
+      </insert>
+      
+      <delete id="MBoardDAO.deleteFavorite" parameterClass="Map">
+           <![CDATA[
+              DELETE FROM
+                  TBL_Board_MyBoards
+              WHERE
+                  USERID = #userID#
+              AND
+                  BOARDID = #boardID#
+              AND    
+                  TENANT_ID = #tenantID#    
+           ]]>
+      </delete>
+      
+      <select id="MBoardDAO.getAttachList" parameterClass="Map" resultClass="MBoardAttachVO">
+          <![CDATA[
+              SELECT 
+                  * 
+              FROM 
+                  TBL_BOARD_ITEM_ATTACHMENTS 
+              WHERE  
+                  tenant_id = #tenantID#
+              AND
+                  itemid = #itemID#
+              ORDER BY
+                  GUID
+              ]]>
+  </select>
 </sqlMap>
 

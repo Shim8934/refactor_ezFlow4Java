@@ -107,11 +107,11 @@
             	}
             	
             	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(3).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(4).style.backgroundColor = "#EDEDED";
+            	obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 244)";
         	}
 
 		    function memberList() {

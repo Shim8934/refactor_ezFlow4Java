@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,17 +95,16 @@ public class MScheduleController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 				
 		String status = resultBody.get("status").toString();
 				
-		if (status.equals("ok")) {
-			JSONArray scheduleList = new JSONArray();
-			
-			Gson gson = new Gson();
-			scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+		if (status.equals("ok")) {			
+			JSONArray scheduleList = (JSONArray) resultBody.get("data");
 			
 			modelMap.addAttribute("scheduleListCnt", scheduleList.size());
 			modelMap.addAttribute("scheduleList", scheduleList);
@@ -141,19 +141,20 @@ System.out.println("status :" + status);
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 				
 		String status = resultBody.get("status").toString();
 		
 System.out.println("status :" + status);
 		
 		if (status.equals("ok")) {
-			Gson gson = new Gson();
-			JSONObject dataObject = gson.fromJson(gson.toJson(resultBody.get("data")),JSONObject.class);
+			JSONObject dataObject = (JSONObject) resultBody.get("data");
 			
-			String scheduleInfo = gson.toJson(dataObject.get("scheduleInfo"));
+			String scheduleInfo = dataObject.get("scheduleInfo").toString();
 			String resourceCnt = "";
 			String attendantList = "";
 			String attachList = "";
@@ -163,11 +164,11 @@ System.out.println("status :" + status);
 			}
 			
 			if(dataObject.get("attendantList") != null) {
-				attendantList = gson.toJson(dataObject.get("attendantList"));
+				attendantList = dataObject.get("attendantList").toString();
 			}		
 			
 			if(dataObject.get("attachList") != null) {
-				attachList = gson.toJson(dataObject.get("attachList"));
+				attachList = dataObject.get("attachList").toString();
 			}
 						
 System.out.println(scheduleInfo);			

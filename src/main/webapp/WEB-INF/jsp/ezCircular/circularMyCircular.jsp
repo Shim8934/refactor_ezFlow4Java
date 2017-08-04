@@ -81,6 +81,8 @@
 	        var strMemberListInfo = "";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
+	        var pageCnt = "";
+            var perCnt = "";
 	
 	        window.onresize = function () {
 	            var height = parseInt(document.documentElement.clientHeight - 320);
@@ -218,14 +220,14 @@
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
-	                var pageCnt = getNodeText(pageNode);
-	                var perCnt = getNodeText(perNode);
+	                pageCnt = getNodeText(pageNode);
+	                perCnt = getNodeText(perNode);
 	
 	                listcount.value = perCnt;
 	                totalPage = Math.ceil(new Number(pageCnt / perCnt));
 	                pTotalCnt = lstCnt;
 	                makePageSelPage();
-	
+
 	                var xmlDoc;
 	                if (CrossYN()) {
 	                    var xmlLIST = createXmlDom();
@@ -548,11 +550,14 @@
 	        }
 	        
 	        function CircularDelete_onclick() {
+	        	var strListArr = new Array();
+	        	strListArr = strListInfo.split(";");
+	        	
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
 	        	}
-	        	
+
 	        	if (confirm("<spring:message code='ezCircular.t46'/>")) {
 					$.ajax({
 						type : "POST",
@@ -562,6 +567,10 @@
 						data : { circularIDList : strListInfo
 								},
 						success: function() {
+							if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+								CurPage = CurPage - 1;
+							}
+
 							refresh_onclick();
 						},
 						error: function() {
