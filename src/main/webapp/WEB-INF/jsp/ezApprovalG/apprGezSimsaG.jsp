@@ -343,7 +343,17 @@
 		    function OpenCheckUI_Complete(returnvalue) {
 		        DivPopUpHidden();
 		        is_Enc = returnvalue;
-		        sendExt();
+		        rtnVal = sendExt();
+
+	            if (rtnVal) {
+	                var pAlertContent = "<spring:message code='ezApprovalG.t206'/>";
+	                 OpenAlertUI(pAlertContent);
+	                 setBtnDisable();
+	             }
+	             else {
+	                 var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
+	                 OpenAlertUI(pAlertContent);
+	             }
 		    }
 		
 		    function DeleteLocalFiles() {

@@ -1,17 +1,14 @@
 ﻿var selectenc_dialogArguments = new Array();
-function OpenCheckUI()
-{
+function OpenCheckUI() {
 	var parameter = "";
-	var url = "selectEnc.aspx";
 
 	selectenc_dialogArguments[0] = parameter;
 	selectenc_dialogArguments[1] = OpenCheckUI_Complete;
 
-	DivPopUpShow(330, 205, "/myoffice/ezApprovalG/enforce/selectEnc.aspx");
+	DivPopUpShow(330, 205, "/ezApprovalG/selectEnc.do");
 }
 
-function GetAprDeptXML()
-{
+function GetAprDeptXML() {
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -27,24 +24,20 @@ function GetAprDeptXML()
     
   	APRDEPTXML = loadXMLString(result);
 	
-	for (i=0; i<APRDEPTXML.getElementsByTagName("DATA3").length; i++)
-	{
+	for (i=0; i<APRDEPTXML.getElementsByTagName("DATA3").length; i++) {
 	    if (getNodeText(APRDEPTXML.getElementsByTagName("DATA3").item(i)) == "Y")
 			isExternal = true;
 	}
 	
-	if (isExternal)
-	{
-		for (i=0; i<APRDEPTXML.getElementsByTagName("DATA1").length; i++)
-		{
+	if (isExternal) {
+		for (i=0; i<APRDEPTXML.getElementsByTagName("DATA1").length; i++) {
 		    if (getNodeText(APRDEPTXML.getElementsByTagName("DATA1").item(i)).indexOf("Address") > -1)
 				isAddress = true;
 		}
 	}
 }
 
-function GetEndDocInfo()
-{
+function GetEndDocInfo() {
     var xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
 
@@ -73,8 +66,7 @@ function getLineInfo()
 	return xmlhttp.responseXML;
 }
 
-function chkToInfo()
-{
+function chkToInfo() {
 	var i;
 	var isFrom_Cert = true;	
 	sendCNT[0] = 0;
@@ -82,17 +74,13 @@ function chkToInfo()
 	
 	if(is_Enc == "NONE") isFrom_Cert = false;
 	
-	for (i=0; i<APRDEPTXML.getElementsByTagName("DATA1").length; i++)
-	{
+	for (i=0; i<APRDEPTXML.getElementsByTagName("DATA1").length; i++) {
 	    BaseURL[i] = getNodeText(APRDEPTXML.getElementsByTagName("DATA1").item(i));
 	    AddInfo[i] = getNodeText(APRDEPTXML.getElementsByTagName("DATA9").item(i));
-		if(isFrom_Cert)
-		{
+		if(isFrom_Cert) {
 			isGPKI[i] = "Y";
 			sendCNT[0] = sendCNT[0] + 1;
-		}
-		else
-		{
+		} else {
 			isGPKI[i] = "N"
 			sendCNT[1] = sendCNT[1] + 1;		
 		}	
@@ -101,8 +89,7 @@ function chkToInfo()
 }
 
 var cert_dialogArguments = new Array();
-function getPasswdEnd()
-{
+function getPasswdEnd() { 
     cert_dialogArguments[0] = true;
     cert_dialogArguments[1] = getPasswdEnd_Complete;
 
@@ -121,8 +108,7 @@ function getPasswdEnd_Complete(ret) {
         return false;
 }
 
-function sendExt()
-{
+function sendExt() {
 	var orgHTML;
 	var sihangDate = "";
 	var field;
@@ -131,20 +117,19 @@ function sendExt()
     var xmlRtn;	
 		
 	var chkFlag = chkToInfo();
-	if (!chkFlag)
-	{
+	if (!chkFlag) {
 		return;
 	}
 	if (sendCNT[0] > 0) {
 	    if (!getPasswdEnd()) {
 	        return;
 	    }
-	}
-	else {
-	    if (makeXML(pDocID))
-	        Check_Container();
-	    else
-	        return false;
+	} else {
+	    if (makeXML(pDocID)) {
+	    	Check_Container();
+	    } else {
+	    	return false;
+	    }
 	}
 }
 

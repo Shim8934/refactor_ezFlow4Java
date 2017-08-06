@@ -1,12 +1,22 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1214,8 +1224,145 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception {
-		//TODO LDAP 으로 되어있어서 보류 외부수신처
-		return null;
+		//ldap
+		String searchScope = "";
+		
+		if(intScope == 0) {
+			searchScope = "0";
+		} else {
+			if (intScope == 1) {
+				searchScope = "1";
+			} else {
+				searchScope = "2";
+			}
+		}
+		
+		String ldapPath = "ldap://" + config.getProperty("R_LServer") + commonUtil.separator + config.getProperty("R_LBaseDN");
+		Hashtable<String, String> env           = new Hashtable<String, String>(5, 0.75f); 
+        NamingEnumeration<?> m_ne = null;
+        // 검색된 결과 entry중 아래의 attribute들을 출력할 것임 
+        String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode"}; 
+        List<String[]> ou = new ArrayList<String[]>();
+        try {   
+            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); 
+           //LDAP 서버의 "프로토콜://IP:포트"를 설정 
+            // 아래는 ldap 프로토콜을 사용하는 127.0.0.1 서버의 389포트로 접속하는 경우 
+            env.put(Context.PROVIDER_URL, "ldap://doc.dir.go.kr:389"); 
+            DirContext dirCtx = new InitialDirContext(env); 
+            SearchControls constraints = new SearchControls();
+            
+            //검색 제약 조건
+            // SUBTREE_SCOPE : 기본 엔트리에서 시작하여 기본 엔트리 및 하위 모두 검색
+            // ONELEVEL_SCOPE : 기본 엔트리 밑에 있는 엔트리들을 검색
+            // OBJECT_SCOPE : 기본 엔트리만 검색
+            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE); 
+            if (attrIDs != null) {
+                constraints.setReturningAttributes(attrIDs); 
+            }
+            //검색을 시작할 BASE DN을 설정하고, 검색 
+            m_ne = dirCtx.search(config.getProperty("R_LBaseDN"), strFilter, constraints); 
+            dirCtx.close(); 
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+            SearchResult sr = null; 
+            while(m_ne.hasMoreElements()){ 
+                sr = (SearchResult)m_ne.next(); 
+                //dn출력시 BASE DN은 제외하고 출력된다. 
+                String str[] = new String[12];
+                for (int i=0; i< attrIDs.length; i++) { 
+                	if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
+                		str[i] = " ";
+                	} else {
+                		str[i] = (String)sr.getAttributes().get(attrIDs[i]).get();
+                		
+                	}
+                } 
+                ou.add(str); 
+            }
+      
+            Collections.sort(ou, new Comparator<String[]>(){
+            	@Override
+                public int compare(String[] o1, String[] o2) {
+                    return  o1[2].compareTo(o2[2]);
+                }
+            });
+            
+            
+            StringBuilder nodeInfo = new StringBuilder("");
+
+            nodeInfo.append("<TREEVIEWDATA>");
+
+            nodeInfo.append("<TEXTCOLOR>");
+            nodeInfo.append("<NAME>GRAY</NAME>");
+
+            nodeInfo.append("<DEFAULTTEXTCOLOR>gray</DEFAULTTEXTCOLOR>");
+            nodeInfo.append("<SELECTEDTEXTCOLOR>gray</SELECTEDTEXTCOLOR>");
+            nodeInfo.append("</TEXTCOLOR>");
+
+            nodeInfo.append("<NODEICONIMAGE>");
+            nodeInfo.append("<NAME>ICONGROUP</NAME>");
+            nodeInfo.append("<DEFAULT></DEFAULT>");
+
+            nodeInfo.append("<LEAFDEFAULTICON>images/ic-close.gif</LEAFDEFAULTICON>");
+            nodeInfo.append("<LEAFSELECTEDICON>images/ic-open.gif</LEAFSELECTEDICON>");
+            nodeInfo.append("<BRANCHDEFAULTICON>images/ic-close.gif</BRANCHDEFAULTICON>");
+            nodeInfo.append("<BRANCHSELECTEDICON>images/ic-close.gif</BRANCHSELECTEDICON>");
+            nodeInfo.append("</NODEICONIMAGE>");
+
+            nodeInfo.append("<NODEICONIMAGE>");
+            nodeInfo.append("<NAME>ICONGROUP</NAME>");
+
+            nodeInfo.append("<BRANCHDEFAULTICON>images/ic-company.gif</BRANCHDEFAULTICON>");
+            nodeInfo.append("<BRANCHSELECTEDICON>images/ic-company.gif</BRANCHSELECTEDICON>");
+            nodeInfo.append("</NODEICONIMAGE>");
+
+            nodeInfo.append("<NODE>");
+            nodeInfo.append("<VALUE>조직도</VALUE>");
+            nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
+            nodeInfo.append("<SETNODEICONBYNAME>ICONCOMP</SETNODEICONBYNAME>");
+            nodeInfo.append("<EXPANDED>TRUE</EXPANDED>");
+            nodeInfo.append("<NODES>");
+            
+        for (int i = 0; i < ou.size(); i++) {
+            String pORGANIZATIONUNITNAME = ou.get(i)[0];
+            String pOUCODE =  ou.get(i)[1];
+            String pTOPOUCODE =  ou.get(i)[2];
+            String pOURECEIVEDOCUMENTYN = ou.get(i)[3];
+            String pOUSMTPADDRESS =  ou.get(i)[4];
+
+
+            nodeInfo.append("<NODE>");
+            nodeInfo.append("<VALUE>" + pORGANIZATIONUNITNAME + "</VALUE>");
+            
+            nodeInfo.append("<DATA1>" + pOUCODE + "</DATA1>");
+            nodeInfo.append("<DATA2>" + "ou=" + pORGANIZATIONUNITNAME + "," + "</DATA2>");
+            nodeInfo.append("<DATA3>");
+            
+            if (pOUSMTPADDRESS.equals("") || pOURECEIVEDOCUMENTYN.equals("") || pOURECEIVEDOCUMENTYN.equals("N")) {
+            	nodeInfo.append("N");
+            } else {
+            	nodeInfo.append("Y");
+            }
+            
+            nodeInfo.append("</DATA3>");
+            nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
+            
+            if (pOUCODE.toUpperCase().equals(pTOPOUCODE.toUpperCase())) {
+            	 nodeInfo.append("<SETNODEICONBYNAME>ICONCOMP</SETNODEICONBYNAME>");
+            }
+            
+            if (pOUSMTPADDRESS.equals("") || pOURECEIVEDOCUMENTYN.equals("")|| pOURECEIVEDOCUMENTYN.equals("N"))
+            {
+            	nodeInfo.append("<SETTEXTCOLORBYNAME>GRAY</SETTEXTCOLORBYNAME>");
+            }
+            nodeInfo.append("</NODE>");
+        }
+       
+        nodeInfo.append("</NODES>");
+        nodeInfo.append("</NODE>");
+        nodeInfo.append("</TREEVIEWDATA>");
+        return nodeInfo.toString();
 	}
 
 	@Override

@@ -2101,4 +2101,17 @@ public class EzApprovalGarchiveController {
 	return result;
 	}
 	
+	/** 문서유통 암호화여부 팝업*/
+	@RequestMapping(value = "/ezApprovalG/selectEnc.do", produces = "text/xml;charset=utf-8")
+	public String selectEnc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("selectEnc started");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("selectEnc started");
+
+		return "ezApprovalG/apprGselectEnc";
+	}
+		
+	
 }

@@ -260,7 +260,6 @@ public class EzOrganController {
 		result = result.replaceAll("null", "");
 		
 		logger.debug("getSearchList ended.");
-System.out.println("result : " + result);		
 		return result;
 	}
 	
@@ -270,11 +269,12 @@ System.out.println("result : " + result);
 	@RequestMapping(value = "/ezOrgan/getOrganTreeInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrganTreeInfo() throws Exception{
+		logger.debug("getOrganTreeInfo Started.(Outer Rec.)");
 		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
 		int intScope = 1;
 		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope);
-		//TODO LDAP 이라 보류중
-		return "";
+		logger.debug("getOrganTreeInfo Ended.(Outer Rec.)");
+		return strXML;
 	}
 	
 	/**
