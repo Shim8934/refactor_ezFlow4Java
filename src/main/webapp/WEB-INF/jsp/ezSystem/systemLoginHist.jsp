@@ -411,6 +411,11 @@
 			</td>
 		</tr>
 	</table>
+	<table style="margin: 10px 0px;">
+		<tr>
+			<td width="98%" style="font-weight: bold; color: gray;"> ※ ${mailLogKeepPeriodMessage} ※	</td>
+		</tr>
+	</table>	
 	<table class="mainlist" style="width:100%;">
 		<thead>
 			<tr>

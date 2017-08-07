@@ -2776,7 +2776,6 @@ function setMenuDisable(id, flag) {
 var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
-    	alert(1);
         var parameter = pDocID;
 
         aprcabinetattach_cross_dialogArguments[0] = parameter;
