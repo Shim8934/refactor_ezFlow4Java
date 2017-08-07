@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
-		<script type="text/javascript" src="/js/mobile/mBoard.js"></script>
+		<script type="text/javascript" src="/js/mobile/mBoard.js?ver=7"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
@@ -33,6 +33,7 @@
 					$('.writeButton').css('left', $(window).width() - 60 );
 				});
 				
+				getLeftMenu();
 				getBoardItemList();
 			})
 		</script>			

@@ -101,6 +101,58 @@ function getBoardItemList() {
 	});
 }
 
+//좌측메뉴 조회
+function getLeftMenu() {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezBoard/getLeftMenu.do",
+		dataType : "json",
+		data : {
+			rootBoardID : "top",
+			excludeBoardID : "", 
+			selectBy : "0",
+			subFlag : "0"
+		},
+		success : function(result) {
+			var contentList = "";
+			contentList += "<li>";
+			contentList += "<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='javascript:goHome();'>";
+			contentList += "<i class='fa fa-home' style='font-size:18px;'></i>";
+			contentList += "&nbsp;&nbsp;홈";
+			contentList += "</a>";
+			contentList += "</li>";
+			
+			contentList += "<li>";
+			contentList += "<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezBoard/getBoardItem.do?'>";
+			contentList += "<i class='fa fa-envelope-o' style='font-size:15px;'></i>";
+			contentList += "&nbsp;&nbsp;즐겨찾기";
+			contentList += "</a>";
+			contentList += "</li>";
+			
+			list = result.mBoardItem;
+
+			list.forEach(function(vo, index) {
+				contentList += "<li>";
+				contentList += "<a class='ui-btn ui-btn-icon-right ui-icon-carat-r' href='/mobile/ezBoard/getBoardItem.do?'>";
+				contentList += "<i class='fa fa-envelope-o' style='font-size:15px;'></i>";
+				contentList += "&nbsp;&nbsp;"+vo.boardName;
+				contentList += "</a>";
+				contentList += "</li>";
+			});
+			
+			contentList += "<li style='background-color: transparent;text-align:center'>";
+			contentList += "</li>";
+
+			$("#menu-panel > div[class='ui-panel-inner'] > div >ul[data-role='listview']").html("");
+			$("#menu-panel > div[class='ui-panel-inner'] > div >ul[data-role='listview']").append(contentList);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert("에러");
+			console.log(jqXHR);
+		}
+	});
+}
+
 //글읽기 화면
 function boardItem() {
 	
