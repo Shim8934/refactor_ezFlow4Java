@@ -137,7 +137,7 @@ function getApproveListCount(type) {
 }
 
 function backApproveList() {
-	window.location.href = "/mobile/ezApprovalG/doApproveList.do";
+	window.location.href = "/mobile/ezApprovalG/mApproveList.do";
 }
 
 function showOriginal() {
@@ -227,4 +227,22 @@ function commentSave(docID) {
 	
 	//닫는게 아니라 새로고침을 한번 해주든가 카운트만 새로고침해야할듯
 	$("#popupWriteComment").popup("close");
+}
+
+function doApprove(docID, type) {
+	$.ajax({
+		type : "POST",
+		url : "/mobile/ezApprovalG/mDoApprove.do",
+		dataType : "json",
+		data : {
+			docId    : docID,
+			type     : type
+		},
+		success : function() {
+			backApproveList();
+		},
+		error : function(xhr, status, error) {
+			
+		}
+	});
 }

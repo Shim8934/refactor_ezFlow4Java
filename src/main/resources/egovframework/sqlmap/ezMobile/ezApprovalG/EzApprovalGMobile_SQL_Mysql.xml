@@ -18,7 +18,8 @@
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 					WRITERNAME$lang$,
-					WRITERDEPTNAME$lang$
+					WRITERDEPTNAME$lang$,
+					HASATTACHYN
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -31,6 +32,8 @@
 	   				APRMEMBERID IN ($id$) 
 	   			AND 
 	   				APRTYPE <> '015' 
+	   			AND
+	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
@@ -49,7 +52,8 @@
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 					WRITERNAME$lang$,
-					WRITERDEPTNAME$lang$
+					WRITERDEPTNAME$lang$,
+					HASATTACHYN
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -84,7 +88,8 @@
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 					WRITERNAME$lang$,
-					WRITERDEPTNAME$lang$
+					WRITERDEPTNAME$lang$,
+					HASATTACHYN
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -120,7 +125,8 @@
 				A.DOCTITLE,
 				DATE_ADD(DATE_FORMAT(A.ENDDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
 				A.WRITERNAME$lang$,
-				A.WRITERDEPTNAME$lang$
+				A.WRITERDEPTNAME$lang$,
+				A.HASATTACHYN
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -586,6 +592,21 @@
 			LIMIT
 				1
 		]]>
+	</select>
+	
+	<select id="MApprovalG.getDocState" parameterClass="Map" resultClass="String">
+		SELECT
+			DOCSTATE
+		FROM
+			VAPRDOINGDOCLIST
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			DOCID = #docID#
+		LIMIT
+			1
 	</select>
 	
 	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">

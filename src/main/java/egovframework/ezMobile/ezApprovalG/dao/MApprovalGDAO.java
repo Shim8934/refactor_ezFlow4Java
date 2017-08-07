@@ -82,4 +82,8 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 		return (MApprovalGDocInfoVO) select("MApprovalG.getAprDocInfo", map);
 	}
 
+	public String getDocState(Map<String, Object> map) throws Exception {
+		return (String) select("MApprovalG.getDocState", map);
+	}
+
 }

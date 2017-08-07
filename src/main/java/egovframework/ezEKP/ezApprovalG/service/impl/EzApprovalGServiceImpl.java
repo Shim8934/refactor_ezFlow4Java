@@ -8941,9 +8941,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnVal = false;
 			}
 			
-			aprType = makeListField(docXML.getElementsByTagName("APRSTATE").item(1).getTextContent());
+			String aprState = makeListField(docXML.getElementsByTagName("APRSTATE").item(1).getTextContent());
 			
-			if (!aprType.equals(staASJinHang)) {
+			if (!aprState.equals(staASJinHang)) {
 				rtnVal = false;
 			}
 			

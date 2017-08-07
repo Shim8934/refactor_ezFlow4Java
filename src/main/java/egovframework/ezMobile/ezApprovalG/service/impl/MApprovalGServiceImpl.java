@@ -354,13 +354,29 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		
 		MApprovalGDocInfoVO approvalGDocInfoVO = new MApprovalGDocInfoVO();
 		
-		if (type.equals("DO")) {
+		if (type.equals("APR") || type.equals("BAN") || type.equals("CHECK")) {
 			approvalGDocInfoVO = mApprovalGDAO.getAprDocInfo(map);
 		}
 
 		LOGGER.debug("getAprDocInfo ended");
 		
 		return approvalGDocInfoVO;
+	}
+
+	@Override
+	public String getDocState(String docId, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getDocState started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docId);
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		
+		String docState = mApprovalGDAO.getDocState(map);
+
+		LOGGER.debug("getDocState ended");
+		
+		return docState;
 	}
 	
 }

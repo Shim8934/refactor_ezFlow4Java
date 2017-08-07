@@ -28,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.gson.Gson;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -240,6 +238,8 @@ public class MApprovalGController {
 		
 		if (status1.equals("ok") && status2.equals("ok") && status3.equals("ok") && status4.equals("ok")) {
 			String bodyHTML = result1.getBody().get("data").toString();
+			String docState = result1.getBody().get("docState").toString();
+			String callBackYN = result1.getBody().get("callBackYN").toString();
 			String photoPath = jsonResult2.get("photoPath").toString();
 			String opinionCount = result4.getBody().get("data").toString();
 			
@@ -249,6 +249,13 @@ public class MApprovalGController {
 			JSONArray approveAttachList = new JSONArray();
 			approveAttachList = (JSONArray) jsonResult3.get("data");
 				
+			if (callBackYN.equals("<RESULT>CALLBACK</RESULT>") || callBackYN.equals("<RESULT>CANCEL</RESULT>")) {
+				model.addAttribute("callBackYN", "Y");
+			} else {
+				model.addAttribute("callBackYN", "N");
+			}
+			
+			model.addAttribute("docState", docState);
 			model.addAttribute("aprAttachList", approveAttachList);
 			model.addAttribute("aprLineList", approveLineList);
 			model.addAttribute("photoPath", photoPath);

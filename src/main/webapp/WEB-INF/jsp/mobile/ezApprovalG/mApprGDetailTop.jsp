@@ -31,9 +31,14 @@
 				</li>
 				<li style="height:40px;border-bottom:1px solid #f2f2f2;display:none" id="approveList">
 					<div style="padding-left:20px">
-						<i class="fa fa-thumbs-o-up" style="font-size:24px; cursor: pointer; padding-top: 5px"></i>&nbsp;&nbsp;
-						<i class="fa fa-thumbs-o-down" style="font-size:24px; cursor: pointer;"></i>&nbsp;&nbsp;
-						<i class="fa fa-hand-rock-o" style="font-size:24px; cursor: pointer;"></i>&nbsp;&nbsp;
+						<c:if test="${docState == '001' || docState == '012'}">
+							<i class="fa fa-thumbs-o-up" style="font-size:24px; cursor: pointer; padding-top: 5px" onclick="doApprove('${docID}', 'APR')"></i>&nbsp;&nbsp;
+							<i class="fa fa-thumbs-o-down" style="font-size:24px; cursor: pointer;" onclick="doApprove('${docID}', 'BAN')"></i>&nbsp;&nbsp;
+							<i class="fa fa-hand-rock-o" style="font-size:24px; cursor: pointer;" onclick="doApprove('${docID}', 'BO')"></i>&nbsp;&nbsp;
+						</c:if>
+						<c:if test="${docState == '017'}">
+							<i class="fa fa-check-square-o" style="font-size:24px; cursor: pointer;" onclick="doApprove('${docID}', 'CHECK')"></i>&nbsp;&nbsp;
+						</c:if>
 					</div>
 				</li>
 			</ul>
