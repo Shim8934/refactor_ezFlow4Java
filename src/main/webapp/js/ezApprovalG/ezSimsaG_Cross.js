@@ -38,17 +38,20 @@ function GetAprDeptXML() {
 }
 
 function GetEndDocInfo() {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getEndDocInfo.do",
+		data : {
+			docID : pOrgDocID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETERS"); 
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pOrgDocID);
-
-	xmlhttp.open("POST","../aspx/getEndDocInfo.aspx",false);
-	xmlhttp.send(xmlpara);
-
-	pDocInfoXML = xmlhttp.responseXML;
+	pDocInfoXML = loadXMLString(result);
 }
 
 function getLineInfo()
@@ -150,7 +153,7 @@ function makeXML(newDocID) {
         }
     }
 
-    sihangXML = loadXMLFile("pubdocsample.xml");
+    sihangXML = loadXMLFile("/xml/ezApprovalG/pubdocsample.xml");
     var eNodes = sihangXML.documentElement;
 
     var Nodes = eNodes.getElementsByTagName("organ");

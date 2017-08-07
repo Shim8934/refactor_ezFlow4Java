@@ -31,7 +31,7 @@
                   window.close();
         }
     }
-        
+    }  
     function btn_CancelAprDeptTempletName_onclick() {
         if (ReturnFunction != null) {
             ReturnFunction("cancel");

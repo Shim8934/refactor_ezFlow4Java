@@ -80,7 +80,7 @@
 
     function GetencodeinfoxXML() {
         var xhttp = createXMLHttpRequest();
-        xhttp.open("GET", "aspx/GetencodeinfoxXML.aspx", false);
+        xhttp.open("GET", "/ezApprovalG/getencodeinfoxXML.do", false);
         xhttp.send();
         return xhttp.responseText;
     }

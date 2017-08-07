@@ -1241,18 +1241,20 @@ function SendMailOpiniontoReceptionistAll(pGubn) {
 }
 
 function GetEndOrgDocinfoXml(pOrgDocID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getEndDocInfo.do",
+		data : {
+			docID : pOrgDocID
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
 
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "DocID", pOrgDocID);
-
-    xmlhttp.open("Post", "../aspx/getEndDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-    xmldoc = xmlhttp.responseXML;
-
-    return xmldoc;
+    return loadXMLString(result);
 }
 
 function GetAprOrgDocinfoXml(pOrgDocID) {

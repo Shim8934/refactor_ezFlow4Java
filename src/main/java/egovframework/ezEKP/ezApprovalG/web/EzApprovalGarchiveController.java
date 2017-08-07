@@ -1,5 +1,8 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.net.URLDecoder;
 import java.util.Locale;
 import java.util.Properties;
@@ -2161,6 +2164,50 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("userInfo", userInfo);
 		logger.debug("aprDeptName ended");
 		return "/ezApprovalG/apprGaprDeptName";
+	}
+	
+	/**
+	 * 외부 수신처 발송 시 코드 xml 화
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/ezApprovalG/getencodeinfoxXML.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getencodeinfoxXML(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("getencodeinfoxXML started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+        String realPath = commonUtil.getRealPath(request);
+		String filePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml";
+		
+		File file = new File (filePath);
+		String FileText = "";
+		StringBuilder result = new StringBuilder();
+
+		BufferedReader br = new BufferedReader(new FileReader(file));
+
+		while ((FileText = br.readLine()) != null) {
+			result.append(FileText);
+		}
+
+		logger.debug("getencodeinfoxXML ended");
+		return result.toString();
+	}
+	
+	/**
+	 * 외부 수신처 발송 시 문서 정보
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/ezApprovalG/getEndDocInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getEndDocInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("getencodeinfoxXML started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+        String docID = request.getParameter("docID");
+		String result = ezApprovalGService.getDocInfo(docID, "END", "ALL", userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		logger.debug("getencodeinfoxXML ended");
+		return result;
 	}
 	
 }
