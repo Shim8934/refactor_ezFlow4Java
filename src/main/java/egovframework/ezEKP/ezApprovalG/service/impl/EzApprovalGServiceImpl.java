@@ -20726,6 +20726,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1)));
 		map.put("v_PQUERYSIZESUB", Integer.parseInt(pPageSize)*Integer.parseInt(pPageNum));
 		map.put("v_ORDEROPTION", OrderOption1);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offSet));
 		
 		List <ApprGDocListVO> userContList = ezApprovalGDAO.getUserContList(map);
 		
