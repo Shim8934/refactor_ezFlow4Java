@@ -41,7 +41,7 @@
 					success : function(result) {
 						var list = result.circularDeptList;
 						
-						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='18%' /><col width='10%' /></colgroup>";
+						circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
 						
 						list.forEach(function(vo, index) {
 							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
