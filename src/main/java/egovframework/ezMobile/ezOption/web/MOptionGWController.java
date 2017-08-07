@@ -61,7 +61,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			LOGGER.debug("tenantId: " + tenantId);
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 			
-			LOGGER.debug("opt: " + opt);
+			LOGGER.debug("opt: " + opt.toString());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
