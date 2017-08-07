@@ -205,5 +205,20 @@ function searchResSchMainList(){
         });
  	}
 	
+	function updateOption(){
+ 		console.log("in updateOption");
+	    $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/mobile/ezOption/updateOption.do",
+    		data : {
+    			id  : "1"		    			
+    		},
+    		success: function(e) {		    			
+				console.log(e);
+    		}
+        });
+ 	}
 	
 	
