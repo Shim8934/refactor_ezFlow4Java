@@ -467,7 +467,7 @@ var strLang652 = "있음"
 var strLang665 = "특수기록물"
 var strLang667 = "공개제한부분 표시"
 var strLang668 = "발송목록-1, 접수목록:2"
-var strLang669 = "접수"
+var strLang669 = "受付"
 var strLang670 = "카드류 이첩발송"
 var strLang671 = "이 외에는 일반 생산문서이다."
 var strLang672 = "시청각기록물 여부"
@@ -792,10 +792,10 @@ var strLangAprState2 = "進行";
 var strLangAprState3 = "決裁";
 
 // 2011.06.17 추가
-var strLangAprState19 = "전송실패";
-var strLangAprState20 = "수신";
-var strLangAprState21 = "도달";
-var strLangAprState22 = "재요청";
+var strLangAprState19 = "送信に失敗し";
+var strLangAprState20 = "受信";
+var strLangAprState21 = "到達";
+var strLangAprState22 = "再要求";
 
 // OpinionGB : 의견 종류
 var strOpinionType1 = "001";
@@ -817,23 +817,23 @@ var strLangOpinionType4 = "回送意見";
 var strModifyFlag1 = "001";
 var strModifyFlag2 = "002";
 var strModifyFlag3 = "003";
-var strLangModifyFlag1 = "삭제";
-var strLangModifyFlag2 = "추가";
-var strLangModifyFlag3 = "수정";
+var strLangModifyFlag1 = "削除";
+var strLangModifyFlag2 = "追加";
+var strLangModifyFlag3 = "修正";
 
 // Etc
 var strLangEtcAprType4 = "専決"; // 문서 싸인칸에 표시하는 전결문자
-var strLangEtcAprState4 = "반송"; // 문서 싸인칸에 표시하는 반송문자
+var strLangEtcAprState4 = "搬送"; // 문서 싸인칸에 표시하는 반송문자
 var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept.xml"; // xml 파일 처리
 var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept.xml"; // xml 파일 처리
 var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept.xml";
-var strLang1101 = "해당 부서에 수발신 담당자가 존재하지 않아 "
-var strLang1102 = "수신처에 등록할 수 없는 부서 입니다."
+var strLang1101 = "その部門に受発信者が存在しない"
+var strLang1102 = "宛先に登録することができない部門です。"
 var strLang1103 = "HWP is not supported(Draft/Re-draft)."
 var strLangFromFile = "/xml/ezApprovalG/ezFormInfo.xml";
 
 /* 2015-06-30 표준모듈:추가 - KSK */
-var strLang1105 = "결재문서를 수신하지 않는 부서 입니다.\n추가 할 수 없습니다.";
+var strLang1105 = "決裁文書を受信して​​いない部門です。\\ n追加することはできません。";
 var strLang1106 = "検索語を入力してください。";
 var strLang1107 = "送信者";
 var strLang1108 = "審査者";
@@ -855,19 +855,19 @@ var strLang1123 = "[コメント内容を通知]";
 var strLang1124 = "タイトル";
 
 /* 2016-09-05 js 한글 하드코딩 수정 */
-var strLang1127 = "데이터가 지정되지 않았습니다.";
-var strLang1128 = "프로세스에서 디자인된 결재자보다 많습니다.";
-var strLang1130 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang1131 = "공람한 문서 : ";
+var strLang1127 = "データが指定されていません。";
+var strLang1128 = "プロセスでデザインされた決裁者よりも多いのです。";
+var strLang1130 = "リストのIDが指定されていません。";
+var strLang1131 = "供覧した記事： ";
 var strLang1132 = "権限がありません。";
-var strLang1133 = "자동임시저장문서";
+var strLang1133 = "自動一時保存文書";
 var strLang1134 = "一時保存した文書の削除に失敗しました。";
-var strLang1135 = "수기기록물";
-var strLang1136 = "파일";
-var strLang1137 = "부서명이 없습니다.";
-var strLang1138 = "부서아이디가 없습니다.";
-var strLang1139 = "이 문서를 열람할 권한이 없습니다.";
-var strLang1148 = "첨부 정보";
+var strLang1135 = "手記ドキュメンタリー";
+var strLang1136 = "ファイル";
+var strLang1137 = "部署名がありません。";
+var strLang1138 = "部門名がありません。";
+var strLang1139 = "この記事を閲覧する権限がありません。";
+var strLang1148 = "添付情報";
 var strLang1149 = "決裁経路情報";
 
 // 일반용 S를 붙일 것
@@ -948,7 +948,7 @@ var strLangS602 = "お気に入りに追加しました。";
 var strLangS603 = "お気に入りから削除しました。";
 var strLangS604 = "エラーが発生しました。";
 var strLangS605 = "エラーが発生しました。";
-var strLangS957 = "수신자 리스트에 데이터가 없습니다.<br/>수신자를 지정해 주십시오.";
+var strLangS957 = "受信者リストにデータがありません。<br/>受信者を指定してください。";
 var strLangS1108 ="条件を選択してください。";
 var strLangS1109 ="選択した条件がありません。";
 var strLangS1110 ="チェック項目の直接入力欄に値を入力してください。";
@@ -977,9 +977,9 @@ var strLangS194  ="既に登録されている決裁経路です。";
 var strLangS195  ="入力し直してください。";
 var strLangSHJ1 = "参照後の最終決裁者を指定してください。";
 
-var strLangS822 = "이미 회람이 발송된 사용자입니다. "
-var strLangS824 = "회람자가 중복되었습니다.";
-var strLangS825 = "회람자를 지정하시기 바랍니다.";
-var strLangS826 = "회람을 발송하지 못하였습니다.";
-var strLangpjj27 = "편집하려는 즐겨찾기를 공람자 리스트에 적용 해야 편집 할 수 있습니다.";
-var strLangHYJ28 = "회람자 리스트가 존재하지 않습니다.";
+var strLangS822 = "既に循環が送信されたユーザです。 "
+var strLangS824 = "循環が重複しました。";
+var strLangS825 = "循環子を指定してください。";
+var strLangS826 = "循環を発送しませんでした。";
+var strLangpjj27 = "編集するお気に入りを供覧者リストに適用する必要が編集することができます。";
+var strLangHYJ28 = "循環者リストが存在しません。";
