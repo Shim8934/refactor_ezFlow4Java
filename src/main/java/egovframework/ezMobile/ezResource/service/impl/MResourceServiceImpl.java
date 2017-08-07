@@ -17,19 +17,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
-import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
-import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -233,7 +230,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 	
 	@Override
-	public Map<String, Object> getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception {
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception {
 		LOGGER.debug("getScheduleList Start");
 
 		Map<String, Object> result = new HashMap<>();
@@ -241,14 +238,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		String endDateLimit = sDate + " 00:00:01";
 
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
-		List<ResGetScheduleVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
+		List<ResGetScheduleVO> getScheduleList = getScheduleNormalList(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);
 		
 		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
 			
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
-		List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
+		List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
 		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
 		
@@ -326,18 +323,27 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		LOGGER.debug("getScheduleList: " + getScheduleList);		
 		
-		List<ResGetScheduleVO> resultList = new ArrayList<ResGetScheduleVO>();
-		
-		int index = Integer.parseInt(listCnt);
 		int count = getScheduleList.size();
 		
-		if(count > index){
-			for (int k = 0; k < index; k++) {
-				resultList.add(getScheduleList.get(k));
-			}
+		List<ResGetScheduleVO> resultList = new ArrayList<ResGetScheduleVO>();
+		
+		if(!listCnt.equals("")&&(listCnt != null)){
+			int index = 0;
+			index =	Integer.parseInt(listCnt);
+			LOGGER.debug("index: " + index);
+			
+			
+			if(count > index){
+				for (int k = 0; k < index; k++) {
+					resultList.add(getScheduleList.get(k));
+				}
+			}else{
+				resultList = getScheduleList;
+			}	
 		}else{
 			resultList = getScheduleList;
 		}
+
 		
 		LOGGER.debug("resultList: " + resultList);
 		
@@ -878,7 +884,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return returnList;
 	}
 	
-	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleNormalList(String ownerID, String companyID, String startDate, String endDate, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -887,7 +893,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PSTARTDATE", startDate);
 		map.put("v_PENDDATE", endDate);
-		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
 		map.put("tenantID", tenantID);
 		return mResourceDAO.getScheduleList(map);
@@ -907,7 +912,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return mResourceDAO.getScheduleListMain(map);
 	}
 
-	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -917,7 +922,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PSTARTDATE", startDate);
 		map.put("v_PENDDATE", endDate);
-		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
 		map.put("tenantID", tenantID);
 		
@@ -1094,13 +1098,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			String listCnt) throws Exception {
 		
 		String ownerId = "";
-		String groupId = "";
-		String gubun = "";
 		String utcStartDate = "";
 		String utcEndDate = "";
 		String companyId = "";
-		String pType = "";
-		String writerNm = "";
 		String writerDt = "";
 		int tenantId = 0;
 		String offset = "";
@@ -1108,7 +1108,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 
 		companyId = info.getCompanyId();
 		offset = info.getOffSet();
-		writerNm = info.getUserName();
 		writerDt = info.getDeptId();
 		tenantId = info.getTenantId();
 		utcStartDate = today.substring(0,10);
@@ -1116,16 +1115,14 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
     	LOGGER.debug("ownerId: " + ownerId);
     	LOGGER.debug("companyId: " + companyId);
-    	LOGGER.debug("groupId: " + groupId);
-    	LOGGER.debug("gubun: " + gubun);
     	LOGGER.debug("utcStartDate: " + utcStartDate);
     	LOGGER.debug("utcEndDate: " + utcEndDate);
-    	LOGGER.debug("writerNm: " + writerNm);
     	LOGGER.debug("writerDt: " + writerDt);
     	LOGGER.debug("tenantId: " + tenantId);
     	LOGGER.debug("offset: " + offset);
-    			
-		Map<String, Object> result = getScheduleList(ownerId, companyId, groupId, gubun, utcStartDate, utcEndDate, pType, writerNm, writerDt, tenantId, offset, listCnt);
+
+    	
+		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt);
 
 		LOGGER.debug("result: " + result);
 	

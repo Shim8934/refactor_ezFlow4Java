@@ -1,5 +1,113 @@
 package egovframework.ezMobile.ezOption.web;
 
+import java.util.Map;
+import java.util.Properties;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.let.user.login.service.LoginService;
+import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+
+@Controller
 public class MOptionGWController {
 
+private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController.class);
+	
+	@Autowired
+	private CommonUtil commonUtil;
+
+	@Autowired
+	private Properties config;
+	
+	@Resource(name="loginService")
+	private LoginService loginService;
+
+	@Resource(name="crypto") 
+	private EgovFileScrty egovFileScrty;
+	
+	@Resource(name = "MOptionService")
+	private MOptionService mOptionService;
+	
+	/**
+	 * 모바일 G/W 환경설정 [get] 환경설정조회
+	 */
+	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject optionDetail(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			//String serverName = "http://localhost:8080";
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			LOGGER.debug("userId: " + userId);
+			LOGGER.debug("tenantId: " + tenantId);
+			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
+			
+			LOGGER.debug("opt: " + opt.toString());
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", opt);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+		LOGGER.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] ended.");	
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 환경설정 [put] 환경설정수정
+	 */
+	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject optionUpdate(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", "");
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] ended.");	
+		
+		return result;
+	}
+	
 }
