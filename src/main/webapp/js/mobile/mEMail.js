@@ -33,6 +33,41 @@ function sendMail(){
         });
 }
 
+function goMailWrite() {
+	$.mobile.changePage("/mobile/ezEmail/mMailWrite.do", {
+		type: "post",
+		transition: "pop",
+		changeHash: true
+	});
+}
+
+function tempSave(){
+	
+	var obj = new Object();
+    
+	obj.subject = $('#subject').val();
+    obj.to = '"강민석" <rkd1395@svn.opensol2014.com>';
+    obj.cc = '"강민석" <rkd1395@svn.opensol2014.com>';
+    obj.bcc = '"강민석" <rkd1395@svn.opensol2014.com>';
+    obj.textbody = $('#textbody').val();
+    obj.from = '"강민석" <rkd1395@svn.opensol2014.com>';
+    
+    var jsonData = JSON.stringify(obj);
+  $.ajax({
+            type : 'post',
+            url : '/mobile/ezEmail/mailSaveMessage.do',
+            data : jsonData,
+            dataType : "text",
+            contentType : "application/json; charset=UTF-8",
+            error: function(xhr, status, error){
+                alert(error);
+            },
+            success : function(data){ 
+            	alert(data)
+            },
+        });
+}
+
 function getMail(FolderId){
 var obj = new Object();
 	
