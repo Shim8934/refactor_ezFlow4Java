@@ -99,16 +99,18 @@
 		});    	    	
 	});
 	
-	var monthMsg = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월";
-	var monthStr = monthMsg.split(";");
-	var dayMsg = "일;월;화;수;목;금;토";
+	
+	var dayMsg = "<spring:message code='main.kyj1'/>";
 	var dayStr = dayMsg.split(";");
+	var monthMsg = "<spring:message code='main.kyj2'/>";
+	var monthStr = monthMsg.split(";");
 	
 	$(function() {
-		$.datepicker.regional["ko"] = {
-				closeText: "닫기",
-				prevText: "이전달",
-				nextText: "다음달",
+		$.datepicker.regional["<spring:message code='main.t0619'/>"] = {
+				closeText: "<spring:message code='main.t3'/>",
+				prevText: "<spring:message code='main.t0604'/>",
+				nextText: "<spring:message code='main.t0605'/>",
+				currentText: "<spring:message code='main.t0606' />",
 				monthNames: monthStr,
 				monthNamesShort: monthStr,
 				dayNames: dayStr,
@@ -123,7 +125,7 @@
 				showMonthAfterYear: true
 		};
 		
-		$.datepicker.setDefaults($.datepicker.regional["ko"]);	
+		$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619'/>"]);	
 			
 	});
 
