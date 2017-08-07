@@ -1036,10 +1036,10 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <th style="text-align: center">
+	                        <th style="text-align: center;border-bottom:0px;">
 	                            <spring:message code='ezEmail.t98' />
 	                        </th>
-	                        <td colspan="3">
+	                        <td colspan="3" style="border-bottom:0px;">
 	                            <input id="eSubject" name="eSubject" onkeyup="Subject_ReApply()" type="text" value="${encodedSubject}"
 	                                tabindex="4" style="width: 99%">
 	                        </td>
@@ -1065,7 +1065,7 @@
 	                    <tr>
 	                        <td style="height:100%;">
 	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
-	                        	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; border-top-width:0; display:none;"></textarea>
+	                        	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
 	                        </td>
 	                    </tr>
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리
