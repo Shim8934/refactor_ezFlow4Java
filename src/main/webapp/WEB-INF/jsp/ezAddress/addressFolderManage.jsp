@@ -123,7 +123,7 @@
 	                inputnamedlg_cross_dialogArguments[0] = "";
 	                inputnamedlg_cross_dialogArguments[1] = add_onclick_Complete;
 	                inputnamedlg_cross_dialogArguments[2] = DivPopUpHidden;
-	                DivPopUpShow(330, 150, "/ezAddress/addressInputNameDlg.do");
+	                DivPopUpShow(330, 160, "/ezAddress/addressInputNameDlg.do");
 	            }
 	            else {
 	                var feature = "dialogHeight:200px; dialogwidth:330px; status:no; help:no; scroll:no; edge:sunken";
@@ -203,7 +203,7 @@
 	                inputnamedlg_cross_dialogArguments[0] = szNames;
 	                inputnamedlg_cross_dialogArguments[1] = modify_onclick_Complete;
 	                inputnamedlg_cross_dialogArguments[2] = DivPopUpHidden;
-	                DivPopUpShow(330, 150, "/ezAddress/addressInputNameDlg.do");
+	                DivPopUpShow(330, 160, "/ezAddress/addressInputNameDlg.do");
 	            }
 	            else {
 	                var ArgObjet = new Array();
@@ -338,7 +338,7 @@
 	                address_movecopy_dialogArguments[0] = "";
 	                address_movecopy_dialogArguments[1] = move_onclick_Complete;
 	                address_movecopy_dialogArguments[2] = DivPopUpHidden;
-	                DivPopUpShow(320, 375, "/ezAddress/addressMoveCopy.do?checkadmin=1");
+	                DivPopUpShow(320, 380, "/ezAddress/addressMoveCopy.do?checkadmin=1");
 	            }
 	            else {
 	                var feature = "dialogHeight:375px; dialogWidth:320px; status:no; help:no; edge:sunken";
