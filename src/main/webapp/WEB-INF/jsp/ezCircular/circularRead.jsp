@@ -30,10 +30,6 @@
 			    border: 1px solid;
 			}
 
-			#divCross p {
-				overflow: auto;
-			}
-
 			#divCross p a {
 				color: blue;
 				text-decoration: underline;
@@ -55,7 +51,7 @@
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
-	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 	            document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 	            
 				if ("${attachList}" != "") {
@@ -70,7 +66,7 @@
 			
 			window.onresize = function () {
 				var contentHeight;
-				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+				document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 			};
 			
@@ -222,7 +218,6 @@
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
-	            strContent = strContent + "<style> #printDocument p {overflow: auto;}</style>";
 	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
 	            strContent = strContent + "<div style='width:100%'>";
 	            strContent = strContent + "<table id='printScreen' class='layout'>";
@@ -539,8 +534,11 @@
 		            			</c:choose>
 		            		</td>
 		        		</tr>
-	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; display:inline-grid; height:100%; overflow:auto;"></div></td>
+	        		</table>
+	        		<br/>
+	        		<table class="content" style="width:100%; table-layout: fixed;">
+	        			<tr>
+	            			<td colspan="4"><div id="divCross" style="margin:8px; overflow:auto; overflow-x:scroll;"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
@@ -688,10 +686,13 @@
 		            			</c:choose>
 		            		</td>
 						</tr>
-						<tr>
- 							<td colspan="4"><div align="left" id="printDocument" style="padding: 5px; margin: 8px; height: 100%; display:inline-grid; overflow:auto;"></div></td> 
-						</tr>
 					</table>
+					<br/>
+					<table class="content" style="width:100%; table-layout: fixed;">
+	        			<tr>
+ 							<td colspan="4"><div align="left" id="printDocument" style="padding: 5px; margin: 8px; overflow:auto;"></div></td> 
+						</tr>
+	        		</table>
 				</td>
 			</tr>
 		</table>

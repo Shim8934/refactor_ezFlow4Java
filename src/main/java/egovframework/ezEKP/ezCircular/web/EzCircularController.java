@@ -2408,7 +2408,7 @@ logger.debug("searchType = " + searchType);
 	}
 
 	/**
-	 * 회람작성 시 회람처 List 호출
+	 * 회람자 선택 시 즐겨찾기 목록 호출
      *  
 	 */
 	@RequestMapping(value = "/ezCircular/getcircularDeptName.do", method = RequestMethod.POST)

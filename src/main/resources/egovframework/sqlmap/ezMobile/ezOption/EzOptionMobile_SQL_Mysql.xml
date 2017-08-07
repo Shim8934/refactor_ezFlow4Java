@@ -19,6 +19,7 @@
       <result property="userId"       		column="cn"        							columnIndex="10"/>
       <result property="userName"       	column="displayName"        				columnIndex="11"/>
       <result property="userName2"       	column="displayName2"        				columnIndex="12"/>
+      <result property="rollInfo"          column="rollinfo"                       columnIndex="13"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">

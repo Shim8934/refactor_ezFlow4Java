@@ -26,7 +26,7 @@ import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
-import egovframework.ezMobile.ezBoard.vo.MBoardListVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -68,7 +68,7 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 새게시물 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/new-List/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezboard/new-list/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getBoardMainList(@PathVariable String userId, HttpServletRequest request, Model model) {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] started.");
 		
@@ -78,7 +78,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			List<MBoardItemVO> list = mBoardService.getNewBoardList(userId, info.getTenantId()); 
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, info.getTenantId()); 
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -100,36 +100,35 @@ public class MBoardGWController {
 	 * 모바일 G/W 게시판 [GET] 게시판 리스트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezboard/{type}/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object getBoardItemList(@PathVariable String type, @PathVariable String boardId, HttpServletRequest request, Model model) {		
+	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getBoardItemList(@PathVariable String boardId, HttpServletRequest request, Model model) {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] started.");
 		
 		JSONObject result = new JSONObject();
 		
 		try {
 			String userID = request.getParameter("userID");
-			String primary = request.getParameter("primary");
 			String deptPathCode = request.getParameter("deptPathCode");
-			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
-			
+	
+			String primary = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-			
+
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			List<MBoardItemVO> list = null;
 			
-			if (boardId != null && boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			//if (boardId != null && boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 				//새게시물 가져오기 리스트
-				list = mBoardService.getNewBoarditemList(boardInfo, info, info.getUserId());
-			}
+				//list = mBoardService.getNewBoarditemList(boardInfo, info, info.getUserId());
+			//}
 			
-			if (boardId != null && !boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+			//if (boardId != null && !boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 				//일반게시판 가져오기 리스트
 				list = mBoardService.getBoardItemList(boardInfo, info, info.getUserId());
-			}
+			//}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
