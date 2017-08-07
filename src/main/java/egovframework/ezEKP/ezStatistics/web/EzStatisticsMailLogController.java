@@ -76,7 +76,26 @@ public class EzStatisticsMailLogController {
 	 * 메일 수신 내역 메인 호출 
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMailRecieveLogList.do")
-	public String getStatMailRecieveLogMain()throws Exception {
+	public String getStatMailRecieveLogMain(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model)throws Exception {
+		logger.debug("getStatMailRecieveLogMain started.");
+		
+		// 관리자 로그인 체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", userInfo.getTenantId());
+		LoginMailLogKeepPeriod = LoginMailLogKeepPeriod.equals("") ? "3" : LoginMailLogKeepPeriod;
+		
+		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
+		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
+		
+		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+		
+		logger.debug("getStatMailRecieveLogMain ended.");
+		
 		return "/ezStatistics/statisticsMailRecieveLog";
 	}
 	
@@ -84,7 +103,26 @@ public class EzStatisticsMailLogController {
 	 * 메일 발신 내역 메인 호출
 	 */
 	@RequestMapping(value = "/ezStatistics/statisticsMailSendLogList.do")
-	public String getStatMailSendLogMain() throws Exception {
+	public String getStatMailSendLogMain(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception {
+		logger.debug("getStatMailSendLogMain started.");
+		
+		// 관리자 로그인 체크
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie); 
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", userInfo.getTenantId());
+		LoginMailLogKeepPeriod = LoginMailLogKeepPeriod.equals("") ? "3" : LoginMailLogKeepPeriod;
+		
+		String mailLogKeepPeriodMessage = egovMessageSource.getMessage("ezStatistics.t1065", locale);
+		mailLogKeepPeriodMessage = String.format(mailLogKeepPeriodMessage, LoginMailLogKeepPeriod);
+		
+		model.addAttribute("mailLogKeepPeriodMessage", mailLogKeepPeriodMessage);
+		
+		logger.debug("getStatMailSendLogMain ended.");
+		
 		return "/ezStatistics/statisticsMailSendLog";
 	}
 

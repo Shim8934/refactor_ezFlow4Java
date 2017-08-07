@@ -45,6 +45,7 @@ import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -78,6 +79,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
 	
 	@Resource(name = "jspw")
     private String jspw;
@@ -296,11 +300,32 @@ public class EzEmailScheduler extends EgovFileMngUtil {
         for (TenantVO tenant : tenantList) {
             logger.debug("tenantId=" + tenant.getTenantId() + ",tenantName=" + tenant.getTenantName());
         
+            String LoginMailLogKeepPeriod = ezCommonService.getTenantConfig("LoginMailLogKeepPeriod", tenant.getTenantId());
+            
+            int keepLogPeriodNum = 3; // Default 3개월
+            
+            if (!LoginMailLogKeepPeriod.equals("")) {
+	            try {
+	            	keepLogPeriodNum = Integer.parseInt(LoginMailLogKeepPeriod);
+	            } catch (Exception e) {            	
+	            	e.printStackTrace();
+	            }
+            }
+            
+            try {
+	            // 보존 기간이 지난 로그인 히스토리 로그를 삭제한다.
+	            ezSystemAdminService.deleteLoginHist(keepLogPeriodNum, tenant.getTenantId());
+            } catch (Exception e) {           
+            	e.printStackTrace();
+            }
+            
             // 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
+            // 보존 기간이 지난 메일 수발신 로그를 삭제하는 기능도 수행한다.
             String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";
             
             String param1 = "tenantId=" + tenant.getTenantId();        
-            String inputParams = param1;
+            String param2 = "keepLogPeriod=" + LoginMailLogKeepPeriod;
+            String inputParams = param1 + "&" + param2;
     
             logger.debug("inputParams=" + inputParams);
             
@@ -313,65 +338,60 @@ public class EzEmailScheduler extends EgovFileMngUtil {
             
             logger.debug("dayOfMonth=" + dayOfMonth);
             
-            // 매월 초 1일 처리를 매일 처리로 변경함
-            // 메일박스 사용량 통계는 매월 초 1일에 한 번 처리한다.
-//            if (dayOfMonth == 1) {  
-            	// 모든 사용자의 목록을 가져온다.
-                List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenant.getTenantId());
+        	// 모든 사용자의 목록을 가져온다.
+            List<OrganUserVO> userCnList = ezOrganAdminService.getUserCnList(tenant.getTenantId());
+            
+            IMAPAccess ia = null;
+            Locale locale = Locale.getDefault();
+            String password = jspw;
+            String userId = null;
+            String email = null;
+            
+            String yearMonth = String.format("%04d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+            
+            // 각 사용자별로 처리한다.
+            for (OrganUserVO organUser : userCnList) {
+                userId = organUser.getCn();
+                logger.debug("userId=" + userId);
                 
-                IMAPAccess ia = null;
-                Locale locale = Locale.getDefault();
-                String password = jspw;
-                String userId = null;
-                String email = null;
-                
-//                calendar.add(Calendar.DAY_OF_MONTH, -1);
-                String yearMonth = String.format("%04d%02d", calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
-                
-                // 각 사용자별로 처리한다.
-                for (OrganUserVO organUser : userCnList) {
-                    userId = organUser.getCn();
-                    logger.debug("userId=" + userId);
+                try {
+                    email = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenant.getTenantId());
+                    ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+                                        email, password, egovMessageSource, locale);
+                            
+                    long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
                     
-                    try {
-                        email = userId + "@" + ezCommonService.getTenantConfig("DomainName", tenant.getTenantId());
-                        ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                                            email, password, egovMessageSource, locale);
-                                
-                        long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-                        
-                        // 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-                        long mailboxUsage = storageUsageAndLimit[0]; // in KBs
-                        long mailboxQuota = storageUsageAndLimit[1]; // in KBs
-                        
-                        logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);     
-                        
-                        // 메일박스 쿼터와 사용량을 통계 테이블에 저장하는 Web Service API를 호출한다.
-                        requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/setMailboxUsageLog";
-                        
-                        String tenantIdParam = "tenantId=" + tenant.getTenantId();
-                        String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
-                        String usageParam = "usage=" + mailboxUsage*1024;
-                        String quotaParam = "quota=" + mailboxQuota*1024;
-                        String yearMonthParam = "yearMonth=" + yearMonth;
-                        
-                        inputParams = tenantIdParam + "&" + userIdParam + "&" + usageParam + "&" + quotaParam + "&" + yearMonthParam;
-    
-                        logger.debug("inputParams=" + inputParams);
-                        
-                        response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-                        
-                        logger.debug("response=" + response);                           
-                    } catch (Exception e) {
-                        logger.debug(e.getMessage());
-                        e.printStackTrace();
-                    } finally {
-                        if (ia != null) {
-                            ia.close();
-                        }
+                    // 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
+                    long mailboxUsage = storageUsageAndLimit[0]; // in KBs
+                    long mailboxQuota = storageUsageAndLimit[1]; // in KBs
+                    
+                    logger.debug("email=" + email + ",mailboxUsage=" + mailboxUsage + ",mailboxQuota=" + mailboxQuota);     
+                    
+                    // 메일박스 쿼터와 사용량을 통계 테이블에 저장하는 Web Service API를 호출한다.
+                    requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/setMailboxUsageLog";
+                    
+                    String tenantIdParam = "tenantId=" + tenant.getTenantId();
+                    String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+                    String usageParam = "usage=" + mailboxUsage*1024;
+                    String quotaParam = "quota=" + mailboxQuota*1024;
+                    String yearMonthParam = "yearMonth=" + yearMonth;
+                    
+                    inputParams = tenantIdParam + "&" + userIdParam + "&" + usageParam + "&" + quotaParam + "&" + yearMonthParam;
+
+                    logger.debug("inputParams=" + inputParams);
+                    
+                    response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+                    
+                    logger.debug("response=" + response);                           
+                } catch (Exception e) {
+                    logger.debug(e.getMessage());
+                    e.printStackTrace();
+                } finally {
+                    if (ia != null) {
+                        ia.close();
                     }
                 }
-//            }
+            }
         }
         
         logger.debug("processMailStatLogs scheduler ended.");

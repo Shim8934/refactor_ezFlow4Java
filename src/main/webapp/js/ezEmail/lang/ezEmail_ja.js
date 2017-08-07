@@ -280,7 +280,7 @@ var strLangLHM04 = "ツリービューのデータが指定されていません
 var strLangLHM05 = "ファイルを削除してよろしいですか？";
 var strLangLHM06 = "移動しました。";
 var strLangLHM07 = "アップロードするファイルを選択してください。";
-var strLangLHM08 = "割り当てられたメール容量を超過しているため、メール送信できません。\n편지함을 정리해주세요.";
+var strLangLHM08 = "割り当てられたメール容量を超過しているため、メール送信できません。\nメールボックスを整理してください。";
 var strLangLHM09 = "外部へのメールは10MBまで送信できます。";
 var strLangLHM10 = "大容量";
 var strLangLHM11 = "メールを取り下げする対象を選択してください。";
@@ -289,12 +289,12 @@ var strLangLHM13 = "送信可能なメールサイズを超過しています。
 var strLangLHM14 = "一回に送信可能なサイズ : ";
 var strLangLHM15 = ", 現在のサイズ : ";
 var strLangLHM16 = "アカウント情報の見つからない受信者が存在します。メールアドレスを確かめてください。";
-var strLangLHM17 = "해당 수신인을 제외하고 메일을 발송하시겠습니까?";
+var strLangLHM17 = "このメールアドレスを除いて、メールを送信しますか？";
 var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "添付フォイルのサイズが ";
-var strLangKMS03 = "메일이 없습니다.";
-var strLangKMS04 = "수신자 수가 "; 
-var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다.\n개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
+var strLangKMS03 = "メールがありません。";
+var strLangKMS04 = "受信者の数が";
+var strLangKMS05 = "名より多いため、個別送信機能を使用することができません。\n個別送信機能を外してメールを送信しますか？";
 
 function GetLocalTime(Offset , pDateTime)
 {
