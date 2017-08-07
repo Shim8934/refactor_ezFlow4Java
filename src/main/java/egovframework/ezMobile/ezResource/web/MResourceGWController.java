@@ -86,14 +86,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@Resource(name="loginService")
 	private LoginService loginService;
 
-	/*@Resource(name="crypto") 
-	private EgovFileScrty egovFileScrty;*/
-	
 	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
-	/*@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;*/
+	private EgovMessageSource egovMessageSource;	
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
@@ -103,7 +97,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezresource/main-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceMainList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/{type}/list] started.");
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/main-list/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -111,49 +105,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String deptId = info.getDeptId();
-			String offset = info.getOffSet();
-			String writerNm = info.getUserName();
-			String writerDt = info.getDeptId();
-			int tenantId = info.getTenantId();
-			String companyId = request.getParameter("companyId");
-	    	String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			String utcStartDate = today.substring(0,10);
-	    	String utcEndDate = today.substring(0,10);
-	    	//utcStartDate = "2017-07-05";
-	    	//utcEndDate = "2017-08-30";
-	    	String ownerId = "";
-	    	String groupId = "";
-	    	String gubun = "";
-	    	String pType = "";
-	        
-	    	LOGGER.debug("utcStartDate: " + utcStartDate);
-	    	LOGGER.debug("utcEndDate: " + utcEndDate);
-	    	
-	    	int pageNum = 1;
-	    	
-	    	int pageSize = 10;
-	    	int firstIndex = 0;
-	    	int lastIndex = 0;
-	    	
-	    	LOGGER.debug("ownerId: " + ownerId);
-	    	LOGGER.debug("companyId: " + companyId);
-	    	LOGGER.debug("groupId: " + groupId);
-	    	LOGGER.debug("gubun: " + gubun);
-	    	LOGGER.debug("utcStartDate: " + utcStartDate);
-	    	LOGGER.debug("utcEndDate: " + utcEndDate);
-	    	LOGGER.debug("writerNm: " + writerNm);
-	    	LOGGER.debug("writerDt: " + writerDt);
-	    	LOGGER.debug("tenantId: " + tenantId);
-	    	LOGGER.debug("offset: " + offset);
-	    	
+
 	    	String listCnt = "10";
-	    	
-			//List<MResourceScheduleVO> list = mResourceService.getResScheduleMainList(utcStartDate, utcEndDate, companyId, page, firstWriteDay, lastWriteDay,  tenantId);
-			
+	    				
 			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt);
-			//LOGGER.debug("size of result: " + list.size());
-			
+
 			LOGGER.debug("resultMap: " + resultMap);
 			
 			result.put("status", "ok");
@@ -167,7 +123,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/{type}/list] ended.");	
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/main-list/users/{userId}] ended.");	
 		
 		return result;
 	}
@@ -220,17 +176,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 
 	 */
-	//리스트와 카운트를 병합처리로 변경
-/*	@RequestMapping(value="/ezresource/{type}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public LoginVO resourceSchListCount(@PathVariable String type, @RequestParam(value="tenantId", required=false) String tenantId) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /ezresource/{type}/list-count] started.");
-		LOGGER.debug("type: " + type);
-		LOGGER.debug("tenantId: " + tenantId);
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /ezresource/{type}/list-count] ended.");
-		LoginVO vo = new LoginVO();
-		return vo;
-	}*/
-	
+
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원리스트 조회
 	 */

@@ -23,6 +23,7 @@ import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -111,7 +112,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 			
 			//새게시물 리스트
-			List<MBoardItemVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId());
+			List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId());
 			
 			//새게시물 리스트 카운트
 			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
