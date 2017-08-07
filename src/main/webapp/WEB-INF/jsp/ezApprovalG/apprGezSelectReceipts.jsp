@@ -470,7 +470,6 @@
     }
     function getExtLdapInfo(OrganCode) {
         try {
-        	
         	$.ajax({
         		type : "POST",
         		dataType : "text",
@@ -484,7 +483,7 @@
         		}        			
         	});
 
-            return loadXMLString(result);
+            return loadXMLString(result).documentElement;
         }
         catch (e) {
             return "";
@@ -544,12 +543,12 @@
             searchorganglist_dialogArguments[0] = g_progresswin;
             searchorganglist_dialogArguments[1] = btnSearchDept_onClick_Complete;
 
-            DivPopUpShow(600, 600, "/myoffice/ezApprovalG/ezOrganG/SearchOrganGList.aspx?keyword=" + escape(tmpDeptName));
+            DivPopUpShow(600, 600, "/ezApprovalG/searchOrganGList.do?keyword=" + escape(tmpDeptName));
         }
         else {
             var feature = "status:no;dialogWidth:600px;dialogHeight:600px;scroll:no;edge:sunken;help:no;";
             feature = feature + GetShowModalPosition(600, 600);
-            reParam = window.showModalDialog("/myoffice/ezApprovalG/ezOrganG/SearchOrganGList.aspx?keyword=" + escape(tmpDeptName), g_progresswin, feature);
+            reParam = window.showModalDialog("/ezApprovalG/searchOrganGList.do?keyword=" + escape(tmpDeptName), g_progresswin, feature);
             document.getElementById("txtOuterDeptName").focus();
 
 

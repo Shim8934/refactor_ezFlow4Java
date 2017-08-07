@@ -310,7 +310,7 @@ public class EzOrganController {
 		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
 
         int intScope = 1;
-        String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, strBaseDN, intScope, userInfo);
+        String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, strBaseDN, intScope);
 		logger.debug("getOrganSubTreeInfo ended (outer)");
 
 		return strXML;
@@ -330,8 +330,11 @@ public class EzOrganController {
 		return infoXML;
 	}
 	
-
-//	 * 외부 수신처 정보 가져오기
+	/**
+	 * 외부 수신처 정보 가져오기
+	 * @throws Exception 
+	 */
+//	 * 
 	@RequestMapping(value = "/ezOrgan/getOrgInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrgInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
@@ -340,7 +343,8 @@ public class EzOrganController {
 		
 		String strBaseDN = request.getParameter("orgID") ;
 		String strFilter = "(&(objectclass=ucOrg2)(ouCode=" + strBaseDN + "))";
-		String strXML = ezOrganService.getOrgInfo(strBaseDN, strFilter);
+		int intScope = 0;
+		String strXML = ezOrganService.getOrgInfo(strBaseDN, strFilter, intScope);
 		
 		logger.debug("getOrgInfo ended");
 		return strXML;

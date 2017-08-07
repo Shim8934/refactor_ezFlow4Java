@@ -2112,6 +2112,55 @@ public class EzApprovalGarchiveController {
 
 		return "ezApprovalG/apprGselectEnc";
 	}
+	
+	/**
+	 * 외부 부서검색 팝업창 호출
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/ezApprovalG/searchOrganGList.do", produces = "text/xml;charset=utf-8")
+	public String searchOrganGList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("searchOrganGList started");
+		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String keyword = request.getParameter("keyword") ;
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("keyword", keyword);
+		logger.debug("searchOrganGList ended");
+		return "/ezApprovalG/apprGsearchOrganGList";
+	}
+	
+	/**
+	 * 외부 부서검색 데이터 리스트 가져오기
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/ezApprovalG/searchOrganGListData.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String searchOrganGListData(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("searchOrganGListData started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String keyword = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+        String strBaseDn = "ou=*" + keyword + "*,";
+        String strFilter = "(&(ou=*" + keyword + "*)(objectclass=ucorg2)(docsysteminfo=*))";
+        int intScope = 3;
+        String strXML = ezOrganService.searchOuterOrgan(strFilter, intScope, strBaseDn);
+		logger.debug("searchOrganGListData ended");
+		return strXML;
+	}
+	
+	/**
+	 * 외부 수신처 이름 수정 팝업창 호출
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8")
+	public String aprDeptName(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("aprDeptName started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("userInfo", userInfo);
+		logger.debug("aprDeptName ended");
+		return "/ezApprovalG/apprGaprDeptName";
+	}
 	
 }

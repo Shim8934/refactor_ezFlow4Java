@@ -1224,21 +1224,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getOrganTreeInfo(String strFilter, int intScope, String strBaseDN) throws Exception {
-		//ldap
-		String searchScope = "";
-		
-		if(intScope == 0) {
-			searchScope = "0";
-		} else {
-			if (intScope == 1) {
-				searchScope = "1";
-			} else {
-				searchScope = "2";
-			}
-		}
-
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter,strBaseDN);
+		ou = ldapSearch(strFilter,strBaseDN, intScope);
             
             StringBuilder nodeInfo = new StringBuilder("");
 
@@ -1317,22 +1304,29 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private List<String[]> ldapSearch(String strFilter, String strBaseDN) throws Exception {
+	private List<String[]> ldapSearch(String strFilter, String strBaseDN, int intScope) throws Exception {
 		List<String[]> ou = new ArrayList<String[]>();
 
 		Hashtable<String, String> env           = new Hashtable<String, String>(5, 0.75f); 
         NamingEnumeration m_ne = null;
-        String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode"}; 
+        String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode", "ouOrder"}; 
        
         try {   
             env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); 
             env.put(Context.PROVIDER_URL, config.getProperty("R_LServer")); 
             DirContext dirCtx = new InitialDirContext(env); 
             SearchControls constraints = new SearchControls();
-            // SUBTREE_SCOPE : 기본 엔트리에서 시작하여 기본 엔트리 및 하위 모두 검색
-            // ONELEVEL_SCOPE : 기본 엔트리 밑에 있는 엔트리들을 검색
-            // OBJECT_SCOPE : 기본 엔트리만 검색
-            constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE); 
+    		
+    		if(intScope == 0) {
+	            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE); 
+    		} else {
+    			if (intScope == 1) {
+    	            constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE); 
+    			} else {
+    	            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE); 
+    			}
+    		}
+    		
             if (attrIDs != null) {
                 constraints.setReturningAttributes(attrIDs); 
             }
@@ -1344,7 +1338,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             SearchResult sr = null; 
             while(m_ne.hasMoreElements()){ 
                 sr = (SearchResult)m_ne.next(); 
-                String str[] = new String[12];
+                String str[] = new String[13];
                 for (int i=0; i< attrIDs.length; i++) { 
                 	if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
                 		str[i] = " ";
@@ -1515,11 +1509,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope, LoginVO userInfo) throws Exception {
+	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope) throws Exception {
 		logger.debug("getOrganSubTreeInfo started");
 		
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter, strBaseDN);
+		ou = ldapSearch(strFilter, strBaseDN, intScope);
 		
 		StringBuilder str = new StringBuilder();
 		
@@ -1557,14 +1551,86 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 
 	@Override
-	public String getOrgInfo(String strBaseDN, String strFilter) throws Exception {
+	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception {
 		logger.debug("getOrgInfo started");
-			List<String[]> ou = new ArrayList<String[]>();
-			ou = ldapSearch(strFilter , "" );
+		List<String[]> ou = new ArrayList<String[]>();
+		ou = ldapSearch(strFilter , "" ,intScope);
+	
+		StringBuffer str = new StringBuffer();
+		str.append("<ORGAN>");
+		
+		for(int i=0; i<ou.size(); i++) {
+			str.append("<DATA1>" + ou.get(i)[3] + "</DATA1>");
+			str.append("<DATA2> ou=" + ou.get(i)[1] + "," + config.getProperty("R_LBaseDN") + "</DATA2>");
+			str.append("<DATA3>" + ou.get(i)[1]  + "</DATA3>");
+			str.append("<DATA4>" + ou.get(i)[0]  + "</DATA4>");
+			str.append("<DATA5>" + ou.get(i)[2]  + "</DATA5>");
+			str.append("<DATA6>" + ou.get(i)[4]  + "</DATA6>");
+			str.append("<DATA7>" + ou.get(i)[5]  + "</DATA7>");
+			str.append("<DATA8>" + ou.get(i)[12]  + "</DATA8>");
+			str.append("<DATA9>" + ou.get(i)[8]  + "</DATA9>");
+			str.append("<DATA10>" + ou.get(i)[9]  + "</DATA10>");
+			str.append("<DATA11>" + ou.get(i)[6]  + "</DATA11>");
+			str.append("<DATA12>" + ou.get(i)[7]  + "</DATA12>");
+			str.append("<DATA13>" + ou.get(i)[11]  + "</DATA13>");
+		}
+		str.append("</ORGAN>");
 		logger.debug("getOrgInfo ended");	
-		return null;
+		return str.toString();
 	}
 
+	@Override
+	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception {
+		logger.debug("getOrgInfo started");
+		StringBuilder str = new StringBuilder();
+		str.append("<LISTVIEWDATA>");
+		str.append("<HEADERS>");
+		str.append("<HEADER>");
+		str.append("<NAME>" + "기관명" + "</NAME>");
+		str.append("<WIDTH>" + "150" + "</WIDTH>");
+		str.append("<COLNAME>" + "OUName" + "</COLNAME>");
+		str.append("</HEADER>");
+		
+		str.append("<HEADER>");
+		str.append("<NAME>" + "기관명(전체)" + "</NAME>");
+		str.append("<WIDTH>" + "500" + "</WIDTH>");
+		str.append("<COLNAME>" + "OuFullName" + "</COLNAME>");
+		str.append("</HEADER>");
+		str.append("</HEADERS>");
+		List<String[]> ou = new ArrayList<String[]>();
+		ou = ldapSearch(strFilter , "",intScope );
+		
+		str.append("<ROWS>");
+		for (int i=0; i<ou.size(); i++) {
+			str.append("<ROW>");
+			str.append("<CELL>");
+
+			str.append("<VALUE>" + ou.get(i)[1] + "</VALUE>");
+			str.append("<DATA1>" + ou.get(i)[3] + "</DATA1>");
+			str.append("<DATA2>" + ou.get(i)[1] + "</DATA2>");
+			str.append("<DATA3>" + ou.get(i)[0] + "</DATA3>");
+			str.append("<DATA4>" + ou.get(i)[2] + "</DATA4>");
+			str.append("<DATA5>" + ou.get(i)[4] + "</DATA5>");
+			str.append("<DATA6>" + ou.get(i)[8] + "</DATA6>");
+			str.append("<DATA7>");
+			
+			if(ou.get(i)[7].equals("N") || ou.get(i)[7].equals(" ")) {
+				str.append("GRAY");
+			} else {
+				str.append("YES");
+			}
+			str.append("</DATA7>");
+			str.append("</CELL>");
+			str.append("<CELL>");
+			str.append("<VALUE>" + ou.get(i)[0] + "</VALUE>");
+			str.append("</CELL>");
+			str.append("</ROW>");
+		}
+		str.append("</ROWS>");
+		str.append("</LISTVIEWDATA>");
+		logger.debug("getOrgInfo started");
+		return str.toString();
+	}
 }
 
 

@@ -56,7 +56,9 @@ public interface EzOrganService {
 
 	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
 
-	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope, LoginVO userInfo) throws Exception;
+	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope) throws Exception;
 
-	public String getOrgInfo(String strBaseDN, String strFilter) throws Exception;
+	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception;
+
+	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception;
 }
