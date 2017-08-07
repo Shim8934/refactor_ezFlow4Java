@@ -1859,6 +1859,7 @@ function ConvertDocState(pDocState) {
 }
 
 var getformcont_cross_dialogArguments = new Array();
+/* 기안을 위한 양식창을 띄우는 곳 */
 function openFormUI() {
     try {
         var parameter = new Array();
@@ -1876,7 +1877,7 @@ function openFormUI() {
 
 function openFormUI_Complete(ret) {
     DivPopUpHidden();
-
+alert("<<<openFormUI_Complete");
     pFormHref = ret[0];
     pDocType = ret[1];
 
@@ -2002,6 +2003,7 @@ function SetBtnStateTrue() {
     }
 }
 function createNewDoc() {
+alert("<<<createNewDoc");
     try {
     	var result = "";
         $.ajax({

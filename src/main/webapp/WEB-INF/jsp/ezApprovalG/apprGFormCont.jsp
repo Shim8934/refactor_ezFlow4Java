@@ -169,7 +169,7 @@
 		                Rtnval[1] = selRow.getAttribute("DATA3");
 		                Rtnval[2] = selRow.getAttribute("DATA1");
 		                Rtnval[3] = selRow.childNodes[0].innerText;
-		
+		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
 		                }

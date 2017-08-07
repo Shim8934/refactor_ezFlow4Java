@@ -719,7 +719,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
-
+alert("<<<openDraftUI");
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
@@ -867,14 +867,13 @@ function openForm() {
     var parameter = new Array();
     parameter[0] = arr_userinfo[4];
     parameter[1] = "000";
-
+alert("<<<openForm");
     var url = "/ezApprovalG/getFormCont.do";
     var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(713, 570);
 
     getformcont_cross_dialogArguments[0] = parameter;
     getformcont_cross_dialogArguments[1] = openForm_Complete;
-
     getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
     
     try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
@@ -885,7 +884,7 @@ function openForm_Complete(ret) {
     formURL = ret[0];
     formDocType = ret[1];
     formExt = ret[2];
-
+alert("<<<openForm_Complete");
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -2578,7 +2577,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
     openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-
+alert("openServerDraftUI");
     openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
 
