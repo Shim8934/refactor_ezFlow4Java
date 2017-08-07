@@ -15,6 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -271,8 +272,11 @@ public class EzOrganController {
 	public String getOrganTreeInfo() throws Exception{
 		logger.debug("getOrganTreeInfo Started.(Outer Rec.)");
 		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
+		String strBaseDN = "";
 		int intScope = 1;
-		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope);
+
+		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope, strBaseDN);
+
 		logger.debug("getOrganTreeInfo Ended.(Outer Rec.)");
 		return strXML;
 	}
@@ -294,12 +298,22 @@ public class EzOrganController {
 	
 	/**
 	 * 조직도 서브트리정보  함수
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/ezOrgan/getOrganSubTreeInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getOrganSubTreeInfo(){
-		//TODO LDAP 이라 보류중
-		return "";
+	public String getOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , @RequestBody String xmlPara) throws Exception{
+		logger.debug("getOrganSubTreeInfo Started (outer)");
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String strBaseDN = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+
+        int intScope = 1;
+        String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, strBaseDN, intScope, userInfo);
+		logger.debug("getOrganSubTreeInfo ended (outer)");
+
+		return strXML;
 	}
 //	/**
 //	 * 조직도 부서 및 사원정보 함수
@@ -314,5 +328,21 @@ public class EzOrganController {
 		
 		 infoXML="<RESULT>" + infoXML + "</RESULT>";
 		return infoXML;
+	}
+	
+
+//	 * 외부 수신처 정보 가져오기
+	@RequestMapping(value = "/ezOrgan/getOrgInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getOrgInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("getOrgInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String strBaseDN = request.getParameter("orgID") ;
+		String strFilter = "(&(objectclass=ucOrg2)(ouCode=" + strBaseDN + "))";
+		String strXML = ezOrganService.getOrgInfo(strBaseDN, strFilter);
+		
+		logger.debug("getOrgInfo ended");
+		return strXML;
 	}
 }

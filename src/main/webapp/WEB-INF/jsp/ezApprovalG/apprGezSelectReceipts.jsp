@@ -470,17 +470,21 @@
     }
     function getExtLdapInfo(OrganCode) {
         try {
-            var xmlhttp = createXMLHttpRequest();
-            var xmlpara = createXmlDom();
+        	
+        	$.ajax({
+        		type : "POST",
+        		dataType : "text",
+        		async : false,
+        		url : "/ezOrgan/getOrgInfo.do",
+        		data : {
+        			orgID 	: OrganCode
+        		},
+        		success: function(text){
+        			result = text;
+        		}        			
+        	});
 
-            var objNode;
-            createNodeInsert(xmlpara, objNode, "PARA");
-            createNodeAndInsertText(xmlpara, objNode, "ORGID", OrganCode);
-
-            xmlhttp.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrgInfo.aspx", false);
-            xmlhttp.send(xmlpara);
-
-            return xmlhttp.responseXML;
+            return loadXMLString(result);
         }
         catch (e) {
             return "";

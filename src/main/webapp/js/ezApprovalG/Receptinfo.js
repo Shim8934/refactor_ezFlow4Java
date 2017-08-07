@@ -1646,7 +1646,7 @@ function RequestDataG(pNodeID, pTreeID) {
         createNodeInsert(xmlpara, objNode, "PARA");
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", treeNode.GetNodeData("DATA2"));
         xmlhttp2 = createXMLHttpRequest();
-        xmlhttp2.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrganSubTreeInfo.aspx", false);
+        xmlhttp2.open("POST", "/ezOrgan/getOrganSubTreeInfo.do", false);
         xmlhttp2.send(xmlpara);
 
         var xmlRtn = createXmlDom();
@@ -1723,7 +1723,6 @@ function DuplicateAprDeptCheckG(APRDEPT, arrUserInfo) {
 
 function AprLineAddDeptG(nodeIdx, tr) {
     var isCurretnCompany = "Y";
-    Resultxml.async = false;
 
     if(approvalFlag == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
@@ -1921,16 +1920,20 @@ function isExistDept(ExtFlag) {
 }
 function getExtLdapInfo(OrganCode) {
     try {
-        var xmlpara = createXmlDom();
-        var xmlRtn = createXmlDom();
-        var objNode;
-        createNodeInsert(xmlpara, objNode, "PARA");
-        createNodeAndInsertText(xmlpara, objNode, "ORGID", OrganCode);
-        xmlhttp2 = createXMLHttpRequest();
-        xmlhttp2.open("POST", "/myoffice/ezApprovalG/ezOrganG/GetOrgInfo.aspx", false);
-        xmlhttp2.send(xmlpara);
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/getOrgInfo.do",
+    		data : {
+    			orgID 	: OrganCode
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
 
-        return xmlhttp2.responseXML.documentElement;
+        return loadXMLString(result);
     } catch (e) {
         return "";
     }

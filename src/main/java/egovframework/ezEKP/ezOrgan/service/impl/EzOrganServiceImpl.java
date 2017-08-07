@@ -29,7 +29,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPortal.web.EzPortalAdminController;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzOrganService")
@@ -1223,7 +1223,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception {
+	public String getOrganTreeInfo(String strFilter, int intScope, String strBaseDN) throws Exception {
 		//ldap
 		String searchScope = "";
 		
@@ -1236,58 +1236,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 				searchScope = "2";
 			}
 		}
-		
-		String ldapPath = "ldap://" + config.getProperty("R_LServer") + commonUtil.separator + config.getProperty("R_LBaseDN");
-		Hashtable<String, String> env           = new Hashtable<String, String>(5, 0.75f); 
-        NamingEnumeration<?> m_ne = null;
-        // 검색된 결과 entry중 아래의 attribute들을 출력할 것임 
-        String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode"}; 
-        List<String[]> ou = new ArrayList<String[]>();
-        try {   
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); 
-           //LDAP 서버의 "프로토콜://IP:포트"를 설정 
-            // 아래는 ldap 프로토콜을 사용하는 127.0.0.1 서버의 389포트로 접속하는 경우 
-            env.put(Context.PROVIDER_URL, "ldap://doc.dir.go.kr:389"); 
-            DirContext dirCtx = new InitialDirContext(env); 
-            SearchControls constraints = new SearchControls();
-            
-            //검색 제약 조건
-            // SUBTREE_SCOPE : 기본 엔트리에서 시작하여 기본 엔트리 및 하위 모두 검색
-            // ONELEVEL_SCOPE : 기본 엔트리 밑에 있는 엔트리들을 검색
-            // OBJECT_SCOPE : 기본 엔트리만 검색
-            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE); 
-            if (attrIDs != null) {
-                constraints.setReturningAttributes(attrIDs); 
-            }
-            //검색을 시작할 BASE DN을 설정하고, 검색 
-            m_ne = dirCtx.search(config.getProperty("R_LBaseDN"), strFilter, constraints); 
-            dirCtx.close(); 
-        } catch (Exception e) { 
-            e.printStackTrace(); 
-        } 
-            SearchResult sr = null; 
-            while(m_ne.hasMoreElements()){ 
-                sr = (SearchResult)m_ne.next(); 
-                //dn출력시 BASE DN은 제외하고 출력된다. 
-                String str[] = new String[12];
-                for (int i=0; i< attrIDs.length; i++) { 
-                	if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
-                		str[i] = " ";
-                	} else {
-                		str[i] = (String)sr.getAttributes().get(attrIDs[i]).get();
-                		
-                	}
-                } 
-                ou.add(str); 
-            }
-      
-            Collections.sort(ou, new Comparator<String[]>(){
-            	@Override
-                public int compare(String[] o1, String[] o2) {
-                    return  o1[2].compareTo(o2[2]);
-                }
-            });
-            
+
+		List<String[]> ou = new ArrayList<String[]>();
+		ou = ldapSearch(strFilter,strBaseDN);
             
             StringBuilder nodeInfo = new StringBuilder("");
 
@@ -1326,11 +1277,11 @@ public class EzOrganServiceImpl implements EzOrganService {
             
         for (int i = 0; i < ou.size(); i++) {
             String pORGANIZATIONUNITNAME = ou.get(i)[0];
-            String pOUCODE =  ou.get(i)[1];
-            String pTOPOUCODE =  ou.get(i)[2];
-            String pOURECEIVEDOCUMENTYN = ou.get(i)[3];
-            String pOUSMTPADDRESS =  ou.get(i)[4];
 
+            String pOUCODE =  ou.get(i)[3];
+            String pTOPOUCODE =  ou.get(i)[2];
+            String pOURECEIVEDOCUMENTYN = ou.get(i)[7];
+            String pOUSMTPADDRESS =  ou.get(i)[9];
 
             nodeInfo.append("<NODE>");
             nodeInfo.append("<VALUE>" + pORGANIZATIONUNITNAME + "</VALUE>");
@@ -1365,6 +1316,54 @@ public class EzOrganServiceImpl implements EzOrganService {
         return nodeInfo.toString();
 	}
 
+	@SuppressWarnings("rawtypes")
+	private List<String[]> ldapSearch(String strFilter, String strBaseDN) throws Exception {
+		List<String[]> ou = new ArrayList<String[]>();
+
+		Hashtable<String, String> env           = new Hashtable<String, String>(5, 0.75f); 
+        NamingEnumeration m_ne = null;
+        String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode"}; 
+       
+        try {   
+            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); 
+            env.put(Context.PROVIDER_URL, config.getProperty("R_LServer")); 
+            DirContext dirCtx = new InitialDirContext(env); 
+            SearchControls constraints = new SearchControls();
+            // SUBTREE_SCOPE : 기본 엔트리에서 시작하여 기본 엔트리 및 하위 모두 검색
+            // ONELEVEL_SCOPE : 기본 엔트리 밑에 있는 엔트리들을 검색
+            // OBJECT_SCOPE : 기본 엔트리만 검색
+            constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE); 
+            if (attrIDs != null) {
+                constraints.setReturningAttributes(attrIDs); 
+            }
+            m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
+            dirCtx.close(); 
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+            SearchResult sr = null; 
+            while(m_ne.hasMoreElements()){ 
+                sr = (SearchResult)m_ne.next(); 
+                String str[] = new String[12];
+                for (int i=0; i< attrIDs.length; i++) { 
+                	if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
+                		str[i] = " ";
+                	} else {
+                		str[i] = (String)sr.getAttributes().get(attrIDs[i]).get();
+                	}
+                } 
+                ou.add(str); 
+            }
+      
+            Collections.sort(ou, new Comparator<String[]>(){
+            	@Override
+                public int compare(String[] o1, String[] o2) {
+                    return  o1[2].compareTo(o2[2]);
+                }
+            });
+		return ou;
+	}
+	
 	@Override
 	public String getEncPassword(String dUserID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1515,7 +1514,57 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return proxyInfo;
 	}
 
-	
+	@Override
+	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope, LoginVO userInfo) throws Exception {
+		logger.debug("getOrganSubTreeInfo started");
+		
+		List<String[]> ou = new ArrayList<String[]>();
+		ou = ldapSearch(strFilter, strBaseDN);
+		
+		StringBuilder str = new StringBuilder();
+		
+		str.append("<NODES>");
+
+		for (int i=0; i<ou.size(); i++) {
+			str.append("<NODE>");
+			str.append("<VALUE>" + ou.get(i)[1] + "</VALUE>");
+			str.append("<DATA1>" + ou.get(i)[3] + "</DATA1>");
+			str.append("<DATA2> ou=" + ou.get(i)[1] + "," + strBaseDN + "</DATA2>");
+			str.append("<DATA3>");
+			
+			if (ou.get(i)[7].equals(" ") || ou.get(i)[7].equals("N")) {
+				str.append("N");
+			} else {
+				str.append("Y");
+			}
+			
+			str.append("</DATA3>");
+			str.append("<ISLEAF>FALSE</ISLEAF>");
+			
+			if(ou.get(i)[3].toLowerCase().equals(ou.get(i)[2].toLowerCase())) {
+				str.append("<SETNODEICONBYNAME>" + ou.get(i)[1] + "</SETNODEICONBYNAME>");
+			}
+			
+			if (ou.get(i)[7].equals(" ") || ou.get(i)[7].equals("N")) {
+				str.append("<SETTEXTCOLORBYNAME>GRAY</SETTEXTCOLORBYNAME>");
+			}
+			str.append("</NODE>");
+		}
+		str.append("</NODES>");
+		logger.debug("getOrganSubTreeInfo ended");
+		return str.toString();
+	}
+
+
+	@Override
+	public String getOrgInfo(String strBaseDN, String strFilter) throws Exception {
+		logger.debug("getOrgInfo started");
+			List<String[]> ou = new ArrayList<String[]>();
+			ou = ldapSearch(strFilter , "" );
+		logger.debug("getOrgInfo ended");	
+		return null;
+	}
+
 }
 
 
