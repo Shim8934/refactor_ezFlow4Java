@@ -111,7 +111,9 @@ public class MBoardGWController {
 			String deptPathCode = request.getParameter("deptPathCode");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
-	
+			
+			LOGGER.debug("deptPathCode : "+deptPathCode);
+			
 			String primary = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 
@@ -310,15 +312,11 @@ public class MBoardGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			//String rootBoardID = request.getParameter("rootBoardId");
+			String rootBoardID = request.getParameter("rootBoardId");
 			int mode = 0;
-			//String selectBy = request.getParameter("selectBy");
-			//String excludeBoardID = request.getParameter("excludeBoardId");
-			//String subFlag = request.getParameter("subFlag");
-			String rootBoardID = "top";
-			String selectBy = "0";
-			String excludeBoardID = "";
-			String subFlag = "0";
+			String selectBy = request.getParameter("selectBy");
+			String excludeBoardID = request.getParameter("excludeBoardId");
+			String subFlag = request.getParameter("subFlag");
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			

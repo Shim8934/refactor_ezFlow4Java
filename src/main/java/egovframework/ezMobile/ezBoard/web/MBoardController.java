@@ -470,7 +470,7 @@ System.out.println("mBoardItem:"+mBoardItem);
 	 * 모바일 게시판 좌측메뉴 리스트
 	 */
 	@RequestMapping(value = "/mobile/ezBoard/getLeftMenu.do")
-	public String getLeftMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp) throws Exception {
+	public String getLeftMenu(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		LOGGER.debug("getLeftMenu started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -479,11 +479,9 @@ System.out.println("mBoardItem:"+mBoardItem);
 		String boardID = request.getParameter("rootBoardID");
 		String excludeBoardID = request.getParameter("excludeBoardID");
 		String selectBy = request.getParameter("selectBy");
+		String subFlag = request.getParameter("subFlag");
 		String url = gwServerUrl + "/mobile/ezboard/folder-list";
 		
-		selectBy = "0";
-		boardID = "top";
-		excludeBoardID="";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -492,10 +490,11 @@ System.out.println("mBoardItem:"+mBoardItem);
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId());
-				//.queryParam("rootBoardId", boardID)
-				//.queryParam("selectBy", selectBy)
-				//.queryParam("excludeBoardId", excludeBoardID);
+				.queryParam("userId", userInfo.getId())
+				.queryParam("rootBoardId", boardID)
+				.queryParam("selectBy", selectBy)
+				.queryParam("excludeBoardId", excludeBoardID)
+				.queryParam("subFlag", subFlag);
 		RestTemplate rest = new RestTemplate();
 		
 		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
@@ -508,12 +507,12 @@ System.out.println("mBoardItem:"+mBoardItem);
 		if (status.equals("ok")) {
 			mBoardItem = resultBody.get("data");
 System.out.println("mBoardItem:"+mBoardItem);
-			//model.addAttribute("mBoardItem", mBoardItem);
+			model.addAttribute("mBoardItem", mBoardItem);
 		}
 		
 		LOGGER.debug("getLeftMenu ended.");
 		
-		return "";
+		return "json";
 	}
 	
 	/**
