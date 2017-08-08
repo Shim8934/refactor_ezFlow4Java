@@ -139,10 +139,8 @@
 						<input type="radio" name='searchType' class='searchType' value='content' /><spring:message code='ezCircular.t188' />
 						<input type='text' id='searchValue' />
 						&nbsp;
-						<a class='imgbtn'>
-							<span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span>&nbsp;
-							<span onclick="commentRefresh()"><spring:message code='ezCircular.t173' /></span>&nbsp;
-						</a>
+						<a class='imgbtn'><span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
+						<a class='imgbtn'><span onclick="commentRefresh()"><spring:message code='ezCircular.t173' /></span>&nbsp;</a>
 					</th>
 				</tr>
 			</table>
