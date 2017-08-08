@@ -296,7 +296,7 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String ownerNm = xmlRes.getElementsByTagName("DATA").item(4).getTextContent().trim();
 		String ownerPos = xmlRes.getElementsByTagName("DATA").item(5).getTextContent().trim();
 		String ownerCall = xmlRes.getElementsByTagName("DATA").item(6).getTextContent().trim();
-		String brdNm = xmlRes.getElementsByTagName("DATA").item(7).getTextContent().trim();
+		String brdNm = xmlRes.getElementsByTagName("DATA").item(7).getTextContent();
 		String brdExplain = xmlRes.getElementsByTagName("DATA").item(8).getTextContent().trim();
 		String accessNoty = xmlRes.getElementsByTagName("DATA").item(9).getTextContent().trim();
 		String companyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
