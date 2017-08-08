@@ -929,7 +929,7 @@ function PreviewRayerChange(pGubun) {
                 if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
                     if (g_foldertype != "sent") {
                         if (p_HeaderViewXML.indexOf("viewXMLFile1_1.xml") > 0) {
-                            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+                            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);
@@ -982,7 +982,7 @@ function PreviewRayerChange(pGubun) {
                 if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
                     if (g_foldertype != "sent") {
                         if (p_HeaderViewXML.indexOf("viewXMLFile1.xml") > 0) {
-                            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
+                            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1_1.xml";
                             var HeaderObject = document.getElementById("MailHeader");
                             var ContentObject = document.getElementById("MailList");
                             HeaderIni(HeaderObject);

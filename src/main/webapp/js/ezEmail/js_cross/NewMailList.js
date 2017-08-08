@@ -799,7 +799,7 @@ function MailListRefresh() {
         if (listSubContentArry.length > 0) {
             var pGroupProp = pGroupListClickObject.getAttribute("prop");
             var pGroupMode = pGroupListClickObject.getAttribute("mode");
-            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
             if (pGroupMode == "SENT") {
                 p_ListorderType = " WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false " +
                                   " AND \"http://schemas.microsoft.com/mapi/sent_representing_name\" = '" + pGroupProp + "' ";
