@@ -92,17 +92,29 @@
   		   <![CDATA[
 				UPDATE TBL_USERMOBILEINFO
 				SET 
-					TIMEZONE = #timeZone#,
-					LANG = #lang#,
-					MAINTYPE = #mainType#,
-					LISTCNT = #listCnt#,
-					USESEARCH = #useSearch#,
-					USESECURITY = #useSecurity#
+					LANG = #lang#
+				]]>	
+					<isNotEmpty property="timeZone">	
+					,TIMEZONE = #timeZone#
+					</isNotEmpty>		
+					<isNotEmpty property="mainType">	
+					,MAINTYPE = #mainType#
+					</isNotEmpty>
+					<isNotEmpty property="listCnt">
+					,LISTCNT = #listCnt#
+					</isNotEmpty>
+					<isNotEmpty property="useSearch">
+					,USESEARCH = #useSearch#
+					</isNotEmpty>
+					<isNotEmpty property="useSecurity">
+					,USESECURITY = #useSecurity#
+					</isNotEmpty>
+			<![CDATA[		
 				WHERE 
 					USERID = #userId#
 				AND 
 					TENANT_ID = #tenantId#
-   		]]>
+   				]]>
   	</update>
   	
 </sqlMap>
