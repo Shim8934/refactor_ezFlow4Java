@@ -84,8 +84,29 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 				
 		LOGGER.debug("insertOption ended");				
 	}
-	
-	
+
+	@Override
+	public void updateOption(String userId, String timeZone, String lang,
+			String mainType, String listCnt, String useSearch,
+			String useSecurity, int tenantId) throws Exception {
+		
+		LOGGER.debug("updateOption started");	
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("timeZone", timeZone);
+		map.put("lang", lang);
+		map.put("mainType", mainType);
+		map.put("listCnt", listCnt);
+		map.put("useSearch", useSearch);
+		map.put("useSecurity", useSecurity);
+		map.put("tenantId", tenantId);
+		
+		mOptionDAO.updateOption(map);
+		
+		LOGGER.debug("updateOption ended");	
+		
+	}
 	
 	
 	

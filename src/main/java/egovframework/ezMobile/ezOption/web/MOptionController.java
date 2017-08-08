@@ -1,5 +1,7 @@
 package egovframework.ezMobile.ezOption.web;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -7,16 +9,29 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.google.gson.Gson;
 
 import egovframework.ezMobile.ezOption.service.MOptionService;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.web.MPortalController;
+import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -80,6 +95,79 @@ private static final Logger logger = LoggerFactory.getLogger(MPortalController.c
 	}
 	
 	
+	/**
+	 * 모바일 환경설정 수정사항 저장
+	 */
+	@RequestMapping(value = "/mobile/ezOption/updateOption.do")
+	public String updteOption(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, MOptionVO optionVO,LoginVO userInfo, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("addResSchedule started.");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String serverName = request.getServerName();
+		String timeZone = request.getParameter("timeZone");
+		String lang = request.getParameter("lang");
+		String mainType = request.getParameter("mainType");
+		String listCnt = request.getParameter("listCnt");
+		String useSearch = request.getParameter("useSearch");
+		String useSecurity = request.getParameter("useSecurity");
+		String userId = "";
+		
+		timeZone = "235|+09:00";
+		lang = "1";
+		mainType = "P";
+		listCnt = "10";
+		useSearch = "Y";
+		useSecurity = "N";
+		userId = "naman79";
+		
+		if(userInfo != null){
+			userId = userInfo.getId();			
+		}
+		
+		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+		logger.debug("gwServerUrl: " + gwServerUrl);
+		//로컬테스트용
+		gwServerUrl = "http://localhost:8080";
+		String url = gwServerUrl + "/mobile/ezoption/option/users/" + userId;
+		
+		optionVO.setTimeZone(timeZone);
+		optionVO.setLang(lang);
+		optionVO.setListCnt(listCnt);
+		optionVO.setMainType(mainType);
+		optionVO.setUseSearch(useSearch);
+		optionVO.setUseSecurity(useSecurity);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<JSONObject> result = null;
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+		
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<Object> entity = null;		
+		Gson gson = new Gson();
+		
+
+		
+		String jsonString = gson.toJson(optionVO);
+		 JSONObject jsonObject = gson.fromJson(jsonString, JSONObject.class);
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", serverName);
+	     entity = new HttpEntity<Object>(jsonObject, headers);	
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+
+		logger.debug("result: " + result);
+		
+		JSONObject resultBody = result.getBody();
+				
+		String status = resultBody.get("status").toString();
+
+		model.addAttribute("result", result);
+		
+		logger.debug("addResSchedule ended.");
+		
+		return "json";
+	}
 	
 	
 }
