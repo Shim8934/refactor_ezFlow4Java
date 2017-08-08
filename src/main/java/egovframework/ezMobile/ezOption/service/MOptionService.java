@@ -13,4 +13,6 @@ public interface MOptionService {
 
 	public void insertOption(String uid, String timeZone, String lang, String mainType, String listCnt, String useSearch, String useSecurity, int tenantId) throws Exception;
 
+	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSearch, String useSecurity, int tenantId) throws Exception;
+	
 }

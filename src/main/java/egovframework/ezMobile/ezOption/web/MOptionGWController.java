@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -83,7 +84,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	 * 모바일 G/W 환경설정 [put] 환경설정수정
 	 */
 	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject optionUpdate(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+	public JSONObject optionUpdate(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
@@ -92,7 +93,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-
+			
+			String timeZone = "235|+09:00";
+			String lang = "1";
+			String mainType = "P";
+			String listCnt = "10";
+			String useSearch = "Y";
+			String useSecurity = "N";
+			int tenantId = 0;
+			
+			timeZone = (String) jsonObject.get("timeZone");
+			lang = (String) jsonObject.get("lang");
+			mainType = (String) jsonObject.get("mainType");
+			listCnt = (String) jsonObject.get("listCnt");
+			useSearch = (String) jsonObject.get("useSearch");
+			useSecurity = (String) jsonObject.get("useSecurity");
+			tenantId = info.getTenantId();
+			
+			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSearch, useSecurity, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
