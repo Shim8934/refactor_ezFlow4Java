@@ -78,8 +78,15 @@ public class MApprovalGController {
 	 * 모바일 전자결재G 결재할문서 호출 Method
 	 */
 	@RequestMapping(value = "/mobile/ezApprovalG/mApproveList.do")
-	public String mApproveList() throws Exception {
+	public String mApproveList(String pType, Model model) throws Exception {
 		LOGGER.debug("mApproveList started");
+		
+		if (pType == null || pType.equals("")) {
+			pType = "DO";
+		}
+		
+		model.addAttribute("type", pType);
+		
 		LOGGER.debug("mApproveList ended");
 		
 		return "mobile/ezApprovalG/mApprGdoApproveList";
@@ -261,6 +268,7 @@ public class MApprovalGController {
 			model.addAttribute("photoPath", photoPath);
 			model.addAttribute("opinionCount", opinionCount);
 			model.addAttribute("docID", pDocID);
+			model.addAttribute("type", pType);
 			model.addAttribute("bodyHTML", bodyHTML);
 		} else {
 			return "에러페이지라고 하면 될려나";
@@ -565,60 +573,61 @@ public class MApprovalGController {
 		return "json";
 	}
 	
-	@RequestMapping(value = "/mobile/ezApprovalG/getTimeLineList.do")
-	public String getTimeLineList(@CookieValue("loginCookie") String loginCookie, HttpSession session, Model model, String pTempFlag) throws Exception {
-		LOGGER.debug("getTimeLineList started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String sessionDate = "";
-		
-		if (pTempFlag.equals("0")) {
-			sessionDate = commonUtil.getTodayUTCTime("");
-			session.setAttribute("timeLineStartDate", sessionDate);
-		} else {
-			sessionDate = (String) session.getAttribute("timeLineStartDate");
-		}
-		
-		LOGGER.debug("sessionDate : " + sessionDate);
-		
-		List<MApprovalGTLVO> mApprovalGTLVOs = MApprovalGService.getTimeLineList(userInfo, sessionDate);
-		
-
-		//메일 조인 부분
-		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
-		String password = userIdAndPassword.get(1);
-	      
-		List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, password, sessionDate, 20);
-		//sender, receivedDate, title
-		
-		for (Map<String, String> maps : mailList) {
-			MApprovalGTLVO mApprovalGTLVO = new MApprovalGTLVO();
-			mApprovalGTLVO.setTitle(maps.get("subject"));
-			mApprovalGTLVO.setStartDate(maps.get("receivedDate"));
-			mApprovalGTLVO.setModule("메일");
-			mApprovalGTLVO.setWriterName(maps.get("sender"));
-			
-			mApprovalGTLVOs.add(mApprovalGTLVO);
-		}
-		
-		Collections.sort(mApprovalGTLVOs, new Comparator<MApprovalGTLVO>() {
-			@Override
-			public int compare(MApprovalGTLVO o1, MApprovalGTLVO o2) {
-				return o2.getStartDate().compareTo(o1.getStartDate());
-			}
-		});
-		
-		sessionDate = mApprovalGTLVOs.get(mApprovalGTLVOs.size() - 1).getStartDate();
-		
-		if (mApprovalGTLVOs.size() > 0) {
-			session.setAttribute("timeLineStartDate", sessionDate);
-		}
-
-		model.addAttribute("timeLineList", mApprovalGTLVOs);
-		
-		LOGGER.debug("getTimeLineList ended");
-		
-		return "json";
-	}
+	//타임라인 임시휴업
+//	@RequestMapping(value = "/mobile/ezApprovalG/getTimeLineList.do")
+//	public String getTimeLineList(@CookieValue("loginCookie") String loginCookie, HttpSession session, Model model, String pTempFlag) throws Exception {
+//		LOGGER.debug("getTimeLineList started");
+//
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		
+//		String sessionDate = "";
+//		
+//		if (pTempFlag.equals("0")) {
+//			sessionDate = commonUtil.getTodayUTCTime("");
+//			session.setAttribute("timeLineStartDate", sessionDate);
+//		} else {
+//			sessionDate = (String) session.getAttribute("timeLineStartDate");
+//		}
+//		
+//		LOGGER.debug("sessionDate : " + sessionDate);
+//		
+//		List<MApprovalGTLVO> mApprovalGTLVOs = MApprovalGService.getTimeLineList(userInfo, sessionDate);
+//		
+//
+//		//메일 조인 부분
+//		List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+//		String password = userIdAndPassword.get(1);
+//	      
+//		List<Map<String, String>> mailList = ezEmailService.getMailListT(userInfo, password, sessionDate, 20);
+//		//sender, receivedDate, title
+//		
+//		for (Map<String, String> maps : mailList) {
+//			MApprovalGTLVO mApprovalGTLVO = new MApprovalGTLVO();
+//			mApprovalGTLVO.setTitle(maps.get("subject"));
+//			mApprovalGTLVO.setStartDate(maps.get("receivedDate"));
+//			mApprovalGTLVO.setModule("메일");
+//			mApprovalGTLVO.setWriterName(maps.get("sender"));
+//			
+//			mApprovalGTLVOs.add(mApprovalGTLVO);
+//		}
+//		
+//		Collections.sort(mApprovalGTLVOs, new Comparator<MApprovalGTLVO>() {
+//			@Override
+//			public int compare(MApprovalGTLVO o1, MApprovalGTLVO o2) {
+//				return o2.getStartDate().compareTo(o1.getStartDate());
+//			}
+//		});
+//		
+//		sessionDate = mApprovalGTLVOs.get(mApprovalGTLVOs.size() - 1).getStartDate();
+//		
+//		if (mApprovalGTLVOs.size() > 0) {
+//			session.setAttribute("timeLineStartDate", sessionDate);
+//		}
+//
+//		model.addAttribute("timeLineList", mApprovalGTLVOs);
+//		
+//		LOGGER.debug("getTimeLineList ended");
+//		
+//		return "json";
+//	}
 }

@@ -55,7 +55,7 @@
 					WRITERDEPTNAME$lang$,
 					HASATTACHYN
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
@@ -91,15 +91,13 @@
 					WRITERDEPTNAME$lang$,
 					HASATTACHYN
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
 	   				COMPANYID = #companyID#
 	   			AND
 	   				STARTDATE < #lastDate#
-	   			AND 
-		         	APRMEMBERSN = 1 
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
@@ -228,7 +226,7 @@
 				SELECT 
 					COUNT(*)
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
@@ -253,20 +251,20 @@
 				SELECT 
 					COUNT(*)
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
 	   				COMPANYID = #companyID#
-	   			AND 
-		         	APRMEMBERSN = 1 
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
 	   				APRTYPE <> '015'
-	   			AND 
-		         	DocState <> '017'
 			]]>
+			<isEqual property="mainViewYN" compareValue="YES">
+				AND	    
+					AprState != '001'
+		    </isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
 					OR 

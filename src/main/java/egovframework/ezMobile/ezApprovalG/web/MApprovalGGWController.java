@@ -168,8 +168,6 @@ public class MApprovalGGWController {
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
-			userInfo.setUserId("test");
-			
 			int listCount = mApprovalGService.getDoApproveListCount(userInfo, type, searchText);
 			
 			result.put("status", "ok");

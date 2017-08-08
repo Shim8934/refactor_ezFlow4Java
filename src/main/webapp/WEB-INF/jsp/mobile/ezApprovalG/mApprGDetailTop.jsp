@@ -31,13 +31,16 @@
 				</li>
 				<li style="height:40px;border-bottom:1px solid #f2f2f2;display:none" id="approveList">
 					<div style="padding-left:20px">
-						<c:if test="${docState == '001' || docState == '012'}">
+						<c:if test="${(docState == '001' || docState == '012') && type == 'APR'}">
 							<i class="fa fa-thumbs-o-up" style="font-size:24px; cursor: pointer; padding-top: 5px" onclick="doApprove('${docID}', 'APR')"></i>&nbsp;&nbsp;
 							<i class="fa fa-thumbs-o-down" style="font-size:24px; cursor: pointer;" onclick="doApprove('${docID}', 'BAN')"></i>&nbsp;&nbsp;
 							<i class="fa fa-hand-rock-o" style="font-size:24px; cursor: pointer;" onclick="doApprove('${docID}', 'BO')"></i>&nbsp;&nbsp;
 						</c:if>
-						<c:if test="${docState == '017'}">
+						<c:if test="${docState == '017' && type == 'APR'}">
 							<i class="fa fa-check-square-o" style="font-size:24px; cursor: pointer;" onclick="doApprove('${docID}', 'CHECK')"></i>&nbsp;&nbsp;
+						</c:if>
+						<c:if test="${callBackYN == 'Y' && (type == 'ING' || type == 'DRAFT')}">
+							<i class="fa fa-history" style="font-size:24px; cursor: pointer;" onclick="doApprove('${docID}', 'HWE')"></i>&nbsp;&nbsp;
 						</c:if>
 					</div>
 				</li>
@@ -74,11 +77,10 @@
 	    	<div style="font-size:16px"><b>메뉴선택</b></div>		    	
 	        <ul data-role="listview" style="margin-top:10px">
 	        	<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
-                <li data-icon="carat-r"><a href="javascript:goMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;받은편지함</a></li>
-                <li data-icon="carat-r"><a href="javascript:goSendMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;임시보관함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;지운편지함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개인편지함</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('DO');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('ING');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;결재진행문서</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('DRAFT');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;기안한문서</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('END');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;결재한문서</a></li>
 	        </ul>
 	        <div style="margin-top:45px">
 	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>

@@ -137,7 +137,21 @@ function getApproveListCount(type) {
 }
 
 function backApproveList() {
-	window.location.href = "/mobile/ezApprovalG/mApproveList.do";
+	$.mobile.changePage("/mobile/ezApprovalG/mApproveList.do", {
+		type: "post",
+		transition: "pop",
+		changeHash: true
+	});
+	
+//	window.location.href = "/mobile/ezApprovalG/mApproveList.do";
+}
+
+function goApproveList(type) {
+	$.mobile.changePage("/mobile/ezApprovalG/mApproveList.do?pType=" + type, {
+		type: "post",
+		transition: "pop",
+		changeHash: true
+	});
 }
 
 function showOriginal() {

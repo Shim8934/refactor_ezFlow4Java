@@ -97,6 +97,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		LOGGER.debug("getDoApproveListCount started");
 
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String mainViewYN = ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId());
 		String userIDS = "'" + userInfo.getUserId() + "'";
 		String proxyOption = ezApprovalGService.getIsUse("A23", "001", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
 		
@@ -112,6 +113,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("userId", userInfo.getUserId());
 		map.put("type", type);
 		map.put("approvalFlag", approvalFlag);
+		map.put("mainViewYN", mainViewYN);
 
 		int listCount = mApprovalGDAO.getDoApproveListCount(map);
 		
