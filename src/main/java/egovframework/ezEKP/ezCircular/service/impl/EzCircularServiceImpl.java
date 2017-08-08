@@ -1367,28 +1367,31 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.updateCircularStatus(map);
 			}
 		}
-    	
-    	String subject = egovMessageSource.getMessage("ezCircular.t163", userInfo.getLocale());
-    	StringBuilder bodyContent = new StringBuilder("");
-    	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularVO.getCircularID() + "', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
-    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
-    	bodyContent.append("</div>");
-    	
-    	InternetAddress from = new InternetAddress();
-		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-		from.setAddress(userInfo.getEmail());
 		
-    	for (CircularCommentVO commentVO : list) {
-			if (vo.getCircularUserID().equals(commentVO.getMemberID())) {
-				InternetAddress to = new InternetAddress();
-				to.setPersonal(commentVO.getMemberName(), "UTF-8");
-				to.setAddress(commentVO.getMail());
-				
-				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+		if (!vo.getCircularUserID().equals(userInfo.getId())) {
+			String subject = egovMessageSource.getMessage("ezCircular.t163", userInfo.getLocale());
+    	
+			StringBuilder bodyContent = new StringBuilder("");
+			bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularVO.getCircularID() + "', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
+			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+			bodyContent.append("</div>");
+			
+			InternetAddress from = new InternetAddress();
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			
+			for (CircularCommentVO commentVO : list) {
+				if (vo.getCircularUserID().equals(commentVO.getMemberID())) {
+					InternetAddress to = new InternetAddress();
+					to.setPersonal(commentVO.getMemberName(), "UTF-8");
+					to.setAddress(commentVO.getMail());
+
+					ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+				}
 			}
-		}
-		
+    	}
+
 		logger.debug("editCircularComment ended.");
 	}
 

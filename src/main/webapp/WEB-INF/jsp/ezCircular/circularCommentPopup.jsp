@@ -104,6 +104,10 @@
 		        	getCircularComment();
 		        }
 		    }
+			
+			function commentRefresh() {
+				getCircularComment();
+			}
 		</script>
 		
 	</head>
@@ -112,7 +116,7 @@
 		<div class="layerpopup"  style="z-index: 3000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<h1><spring:message code='ezCircular.t180'/></h1>
+		<h1><spring:message code='ezCircular.t180'/>[${myCommentCount}/${totalCommentCount }]</h1>
 		<div id="close">
 			<ul>
 				<c:if test="${vo.memberID == userInfo.id}">
@@ -131,9 +135,14 @@
 				<tr>
 					<th style="width:51.5px;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<spring:message code='ezCircular.t85' /></th>
 					<th style="text-align:right;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-						<input type="radio" name='searchType' class='searchType' value='content' checked="checked" /><spring:message code='ezCircular.t188' />
-						<input type="radio" name='searchType' class='searchType' value='userID' /><spring:message code='ezCircular.t34' />
-						<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
+						<input type="radio" name='searchType' class='searchType' value='userID' checked="checked" /><spring:message code='ezCircular.t34' />
+						<input type="radio" name='searchType' class='searchType' value='content' /><spring:message code='ezCircular.t188' />
+						<input type='text' id='searchValue' />
+						&nbsp;
+						<a class='imgbtn'>
+							<span onclick="getCircularComment()"><spring:message code='ezCircular.t85' /></span>&nbsp;
+							<span onclick="commentRefresh()"><spring:message code='ezCircular.t173' /></span>&nbsp;
+						</a>
 					</th>
 				</tr>
 			</table>
@@ -147,8 +156,8 @@
 			
 			<table id="circularUserList" style="width:99.5%;margin-top:10px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225)"></table>
 		</div>
-		
-		<div style="width:100%;margin-left:-10px;position: relative; bottom: 0px; z-index: 1000;height:50px;">
+
+		<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color: rgb(48, 77, 127);">
 			<div class="commentConfirmDiv" style="right:330px; display:none;">
 		        <ul style="padding-top:2px">
 		            <li><span id="commentConfirm" onClick="commentConfirm()"><spring:message code='ezCircular.t54' /></span></li>

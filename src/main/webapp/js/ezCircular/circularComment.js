@@ -115,6 +115,12 @@ function getCircularComment() {
 				$("#circularUserList").append(circularCommentList);
 			}
 			
+			var updateCount = strLang2 + "[" + result.myCommentCount + "/" + result.totalCommentCount + "]"; 
+
+			$("h1").html("");
+			$("h1").append(updateCount);
+
+			parent.getCommentCount();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			
@@ -310,7 +316,7 @@ function commentConfirm() {
 }
 
 function openCircularComment() {
-	DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.9, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
+	DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezCircular/circularCommentPopup.do?circularID=" + circularID + "&status=" + status);
 }
 
 function openCommentSharePopup(obj) {
@@ -321,4 +327,5 @@ function openCommentSharePopup(obj) {
 
 function closePopup() {
 	parent.DivPopUpHidden();
+	parent.getCommentCount(); // 공유자목록 창 닫을 때 read 창에서 의견목록 Update 위해 추가
 }

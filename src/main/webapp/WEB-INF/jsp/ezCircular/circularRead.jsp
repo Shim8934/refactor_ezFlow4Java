@@ -538,7 +538,7 @@
 	        		<br/>
 	        		<table class="content" style="width:100%; table-layout: fixed;">
 	        			<tr>
-	            			<td colspan="4"><div id="divCross" style="margin:8px; overflow:auto; overflow-x:scroll;"></div></td>
+	            			<td colspan="4"><div id="divCross" style="margin:8px; overflow:auto;"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
