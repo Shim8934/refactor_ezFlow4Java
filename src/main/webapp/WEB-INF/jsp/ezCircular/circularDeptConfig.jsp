@@ -215,7 +215,7 @@
 		                        </tr>
 		                    </table>
 		                    <div id="contentlist" style="height: 365px; overflow-y: auto;">
-		                        <table id="circularDeptList" class="mainlist" style="width: 100%;">
+		                        <table id="circularDeptList" class="mainlist" style="width: 100%; display:inherit">
 		                        </table>
 		                    </div>
 		                </div>

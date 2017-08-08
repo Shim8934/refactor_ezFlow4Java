@@ -23,4 +23,8 @@ public class MOptionDAO extends EgovAbstractDAO {
 		insert("EzOptionDAO.insertOption", map);		
 	}
 
+	public void updateOption(Map<String, Object> map) throws Exception{
+		insert("EzOptionDAO.updateOption", map);		
+	}
+	
 }
