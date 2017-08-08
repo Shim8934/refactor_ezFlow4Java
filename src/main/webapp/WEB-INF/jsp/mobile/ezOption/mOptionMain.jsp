@@ -11,7 +11,7 @@
     	<link rel="stylesheet" type="text/css" href="/css/mobile/mobile.css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.mobile/jquery.mobile-1.4.5.min.js"></script>
-		
+			<script type="text/javascript" src="/js/mobile/mOption.js"></script>
 		<script type="text/javascript" src="/js/mobile/mobile.js"></script>
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
@@ -62,7 +62,9 @@
      		
      		<!-- body start -->
 			<div class="content" data-role="content">
-				<form id="mainForm" name="mainForm" method="post">					
+				<form id="mainForm" name="mainForm" method="post">
+				<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchOption();">환경설정업조회</li>
+				<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:updateOption();">환경설정업데이트</li>					
 					<div class="ui-corner-all custom-corners">
 					  <div class="ui-bar ui-bar-a">
 					    <h3>언어 설정</h3>
