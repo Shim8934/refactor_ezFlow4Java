@@ -523,7 +523,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject modResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}] started.");
-JSONObject result = new JSONObject();
+			JSONObject result = new JSONObject();
 		
 		String test = (String) jsonObject.get("userId");
 		LOGGER.debug("test: " + test);

@@ -10,12 +10,15 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
@@ -23,8 +26,8 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
-@Controller
-public class MOptionGWController {
+@RestController
+public class MOptionGWController extends EgovFileMngUtil{
 
 private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController.class);
 	
@@ -64,9 +67,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			
 			LOGGER.debug("opt: " + opt.toString());
 			
+			String obj = "";
+			
+			Gson gson = new Gson();
+			
+			obj = gson.toJson(opt);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", opt);
+			result.put("data", obj);
 			
 		} catch (Exception e) {
 			
@@ -88,6 +97,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
+		
+		String test = (String) jsonObject.get("lang");
+		
+		LOGGER.debug("lang: " + test);
 
 		try {
 			
@@ -102,12 +115,26 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			String useSecurity = "N";
 			int tenantId = 0;
 			
-			timeZone = (String) jsonObject.get("timeZone");
-			lang = (String) jsonObject.get("lang");
-			mainType = (String) jsonObject.get("mainType");
-			listCnt = (String) jsonObject.get("listCnt");
-			useSearch = (String) jsonObject.get("useSearch");
-			useSecurity = (String) jsonObject.get("useSecurity");
+			if(jsonObject.containsKey("timeZone")){
+				timeZone = jsonObject.get("timeZone").toString();
+			}
+			
+			if(jsonObject.containsKey("lang")){
+				lang = jsonObject.get("lang").toString();
+			}
+			
+			if(jsonObject.containsKey("listCnt")){
+				listCnt = jsonObject.get("listCnt").toString();
+			}
+			
+			if(jsonObject.containsKey("useSearch")){
+				useSearch = jsonObject.get("useSearch").toString();
+			}
+			
+			if(jsonObject.containsKey("useSecurity")){
+				useSecurity = jsonObject.get("useSecurity").toString();
+			}
+
 			tenantId = info.getTenantId();
 			
 			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSearch, useSecurity, tenantId);
