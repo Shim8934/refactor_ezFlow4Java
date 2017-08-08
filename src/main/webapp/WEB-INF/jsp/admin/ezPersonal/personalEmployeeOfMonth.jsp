@@ -24,7 +24,7 @@
 		    function btn_Select() {
 		        if (CrossYN()) {
 		            select_best_dialogArguments[1] = btn_Select_Complete;
-		            var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(400, 200));
+		            var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(448, 200));
 		            try { Select_Best.focus(); } catch (e) {
 		            }
 		        }  else {
