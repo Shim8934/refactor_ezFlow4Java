@@ -7,12 +7,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1964,6 +1968,42 @@ public class EzEmailUtil {
     	}
     	
     	return credential;
+    }
+    
+    /**
+     * Bizmeka API를 호출할 때 인증을 위해 관리자의 id와 pw를 이 메소드를 사용해 암호화한 후 보낸다.
+     * 현재 구현은 Tenant Config에 이미 암호화된 형태로 입력해 놓았기 때문에(BizmekaAdminId와 BizmekaAdminPw)
+     * App내에서 이 메소드를 직접 호출하지는 않는다.
+     * @param value
+     * @return
+     * @throws Exception
+     */
+    public String getEncryptedCredentialForBizmekaAPI(String value) throws Exception {
+    	String encryptedValue = "";
+    	
+    	// RSA 키의 Modulus를 대입
+    	String modulusInBase64 = "iWJy6wVrRTu4FcieK+FOyVaoxhMC0Ng6APQD5wefVEWFbcx8S9iOtj+JOith3XYeZi9E3+0rqhwgcGKDYryYRMrmWDAcLqwWHO/Cp9EX3uQw3GDLSwo4TwkwcXhtAwKXL5mttkX76p9eSUWwbKLRq+Eq+0oeh6ZUkcYLiwIY5Q8=";
+    	// RSA 키의 Exponent를 대입
+    	String exponentInBase64 = "AQAB";
+    	
+    	java.util.Base64.Decoder decoder = java.util.Base64.getDecoder();
+    	String modulusInHex = toHexString(decoder.decode(modulusInBase64));
+    	String exponentInHex = toHexString(decoder.decode(exponentInBase64));
+
+    	BigInteger modulus = new BigInteger(modulusInHex, 16);
+    	BigInteger pubExp = new BigInteger(exponentInHex, 16);
+
+    	KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    	RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(modulus, pubExp);
+    	RSAPublicKey key = (RSAPublicKey) keyFactory.generatePublic(pubKeySpec);
+    	Cipher cipher = Cipher.getInstance("RSA");
+    	cipher.init(Cipher.ENCRYPT_MODE, key);
+    	
+    	byte[] cipherData = cipher.doFinal(value.getBytes());
+    	
+    	encryptedValue = toHexString(cipherData);
+    	
+    	return encryptedValue;
     }
     
     public String bizmekaAddUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 

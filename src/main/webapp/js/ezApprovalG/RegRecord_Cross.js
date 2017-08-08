@@ -192,7 +192,7 @@ function RegisterRecord() {
             objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DOCTYPE", "1");
         }
         else {
-            objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DOCTYPE", "0");
+		    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "DOCTYPE", "0");
         }
     }
     else if (ListTypeFlag == "10") {
@@ -280,7 +280,7 @@ function btnChangeCabinet_onclick() {
     selectcabinet_cross_dialogArguments[0] = para;
     selectcabinet_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 
-    DivPopUpShow(870, 500, url);
+    DivPopUpShow(830, 500, url);
 }
 
 function btnChangeCabinet_onclick_Complete(rtn) {

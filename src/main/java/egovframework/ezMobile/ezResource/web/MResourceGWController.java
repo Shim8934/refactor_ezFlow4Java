@@ -77,8 +77,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;
 		
 	@Resource(name="MResourceService")
 	private MResourceService mResourceService;
@@ -86,14 +84,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@Resource(name="loginService")
 	private LoginService loginService;
 
-	/*@Resource(name="crypto") 
-	private EgovFileScrty egovFileScrty;*/
-	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
-	/*@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;*/
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
@@ -103,7 +93,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/mobile/ezresource/main-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceMainList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/{type}/list] started.");
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/main-list/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -111,28 +101,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String deptId = info.getDeptId();
-			String offset = info.getOffSet();
-			int tenantId = info.getTenantId();
-			String firstWriteDay = request.getParameter("firstWriteDay");
-			String lastWriteDay = request.getParameter("lastWriteDay");
-			String companyId = request.getParameter("companyId");
-	    	String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
-			String utcStartDate = today.substring(0,10) + " 00:00:00";
-	    	String utcEndDate = today.substring(0,10)+ " 23:59:59";
-	        
-	    	LOGGER.debug("utcStartDate: " + utcStartDate);
-	    	LOGGER.debug("utcEndDate: " + utcEndDate);
-	    	
-	    	int page = 10;
-	    	
-			List<MResourceScheduleVO> list = mResourceService.getResScheduleMainList(utcStartDate, utcEndDate, companyId, page, firstWriteDay, lastWriteDay,  tenantId);
-			
-			LOGGER.debug("size of result: " + list.size());
+
+	    	String listCnt = "10";
+	    				
+			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt);
+
+			LOGGER.debug("resultMap: " + resultMap);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
@@ -141,7 +119,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			result.put("data", "");
 			
 		}
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/{type}/list] ended.");	
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/main-list/users/{userId}] ended.");	
 		
 		return result;
 	}
@@ -194,17 +172,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 
 	 */
-	//리스트와 카운트를 병합처리로 변경
-/*	@RequestMapping(value="/ezresource/{type}/list-count", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public LoginVO resourceSchListCount(@PathVariable String type, @RequestParam(value="tenantId", required=false) String tenantId) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /ezresource/{type}/list-count] started.");
-		LOGGER.debug("type: " + type);
-		LOGGER.debug("tenantId: " + tenantId);
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /ezresource/{type}/list-count] ended.");
-		LoginVO vo = new LoginVO();
-		return vo;
-	}*/
-	
+
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원리스트 조회
 	 */
@@ -551,7 +519,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject modResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}] started.");
-JSONObject result = new JSONObject();
+			JSONObject result = new JSONObject();
 		
 		String test = (String) jsonObject.get("userId");
 		LOGGER.debug("test: " + test);
@@ -718,10 +686,11 @@ JSONObject result = new JSONObject();
 	/**
 	 * 모바일 G/W 자원관리 [delete] 자원예약삭제
 	 */
-	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public JSONObject delResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}] started.");
+	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject delResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId,  HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] started.");
 		JSONObject result = new JSONObject();
+		
 		
 		try {
 			
@@ -731,13 +700,11 @@ JSONObject result = new JSONObject();
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
-			String companyId = request.getParameter("companyId");
-			String ownerId = request.getParameter("ownerId");
-			String num = request.getParameter("num");
+			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("companyId: " + companyId);
 			LOGGER.debug("resourceId: " + resourceId);
-			LOGGER.debug("schuduleId: " + scheduleId);
+			LOGGER.debug("scheduleId: " + scheduleId);
 			LOGGER.debug("tenantId: " + tenantId);
 			
 			mResourceService.delResSch(companyId, resourceId, scheduleId, tenantId);
@@ -755,7 +722,7 @@ JSONObject result = new JSONObject();
 		}
 		LOGGER.debug("resourceId: " + resourceId);
 		LOGGER.debug("schuduleId: " + scheduleId);
-		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}] ended.");	
+		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] ended.");	
 		return result;
 	}
 	
@@ -790,7 +757,7 @@ JSONObject result = new JSONObject();
 		}
 		LOGGER.debug("resourceId: " + resourceId);
 		LOGGER.debug("userId: " + userId);
-		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/favorite/{userId] ended.");	
+		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/favorite/{userId}] ended.");	
 		return result;
 	}
 	

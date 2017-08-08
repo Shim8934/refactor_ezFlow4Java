@@ -5,12 +5,12 @@
 
 	<typeAlias  alias="MResourceGetAdmSubClsTreeVO" type="egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO"/>
     <typeAlias  alias="MResourceScheduleVO" 		type="egovframework.ezMobile.ezResource.vo.MResourceScheduleVO"/>
-	<typeAlias  alias="ResGetScheduleVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
-	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
+	<typeAlias  alias="MResourceGetScheduleVO" 						type="egovframework.ezMobile.ezResource.vo.ResGetScheduleVO"/>
+	<typeAlias  alias="MResGetScheduleRepetitionVO" 				type="egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO"/>
 	
 	
 	
-		<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListVO">
+		<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
@@ -36,9 +36,10 @@
 		<result property="deptNm2"				column="DEPTNM2"				columnIndex="23"/>
 		<result property="jobTitle"					column="JOBTITLE"					columnIndex="24"/>
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="25"/>
+		<result property="brdNm"				column="BRDNM"				columnIndex="26"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleVO" id="resGetScheduleListMainVO">
+	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
@@ -63,7 +64,7 @@
 		<result property="companyID"			column="COMPANYID"			columnIndex="22"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
+	<resultMap class="MResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1" />
 		<result property="num"					column="NUM"					columnIndex="2" />
 		<result property="companyID"			column="COMPANYID"				columnIndex="3" />
@@ -80,7 +81,7 @@
 	</resultMap>
     
     
-    	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListRepetitionVO">
+    	<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListRepetitionVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
@@ -107,6 +108,7 @@
 		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
 		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
+		<result property="brdNm"				column="BRDNM"				columnIndex="27"/>
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
@@ -691,51 +693,62 @@
 		<select id="MResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
 		<![CDATA[
 			SELECT 
-				NUM ,
-                PNUM ,
-                OWNERID ,
+				A.NUM ,
+                A.PNUM ,
+                A.OWNERID ,
                 A.title title  ,
-                LOCATION ,
-                TIMEDISPLAY ,
-                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-                ALERTTIME ,
-                REFLAG ,
-                GRESFLAG ,
-                WRITERID ,
-                IMPORTANCE ,
-                ENTRYLIST ,
-                ALLDAY ,
+                A.LOCATION ,
+                A.TIMEDISPLAY ,
+                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+                DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                A.ALERTTIME ,
+                A.REFLAG ,
+                A.GRESFLAG ,
+                A.WRITERID ,
+                A.IMPORTANCE ,
+                A.ENTRYLIST ,
+                A.ALLDAY ,
                 DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
-                ATTACHFLAG ,
-                CHARACTERID ,
-                APPROVEFLAG ,
+                A.ATTACHFLAG ,
+                A.CHARACTERID ,
+                A.APPROVEFLAG ,
                 B.DISPLAYNAME OWNERNM  ,
                 B.DISPLAYNAME2 OWNERNM2  ,
                 B.DESCRIPTION DEPTNM  ,
                 B.DESCRIPTION2 DEPTNM2  ,
                 B.TITLE JOBTITLE  ,
-                B.TITLE2 JOBTITLE2  
+                B.TITLE2 JOBTITLE2,
+                C.BRD_NM BRDNM  
            	FROM 
            		TBL_RS_SCHEDULE A
 			JOIN
 				TBL_USERMASTER B 
 			ON
 				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
+		    JOIN
+				TBL_RS_BRD C
+			ON
+				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
 				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
 			AND 
 				COMPANYID = #v_PCOMPANYID#
+				]]>
+			<isNotEmpty property="v_POWNERID">				
 			AND 
 				A.OWNERID = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				REFLAG = '0'
+						]]>
+			<isEmpty property="v_POWNERID">
 			AND 
-                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
-			AND 
-				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+			    B.DEPARTMENT = #v_WRITERDEPT#
+			</isEmpty>	
+			<![CDATA[   	
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -748,31 +761,32 @@
 		<![CDATA[
 			SELECT 
 				A.num ,
-            	PNUM ,
+            	A.PNUM ,
             	A.ownerID ,
             	A.title title  ,
-            	LOCATION ,
-            	TIMEDISPLAY ,
-            	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-            	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-            	ALERTTIME ,
-            	REFLAG ,
-            	GRESFLAG ,
-            	WRITERID ,
-            	IMPORTANCE ,
-            	ENTRYLIST ,
-            	ALLDAY ,
-            	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
-            	ATTACHFLAG ,
+            	A.LOCATION ,
+            	A.TIMEDISPLAY ,
+            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+            	DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+            	A.ALERTTIME ,
+            	A.REFLAG ,
+            	A.GRESFLAG ,
+            	A.WRITERID ,
+            	A.IMPORTANCE ,
+            	A.ENTRYLIST ,
+            	A.ALLDAY ,
+            	DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+            	A.ATTACHFLAG ,
             	A.companyID ,
-            	CHARACTERID ,
-            	APPROVEFLAG ,
+            	A.CHARACTERID ,
+            	A.APPROVEFLAG ,
             	B.DISPLAYNAME OWNERNM  ,
             	B.DISPLAYNAME2 OWNERNM2  ,
             	B.DESCRIPTION DEPTNM  ,
             	B.DESCRIPTION2 DEPTNM2  , 
             	B.TITLE JOBTITLE  ,
-            	B.TITLE2 JOBTITLE2  
+            	B.TITLE2 JOBTITLE2 ,
+            	D.BRD_NM BRDNM 
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -788,21 +802,31 @@
 			AND
 				A.num = C.num
 			AND
-				A.TENANT_ID = C.TENANT_ID	
+				A.TENANT_ID = C.TENANT_ID
+		    JOIN
+				TBL_RS_BRD D
+			ON
+				A.OWNERID = D.BRD_ID AND A.TENANT_ID = D.TENANT_ID		
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
+			        	]]>
+			<isNotEmpty property="v_POWNERID">				
 			AND
 				A.OWNERID = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				REFLAG = '1'
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
-			AND
-				( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
-			AND
-				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+						]]>
+			<isEmpty property="v_POWNERID">
+			AND 
+			    B.DEPARTMENT = #v_WRITERDEPT#
+			</isEmpty>	
+			<![CDATA[    
 			AND 
 				A.TENANT_ID = #tenantID#	
         	ORDER BY
@@ -852,8 +876,12 @@
         		COMPANYID = #v_pCompanyID#
         	AND 
         		REFLAG = '0'
+        	]]>
+			<isNotEmpty property="v_pOwnerID">				
 			AND
 				BRD.BRD_UPPER = #v_pOwnerID#
+			</isNotEmpty>	
+			<![CDATA[		
 			AND
 				SCH.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -899,8 +927,12 @@
         		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 
 				COMPANYID = #v_PCOMPANYID#
+							]]>
+			<isNotEmpty property="v_POWNERID">				
 			AND
 				BRD.Brd_Upper = #v_POWNERID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				REFLAG = '1'
 			AND
@@ -921,8 +953,12 @@
 				PNUM = #v_P_pNum#
 			AND
 				COMPANYID = #v_P_companyID#
+				]]>
+			<isNotEmpty property="v_pOwnerID">				
 			AND
 				OWNERID = #v_P_ownerID#
+			</isNotEmpty>	
+			<![CDATA[		
 			AND
 				REFLAG = '4'
 			AND
@@ -951,8 +987,12 @@
 				TBL_RS_SCHEDULEREPETITION 
 			WHERE
 				COMPANYID = #v_pCompanyID#
+				]]>
+			<isNotEmpty property="v_pOwnerID">				
 			AND
 				OWNERID = #v_pOwnerID#
+			</isNotEmpty>	
+			<![CDATA[	
 			AND
 				NUM = #v_pNum#
 			AND

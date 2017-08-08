@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
@@ -72,21 +74,9 @@ public class MResourceController extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 	
-	@Resource(name = "EzResourceService")
-	private EzResourceService ezResourceService;
-	
 	@Resource(name="loginService")
 	private LoginService loginService;
 
-	@Resource(name="crypto") 
-	private EgovFileScrty egovFileScrty;
-	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
-	
 	@Resource(name = "MResourceService")
 	private MResourceService mResourceService;
 	
@@ -124,13 +114,9 @@ public class MResourceController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String serverName = request.getServerName();
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
-		String firstWriteDay = searchVO.getFirstWriteDay();
-		String lastWriteDay = searchVO.getLastWriteDay();
 		String userId = "";
 		String companyId = "";
 		
-		LOGGER.debug("firstWriteDay: " + firstWriteDay);
-		LOGGER.debug("lastWriteDay: " + lastWriteDay);
 		
 		
 		if(userInfo != null){
@@ -138,40 +124,38 @@ public class MResourceController extends EgovFileMngUtil {
 			companyId = userInfo.getCompanyID();
 		}
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/main-list/users/" + userId;
 				
 		RestTemplate rest = new RestTemplate();	
-		ResponseEntity<JSONObject> result = null;
+		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);		
 		HttpHeaders headers = new HttpHeaders();
-		HttpEntity<Object> entity = null;		
+		HttpEntity<String> entity = null;		
 			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 			headers.set("x-user-host", serverName);
-	     entity = new HttpEntity<Object>(headers);	
-		builder = builder.queryParam("firstWriteDay", firstWriteDay)
-						 .queryParam("lastWriteDay", lastWriteDay)
-						 .queryParam("companyId", companyId); 
+	     entity = new HttpEntity<String>(headers);	
+		builder = builder.queryParam("companyId", companyId); 
 						
 	     
-		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 
 		LOGGER.debug("result: " + result);
 		
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 				
 		String status = resultBody.get("status").toString();
-		JSONArray scheduleList = new JSONArray();
-		
 
-	
-			scheduleList = gson.fromJson(gson.toJson(resultBody.get("data")), JSONArray.class);
+		if (status.equals("ok")) {
+			JSONObject dataObject = (JSONObject) resultBody.get("data");
 			
-			LOGGER.debug("scheduleList" + scheduleList);
-			
-			model.addAttribute("scheduleListCnt", scheduleList.size());
-			model.addAttribute("scheduleList", scheduleList);
-
+			List<ResGetScheduleVO> getScheduleList = (List<ResGetScheduleVO>) dataObject.get("getScheduleList");
+			String count = dataObject.get("count").toString();
+			model.addAttribute("getScheduleList", getScheduleList);
+			model.addAttribute("count", count);
+		}
 		
 		LOGGER.debug("getResSchList ended.");
 		return "json";
@@ -194,7 +178,7 @@ public class MResourceController extends EgovFileMngUtil {
 		startDate = "2017-07-01 09:00";
 		endDate = "2017-07-03 10:00";
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/" + type + "/list";
 		String userId = "";
 		String companyId = "";
@@ -261,7 +245,7 @@ public class MResourceController extends EgovFileMngUtil {
 		String brdId = "1";
 		String brdCompany = searchVO.getCompanyId();
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/folder-list";
 		String userId = "";
 		String companyId = "";
@@ -322,7 +306,7 @@ public class MResourceController extends EgovFileMngUtil {
 			userId = userInfo.getId();			
 		}
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/favorite-list/users/" + userId;
 
 		String ownerId = searchVO.getOwnerId();
@@ -383,7 +367,7 @@ public class MResourceController extends EgovFileMngUtil {
 		ownerId = "11";
 		scheduleId = 22;
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/schedules/" + scheduleId;
 		LOGGER.debug("userId: " + userId);
 		
@@ -440,7 +424,7 @@ public class MResourceController extends EgovFileMngUtil {
 		ownerId = "11";
 		scheduleId = 22;
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/schedules/" + scheduleId + "/check-repetition";
 		LOGGER.debug("userId: " + userId);
 		
@@ -486,7 +470,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + resourceId + "/schedules";
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -586,7 +570,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + resourceId + "/schedules/" + scheduleId;
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -695,7 +679,7 @@ public class MResourceController extends EgovFileMngUtil {
 		ownerId = "11";
 		scheduleId = 23;
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/schedules/" + scheduleId;
 		LOGGER.debug("userId: " + userId);
 		
@@ -749,7 +733,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 	    resourceId = "5";
 	    //로컬테스트용
-	    gwServerUrl = "http://localhost:8080";
+	    //gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + resourceId + "/favorite";
 		
 		
@@ -822,7 +806,7 @@ public class MResourceController extends EgovFileMngUtil {
 
 		ownerId = "1";
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/favorite/users/" + userId;
 		LOGGER.debug("userId: " + userId);
 		

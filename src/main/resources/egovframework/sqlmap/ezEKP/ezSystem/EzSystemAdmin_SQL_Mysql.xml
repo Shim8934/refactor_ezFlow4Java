@@ -105,4 +105,15 @@
 				<include refid="EzSystemAdminDAO.searchQuery"/>
 	</select>
 	
+	<delete id="EzSystemAdminDAO.deleteLoginHist" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_CONNECTION_INFO
+            WHERE
+            	TENANT_ID = #v_TENANT_ID#	
+            AND
+            	CONNECTTIME < SUBDATE(DATE(NOW()), #v_KEEP_LOG_PERIOD#)
+		]]>
+	</delete>
+	
 </sqlMap>

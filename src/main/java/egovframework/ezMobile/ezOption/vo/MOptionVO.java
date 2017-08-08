@@ -81,5 +81,13 @@ public class MOptionVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
+
+	@Override
+	public String toString() {
+		return "MOptionVO [userId=" + userId + ", timeZone=" + timeZone
+				+ ", lang=" + lang + ", mainType=" + mainType + ", listCnt="
+				+ listCnt + ", useSearch=" + useSearch + ", useSecurity="
+				+ useSecurity + ", tenantId=" + tenantId + "]";
+	}
 	
 }

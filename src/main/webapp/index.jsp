@@ -4,7 +4,7 @@
 
 <script type="text/javaScript">
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) == false) {
-		document.location.href="<c:url value='/mobile/user/login/login.do'/>";
+		document.location.href="<c:url value='/user/login/login.do'/>";
 	} else {
 		document.location.href="<c:url value='/user/login/login.do'/>";
 	}

@@ -251,11 +251,7 @@
 	            }
 	        }
 	        function Window_Print() {
-	            document.getElementById("close").style.display = 'none';
-	            document.getElementById("menu").style.display = 'none';
 	            window.print();
-	            document.getElementById("menu").style.display = '';
-	            document.getElementById("close").style.display = '';
 	        }
 	    </script>
 	</head>

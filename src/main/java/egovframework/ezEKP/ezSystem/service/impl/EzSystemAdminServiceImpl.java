@@ -184,5 +184,19 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		
 		return ezSystemAdminDAO.getLoginHistCount(params);
 	}
+	
+	@Override
+	public void deleteLoginHist(int keepLogPeriod, int tenantID) throws Exception {
+	    logger.debug("deleteLoginHist started. keepLogPeriod=" + keepLogPeriod + ",tenantID=" + tenantID);
+	    
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_KEEP_LOG_PERIOD", keepLogPeriod*30);
+        map.put("v_TENANT_ID", tenantID);		
+        
+        ezSystemAdminDAO.deleteLoginHist(map);
+        
+        logger.debug("deleteLoginHist ended.");
+	}	
 
 }

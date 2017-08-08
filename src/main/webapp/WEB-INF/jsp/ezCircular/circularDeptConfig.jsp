@@ -62,7 +62,7 @@
 						
 						if (list.length == 0) {
 							circularDeptList += "<tr>";
-							circularDeptList += "<td style='text-align: center;'><spring:message code='ezCircular.t47'/></td>";
+							circularDeptList += "<td colspan='5' style='text-align: center;'><spring:message code='ezCircular.t47'/></td>";
 							circularDeptList += "</tr>";
 						}
 						
@@ -107,11 +107,11 @@
             	}
             	
             	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(2).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(3).style.backgroundColor = "#EDEDED";
-            	obj.childNodes.item(4).style.backgroundColor = "#EDEDED";
+            	obj.childNodes.item(0).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(1).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(2).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(3).style.backgroundColor = "rgb(233, 241, 244)";
+            	obj.childNodes.item(4).style.backgroundColor = "rgb(233, 241, 244)";
         	}
 
 		    function memberList() {

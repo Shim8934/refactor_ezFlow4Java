@@ -682,7 +682,8 @@ public class EzCircularController extends EgovFileMngUtil {
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId());
-        
+//        int totalCommentCount = ezCircularService.getCommentCount(circularID, userInfo.getId(), "totalComment", userInfo.getTenantId());
+
 		List<CircularListVO> list = ezCircularService.getCircularCompleteList(userInfo.getId(), searchValue, searchType, sdate, edate, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
@@ -732,6 +733,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			resultXML.append("<CELL><VALUE>" + vo.getRegDate().substring(0, 16) + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmCount() + "/" + vo.getConfirmTotalCount() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getStatus() + "</VALUE></CELL>");
+//			resultXML.append("<CELL><VALUE>" + "10" + "</VALUE></CELL>");
 			resultXML.append("</ROW>");
         }
         
@@ -2106,10 +2108,9 @@ public class EzCircularController extends EgovFileMngUtil {
 
         int startRow = 1;
         int endRow = 0;
-        
 
     	CircularConfigVO config = ezCircularService.getCircularList_Config(userInfo.getId(), userInfo.getTenantId());
-		
+
 		int personalCount = config.getListCnt();
 		startRow = (personalCount * (Integer.parseInt(pageNum) - 1)) + 1;
         endRow = (personalCount * Integer.parseInt(pageNum));
@@ -2191,12 +2192,16 @@ public class EzCircularController extends EgovFileMngUtil {
     	String searchValue = request.getParameter("searchValue");
     	String commentType = request.getParameter("commentType");
     	
-logger.debug("searchType = " + searchType);
+    	logger.debug("searchType = " + searchType);
     	List<CircularListVO> circularUserList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchType, searchValue, userInfo.getTenantId(), userInfo.getOffset());
     	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getId(), commentType, userInfo.getOffset(), userInfo.getTenantId());
-    	
+    	int totalCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "totalComment", userInfo.getTenantId());
+		int myCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "myComment", userInfo.getTenantId());
+
     	logger.debug("getCircularComment ended.");
     	
+    	model.addAttribute("totalCommentCount", totalCommentCount);
+    	model.addAttribute("myCommentCount", myCommentCount);
     	model.addAttribute("circularUserList", circularUserList);
     	model.addAttribute("circularCommentList", circularCommentList);
     	model.addAttribute("userInfo", userInfo);
@@ -2286,7 +2291,11 @@ logger.debug("searchType = " + searchType);
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	CircularListVO vo = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-    	
+    	int totalCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "totalComment", userInfo.getTenantId());
+		int myCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "myComment", userInfo.getTenantId());
+
+    	model.addAttribute("totalCommentCount", totalCommentCount);
+    	model.addAttribute("myCommentCount", myCommentCount);
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("vo", vo);
     	
@@ -2411,7 +2420,7 @@ logger.debug("searchType = " + searchType);
 	}
 
 	/**
-	 * 회람작성 시 회람처 List 호출
+	 * 회람자 선택 시 즐겨찾기 목록 호출
      *  
 	 */
 	@RequestMapping(value = "/ezCircular/getcircularDeptName.do", method = RequestMethod.POST)

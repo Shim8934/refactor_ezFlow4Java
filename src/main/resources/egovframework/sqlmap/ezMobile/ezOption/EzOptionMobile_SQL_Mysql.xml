@@ -19,6 +19,7 @@
       <result property="userId"       		column="cn"        							columnIndex="10"/>
       <result property="userName"       	column="displayName"        				columnIndex="11"/>
       <result property="userName2"       	column="displayName2"        				columnIndex="12"/>
+      <result property="rollInfo"          column="rollinfo"                       columnIndex="13"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">
@@ -86,5 +87,35 @@
 			)
    		]]>
   	</insert>
+  	
+  	<update id="EzOptionDAO.updateOption" parameterClass="Map">
+  		   <![CDATA[
+				UPDATE TBL_USERMOBILEINFO
+				SET 
+					LANG = #lang#
+				]]>	
+					<isNotEmpty property="timeZone">	
+					,TIMEZONE = #timeZone#
+					</isNotEmpty>		
+					<isNotEmpty property="mainType">	
+					,MAINTYPE = #mainType#
+					</isNotEmpty>
+					<isNotEmpty property="listCnt">
+					,LISTCNT = #listCnt#
+					</isNotEmpty>
+					<isNotEmpty property="useSearch">
+					,USESEARCH = #useSearch#
+					</isNotEmpty>
+					<isNotEmpty property="useSecurity">
+					,USESECURITY = #useSecurity#
+					</isNotEmpty>
+			<![CDATA[		
+				WHERE 
+					USERID = #userId#
+				AND 
+					TENANT_ID = #tenantId#
+   				]]>
+  	</update>
+  	
 </sqlMap>
 

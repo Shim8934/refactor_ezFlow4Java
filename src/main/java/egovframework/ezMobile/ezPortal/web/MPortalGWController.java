@@ -23,9 +23,11 @@ import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -63,6 +65,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 	
 	@Resource(name = "MBoardService")
 	private MBoardService mBoardService;
+	
+	@Resource(name="MResourceService")
+	private MResourceService mResourceService;
 		
 	/**
 	 * 모바일 G/W 포탈 [GET] 메인 리스트 (일반/폴더/포탈/타임라인)
@@ -88,7 +93,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 			List<MApprovalGDocInfoVO> apprList = mApprovalGService.getDoApproveList(info, "DO", "", listCnt, today);
 		
 			//받은결재함 리스트 카운트
-			int apprListCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
+			int apprCnt = mApprovalGService.getDoApproveListCount(info, "DO", "");
 			
 			//오늘의일정 리스트			
 			JSONObject scheduleInfo = mScheduleService.scheduleMainList(info, listCnt);
@@ -107,14 +112,20 @@ public class MPortalGWController extends EgovFileMngUtil {
 			int mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
 			
 			//새게시물 리스트
-			List<MBoardItemVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId());
+			List<MBoardNewListVO> boardList = mBoardService.getBoardMainList(userId, listCnt, info.getTenantId());
 			
 			//새게시물 리스트 카운트
 			int boardCnt = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
 			
+			//오늘의자원 리스트
+			Map<String, Object> resourceMap = mResourceService.getScheduleMainList(info, listCnt);
+			Object resourceList = resourceMap.get("scheduleList");
+			
+			//오늘의자원 리스트 카운트
+			Object resourceCnt = resourceMap.get("count");			
 			
 			dataObject.put("apprList", apprList);
-			dataObject.put("apprListCnt", apprListCnt+"");
+			dataObject.put("apprCnt", apprCnt+"");
 			
 			dataObject.put("scheduleList", scheduleList);
 			dataObject.put("scheduleCnt", scheduleCnt+"");
@@ -124,6 +135,9 @@ public class MPortalGWController extends EgovFileMngUtil {
 			
 			dataObject.put("boardList", boardList);
 			dataObject.put("boardCnt", boardCnt+"");
+			
+			dataObject.put("resourceList", resourceList);
+			dataObject.put("resourceCnt", resourceCnt+"");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

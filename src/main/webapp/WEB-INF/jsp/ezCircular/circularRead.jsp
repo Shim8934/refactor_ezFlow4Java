@@ -29,7 +29,7 @@
 			    cursor : pointer;
 			    border: 1px solid;
 			}
-			
+
 			#divCross p a {
 				color: blue;
 				text-decoration: underline;
@@ -51,7 +51,7 @@
 	            document.getElementById("divCross").innerHTML = sigBody.innerHTML
 	            document.getElementById("printDocument").innerHTML = sigBody.innerHTML;
 	            
-	            document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 	            document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 	            
 				if ("${attachList}" != "") {
@@ -66,7 +66,7 @@
 			
 			window.onresize = function () {
 				var contentHeight;
-				document.getElementById("divCross").style.height = window.innerHeight - 320 + "px";
+				document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 			};
 			
@@ -534,8 +534,11 @@
 		            			</c:choose>
 		            		</td>
 		        		</tr>
-	        			<tr style="height:100%">
-	            			<td colspan="4" style="height:100%;"><div id="divCross" style="margin:8px; height:100%; overflow:auto;"></div></td>
+	        		</table>
+	        		<br/>
+	        		<table class="content" style="width:100%; table-layout: fixed;">
+	        			<tr>
+	            			<td colspan="4"><div id="divCross" style="margin:8px; overflow:auto;"></div></td>
 	        			</tr>
 	        		</table>
 	        		<br/>
@@ -683,10 +686,13 @@
 		            			</c:choose>
 		            		</td>
 						</tr>
-						<tr> 
- 							<td colspan="4"> <div align="left" id="printDocument" style="padding: 5px; margin: 8px; width: 100%; display:inherit;"></div></td> 
-						</tr>
 					</table>
+					<br/>
+					<table class="content" style="width:100%; table-layout: fixed;">
+	        			<tr>
+ 							<td colspan="4"><div align="left" id="printDocument" style="padding: 5px; margin: 8px; overflow:auto;"></div></td> 
+						</tr>
+	        		</table>
 				</td>
 			</tr>
 		</table>

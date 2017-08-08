@@ -17,14 +17,15 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
-import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
+import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -379,7 +380,7 @@ public class MBoardServiceImpl implements MBoardService {
 
 
 	@Override
-	public List<MBoardItemVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception {
+	public List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception {
 		String boardID = mBoardInfoVO.getBoardID();
 		String gubun = mBoardInfoVO.getGuBun();
 		int page = mBoardInfoVO.getPage() != 0 ? mBoardInfoVO.getPage() : 1; 
@@ -399,7 +400,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
         int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
         
-        List<MBoardItemVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
+        List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
         
 		return mBoardItemList;
 	}
@@ -583,7 +584,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return list;
 	}
 	
-	private List<MBoardItemVO> getNewBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset) throws Exception {
+	private List<MBoardNewListVO> getNewBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset) throws Exception {
 		logger.debug("getNewBoardItemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || startRow = " + startRow + " || endRow = " + endRow + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID);
 		
@@ -601,7 +602,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		
-		List<MBoardItemVO> list = mBoardDAO.getNewItemList(map);
+		List<MBoardNewListVO> list = mBoardDAO.getNewItemList(map);
 		
 		logger.debug("getNewBoardItemList ended.");
 		
@@ -831,7 +832,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<MBoardItemVO> getNewBoardList(String userID, int tenantID) throws Exception {
+	public List<MBoardNewListVO> getNewBoardList(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		//mainList 임시 10까지
@@ -843,7 +844,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<MBoardItemVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
+	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("rowCount", listCnt);
@@ -941,5 +942,32 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		return mBoardDAO.getNewBoardListCount(map);
 	}
+
+	@Override
+	public void insertFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("boardID", boardID);
+		mBoardDAO.insertFavorite(map);
+	}
+
+	@Override
+	public void deleteFavorite(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("boardID", boardID);
+		mBoardDAO.deleteFavorite(map);
+	}
+
+	@Override
+	public List<MBoardAttachVO> getAttachList(String itemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.getAttachList(map);
+	}
+	
 	
 }

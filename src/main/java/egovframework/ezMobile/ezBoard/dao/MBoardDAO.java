@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezMobile.ezBoard.vo.MBoardAttachVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -25,8 +27,8 @@ public class MBoardDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MBoardItemVO> getNewItemList(Map<String, Object> map) throws Exception {
-		return (List<MBoardItemVO>) list("MBoardDAO.getNewItemList", map);
+	public List<MBoardNewListVO> getNewItemList(Map<String, Object> map) throws Exception {
+		return (List<MBoardNewListVO>) list("MBoardDAO.getNewItemList", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -47,6 +49,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<MBoardInfoVO> getBoardTreeGet2(Map<String, Object> map) throws Exception{		
 		return (List<MBoardInfoVO>) list("MBoardDAO.getBoardTreeGet2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<MBoardAttachVO> getAttachList(Map<String, Object> map) throws Exception{		
+		return (List<MBoardAttachVO>) list("MBoardDAO.getAttachList", map);
 	}
 	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {
@@ -95,6 +102,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 		insert("MBoardDAO.insertBrdItem2", map);
 	}
 	
+	public void insertFavorite(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.insertFavorite", map);
+	}
+	
 	public void updateItem(Map<String, Object> map) throws Exception{
 		update("MBoardDAO.updateItem", map);
 	}
@@ -113,6 +124,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void insertDeleteReservedItem(Map<String, Object> map) throws Exception{
 		delete("MBoardDAO.insertDeleteReservedItem", map);
+	}
+	
+	public void deleteFavorite(Map<String, Object> map) throws Exception{
+		delete("MBoardDAO.deleteFavorite", map);
 	}
 	
 }

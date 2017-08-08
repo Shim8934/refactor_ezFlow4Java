@@ -1,5 +1,5 @@
 ﻿var strLang1 = "削除に失敗しました。";
-var strLang2 = "Gullim";
+var strLang2 = "コメントリスト";
 var strLang3 = "コメント作成";
 var strLang4 = "非公開";
 var strLang5 = "コメントを入力してください。";

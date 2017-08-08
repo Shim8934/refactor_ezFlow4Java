@@ -21,13 +21,6 @@
 	        function setValue(pUID,pObj)
 			{
 				g_UID = pUID;
-				pObj.style.backgroundColor = "rgb(233, 241, 244)";
-				g_SelectedObj = pObj;
-			}
-			else
-			{
-				pObj.style.backgroundColor = "rgb(233, 241, 244)";
-				
 	
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null )
@@ -43,8 +36,6 @@
 					g_SelectedObj = pObj;
 				}
 			}
-			
-	
 			
 			function entercheck()
 			{

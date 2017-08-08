@@ -17,17 +17,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
-import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResScheduleRepetitionVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
-import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -39,12 +36,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	
 	@Resource(name="MResourceDAO")
 	private MResourceDAO mResourceDAO;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
-	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -59,15 +50,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return mResourceDAO.getAdmSubClsTree(map);
 	}
 
-	@Override
-	public List<MResourceScheduleVO> getScheduleList(Map<String,Object> map) {
 
-		return mResourceDAO.getTestList(map);
-	}
 
-	
-	
-	
 	@Override
 	public List<MResourceScheduleVO> getResScheduleMainList(
 			String utcStartDate, String utcEndDate, String companyId,
@@ -237,100 +221,36 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		mResourceDAO.delResFavor(map);
 	}
 	
-	public String getScheduleList(String ownerID, String companyID, String groupID, String gubun, String sDate, String eDate, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
+	@Override
+	public Map<String, Object> getScheduleList(String ownerID, String companyID, String sDate, String eDate, String pWriterDept, int tenantID, String offset, String listCnt) throws Exception {
 		LOGGER.debug("getScheduleList Start");
 
+		Map<String, Object> result = new HashMap<>();
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
 
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
-		String returnSchedule = "<DATA>";
-		if (pType.equals("")) {
-			List<ResGetScheduleVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
-			LOGGER.debug("getScheduleListSize=" + getScheduleList.size());
-			
-			for (ResGetScheduleVO vo :  getScheduleList) {
-				returnSchedule += commonUtil.getQueryResult(vo);
-			}
-		} else if (pType.equals("MAIN")) {
-			List<ResGetScheduleVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
-			LOGGER.debug("getScheduleListMainSize=" + getScheduleListMain.size());
-			
-			for (ResGetScheduleVO vo :  getScheduleListMain) {
-				returnSchedule += commonUtil.getQueryResult(vo);
-			}
-		}
-		returnSchedule += "</DATA>";
+		List<ResGetScheduleVO> getScheduleList = getScheduleNormalList(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
-		Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
+		LOGGER.debug("getScheduleList: " + getScheduleList);
 		
-		// return할 xml string 생성(반복예약 제외)
-		StringBuilder returnStr = new StringBuilder();
-		returnStr.append("<DATA>");
-		
-		if (returnDom1 != null) {
-			for (int m=0; m<returnDom1.getElementsByTagName("ROW").getLength(); m++) {
-				returnStr.append("<ROW>");
-				returnStr.append("<num>" + returnDom1.getElementsByTagName("NUM").item(m).getTextContent() + "</num>");
-				returnStr.append("<pnum>" + returnDom1.getElementsByTagName("PNUM").item(m).getTextContent() + "</pnum>");
-				returnStr.append("<ownerID>" + returnDom1.getElementsByTagName("OWNERID").item(m).getTextContent() + "</ownerID>");
-				returnStr.append("<title><![CDATA[" + returnDom1.getElementsByTagName("TITLE").item(m).getTextContent() + "]]></title>");
-				returnStr.append("<location><![CDATA[" + returnDom1.getElementsByTagName("LOCATION").item(m).getTextContent() + "]]></location>");
-				returnStr.append("<timeDisplay><![CDATA[" + returnDom1.getElementsByTagName("TIMEDISPLAY").item(m).getTextContent() + "]]></timeDisplay>");
-				returnStr.append("<startDate>" + commonUtil.getDateStringInUTC(returnDom1.getElementsByTagName("STARTDATE").item(m).getTextContent(), offset, false) + "</startDate>");
-				returnStr.append("<endDate>" + commonUtil.getDateStringInUTC(returnDom1.getElementsByTagName("ENDDATE").item(m).getTextContent(), offset, false) + "</endDate>");
-				returnStr.append("<alertTime>" + returnDom1.getElementsByTagName("ALERTTIME").item(m).getTextContent() + "</alertTime>");
-				returnStr.append("<reFlag>" + returnDom1.getElementsByTagName("REFLAG").item(m).getTextContent() + "</reFlag>");
-				returnStr.append("<gresFlag>" + returnDom1.getElementsByTagName("GRESFLAG").item(m).getTextContent() + "</gresFlag>");
-				returnStr.append("<writerID>" + returnDom1.getElementsByTagName("WRITERID").item(m).getTextContent() + "</writerID>");
-				returnStr.append("<importance>" + returnDom1.getElementsByTagName("IMPORTANCE").item(m).getTextContent() + "</importance>");
-				returnStr.append("<entryList>" + returnDom1.getElementsByTagName("ENTRYLIST").item(m).getTextContent() + "</entryList>");
-				returnStr.append("<allDay>" + returnDom1.getElementsByTagName("ALLDAY").item(m).getTextContent() + "</allDay>");
-				returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnDom1.getElementsByTagName("WRITEDAY").item(m).getTextContent(), offset, false) + "</writeDay>");
-				returnStr.append("<attachFlag>" + returnDom1.getElementsByTagName("ATTACHFLAG").item(m).getTextContent() + "</attachFlag>");
-				returnStr.append("<characterID>" + returnDom1.getElementsByTagName("CHARACTERID").item(m).getTextContent() + "</characterID>");
-				returnStr.append("<approveFlag>" + returnDom1.getElementsByTagName("APPROVEFLAG").item(m).getTextContent() + "</approveFlag>");
-				returnStr.append("<owner_nm><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM").item(m).getTextContent() + "]]></owner_nm>");
-				returnStr.append("<dept_name><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM").item(m).getTextContent() + "]]></dept_name>");
-				
-				if (pType.equals("")) {
-					returnStr.append("<owner_nm2><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM2").item(m).getTextContent() + "]]></owner_nm2>");
-					returnStr.append("<dept_name2><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM2").item(m).getTextContent() + "]]></dept_name2>");
-					returnStr.append("<jobtitle><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE").item(m).getTextContent() + "]]></jobtitle>");
-					returnStr.append("<jobtitle2><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE2").item(m).getTextContent() + "]]></jobtitle2>");
-				}
-				
-				returnStr.append("</ROW>");
-			}
-		}
+		List<ResGetScheduleVO> getRepeatResult= new ArrayList<ResGetScheduleVO>();
 			
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
-		String returnRepetition = "<DATA>";
-		if (pType.equals("")) {
-			List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
-			
-			for(int j=0; j<getScheduleListRept.size(); j++) {
-				returnRepetition += commonUtil.getQueryResult(getScheduleListRept.get(j));
-			}
-		} else {
-			List<ResGetScheduleVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
-
-			for(int j=0; j<getScheduleListReptMain.size(); j++) {
-				returnRepetition += commonUtil.getQueryResult(getScheduleListReptMain.get(j));
-			}
-		}
-		returnRepetition += "</DATA>";
+		List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
-		Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
+		LOGGER.debug("getScheduleListRept: " + getScheduleListRept);
 		
-		// return할 xml string 생성(반복예약)
-		if (returnRepetitionDom != null) {
+		getRepeatResult.addAll(getScheduleListRept);
+		
+		// return할 ResGetScheduleVO getScheduleList 에 추가(반복예약)
+		if (getRepeatResult.size() > 0 ) {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
-				String reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
-				String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
-				String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
+			for (int i=0; i<getRepeatResult.size(); i++) {
+				String reCompanyID = getRepeatResult.get(i).getCompanyID();
+				String reNum = Integer.toString(getRepeatResult.get(i).getNum());
+				String reOwnerID = getRepeatResult.get(i).getOwnerID();
 				
 				// tbl_schedulerepetition에서 정보 가져옴
 				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, Integer.parseInt(reNum), tenantID);
@@ -360,46 +280,69 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 							continue;
 						}
 						
-						returnStr.append("<ROW>");
-						returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent() + "</num>");
-						returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("PNUM").item(i).getTextContent() + "</pnum>");
-						returnStr.append("<ownerID>" + returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent() + "</ownerID>");
-						returnStr.append("<title><![CDATA[" + returnRepetitionDom.getElementsByTagName("TITLE").item(i).getTextContent() + "]]></title>");
-						returnStr.append("<location><![CDATA[" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "]]></location>");
-						returnStr.append("<timeDisplay><![CDATA[" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "]]></timeDisplay>");
-						returnStr.append("<startDate>" + format.format(dateArr[0]) + "</startDate>");
-						returnStr.append("<endDate>" + format.format(dateArr[1]) + "</endDate>");
-						returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
-						returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
-						returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
-						returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
-						returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
-						returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
-						returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
-						returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnRepetitionDom.getElementsByTagName("WRITEDAY").item(i).getTextContent(), offset, false) + "</writeDay>");
-						returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ATTACHFLAG").item(i).getTextContent() + "</attachFlag>");
-						returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("CHARACTERID").item(i).getTextContent() + "</characterID>");
-						returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("APPROVEFLAG").item(i).getTextContent() + "</approveFlag>");
-						returnStr.append("<owner_nm><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM").item(i).getTextContent() + "]]></owner_nm>");
-						returnStr.append("<dept_name><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM").item(i).getTextContent() + "]]></dept_name>");
+						ResGetScheduleVO temp = new ResGetScheduleVO();
 						
-						if (pType == null || pType.equals("")) {
-							returnStr.append("<owner_nm2><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM2").item(i).getTextContent() + "]]></owner_nm2>");
-							returnStr.append("<dept_name2><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM2").item(i).getTextContent() + "]]></dept_name2>");
-							returnStr.append("<jobtitle><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE").item(i).getTextContent() + "]]></jobtitle>");
-							returnStr.append("<jobtitle2><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE2").item(i).getTextContent() + "]]></jobtitle2>");
-						}
+						temp.setNum(getRepeatResult.get(i).getNum());
+						temp.setpNum(getRepeatResult.get(i).getNum());
+						temp.setOwnerID(getRepeatResult.get(i).getOwnerID());
+						temp.setTitle(getRepeatResult.get(i).getTitle());
+						temp.setLocation(getRepeatResult.get(i).getLocation());
+						temp.setTimeDisplay(getRepeatResult.get(i).getTimeDisplay());
+						temp.setStartDate(format.format(dateArr[0]));
+						temp.setEndDate(format.format(dateArr[1]));
+						temp.setAlertTime(getRepeatResult.get(i).getAlertTime());
+						temp.setReFlag(getRepeatResult.get(i).getReFlag());
+						temp.setGresFlag(getRepeatResult.get(i).getGresFlag());
+						temp.setWriterID(getRepeatResult.get(i).getWriterID());
+						temp.setImportance(getRepeatResult.get(i).getImportance());
+						temp.setEntryList(getRepeatResult.get(i).getEntryList());
+						temp.setAllDay(getRepeatResult.get(i).getAllDay());
+						temp.setWriteDay(getRepeatResult.get(i).getWriteDay());
+						temp.setAttachFlag(getRepeatResult.get(i).getAttachFlag());
+						temp.setCharacterID(getRepeatResult.get(i).getCharacterID());
+						temp.setApproveFlag(getRepeatResult.get(i).getApproveFlag());
+						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
+						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
+						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
 						
-						returnStr.append("</ROW>");
+						getScheduleList.add(temp);
 					}
 					
 				}
 				
 			}
 		}
-		returnStr.append("</DATA>");
+		
+		LOGGER.debug("getScheduleList: " + getScheduleList);		
+		
+		int count = getScheduleList.size();
+		
+		List<ResGetScheduleVO> resultList = new ArrayList<ResGetScheduleVO>();
+		
+		if(!listCnt.equals("")&&(listCnt != null)){
+			int index = 0;
+			index =	Integer.parseInt(listCnt);
+			LOGGER.debug("index: " + index);
+			
+			
+			if(count > index){
+				for (int k = 0; k < index; k++) {
+					resultList.add(getScheduleList.get(k));
+				}
+			}else{
+				resultList = getScheduleList;
+			}	
+		}else{
+			resultList = getScheduleList;
+		}
+
+		
+		LOGGER.debug("resultList: " + resultList);
+		
+		result.put("scheduleList", resultList);
+		result.put("count", count);
 		LOGGER.debug("getScheduleList End");
-		return returnStr.toString();
+		return result;
 	}
 	
 	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
@@ -933,7 +876,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return returnList;
 	}
 	
-	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleNormalList(String ownerID, String companyID, String startDate, String endDate, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -942,7 +885,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PSTARTDATE", startDate);
 		map.put("v_PENDDATE", endDate);
-		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
 		map.put("tenantID", tenantID);
 		return mResourceDAO.getScheduleList(map);
@@ -962,7 +904,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		return mResourceDAO.getScheduleListMain(map);
 	}
 
-	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -972,7 +914,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PSTARTDATE", startDate);
 		map.put("v_PENDDATE", endDate);
-		map.put("v_WRITERNAME", writerName);
 		map.put("v_WRITERDEPT", writerDept);
 		map.put("tenantID", tenantID);
 		
@@ -1143,6 +1084,46 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		LOGGER.debug("resStruct ended");
 		return result;
 	}
+
+	@Override
+	public Map<String, Object> getScheduleMainList(MCommonVO info,
+			String listCnt) throws Exception {
+		
+		String ownerId = "";
+		String utcStartDate = "";
+		String utcEndDate = "";
+		String companyId = "";
+		String writerDt = "";
+		int tenantId = 0;
+		String offset = "";
+		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+
+		companyId = info.getCompanyId();
+		offset = info.getOffSet();
+		writerDt = info.getDeptId();
+		tenantId = info.getTenantId();
+		utcStartDate = today.substring(0,10);
+    	utcEndDate = today.substring(0,10);
+		
+    	LOGGER.debug("ownerId: " + ownerId);
+    	LOGGER.debug("companyId: " + companyId);
+    	LOGGER.debug("utcStartDate: " + utcStartDate);
+    	LOGGER.debug("utcEndDate: " + utcEndDate);
+    	LOGGER.debug("writerDt: " + writerDt);
+    	LOGGER.debug("tenantId: " + tenantId);
+    	LOGGER.debug("offset: " + offset);
+
+    	
+		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt);
+
+		LOGGER.debug("result: " + result);
+	
+		LOGGER.debug("in MainList");
+		
+		return result;
+	}
+	
+	
 	
 }
 
