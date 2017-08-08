@@ -6,7 +6,7 @@
 	<typeAlias  alias="MResourceGetAdmSubClsTreeVO" type="egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO"/>
     <typeAlias  alias="MResourceScheduleVO" 		type="egovframework.ezMobile.ezResource.vo.MResourceScheduleVO"/>
 	<typeAlias  alias="MResourceGetScheduleVO" 						type="egovframework.ezMobile.ezResource.vo.ResGetScheduleVO"/>
-	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
+	<typeAlias  alias="MResGetScheduleRepetitionVO" 				type="egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO"/>
 	
 	
 	
@@ -64,7 +64,7 @@
 		<result property="companyID"			column="COMPANYID"			columnIndex="22"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
+	<resultMap class="MResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1" />
 		<result property="num"					column="NUM"					columnIndex="2" />
 		<result property="companyID"			column="COMPANYID"				columnIndex="3" />

@@ -74,21 +74,9 @@ public class MResourceController extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 	
-	@Resource(name = "EzResourceService")
-	private EzResourceService ezResourceService;
-	
 	@Resource(name="loginService")
 	private LoginService loginService;
 
-	@Resource(name="crypto") 
-	private EgovFileScrty egovFileScrty;
-	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
-	
 	@Resource(name = "MResourceService")
 	private MResourceService mResourceService;
 	

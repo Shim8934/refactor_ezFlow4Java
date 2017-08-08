@@ -18,11 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
+import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
-import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
+import egovframework.ezMobile.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
@@ -38,12 +36,6 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	
 	@Resource(name="MResourceDAO")
 	private MResourceDAO mResourceDAO;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
-	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
 	
 	@Autowired
 	private CommonUtil commonUtil;
