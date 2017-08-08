@@ -382,12 +382,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					// subject
 					subject = ezEmailUtil.getSubject(message);
 					
-					if(subject.trim().equals("")){
+					if(subject == null || subject.trim().equals("")){
 						subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
 					}
-					if (subject != null) {
-						title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
-					}
+					
+					subject = commonUtil.cleanValue(subject);
+					title = egovMessageSource.getMessage("ezEmail.t565", locale) + subject;
 					
 					logger.debug("subject=" + subject);
 
@@ -1089,6 +1089,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					logger.debug("dateStr=" + dateStr);
 					
 					subject = ezEmailUtil.getSubject(message);
+					subject = commonUtil.cleanValue(subject);
 					
 					logger.debug("subject=" + subject);
 					
@@ -1401,6 +1402,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					pSubject = ezEmailUtil.getSubject(message);
 					pSubject = pSubject == null ? "" : pSubject;
+					pSubject = commonUtil.cleanValue(pSubject);
 					
 					logger.debug("pSubject=" + pSubject);
 					

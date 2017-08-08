@@ -3167,7 +3167,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px;">
-	                                                    <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()"><spring:message code='ezEmail.t596' /></span></a>
+	                                                    <a href="#" class="imgbtn" id="dept_select"><span onclick="dept_select()" style="z-index:10"><spring:message code='ezEmail.t596' /></span></a>
 	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
