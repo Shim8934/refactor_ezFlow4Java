@@ -995,7 +995,13 @@
 		        }
 		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
 		        //if (CrossYN()){
-		            window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		        	 //크롬일때 alert창 크기때문에 크롬일때 구별
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=315px,width=449px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(449, 315));	
+		            } else {
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		            }
 		        /* }else{
 		            window.open("ConfigSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=297px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 297));
 		        } */
@@ -1013,7 +1019,15 @@
 				}
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
+		        
+		      //크롬일때 alert창 크기때문에 크롬일때 구별
+	            var agent = navigator.userAgent.toLowerCase();
+	            if (agent.indexOf("chrome") != -1) {
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(450, 185));	
+	            } else {
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
+	            }
+	            
 		        try { OpenWin.focus(); } catch (e) { }
 			}
 			

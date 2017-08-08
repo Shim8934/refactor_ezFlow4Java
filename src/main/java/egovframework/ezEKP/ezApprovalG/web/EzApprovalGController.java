@@ -5232,7 +5232,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         String result = ezApprovalGService.getSearchDocList(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY, draftToYEAR,
         		draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY, myApprToYEAR, myApprToMONTH,
-        		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+        		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         
         logger.debug("getFormSearchDocList ended");
         
@@ -5477,7 +5477,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String orderOption = request.getParameter("OO");
             String subQuery = request.getParameter("SQ");
             
-            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag);
+            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
@@ -5505,11 +5505,46 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			for (int p = 0; p < objCell.getLength(); p++) {
 				Element cell = (Element) objCell.item(p);
-				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
+   				String cellValue = " " + cell.getElementsByTagName("VALUE").item(0).getTextContent() + " ";
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
-				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "&nbsp;</p></td>       ");
+
+				if (cellValue.trim().equals("001")) {
+					cellValue = "품의";
+				} else if (cellValue.trim().equals("002")) {
+					cellValue = "협조";
+				} else if (cellValue.trim().equals("003")) {
+					cellValue = "감사";
+				} else if (cellValue.trim().equals("004")) {
+					cellValue = "심사";
+				} else if (cellValue.trim().equals("011")) {
+					cellValue = "수신";
+				} else if (cellValue.trim().equals("012")) {
+					cellValue = "합의";
+				} else if (cellValue.trim().equals("013")) {
+					cellValue = "시행";
+				} else if (cellValue.trim().equals("014")) {
+					cellValue = "검사부 감사";
+				} else if (cellValue.trim().equals("015")) {
+					cellValue = "공람";
+				} else if (cellValue.trim().equals("016")) {
+					cellValue = "회람";
+				} else if (cellValue.trim().equals("017")) {
+					cellValue = "참조";
+				} else if (cellValue.trim().equals("018")) {
+					cellValue = "후결";
+				} else if (cellValue.trim().equals("019")) {
+					cellValue = "발신";
+				} else if (cellValue.trim().equals("020")) {
+					cellValue = "신청";
+				} else if (cellValue.trim().equals("031")) {
+					cellValue = "반송";
+				} else if (cellValue.trim().equals("032")) {
+					cellValue = "회송";
+				}
+					
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + " </p></td>       ");
+
 			}
 			resultExcel.append("</tr>");
 		}

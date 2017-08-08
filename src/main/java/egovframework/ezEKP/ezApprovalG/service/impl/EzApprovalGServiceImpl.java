@@ -5641,11 +5641,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 				        switch (Header) {
 				            case "DP":
-				                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
+				                numHeader += (commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent() == "" ? userInfo.getDeptID() : commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent()) + Tail;
 				                break;
-
+	
 				            case "dp":
-				                numHeader += (ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId()) == "" ? userInfo.getDeptID() : ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())) + Tail;
+				                numHeader += (commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent() == "" ? userInfo.getDeptName() : commonUtil.convertStringToDocument(ezOrganService.getPropertyList(userInfo.getDeptID(), "extensionAttribute6", userInfo.getPrimary(), userInfo.getTenantId())).getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent()) + Tail;
 				                break;
 
 				            case "YY":
@@ -15723,7 +15723,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getSearchDocList(String containerID, String userID, String subQuery, String docNumber, String docTitle, String drafter, String formID, String draftFromYEAR, String draftFromMONTH,
 			String draftFromDAY, String draftToYEAR, String draftToMONTH, String draftToDAY, String apprFromYEAR, String apprFromMONTH, String apprFromDAY, String apprToYEAR, String apprToMONTH,
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
-			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag) throws Exception {
+			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String approvUser, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		String orderOption1 = "";
 		String orderOption2 = "";
@@ -15825,7 +15825,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 
 		String docList = getSearchDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
-				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, commonUtil.getMultiData(lang, tenantID), approvUser, companyID, tenantID, offset, approvalFlag);
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, commonUtil.getMultiData(lang, tenantID), approvUser, companyID, tenantID, offset, approvalFlag, locale);
 		
 		logger.debug("docList = " + docList);
 		Document docXML = commonUtil.convertStringToDocument(docList);
@@ -15855,7 +15855,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             		fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
             	}
 				
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + " </VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -15933,7 +15933,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private String getSearchDocList(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
 			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
-			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag) throws Exception{
+			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CONTID", containerID);
@@ -16001,6 +16001,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
+		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getSearchDocList(map);
 		
@@ -20722,6 +20727,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1)));
 		map.put("v_PQUERYSIZESUB", Integer.parseInt(pPageSize)*Integer.parseInt(pPageNum));
 		map.put("v_ORDEROPTION", OrderOption1);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offSet));
 		
 		List <ApprGDocListVO> userContList = ezApprovalGDAO.getUserContList(map);
 		
