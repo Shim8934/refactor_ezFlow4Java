@@ -2,6 +2,7 @@ package egovframework.ezMobile.ezEmail.web;
 
 import java.net.URI;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -57,6 +58,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -231,16 +233,18 @@ public class MEmailController extends EgovFileMngUtil {
 
 		String status = resultBody.get("status").toString();
 
+		JSONObject data = new JSONObject();
 		JSONArray messages = new JSONArray();
 		int unreadCount = 0;
 		JSONArray folderList = new JSONArray();
 	
 		if (status.equals("ok")) {
 			
-			messages = (JSONArray) resultBody.get("data");
-			unreadCount = Integer.parseInt(resultBody.get("unreadCount").toString());
-			folderList = (JSONArray) resultBody.get("folderList");
-			String title = (String) resultBody.get("folderId");
+			data = (JSONObject) resultBody.get("data");
+			messages = (JSONArray) data.get("messageJsonArray");
+			unreadCount = Integer.parseInt(data.get("unreadCount").toString());
+			folderList = (JSONArray) data.get("folderList");
+			String title = (String) data.get("folderId");
 			
 			modelMap.addAttribute("MessagesListCnt", messages.size());
 			modelMap.addAttribute("MessagesList", messages);
@@ -259,9 +263,9 @@ public class MEmailController extends EgovFileMngUtil {
 	@ResponseBody
 	public JSONObject getMobileMailList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie,@RequestBody String bodyData, Locale locale, ModelMap modelMap) throws Exception {
 		
-		String folderId = "";
-		String start = "";
-		String end = "";
+		String folderId = "INBOX";
+		String start = "0";
+		String end = "9";
 		String search = "";
 		String filter = "";
 	
@@ -318,13 +322,16 @@ public class MEmailController extends EgovFileMngUtil {
 		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
 
 		String status = resultBody.get("status").toString();
-
+		
+		JSONObject data = new JSONObject();
+		
 		JSONArray messages = new JSONArray();
+		
 		int unReadCount = 0;
 		if (status.equals("ok")) {
-			messages = (JSONArray) resultBody.get("data");
-			unReadCount = Integer.parseInt(resultBody.get("unreadCount").toString());
-			
+			data = (JSONObject) resultBody.get("data");
+			unReadCount = Integer.parseInt(data.get("unreadCount").toString());
+			messages = (JSONArray) data.get("messageJsonArray");
 			modelMap.addAttribute("MessagesListCnt", messages.size());
 			modelMap.addAttribute("MessagesList", messages);
 		}
@@ -458,8 +465,10 @@ public class MEmailController extends EgovFileMngUtil {
 	public String getSignList(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse response, Locale locale) throws Exception {
 		logger.debug("getFolderList started.");
 		
+		String userId = "rkd1395";
+		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
-		String url = gwServerUrl + "/mobile/ezemail/sign/users/rkd1395";
+		String url = gwServerUrl + "/mobile/ezemail/sign/users/" + userId;
 				
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -559,7 +568,7 @@ public class MEmailController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/ezEmail/mailRead.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
 	@ResponseBody
 	public String mobileReadMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("mailDeleteMessage started.");
+		logger.debug("mailReadMessage started.");
 		
 		String folderId = "";
 		String messageId = "";
@@ -579,6 +588,8 @@ public class MEmailController extends EgovFileMngUtil {
 		}
 
 		logger.debug("folderId = " + folderId + ", messageId = " + messageId);
+		
+		folderId = URLEncoder.encode(folderId, "UTF-8");
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/" + messageId + "/users/" + userInfo.getId();
@@ -604,7 +615,7 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		model.addAttribute("mailFolderList", resultBody);		
 						
-		logger.debug("mailDeleteMessage ended.");
+		logger.debug("mailReadMessage ended.");	
 		
 		return resultBody.toJSONString();
 	
@@ -940,10 +951,6 @@ public class MEmailController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/ezEmail/mMailWrite.do")
 	public String mailWrite(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		
-		MCommonVO info = mOptionService.commonInfo(request.getServerName(), "rkd1395");
-		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
-		String userEmail = info.getUserId() + "@" + domainName;
-		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/sign/users/rkd1395";
 				
@@ -958,13 +965,29 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		//signList가 1개도 없으면  null
 
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
 		
-		model.addAttribute("mailSignList", resultBody);		
-		model.addAttribute("sender", userEmail);
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+
+		String status = resultBody.get("status").toString();
+
+		JSONObject data = new JSONObject();
+		JSONArray messages = new JSONArray();
+		JSONArray folderList = new JSONArray();
+		JSONObject mailSignatureVO = new JSONObject();
+		
+		if (status.equals("ok")) {
+			
+			data = (JSONObject) resultBody.get("data");
+			mailSignatureVO = (JSONObject) data.get("mailSignatureVO");
+			String userEmail = (String) data.get("userEmail");
+			
+			model.addAttribute("mailSignList", resultBody);		
+			model.addAttribute("sender", userEmail);
+		}
 
 		return "/mobile/ezEmail/mMailWrite";
 	}
@@ -1048,12 +1071,12 @@ public class MEmailController extends EgovFileMngUtil {
 
 	}
 	
-	@RequestMapping(value="/mobile/ezEmail/mailSaveMessage.do",method=RequestMethod.GET ,produces="text/plain;charset=utf-8")
+	@RequestMapping(value="/mobile/ezEmail/mailSaveMessage.do",method=RequestMethod.POST ,produces="text/plain;charset=utf-8")
 	@ResponseBody
-	public String mailSaveMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, 
+	public String mailSaveMessage(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject InputJsonObject, 
 			Locale locale, Model model) throws Exception {
 		
-		logger.debug("mailSend started");
+		logger.debug("mailsave started");
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/mail-save/users/rkd1395";
 				
@@ -1065,13 +1088,13 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		JSONObject jsonObject = new JSONObject();
 		
-		jsonObject.put("subject", "테스트 메일");
-		jsonObject.put("to", "강민석' <rkd1395@svn.opensol2014.com>");
-		jsonObject.put("cc", "강민석 <rkd1395@svn.opensol2014.com>");
-		jsonObject.put("bcc", "");
-		jsonObject.put("textbody", "메일 저장 테스트");
-		jsonObject.put("from", "강민석 <rkd1395@svn.opensol2014.com>");
-//		jsonObject.put("displayName", "'강민석' <rkd1395@svn.opensol2014.com>");
+		jsonObject.put("subject", InputJsonObject.get("subject"));
+		jsonObject.put("to", InputJsonObject.get("to"));
+		jsonObject.put("cc", InputJsonObject.get("cc"));
+		jsonObject.put("bcc", InputJsonObject.get("bcc"));
+		jsonObject.put("textbody", InputJsonObject.get("textbody"));
+		jsonObject.put("from", InputJsonObject.get("from"));
+		//jsonObject.put("displayName", "'강민석' <rkd1395@svn.opensol2014.com>");
 		jsonObject.put("stateName", UUID.randomUUID().toString());
 		//jsonObject.put("charsert", "");
 		//jsonObject.put("htmlbody", "");
@@ -1086,7 +1109,7 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		JSONObject resultBody = (JSONObject) jp.parse(responseEntity.getBody());
 								
-		logger.debug("mailSend ended. returnVal = " + resultBody);
+		logger.debug("mailsave ended. returnVal = " + resultBody);
 		
 		return resultBody.toJSONString();
 

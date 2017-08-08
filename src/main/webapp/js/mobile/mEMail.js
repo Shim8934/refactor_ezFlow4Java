@@ -33,6 +33,41 @@ function sendMail(){
         });
 }
 
+function goMailWrite() {
+	$.mobile.changePage("/mobile/ezEmail/mMailWrite.do", {
+		type: "post",
+		transition: "pop",
+		changeHash: true
+	});
+}
+
+function tempSave(){
+	
+	var obj = new Object();
+    
+	obj.subject = $('#subject').val();
+    obj.to = '"강민석" <rkd1395@svn.opensol2014.com>';
+    obj.cc = '"강민석" <rkd1395@svn.opensol2014.com>';
+    obj.bcc = '"강민석" <rkd1395@svn.opensol2014.com>';
+    obj.textbody = $('#textbody').val();
+    obj.from = '"강민석" <rkd1395@svn.opensol2014.com>';
+    
+    var jsonData = JSON.stringify(obj);
+  $.ajax({
+            type : 'post',
+            url : '/mobile/ezEmail/mailSaveMessage.do',
+            data : jsonData,
+            dataType : "text",
+            contentType : "application/json; charset=UTF-8",
+            error: function(xhr, status, error){
+                alert(error);
+            },
+            success : function(data){ 
+            	alert(data)
+            },
+        });
+}
+
 function getMail(FolderId){
 var obj = new Object();
 	
@@ -55,11 +90,18 @@ var obj = new Object();
 	    var tag = "<ul data-role='listview' data-inset='false' data-theme='a' class='ui-listview ui-group-theme-a'>"
 					
 		for (var x = 0; x < messages.length; x++) {
-			tag =  tag + "<li><a href='/mobile/ezEmail/mailRead.do?folderId=" + encodeURIComponent(messages[x].folderId) + "&messageId="+ messages[x].href.split('/')[1] 
-				+"' class ='ui-btn ui-btn-icon-right ui-icon-carat-r'><h2 style='font-size:12px'><i class='fa fa-envelope' style='font-size:12px;'>" +  messages[x].sender 
-				+ "</i></h2><p class='ui-li-aside'>" +  messages[x].receivedt + "</p><p>" +  messages[x].subject + "</p></a></li>"
+				tag =  tag + "<li><a href='/mobile/ezEmail/mailRead.do?folderId=" + encodeURIComponent(messages[x].folderId) + "&messageId="+ messages[x].href.split('/')[1] 
+				+"' class ='ui-btn ui-btn-icon-right ui-icon-carat-r'><h2 style='font-size:12px'>"
+//				if (messages[x].read == '0') {
+					+ "<i class='fa fa-envelope' style='font-size:12px;'>" + messages[x].sender + "</i>" 
+					+ "</h2><p class='ui-li-aside'>" +  messages[x].receivedt + "</p><p>" +  messages[x].subject + "</p></a></li>"
+//				}
+//				else { 
+//					+ "<i class='fa fa-envelope-o' style='font-size:12px;'>" + messages[x].sender + "</i>" 
+//					+ "</h2><p class='ui-li-aside'>" +  messages[x].receivedt + "</p><p>" +  messages[x].subject + "</p></a></li>"
+//				}
+				
 		}
-		
 		$('.content').html(tag);
 		$("#unReadCount").text(json.unReadCount);
 		$("h1").text(json.folderId)

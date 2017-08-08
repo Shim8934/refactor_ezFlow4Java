@@ -28,6 +28,7 @@
      		<!-- body start -->
 			<div class="content" data-role="content">				
 				<ul data-role="listview" data-inset="false" data-theme="a">
+				<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchOption();">환경설정업조회</li>
 				<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:updateOption();">환경설정업데이트</li>
 					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchResSchMainList();">자원예약메인리스트</li>
 					<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchResSchList();">자원예약리스트</li>

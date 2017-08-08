@@ -14,7 +14,7 @@
 				<ul class="ui-grid-a">
 					<li class="ui-block-a"><a class="ui-btn" href="javascript:goHome();"><i class="fa fa-home" style="font-size:24px"></i></a></li>
 					<li class="ui-block-b"><a class="ui-btn" href="javascript:goMail();"><i class="fa fa-envelope-o" style="font-size:24px"></i></a></li>
-					<li class="ui-block-c"><a class="ui-btn" href="page-b.html"><i class="fa fa-pencil" style="font-size:24px"></i></a></li>
+					<li class="ui-block-c"><a class="ui-btn" href="javascript:goMailWrite();"><i class="fa fa-pencil" style="font-size:24px"></i></a></li>
 					<li class="ui-block-d"><a class="ui-btn" href="page-c.html"><i class="fa fa-file-text-o" style="font-size:24px"></i></a></li>
 					<li class="ui-block-e"><a class="ui-btn" href="page-d.html"><i class="fa fa-calendar" style="font-size:24px"></i></a></li>					
 				</ul>
