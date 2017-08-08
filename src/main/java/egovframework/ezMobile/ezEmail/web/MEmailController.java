@@ -2,6 +2,7 @@ package egovframework.ezMobile.ezEmail.web;
 
 import java.net.URI;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -57,6 +58,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
+import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -566,7 +568,7 @@ public class MEmailController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/ezEmail/mailRead.do",method=RequestMethod.GET, produces="text/plain;charset=utf-8")
 	@ResponseBody
 	public String mobileReadMail(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("mailDeleteMessage started.");
+		logger.debug("mailReadMessage started.");
 		
 		String folderId = "";
 		String messageId = "";
@@ -586,6 +588,8 @@ public class MEmailController extends EgovFileMngUtil {
 		}
 
 		logger.debug("folderId = " + folderId + ", messageId = " + messageId);
+		
+		folderId = URLEncoder.encode(folderId, "UTF-8");
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/folders/" + folderId + "/mails/" + messageId + "/users/" + userInfo.getId();
@@ -611,7 +615,7 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		model.addAttribute("mailFolderList", resultBody);		
 						
-		logger.debug("mailDeleteMessage ended.");
+		logger.debug("mailReadMessage ended.");	
 		
 		return resultBody.toJSONString();
 	
@@ -947,10 +951,6 @@ public class MEmailController extends EgovFileMngUtil {
 	@RequestMapping(value="/mobile/ezEmail/mMailWrite.do")
 	public String mailWrite(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		
-		MCommonVO info = mOptionService.commonInfo(request.getServerName(), "rkd1395");
-		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
-		String userEmail = info.getUserId() + "@" + domainName;
-		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");		
 		String url = gwServerUrl + "/mobile/ezemail/sign/users/rkd1395";
 				
@@ -965,13 +965,29 @@ public class MEmailController extends EgovFileMngUtil {
 		
 		RestTemplate rest = new RestTemplate();
 		
-		ResponseEntity<JSONObject> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, JSONObject.class);
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
 		//signList가 1개도 없으면  null
 
-		JSONObject resultBody = result.getBody();
+		JSONParser jp = new JSONParser();
 		
-		model.addAttribute("mailSignList", resultBody);		
-		model.addAttribute("sender", userEmail);
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+
+		String status = resultBody.get("status").toString();
+
+		JSONObject data = new JSONObject();
+		JSONArray messages = new JSONArray();
+		JSONArray folderList = new JSONArray();
+		JSONObject mailSignatureVO = new JSONObject();
+		
+		if (status.equals("ok")) {
+			
+			data = (JSONObject) resultBody.get("data");
+			mailSignatureVO = (JSONObject) data.get("mailSignatureVO");
+			String userEmail = (String) data.get("userEmail");
+			
+			model.addAttribute("mailSignList", resultBody);		
+			model.addAttribute("sender", userEmail);
+		}
 
 		return "/mobile/ezEmail/mMailWrite";
 	}

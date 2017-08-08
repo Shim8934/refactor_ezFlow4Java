@@ -488,9 +488,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	            mailSignSel = mailSignatureVO.getUseFlag().trim();
 	        }
 	        
+	        JSONObject data = new JSONObject();
+	        data.put("mailSignatureVO",mailSignatureVO);
+	        data.put("userEmail",userEmail);
+	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", mailSignatureVO);
+			result.put("data", data);
 	        
 		} catch (Exception e) {
 			e.printStackTrace();

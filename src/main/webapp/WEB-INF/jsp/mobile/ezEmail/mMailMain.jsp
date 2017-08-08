@@ -27,97 +27,28 @@
      		
      		<!-- body start -->
 			<div class="content" data-role="content">				
-				<ul data-role="listview" data-inset="false" data-theme="a">
-				<c:forEach items="${MessagesList}" var="message">
+				<ul class="fa-ul" data-role="listview" data-inset="false" data-theme="a">
+				<c:forEach items="${MessagesList}" var="message"  varStatus="i">
 				<li>
-					<a href="/mobile/ezEmail/mailRead.do?folderId=${message.folderId}&messageId=${message.messageId}">
-					<h2 style="font-size:12px"><i class="fa fa-envelope" style="font-size:12px;">${message.sender}</i></h2>
+					<a href="/mobile/ezEmail/mailRead.do?folderId=${message.folderId}&messageId=${message.messageId}" style="height:50px;">
+					<i class="fa-li fa fa-check-square" id="checklist${i}" style="float:left; top:25px; left:10px; position:absolute"></i>
+					<div style="left:70px; width:95%; position:absolute;">
+					<h2 style="font-size:12px">
+					<c:if test="${message.read==0}"><i class="fa fa-envelope" style="font-size:12px;"></c:if>
+					<c:if test="${message.read==1}"><i class="fa fa-envelope-o" style="font-size:12px;"></c:if>
+					${message.sender}</i></h2>
 					<p class="ui-li-aside">${message.receivedt}</p>
 					<p>${message.subject}</p>
+					<c:if test="${message.flag==0}">
+					<i class="fa fa-star-o" aria-hidden="true" style="float:right; top:25px; right:35px; position:absolute"></i>
+					</c:if>
+					<c:if test="${message.flag==1}">
+					<i class="fa fa-star" aria-hidden="true" style="float:right; top:25px; right:35px; position:absolute"></i>
+					</c:if>
+					</div>
 					</a>
 				</li>
 				</c:forEach>
-<%-- 					<c:if test="${type == 'mailReceive' }"> --%>
-<!-- 					<li>				    					    	 -->
-<!-- 				    	<a href="/mobile/sample/sampleDetail.do?type=mailRead">					    		 -->
-<!--     						<h2 style="font-size:12px"><i class="fa fa-envelope" style="font-size:12px;"></i>&nbsp;&nbsp;장진혁</h2> -->
-<!--     						<p class="ui-li-aside">06:24</p> -->
-<!-- 				    		<p>오픈솔루션팀 차장 장진혁입니다.</p> -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope" style="font-size:12px;"></i>&nbsp;&nbsp;정지혜</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p> -->
-<!-- 					    	<p>전자정부 표준프레임워크 호환성 관련 메일입니다.</p>						    	 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope" style="font-size:12px;"></i>&nbsp;&nbsp;이종립/클라우드센터</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>			    		 -->
-<!-- 					    	<p>클라우드센터에서 메일보냅니다.</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope" style="font-size:12px;"></i>&nbsp;&nbsp;이동호</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>회신: [애경그룹] 폼빌더 수정 진행 사항 확인 요청</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope-o" style="font-size:12px;"></i>&nbsp;&nbsp;이효민</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>[알림] 영어연구회 영어회화 스크립트</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope-o" style="font-size:12px;"></i>&nbsp;&nbsp;홍용빈</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>[공지] 악성코드 탐지내역 2017.06.10</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope-o" style="font-size:12px;"></i>&nbsp;&nbsp;박종균</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>SQLMAP 관련 내용입니다.</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope-o" style="font-size:12px;"></i>&nbsp;&nbsp;김유진</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>[Spring] context-dataSource.xml</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-envelope-o" style="font-size:12px;"></i>&nbsp;&nbsp;테스트</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>테스트 메일입니다.</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<%-- 				    </c:if> --%>
-<%-- 				    <c:if test="${type == 'mailSend' }"> --%>
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-paper-plane-o" style="font-size:12px;"></i>&nbsp;&nbsp;김유진</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>[Spring] context-dataSource.xml</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<!-- 				    <li> -->
-<!-- 				    	<a href="index.html">					    		 -->
-<!-- 					    	<h2 style="font-size:12px"><i class="fa fa-paper-plane-o" style="font-size:12px;"></i>&nbsp;&nbsp;테스트</h2> -->
-<!-- 					    	<p class="ui-li-aside">06:24</p>					    		 -->
-<!-- 					    	<p>테스트 메일입니다.</p>						    						    		 -->
-<!-- 				    	</a> -->
-<!-- 				    </li> -->
-<%-- 				    </c:if> --%>
 				    <li style="background-color: transparent;text-align:center">
 						P A G I N G
 					</li>					
