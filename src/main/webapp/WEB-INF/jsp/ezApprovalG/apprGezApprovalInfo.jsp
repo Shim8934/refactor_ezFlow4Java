@@ -204,6 +204,7 @@
 	        });
 	        
 	        window.onload = function () {
+alert("<<<pIniGubun : " + pIniGubun);	        	
 	        	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
@@ -517,6 +518,7 @@
 	        var bool3 = false;
 	        var bool4 = false;
 	        var bool5 = false;
+	        // 결재정보 창에서 보이는 탭 이동 관련 함수.
 	        function ChangeTab(obj) {
 	            //DisabledTab();
 	            var pSelectTab = obj.getAttribute("divname");
@@ -532,8 +534,9 @@
 		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
-	                    if (!bool)
+	                    if (!bool) {
 	                        Lineinfo_ini();
+	                    }
 	                    bool = true;
 	                    break;
 	                case "Receptinfo":
@@ -545,8 +548,9 @@
 		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
-	                    if (!bool2)
+	                    if (!bool2) {
 	                        Receptinfo_ini();
+	                    }
 	                    bool2 = true;
 	                    break;
 	                case "Cabinetinfo":
@@ -1006,6 +1010,7 @@
 		    }
 		
 		    function CheckAprPerson() {  	
+alert("<<<CheckAprPerson");		    	
 		        var pAPRLINE = new ListView();
 		        pAPRLINE.LoadFromID("lvAPRLINE");
 		

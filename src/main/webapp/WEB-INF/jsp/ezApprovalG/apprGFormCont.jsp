@@ -156,10 +156,11 @@
 		    function btnOK_onclick() {
 		        var URL;
 		        var listview = new ListView();
-		        if (pSelectTab == "favoritelist")
+		        if (pSelectTab == "favoritelist") {
 		            listview.LoadFromID("lvtFavForm");
-		        else
+		        } else {
 		            listview.LoadFromID("lvtForm");
+		        }
 		        var oArrRows = listview.GetSelectedRows();
 		        var selRow = oArrRows[0];
 		        if (selRow) {

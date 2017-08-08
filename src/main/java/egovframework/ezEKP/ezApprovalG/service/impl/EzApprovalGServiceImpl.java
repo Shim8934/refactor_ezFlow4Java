@@ -2685,9 +2685,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", userInfo.getTenantId());
 		
-		ezApprovalGDAO.deleteExApprLine(map);
-		ezApprovalGDAO.deleteApprLineInfo(map);
+		logger.debug("updateLineInfo = v_DOCID : " + strDocID + " companyID : " + companyID + " v_TENANTID : " + userInfo.getTenantId() );
 		
+		ezApprovalGDAO.deleteExApprLine(map);
+		ezApprovalGDAO.deleteApprLineInfo(map);		
 
 		String recDate = "";
 		String procDate = "";

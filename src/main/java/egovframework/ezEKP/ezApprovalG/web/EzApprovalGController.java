@@ -1080,6 +1080,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = ezApprovalGService.updateLineInfo(strXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo);
 		
+		logger.debug("aprLineSave result : " + result); 
 		logger.debug("aprLineSave ended.");
 		
 		return result;
@@ -1192,6 +1193,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formID = request.getParameter("formID");
 		String result = ezApprovalGService.getFormRecvApr(docID, formID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
+		logger.debug("<<<result : " + result );
 		logger.debug("getFormRecv ended.");
 		
 		return result;
