@@ -135,7 +135,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 				useSecurity = jsonObject.get("useSecurity").toString();
 			}
 
+			if(jsonObject.containsKey("mainType")){
+				mainType = jsonObject.get("mainType").toString();
+			}
+			
 			tenantId = info.getTenantId();
+			
+			LOGGER.debug("userId: " + userId);
+			LOGGER.debug("timeZone: " + timeZone);
+			LOGGER.debug("lang: " + lang);
+			LOGGER.debug("mainType: " + mainType);
+			LOGGER.debug("listCnt: " + listCnt);
+			LOGGER.debug("useSearch: " + useSearch);
+			LOGGER.debug("useSecurity: " + useSecurity);
+			LOGGER.debug("tenantId: " + tenantId);
 			
 			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSearch, useSecurity, tenantId);
 			

@@ -92,24 +92,12 @@
   		   <![CDATA[
 				UPDATE TBL_USERMOBILEINFO
 				SET 
-					LANG = #lang#
-				]]>	
-					<isNotEmpty property="timeZone">	
+					LANG = #lang#	
 					,TIMEZONE = #timeZone#
-					</isNotEmpty>		
-					<isNotEmpty property="mainType">	
 					,MAINTYPE = #mainType#
-					</isNotEmpty>
-					<isNotEmpty property="listCnt">
 					,LISTCNT = #listCnt#
-					</isNotEmpty>
-					<isNotEmpty property="useSearch">
 					,USESEARCH = #useSearch#
-					</isNotEmpty>
-					<isNotEmpty property="useSecurity">
-					,USESECURITY = #useSecurity#
-					</isNotEmpty>
-			<![CDATA[		
+					,USESECURITY = #useSecurity#	
 				WHERE 
 					USERID = #userId#
 				AND 
