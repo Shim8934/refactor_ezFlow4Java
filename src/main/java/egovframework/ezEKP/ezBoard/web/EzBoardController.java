@@ -5790,7 +5790,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String result = "";
 		
 		if (boardItemVO.getMode() != null && (boardItemVO.getMode().equals("boardContent") || boardItemVO.getMode().equals("boardAttach"))) {
-			boardItemVO.setTitle(commonUtil.cleanValue(boardItemVO.getTitle()));
+			boardItemVO.setTitle(boardItemVO.getTitle());
 			result = ezBoardService.getItemAttachmentXMLRetrans(boardItemVO);
 		} else {
 			result = ezBoardService.getItemAttachmentXML(boardItemVO);

@@ -293,10 +293,10 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
-                            _TDColum.innerText = p_Subject;
+                            _TDColum.innerHTML = p_Subject;
                             p_Subject = p_Subject.trim();
                             if(p_Subject == ""){
-                            	_TDColum.innerText = strLang97;
+                            	_TDColum.innerHTML = strLang97;
                             }
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             _TDColum.onclick = function () { event_listclick(this); };
@@ -799,7 +799,7 @@ function MailListRefresh() {
         if (listSubContentArry.length > 0) {
             var pGroupProp = pGroupListClickObject.getAttribute("prop");
             var pGroupMode = pGroupListClickObject.getAttribute("mode");
-            p_HeaderViewXML = "Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
+            p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile1.xml";
             if (pGroupMode == "SENT") {
                 p_ListorderType = " WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false " +
                                   " AND \"http://schemas.microsoft.com/mapi/sent_representing_name\" = '" + pGroupProp + "' ";

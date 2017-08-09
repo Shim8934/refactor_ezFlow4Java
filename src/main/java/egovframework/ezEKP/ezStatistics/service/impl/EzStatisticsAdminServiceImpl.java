@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -356,9 +357,14 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 					
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					Date dbDate = format.parse(logTime);
-					
-					SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss");
-					String dateStr = newFormat.format(dbDate);
+					String dateStr = "";
+					if (isPrimaryLang.equals("1")) {
+						SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss");
+						dateStr = newFormat.format(dbDate);
+					} else {
+						SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss", new Locale("en","US"));
+						dateStr = newFormat.format(dbDate);
+					}
 					
 					logger.debug("LogTime=" + dateStr);
 					
