@@ -74,21 +74,9 @@ public class MResourceController extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 	
-	@Resource(name = "EzResourceService")
-	private EzResourceService ezResourceService;
-	
 	@Resource(name="loginService")
 	private LoginService loginService;
 
-	@Resource(name="crypto") 
-	private EgovFileScrty egovFileScrty;
-	
-	@Resource(name="egovMessageSource")
-	private EgovMessageSource egovMessageSource;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
-	
 	@Resource(name = "MResourceService")
 	private MResourceService mResourceService;
 	
@@ -136,7 +124,7 @@ public class MResourceController extends EgovFileMngUtil {
 			companyId = userInfo.getCompanyID();
 		}
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/main-list/users/" + userId;
 				
 		RestTemplate rest = new RestTemplate();	
@@ -190,7 +178,7 @@ public class MResourceController extends EgovFileMngUtil {
 		startDate = "2017-07-01 09:00";
 		endDate = "2017-07-03 10:00";
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/" + type + "/list";
 		String userId = "";
 		String companyId = "";
@@ -257,7 +245,7 @@ public class MResourceController extends EgovFileMngUtil {
 		String brdId = "1";
 		String brdCompany = searchVO.getCompanyId();
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/folder-list";
 		String userId = "";
 		String companyId = "";
@@ -318,7 +306,7 @@ public class MResourceController extends EgovFileMngUtil {
 			userId = userInfo.getId();			
 		}
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/favorite-list/users/" + userId;
 
 		String ownerId = searchVO.getOwnerId();
@@ -379,7 +367,7 @@ public class MResourceController extends EgovFileMngUtil {
 		ownerId = "11";
 		scheduleId = 22;
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/schedules/" + scheduleId;
 		LOGGER.debug("userId: " + userId);
 		
@@ -436,7 +424,7 @@ public class MResourceController extends EgovFileMngUtil {
 		ownerId = "11";
 		scheduleId = 22;
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/schedules/" + scheduleId + "/check-repetition";
 		LOGGER.debug("userId: " + userId);
 		
@@ -482,7 +470,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + resourceId + "/schedules";
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -582,7 +570,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + resourceId + "/schedules/" + scheduleId;
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
@@ -691,7 +679,7 @@ public class MResourceController extends EgovFileMngUtil {
 		ownerId = "11";
 		scheduleId = 23;
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/schedules/" + scheduleId;
 		LOGGER.debug("userId: " + userId);
 		
@@ -745,7 +733,7 @@ public class MResourceController extends EgovFileMngUtil {
 		
 	    resourceId = "5";
 	    //로컬테스트용
-	    gwServerUrl = "http://localhost:8080";
+	    //gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + resourceId + "/favorite";
 		
 		
@@ -818,7 +806,7 @@ public class MResourceController extends EgovFileMngUtil {
 
 		ownerId = "1";
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezresource/resources/" + ownerId + "/favorite/users/" + userId;
 		LOGGER.debug("userId: " + userId);
 		

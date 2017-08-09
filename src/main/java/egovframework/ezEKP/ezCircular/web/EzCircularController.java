@@ -604,14 +604,14 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
-    		resultXML.append("<ROW>");
-    		
+        	resultXML.append("<ROW>");
+
     		if (vo.getRegDate().compareTo(newlyDate) > 0) {
-    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>0</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			} else {
-				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>0</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			}
-			
+
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
 			resultXML.append("<CELL><VALUE>" + vo.getConfirmStatus() + "</VALUE></CELL>");
 			
@@ -682,7 +682,7 @@ public class EzCircularController extends EgovFileMngUtil {
         endRow = (personalCount * Integer.parseInt(pageNum));
 		
         int totalCount = ezCircularService.getCircularCompleteListCount(userInfo.getId(), searchValue, searchType, sdate, edate, userInfo.getOffset(), userInfo.getTenantId());
-        
+
 		List<CircularListVO> list = ezCircularService.getCircularCompleteList(userInfo.getId(), searchValue, searchType, sdate, edate, startRow, endRow, userInfo.getTenantId(), userInfo.getOffset(), orderCell, orderOption1);
 		
 		StringBuffer resultXML = new StringBuffer();
@@ -716,12 +716,14 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
+        	int totalCommentCount = ezCircularService.getCommentCount(Integer.toString(vo.getCircularID()), userInfo.getId(), "totalComment", userInfo.getTenantId());
+
     		resultXML.append("<ROW>");
     		
     		if (vo.getRegDate().compareTo(newlyDate) > 0) {
-    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			} else {
-				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			}
         
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
@@ -819,12 +821,14 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
+        	int totalCommentCount = ezCircularService.getCommentCount(Integer.toString(vo.getCircularID()), userInfo.getId(), "totalComment", userInfo.getTenantId());
+
     		resultXML.append("<ROW>");
     		
     		if (vo.getRegDate().compareTo(newlyDate) > 0) {
-    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			} else {
-				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			}
     		
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
@@ -922,13 +926,15 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
+        	int totalCommentCount = ezCircularService.getCommentCount(Integer.toString(vo.getCircularID()), userInfo.getId(), "totalComment", userInfo.getTenantId());
+
     		resultXML.append("<ROW>");
     		
     		if (vo.getRegDate().compareTo(newlyDate) > 0) {
-    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE>" + 
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE>" + 
     							 "<STATUS>" + vo.getStatus() + "</STATUS><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			} else {
-				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE>" +
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE>" +
 								 "<STATUS>" + vo.getStatus() + "</STATUS><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			}
 
@@ -1028,9 +1034,9 @@ public class EzCircularController extends EgovFileMngUtil {
     		resultXML.append("<ROW>");
     		
     		if (vo.getRegDate().compareTo(newlyDate) > 0) {
-    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>0</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			} else {
-				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>0</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			}
     		
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
@@ -1119,6 +1125,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			} else { // 임시회람 수정
 				result = ezCircularService.getCircular(circularID, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "temp");
 			}
+			
+			result.setTitle(result.getTitle().replaceAll("\\\\", "\\\\\\\\"));
 			
 			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", "", userInfo.getTenantId(), userInfo.getOffset());
 
@@ -2146,12 +2154,14 @@ public class EzCircularController extends EgovFileMngUtil {
         logger.debug("newlyDate = " + newlyDate);
         
         for (CircularListVO vo : list) {
+        	int totalCommentCount = ezCircularService.getCommentCount(Integer.toString(vo.getCircularID()), userInfo.getId(), "totalComment", userInfo.getTenantId());
+
     		resultXML.append("<ROW>");
     		
     		if (vo.getRegDate().compareTo(newlyDate) > 0) {
-    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+    			resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>1</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			} else {
-				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
+				resultXML.append("<CELL><MEMBERID>" + vo.getMemberID() + "</MEMBERID><COMMENTCOUNT>" + totalCommentCount + "</COMMENTCOUNT><CIRCULARID>" + vo.getCircularID() + "</CIRCULARID><NEWLYDATE>0</NEWLYDATE><VALUE>" + vo.getCircularID() + "</VALUE></CELL>");
 			}
     		
 			resultXML.append("<CELL><VALUE>" + vo.getImportance() + "</VALUE></CELL>");
@@ -2188,12 +2198,16 @@ public class EzCircularController extends EgovFileMngUtil {
     	String searchValue = request.getParameter("searchValue");
     	String commentType = request.getParameter("commentType");
     	
-logger.debug("searchType = " + searchType);
+    	logger.debug("searchType = " + searchType);
     	List<CircularListVO> circularUserList = ezCircularService.getCircularUserList(Integer.parseInt(circularCommentVO.getCircularID()), searchType, searchValue, userInfo.getTenantId(), userInfo.getOffset());
     	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getId(), commentType, userInfo.getOffset(), userInfo.getTenantId());
-    	
+    	int totalCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "totalComment", userInfo.getTenantId());
+		int myCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "myComment", userInfo.getTenantId());
+
     	logger.debug("getCircularComment ended.");
     	
+    	model.addAttribute("totalCommentCount", totalCommentCount);
+    	model.addAttribute("myCommentCount", myCommentCount);
     	model.addAttribute("circularUserList", circularUserList);
     	model.addAttribute("circularCommentList", circularCommentList);
     	model.addAttribute("userInfo", userInfo);
@@ -2283,7 +2297,11 @@ logger.debug("searchType = " + searchType);
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
     	CircularListVO vo = ezCircularService.getCircular(circularCommentVO.getCircularID(), userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId(), "read");
-    	
+    	int totalCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "totalComment", userInfo.getTenantId());
+		int myCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "myComment", userInfo.getTenantId());
+
+    	model.addAttribute("totalCommentCount", totalCommentCount);
+    	model.addAttribute("myCommentCount", myCommentCount);
     	model.addAttribute("userInfo", userInfo);
     	model.addAttribute("vo", vo);
     	
@@ -2471,7 +2489,7 @@ logger.debug("searchType = " + searchType);
 		logger.debug("circularConfirm started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+
 		String circularID = request.getParameter("circularID");
 		
 		ezCircularService.confirmStatus(circularID, userInfo.getId(), userInfo.getTenantId(), "commentConfirm");

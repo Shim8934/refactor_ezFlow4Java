@@ -114,7 +114,7 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 		}
 
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezoption/option/users/" + userId;
 		logger.debug("userId: " + userId);
 		logger.debug(url);
@@ -179,7 +179,7 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 		String gwServerUrl = config.getProperty("config.mobileGwServerURL");
 		logger.debug("gwServerUrl: " + gwServerUrl);
 		//로컬테스트용
-		gwServerUrl = "http://localhost:8080";
+		//gwServerUrl = "http://localhost:8080";
 		String url = gwServerUrl + "/mobile/ezoption/option/users/" + userId;
 		
 		optionVO.setTimeZone(timeZone);

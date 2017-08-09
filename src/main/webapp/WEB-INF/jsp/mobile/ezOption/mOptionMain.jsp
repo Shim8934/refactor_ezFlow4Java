@@ -21,37 +21,9 @@
 		<script>
 		 $(document).on("pagecreate",function(event){
 			 $('#plus').closest('.ui-btn').hide();
+			 searchOption();
 			});
-			function saveEnvironment() {
-				var resourceChk = "";
-				
-	            $("input[name=resourceChk]:checked").each(function() {
-	            	resourceChk += $(this).val() + ",";
-	            });
-	            
-				 $.ajax({
-                  type:"POST",
-                  dataType:"text",
-                  data : {
-                  	lang : $('input[name = radio-view]:checked').val(),
-                  	dpBoardCnt: $('input[name = slider-2]').val(),
-                  	resourceChk : resourceChk,
-                	resourceYN : $('input[name = radio-view2]:checked').val(),
-                  	async: false
-                  },
-                  url: "/mobile/ezOption/saveOption.do",
-                    success: function (data) {
-                    }
-                });
-			}
-			
-		  function addPlus(flag) {
-			  if (flag == '1') {
-			  	$('#plus').closest('.ui-btn').hide(); 
-			  } else {
-				$('#plus').closest('.ui-btn').show(); 
-			  }
-		  }
+
 		</script>	
 	</head>
 	<body class="loginbody">
@@ -62,9 +34,6 @@
      		
      		<!-- body start -->
 			<div class="content" data-role="content">
-				<form id="mainForm" name="mainForm" method="post">
-				<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:searchOption();">환경설정업조회</li>
-				<li class="fa fa-caret-down " style="font-size:15px" onclick="javascript:updateOption();">환경설정업데이트</li>					
 					<div class="ui-corner-all custom-corners">
 					  <div class="ui-bar ui-bar-a">
 					    <h3>언어 설정</h3>
@@ -185,7 +154,7 @@
 						        </select>
 						</div>
 					  </div>
-					</div>	
+						
 					<div class="ui-corner-all custom-corners" data-position="fixed" >
 					  <div class="ui-bar ui-bar-a" >
 						<div class="searchArea" id="searchArea">
@@ -201,63 +170,60 @@
 		    				<input type="range" name="slider-2" id="slider-2" data-highlight="true" min="0" max="100" value="10" >
 						</div>
 					</div>
+					 </div>
 					<div class="ui-corner-all custom-corners">
 					  <div class="ui-bar ui-bar-a">
 						<div class="searchArea">
-							<h3>자원관리 설정</h3>
-							<a href="#popupInfo" data-rel="popup" data-transition="pop" class=" ui-btn-right  ui-icon-info ui-shadow ui-corner-all ui-btn-icon-notext" title="Learn more">Learn more</a>														
+							<h3>메인화면직원검색 설정</h3>
+							<a href="#popupInfo3" data-rel="popup" data-transition="pop" class=" ui-btn-right  ui-icon-info ui-shadow ui-corner-all ui-btn-icon-notext" title="Learn more">Learn more</a>														
 						</div>    
 					  </div>
-					<div data-role="popup" id="popupInfo" class="ui-content" data-theme="a" style="max-width:350px;">
+					<div data-role="popup" id="popupInfo3" class="ui-content" data-theme="a" style="max-width:350px;">
 	  							<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
-								<p>게시판의 갯수를 몇개 보여줄지 정함</p>
+								<p>메인화면에서 직원검색 기능의 사용여부 선택</p>
 					</div>
 					<div class="ui-body ui-body-a">
 						<fieldset class="ui-grid-a"> 
 							<div class="ui-block-a">
 								<fieldset data-role="controlgroup" data-type="horizontal">
-									<input type="radio" name="radio-view2" id="radio-view-a1" value="N"  onclick="javascript:addPlus('1');"/>
-									<label for="radio-view-a1">기본</label>
-									<input type="radio" name="radio-view2" id="radio-view-b1" value="Y" onclick="javascript:addPlus('2');" />
-									<label for="radio-view-b1">개인</label>
+									<input type="radio" name="radio-view3" id="radio-view-a3" value="Y"  onclick="javascript:addPlus('1');"/>
+									<label for="radio-view-a3">사용</label>
+									<input type="radio" name="radio-view2" id="radio-view-b3" value="N" onclick="javascript:addPlus('2');" />
+									<label for="radio-view-b3">안함</label>
 								</fieldset>
-							</div> 
-							<div class="ui-block-b">
-								<a id="plus" href="#popupInfo2" data-rel="popup" data-transition="pop" class=" ui-btn ui-alt-icon ui-shadow ui-icon-plus ui-btn-icon-notext" title="Learn more">Learn more</a>
 							</div> 
 						</fieldset>
-						<div data-role="popup" id="popupInfo2" class="ui-content" data-theme="a" style="width:300px;">
-								<a href="#" data-position-to="#searchArea" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
-							<div data-role="header">
-							자원선택
-							</div>
-		  					 <div data-role="collapsible" class="animateMe" data-iconpos="right" data-collapsed="false">
-						    	<h2>회의실&nbsp;&nbsp;</h2>
-								<fieldset data-role="controlgroup">
-								    <input type="checkbox" name="resourceChk" id="checkbox-1a" value="1">
-								    <label for="checkbox-1a">3층 소회의실</label>
-								    <input type="checkbox" name="resourceChk" id="checkbox-2a" value="2">
-								    <label for="checkbox-2a">5층 소회의실</label>
-								    <input type="checkbox" name="resourceChk" id="checkbox-3a" value="3">
-								    <label for="checkbox-3a">3층 대회의실</label>
-								    <input type="checkbox" name="resourceChk" id="checkbox-4a" value="4">
-								    <label for="checkbox-4a">5층 소회의실</label>
+					 </div>
+					 </div> 
+					<div class="ui-corner-all custom-corners">
+					  <div class="ui-bar ui-bar-a">
+						<div class="searchArea">
+							<h3>전자결재보안모드 설정</h3>
+							<a href="#popupInfo4" data-rel="popup" data-transition="pop" class=" ui-btn-right  ui-icon-info ui-shadow ui-corner-all ui-btn-icon-notext" title="Learn more">Learn more</a>														
+						</div>    
+					  </div>
+					<div data-role="popup" id="popupInfo4" class="ui-content" data-theme="a" style="max-width:350px;">
+	  							<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	
+								<p>전자결재시 보안기능의 사용여부 선택</p>
+					</div>
+					<div class="ui-body ui-body-a">
+						<fieldset class="ui-grid-a"> 
+							<div class="ui-block-a">
+								<fieldset data-role="controlgroup" data-type="horizontal">
+									<input type="radio" name="radio-view4" id="radio-view-a4" value="Y"  onclick="javascript:addPlus('1');"/>
+									<label for="radio-view-a4">사용</label>
+									<input type="radio" name="radio-view2" id="radio-view-b4" value="N" onclick="javascript:addPlus('2');" />
+									<label for="radio-view-b4">안함</label>
 								</fieldset>
-						    </div>
-						    </div>
-<!-- 							<a href="#popupInfo2" data-rel="popup" data-transition="pop" class=" ui-btn-right ui-btn ui-alt-icon ui-shadow ui-icon-info ui-btn-icon-notext" title="Learn more">Learn more</a> -->
-<!-- 							<div data-role="popup" id="popupInfo2" class="ui-content" data-theme="a" style="width:600px;"> -->
-<!-- 								<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>	 -->
-<!-- 		  					<p>게시판의 갯수를 몇개 보여줄지 정함</p> -->
-<!-- 						    </div> -->
+							</div> 
+						</fieldset>
 					 </div>
-					 </div>
+					 </div>  
 					<div>
 					<p align="center">
-					<button class="show-page-loading-msg" data-textonly="false" data-textvisible="true" data-inline="true" onclick="javascript:saveEnvironment()">적용하기</button>
+					<button class="show-page-loading-msg" data-textonly="false" data-textvisible="true" data-inline="true" onclick="javascript:saveOption()">적용하기</button>
 					</p>
 					</div>
-				</form>
      		</div>    		
 	<!-- body end -->
 

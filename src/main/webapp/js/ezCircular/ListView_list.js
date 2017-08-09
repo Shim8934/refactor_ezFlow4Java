@@ -672,7 +672,6 @@ function ListView() {
             objTr.setAttribute("id", _thisID + "_TR_" + i);
             objTr.style.cursor = "pointer";
 
-
             objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
 
@@ -680,7 +679,6 @@ function ListView() {
                 objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
             else
                 objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
-
 
             if (_rowondblclick != null)
                 objTr.ondblclick = new Function(_rowondblclick);
@@ -704,6 +702,7 @@ function ListView() {
 
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
+
             for (var j = 0; j < oDatas.length; j++) {
                 var strData = oDatas[j].tagName;
                 var strValue = "";
@@ -729,7 +728,7 @@ function ListView() {
                 var objTd = document.createElement("TD");
                 var titleImage = "";
                 var titleOneLineCnt = "";
-                
+            
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.padding = "8px 4px";
                     objTd.style.margin = "0";
@@ -737,6 +736,10 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
+
+                    if (getNodeText(oDatas[1]) != 0) {
+                    	titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[1]) + "]</span>";
+                    }
                 }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {

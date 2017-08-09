@@ -224,7 +224,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
-			
+			LOGGER.debug("userEmail : " + userEmail + ", password : " + password);
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
 					
@@ -395,8 +395,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							
 				if (message.isSet(Flags.Flag.ANSWERED)) {
 					messageJson.put("contentclass","REPLY");
-				}
-				else {
+				} else {
 					boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
 					
 					if (isForwarded) {
@@ -412,12 +411,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			folder.close(false);
 			
+			JSONObject data = new JSONObject();
+			data.put("messageJsonArray", messageJsonArray);
+			data.put("unreadCount", folder.getUnreadMessageCount());
+			data.put("folderList", folderList);
+			data.put("folderId", folderId);
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", messageJsonArray);
-			result.put("unreadCount", folder.getUnreadMessageCount());
-			result.put("folderList", folderList);
-			result.put("folderId", folderId);
+			result.put("data", data);
+//			result.put("unreadCount", folder.getUnreadMessageCount());
+//			result.put("folderList", folderList);
+//			result.put("folderId", folderId);
 			
 			//data 안에 넣어서 한번에 처리하도록 하자.
 			
@@ -463,6 +467,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			
 			String userEmail = info.getUserId() + "@" + domainName;
 			
 			tenantID = info.getTenantId();
@@ -472,7 +477,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String mailSign3 = "";
 			String mailSignSel = "0";
 			
-	
 			LOGGER.debug("tenantID" + tenantID + "userId" + userId);
 			
 			MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(tenantID, userId);
@@ -484,13 +488,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	            mailSignSel = mailSignatureVO.getUseFlag().trim();
 	        }
 	        
+	        JSONObject data = new JSONObject();
+	        data.put("mailSignatureVO",mailSignatureVO);
+	        data.put("userEmail",userEmail);
+	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", mailSignatureVO);
+			result.put("data", data);
 	        
 		} catch (Exception e) {
-			result.put("status", "ok");
-			result.put("code", 0);			
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
 			result.put("data", "");
 		}
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/sign/users/{userId}] ended.");	
@@ -1462,12 +1471,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //			            } else {
 			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
 			                // 이 경우에는 메일을 다시 전송하지 않는다.
-			                if (mailSendCompleted == false) {
-    			            	Transport.send(message);
+//			                if (mailSendCompleted == false) {
+//    			            	Transport.send(message);
     			            	
-    			            	sentFolderMessageUID = 0;
-    			            	mailSendCompleted = true;
-			                }
+//    			            	sentFolderMessageUID = 0;
+//    			            	mailSendCompleted = true;
+//			                }
 			            				                	            				        		
                             // this deletion code block has been moved here because
                             // it needs to be kept in Drafts if an error occurs during the above process.
@@ -2980,10 +2989,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
 			mail.put("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
-			mail.put("htmlBody", bodyInfoList.get(0));
-			mail.put("pAttachListHtml", bodyInfoList.get(1));
 			mail.put("pAttachListHtmlSub", pAttachListHtmlSub);
-			mail.put("isAttach", bodyInfoList.get(4));
+			
+			if (bodyInfoList != null) { 
+				mail.put("htmlBody", bodyInfoList.get(0));
+				mail.put("pAttachListHtml", bodyInfoList.get(1));
+				mail.put("isAttach", bodyInfoList.get(4));
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

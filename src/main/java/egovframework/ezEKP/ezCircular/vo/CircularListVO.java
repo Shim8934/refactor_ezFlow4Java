@@ -45,7 +45,7 @@ public class CircularListVO {
 	private String commentStatus;
 	/** 공유상태 */
 	private String shareStatus;
-	
+
 	public int getCircularID() {
 		return circularID;
 	}
