@@ -2,6 +2,7 @@
 function getCircularComment() {
 	$.ajax({
 		type : "POST",
+		async : false,
 		url : "/ezCircular/getCircularComment.do",
 		dataType : "json",
 		data : {
