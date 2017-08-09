@@ -684,9 +684,18 @@ function Send_onClick() {
         eSubject.focus();
         return;
     }
-
+    
+    if (eSubject.value.length > 120) {
+        alert(strLang95);
+        eSubject.focus();
+        return;
+    }
+    
     NameCertify_onClick(Send_onClick_Complete);
 }
+
+var secureMail_dialogArguments = new Array();
+var secureMailParams = new Array();
 function Send_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
@@ -718,10 +727,27 @@ function Send_onClick_Complete(ReturnValue) {
                     return;
                 }
             }
-            Save_onClick("sendsave");
+            
+            // 보안메일 체크되어있을 경우 보안메일 설정 팝업창을 띄운다.
+            if (document.getElementById("chkSecureMail").checked) {
+            	secureMail_dialogArguments[0] = secureMailParams;
+            	secureMail_dialogArguments[1] = secureMail_Complete;
+            	secureMail_dialogArguments[2] = DivPopUpHidden;
+            	
+            	DivPopUpShow(550, 300, "/ezEmail/secureMailOption.do");
+            } else {
+            	Save_onClick("sendsave");
+            }
+            
         }
     } catch (e) {
     }
+}
+
+// 보안메일 설정 팝업창에서 발송버튼 클릭하면 실행되는 함수
+function secureMail_Complete(returnValue) {
+	DivPopUpHidden();
+	Save_onClick("sendsave");
 }
 
 function MakeFromAddress(pAddress) {
@@ -808,14 +834,6 @@ function Save_onClick(savemode) {
 function Save_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
-            if (eSubject.value.length > 120) {
-            	MailStatus = "NO";
-            	isAutoSave = false;
-            	
-                alert(strLang95);
-                return;
-            }
-
             var Subject = eSubject.value;
             if (TrimText(Subject) == "")
                 Subject = strLang97;
@@ -882,6 +900,15 @@ function Save_onClick_Complete(ReturnValue) {
 
                 }
             }
+            
+            // 보안메일 체크되어있을 경우 request xml에 보안메일정보 추가
+            if (document.getElementById("chkSecureMail").checked) {
+            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREMAIL", "TRUE");
+            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREPASSWORD", secureMailParams["securePassword"]);
+            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADCOUNT", secureMailParams["secureReadCount"]);
+            	createNodeAndInsertText(xmlDoc, rootNode, "SECUREREADDATE", secureMailParams["secureReadDate"]);
+            }
+            
             ConvertEmbedPath(xmlDoc, xmlDoc);
             ConvertEmbedImagToXml(xmlDoc, xmlDoc);
 

@@ -931,8 +931,13 @@
 	                            ${mailSendObject}
 	                            </select>
 	                        </li>
-	                        <li class="bar" style="background: none; border: 0; padding-left: 10px; padding-right: 0; cursor: default; display: none;" nowrap="nowrap">
-	                                <input type="checkbox" style="display: inline;" id="chkeachmail" onclick="setEachMail()" /><spring:message code='ezEmail.t748' /></li>
+	                        <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+	                            <img src="/images/pbar.gif">
+	                        </li>
+	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+	                        	<input type="checkbox" id="chkSecureMail" />
+	                        	<label for="chkSecureMail" style="color:white">보안메일</label>
+	                        </li>
 	                    </ul>
 	                </div>
 	                <div id="close">
