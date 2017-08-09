@@ -440,7 +440,8 @@ public class EzEmailMailListController {
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
 				subject = (subject != null) ? subject : "";
-							
+				subject = commonUtil.cleanValue(subject);
+				
 				if (viewSelectIndex.equals("1")) {
 					((IMAPMessage)message).setPeek(true);
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false, locale);
