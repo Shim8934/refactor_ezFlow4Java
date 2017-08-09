@@ -22,9 +22,11 @@
 		
 		// 서버의 갯수만큼 checkbox 생성
 		for (var i = 0; i < list.length; i++) {
-			str += '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')">' + list[i].hostname;
+			str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked >' + list[i].hostname;
+			$("#serverList").append(str);
+			chkServerList_onclick(i);
 		}
-		$("#serverList").append(str);
+		//$("#serverList").append(str);
 	});
 	
 	/**
@@ -34,8 +36,8 @@
 	function chkServerList_onclick(listNum) {	
 		var checkedId = "chkVal_" + listNum;
 		var graphId = "graph_" + listNum;
-		
-		if (document.getElementById(checkedId).checked) {
+
+ 		if (document.getElementById(checkedId).checked) {
 			var str = "";
 			
 			str += "<div class='infoMain' id="+ graphId +" target="+ graphId +">";
@@ -69,7 +71,7 @@
 			makingGraph(graphId);
 		} else {
 			document.getElementById(graphId).remove();
-		}
+		} 
 	}	
 
 	/**
@@ -250,13 +252,14 @@
 					size: 14
 				}]
 			});
-			
+
 			/**
 			 *  그래프 업데이트 관련 함수
 			 *  update() : 그래프 데이터 업데이트
 			 *  updateGrid() : 그래프에 그려질 축 업데이트
 			 */
-	      	setInterval(function() {
+	      	var refreshIntervalID = setInterval(function() {
+
 	   	    	current = new Date();
 	   	    	start = new Date - 1000 * 60;
 	   	    	var domain = [start , current];
@@ -265,6 +268,10 @@
 	   	    	var networkStep;
 	   	    	var tmp = 0;
 		    	getInfo();
+
+		    	if (document.getElementById(graphId) == null) {
+		    		clearInterval(refreshIntervalID);
+		    	}
 
 		    	cpuMemoryChart.axis(0).update(cpuMemoryData);   	    	
 		    	cpuMemoryChart.axis(0).updateGrid("x", {
