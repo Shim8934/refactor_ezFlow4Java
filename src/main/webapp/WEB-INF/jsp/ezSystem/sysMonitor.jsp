@@ -20,12 +20,17 @@
 		var list = obj.getSysInfo;
 		var str = "";
 		
+		// 서버의 갯수만큼 checkbox 생성
 		for (var i = 0; i < list.length; i++) {
 			str += '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')">' + list[i].hostname;
 		}
 		$("#serverList").append(str);
 	});
 	
+	/**
+	 * 각 서버를 checkbox로 제어
+	 * checkedId, graphId를 이용한 그래프가 그려질 div 구분
+	 */
 	function chkServerList_onclick(listNum) {	
 		var checkedId = "chkVal_" + listNum;
 		var graphId = "graph_" + listNum;
@@ -67,6 +72,10 @@
 		}
 	}	
 
+	/**
+	 * 그래프 생성 함수
+	 * jui.ready()가 반드시 필요
+	 */
 	function makingGraph(graphId) {
 		var fileSysData = [];
 		var cpuMemoryData = [];
@@ -95,6 +104,7 @@
 						realtime: "seconds",
 						interval: 10,
 						format: "hh:mm:ss",
+						line: true,
 						key: "time"
 					},
 					y: {
@@ -115,6 +125,7 @@
 					target: ["Cpu", "Memory"],
 					symbol: "circle",
 					size: 8,
+					//hide : true,
 					colors: cpuMemoryColor
 				}],
 				widget: [{
@@ -140,6 +151,7 @@
 						realtime: "seconds",
 						interval: 10,
 						format: "hh:mm:ss",
+						line: true,
 						key: "time"
 					},
 					y: {
@@ -157,7 +169,8 @@
 					colors: diskioColor
 				}, {
 					type: "scatter",
-					colors: diskioColor
+					colors: diskioColor,
+					//hide : true,
 				}], 
 				widget: [{
 					type: "legend"
@@ -178,6 +191,7 @@
 						realtime: "seconds",
 						interval : 10,
 						format: "hh:mm:ss",
+						line: true,
 						key: "time"
 					},
 					y: {
@@ -198,6 +212,7 @@
 					target: ["Receive", "Transfer"],
 					symbol: "circle",
 					size: 8,
+					//hide : true,
 					colors: networkColor
 				}],
 				widget: [{
@@ -236,6 +251,11 @@
 				}]
 			});
 			
+			/**
+			 *  그래프 업데이트 관련 함수
+			 *  update() : 그래프 데이터 업데이트
+			 *  updateGrid() : 그래프에 그려질 축 업데이트
+			 */
 	      	setInterval(function() {
 	   	    	current = new Date();
 	   	    	start = new Date - 1000 * 60;
@@ -268,6 +288,7 @@
 		    		type: "scatter",
 		    		target: diskTarget,
 		    		symbol: "circle",
+		    		//hide : true,
 		    		size: 8
 		    	})
  		    	diskioChart.addWidget({
@@ -281,6 +302,10 @@
 		    		domain : domain
 		        });
 	    		
+		    	/**
+		    	 * 네트워크 데이터 y축을 동적으로 변하게 하기 위한 부분
+		    	 * transfer receive 둘 중 제일 큰 값을 기준으로 변경
+		    	 */
 	    		for (var i = 0; i < networkData.length; i++) {
 	    			
 	    			if (networkData[i].Receive > networkData[i].Transfer) {
@@ -300,6 +325,7 @@
 		    		networkDomain = [0, 50];
 		    		networkStep = 5;	    		
 		    	}
+		    	
 		    	networkChart.axis(0).updateGrid("y", {
 					type: "range",
 					domain: networkDomain,
@@ -319,6 +345,7 @@
 		    	filesysChart.render(true);
 		    }, 2000);
 	      	
+			// 그래프에 필요한 데이터 가져오기
 	    	function getInfo() {
 	    		$.ajax ({
 	    			url : "/admin/ezSystem/sysMonitorInfo.do",
@@ -334,6 +361,7 @@
 	    		});
 	    	}; 
 	    	
+	    	// OS 관련 데이터
 	    	function setOsInfo(list) {
 	    		var obj = JSON.parse(list);
 	    		var osInfo = obj.getSysInfo;
