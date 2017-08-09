@@ -118,9 +118,7 @@ function getCircularComment() {
 			
 			var updateCount = strLang2 + "[" + result.myCommentCount + "/" + result.totalCommentCount + "]"; 
 
-			$("h1").html("");
-			$("h1").append(updateCount);
-
+			$("h1").html(updateCount);
 			parent.getCommentCount();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
