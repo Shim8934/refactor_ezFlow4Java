@@ -229,7 +229,8 @@ public class EzSystemAdminController {
 		}
 		
 		InetAddress local = InetAddress.getLocalHost();
-		String localIP = local.getHostAddress();
+		String localIP = local.getHostAddress();		
+		logger.debug("localIP : " + localIP);
 		
 		String serverList = EzSystemUtil.getSysInfo(userInfo.getTenantId(), localIP);	
 	
@@ -255,6 +256,7 @@ public class EzSystemAdminController {
 		
 		InetAddress local = InetAddress.getLocalHost();
 		String localIP = local.getHostAddress();		
+		logger.debug("localIP : " + localIP);
 		
 		String osInfo = EzSystemUtil.getSysInfo(userInfo.getTenantId(), localIP);
 		String cpuInfo = EzSystemUtil.getCpuInfo(userInfo.getTenantId(), localIP);

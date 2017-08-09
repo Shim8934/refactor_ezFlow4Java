@@ -40,7 +40,7 @@ public class EzSystemUtil {
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
 		 */
-		if (ip.equalsIgnoreCase("127.0.0.1")) {
+		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
 			Process process = builder.start();
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
@@ -100,7 +100,7 @@ public class EzSystemUtil {
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
 		 */
-		if (ip.equalsIgnoreCase("127.0.0.1")) {
+		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
 			Process process = builder.start();
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
@@ -176,7 +176,7 @@ public class EzSystemUtil {
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
 		 */
-		if (ip.equalsIgnoreCase("127.0.0.1")) {
+		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("cat", "/proc/meminfo");
 			Process process = builder.start();
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
@@ -237,7 +237,7 @@ public class EzSystemUtil {
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
 		 */
-		if (ip.equalsIgnoreCase("127.0.0.1")) {
+		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("df", "-h");
 			Process process = builder.start();
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
@@ -302,7 +302,7 @@ public class EzSystemUtil {
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
 		 */
-		if (ip.equalsIgnoreCase("127.0.0.1")) {
+		if (!ip.equals("192.168.56.1") && !ip.equals("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
 			Process process = builder.start();
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
@@ -374,7 +374,7 @@ public class EzSystemUtil {
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
 		 */
-		if (ip.equalsIgnoreCase("127.0.0.1")) {
+		if (!ip.equalsIgnoreCase("192.168.56.1") && !ip.equalsIgnoreCase("10.0.120.142")) {
 			ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
 			Process process = builder.start();
 			InputStreamReader isr = new InputStreamReader(process.getInputStream());
