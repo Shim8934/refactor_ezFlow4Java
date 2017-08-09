@@ -968,6 +968,12 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getAttachList(map);
 	}
-	
-	
+
+	@Override
+	public String getDeptPathCode(String departmentID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("departmentID", departmentID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.getDeptPathCode(map);
+	}
 }

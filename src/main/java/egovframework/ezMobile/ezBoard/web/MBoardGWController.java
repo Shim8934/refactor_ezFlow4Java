@@ -108,15 +108,13 @@ public class MBoardGWController {
 		
 		try {
 			String userID = request.getParameter("userID");
-			String deptPathCode = request.getParameter("deptPathCode");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
-			LOGGER.debug("deptPathCode : "+deptPathCode);
-			
 			String primary = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
-
+			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			

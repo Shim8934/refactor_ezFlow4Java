@@ -1,6 +1,7 @@
 package egovframework.ezMobile.ezBoard.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -39,6 +40,8 @@ public interface MBoardService {
 	MBoardItemVO getBrdItemInfo(String itemID, String lang, int tenantID) throws Exception;
 	
 	String checkIfBoardGroupAdmin(String rootBoardID, String userID, String deptID, String companyID, int tenantID) throws Exception;
+	
+	String getDeptPathCode(String departmentID,int tenantID) throws Exception;
 	
 	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
