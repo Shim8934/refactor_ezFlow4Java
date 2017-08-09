@@ -127,7 +127,6 @@
 					target: ["Cpu", "Memory"],
 					symbol: "circle",
 					size: 8,
-					//hide : true,
 					colors: cpuMemoryColor
 				}],
 				widget: [{
@@ -171,8 +170,7 @@
 					colors: diskioColor
 				}, {
 					type: "scatter",
-					colors: diskioColor,
-					//hide : true,
+					colors: diskioColor
 				}], 
 				widget: [{
 					type: "legend"
@@ -214,7 +212,6 @@
 					target: ["Receive", "Transfer"],
 					symbol: "circle",
 					size: 8,
-					//hide : true,
 					colors: networkColor
 				}],
 				widget: [{
@@ -268,7 +265,8 @@
 	   	    	var networkStep;
 	   	    	var tmp = 0;
 		    	getInfo();
-
+                
+		    	// 해당 그래프가 없을 경우 setInterval 종료
 		    	if (document.getElementById(graphId) == null) {
 		    		clearInterval(refreshIntervalID);
 		    	}
@@ -295,7 +293,6 @@
 		    		type: "scatter",
 		    		target: diskTarget,
 		    		symbol: "circle",
-		    		//hide : true,
 		    		size: 8
 		    	})
  		    	diskioChart.addWidget({
@@ -409,7 +406,8 @@
 	    		transfer = getMbps(oldTx, parseInt(netInfo[0].tBytes));
 	    		
 	    		networkData.push({
-	    			time: new Date(),
+	    			time: current,
+	    			//time: new Date(),
 	    			Receive: receive.toFixed(4),
 	    			Transfer: transfer.toFixed(4)			
 	    		});	    	
@@ -461,7 +459,8 @@
 	    		}
 	    		
  	    		cpuMemoryData.push({
-	    			time: new Date(),			
+	    			time: current,
+ 	    			//time: new Date(),			
 	    			Cpu: parseFloat(cpu[0].totalUsedPer).toFixed(2),
 	    			Memory: (usedMemory * 100).toFixed(2)
 	    		});  	
