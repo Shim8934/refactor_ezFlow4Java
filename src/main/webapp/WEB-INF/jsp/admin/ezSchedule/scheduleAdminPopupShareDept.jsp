@@ -152,14 +152,14 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t999' /></th>
 	            <td>
-	                <input id="txtuser" type="text" style="margin-bottom:2px; width:70%" onfocus="this.blur();" readonly="readonly" />
+	                <input id="txtuser" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
 	                <a href="#" class="imgbtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t1004' /></th>
 	            <td>
-	                <input id="txtdept" type="text" style="margin-bottom:2px; width:70%" onfocus="this.blur();" readonly="readonly" />
+	                <input id="txtdept" type="text" style="margin-bottom:2px; width:80%" onfocus="this.blur();" readonly="readonly" />
 	                <a href="#" class="imgbtn"><span onclick="select_sharedept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
