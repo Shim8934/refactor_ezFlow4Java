@@ -168,10 +168,10 @@ public class MLoginGWController {
     				MOptionVO mOptionVO = mOptionService.optionInfo(uid, tenantId);
     				
     				String acceptLanguage = request.getHeader("Accept-Language");    				
-    				String lang = mOptionVO.getLang();
-    				String timeZone = mOptionVO.getTimeZone();
-    				String maintype = mOptionVO.getMainType();
-    				String listCnt = mOptionVO.getListCnt();
+    				String lang = "";
+    				String timeZone = "";
+    				String maintype = "";
+    				String listCnt = "";
 					
     				String returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
     				
@@ -207,6 +207,11 @@ public class MLoginGWController {
     				    listCnt = "10";
     				    
     					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, "Y", "N", tenantId);    					
+    				} else {
+    					lang = mOptionVO.getLang();
+    					timeZone = mOptionVO.getTimeZone();
+        				maintype = mOptionVO.getMainType();
+        				listCnt = mOptionVO.getListCnt();
     				}
     				
     				StringBuilder cookieInfo = new StringBuilder();
