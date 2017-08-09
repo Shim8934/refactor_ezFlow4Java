@@ -21,9 +21,12 @@
 		<script>
 		 $(document).on("pagecreate",function(event){
 			 $('#plus').closest('.ui-btn').hide();
-			 searchOption();
 			});
-
+		
+		 $( document ).ready(function() {
+			 console.log('document ready!!');
+			 searchOptionAjax();
+			});
 		</script>	
 	</head>
 	<body class="loginbody">
@@ -221,7 +224,7 @@
 					 </div>  
 					<div>
 					<p align="center">
-					<button class="show-page-loading-msg" data-textonly="false" data-textvisible="true" data-inline="true" onclick="javascript:saveOption()">적용하기</button>
+					<button class="show-page-loading-msg" data-textonly="false" data-textvisible="true" data-inline="true" onclick="javascript:saveOptionButton()">적용하기</button>
 					</p>
 					</div>
      		</div>    		
