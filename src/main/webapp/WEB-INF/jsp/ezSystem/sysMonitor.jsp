@@ -126,6 +126,7 @@
 					type: "scatter",
 					target: ["Cpu", "Memory"],
 					symbol: "circle",
+					clip: true,
 					size: 8,
 					colors: cpuMemoryColor
 				}],
@@ -170,6 +171,7 @@
 					colors: diskioColor
 				}, {
 					type: "scatter",
+					clip: true,
 					colors: diskioColor
 				}], 
 				widget: [{
@@ -212,6 +214,7 @@
 					target: ["Receive", "Transfer"],
 					symbol: "circle",
 					size: 8,
+					clip: true,
 					colors: networkColor
 				}],
 				widget: [{
@@ -293,6 +296,7 @@
 		    		type: "scatter",
 		    		target: diskTarget,
 		    		symbol: "circle",
+		    		clip: true,
 		    		size: 8
 		    	})
  		    	diskioChart.addWidget({

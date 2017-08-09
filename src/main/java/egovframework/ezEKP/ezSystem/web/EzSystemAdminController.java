@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSystem.web;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -227,7 +228,10 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
-		String serverList = EzSystemUtil.getSysInfo(userInfo.getTenantId());	
+		InetAddress local = InetAddress.getLocalHost();
+		String localIP = local.getHostAddress();
+		
+		String serverList = EzSystemUtil.getSysInfo(userInfo.getTenantId(), localIP);	
 	
 		model.addAttribute("serverList", serverList);
 		logger.debug("systemStatus ended");
@@ -249,12 +253,15 @@ public class EzSystemAdminController {
 			return "cmm/error/adminDenied";
 		}		
 		
-		String osInfo = EzSystemUtil.getSysInfo(userInfo.getTenantId());
-		String cpuInfo = EzSystemUtil.getCpuInfo(userInfo.getTenantId());
-		String memoryInfo = EzSystemUtil.getMemoryInfo(userInfo.getTenantId());
-		String fileSysInfoList  = EzSystemUtil.getFileSysInfo(userInfo.getTenantId());
-		String diskioInfo = EzSystemUtil.getDiskioInfo(userInfo.getTenantId());
-		String netTrafficList = EzSystemUtil.getNetDataInfo(userInfo.getTenantId());
+		InetAddress local = InetAddress.getLocalHost();
+		String localIP = local.getHostAddress();		
+		
+		String osInfo = EzSystemUtil.getSysInfo(userInfo.getTenantId(), localIP);
+		String cpuInfo = EzSystemUtil.getCpuInfo(userInfo.getTenantId(), localIP);
+		String memoryInfo = EzSystemUtil.getMemoryInfo(userInfo.getTenantId(), localIP);
+		String fileSysInfoList  = EzSystemUtil.getFileSysInfo(userInfo.getTenantId(), localIP);
+		String diskioInfo = EzSystemUtil.getDiskioInfo(userInfo.getTenantId(), localIP);
+		String netTrafficList = EzSystemUtil.getNetDataInfo(userInfo.getTenantId(), localIP);
 		
 		model.addAttribute("osInfo", osInfo);
 		model.addAttribute("cpuInfo", cpuInfo);

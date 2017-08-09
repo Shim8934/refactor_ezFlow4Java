@@ -26,16 +26,31 @@ public class EzSystemUtil {
 	 * 서버 및 OS 정보 
 	 **/
 	@SuppressWarnings("unchecked")
-	public static String getSysInfo(int tenantID) throws Exception {
+	public static String getSysInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getSysInfo started. : " + tenantID);
-		
-		String command = "uname";
+
 		//String filePath = "D:/test/uname.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
-		ProcessBuilder builder = new ProcessBuilder(command, "-nro");
-		Process process = builder.start();
-		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//BufferedReader br = new BufferedReader(new FileReader(filePath));
+		//ProcessBuilder builder = new ProcessBuilder(command, "-nro");
+		//Process process = builder.start();
+		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		
+		BufferedReader br = null;		
+		/**
+		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 */
+		if (ip.equalsIgnoreCase("127.0.0.1")) {
+			ProcessBuilder builder = new ProcessBuilder("uname", "-nro");
+			Process process = builder.start();
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			br = new BufferedReader(isr);			
+		} else {
+			String filePath = "D:/test/uname.txt";
+			FileReader fr = new FileReader(filePath);
+			br = new BufferedReader(fr);			
+		}
+
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		
@@ -70,16 +85,32 @@ public class EzSystemUtil {
 	 * CPU 관련 정보 
 	 **/
 	@SuppressWarnings("unchecked")
-	public static String getCpuInfo(int tenantID) throws Exception {
+	public static String getCpuInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getCpuInfo started. : " + tenantID);
 		
-		String command = "iostat";
+		//String command = "iostat";
 		//String filePath = "D:/test/iostat.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
-		Process process = builder.start();
-		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
+		//Process process = builder.start();
+		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		
+		BufferedReader br = null;
+		/**
+		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 */
+		if (ip.equalsIgnoreCase("127.0.0.1")) {
+			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
+			Process process = builder.start();
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			br = new BufferedReader(isr);			
+		} else {
+			String filePath = "D:/test/iostat.txt";
+			FileReader fr = new FileReader(filePath);
+			br = new BufferedReader(fr);			
+		}
+		
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -130,16 +161,32 @@ public class EzSystemUtil {
 	 * 메모리 관련 정보
 	 * */	
 	@SuppressWarnings("unchecked")
-	public static String getMemoryInfo(int tenantID) throws Exception {
+	public static String getMemoryInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getMemoryInfo started. : " + tenantID);
 		
-		String command = "cat";
+		//String command = "cat";
 		//String filePath = "D:/test/meminfo.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		ProcessBuilder builder = new ProcessBuilder(command, "/proc/meminfo");
-		Process process = builder.start();
-		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//ProcessBuilder builder = new ProcessBuilder(command, "/proc/meminfo");
+		//Process process = builder.start();
+		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		
+		BufferedReader br = null;
+		/**
+		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 */
+		if (ip.equalsIgnoreCase("127.0.0.1")) {
+			ProcessBuilder builder = new ProcessBuilder("cat", "/proc/meminfo");
+			Process process = builder.start();
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			br = new BufferedReader(isr);			
+		} else {
+			String filePath = "D:/test/meminfo.txt";
+			FileReader fr = new FileReader(filePath);
+			br = new BufferedReader(fr);			
+		}				
+		
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -176,16 +223,31 @@ public class EzSystemUtil {
 	 * 파일 시스템 정보 관련
 	 * */
 	@SuppressWarnings("unchecked")
-	public static String getFileSysInfo(int tenantID) throws Exception {
+	public static String getFileSysInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getFileSysInfo started. : " + tenantID);
 		
-		String command = "df";
+		//String command = "df";
 		//String filePath = "D:/test/filesys.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		ProcessBuilder builder = new ProcessBuilder(command, "-h");
-		Process process = builder.start();
-		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//ProcessBuilder builder = new ProcessBuilder(command, "-h");
+		//Process process = builder.start();
+		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );		
+		BufferedReader br = null;
+		/**
+		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 */
+		if (ip.equalsIgnoreCase("127.0.0.1")) {
+			ProcessBuilder builder = new ProcessBuilder("df", "-h");
+			Process process = builder.start();
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			br = new BufferedReader(isr);			
+		} else {
+			String filePath = "D:/test/filesys.txt";
+			FileReader fr = new FileReader(filePath);
+			br = new BufferedReader(fr);			
+		}	
+		
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -225,16 +287,32 @@ public class EzSystemUtil {
 	 * 디스크 I/O 관련 정보
 	 * */
 	@SuppressWarnings("unchecked")
-	public static String getDiskioInfo(int tenantID) throws Exception {
+	public static String getDiskioInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getDiskioInfo started. : " + tenantID);
 		
-		String command = "iostat";
+		//String command = "iostat";
 		//String filePath = "D:/test/iostat.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
-		Process process = builder.start();
-		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
+		//Process process = builder.start();
+		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		
+		BufferedReader br = null;
+		/**
+		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 */
+		if (ip.equalsIgnoreCase("127.0.0.1")) {
+			ProcessBuilder builder = new ProcessBuilder("iostat", "1", "2");
+			Process process = builder.start();
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			br = new BufferedReader(isr);			
+		} else {
+			String filePath = "D:/test/iostat.txt";
+			FileReader fr = new FileReader(filePath);
+			br = new BufferedReader(fr);			
+		}	
+		
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
@@ -282,15 +360,31 @@ public class EzSystemUtil {
 	 *  네트워크 트래픽 정보
 	 **/	
 	@SuppressWarnings("unchecked")
-	public static String getNetDataInfo(int tenantID) throws Exception {
+	public static String getNetDataInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getNetDataInfo started. : " + tenantID);
 		
 		//String filePath = "D:/test/netInter.txt";
 		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
-		ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
-		Process process = builder.start();
-		BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		//ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
+		//Process process = builder.start();
+		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
+		
+		BufferedReader br = null;
+		/**
+		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
+		 */
+		if (ip.equalsIgnoreCase("127.0.0.1")) {
+			ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
+			Process process = builder.start();
+			InputStreamReader isr = new InputStreamReader(process.getInputStream());
+			br = new BufferedReader(isr);			
+		} else {
+			String filePath = "D:/test/netInter.txt";
+			FileReader fr = new FileReader(filePath);
+			br = new BufferedReader(fr);			
+		}	
+		
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;		
