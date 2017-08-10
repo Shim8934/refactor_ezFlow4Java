@@ -727,7 +727,7 @@
 		            return;
 		        }
 		        if (!NostampFlag) {
-		            var SealHref = "/fileroot/${userInfo.tenantId}/files/upload_approvalG/sealImg/nostamp.gif";
+		            var SealHref = "/files/sealImg/nostamp.gif";
 		            var SealWidth = 30;
 		            var SealHeight = 30;
 		            field = message.GetListItem(fields, "sealsign");
@@ -814,153 +814,413 @@
 		        return Math.round(parseFloat(size) * parseFloat("0.35")).toFixed(2);
 		    }
 		
-		    function Document_Encode(text) {   
-		        var xmlhttp = createXMLHttpRequest();
-		        var xmlpara = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlpara, objNode, "PARAMETER");
-		        createNodeAndInsertText(xmlpara, objNode, "CONTENT", text);
-		        xmlhttp.open("POST", "aspx/GetContentXml.aspx", false);
-		        xmlhttp.send(xmlpara);
-		
-		        var Content = document.createElement("DIV");
-		        Content.innerHTML = xmlhttp.responseText;
-		
-		        var ElementsRows = Content.getElementsByTagName("*");
-		        for (var Cnt = 0; Cnt < ElementsRows.length; Cnt++) {
-		            ElementsRows.item(Cnt).removeAttribute("bgColor");
-		            if (ElementsRows.item(Cnt).tagName == "P") {
-		                if (ElementsRows.item(Cnt).innerHTML == "")
-		                    ElementsRows.item(Cnt).outerHTML = "";
-		                else {
-		                    var ArrCSSs = ElementsRows.item(Cnt).style.cssText.split(';');
-		                    var retCssText = "";
-		                    var retAlignText = "";
-		                    for (var i = 0; i < ArrCSSs.length; i++) {
-		                        if (ArrCSSs[i] != "") {
-		                            var ArrCss = ArrCSSs[i].split(":");
-		                            if (ArrCss.length == 2) {
-		                                switch (trim_Cross(ArrCss[0].toLowerCase())) {
-		                                    case "text-indent":
-		                                        if (ArrCss[1].indexOf("mm") > 0)
-		                                            retCssText += " text-indent:" + ArrCss + ";";
-		                                        else {
-		                                            var Size = ArrCss[1].replace("pt", "").replace("px", "").replace("mm", "");
-		                                            if (parseInt(Size) < 0)
-		                                                retCssText += " text-indent:" + SizeConvert(Size) + "mm;";
-		                                            else
-		                                                retCssText += " text-indent:0mm;";
-		                                        }
-		                                        break;
-		                                    case "margin-left": retCssText += ArrCSSs[i] + ";";
-		                                        break;
-		                                    case "margin-right": retCssText += ArrCSSs[i] + ";";
-		                                        break;
-		                                    case "margin-top": retCssText += ArrCSSs[i] + ";";
-		                                        break;
-		                                    case "margin-bottom": retCssText += ArrCSSs[i] + ";";
-		                                        break;
-		                                    case "font-family": retCssText += ArrCSSs[i] + ";";
-		                                        break;
-		                                    case "font-size": retCssText += ArrCSSs[i] + ";";
-		                                        break;
-		                                    case "line-height": retCssText += ArrCSSs[i] + ";";
-		                                        break;
-		                                    case "text-align": retAlignText = ArrCss[1].toLowerCase().replace("justify", "left");
-		                                        break;
-		                                }
-		
-		                                ElementsRows.item(Cnt).style.cssText = retCssText;
-		                                if (retAlignText != "")
-		                                    ElementsRows.item(Cnt).style.textAlign = retAlignText;
-		                                var LastTag = ElementsRows.item(Cnt).outerHTML.substring(ElementsRows.item(Cnt).outerHTML.length - 4).toUpperCase();
-		                                if (LastTag != "</P>")
-		                                    ElementsRows.item(Cnt).outerHTML = ElementsRows.item(Cnt).outerHTML + "</P>";
-		                            }
-		                        }
-		                    }
-		                    ElementsRows.item(Cnt).removeAttribute("dir");
-		                }
-		            }
-		            else if (ElementsRows.item(Cnt).tagName == "SPAN") {
-		                if (ElementsRows.item(Cnt).innerText == "")
-		                    ElementsRows.item(Cnt).outerHTML = "";
-		                if (ElementsRows.item(Cnt).style.getAttribute("HWP-TAB") != null)
-		                    ElementsRows.item(Cnt).outerHTML = "";
-		            }
-		            else if (ElementsRows.item(Cnt).tagName == "A") {
-		                ElementsRows.item(Cnt).innerHTML = ElementsRows.item(Cnt).innerText;
-		                ElementsRows.item(Cnt).removeAttribute("target");
-		                ElementsRows.item(Cnt).removeAttribute("name");
-		            }
-		            else {
-		                //if (ElementsRows.item(Cnt).tagName != "TR") {
-		                //    if (ElementsRows.item(Cnt).style.width != "") {
-		                //        ElementsRows.item(Cnt).style.setAttribute("Width", SizeConvert(ElementsRows.item(i).style.pixelWidth) + "mm");
-		                //        ElementsRows.item(Cnt).style.removeProperty("width");
-		                //    }
-		                //    if (ElementsRows.item(Cnt).getAttribute("width") != null && ElementsRows.item(Cnt).getAttribute("width") != "") {
-		                //        ElementsRows.item(Cnt).setAttribute("Width", SizeConvert(ElementsRows.item(Cnt).getAttribute("width")) + "mm");
-		                //        ElementsRows.item(Cnt).removeAttribute("width");
-		                //    }
-		                //}
-		                if (ElementsRows.item(Cnt).tagName != "COL" && ElementsRows.item(i).tagName != "COLGROUP" && ElementsRows.item(i).tagName != "TR") {
-		                    if (ElementsRows.item(Cnt).style.height != "") {
-		                        ElementsRows.item(Cnt).style.setAttribute("Hidth", SizeConvert(ElementsRows.item(i).style.pixelHeight) + "mm");
-		                        ElementsRows.item(Cnt).style.removeProperty("height");
-		                    }
-		                    if (ElementsRows.item(Cnt).getAttribute("height") != null && ElementsRows.item(Cnt).getAttribute("height") != "") {
-		                        ElementsRows.item(Cnt).setAttribute("Height", SizeConvert(ElementsRows.item(Cnt).getAttribute("height")) + "mm");
-		                        ElementsRows.item(Cnt).removeAttribute("height");
-		                    }
-		                }
-		                if (ElementsRows.item(Cnt).tagName == "TD") {
-		                    if (ElementsRows.item(Cnt).style.background != "")
-		                        ElementsRows.item(Cnt).style.removeProperty("background");
-		                    if (ElementsRows.item(Cnt).style.backgroundColor != "")
-		                        ElementsRows.item(Cnt).style.removeProperty("backgroundColor");
-		
-		                    ElementsRows.item(Cnt).removeAttribute("x:num");
-		                    ElementsRows.item(Cnt).removeAttribute("x:str");
-		
-		                    if (ElementsRows.item(Cnt).style.width != "") {
-		                        ElementsRows.item(Cnt).style.setAttribute("Width", SizeConvert(ElementsRows.item(i).style.pixelWidth) + "mm");
-		                        ElementsRows.item(Cnt).style.removeProperty("width");
-		                    }
-		
-		                    if (ElementsRows.item(Cnt).getAttribute("width") != null && ElementsRows.item(Cnt).getAttribute("width") != "") {
-		                        ElementsRows.item(Cnt).setAttribute("Width", SizeConvert(ElementsRows.item(Cnt).getAttribute("width")) + "mm");
-		                        //ElementsRows.item(Cnt).removeAttribute("width");
-		                    }
-		                }
-		                if (ElementsRows.item(Cnt).tagName == "TABLE") {
-		                    if (ElementsRows.item(Cnt).getAttribute("border") == "")
-		                        ElementsRows.item(Cnt).setAttribute("border", "1");
-		
-		                    if (ElementsRows.item(Cnt).style.height != "") {
-		                        ElementsRows.item(Cnt).style.setAttribute("Height", SizeConvert(ElementsRows.item(i).style.pixelWidth) + "mm");
-		                        ElementsRows.item(Cnt).style.removeProperty("Height");
-		                    }
-		
-		                    if (ElementsRows.item(Cnt).getAttribute("height") != null && ElementsRows.item(Cnt).getAttribute("height") != "") {
-		                        ElementsRows.item(Cnt).setAttribute("height", SizeConvert(ElementsRows.item(Cnt).getAttribute("height")) + "mm");
-		                        //ElementsRows.item(Cnt).removeAttribute("width");
-		                    }
-		
-		
-		                    ElementsRows.item(Cnt).removeAttribute("ver");
-		                    ElementsRows.item(Cnt).removeAttribute("kaoni");
-		                    ElementsRows.item(Cnt).removeAttribute("x:num");
-		                    ElementsRows.item(Cnt).removeAttribute("x:str");
-		                }
-		                if (ElementsRows.item(Cnt).tagName == "TR") {
-		                    ElementsRows.item(Cnt).removeAttribute("height");
-		                    ElementsRows.item(Cnt).removeAttribute("Height");
-		                }
-		            }
-		        }
-		        return Content.outerHTML;
-		    }
+	        function Document_Encode(text, pDefaultFontFamily, pDefaultFontSize) {
+	            alert(100);
+	        	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getContentXml.do",
+		    		data : {
+		    			fontFamily : pDefaultFontFamily,
+		    			fontSize : pDefaultFontSize,
+		    			content : text
+		    		},
+		    		success: function(xml){
+		    			result = loadXMLString(xml);
+		    		}     			
+		    	});
+	        	
+	            var Content = document.createElement("DIV");
+	            var pTemp = result;
+
+	            if (getNodeText(pTemp.getElementsByTagName("RESULT")[0]) === "OK")
+	            {
+	                Content.innerHTML = getNodeText(pTemp.getElementsByTagName("CONTENT")[0]);
+	            }
+	            else {
+	                alert(getNodeText(pTemp.getElementsByTagName("CONTENT")[0]));
+	                return "";
+	            }
+
+	            // 태그는 GetContentXml페이지에서 처리하여 리턴되므로 Element의 Attribute중 필요없는 것만 제거한다.
+	            var ElementsRows = Content.getElementsByTagName("*");
+	            var ArrAttr = null;
+	            for (var Cnt = 0; Cnt < ElementsRows.length; Cnt++) {
+	                switch (ElementsRows.item(Cnt).tagName) {
+	                    case "SUB":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "SUP":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "I":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "B":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "U":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "P":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "style":
+	                                case "align":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "UL":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "OL":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "LI":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "A":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "name":
+	                                case "href":
+	                                case "rel":
+	                                case "rev":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "IMG":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "src":
+	                                case "alt":
+	                                case "name":
+	                                case "longdesc":
+	                                case "height":
+	                                case "height_kaoni":
+	                                case "width":
+	                                case "width_kaoni":
+	                                case "align":
+	                                case "border":
+	                                case "hspace":
+	                                case "vspace":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "TABLE":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "summary":
+	                                case "width":
+	                                case "width_kaoni":
+	                                case "height":
+	                                case "height_kaoni":
+	                                case "border":
+	                                case "cellspacing":
+	                                case "cellpadding":
+	                                case "align":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "CAPTION":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "align":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "COLGROUP":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "span":
+	                                case "width":
+	                                case "width_kaoni":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "COL":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "span":
+	                                case "width":
+	                                case "width_kaoni":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "THEAD":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "TFOOT":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "TBODY":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "TR":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "TH":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "abbr":
+	                                case "axis":
+	                                case "headers":
+	                                case "scope":
+	                                case "rowspan":
+	                                case "colspan":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                case "nowrap":
+	                                case "width":
+	                                case "width_kaoni":
+	                                case "height":
+	                                case "height_kaoni":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                    case "TD":
+	                        ArrAttr = ElementsRows.item(Cnt).attributes;
+	                        for (var AttrIdx = 0; AttrIdx < ArrAttr.length; AttrIdx++) {
+	                            switch (ArrAttr[AttrIdx].name.toLowerCase()) {
+	                                case "id":
+	                                case "class":
+	                                case "abbr":
+	                                case "axis":
+	                                case "headers":
+	                                case "scope":
+	                                case "rowspan":
+	                                case "colspan":
+	                                case "align":
+	                                case "char":
+	                                case "charoff":
+	                                case "valign":
+	                                case "nowrap":
+	                                case "width":
+	                                case "width_kaoni":
+	                                case "height":
+	                                case "height_kaoni":
+	                                    break;
+	                                default:
+	                                    ElementsRows.item(Cnt).removeAttribute(ArrAttr[AttrIdx].name);
+	                                    break;
+	                            }
+	                        }
+	                        break;
+	                }
+	            }
+
+	            var rtnVal = Content.innerHTML.replace(/width_kaoni/g, "width").replace(/height_kaoni/g, "height").replace(/<p><\/p>/g, "</p>");
+	            rtnVal = rtnVal.replace(/\r/g, "").replace(/\n/g, "").replace(/&nbsp; /g, "&nbsp;&nbsp;");
+
+	            // COL TAG의 닫는 태그가 없는 경우가 있어 강제 변환처리.
+	            rtnVal = rtnVal.replace(/<COL>/g, "<col>").replace(/<COL /g, "<col ").replace(/<\/COL>/g, "</col>"); // 대문자 태그를 소문자로 변환
+	            rtnVal = rtnVal.replace(/<col>/g, "<col></col>").replace(/<\/col><\/col>/g, "</col>").replace(/\/><\/col>/g, "></col>");
+
+	            return rtnVal;
+	        }
 		
 		    function EncodeJavaScript(text) {
 		        var BodyStr = text;

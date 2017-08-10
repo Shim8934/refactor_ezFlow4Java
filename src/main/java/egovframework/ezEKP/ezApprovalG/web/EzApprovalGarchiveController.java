@@ -2210,4 +2210,33 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	/**
+	 * 외부 수신처 발송 시 문서 본문 xml 타입으로 
+	 * @throws Exception 
+        // HTML 정리 페이지로 MSHTML을 사용하여 태그를 정리한다.
+        // MSHTML로 Element Tag의 Attribute를 정리하지는 않고 필수 Attribute 추가만 진행한다.
+        // Attribute 전체 목록(사용하지 않는 Attribute포함)을 가지고 오기 때문에 이를 체크하는데 시간이 많이 소요되기 때문이다.(각 태그당 100개 이상의 속성)
+        // 사용하지 않는 Attribute에 대한 처리는 Javascript 에서 처리한다.
+        // 또한 Width, Height속성은 width_kaoni, height_kaoni로 리턴하여 자바스크립트에서 Replace하여 사용한다.
+        // IE에서 Width, Height에 숫자만 인식되는 현상을 피하기 위해서이다.
+
+        // 주의. 각 Element처리시 Element.OuterHTML을 사용하는 경우 해당 Element 하위의 Element의 값이 인식되지 않는 문제로 인해 OuterHTML 수정시에는 
+        // GetElementsByTagName을 다시 로드하여 사용하도록 한다.
+	 */
+	@RequestMapping(value = "/ezApprovalG/getContentXml.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getContentXml(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		logger.debug("getContentXml started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+        String fontFamily = request.getParameter("fontFamily");
+		String fontSize = request.getParameter("fontSize"); 
+		String content = request.getParameter("content");
+
+		String result = ezApprovalGService.startXmlConvert(content, fontFamily, fontSize, userInfo);
+		logger.debug("getContentXml ended");
+		return result;
+	}
+	
+	
 }

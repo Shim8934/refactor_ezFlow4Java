@@ -25,6 +25,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20496,10 +20497,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuffer resultXML = new StringBuffer();
 		String OrderOption1 = "";
 		String OrderOption2 = "";
-		boolean PublicFlag = false;	// 공개/비공개 사용 여부
-		boolean SecurityFlag = false;	// 보안등급 사용 여부
-		boolean SecurityLineFlag = false;	// 보안등급결재선.  true 이면, 보안등급보다 결재선 소속여부가 우선함.
-		String UserSecurityCode = "";
 		// 수정(2007.06.18) : multidata 기능추가 
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
@@ -21577,5 +21574,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
        
         }
 		return rtnVal;
+	}
+
+	@Override
+	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception {
+		
+		content = beforeXmlConverter(content);
+		return null;
+	}
+
+	private String beforeXmlConverter(String content) {
+		// ==========================================================================================================================
+        // DIV태그가 겹쳐있을 경우 처리.
+        // ex) <td style="border: 1px solid rgb(0, 0, 0); border-image: none; height: 31px;">
+        //        <div style="text-align: center; line-height: 1.2; font-size: 12pt; margin-top: 0px; margin-bottom: 0px;">
+        //              <div style="font-size: 10pt;">미학과에술문화</div></div></td>
+        // 위와 같은 경우 DIV제거를 위해 속성을 맞춰준다.
+        // 상위/하위 Element 의 innerText가 동일하다면 Style을 맞춰준다.
+
+        // 리턴시 div태그를 p태그로 변경하여 리턴한다.
+//		String html = content;
+		String html = "<body><p>text <div style='text-align: center; line-height: 1.2; font-size: 12pt; margin-top: 0px; margin-bottom: 0px;'>";
+		org.jsoup.nodes.Document doc = null;
+//		if (content.indexOf("body") > 0) {
+			 doc = Jsoup.parseBodyFragment(html);
+			 for ( Element element : doc.getAllElements()) {
+			        for ( TextNode textNode : element.textNodes()) {
+			        	String text = textNode.text();
+			        	String parentText = element.parent().text();
+			        	String parentText2 = element.parent().tagName();
+			        	System.out.println(parentText);
+			        	System.out.println(text);
+			        }
+			 }
+			 
+//		}
+		return null;
 	}
 }
