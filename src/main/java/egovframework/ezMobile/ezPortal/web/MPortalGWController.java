@@ -28,7 +28,7 @@ import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
-import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
+import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -172,8 +172,8 @@ public class MPortalGWController extends EgovFileMngUtil {
 				//게시판 풋터리스트
 				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId);
 				
-				//자원관리 풋터리스트
-				List<MResourceGetAdmSubClsTreeVO> resourceFooterList = mResourceService.getResFavoriteList(userId, tenantId);
+				//자원관리 풋터리스트				
+				List<MResourceScheduleVO> resourceFooterList = mResourceService.getResFavoriteList(userId, info.getCompanyId(), tenantId);
 				
 				dataObject.put("boardFooterList", boardFooterList);
 				dataObject.put("resourceFooterList", resourceFooterList);
