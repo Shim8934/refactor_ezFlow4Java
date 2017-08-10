@@ -80,7 +80,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 		} else {
 			return "NO";
 		}
-	}	
+	}
+	
+	public String getDeptPathCode(Map<String, Object> map) throws Exception{
+		return (String) select("MBoardDAO.getDeptPathCode", map);
+	}
 
 	public Integer getBoardItemListCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("MBoardDAO.getBoardItemListCount", map);

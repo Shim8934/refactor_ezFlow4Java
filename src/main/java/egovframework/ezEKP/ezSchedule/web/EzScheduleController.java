@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
+import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtilPublic;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
@@ -868,6 +869,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			sList = ezScheduleService.getScheduleList(pidList, filter.trim(), utcStartTime, utcEndTime, startDate, endDate, keyword.trim(), offSetMin, loginVO.getTenantId());
 			
+			Collections.sort(sList, new EzScheduleCompareUtilPublic());
+			
 			startDate = startDate.substring(0,10);
 			endDate = endDate.substring(0,10);
 		}		
@@ -930,6 +933,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 				}
 			}			
 			sList = ezScheduleService.getScheduleList(userIDList, "IsPublic", utcStartTime, utcEndTime, startDate, endDate, "Y", offSetMin, loginVO.getTenantId());
+			
+			Collections.sort(sList, new EzScheduleCompareUtilPublic());
 			
 			startDate = startDate.substring(0,10);
 			endDate = endDate.substring(0,10);

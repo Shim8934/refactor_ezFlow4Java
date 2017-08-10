@@ -758,6 +758,7 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+		                    window.close();
 		                }
 		                else {
 		                    swidth = 510;

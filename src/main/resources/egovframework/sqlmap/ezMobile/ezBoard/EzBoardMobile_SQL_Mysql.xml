@@ -1015,5 +1015,16 @@
                   GUID
               ]]>
   </select>
+  
+   <select id="MBoardDAO.getDeptPathCode" resultClass="String">
+        <![CDATA[
+            SELECT 
+                concat('top,Top,', dept_cd_path) as deptPathCode
+            FROM 
+                TBL_DEPTMASTER
+            WHERE 
+                cn = #departmentID# AND tenant_id = #tenantID#
+        ]]>
+    </select>
 </sqlMap>
 

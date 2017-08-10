@@ -502,11 +502,15 @@
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
                             var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
-                            
+                          
                             if (AttachfilenameN1 < 0) {
                                 Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                                Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+                            	if (AttachUrlA2 == ".mht") {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
+	                        	} else {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+	                        	}
                             }
 
                             if (AttachUrl != "null") {
