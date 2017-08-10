@@ -29,4 +29,8 @@ public class EzTaskController {
 		return "/ezTask/taskSearch";
 	}
 	/* 정수현*/
+	@RequestMapping(value = "/ezTask/taskConfig.do")
+	public String taskConfig() throws Exception {
+		return "/ezTask/taskConfig";
+	}
 }

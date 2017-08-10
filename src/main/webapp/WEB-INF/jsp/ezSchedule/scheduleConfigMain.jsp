@@ -85,7 +85,7 @@
 		    }
 		    
 		    function task_ini() {
-	            document.getElementById("mainframe").src = "/myoffice/ezTask/task_config_cross.aspx";
+	            document.getElementById("mainframe").src = "/ezTask/taskConfig.do";
 		    }
 		    
 		    function address_ini() {
@@ -106,9 +106,8 @@
            		<%-- <%if(pUseGoogleCalrendar == "YES"){ %>
            				<p><span id="1tab2" divname="googleTab"><%=RM.GetString("t401")%></span></p><%
            		} %> --%>
-           		
-           		<%-- 업무관리 --%>           		
-           		<%-- <p><span id="1tab3" divname="taskTab"><spring:message code='ezSchedule.t1005' /></span></p> --%>            
+
+           		<p><span id="1tab3" divname="taskTab"><spring:message code='ezSchedule.t1005' /></span></p>            
        		</div>
    		</div>    
        	<iframe id="mainframe" style="width:100%;height:100%;border:0px"></iframe>    
