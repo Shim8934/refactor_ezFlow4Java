@@ -19,14 +19,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class EzTaskController {
 	/* 이효진*/
+	
+	/**
+	 * 업무관리 메인화면
+	 */
 	@RequestMapping(value="/ezTask/taskMain.do")
 	public String taskMain() throws Exception {
 		return "/ezTask/taskMain";
+	}
+	
+	/**
+	 * 업무작성화면 조회
+	 */
+	@RequestMapping(value = "/ezTask/taskWrite.do")
+	public String taskWrite() throws Exception {
+		return "/ezTask/taskWrite";
+	}
+	
+	/*@RequestMapping(value = "/ezTask/taskSearch.do")
+	public String taskSearch() throws Exception {
+		return "/ezTask/taskSearch";
 	}
 	
 	@RequestMapping(value = "/ezTask/taskSearch.do")
 	public String taskSearch() throws Exception {
 		return "/ezTask/taskSearch";
 	}
+	
+	@RequestMapping(value = "/ezTask/taskSearch.do")
+	public String taskSearch() throws Exception {
+		return "/ezTask/taskSearch";
+	}*/
+	
+	@RequestMapping(value = "/ezTask/taskSearch.do")
+	public String taskSearch() throws Exception {
+		return "/ezTask/taskSearch";
+	}
+	
+	
 	/* 정수현*/
 }
