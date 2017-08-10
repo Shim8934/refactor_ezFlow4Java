@@ -238,7 +238,6 @@
 
 	<body class="leftbody">	    
         <div class="left_pims" title="PIMS"></div>
-        <div id="CalendarMini" style=" margin:10px;"></div>
 	        
 	    <div id="left">
 	        <div class="left_pims1" title="<spring:message code='ezSchedule.t1010'/>" id='pims1'></div>
@@ -247,6 +246,7 @@
 			<div class="gray_line"></div>	
 		    <h2><span id='Schedule' onClick="Function_Flag(2)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1010'/></span></h2>		    
 		    <ul>
+		    	<div id="CalendarMini" style=" margin:10px;"></div>
 			    <li evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li>
 	            <li evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
