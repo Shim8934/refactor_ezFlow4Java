@@ -317,28 +317,40 @@ public class EzSystemUtil {
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
 		int cpuCnt = 0;
+		int diskioMax = 0;
 		String result ="";
 
 		while (true) {
-		String line = br.readLine();
-		if (line == null) {
-				break;
+			String line = br.readLine();
+			if (line == null) {
+					break;
 			} else {                          
-				JSONObject tmpObj = new JSONObject();
-				
+				JSONObject tmpObj = new JSONObject();					
 				if (line.contains("avg")) {
 					cpuCnt++;
-				}
-				
+				}					
 				if ( cpuCnt == 2 ) {	
 					if ( cnt > 3 ) {
 						logger.debug(line);
 						String[] tmp = line.trim().split("\\s+");
-
-						if (!tmp[0].equalsIgnoreCase("")) {        // 마지막 줄은 공백이라 불필요					
+						if (!tmp[0].equalsIgnoreCase("")) {        // 마지막 줄은 공백이라 불필요
+							double tmpVal = 0;
+							double readVal = Double.parseDouble(tmp[2]) / 1024;
+							double writeVal = Double.parseDouble(tmp[3]) / 1024;
+							logger.debug("readVal : " + readVal);
+							logger.debug("writeVal : " + writeVal);
+							if ( readVal > writeVal ) {
+								tmpVal = readVal;
+							} else {
+								tmpVal = writeVal;
+							}
+							if (tmpVal > diskioMax) {
+								diskioMax = (int)tmpVal;
+							}
+							logger.debug("diskioMax : " + diskioMax);
 							tmpObj.put("read_" + tmp[0], tmp[2]);
-							tmpObj.put("write_"+ tmp[0], tmp[3]);					
-							jArr.add(tmpObj);	
+							tmpObj.put("write_"+ tmp[0], tmp[3]);
+							jArr.add(tmpObj);							
 						}
 					}
 					cnt ++;
@@ -347,7 +359,8 @@ public class EzSystemUtil {
 		}			
 		br.close();
 		
-		jObj.put("getDiskioInfo", jArr);		
+		jObj.put("getDiskioInfo", jArr);	
+		jObj.put("diskioMax", diskioMax);
 		result = jObj.toString().replaceAll("\\},\\{", ",");
 		
 		logger.debug(result);		

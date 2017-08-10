@@ -83,6 +83,7 @@
 		var cpuMemoryData = [];
 		var diskioData = [];
 		var networkData = [];
+		var diskMax = [];
 		
 		var cpuMemoryColor = ['#77B0A8', '#E96359'];
 		var diskioColor = ['#4641D9', '#2F9D27', '#FF5E00', '#FFBB00', '#99004C', '#000093', '#FF0000'];
@@ -158,11 +159,12 @@
 					},
 					y: {
 						type: "range",
-						domain: [0, 100],
+						domain: [0, 1],
 						step: 5,
 						line: true,
 						format: function(value) {
-							return value + "KB/s";
+							//return value + "KB/s";
+							return value + "MB/s"
 						}
 					}
 				}],
@@ -266,7 +268,12 @@
 	   	    	var networkMax = 0;
 	   	    	var networkDomain;
 	   	    	var networkStep;
-	   	    	var tmp = 0;
+	   	    	var networkTmp = 0;
+	   	    	
+	   	    	var diskioMax = 0;
+	   	    	var diskioDomain;
+	   	    	var diskioStep;
+	   	    	var diskioTmp = 0;
 		    	getInfo();
                 
 		    	// 해당 그래프가 없을 경우 setInterval 종료
@@ -284,6 +291,11 @@
 		    	});
 		    	cpuMemoryChart.render(true);
 
+		    	/**
+		    	 * 디스크 입출력 y축을 동적으로 변하게 하기 위한 부분
+		    	 * diskioData에 있는 값 중 가장 큰 값을 
+		    	 * diskioMax저장해서 y축 값을 변경
+		    	 */	    	
  		    	diskioChart.axis(0).update(diskioData);
 		    	diskioChart.axis(0).updateGrid("x", {
 		    		domain : domain
@@ -312,23 +324,33 @@
 	    		
 		    	/**
 		    	 * 네트워크 데이터 y축을 동적으로 변하게 하기 위한 부분
-		    	 * transfer receive 둘 중 제일 큰 값을 기준으로 변경
+		    	 * networkData에 있는 transfer, receive 값 중 가장 큰 값을 
+		    	 * networkMax저장해서 y축 값을 변경
 		    	 */
 	    		for (var i = 0; i < networkData.length; i++) {
 	    			
 	    			if (networkData[i].Receive > networkData[i].Transfer) {
-	    				tmp = networkData[i].Receive;
+	    				networkTmp = networkData[i].Receive;
 	    			} else {
-	    				tmp = networkData[i].Transfer;
+	    				networkTmp = networkData[i].Transfer;
 	    			}	    			
-	    			if (tmp > networkMax) {
-	    				networkMax = tmp;
+	    			if (networkTmp > networkMax) {
+	    				networkMax = networkTmp;
 	    			}
 	    		}	
-		    	
 		    	if (networkMax > 50) {
-		    		networkDomain = [0, 100];
-		    		networkStep = 10;   		
+/* 		    		networkDomain = [0, 100];
+		    		networkStep = 10;  */  	
+		    		/** 
+		    		 * 최대값의 10의 자리를 기준으로 + 10
+		    		 * 예) 최대값이 63인 경우 70Mbps를 y축으로 설정 
+		    		*/
+		    		var step = parseInt(networkMax / 10);
+		    		var result = (step * 10) + 10 ;
+		    		//console.log("step : " + step);
+		    		//console.log("result: " + result);
+			        networkDomain = [0, result];
+			        networkStep = step + 1;
 		    	} else {
 		    		networkDomain = [0, 50];
 		    		networkStep = 5;	    		
@@ -424,8 +446,15 @@
 	    	function getDiskioData(str) {
 	    		var obj = JSON.parse(str);
 	    		var ioInfo = obj.getDiskioInfo;
+	    		var maxInfo = obj.diskioMax;	
 	    		var current = new Date();
 
+	    		console.log(maxInfo);	    		
+	    		
+	    		if (maxInfo > diskioMax) {
+	    			diskioMax = maxInfo;
+	    		}
+	    		
 	    		if (diskioData.length >= 30) {
 	    			diskioData.shift();
 	    		}
@@ -434,7 +463,7 @@
 	    			diskTarget = Object.keys(ioInfo[i]);
 	    			ioInfo[i].time = current;
 	    			diskioData.push(ioInfo[i]);
-	    		}
+	    		} 	    		
 	    	}
 	    	
 	    	// 메모리 사용량 계산
