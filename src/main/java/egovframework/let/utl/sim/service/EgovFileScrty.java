@@ -6,7 +6,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
@@ -422,7 +425,38 @@ public class EgovFileScrty {
             throw e;
         }
     }     
-
+    
+    public void cryptFile(int mode, File source, File dest) throws Exception {
+    	String iv16 = apb.substring(0,16);
+    	SecretKeySpec skeySpec = new SecretKeySpec(apb.getBytes(), "AES");             
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(mode, skeySpec, new IvParameterSpec(iv16.getBytes("UTF-8")));
+    	
+        InputStream input = null;
+        OutputStream output = null;
+        
+        try {
+            input = new BufferedInputStream(new FileInputStream(source), BUFFER_SIZE);
+            output = new BufferedOutputStream(new FileOutputStream(dest), BUFFER_SIZE);
+            
+            byte[] buffer = new byte[1024];
+            int read = -1;
+            while ((read = input.read(buffer)) != -1) {
+            	output.write(cipher.update(buffer, 0, read));
+            }
+            
+            output.write(cipher.doFinal());
+            
+        } finally {
+            if (output != null) {
+                try { output.close(); } catch (IOException ie) {}
+            }
+            if (input != null) {
+                try { input.close(); } catch (IOException ie) {}
+            }
+        }
+    }
+    
 	public String getPrm() {
 		return prm;
 	}
