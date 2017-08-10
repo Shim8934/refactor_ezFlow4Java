@@ -22,12 +22,13 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
-import egovframework.ezMobile.ezBoard.vo.MBoardItemVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardFavoriteVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
+import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -151,5 +152,45 @@ public class MPortalGWController extends EgovFileMngUtil {
 		logger.debug("portalMainList End");
 		
 		return result;
+	}
+		
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/{menu}/footer-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject portalFooterList(@PathVariable String menu, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("portalFooterList Start");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			Map<String, Object> dataObject = new HashMap<String, Object>();
+
+			String serverName = request.getHeader("x-user-host");			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			int tenantId = info.getTenantId();
+			
+			if (menu.equals("etc")) {
+				//게시판 풋터리스트
+				List<MBoardFavoriteVO> boardFooterList = mBoardService.getFavoriteList(userId, tenantId);
+				
+				//자원관리 풋터리스트
+				List<MResourceGetAdmSubClsTreeVO> resourceFooterList = mResourceService.getResFavoriteList(userId, tenantId);
+				
+				dataObject.put("boardFooterList", boardFooterList);
+				dataObject.put("resourceFooterList", resourceFooterList);
+			}				
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", dataObject);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");		
+		}		
+		
+		logger.debug("portalFooterList End");
+		
+		return result;
 	}	
+	
 }
