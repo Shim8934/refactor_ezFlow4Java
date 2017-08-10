@@ -1,0 +1,21 @@
+package egovframework.ezEKP.ezTask.web;
+
+import org.springframework.stereotype.Controller;
+
+/** 
+ * @Description [Controller] 사용자 - ToDo 
+ * @author 오픈솔루션팀 이효진, 정수현
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2017.08.11	이효진			신규작성
+ *    2017.08.11	정수현			신규작성
+ *
+ * @see
+ */
+
+@Controller
+public class EzTaskController {
+
+}
