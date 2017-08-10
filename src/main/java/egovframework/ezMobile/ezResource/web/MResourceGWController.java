@@ -230,9 +230,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String offset = info.getOffSet();
-			int tenantId = info.getTenantId();			
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
 
-			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, tenantId);
+			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId,tenantId);
 
 			LOGGER.debug("size of list: " + list);
 			
