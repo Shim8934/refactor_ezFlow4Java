@@ -84,6 +84,7 @@
 		var diskioData = [];
 		var networkData = [];
 		var diskMax = [];
+		//var diskioMax = 0;
 		
 		var cpuMemoryColor = ['#77B0A8', '#E96359'];
 		var diskioColor = ['#4641D9', '#2F9D27', '#FF5E00', '#FFBB00', '#99004C', '#000093', '#FF0000'];
@@ -97,7 +98,7 @@
 		
 		jui.ready(["chart.builder"], function (builder) {
 			var diskTarget = [];		
-			
+			//var diskioMax = 0;
 			// CPU & Memory 관련 그래프
 			var cpuMemoryChart = builder ("#cpuMemInfo", {		
 				axis: [{
@@ -273,7 +274,6 @@
 	   	    	var diskioMax = 0;
 	   	    	var diskioDomain;
 	   	    	var diskioStep;
-	   	    	var diskioTmp = 0;
 		    	getInfo();
                 
 		    	// 해당 그래프가 없을 경우 setInterval 종료
@@ -293,13 +293,36 @@
 
 		    	/**
 		    	 * 디스크 입출력 y축을 동적으로 변하게 하기 위한 부분
-		    	 * diskioData에 있는 값 중 가장 큰 값을 
-		    	 * diskioMax저장해서 y축 값을 변경
-		    	 */	    	
+		    	 */	      	
  		    	diskioChart.axis(0).update(diskioData);
 		    	diskioChart.axis(0).updateGrid("x", {
 		    		domain : domain
-		        });
+		        });		    			    	
+		    	/**
+		    	 * diskMax 안에서 가장 큰 값을 찾는다.
+		    	 */
+		    	for (var i = 0; i < diskMax.length; i++) {
+		    		if (diskMax[i] >= diskioMax) {
+		    			diskioMax = diskMax[i];
+		    		}
+		    	}
+		    	if (diskioMax > 1) {
+		    		diskioDomain = [0, (diskioMax/10) * 10 + 10 ];
+		    		diskioStep = 2;
+		    	} else {
+		    		diskioDomain = [0, 1];
+		    		diskioStep = 5;
+		    	}		    	
+		    	diskioChart.axis(0).updateGrid("y", {
+					type: "range",
+					domain: diskioDomain,
+					step: diskioStep,
+					line: true,
+					format: function(value) {
+						return value + "MB/s";	 
+					}
+		    	});
+		    	
 		    	diskioChart.updateBrush(0, {
 		    		type: "line",
 		    		target: diskTarget
@@ -338,17 +361,15 @@
 	    				networkMax = networkTmp;
 	    			}
 	    		}	
-		    	if (networkMax > 50) {
-/* 		    		networkDomain = [0, 100];
-		    		networkStep = 10;  */  	
+		    	if (networkMax > 50) { 	
+		    		
 		    		/** 
 		    		 * 최대값의 10의 자리를 기준으로 + 10
 		    		 * 예) 최대값이 63인 경우 70Mbps를 y축으로 설정 
 		    		*/
 		    		var step = parseInt(networkMax / 10);
 		    		var result = (step * 10) + 10 ;
-		    		//console.log("step : " + step);
-		    		//console.log("result: " + result);
+
 			        networkDomain = [0, result];
 			        networkStep = step + 1;
 		    	} else {
@@ -449,11 +470,11 @@
 	    		var maxInfo = obj.diskioMax;	
 	    		var current = new Date();
 
-	    		console.log(maxInfo);	    		
-	    		
-	    		if (maxInfo > diskioMax) {
-	    			diskioMax = maxInfo;
-	    		}
+	    		if (diskMax.length >= 30) {
+	    			diskMax.shift();
+	    		}	    		
+	    		// diskio 관련 최대값을 저장
+	    		diskMax.push(parseInt(maxInfo));
 	    		
 	    		if (diskioData.length >= 30) {
 	    			diskioData.shift();
@@ -468,11 +489,7 @@
 	    	
 	    	// 메모리 사용량 계산
 	    	function getUsedMemoryPer(total, avail) {
-	    		
-	    		//var bufferCache = parseInt(free) + parseInt(buffer) + parseInt(cached);
-	    		//var result = (parseInt(total) - bufferCache) / parseInt(total);
-	    		var result = ( parseInt(total) - parseInt(avail) ) / parseInt(total);
-	    		
+	    		var result = ( parseInt(total) - parseInt(avail) ) / parseInt(total);	    		
 	    		return result;
 	    	}	    	
 	    	
@@ -483,17 +500,14 @@
 
 	    		var cpu = cobj.getCpuInfo;
 	    		var memory = mobj.getMemoryInfo;	 
-	    		
-	    		//var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memfree, memory[0].buffers, memory[0].cached);
-	    		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memavailable);
+	       		var usedMemory = getUsedMemoryPer(memory[0].memtotal, memory[0].memavailable);
 	    		
 	    		if (cpuMemoryData.length >= 30) {
 	    			cpuMemoryData.shift();
 	    		}
 	    		
  	    		cpuMemoryData.push({
-	    			time: current,
- 	    			//time: new Date(),			
+	    			time: current,	
 	    			Cpu: parseFloat(cpu[0].totalUsedPer).toFixed(2),
 	    			Memory: (usedMemory * 100).toFixed(2)
 	    		});  	

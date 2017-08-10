@@ -9,6 +9,8 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ibm.icu.text.DecimalFormat;
+
 import egovframework.ezEKP.ezSystem.service.impl.EzSystemAdminServiceImpl;
 
 /** 
@@ -30,12 +32,6 @@ public class EzSystemUtil {
 		
 		logger.debug("getSysInfo started. : " + tenantID);
 
-		//String filePath = "D:/test/uname.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "-nro");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
-		
 		BufferedReader br = null;		
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
@@ -88,14 +84,7 @@ public class EzSystemUtil {
 	public static String getCpuInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getCpuInfo started. : " + tenantID);
-		
-		//String command = "iostat";
-		//String filePath = "D:/test/iostat.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
-		
+
 		BufferedReader br = null;
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
@@ -164,14 +153,7 @@ public class EzSystemUtil {
 	public static String getMemoryInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getMemoryInfo started. : " + tenantID);
-		
-		//String command = "cat";
-		//String filePath = "D:/test/meminfo.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "/proc/meminfo");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
-		
+
 		BufferedReader br = null;
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
@@ -226,13 +208,7 @@ public class EzSystemUtil {
 	public static String getFileSysInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getFileSysInfo started. : " + tenantID);
-		
-		//String command = "df";
-		//String filePath = "D:/test/filesys.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "-h");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );		
+	
 		BufferedReader br = null;
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
@@ -291,13 +267,6 @@ public class EzSystemUtil {
 		
 		logger.debug("getDiskioInfo started. : " + tenantID);
 		
-		//String command = "iostat";
-		//String filePath = "D:/test/iostat.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));
-		//ProcessBuilder builder = new ProcessBuilder(command, "1", "2");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
-		
 		BufferedReader br = null;
 		/**
 		 * ip가 127.0.0.1이 아닌 경우 로컬 테스트
@@ -313,11 +282,12 @@ public class EzSystemUtil {
 			br = new BufferedReader(fr);			
 		}	
 		
+		DecimalFormat f = new DecimalFormat("#.##");
 		JSONObject jObj = new JSONObject();
 		JSONArray jArr = new JSONArray();
 		int cnt = 0;
 		int cpuCnt = 0;
-		int diskioMax = 0;
+		double diskioMax = 0;
 		String result ="";
 
 		while (true) {
@@ -339,17 +309,19 @@ public class EzSystemUtil {
 							double writeVal = Double.parseDouble(tmp[3]) / 1024;
 							logger.debug("readVal : " + readVal);
 							logger.debug("writeVal : " + writeVal);
-							if ( readVal > writeVal ) {
+							if ( readVal >= writeVal ) {
 								tmpVal = readVal;
 							} else {
 								tmpVal = writeVal;
 							}
 							if (tmpVal > diskioMax) {
-								diskioMax = (int)tmpVal;
+								diskioMax = tmpVal;
 							}
 							logger.debug("diskioMax : " + diskioMax);
-							tmpObj.put("read_" + tmp[0], tmp[2]);
-							tmpObj.put("write_"+ tmp[0], tmp[3]);
+							//tmpObj.put("read_" + tmp[0], tmp[2]);
+							//tmpObj.put("write_"+ tmp[0], tmp[3]);
+							tmpObj.put("read_" + tmp[0], f.format(readVal));
+							tmpObj.put("write_"+ tmp[0], f.format(writeVal));							
 							jArr.add(tmpObj);							
 						}
 					}
@@ -376,12 +348,6 @@ public class EzSystemUtil {
 	public static String getNetDataInfo(int tenantID, String ip) throws Exception {
 		
 		logger.debug("getNetDataInfo started. : " + tenantID);
-		
-		//String filePath = "D:/test/netInter.txt";
-		//BufferedReader br = new BufferedReader(new FileReader(filePath));		
-		//ProcessBuilder builder = new ProcessBuilder("cat","/proc/net/dev");
-		//Process process = builder.start();
-		//BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()) );
 		
 		BufferedReader br = null;
 		/**
