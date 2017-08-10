@@ -109,7 +109,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 
 	@Override
-	public List<MResourceGetAdmSubClsTreeVO> getResFavoriteList(String userId,
+	public List<MResourceScheduleVO> getResFavoriteList(String userId,
 			int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userId);

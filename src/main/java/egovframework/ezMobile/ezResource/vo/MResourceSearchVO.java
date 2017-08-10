@@ -79,6 +79,15 @@ public class MResourceSearchVO {
 	private String firstWriteDay;	
 	/** 마지막 작엇일 */
 	private String lastWriteDay;
+	/** 자원명 */
+	private String brdNm;
+
+	public String getBrdNm() {
+		return brdNm;
+	}
+	public void setBrdNm(String brdNm) {
+		this.brdNm = brdNm;
+	}
 		
 	public String getFirstWriteDay() {
 		return firstWriteDay;

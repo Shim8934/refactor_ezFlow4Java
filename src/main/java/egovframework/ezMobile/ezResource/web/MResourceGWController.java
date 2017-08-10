@@ -232,7 +232,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();			
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResFavoriteList(userId, tenantId);
+			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, tenantId);
 
 			LOGGER.debug("size of list: " + list);
 			
