@@ -781,8 +781,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
 
-			mResourceService.addResFavor(resourceId, userId, tenantId);
+			mResourceService.addResFavor(resourceId, companyId,userId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

@@ -200,9 +200,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 
 	@Override
-	public void addResFavor(String resId, String userId, int tenantId) {
+	public void addResFavor(String resId, String companyId, String userId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PRESID", resId);
+		map.put("v_PCOMPANYID", companyId);
 		map.put("v_PUSERID", userId);
 		map.put("tenantID", tenantId);
 		mResourceDAO.addResFavor(map);

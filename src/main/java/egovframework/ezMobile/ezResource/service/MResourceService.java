@@ -39,7 +39,7 @@ public interface MResourceService {
 	
 	public void delResSch(String companyId, String ownerId, String num, int tenantId);
 	
-	public void addResFavor(String resId, String userId, int tenantId);
+	public void addResFavor(String resId, String companyId, String userId, int tenantId);
 	
 	public void delResFavor(String resId, String userId, int tenantId);
 	

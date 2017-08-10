@@ -661,7 +661,7 @@
 				B.BRD_NM BRDNM
 			FROM
 				TBL_RS_FAVORITE A
-			LEFT JOIN 
+			JOIN 
 			    TBL_RS_BRD B
 			ON A.RESID = B.BRD_ID AND A.TENANT_ID = B.TENANT_ID AND A.RESCOMPANY = B.BRD_COMPANY   	
 			WHERE
@@ -679,9 +679,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_RS_FAVORITE
-     			( RESID, USERID, TENANT_ID )
+     			( RESID, RESCOMPANY, USERID, TENANT_ID )
      		VALUES
-     			( #v_PRESID#, #v_PUSERID#, #tenantID# )
+     			( #v_PRESID#, #v_PCOMPANYID#, #v_PUSERID#, #tenantID# )
 		]]>
 	</insert>
 	
