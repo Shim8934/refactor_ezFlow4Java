@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.annotation.Resource;
+import javax.crypto.Cipher;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Flags;
@@ -103,6 +104,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
  * @Description [Controller] 메일 쓰기
@@ -147,6 +149,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+	
+    @Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
 	
 	/**
 	 * 메일 쓰기화면 호출 함수
@@ -2033,6 +2038,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String isReserve = "";
 		String reservedId = "";
 		String stateName = "";
+		boolean isSecureMail = false;
+		String securePassword = null;
+		String secureReadCount = null;
+		String secureReadDate = null;
+		int secureId = 0;
 		String connUrl = "";
 		String author = "";
 		String pMessageID = "";
@@ -2186,6 +2196,31 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			tempNode = root.getElementsByTagName("STATENAME").item(0);
 			if (tempNode != null) {
 				stateName = tempNode.getTextContent();
+			}
+		}
+		if (root.getElementsByTagName("SECUREMAIL") != null) {
+			tempNode = root.getElementsByTagName("SECUREMAIL").item(0);
+			if (tempNode != null && tempNode.getTextContent() != null && tempNode.getTextContent().equalsIgnoreCase("TRUE")) {
+				isSecureMail = true;
+				
+				if (root.getElementsByTagName("SECUREPASSWORD") != null) {
+					tempNode = root.getElementsByTagName("SECUREPASSWORD").item(0);
+					if (tempNode != null) {
+						securePassword = tempNode.getTextContent();
+					}
+				}
+				if (root.getElementsByTagName("SECUREREADCOUNT") != null) {
+					tempNode = root.getElementsByTagName("SECUREREADCOUNT").item(0);
+					if (tempNode != null) {
+						secureReadCount = tempNode.getTextContent();
+					}
+				}
+				if (root.getElementsByTagName("SECUREREADDATE") != null) {
+					tempNode = root.getElementsByTagName("SECUREREADDATE").item(0);
+					if (tempNode != null) {
+						secureReadDate = tempNode.getTextContent();
+					}
+				}
 			}
 		}
 		
@@ -2841,13 +2876,124 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
-    			            // 편지함 용량 초과 메세지 확인을 위해 임시저장
-    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
-    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
-    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{message});
-    	                    if (uids != null && uids[0] != null) {
-    	                        sentFolderMessageUID = uids[0].uid;
-    	                    } 
+			            	
+			            	if (isSecureMail) { //보안메일
+			            		MimeMessage secureMessage = sa.createMimeMessage();
+			            		
+			            		@SuppressWarnings("unchecked")
+								Enumeration<Header> headerEnum = message.getAllHeaders();
+			            		
+			            		while (headerEnum.hasMoreElements()) {
+			            			Header header = headerEnum.nextElement();
+			            			secureMessage.addHeader(header.getName(), header.getValue());
+			            		}
+			            		
+		    		        	MimeMultipart secureMixedPart = new MimeMultipart();
+		    		        	
+		    		        	MimeBodyPart secureBodyPart = new MimeBodyPart();
+		    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
+		    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
+		    		        	
+		    		        	StringBuilder sb = new StringBuilder();
+		    		        	sb.append("<html>\n");
+		    		        	sb.append("<style>\n");
+		    		        	sb.append(".security_message{width:100%; height:100%; background:#d0e1ff;}\n");
+		    		        	sb.append(".security_message .security_img{min-width:480px; max-width:780px; margin:0 auto; padding:0px 20px 0px 0px; background:url(/images/email/secureMail/security_img.gif) #d0e1ff no-repeat 40px 0px;}\n");
+		    		        	sb.append(".security_message .security_txt{margin:0px 0px 0px 300px; padding:54px 0px; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;}\n");
+		    		        	sb.append(".security_message .security_txt h4{margin:0px; padding:3px 0px 0px 0px; font-size:22px; letter-spacing:-1px; color:#333; border-bottom:2px solid #727985; line-height:44px;}\n");
+		    		        	sb.append(".security_message .security_txt h4 span{color:#304d7f;}\n");
+		    		        	sb.append(".security_message .security_txt p{margin:0px; padding:5px 0px 0px 0px; font-size:15px; color:#333; line-height:22px;}\n");
+		    		        	sb.append("</style>\n");
+		    		        	sb.append("<body>\n");
+		    		        	sb.append("    <div class=\"security_message\">\n");
+		    		        	sb.append("        <div class=\"security_img\">\n");
+		    		        	sb.append("            <section class=\"security_txt\">\n");
+		    		        	sb.append("                <h4>해당 메일은 <span>암호화</span>되어있는 <span>보안메일</span>입니다.</h4>\n");
+		    		        	sb.append("                <p>메일을 열람하려면 첨부파일을 다운로드한 후<br>보낸 사람이 지정한 암호를 입력해야 합니다.<br>열람 허용 횟수와 열람 허용 기간이 지정되어있으니<br>주의하시기 바랍니다.</p>\n");
+		    		        	sb.append("            </section>\n");
+		    		        	sb.append("        </div>\n");
+		    		        	sb.append("    </div>\n");
+		    		        	sb.append("</body>");
+		    		        	sb.append("</html>");
+		    		        	secureBodyPart.setContent(sb.toString(), "text/html; charset=utf-8");
+		    		        	
+		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
+		    		        	secureAttachPart.setHeader("Content-Type", "text/html");
+		    		        	secureAttachPart.setContent("이 편지는 영국에서 시작되어...", "text/html; charset=utf-8");
+		    		        	
+		    		        	//TODO: originalFile, encryptedFile 삭제
+		    		        	
+		    		        	String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
+		    		        	
+		    			        File file = new File(pDirPath);
+		    					if (!file.exists()) {
+		    						file.mkdirs();
+		    					}
+		    			        
+		    		        	File originalFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
+		    		        	FileOutputStream fos = null;
+		    		        	
+		    		        	try {
+		    		        		fos = new FileOutputStream(originalFile);
+		    		        		message.writeTo(fos);
+		    		        	} catch (Exception e) {
+		    		        		e.printStackTrace();
+		    		        	} finally {
+		    						if (fos != null) {
+		    							try { fos.close(); } catch (IOException e) {}
+		    						}
+		    					}
+		    		        	
+		    		        	File encryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
+		    		        	egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+		    		        	
+		    		        	encryptedOriginalPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"originalMail.eml\"");
+		    		        	encryptedOriginalPart.setHeader("Content-Type", "message/rfc822");
+		    		        	FileDataSource source = new FileDataSource(encryptedFile);
+		    		        	encryptedOriginalPart.setDataHandler(new DataHandler(source));
+		    			        
+		    		        	secureMixedPart.addBodyPart(secureBodyPart);
+		    		        	secureMixedPart.addBodyPart(secureAttachPart);
+		    		        	secureMixedPart.addBodyPart(encryptedOriginalPart);
+		    		            
+		    		        	secureMessage.setContent(secureMixedPart);
+		    		            
+		    		            secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+		    		        	
+		    		        	if (secureId == 0) {
+		    		        		throw new Exception("INSERTSECUREMAILFAIL");
+		    		        	}
+			            		
+			            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
+	    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
+	    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
+	    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{secureMessage});
+	    	                    if (uids != null && uids[0] != null) {
+	    	                        sentFolderMessageUID = uids[0].uid;
+	    	                    }
+	    	                    
+			            		// TODO: 보안메일의 경우 보낸편지함에 저장한 메일의 uid를 저장한다.
+	    			            if (isSecureMail) {
+	    			            	String result = ezEmailService.updateMailSecure(userInfo.getTenantId(), userId, secureId, sentFolder.getFullName() + "/" + sentFolderMessageUID);
+	    				        	
+	    				        	if (!result.equals("OK")) {
+	    				        		throw new Exception("UPDATESECUREMAILFAIL");
+	    				        	}
+	    			            }
+	    			            
+	    			            secureMixedPart.removeBodyPart(encryptedOriginalPart);
+	    			            message = secureMessage;
+	    			            
+			            	} else {
+			            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
+	    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
+	    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
+	    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{message});
+	    	                    if (uids != null && uids[0] != null) {
+	    	                        sentFolderMessageUID = uids[0].uid;
+	    	                    }
+			            	}
+			            	
 			            }
 			            
 			            String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
@@ -3750,6 +3896,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		ezAddressService.setSimpleAddress(userInfo.getTenantId(), userInfo.getId(), bodyData);
 		
 		return "<DATA>OK</DATA>";
+	}
+	
+	
+	/**
+	 * 보안메일 설정화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/secureMailOption.do", produces = "text/xml; charset=utf-8")
+	public String secureMailOption(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			@RequestBody String bodyData) throws Exception{
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("offsetMin", offsetMin);
+		
+		return "ezEmail/mailSecureOption";
 	}
 	
 	/**
