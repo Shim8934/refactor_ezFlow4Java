@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezTask.web;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /** 
  * @Description [Controller] 사용자 - ToDo 
@@ -17,5 +18,15 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class EzTaskController {
-
+	/* 이효진*/
+	@RequestMapping(value="/ezTask/taskMain.do")
+	public String taskMain() throws Exception {
+		return "/ezTask/taskMain";
+	}
+	
+	@RequestMapping(value = "/ezTask/taskSearch.do")
+	public String taskSearch() throws Exception {
+		return "/ezTask/taskSearch";
+	}
+	/* 정수현*/
 }

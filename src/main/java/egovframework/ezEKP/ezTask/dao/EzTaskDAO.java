@@ -6,5 +6,7 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzTaskDAO")
 public class EzTaskDAO extends EgovAbstractDAO {
-
+	/* 이효진*/
+	
+	/* 정수현*/
 }

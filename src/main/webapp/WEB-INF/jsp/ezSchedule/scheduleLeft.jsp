@@ -183,7 +183,7 @@
 		                break;
 
 		            case 3:		// Task
-		                window.open("/ezSchedule/scheduleMain.do?funCode=3", "right");
+		                window.open("/ezTask/taskMain.do", "right");
 		                break;
 
 		            case 5:		// schedule group management 
@@ -195,7 +195,7 @@
 		                break;
 
 		            case 7:		// Search Task
-		                window.open("/myoffice/ezTask/task_search_Cross.aspx", "right");
+		                window.open("/ezTask/taskSearch.do", "right");
 		                break;
 
 		            case 10:	// Search public search
@@ -252,11 +252,11 @@
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
 		    </ul> 
-		    <%-- <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
+		    <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
 		    <ul>
 			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
 			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
-		    </ul> --%>
+		    </ul>
 	        <h3><span id='Schedule_Config' onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
 		</div>		
 	    <script type="text/javascript">
