@@ -530,7 +530,7 @@
 			AND  
 				A.OWNERID = #v_POWNERID#
 			AND
-				REFLAG = '0'
+				REFLAG IN('0', '1')
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
