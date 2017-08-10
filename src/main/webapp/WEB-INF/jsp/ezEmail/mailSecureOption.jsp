@@ -99,6 +99,8 @@
 		                rgParams = RetValue;
 		            } catch (e) { rgParams = dialogArguments; }
 		        }
+		        
+		        document.getElementById("securePassword").focus();
 		    }
 		
 		    function confirm() {
