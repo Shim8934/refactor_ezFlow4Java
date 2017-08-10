@@ -53,4 +53,7 @@ public interface EzEmailService {
 	public List<String[]> getAliasAddress(String userId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionList(String companyId, int tenantId) throws Exception;
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount, String maxReadDate) throws Exception;
+	public String updateMailSecure(int tenantId, String userId, int secureId, String url) throws Exception;
+	
 }

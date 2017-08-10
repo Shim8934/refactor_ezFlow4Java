@@ -1401,5 +1401,79 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return distributionList;
 	}
+
+	@Override
+	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount,
+			String maxReadDate) throws Exception {
+		logger.debug("setMailSecure started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId
+				+ ",password=" + password + ",maxReadCount=" + maxReadCount + ",maxReadDate=" + maxReadDate);
+		
+		int returnValue = 0;
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+		
+		String inputParams = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		inputParams += "&password=" + URLEncoder.encode(password, "UTF-8");
+		inputParams += "&maxReadCount=" + maxReadCount;
+		inputParams += "&maxReadDate=" + URLEncoder.encode(maxReadDate, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailSecure";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				int secureId = ((Long)responseObj.get("result")).intValue();
+				
+				if (secureId != 0) {
+					returnValue = secureId;
+				}
+			}
+		}
+		
+		logger.debug("setMailSecure ended. returnValue=" + returnValue);
+		return returnValue;
+	}
+
+	@Override
+	public String updateMailSecure(int tenantId, String userId, int secureId, String url) throws Exception {
+		logger.debug("updateMailSecure started.");
+		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",secureId=" + secureId + ",url=" + url);
+		
+		String returnValue = "ERROR";
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userAccount = userId + "@" + domainName;
+		
+		String inputParams = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		inputParams += "&url=" + URLEncoder.encode(url, "UTF-8");
+		inputParams += "&secureId=" + secureId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateMailSecure";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				returnValue = "OK";
+			}
+		}
+		
+		logger.debug("updateMailSecure ended. returnValue=" + returnValue);
+		return returnValue;
+		
+	}
 	
 }
