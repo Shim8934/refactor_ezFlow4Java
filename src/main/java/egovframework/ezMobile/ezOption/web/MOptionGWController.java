@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -45,6 +47,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
+	
+    @Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	/**
 	 * 모바일 G/W 환경설정 [get] 환경설정조회
@@ -152,9 +157,39 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			
 			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSearch, useSecurity, tenantId);
 			
+			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
+			
+	        String ip = ClientUtil.getClientIP(request);
+	        
+	        String acceptLanguage = request.getHeader("Accept-Language"); 
+	        
+	        String returnValue = "";
+	        
+	        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+	        
+		    if (acceptLanguage != null) {
+		        returnValue = acceptLanguage.substring(0, 2);
+		    //이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
+		    } else {				        
+		        returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
+		    }
+	        
+		    StringBuilder cookieInfo = new StringBuilder();
+		   
+			cookieInfo.append("{\"uid\" : \"" + userId + "\", \"ip\" : \"" + ip + "\", \"locale\" : \"" + returnValue + "\", \"lang\" : \"" + lang + "\", \"timeZone\" : \"" + timeZone + "\", \"tenantId\" : " + tenantId);
+			cookieInfo.append("\"mainType\" : \"" + mainType + "\", \"listCnt\" : \"" + listCnt + "\" }");
+		    
+			LOGGER.debug("opt: " + opt.toString());
+			
+			String obj = "";
+			
+			Gson gson = new Gson();
+			
+			obj = gson.toJson(opt);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", cookieInfo.toString());
 			
 		} catch (Exception e) {
 			
