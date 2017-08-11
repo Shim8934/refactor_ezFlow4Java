@@ -1921,6 +1921,25 @@ public class EzCircularController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 회람판 환경설정 저장 Method
+	 */
+	@RequestMapping(value = "/ezCircular/circularCheckFolder.do")
+	public String circularCheckFolder(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("circularCheckFolder started");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String deleteFolder = request.getParameter("deleteFolder");
+
+		int deleteListCount = ezCircularService.checkFolder(deleteFolder, userInfo.getId(), userInfo.getTenantId());
+
+		logger.debug("circularCheckFolder ended");
+
+		model.addAttribute("deleteListCount", deleteListCount);
+		
+		return "json";
+	}
+	
+	/**
 	 * 회람처 폴더추가 Method
 	 */
 	@RequestMapping(value = "/ezCircular/circularFolderAdd.do")

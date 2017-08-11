@@ -1701,6 +1701,21 @@
 		]]>
 	</select>
 
+	<select id="EzCircularDAO.checkFolder" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(circularlinkid)
+			FROM
+				TBL_CIRCULAR_link
+			WHERE
+				circularfolderid = #folderID#
+			AND
+				memberid = #memberID#
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
             INSERT INTO TBL_CIRCULAR

@@ -75,7 +75,9 @@ public interface EzCircularService {
 	public int getCommentCount(String circularID, String memberID, String type, int tenantID) throws Exception;
 	
 	public int getListCount(String listType, String userID, int tenantID) throws Exception;
-	
+
+	public int checkFolder(String deleteFolder, String memberID, int tenantID) throws Exception;
+
 	public void setCircularList_Config(CircularConfigVO circularConfigVO) throws Exception;
 	
 	public void setCircularList_Config2(String userID, String listCount, String previewMode, String list, String content, int tenantID) throws Exception;
@@ -129,5 +131,5 @@ public interface EzCircularService {
 	public void restoreCircular(String circularIDList, String memberID, int tenantID) throws Exception;
 
 	public void copyFileList(String pDirPath, String fileName, String circularID) throws Exception;
-	
+
 }
