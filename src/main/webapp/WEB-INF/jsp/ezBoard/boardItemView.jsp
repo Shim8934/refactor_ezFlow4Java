@@ -1227,7 +1227,10 @@
 				              <th><spring:message code='ezBoard.t324' /></th>
 				              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
 				              <th><spring:message code='ezBoard.t438' /></th>
-				              <td><INPUT type="password" id="txtPassWord" style="WIDTH:80px" maxlength="15" autocomplete="Off"></td>
+				              <td>
+				              	<INPUT type="password" id="txtPassWord_fake" name="pwd" style="WIDTH:80px; display: none;" autocomplete="new-password">
+				              	<INPUT type="password" id="txtPassWord" name="pwd" style="WIDTH:80px" maxlength="15" autocomplete="new-password">
+				              </td>
 				              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
 				            </tr>
 				          </table>

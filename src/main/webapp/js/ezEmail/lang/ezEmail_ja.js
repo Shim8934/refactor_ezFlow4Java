@@ -280,7 +280,7 @@ var strLangLHM04 = "ツリービューのデータが指定されていません
 var strLangLHM05 = "ファイルを削除してよろしいですか？";
 var strLangLHM06 = "移動しました。";
 var strLangLHM07 = "アップロードするファイルを選択してください。";
-var strLangLHM08 = "割り当てられたメール容量を超過しているため、メール送信できません。\nメールボックスを整理してください。";
+var strLangLHM08 = "割り当てられたメールボックスの容量を超過しているため、メール送信できません。\n不要となったメールを削除して空き領域を増やしてください。";
 var strLangLHM09 = "外部へのメールは10MBまで送信できます。";
 var strLangLHM10 = "大容量";
 var strLangLHM11 = "メールを取り下げする対象を選択してください。";
@@ -289,12 +289,12 @@ var strLangLHM13 = "送信可能なメールサイズを超過しています。
 var strLangLHM14 = "一回に送信可能なサイズ : ";
 var strLangLHM15 = ", 現在のサイズ : ";
 var strLangLHM16 = "アカウント情報の見つからない受信者が存在します。メールアドレスを確かめてください。";
-var strLangLHM17 = "このメールアドレスを除いて、メールを送信しますか？";
+var strLangLHM17 = "このメールアドレス以外の宛先にメールを送信しますか？";
 var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "添付フォイルのサイズが ";
 var strLangKMS03 = "メールがありません。";
 var strLangKMS04 = "受信者の数が";
-var strLangKMS05 = "名より多いため、個別送信機能を使用することができません。\n個別送信機能を外してメールを送信しますか？";
+var strLangKMS05 = "人より多いため、個別送信機能を使用することができません。\n個別送信設定を解除してメールを送信してよろしいですか？";
 
 function GetLocalTime(Offset , pDateTime)
 {
