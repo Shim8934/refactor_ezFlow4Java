@@ -2877,7 +2877,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
 			            	
-			            	if (isSecureMail) { //보안메일
+			            	// 보안메일 처리
+			            	if (isSecureMail) {
 			            		MimeMessage secureMessage = sa.createMimeMessage();
 			            		
 			            		@SuppressWarnings("unchecked")
@@ -2885,7 +2886,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            		
 			            		while (headerEnum.hasMoreElements()) {
 			            			Header header = headerEnum.nextElement();
-			            			secureMessage.addHeader(header.getName(), header.getValue());
+			            			secureMessage.setHeader(header.getName(), header.getValue());
 			            		}
 			            		
 		    		        	MimeMultipart secureMixedPart = new MimeMultipart();
@@ -2895,7 +2896,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
 		    		        	
 		    		        	StringBuilder sb = new StringBuilder();
-		    		        	sb.append("<html>\n");
 		    		        	sb.append("<style>\n");
 		    		        	sb.append(".security_message{width:100%; height:100%; background:#d0e1ff;}\n");
 		    		        	sb.append(".security_message .security_img{min-width:480px; max-width:780px; margin:0 auto; padding:0px 20px 0px 0px; background:url(/images/email/secureMail/security_img.gif) #d0e1ff no-repeat 40px 0px;}\n");
@@ -2904,31 +2904,30 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	sb.append(".security_message .security_txt h4 span{color:#304d7f;}\n");
 		    		        	sb.append(".security_message .security_txt p{margin:0px; padding:5px 0px 0px 0px; font-size:15px; color:#333; line-height:22px;}\n");
 		    		        	sb.append("</style>\n");
-		    		        	sb.append("<body>\n");
-		    		        	sb.append("    <div class=\"security_message\">\n");
-		    		        	sb.append("        <div class=\"security_img\">\n");
-		    		        	sb.append("            <section class=\"security_txt\">\n");
-		    		        	sb.append("                <h4>해당 메일은 <span>암호화</span>되어있는 <span>보안메일</span>입니다.</h4>\n");
-		    		        	sb.append("                <p>메일을 열람하려면 첨부파일을 다운로드한 후<br>보낸 사람이 지정한 암호를 입력해야 합니다.<br>열람 허용 횟수와 열람 허용 기간이 지정되어있으니<br>주의하시기 바랍니다.</p>\n");
-		    		        	sb.append("            </section>\n");
-		    		        	sb.append("        </div>\n");
+		    		        	sb.append("<div class=\"security_message\">\n");
+		    		        	sb.append("    <div class=\"security_img\">\n");
+		    		        	sb.append("        <section class=\"security_txt\">\n");
+		    		        	sb.append("            <h4>해당 메일은 <span>암호화</span>되어있는 <span>보안메일</span>입니다.</h4>\n");
+		    		        	sb.append("            <p>메일을 열람하려면 첨부파일을 다운로드한 후<br>보낸 사람이 지정한 암호를 입력해야 합니다.<br>열람 허용 횟수와 열람 허용 기간이 지정되어있으니<br>주의하시기 바랍니다.</p>\n");
+		    		        	sb.append("        </section>\n");
 		    		        	sb.append("    </div>\n");
-		    		        	sb.append("</body>");
-		    		        	sb.append("</html>");
+		    		        	sb.append("</div>\n");
 		    		        	secureBodyPart.setContent(sb.toString(), "text/html; charset=utf-8");
 		    		        	
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureAttachPart.setHeader("Content-Type", "text/html");
-		    		        	secureAttachPart.setContent("이 편지는 영국에서 시작되어...", "text/html; charset=utf-8");
+		    		        	String pDirPath = realPath + config.getProperty("upload_mail.ROOT");
+		    		        	File secureAttachFile = new File(pDirPath + commonUtil.separator + "securityAttach.html");
+		    		        	FileDataSource source = new FileDataSource(secureAttachFile);
+		    		        	secureAttachPart.setDataHandler(new DataHandler(source));
 		    		        	
-		    		        	//TODO: originalFile, encryptedFile 삭제
+		    		        	// TODO: originalFile, encryptedFile 삭제
+		    		        	pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
 		    		        	
-		    		        	String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
-		    		        	
-		    			        File file = new File(pDirPath);
-		    					if (!file.exists()) {
-		    						file.mkdirs();
-		    					}
+		    		        	File file = new File(pDirPath);
+		    		        	if (!file.exists()) {
+		    		        		file.mkdirs();
+		    		        	}
 		    			        
 		    		        	File originalFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 		    		        	FileOutputStream fos = null;
@@ -2949,7 +2948,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	
 		    		        	encryptedOriginalPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"originalMail.eml\"");
 		    		        	encryptedOriginalPart.setHeader("Content-Type", "message/rfc822");
-		    		        	FileDataSource source = new FileDataSource(encryptedFile);
+		    		        	source = new FileDataSource(encryptedFile);
 		    		        	encryptedOriginalPart.setDataHandler(new DataHandler(source));
 		    			        
 		    		        	secureMixedPart.addBodyPart(secureBodyPart);
@@ -2957,13 +2956,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	secureMixedPart.addBodyPart(encryptedOriginalPart);
 		    		            
 		    		        	secureMessage.setContent(secureMixedPart);
-		    		            
+		    		        	
 		    		            secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
 		    		        	
 		    		        	if (secureId == 0) {
 		    		        		throw new Exception("INSERTSECUREMAILFAIL");
 		    		        	}
 			            		
+		    		        	// TODO: set secureMail Flag
+//		    		        	secureMessage.setFlag(, set);
+		    		        	secureMessage.setFlag(Flags.Flag.SEEN, true);
+		    		        	
 			            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
 	    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
 	    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
@@ -2972,16 +2975,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	                        sentFolderMessageUID = uids[0].uid;
 	    	                    }
 	    	                    
-			            		// TODO: 보안메일의 경우 보낸편지함에 저장한 메일의 uid를 저장한다.
-	    			            if (isSecureMail) {
-	    			            	String result = ezEmailService.updateMailSecure(userInfo.getTenantId(), userId, secureId, sentFolder.getFullName() + "/" + sentFolderMessageUID);
-	    				        	
-	    				        	if (!result.equals("OK")) {
-	    				        		throw new Exception("UPDATESECUREMAILFAIL");
-	    				        	}
-	    			            }
+			            		// 보낸편지함에 저장한 메일의 uid를 저장한다.
+    			            	String result = ezEmailService.updateMailSecure(userInfo.getTenantId(), userId, secureId, sentFolder.getFullName() + "/" + sentFolderMessageUID);
+    				        	
+    				        	if (!result.equals("OK")) {
+    				        		throw new Exception("UPDATESECUREMAILFAIL");
+    				        	}
 	    			            
+    				        	// 메일을 발송할 때에는 원본메일을 삭제한다.
 	    			            secureMixedPart.removeBodyPart(encryptedOriginalPart);
+	    			            
+	    			            // 서버에서 보안메일을 처리할 수 있도록 헤더를 추가한다.
+	    			            secureMessage.setHeader("X-JMocha-Secure-Mail-ID", String.valueOf(secureId));
+	    			            
 	    			            message = secureMessage;
 	    			            
 			            	} else {
@@ -3050,7 +3056,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                             }			        		
 			            }
 			            			            
-			            //예악발송 수정 시 옵션에서 예약발송 안하고 저장했을 시 DB 데이터 삭제, 파일 시스템의 eml파일 삭제
+			            //예악발송 수정창에서 예약발송 옵션 해제하고 저장했을 경우 메일이 바로 발송되므로 DB 데이터 삭제, 파일 시스템의 eml파일 삭제
 			            logger.debug("reservedId=" + reservedId);
 			            if (reservedId != null && !reservedId.trim().equals("")) {
 							ezEmailService.deleteMailReserved(reservedId);
