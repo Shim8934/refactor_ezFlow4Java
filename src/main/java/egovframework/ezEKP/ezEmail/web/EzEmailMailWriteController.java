@@ -2891,35 +2891,60 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            		
 		    		        	MimeMultipart secureMixedPart = new MimeMultipart();
 		    		        	
+		    		        	// make secureBodyPart and add to secureMixedPart
 		    		        	MimeBodyPart secureBodyPart = new MimeBodyPart();
-		    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
-		    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
+		    		        	MimeMultipart secureBodyRelatedPart = new MimeMultipart("related");
+		    		        	MimeBodyPart secureBodyHtmlPart = new MimeBodyPart();
+		    		        	MimeBodyPart secureBodyImagePart = new MimeBodyPart();
+		    		        	
+		    		        	String tempFileName = UUID.randomUUID().toString();
 		    		        	
 		    		        	StringBuilder sb = new StringBuilder();
 		    		        	sb.append("<style>\n");
-		    		        	sb.append(".security_message{width:100%; height:100%; background:#d0e1ff;}\n");
-		    		        	sb.append(".security_message .security_img{min-width:480px; max-width:780px; margin:0 auto; padding:0px 20px 0px 0px; background:url(/images/email/secureMail/security_img.gif) #d0e1ff no-repeat 40px 0px;}\n");
-		    		        	sb.append(".security_message .security_txt{margin:0px 0px 0px 300px; padding:54px 0px; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;}\n");
+		    		        	sb.append(".security_message{background:#d0e1ff;}\n");
+		    		        	sb.append(".security_message .security_img{max-width:780px; margin:0 auto; padding-left: 40px;}\n");
+		    		        	sb.append(".security_message .security_txt{margin:0px 0px 0px 300px; padding:54px 0px; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;position:relative;left:-50px;margin-top:-250px;}\n");
 		    		        	sb.append(".security_message .security_txt h4{margin:0px; padding:3px 0px 0px 0px; font-size:22px; letter-spacing:-1px; color:#333; border-bottom:2px solid #727985; line-height:44px;}\n");
 		    		        	sb.append(".security_message .security_txt h4 span{color:#304d7f;}\n");
 		    		        	sb.append(".security_message .security_txt p{margin:0px; padding:5px 0px 0px 0px; font-size:15px; color:#333; line-height:22px;}\n");
 		    		        	sb.append("</style>\n");
 		    		        	sb.append("<div class=\"security_message\">\n");
 		    		        	sb.append("    <div class=\"security_img\">\n");
+		    		        	sb.append("        <img src=\"cid:" + tempFileName + ".gif@12345678.87654321\">\n");
 		    		        	sb.append("        <section class=\"security_txt\">\n");
 		    		        	sb.append("            <h4>해당 메일은 <span>암호화</span>되어있는 <span>보안메일</span>입니다.</h4>\n");
 		    		        	sb.append("            <p>메일을 열람하려면 첨부파일을 다운로드한 후<br>보낸 사람이 지정한 암호를 입력해야 합니다.<br>열람 허용 횟수와 열람 허용 기간이 지정되어있으니<br>주의하시기 바랍니다.</p>\n");
 		    		        	sb.append("        </section>\n");
 		    		        	sb.append("    </div>\n");
 		    		        	sb.append("</div>\n");
-		    		        	secureBodyPart.setContent(sb.toString(), "text/html; charset=utf-8");
+		    		        	secureBodyHtmlPart.setContent(sb.toString(), "text/html; charset=utf-8");
 		    		        	
+		    		        	secureBodyImagePart.setHeader("Content-Disposition", "inline;\r\n\tfilename=\"" + tempFileName + ".gif\"");
+		    		        	secureBodyImagePart.setHeader("Content-ID", "<" + tempFileName + ".gif@12345678.87654321>");
+		    		        	secureBodyImagePart.setHeader("Content-Type", "image/gif");
+		    		        	FileDataSource source = new FileDataSource(new File(realPath + "/images/email/secureMail/security_img.gif"));
+		    		        	secureBodyImagePart.setDataHandler(new DataHandler(source));
+		    		        	
+		    		        	secureBodyRelatedPart.addBodyPart(secureBodyHtmlPart);
+		    		        	secureBodyRelatedPart.addBodyPart(secureBodyImagePart);
+		    		        	
+		    		        	secureBodyPart.setContent(secureBodyRelatedPart);
+		    		        	secureMixedPart.addBodyPart(secureBodyPart);
+		    		        	// make secureBodyPart and add to secureMixedPart - end
+		    		        	
+		    		        	// make secureBodyPart and add to secureMixedPart
+		    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureAttachPart.setHeader("Content-Type", "text/html");
 		    		        	String pDirPath = realPath + config.getProperty("upload_mail.ROOT");
 		    		        	File secureAttachFile = new File(pDirPath + commonUtil.separator + "securityAttach.html");
-		    		        	FileDataSource source = new FileDataSource(secureAttachFile);
+		    		        	source = new FileDataSource(secureAttachFile);
 		    		        	secureAttachPart.setDataHandler(new DataHandler(source));
+		    		        	secureMixedPart.addBodyPart(secureAttachPart);
+		    		        	// make secureBodyPart and add to secureMixedPart - end
+		    		        	
+		    		        	// make encryptedOriginalPart and add to secureMixedPart
+		    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
 		    		        	
 		    		        	// TODO: originalFile, encryptedFile 삭제
 		    		        	pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
@@ -2950,11 +2975,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	encryptedOriginalPart.setHeader("Content-Type", "message/rfc822");
 		    		        	source = new FileDataSource(encryptedFile);
 		    		        	encryptedOriginalPart.setDataHandler(new DataHandler(source));
-		    			        
-		    		        	secureMixedPart.addBodyPart(secureBodyPart);
-		    		        	secureMixedPart.addBodyPart(secureAttachPart);
 		    		        	secureMixedPart.addBodyPart(encryptedOriginalPart);
-		    		            
+		    		        	// make encryptedOriginalPart and add to secureMixedPart - end
+		    		        	
 		    		        	secureMessage.setContent(secureMixedPart);
 		    		        	
 		    		            secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
