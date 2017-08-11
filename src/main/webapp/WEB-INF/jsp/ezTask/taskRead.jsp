@@ -6,10 +6,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><spring message code='ezTask.t143' /></title>
-		<link rel="stylesheet" href="<spring message code='ezTask.e2' />" type="text/css">
-		<link rel="stylesheet" href="/css/tab.css" type="text/css">
-		<script type="text/javascript" src="<spring message code='ezTask.e1' />"></script>
+		<title><spring:message code='ezTask.t143' /></title>
+		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezTask/js/AttachItem_CK.js")"></script>
@@ -24,25 +24,24 @@
 		</style>
 		
 		<script type="text/javascript">
-			var userid = "<%= userinfo.UserID %>";
-			var taskid = "<%= _taskid %>";
-			var contentpath = "<%= _content %>";
-			var ownerid = "<%= _ownerid %>";
-			var creatorid = "<%= _creatorid %>";
-			var parentid = "<%= _parentid %>";
-			var repeatcount = "<%= _repeatcount %>";
-			var taskstatus = "<%= _taskstatus %>";
-			var completerate = "<%= _completerate %>";
-		    var admin = "<%= _admin %>";
-		    var personlist = "<%= _personlist %>";
-		    var shareid = "<%= _shareid %>";
-		    var tasktype = "<%= _tasktype %>";
-		    var content = "<%= _contentperson %>";
-		    var date = "<%= _date %>";
-		    var type = "<%= _type %>";
-		    var personid = "<%= _personid %>";
-		    var attachFileInfo = "<%= _attachFileInfo %>";
-		    var optioncnt = "<%= _optioncnt %>";
+			var userid = "${userInfo.id }";
+			var taskid = "${taskID }";
+			var contentpath = "${contentPath }";
+			var ownerid = "${ownerID }";
+			var creatorid = "${creatorID }";
+			var parentid = "${parentID }";
+			var taskstatus = "${taskStatus }";
+			var completerate = "${completeRate }";
+		    var admin = "${admin }";
+		    var personlist = "${personList }";
+		    var shareid = "${shareID }";
+		    var tasktype = "${taskType }";
+		    var content = "${contentPerson }";
+		    var date = "${date }";
+		    var type = "${type }";
+		    var personid = "${personID }";
+		    var attachFileInfo = "${attachFileInfo }";
+		    var optioncnt = "${optionCnt }";
 		    var tempbody = "";
 		    var pUse_Editor = "{useEditor}";
 		    var AttachLimit = 5;
@@ -141,14 +140,59 @@
 			}
 
 			function load_bodyhtml() {
-				var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx&TYPE=TASKCONTENT&DOCID=" + escape(taskid);
-				document.getElementById('message').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
+// 				document.getElementById('message').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
+				
+				var fullPath = "${taskContentLocation1}";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommon/mhtToHTMLContent.do",
+					data : {
+							type : "TASKCONTENT",
+							href : fullPath
+					},
+					success: function(result){
+						html = result;
+						
+						var doc = document.getElementById('message').contentWindow.document;
+						doc.open();
+						doc.write(html);
+						doc.close();
+				        
+						$("#message").contents().find("body").css("word-wrap", "break-word");
+					}
+				});
 			}
 	
 			function load_bodyhtml2() {
+				var fullPath = "${taskContentLocation2}";
+				
 				if (content != "") {
-					var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx&TYPE=TASKCONTENT2&DOCID=" + escape(taskid);
-					document.getElementById('message2').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
+// 					var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx&TYPE=TASKCONTENT2&DOCID=" + escape(taskid);
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : {
+								type : "TASKCONTENT2",
+								href : fullPath
+						},
+						success: function(result){
+							html = result;
+							
+							var doc = document.getElementById('message2').contentWindow.document;
+							doc.open();
+							doc.write(html);
+							doc.close();
+					        
+							$("#message2").contents().find("body").css("word-wrap", "break-word");
+						}
+					});
+					
+// 					document.getElementById('message2').src = "/ezCommon/mhtToHTMLContent.do?href=" + fullPath;
 					
 					try {
 						var objTags = document.getElementById('message2').getElementsByTagName("a");
@@ -247,7 +291,7 @@
 	
 				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
 					alert("<spring:message code='ezTask.t222' />");
-					window.location.href = "/myoffice/ezTask/task_read_Cross.aspx?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
+					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
 				}
 			}
 			
@@ -387,35 +431,36 @@
 			function delete_comment(commentorid, commentid) {
 			    if (commentorid != userid) {
 			        alert("<spring:message code='ezTask.t146' />");
-			    return;
-			}
+				    return;
+				}
 			
-			if (!confirm("<spring:message code='ezTask.t147' />"))
-			    return;
-			
-			var id = taskid;
-			if (parentid != "0")
-			    id = parentid;
-			
-			var xmlDom = createXmlDom();
-			var xmlHTTP = createXMLHttpRequest();
-			var objRoot;
-			var objNode;
-			
-			objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", id);
-			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMMENTID", commentid);
-			
-			xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_del_memo.aspx", false);
-			xmlHTTP.send(xmlDom);
-			
-			if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-			    alert("<spring:message code='ezTask.t148' />");
-			    else {
-			        window.location.href = "/myoffice/ezTask/task_read_Cross.aspx?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
+				if (!confirm("<spring:message code='ezTask.t147' />"))
+				    return;
+				
+				var id = taskid;
+				if (parentid != "0")
+				    id = parentid;
+				
+				var xmlDom = createXmlDom();
+				var xmlHTTP = createXMLHttpRequest();
+				var objRoot;
+				var objNode;
+				
+				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", id);
+				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMMENTID", commentid);
+				
+				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_del_memo.aspx", false);
+				xmlHTTP.send(xmlDom);
+				
+				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+				    alert("<spring:message code='ezTask.t148' />");
+				} else {
+					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
 			        try { window.opener.location.reload(); } catch (e) { }
 			    }
 			}
+			
 			function update_status() {
 			    if (admin != "Y") {
 			        alert("<spring:message code='ezTask.t149' />");
@@ -433,8 +478,6 @@
 			
 			objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
 			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", id);
-			
-			
 			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
 			
 			var tempcheckvalue = "";
@@ -639,7 +682,7 @@
 			
 			if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
 			    alert("<spring:message code='ezTask.t2009' />");
-			        window.location.href = "/myoffice/ezTask/task_read_Cross.aspx?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
+			        window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
 			    }
 			}
 			
@@ -900,154 +943,160 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
+		 
+		 <table id="taskInfo" class="layout">
+		 	<tr>
+				<td style="height:20px">
+					<table class="content">
+						<tr>
+							<th><spring:message code='ezTask.t117' /></th>
+							<td style="white-space:nowrap">
+								<div style="CURSOR:pointer; " onClick="show_personinfo('0')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+									<asp:label id="LabelCreator" Runat="server"></asp:label>
+								</div>
+							</td>
+							<th><spring:message code='ezTask.t155' /></th>
+							<td style="padding-right:15px;white-space:nowrap"><asp:label id="LabelCreateDate" Runat="server"></asp:label></td>
+						</tr>
+						<tr>
+							<th><spring:message code='ezTask.t2003' /></th>
+							<td style="width:100%">
+								<div>
+									<asp:label id="tasktype" Runat="server"></asp:label>
+								</div>
+							</td>
+							<th><spring:message code='ezTask.t156' /></th>
+							<td>
+								<div>
+									<asp:label id="LabelImportance" Runat="server"></asp:label>
+								</div>
+							</td>
+						</tr>
+						<tr id ="persontr">
+							<th><spring:message code='ezTask.t2005' /></th>
+							<td colspan="3" width="100%">
+								<div id="personlist" style="OVERFLOW-Y: auto; padding-top:2px">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th><spring:message code='ezTask.t157' /></th>
+							<td colspan="3" style="width:100%">
+								<div style="OVERFLOW-Y: auto; HEIGHT: 20px;">
+									<asp:label id="LabelShare" runat="server"></asp:label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th><spring:message code='ezTask.t158' /></th>
+							<td colspan="3">
+								<div>
+									<asp:Label ID="LabelDate" runat="server"></asp:Label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th><spring:message code='ezTask.t118' /></th>
+							<td colspan="3">
+								<div style="overflow-y:auto;padding-top:2px">
+									<asp:label id="LabelSubject" Runat="server"></asp:label>
+								</div>
+							</td>
+						</tr>
+	
+						<%-- <c:if test="${taskType == '1' }">
+							<tr>
+								<th><spring:message code='ezTask.t119' /></th>
+								<td colspan="3">
+									<div style="padding-top:4px">
+										<input type ="radio" id="taskstatus" name ="taskstatuscheckbox" value="1" onclick ="changestatus(this)" style="margin-top:0px"/>
+										<label for ="taskstatus"><spring:message code='ezTask.t97' /></label>
+										<input type ="radio" id="taskstatus2" name ="taskstatuscheckbox" value="2" onclick ="changestatus(this)" style="margin-top:0px"/>
+										<label for ="taskstatus2"><spring:message code='ezTask.t98' /></label>
+										<input type ="radio" id="taskstatus3" name ="taskstatuscheckbox" value="3" onclick ="changestatus(this)" style="margin-top:0px"/>
+										<label for ="taskstatus3"><spring:message code='ezTask.t99' /></label>
+										<input type ="radio" id="taskstatus4" name ="taskstatuscheckbox" value="4" onclick ="changestatus(this)" style="margin-top:0px"/>
+										<label for ="taskstatus4"><spring:message code='ezTask.t100' /></label>
+									</div>
+									<div>
+										<input type ="radio" id="completera" name ="completeracheckbox" value="0" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera">0%</label>
+										<input type ="radio" id="completera2" name ="completeracheckbox" value="10" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera2">10%</label>
+										<input type ="radio" id="completera3" name ="completeracheckbox" value="20" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera3">20%</label>
+										<input type ="radio" id="completera4" name ="completeracheckbox" value="30" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera4">30%</label>
+										<input type ="radio" id="completera5" name ="completeracheckbox" value="40" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera5">40%</label>
+										<input type ="radio" id="completera6" name ="completeracheckbox" value="50" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera6">50%</label>
+										<input type ="radio" id="completera7" name ="completeracheckbox" value="60" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera7">60%</label>
+										<input type ="radio" id="completera8" name ="completeracheckbox" value="70" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera8">70%</label>
+										<input type ="radio" id="completera9" name ="completeracheckbox" value="80" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera9">80%</label>
+										<input type ="radio" id="completera10" name ="completeracheckbox" value="90" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera10">90%</label>
+										<input type ="radio" id="completera11" name ="completeracheckbox" value="100" onclick ="changecomplete(this)" style="margin-top:0px"/>
+										<label for ="completera11">100%</label>
+										<a class="imgbtn" style="vertical-align:middle"><span id ="statusbtn" onClick="update_status()"><spring:message code='ezTask.t96' /></span></a>
+									</div>
+								</td>
+							</tr>
+						</c:if> --%>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<br />
 		<div id="tabpart" class="portlet_tabpart03">
 			<div class="portlet_tabpart03_top" id="tab1">
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
 				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
+				<!-- 이효진 저장버튼추가필요 -->
 			</div>
-		</div>
-		 
+		</div> 
+		
 <%-- 		<%if(_type != "2"){ %> --%>
-		<table id="normalScreen" class="layout" style="height:560px">
+		<table id="normalScreen" class="layout" style="height:100%">
 <%-- 		<%}else{ %> --%>
 <!-- 		<table id="normalScreen" class="layout" style="height:560px;display:none;"> -->
 <%-- 		<%}%> --%>
 			<tr>
-				<td style="height:20px"><table class="content">
-					<tr>
-						<th><spring:message code='ezTask.t117' /></th>
-						<td style="white-space:nowrap">
-							<div style="CURSOR:pointer; " onClick="show_personinfo('0')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-								<asp:label id="LabelCreator" Runat="server"></asp:label>
-							</div>
-						</td>
-						<th><spring:message code='ezTask.t155' /></th>
-						<td style="padding-right:15px;white-space:nowrap"><asp:label id="LabelCreateDate" Runat="server"></asp:label></td>
-					</tr>
-					<tr>
-						<th><spring:message code='ezTask.t2003' /></th>
-						<td style="width:100%">
-							<div>
-								<asp:label id="tasktype" Runat="server"></asp:label>
-							</div>
-						</td>
-						<th><spring:message code='ezTask.t156' /></th>
-						<td>
-							<div>
-								<asp:label id="LabelImportance" Runat="server"></asp:label>
-							</div>
-						</td>
-					</tr>
-					<tr id ="persontr">
-						<th><spring:message code='ezTask.t2005' /></th>
-						<td colspan="3" width="100%">
-							<div id="personlist" style="OVERFLOW-Y: auto; padding-top:2px">
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<th><spring:message code='ezTask.t157' /></th>
-						<td colspan="3" style="width:100%">
-							<div style="OVERFLOW-Y: auto; HEIGHT: 20px;">
-								<asp:label id="LabelShare" runat="server"></asp:label>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<th><spring:message code='ezTask.t158' /></th>
-						<td colspan="3">
-							<div>
-								<asp:Label ID="LabelDate" runat="server"></asp:Label>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<th><spring:message code='ezTask.t118' /></th>
-						<td colspan="3">
-							<div style="overflow-y:auto;padding-top:2px">
-								<asp:label id="LabelSubject" Runat="server"></asp:label>
-							</div>
-						</td>
-					</tr>
-	
-					<c:if test="${taskType == '1' }">
+				<td style="padding-bottom:4px;height: 520px;">
+					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;" onload ="messageload()"></iframe>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding-top:4px;height:20px"  class="pad1">
+					<table class="file">
 						<tr>
-							<th><spring:message code='ezTask.t119' /></th>
-							<td colspan="3">
-								<div style="padding-top:4px">
-									<input type ="radio" id="taskstatus" name ="taskstatuscheckbox" value="1" onclick ="changestatus(this)" style="margin-top:0px"/>
-									<label for ="taskstatus"><spring:message code='ezTask.t97' /></label>
-									<input type ="radio" id="taskstatus2" name ="taskstatuscheckbox" value="2" onclick ="changestatus(this)" style="margin-top:0px"/>
-									<label for ="taskstatus2"><spring:message code='ezTask.t98' /></label>
-									<input type ="radio" id="taskstatus3" name ="taskstatuscheckbox" value="3" onclick ="changestatus(this)" style="margin-top:0px"/>
-									<label for ="taskstatus3"><spring:message code='ezTask.t99' /></label>
-									<input type ="radio" id="taskstatus4" name ="taskstatuscheckbox" value="4" onclick ="changestatus(this)" style="margin-top:0px"/>
-									<label for ="taskstatus4"><spring:message code='ezTask.t100' /></label>
-								</div>
-								<div>
-									<input type ="radio" id="completera" name ="completeracheckbox" value="0" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera">0%</label>
-									<input type ="radio" id="completera2" name ="completeracheckbox" value="10" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera2">10%</label>
-									<input type ="radio" id="completera3" name ="completeracheckbox" value="20" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera3">20%</label>
-									<input type ="radio" id="completera4" name ="completeracheckbox" value="30" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera4">30%</label>
-									<input type ="radio" id="completera5" name ="completeracheckbox" value="40" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera5">40%</label>
-									<input type ="radio" id="completera6" name ="completeracheckbox" value="50" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera6">50%</label>
-									<input type ="radio" id="completera7" name ="completeracheckbox" value="60" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera7">60%</label>
-									<input type ="radio" id="completera8" name ="completeracheckbox" value="70" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera8">70%</label>
-									<input type ="radio" id="completera9" name ="completeracheckbox" value="80" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera9">80%</label>
-									<input type ="radio" id="completera10" name ="completeracheckbox" value="90" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera10">90%</label>
-									<input type ="radio" id="completera11" name ="completeracheckbox" value="100" onclick ="changecomplete(this)" style="margin-top:0px"/>
-									<label for ="completera11">100%</label>
-									<a class="imgbtn" style="vertical-align:middle"><span id ="statusbtn" onClick="update_status()"><spring:message code='ezTask.t96' /></span></a>
-								</div>
+							<th><spring:message code='ezTask.t160' /></th>
+							<td class="pos1"><div id="attachedfileDIV" style="OVERFLOW:auto;HEIGHT:50px;background-color:white;text-align:left"><asp:Literal ID="LiteralAttach" Runat="server"></asp:Literal></div></td>
+							<td class="pos2">
+								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
+								<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
+							<td id="Td2" style="display:none"></td>
 						</tr>
-					</c:if>
-				</table>
-			</td>
-		</tr>
-		<tr>
-			<td style="padding-top:10px;padding-bottom:4px;height:100%">
-			<iframe id="message" class="viewbox" name="message" style="padding:0; height:307px; width:100%; overflow:auto;" onload ="messageload()"></iframe>
-			</td>
-		</tr>
-		<tr>
-			<td style="padding-top:4px;height:20px"  class="pad1">
-				<table class="file">
-					<tr>
-						<th><spring:message code='ezTask.t160' /></th>
-						<td class="pos1"><div id="attachedfileDIV" style="OVERFLOW:auto;HEIGHT:50px;background-color:white;text-align:left"><asp:Literal ID="LiteralAttach" Runat="server"></asp:Literal></div></td>
-						<td class="pos2">
-							<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
-							<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
-						</td>
-						<td id="Td2" style="display:none"></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+					</table>
+				</td>
+			</tr>
+		</table>
 	
-	<c:choose>
-		<c:when test="${type != '2' }">
-			<table id="tablework" class="layout" style="height: 560px;" >
-		</c:when>
-		<c:otherwise>
-			<table id="tablework" class="layout" style="height: 560px;display:none;" >
-		</c:otherwise>
-	</c:choose>
-	
-		<tr>
+		<c:choose>
+			<c:when test="${type != '2' }">
+				<table id="tablework" class="layout" style="height: 560px;" >
+			</c:when>
+			<c:otherwise>
+				<table id="tablework" class="layout" style="height: 560px;display:none;" >
+			</c:otherwise>
+		</c:choose>
+		
+		<%-- <tr>
 			<td style="height:20px">
 				<table class="content">
 					<c:if test="${taskType != '1' }">
@@ -1093,10 +1142,10 @@
 					</c:if>
 				</table>
 			</td>
-		</tr>
+		</tr> --%>
 		
-		<c:choose>
-			<c:when test="${userInfo.id == personID }">
+<%-- 		<c:choose> --%>
+			<%-- <c:when test="${userInfo.id == personID }"> 이부분이 레이어팝업으로 들어가야함
 				<tr>
 					<td style="height:100%">            
 						<iframe id="message2" class="viewbox" src="/myoffice/ezEditor/Select_Editor.aspx?type=TASK" name="message2" style="padding:0; height:100%; width:100%; overflow:auto;" onload ="loadiframe()"></iframe>            
@@ -1108,11 +1157,11 @@
 						<iframe id="dadiframe" name="dadiframe" style="width:100%;height:100%;border:0px" src="/myoffice/ezTask/DragandDropiframe.aspx"></iframe>
 					</td>
 				</tr>
-			</c:when>
-			<c:otherwise>
+			</c:when> --%>
+<%-- 			<c:otherwise> --%>
 				<tr style="vertical-align:top">
-					<td colspan="3" style="padding-top:10px;padding-bottom:4px;">
-						<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:444px; width:100%; overflow:auto;" onload ="messageload()"></iframe>
+					<td colspan="3" style="padding-bottom:4px; height:520px;">
+						<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;" onload ="messageload()"></iframe>
 					</td>
 				</tr>
 				<tr style="vertical-align:top">
@@ -1120,7 +1169,11 @@
 						<table class="file">
 							<tr>
 								<th><spring:message code='ezTask.t160' /></th>
-								<td class="pos1"><div id="attachedfileDIV2" style="OVERFLOW: auto;HEIGHT: 50px;background-color:white;text-align:left"><asp:Literal ID="Literal1" Runat="server"></asp:Literal></div></td>
+								<td class="pos1">
+									<div id="attachedfileDIV2" style="OVERFLOW: auto;HEIGHT: 50px;background-color:white;text-align:left">
+										<asp:Literal ID="Literal1" Runat="server"></asp:Literal>
+									</div>
+								</td>
 								<td class="pos2"><a class="imgbtn">
 									<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
 									<a class="imgbtn"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
@@ -1129,8 +1182,8 @@
 						</table>
 					</td>
 				</tr>
-			</c:otherwise>
-		</c:choose>
+<%-- 			</c:otherwise> --%>
+<%-- 		</c:choose> --%>
 		
 		</table>
 		
@@ -1183,17 +1236,17 @@
 							<tr>
 								<th><spring:message code='ezTask.t162' /></th>
 								<td style="width:330px;white-space:nowrap"><div id="printCreator"></div></td>
-								<th><spring:message code='ezTask.t163")%></th>
+								<th><spring:message code='ezTask.t163' /></th>
 								<td style="width:150px;white-space:nowrap;padding-right:15px"><div id="printCreateDate"></div></td>
 							</tr>
 							<tr>
-								<th><spring:message code='ezTask.t164")%></th>
+								<th><spring:message code='ezTask.t164' /></th>
 								<td><div id="printStatus"></div></td>
-								<th><spring:message code='ezTask.t165")%></th>
+								<th><spring:message code='ezTask.t165' /></th>
 								<td ><div id="printImportance"></div></td>
 							</tr>
 							<tr>
-								<th><spring:message code='ezTask.t166")%></th>
+								<th><spring:message code='ezTask.t166' /></th>
 								<td colspan="3" style="width:100%"><div id="printShare"></div></td>
 							</tr>
 							<tr>
