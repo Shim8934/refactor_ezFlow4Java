@@ -231,6 +231,31 @@
 	            if (_funCode == 2)
 	                parent.frames["right"].WriteDateSchedule_left(obj)
 	        }
+	        
+	        //이효진 상세화면 임시
+	        function ReadTask() {
+		        /* var taskid = GetAttribute(elem.parentElement, "taskid");
+		        var parentid = GetAttribute(elem.parentElement, "parentid");
+		        var repeatcount = GetAttribute(elem.parentElement, "repeatcount")
+		        var date = GetAttribute(elem.parentElement, "startdate") */
+		        var taskid = '1';
+		        var parentid = '0';
+		        var repeatcount = '0';
+		        var date = '2017-08-11';
+		        var feature = GetOpenPosition(780, 900);
+		        if (parentid != "0")
+		            taskid = parentid;
+		
+		        if (CrossYN()) {
+		            window.open("/ezTask/taskRead.do" + "?taskID=" + taskid + "&date=" + date, "", "height = 900px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        } else {
+		            if (pUse_Editor == "" || pUse_Editor == "CK") {
+		                window.open("/ezTask/taskRead.aspx" + "?taskID=" + taskid + "&date=" + date, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            } else {
+		                window.open("/ezTask/taskRead_IE.aspx" + "?taskID=" + taskid + "&date=" + date, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            }
+		        }
+		    }
            
 		</script>
 	
@@ -256,6 +281,7 @@
 		    <ul>
 			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
 			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
+			    <li><span id='Task_Search' onClick="ReadTask()" style="width:100%;display:inline-block;">&nbsp;읽기 임시</span></li>
 		    </ul>
 	        <h3><span id='Schedule_Config' onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
 		</div>		
