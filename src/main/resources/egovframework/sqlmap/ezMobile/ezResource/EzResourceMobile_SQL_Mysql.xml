@@ -165,6 +165,7 @@
 		<result property="resId"				column="RESID"				columnIndex="26"/>
 		<result property="userId"					column="USERID"					columnIndex="27"/>
 		<result property="tenantId"				column="TENANT_ID"				columnIndex="28"/>
+		<result property="brdNm"				column="BRDNM"				columnIndex="29"/>
 	</resultMap>
     
     <select id="MResourceDAO.getAdmSubClsTree" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
@@ -653,15 +654,22 @@
 		<select id="MResourceDAO.getResFavoriteList" parameterClass="Map" resultClass="MResourceScheduleVO">
 		<![CDATA[
 			SELECT
-				RESID,
-				USERID,
-				TENANT_ID
+				A.RESID,
+				A.USERID,
+				A.RESCOMPANY,
+				A.TENANT_ID,
+				B.BRD_NM BRDNM
 			FROM
-				TBL_RS_FAVORITE
+				TBL_RS_FAVORITE A
+			JOIN 
+			    TBL_RS_BRD B
+			ON A.RESID = B.BRD_ID AND A.TENANT_ID = B.TENANT_ID AND A.RESCOMPANY = B.BRD_COMPANY   	
 			WHERE
-				USERID = #v_PUSERID#
+				A.USERID = #v_PUSERID#
 			AND
-				TENANT_ID = #tenantID#
+				A.TENANT_ID = #tenantID#
+			AND 
+				A.RESCOMPANY = #v_PCOMPANYID#	
 		]]>
 
 		
@@ -671,9 +679,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_RS_FAVORITE
-     			( RESID, USERID, TENANT_ID )
+     			( RESID, RESCOMPANY, USERID, TENANT_ID )
      		VALUES
-     			( #v_PRESID#, #v_PUSERID#, #tenantID# )
+     			( #v_PRESID#, #v_PCOMPANYID#, #v_PUSERID#, #tenantID# )
 		]]>
 	</insert>
 	
