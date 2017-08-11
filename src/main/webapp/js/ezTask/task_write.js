@@ -225,7 +225,7 @@ function manage_share(type) {
     switch (type) {
         case 1:
 //            var rtn = window.showModalDialog("/ezTask/taskSelectAttendatn.do?type=P&title=" + encodeURI(strLang15) + "", g_person, "dialogHeight:655px; dialogWidth:970px; status:no; scroll:no; help:no; edge:sunken");
-        	var rtn = window.showModalDialog("/ezTask/taskSelectAttendant.do", g_person, "dialogHeight:655px; dialogWidth:970px; status:no; scroll:no; help:no; edge:sunken");
+        	var rtn = window.open("/ezTask/taskSelectAttendant.do", g_person, "height=660px, width=950px, status:no, scroll:no");
         	if (typeof (rtn) != "undefined") {
                 if (rtn["id"].length > 1) {
                     alert(strLang54);
@@ -259,7 +259,7 @@ function manage_share(type) {
             break;
         case 2:
 //            var rtn = window.showModalDialog("/myoffice/ezTask/task_select_entity_Cross.aspx?title=" + encodeURI(strLang15) + "", g_share, "dialogHeight:655px; dialogWidth:970px; status:no; scroll:no; help:no; edge:sunken");
-        	var rtn = window.showModalDialog("/ezTask/taskSelectAttendant.do", g_person, "dialogHeight:655px; dialogWidth:970px; status:no; scroll:no; help:no; edge:sunken");
+        	var rtn = window.open("/ezTask/taskSelectAttendant.do", g_person, "height=660px, width=950px, status:no, scroll:no");
         	if (typeof (rtn) != "undefined") {
                 g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
