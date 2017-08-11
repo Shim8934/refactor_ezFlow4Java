@@ -79,15 +79,24 @@ public class EzTaskController {
 		return "/ezTask/taskSearch";
 	}*/
 	
-	@RequestMapping(value = "/ezTask/taskSearch.do")
-	public String taskSearch() throws Exception {
-		return "/ezTask/taskSearch";
-	}
+	
 	
 	
 	/* 정수현*/
+	
+	/**
+	 * 업무관리 환경설정
+	 */
 	@RequestMapping(value = "/ezTask/taskConfig.do")
 	public String taskConfig() throws Exception {
 		return "/ezTask/taskConfig";
+	}
+
+	/**
+	 * 업무관리 검색
+	 */
+	@RequestMapping(value = "/ezTask/taskSearch.do")
+	public String taskSearch() throws Exception {
+		return "/ezTask/taskSearch";
 	}
 }
