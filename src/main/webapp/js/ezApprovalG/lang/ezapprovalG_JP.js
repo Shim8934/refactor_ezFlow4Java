@@ -824,9 +824,9 @@ var strLangModifyFlag3 = "修正";
 // Etc
 var strLangEtcAprType4 = "専決"; // 문서 싸인칸에 표시하는 전결문자
 var strLangEtcAprState4 = "搬送"; // 문서 싸인칸에 표시하는 반송문자
-var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept.xml"; // xml 파일 처리
-var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept.xml"; // xml 파일 처리
-var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept.xml";
+var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept3.xml"; // xml 파일 처리
+var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept3.xml"; // xml 파일 처리
+var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept3.xml";
 var strLang1101 = "その部門に受発信者が存在しない"
 var strLang1102 = "宛先に登録することができない部門です。"
 var strLang1103 = "HWP is not supported(Draft/Re-draft)."
