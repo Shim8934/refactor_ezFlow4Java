@@ -1,7 +1,17 @@
 package egovframework.ezEKP.ezTask.web;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 
 /** 
  * @Description [Controller] 사용자 - ToDo 
@@ -18,6 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class EzTaskController {
+	private static final Logger logger = LoggerFactory.getLogger(EzEmailAdminController.class);
+	
+	@Resource(name = "egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
 	/* 이효진*/
 	
 	/**
@@ -25,6 +40,10 @@ public class EzTaskController {
 	 */
 	@RequestMapping(value="/ezTask/taskMain.do")
 	public String taskMain() throws Exception {
+		logger.debug("taskMain started.");
+		
+		logger.debug("taskMain ended.");
+		
 		return "/ezTask/taskMain";
 	}
 	
@@ -32,16 +51,25 @@ public class EzTaskController {
 	 * 업무작성화면 조회
 	 */
 	@RequestMapping(value = "/ezTask/taskWrite.do")
-	public String taskWrite() throws Exception {
+	public String taskWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskWrite started.");
+		
+		logger.debug("taskWrite ended.");
+		
 		return "/ezTask/taskWrite";
 	}
 	
-	/*@RequestMapping(value = "/ezTask/taskSearch.do")
-	public String taskSearch() throws Exception {
-		return "/ezTask/taskSearch";
+	@RequestMapping(value = "/ezTask/taskRead.do")
+	public String taskRead() throws Exception {
+		logger.debug("taskRead started.");
+		
+		
+		logger.debug("taskRead ended.");
+		
+		return "/ezTask/taskRead";
 	}
 	
-	@RequestMapping(value = "/ezTask/taskSearch.do")
+	/*@RequestMapping(value = "/ezTask/taskSearch.do")
 	public String taskSearch() throws Exception {
 		return "/ezTask/taskSearch";
 	}
