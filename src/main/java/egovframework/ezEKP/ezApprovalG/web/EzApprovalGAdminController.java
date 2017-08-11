@@ -845,9 +845,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("comID");
-		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 
-		String result = ezApprovalGAdminService.getContainerInfoManage(deptID, "LIST", companyID, primary, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getContainerInfoManage(deptID, "LIST", companyID, lang, userInfo.getTenantId());
 		
 		logger.debug("apprMgetContInfo ended.");
 		

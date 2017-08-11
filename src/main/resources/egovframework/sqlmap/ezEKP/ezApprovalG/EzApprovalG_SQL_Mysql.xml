@@ -6542,7 +6542,11 @@
 								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
 								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL
 							   	<isEqual property="approvalFlag" compareValue="S">
-								   		  , C.NAME as DOCSTATENAME ,
+								   		  ,CASE WHEN $v_PSTRLANG$ = '1' THEN C.NAME
+								   		  		WHEN $v_PSTRLANG$ = '2' THEN C.NAME2
+								   		  		WHEN $v_PSTRLANG$ = '3' THEN C.NAME3
+								   		  		WHEN $v_PSTRLANG$ = '4' THEN C.NAME4
+								   		  END as DOCSTATENAME,
 								   		  CASE WHEN processYN = 'H' THEN #v_H#
 							 				   WHEN processYN = 'I' THEN #v_I#
 							                   WHEN processYN = 'N' THEN #v_N#

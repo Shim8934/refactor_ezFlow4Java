@@ -142,7 +142,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String hideCabinet = config.getProperty("config.hideCabinet");
 		String userCont = "";
 		StringBuffer containers = new StringBuffer();
-		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
 		
