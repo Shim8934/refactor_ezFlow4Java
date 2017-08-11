@@ -6,10 +6,10 @@
 	<head>
 		<title>task_main</title>
 		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
+		<link rel="stylesheet" href="<spring:message code='ezTask.e1' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<link rel="stylesheet" href="<spring:message code='ezTask.e1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<STYLE type="text/css"> 
 		.pagetd{padding-top:6px; }
@@ -72,23 +72,8 @@
 		    }
 	
 		    function WriteTask() {
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            var feature = GetOpenPosition(760, 750);
-		            window.open("/myoffice/ezTask/task_write_Cross.aspx", "",
-		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
-		        else {
-		            if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                var feature = GetOpenPosition(760, 660);
-		                window.open("/myoffice/ezTask/task_write.aspx", "",
-		                "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            }
-		            else {
-		                var feature = GetOpenPosition(760, 660);
-		                window.open("/myoffice/ezTask/task_write_IE.aspx", "",
-		                "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            }
-		        }
+                var feature = GetOpenPosition(760, 660);
+                window.open("/ezTask/taskWrite.do", "", "height = 675px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
 			var BlockSize = 10;

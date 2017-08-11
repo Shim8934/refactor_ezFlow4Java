@@ -71,4 +71,13 @@ public class EzTaskController {
 	public String taskSearch() throws Exception {
 		return "/ezTask/taskSearch";
 	}
+
+	/**
+	 * 업무관리 검색
+	 */
+	@RequestMapping(value = "/ezTask/taskSelectAttendant.do")
+	public String taskSelectAttendant() throws Exception {
+		return "/ezTask/taskSelectAttendant";
+	}
+
 }
