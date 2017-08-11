@@ -1,6 +1,7 @@
 package egovframework.ezMobile.ezBoard.web;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -121,17 +122,7 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
-			List<MBoardItemVO> list = null;
-			
-			//if (boardId != null && boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-				//새게시물 가져오기 리스트
-				//list = mBoardService.getNewBoarditemList(boardInfo, info, info.getUserId());
-			//}
-			
-			//if (boardId != null && !boardId.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
-				//일반게시판 가져오기 리스트
-				list = mBoardService.getBoardItemList(boardInfo, info, info.getUserId());
-			//}
+			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, info.getUserId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -147,7 +138,6 @@ public class MBoardGWController {
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/list] ended.");
 		return result;
 	}
-	
 	
 	/**
 	 * 모바일 G/W 게시판 [GET] 즐겨찾기에 등록된 게시판 폴더 리스트
@@ -185,7 +175,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/{type}/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object boardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request) throws Exception {		
+	public Object boardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -197,11 +187,16 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
-
+			
+			//mht 파일 가져오기
+			String realPath = commonUtil.getRealPath(request);
+			String domain = request.getServerName() + ":" + request.getServerPort();
+			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", boardItem);
-			
+			result.put("content", mhtContent);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -322,7 +317,6 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
-			
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
