@@ -172,6 +172,8 @@ public class MLoginGWController {
     				String timeZone = "";
     				String maintype = "";
     				String listCnt = "";
+    				String useSearch = "";
+    				String useSecurity = "";
 					
     				String returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
     				
@@ -205,18 +207,22 @@ public class MLoginGWController {
     				    timeZone = "235|+09:00";
     				    maintype = "D";
     				    listCnt = "10";
+    				    useSearch = "Y";
+    				    useSecurity = "N";
     				    
-    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, "Y", "N", tenantId);    					
+    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSearch, useSecurity, tenantId);    					
     				} else {
     					lang = mOptionVO.getLang();
     					timeZone = mOptionVO.getTimeZone();
         				maintype = mOptionVO.getMainType();
         				listCnt = mOptionVO.getListCnt();
+        				useSearch = mOptionVO.getUseSearch();
+        				useSecurity = mOptionVO.getUseSecurity();
     				}
     				
     				StringBuilder cookieInfo = new StringBuilder();
     				cookieInfo.append("{\"uid\" : \"" + uid + "\", \"ip\" : \"" + ip + "\", \"locale\" : \"" + returnValue + "\", \"lang\" : \"" + lang + "\", \"timeZone\" : \"" + timeZone + "\", \"tenantId\" : " + tenantId);
-    				cookieInfo.append("\"mainType\" : \"" + maintype + "\", \"listCnt\" : \"" + listCnt + "\" }");
+    				cookieInfo.append("\"mainType\" : \"" + maintype + "\", \"listCnt\" : \"" + listCnt + "\", \"useSearch\" : \"" + useSearch + "\", \"useSecurity\" : \"" + useSecurity + "\" }");
     				
     				result.put("status", "ok");
     				result.put("code", "0");
