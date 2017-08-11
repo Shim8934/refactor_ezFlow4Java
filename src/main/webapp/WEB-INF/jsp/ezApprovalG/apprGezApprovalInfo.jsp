@@ -203,8 +203,7 @@
 	        	initdatepicker();
 	        });
 	        
-	        window.onload = function () {
-alert("<<<pIniGubun : " + pIniGubun);	        	
+	        window.onload = function () {        	
 	        	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
@@ -1009,8 +1008,7 @@ alert("<<<pIniGubun : " + pIniGubun);
 		        return getXmlString(rtnXml);
 		    }
 		
-		    function CheckAprPerson() {  	
-alert("<<<CheckAprPerson");		    	
+		    function CheckAprPerson() {  	    	
 		        var pAPRLINE = new ListView();
 		        pAPRLINE.LoadFromID("lvAPRLINE");
 		

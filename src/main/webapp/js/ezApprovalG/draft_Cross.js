@@ -1877,7 +1877,6 @@ function openFormUI() {
 
 function openFormUI_Complete(ret) {
     DivPopUpHidden();
-alert("<<<openFormUI_Complete");
     pFormHref = ret[0];
     pDocType = ret[1];
 
@@ -2003,7 +2002,6 @@ function SetBtnStateTrue() {
     }
 }
 function createNewDoc() {
-alert("<<<createNewDoc");
     try {
     	var result = "";
         $.ajax({

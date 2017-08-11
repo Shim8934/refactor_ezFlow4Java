@@ -3033,7 +3033,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         String extYN = "";
         String langData = commonUtil.getMultiData(lang, tenantID);
         rtnXML.append("<ROWS>");
-        
+        logger.debug("<<<dlength : " + dlength);
         for (int k = 0; k < dlength; k++) {
         	subSQL = ezOrganService.getPropertyList(docXML.getElementsByTagName("DEPTID").item(k).getTextContent().trim(), "displayName;extensionAttribute2", commonUtil.getPrimaryData(lang, tenantID),tenantID);
         	
@@ -3070,8 +3070,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append(deptXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "</EMAIL>");
             rtnXML.append("<DISPLAYNAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + langData).item(0).getTextContent()) + "</DISPLAYNAME>");
             rtnXML.append("<JOBTITLE></JOBTITLE><JOBTITLE2></JOBTITLE2></ROW>");
+            logger.debug("<<<in FOR rtnXML : " + rtnXML.toString());
         }
-        
+        logger.debug("<<<getFormRecvApr rtnXML : " + rtnXML.toString());
+        logger.debug("<<<getFormRecvApr rtnXML.trim() : " + rtnXML.toString().trim());
         if (rtnXML.toString().trim().equals("<ROWS>") && !userID.trim().equals("")) {
         	String isUse = getCode2Name("A44", "002", companyID, lang, tenantID);
 			
@@ -3109,6 +3111,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     rtnXML.append("<DISPLAYNAME>" + "" + "</DISPLAYNAME><JOBTITLE><![CDATA[");
                     rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(p).getTextContent().trim() + "]]></JOBTITLE><JOBTITLE2><![CDATA[");
                     rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(p).getTextContent().trim() + "]]></JOBTITLE2></ROW>");
+                    logger.debug("<<<in FOR rtnXML : " + rtnXML.toString());
         		}
         	}
         }
