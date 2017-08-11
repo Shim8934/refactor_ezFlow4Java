@@ -10,7 +10,9 @@ public class MApprovalGDocInfoVO {
 	/** 기안자*/
 	private String writerName;
 	/** 기안자부서명*/
-	private String wirterDeptName;
+	private String writerDeptName;
+	/** 기안자직위*/
+	private String writerJobTitle;
 	/** 원본 문서번호*/
 	private String orgDocID;
 	/** 첨부여부*/
@@ -27,6 +29,8 @@ public class MApprovalGDocInfoVO {
 	private String href;
 	/** 양식 아이디*/
 	private String formID;
+	/** */
+	private String docState;
 	
 	public String getDocID() {
 		return docID;
@@ -52,11 +56,17 @@ public class MApprovalGDocInfoVO {
 	public void setWriterName(String writerName) {
 		this.writerName = writerName;
 	}
-	public String getWirterDeptName() {
-		return wirterDeptName;
+	public String getWriterDeptName() {
+		return writerDeptName;
 	}
-	public void setWirterDeptName(String wirterDeptName) {
-		this.wirterDeptName = wirterDeptName;
+	public void setWriterDeptName(String writerDeptName) {
+		this.writerDeptName = writerDeptName;
+	}
+	public String getWriterJobTitle() {
+		return writerJobTitle;
+	}
+	public void setWriterJobTitle(String writerJobTitle) {
+		this.writerJobTitle = writerJobTitle;
 	}
 	public String getOrgDocID() {
 		return orgDocID;
@@ -105,5 +115,11 @@ public class MApprovalGDocInfoVO {
 	}
 	public void setAprMemberDeptID(String aprMemberDeptID) {
 		this.aprMemberDeptID = aprMemberDeptID;
+	}
+	public String getDocState() {
+		return docState;
+	}
+	public void setDocState(String docState) {
+		this.docState = docState;
 	}
 }

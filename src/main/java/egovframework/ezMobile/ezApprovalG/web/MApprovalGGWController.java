@@ -194,10 +194,12 @@ public class MApprovalGGWController {
 		
 		try {
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 			String serverName = request.getHeader("x-user-host");
 			
 			LOGGER.debug("serverName : " + serverName);
 			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("type : " + type);
 			
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
@@ -205,16 +207,20 @@ public class MApprovalGGWController {
 			String domain = request.getServerName() + ":" + request.getServerPort();
 			//본문
 			String bodyHTML = mApprovalGService.getMHTBody(docId, realPath, domain, userInfo, locale);
-			//결재진행
-			String docState = mApprovalGService.getDocState(docId, userInfo.getCompanyId(), userInfo.getTenantId());
+			//결재문서정보
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, userInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
 			//회수 가능여부
 			String callBackYN = ezApprovalGService.getCallBackYN(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId());
 			
+			JSONObject totalData = new JSONObject();
+			
+			totalData.put("bodyHTML", bodyHTML);
+			totalData.put("docInfo", approvalGDocInfoVO);
+			totalData.put("callBackYN", callBackYN);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", bodyHTML);
-			result.put("docState", docState);
-			result.put("callBackYN", callBackYN);
+			result.put("data", totalData);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
@@ -621,7 +627,7 @@ public class MApprovalGGWController {
 			String rtnVal = "";
 			
 			//docId로만 정보 가져오기
-			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, type, userInfo.getCompanyId(), userInfo.getTenantId());
+			MApprovalGDocInfoVO approvalGDocInfoVO = mApprovalGService.getAprDocInfo(docId, "DO", userInfo.getLang(), userInfo.getCompanyId(), userInfo.getTenantId());
 			
 			LoginVO loginVO = new LoginVO();
 			

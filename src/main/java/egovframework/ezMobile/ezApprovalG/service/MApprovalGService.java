@@ -38,7 +38,7 @@ public interface MApprovalGService {
 
 	public int checkPass(MCommonVO userInfo, String shaEncPassword) throws Exception;
 
-	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String companyId, int tenantId) throws Exception;
+	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId) throws Exception;
 
 	public String getDocState(String docId, String companyId, int tenantId) throws Exception;
 

@@ -171,13 +171,13 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
         String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
         LOGGER.debug("strHTML : " + strHTML);
         
-        Document doc = Jsoup.parse(strHTML);
-        
-        String bodyHTML = doc.getElementById("body").html();
+//        Document doc = Jsoup.parse(strHTML);
+//        
+//        String bodyHTML = doc.getElementById("body").html();
 
 		LOGGER.debug("getMHTBody ended");
 		
-		return bodyHTML;
+		return strHTML;
 	}
 
 	@Override
@@ -346,19 +346,19 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	}
 
 	@Override
-	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String companyId, int tenantId) throws Exception {
+	public MApprovalGDocInfoVO getAprDocInfo(String docId, String type, String lang, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAprDocInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docId);
+		map.put("type", type);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
 		map.put("companyID", companyId);
 		
 		MApprovalGDocInfoVO approvalGDocInfoVO = new MApprovalGDocInfoVO();
 		
-		if (type.equals("APR") || type.equals("BAN") || type.equals("CHECK")) {
-			approvalGDocInfoVO = mApprovalGDAO.getAprDocInfo(map);
-		}
+		approvalGDocInfoVO = mApprovalGDAO.getAprDocInfo(map);
 
 		LOGGER.debug("getAprDocInfo ended");
 		
