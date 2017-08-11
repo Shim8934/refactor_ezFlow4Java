@@ -19,6 +19,7 @@
 		<script type="text/javascript">
 			var PostTreeView = null;
 			var treeconfig = "";
+			var listCount = "";
 			var EventCheck = false;
 			var CurrentHeight = 0;
 			var CurrenWidth = 0;
@@ -127,25 +128,46 @@
 
 		        deleteFolder = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
 
-				if (confirm("<spring:message code='ezCircular.t46' />")) {
-					$.ajax({
-						method : "POST",
-						dataType : "text",
-						async : false,
-						url : "/ezCircular/circularDeleteFolder.do",
-						data : {
-							deleteFolder : deleteFolder 
-						},
-						success : function() {
-							onclick_Complete();
-						},
-						error : function() {
-							alert("<spring:message code='ezCircular.t102' />");
-						}
-					})
-				}
+		        checkFolderList(deleteFolder); // 문서함에 회람이 있는지 없는지 확인
+
+		        if (listCount > 0) {
+		        	alert("<spring:message code='ezCircular.t194' />");
+		        } else {
+					if (confirm("<spring:message code='ezCircular.t46' />")) {
+						$.ajax({
+							method : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezCircular/circularDeleteFolder.do",
+							data : {
+								deleteFolder : deleteFolder 
+							},
+							success : function() {
+								onclick_Complete();
+							},
+							error : function() {
+								alert("<spring:message code='ezCircular.t102' />");
+							}
+						})
+					}		        	
+		        }
 		    }
 		    
+		    function checkFolderList(deleteFolder) {
+		    	$.ajax({
+		    		method : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezCircular/circularCheckFolder.do",
+		    		data : {
+		    			deleteFolder : deleteFolder
+		    		},
+		    		success : function(result) {
+		    			listCount = result.deleteListCount;
+		    		}
+		    	})
+		    }
+
 		    function close_onclick() {
 		    	window.close();
 		    }

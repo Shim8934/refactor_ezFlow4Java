@@ -1731,4 +1731,23 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("insertCommentState ended.");
 	}
 
+	@Override
+	public int checkFolder(String deleteFolder, String memberID, int tenantID) throws Exception {
+		logger.debug("checkFolder started.");
+		logger.debug("folderID : " + deleteFolder);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderID", deleteFolder);
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		
+		int deleteListCount = ezCircularDAO.checkFolder(map);
+
+		logger.debug("deleteListCount : " + deleteListCount);
+		logger.debug("checkFolder ended.");
+
+		return deleteListCount;
+	}
+
 }
