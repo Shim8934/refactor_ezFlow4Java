@@ -188,6 +188,19 @@ public class MBoardGWController {
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 			
+			//boardInfo
+			String primary = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			LOGGER.debug("deptPathCode = "+deptPathCode);
+			
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+			//상세보기일때 type boardItem으로 지정
+			boardInfo.setType("boardItem");
+			
 			//mht 파일 가져오기
 			String realPath = commonUtil.getRealPath(request);
 			String domain = request.getServerName() + ":" + request.getServerPort();
@@ -197,6 +210,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", boardItem);
 			result.put("content", mhtContent);
+			result.put("boardInfo", boardInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
