@@ -187,6 +187,7 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
 			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
 			//boardInfo
 			String primary = commonUtil.getMultiData(info.getLang(), info.getTenantId());
