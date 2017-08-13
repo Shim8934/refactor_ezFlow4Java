@@ -488,42 +488,45 @@
 	
 	<select id="MResourceDAO.getResScheduleDetail" parameterClass="Map" resultClass="MResourceScheduleVO">
 		<![CDATA[
-			SELECT 
-				NUM ,
-                PNUM ,
-                OWNERID ,
+			SELECT
+				A.NUM ,
+                A.PNUM ,
+                A.OWNERID ,
+                A.TENANT_ID,
+                A.COMPANYID,
                 A.title title  ,
-                LOCATION ,
-                TIMEDISPLAY ,
-                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-                ALERTTIME ,
-                REFLAG ,
-                GRESFLAG ,
-                WRITERID ,
-                IMPORTANCE ,
-                ENTRYLIST ,
-                ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
-                ATTACHFLAG ,
-                CHARACTERID ,
-                APPROVEFLAG ,
+                A.LOCATION ,
+                A.TIMEDISPLAY ,
+                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+                DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                A.ALERTTIME ,
+                A.REFLAG ,
+                A.GRESFLAG ,
+                A.WRITERID ,
+                A.IMPORTANCE ,
+                A.ENTRYLIST ,
+                A.ALLDAY ,
+                DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                A.ATTACHFLAG ,
+                A.CHARACTERID ,
+                A.APPROVEFLAG ,
                 B.DISPLAYNAME OWNERNM  ,
                 B.DISPLAYNAME2 OWNERNM2  ,
                 B.DESCRIPTION DEPTNM  ,
                 B.DESCRIPTION2 DEPTNM2  ,
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
-				IF(isnull(F.RESID),'N','Y') FAVORITE  
-           	FROM 
-           		TBL_RS_SCHEDULE A
-			JOIN
-				TBL_USERMASTER B 
-			ON
-				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
-			LEFT JOIN 
-				TBL_RS_FAVORITE F
-			ON A.OWNERID = F.RESID AND A.TENANT_ID = F.TENANT_ID AND A.WRITERID = F.USERID	
+				IF(isnull(F.RESID),'N','Y') FAVORITE,
+				    C.BRD_NM BRDNM,
+					 D.STARTDATETIME REPSTARTDATE,
+					 D.ENDDATETIME REPENDDATE,
+					 CASE A.REFLAG WHEN '0' THEN '비반복' WHEN '1' THEN '반복' ELSE '불확실' END REPTYPE  
+			FROM TBL_RS_SCHEDULE A 
+			
+			LEFT JOIN TBL_USERMASTER B ON A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
+			LEFT JOIN TBL_RS_BRD C ON A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID AND A.COMPANYID = C.BRD_COMPANY
+			LEFT JOIN TBL_RS_SCHEDULEREPETITION D ON A.OWNERID = D.OWNERID AND A.NUM = D.NUM AND A.TENANT_ID = D.TENANT_ID AND A.COMPANYID = D.COMPANYID
+			LEFT JOIN TBL_RS_FAVORITE F ON A.OWNERID = F.RESID AND A.TENANT_ID = F.TENANT_ID AND A.WRITERID = F.USERID
           	WHERE
 				A.COMPANYID = #v_PCOMPANYID#			
 			AND
@@ -531,7 +534,7 @@
 			AND  
 				A.OWNERID = #v_POWNERID#
 			AND
-				REFLAG IN('0', '1')
+				A.REFLAG NOT IN('4')
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
