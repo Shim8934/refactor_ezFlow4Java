@@ -2013,7 +2013,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String userId = userInfo.getId();
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String userEmail = userId + "@" + domainName;
+		String userAccount = userId + "@" + domainName;
 		
 		//변수들은 메일발송 실패 시 다시 사용되므로 메일발송 로직 도중 값이 바뀌면 안된다.
 		String url = "";
@@ -2239,7 +2239,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //      string eSimpleMIMEContentTransferEncoding = xmlDoc.GetElementsByTagName("SIMPLE-MIME-CONTENT-TRANSFER-ENCODING").Item(0).InnerText;
 		
 		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-				userEmail, password);
+				userAccount, password);
 		
 		String pResult = null;
 		IMAPAccess ia = null;
@@ -2252,7 +2252,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		do {
 			try {
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale);
+						userAccount, password, egovMessageSource, locale);
 				
 				//메일 발송 재시도일 경우 draftUID의 메일을 지우고 retryFlag와 draftUID를 초기화한다.
 				if (retryFlag) {
@@ -2879,6 +2879,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			            	// 보안메일 처리
 			            	if (isSecureMail) {
+			            		// save secure mail info and get secureId
+			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+		    		        	
+		    		        	if (secureId == 0) {
+		    		        		throw new Exception("INSERTSECUREMAILFAIL");
+		    		        	}
+			            		
 			            		MimeMessage secureMessage = sa.createMimeMessage();
 			            		
 			            		@SuppressWarnings("unchecked")
@@ -2936,10 +2943,57 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureAttachPart.setHeader("Content-Type", "text/html");
-		    		        	String pDirPath = realPath + config.getProperty("upload_mail.ROOT");
-		    		        	File secureAttachFile = new File(pDirPath + commonUtil.separator + "securityAttach.html");
-		    		        	source = new FileDataSource(secureAttachFile);
-		    		        	secureAttachPart.setDataHandler(new DataHandler(source));
+		    		        	
+		    		        	String serverName = userInfo.getServerName();
+		    		        	
+		    		        	sb = new StringBuilder();
+		    		        	sb.append("<!DOCTYPE html>\n");
+		    		        	sb.append("<html style=\"height:100%;\">\n");
+		    		        	sb.append("    <head>\n");
+		    		        	sb.append("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n");
+		    		        	sb.append("        <title>SECURE MAIL</title>\n");
+		    		        	sb.append("        <style>\n");
+		    		        	sb.append("            .security_layerpopup{width:100%; height:100%; background:#f1f1f1;}\n");
+		    		        	sb.append("            .security_layerpopup .popup_img{margin:0px; padding:84px 0px 0px 0px; text-align:center;}\n");
+		    		        	sb.append("            .security_layerpopup .popup_txt{margin:0px; padding:0px; text-align:center; font-size:24px; color:#333; font-weight:600; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;}\n");
+		    		        	sb.append("            .security_layerpopup .popup_txt span{font-size:18px; font-weight:300; letter-spacing:-1px;}\n");
+		    		        	sb.append("            .security_layerpopup form{width:465px; margin: 35px auto;}\n");
+		    		        	sb.append("            .security_layerpopup form fieldset {margin:0; padding:0; border:0; clear:both;}\n");
+		    		        	sb.append("            .security_layerpopup legend {visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0}\n");
+		    		        	sb.append("            .security_layerpopup .password{float:left; width:380px; height:45px; margin:0px; padding::0px; background:url(http://" + serverName + "/images/email/secureMail/input_pw_bg.gif) no-repeat;}\n");
+		    		        	sb.append("            .security_layerpopup #TextPassword {background:url(http://" + serverName + "/images/email/secureMail/pw_txt.png) no-repeat 0px 3px; width:300px; height:43px;  margin:1px 0px 0px 46px; padding:0px 0px 0px 10px; line-height:21px; color:#777; font-size:18px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}\n");
+		    		        	sb.append("            .security_layerpopup .input_text.focus, .input_text.focusnot{background:#fff !important;}\n");
+		    		        	sb.append("            .security_layerpopup .btn{float:left; width:75px; height:45px; margin:0px 0px 0px 10px; padding:0px;}\n");
+		    		        	sb.append("            .security_layerpopup .btn_check{width:75px; height:45px; margin:0px; padding:0px;}\n");
+		    		        	sb.append("        </style>\n");
+		    		        	sb.append("        <script>\n");
+		    		        	sb.append("            function submitForm() {\n");
+		    		        	sb.append("                var f = document.secureForm;\n");
+		    		        	sb.append("                f.submit();\n");
+		    		        	sb.append("            }\n");
+		    		        	sb.append("        </script>\n");
+		    		        	sb.append("    </head>\n");
+		    		        	sb.append("    <body style=\"margin:0;height:100%;\">\n");
+		    		        	sb.append("        <div class=\"security_layerpopup\">\n");
+		    		        	sb.append("            <p class=\"popup_img\"><img src=\"http://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
+		    		        	sb.append("            <p class=\"popup_txt\">해당 메일은 암호화되어있는 보안메일입니다.<br><span>메일을 열람하려면 보낸 사람이 지정한 암호를 입력해야 합니다.</span></p>\n");
+		    		        	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"http://" + serverName + "/ezEmail/mailSecureConfirm.do\">\n");
+		    		        	sb.append("                <fieldset>\n");
+		    		        	sb.append("                    <legend>암호입력 폼</legend>\n");
+		    		        	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" onchange=\"if(this.value.length!=0){this.className=&#39;input_text focus&#39;}\"\n");
+		    		        	sb.append("                                           onblur=\"if (this.value.length==0) {this.className=&#39;input_text&#39;}else {this.className=&#39;input_text focusnot&#39;};\" onfocus=\"this.className=&#39;input_text focus&#39;\" /></p>\n");
+		    		        	sb.append("                    <p class=\"btn\"><input src=\"http://" + serverName + "/images/email/secureMail/btn.gif\" name=\"Button\" type=\"image\" id=\"Button\" tabindex=\"3\" border=\"0\" class=\"btn_check\" /></p>\n");
+		    		        	sb.append("                </fieldset>\n");
+		    		        	sb.append("                <input type=\"hidden\" name=\"secureKey\" value=\"${X-JMocha-Secure-Mail-Key}\" />\n");
+		    		        	sb.append("            </form>\n");
+		    		        	sb.append("        </div>\n");
+		    		        	sb.append("    </body>\n");
+		    		        	sb.append("</html>\n");
+		    		        	
+		    		        	// TODO: secureMailKey 암호화
+		    		        	String secureMailKey = userAccount + "/" + secureId;
+		    		        	secureAttachPart.setContent(sb.toString().replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
+		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureMixedPart.addBodyPart(secureAttachPart);
 		    		        	// make secureBodyPart and add to secureMixedPart - end
 		    		        	
@@ -2947,7 +3001,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
 		    		        	
 		    		        	// TODO: originalFile, encryptedFile 삭제
-		    		        	pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
+		    		        	String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
 		    		        	
 		    		        	File file = new File(pDirPath);
 		    		        	if (!file.exists()) {
@@ -2980,12 +3034,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	
 		    		        	secureMessage.setContent(secureMixedPart);
 		    		        	
-		    		            secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
-		    		        	
-		    		        	if (secureId == 0) {
-		    		        		throw new Exception("INSERTSECUREMAILFAIL");
-		    		        	}
-			            		
 		    		        	// TODO: set secureMail Flag
 //		    		        	secureMessage.setFlag(, set);
 		    		        	secureMessage.setFlag(Flags.Flag.SEEN, true);
@@ -3005,6 +3053,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     				        		throw new Exception("UPDATESECUREMAILFAIL");
     				        	}
 	    			            
+    				        	// 메일을 발송할 때에는 보낸사람의 secureMailKey를 다시 ${X-JMocha-Secure-Mail-Key}로 되돌려놓는다.
+    				        	secureMixedPart.removeBodyPart(secureAttachPart);
+    				        	secureAttachPart.setContent(sb.toString(), "text/html; charset=utf-8");
+    				        	secureMixedPart.addBodyPart(secureAttachPart);
+    				        	
     				        	// 메일을 발송할 때에는 원본메일을 삭제한다.
 	    			            secureMixedPart.removeBodyPart(encryptedOriginalPart);
 	    			            
@@ -3227,7 +3280,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                     Thread.sleep(1000);
                     
                     ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-                            userEmail, password, egovMessageSource, locale);                
+                    		userAccount, password, egovMessageSource, locale);                
                     
                     sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
                     sentFolder.open(Folder.READ_WRITE);
