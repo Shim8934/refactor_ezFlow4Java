@@ -71,7 +71,7 @@
 			};
 			
 			function circularConfirm() {
-				if(!confirm("<spring:message code='ezCircular.t68' />")) {
+				if(!confirm("<spring:message code='ezCircular.t196' />")) {
 					return;
 				}
 				
@@ -430,7 +430,7 @@
             	    <div id="menu">
                 	    <ul>
                 	    	<c:if test="${result.confirmStatus == '0' && result.status == '0'}">
-								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t38' /></span></li>
+								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t195' /></span></li>
                 	    	</c:if>
                 	    	
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
