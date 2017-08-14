@@ -140,6 +140,9 @@
 					case "MailEnv_sub100":
 						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_InboxRule_Cross.aspx";
 						break;
+					case "CircularEnv":
+				        window.parent.frames.right.document.location.href = "/ezCircular/circularConfig.do";
+				        break;
 					default: 
 						break;
 				}
@@ -181,6 +184,7 @@
 			<h2><span id="ApprovalEnv" name="ApprovalEnv" onClick="Approval_Config()" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900008' /></span></h2><ul></ul>
             </c:if>
     		<h2><span id="BoardEnv" name="BoardEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900030' /></span></h2><ul></ul>
+    		<h2><span id="CircularEnv" name="CircularEnv" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900031' /></span></h2><ul></ul>
             </c:if>
 			<h2><span id="TimeZone" name="TimeZone" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900010' /></span><ul></ul></h2>
 		</div>
