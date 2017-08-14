@@ -15,7 +15,6 @@
 		<script type="text/javascript" src="/js/ezCircular/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/lang/ezCircular.js"></script>
 		<script type="text/javascript" src="/js/ezCircular/circular.js"></script>
 		
 		<style>
