@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.google.gson.Gson;
+
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -108,21 +111,25 @@ public class MResourceGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();			
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
-			String companyId = request.getParameter("companyId");
-			String ownerId = request.getParameter("ownerId");
+			String companyId = info.getCompanyId();
+			//String ownerId = request.getParameter("ownerId"); 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-	    			
+	    	
+	    	String ownerId = "";
+	    	
+	    	String writerDt = info.getDeptId();
+	    	
+	    	String offset = info.getOffSet();
+	    	
 	    	LOGGER.debug("utcStartDate: " + utcStartDate);
 	    	LOGGER.debug("utcEndDate: " + utcEndDate);
 	    	
-			List<MResourceScheduleVO> list = mResourceService.getResScheduleList(utcStartDate, utcEndDate, companyId, ownerId, tenantId);
-			
-			LOGGER.debug("size of result: " + list.size());
+	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
