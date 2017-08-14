@@ -77,7 +77,7 @@ var obj = new Object();
     obj.search = "";
     obj.filter = $("#filter option:selected").val();
 
-	$.ajax({
+    $.ajax({
 		type : 'get',
 	    url : '/mobile/ezEmail/mailGetList.do',
 	    data : obj,
