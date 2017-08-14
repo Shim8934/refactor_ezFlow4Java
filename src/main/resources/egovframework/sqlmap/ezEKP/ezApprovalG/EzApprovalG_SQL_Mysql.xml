@@ -7685,8 +7685,12 @@
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 
-					code2, 
-					name$v_LANGTYPE$ AS name
+					code2,
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 
@@ -7705,7 +7709,11 @@
 			<![CDATA[
 				SELECT 
 					code2, 
-					name$v_LANGTYPE$ AS name
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 
