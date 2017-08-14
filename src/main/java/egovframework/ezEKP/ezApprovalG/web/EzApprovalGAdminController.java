@@ -126,7 +126,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String multiData = userInfo.getPrimary();
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 //		폼프로세서 사용하려면 useEditor "" 으로 세팅
@@ -365,7 +365,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String companyID = request.getParameter("companyID");
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
@@ -409,7 +409,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
 		String type = request.getParameter("type");
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String companyID = request.getParameter("companyID");
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
