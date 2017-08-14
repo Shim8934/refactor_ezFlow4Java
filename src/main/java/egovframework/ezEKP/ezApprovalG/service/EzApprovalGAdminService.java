@@ -13,7 +13,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGAdminService {
 
-	public String getContainerInfoManage(String deptID, String type, String companyID, String primary, int tenantID) throws Exception;
+	public String getContainerInfoManage(String deptID, String type, String companyID, String lang, int tenantID) throws Exception;
 
 	public String getContTypeInfo(String type, String companyID, String primary, int tenantID) throws Exception;
 	

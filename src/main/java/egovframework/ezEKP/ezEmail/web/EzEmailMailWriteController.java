@@ -1340,14 +1340,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
+				fileName[i] = fileName[i].replaceAll("[\\\\/:*?\"<>|]", "_");
 				
 				if (fileName[i].lastIndexOf(".") > -1) {
 					fileExt[i] = fileName[i].substring(fileName[i].lastIndexOf(".") + 1);
+					newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
 				} else {
 					fileExt[i] = "";
+					newFileName[i] = UUID.randomUUID().toString();
 				}
-				
-				newFileName[i] = UUID.randomUUID().toString() + "." + fileExt[i];
 				
 				fileSize[i] = f.length();
 				totalFileSize += fileSize[i];

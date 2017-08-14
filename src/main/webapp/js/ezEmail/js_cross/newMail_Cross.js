@@ -1809,7 +1809,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
         XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
         var htmlData = getNodeText(XmlBodyDATA);
-        
+
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriteDate")[0]);
         var Sender = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterName")[0]) + " (" +

@@ -70,7 +70,15 @@
 	            if (CrossYN()) {
 	                addquicklink_dialogArguments[0] = "";
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 625));
+	                
+	              //크롬일때 alert창 크기때문에 크롬일때 구별
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 673));	
+		            } else {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 625));
+		            }
+	                
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
 	            } else {

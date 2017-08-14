@@ -80,7 +80,7 @@
 		    }
 		     function ManageBujae_ini()
 		    {
-		         document.getElementById("mainframe").src = "/myoffice/ezPersonal/BujaeConf/managebujae_cross.aspx";
+		         document.getElementById("mainframe").src = "/ezPersonal/manageBujaeG.do";
 		    }
 		     function ManageBujaeG_ini()
 		    {
