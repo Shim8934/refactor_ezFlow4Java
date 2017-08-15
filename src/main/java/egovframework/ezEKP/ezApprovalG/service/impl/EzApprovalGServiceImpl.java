@@ -3814,6 +3814,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strAprDeptSN = doc.getElementsByTagName("APRDEPT").item(0).getChildNodes().item(2).getTextContent();
 		String strAprDeptTempletName = doc.getElementsByTagName("APRDEPT").item(0).getChildNodes().item(3).getTextContent();
 		
+		/**
+		 * 새로운 즐겨찾기를 등록하는 경우 strAprDeptSN = null
+		 * 기존의 즐겨찾기를 수정하는 경우 strAprDeptSN != null
+		 * */
 		if (strAprDeptSN.trim().equals("")) {
 			strAprDeptSN = getReceiptTempletSN(strFormID, strUserID, companyID, tenantID);
 		} else {
