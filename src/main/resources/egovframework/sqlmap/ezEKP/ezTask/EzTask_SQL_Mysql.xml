@@ -69,7 +69,7 @@
 	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
 	   <![CDATA[
 		    SELECT
-				SharerID,
+				sharerid,
 				case when #primary# = 1 then sharername else sharername2 end as sharername,
 				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname
 			FROM

@@ -7,7 +7,7 @@ public class TaskShareVO {
 	/** 공유대상자ID */
 	private String sharerID;
 	/** 공유대상자이름 */
-	private String sharereName;
+	private String sharerName;
 	/** 공유대상자부서이름 */
 	private String sharerDeptName;
 	/** 완료율 */
@@ -36,11 +36,11 @@ public class TaskShareVO {
 	public void setSharerID(String sharerID) {
 		this.sharerID = sharerID;
 	}
-	public String getSharereName() {
-		return sharereName;
+	public String getsharerName() {
+		return sharerName;
 	}
-	public void setSharereName(String sharereName) {
-		this.sharereName = sharereName;
+	public void setsharerName(String sharerName) {
+		this.sharerName = sharerName;
 	}
 	public String getSharerDeptName() {
 		return sharerDeptName;
@@ -93,7 +93,7 @@ public class TaskShareVO {
 	@Override
 	public String toString() {
 		return "TaskShareVO [taskID=" + taskID + ", sharerID=" + sharerID
-				+ ", sharereName=" + sharereName + ", sharerDeptName="
+				+ ", sharerName=" + sharerName + ", sharerDeptName="
 				+ sharerDeptName + ", completeRate=" + completeRate
 				+ ", completeDate=" + completeDate + ", hasMemo=" + hasMemo
 				+ ", hasAttach=" + hasAttach + ", updateTime=" + updateTime

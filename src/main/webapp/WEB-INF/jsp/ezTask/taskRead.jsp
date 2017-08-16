@@ -15,14 +15,7 @@
 		<script type="text/javascript" src="/js/ezTask/js/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezTask/js/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
-		<style>
-			P {
-				margin-bottom: 0mm;
-				margin-top: 0mm;
-			}
-		</style>
-		
+
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
@@ -815,22 +808,22 @@
 			
 				status += ", <spring:message code='ezTask.t144' />" + completerate + "%";
 			
-			    setNodeText(document.getElementById("printCreator"), '${taskInfoVO.creatorName }');
+			    /* setNodeText(document.getElementById("printCreator"), '${taskInfoVO.creatorName }');
 			    setNodeText(document.getElementById("printCreateDate"), '${taskInfoVO.createDate }');
 			    setNodeText(document.getElementById("printStatus"), status);
 			    setNodeText(document.getElementById("printImportance"), '${taskInfoVO.importance }');
 			    setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("LabelShare")));
 			    setNodeText(document.getElementById("printDate"), '${taskInfoVO.completeDate }');
-			    setNodeText(document.getElementById("printTitle"), '${taskInfoVO.title }');
+			    setNodeText(document.getElementById("printTitle"), '${taskInfoVO.title }'); */
 			    document.getElementById("printComment").innerHTML = document.getElementById("Comment").innerHTML;
 			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
 			
-			    if (tasktype == "1") {
+			    /* if (tasktype == "1") {
 			        document.getElementById("progresstr").style.display = "none";
 			        document.getElementById("printProgress").style.display = "none";
 			        document.getElementById("printattachViewProgress").style.display = "none";
-			    }
+			    } */
 			
 			    if (personid == userid && shareid.indexOf(userid) == -1) {
 			        document.getElementById("printAttach2").innerHTML == "";
@@ -955,6 +948,15 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
+		
+		<table id="taskProgress" class="layout content">
+			<tr>
+				<td>
+					progressBar
+				</td>
+			</tr>
+		</table>
+		<br/>
 		 
 		 <table id="taskInfo" class="layout">
 		 	<tr>
@@ -998,7 +1000,7 @@
 							<th><spring:message code='ezTask.t2005' /></th>
 							<td colspan="3" width="100%">
 <!-- 							담당자부분인것같음 이효진 -->
-<!-- 								<div id="personlist" style="OVERFLOW-Y: auto; padding-top:2px"> -->
+<!-- 								<div id="personlist" style="overflow-Y: auto; padding-top:2px"> -->
 <!-- 								</div> -->
 								<div style="CURSOR:pointer; " onClick="show_personinfo('${taskInfoVO.personID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
 									<c:out value = '${taskInfoVO.personName }' />
@@ -1008,8 +1010,13 @@
 						<tr>
 							<th><spring:message code='ezTask.t157' /></th>
 							<td colspan="3" style="width:100%">
-								<div style="OVERFLOW-Y: auto; HEIGHT: 20px;">
-									<asp:label id="LabelShare" runat="server"></asp:label>
+								<div id="taskShareList" style="overflow-Y: auto; height: 20px;">
+									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
+										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
+											<c:out value = '${taskShareVO.sharerName }' /> (<c:out value = '${taskShareVO.sharerDeptName }' />)
+										</span>
+										<c:if test="${not status.last }">,&nbsp;</c:if>
+									</c:forEach>
 								</div>
 							</td>
 						</tr>
@@ -1107,7 +1114,7 @@
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
-							<td class="pos1"><div id="attachedfileDIV" style="OVERFLOW:auto;HEIGHT:50px;background-color:white;text-align:left"><asp:Literal ID="LiteralAttach" Runat="server"></asp:Literal></div></td>
+							<td class="pos1"><div id="attachedfileDIV" style="overflow:auto;height:50px;background-color:white;text-align:left"><asp:Literal ID="LiteralAttach" Runat="server"></asp:Literal></div></td>
 							<td class="pos2">
 								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
 								<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
@@ -1202,7 +1209,7 @@
 							<tr>
 								<th><spring:message code='ezTask.t160' /></th>
 								<td class="pos1">
-									<div id="attachedfileDIV2" style="OVERFLOW: auto;HEIGHT: 50px;background-color:white;text-align:left">
+									<div id="attachedfileDIV2" style="overflow: auto;height: 50px;background-color:white;text-align:left">
 										<asp:Literal ID="Literal1" Runat="server"></asp:Literal>
 									</div>
 								</td>
@@ -1225,7 +1232,7 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="Comment" style="OVERFLOW: auto;  width:100%; HEIGHT: 520px; BACKGROUND-COLOR: white;padding-top:3px"">
+								<div id="Comment" style="overflow: auto; width:100%; height: 520px; background-color: white; padding-top:3px;">
 									<%-- <asp:Repeater ID="ListComment" Runat="server">
 									<ItemTemplate>
 										<span onclick="show_personinfo('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORID").InnerText %>')" title="<spring:message code='ezTask.t139' />" style="cursor: pointer; color: #2828A5">
@@ -1262,7 +1269,7 @@
 		</table>
 		<div id="printScreen" style="DISPLAY: none; padding-top:50px;">
 			<table class="layout" >
-				<tr>
+				<%-- <tr>
 					<td style="height:20px">
 						<table class="content">
 							<tr>
@@ -1291,36 +1298,39 @@
 							</tr>
 						</table>
 					</td>
-				</tr>
+				</tr> --%>
 				<tr>
-					<td style="padding-top:10px;padding-bottom:4px"><div class='margin' id="printDocument" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;BACKGROUND-COLOR: white"></div></td>
+					<td style="padding-top:10px;padding-bottom:4px"><div class='margin' id="printDocument" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
 				</tr>
 				<tr id="printattachView" style="display:none">
 					<td style="height:20px" class="pad1">
 						<table class="file">
 							<tr>
 								<th><spring:message code='ezTask.t169' /></th>
-								<td style="width:100%"><div id="printAttach" style="margin-top:0px;padding-top:0px;OVERFLOW:visible; HEIGHT: auto; background-color:white;text-align:left;"></div></td>
+								<td style="width:100%"><div id="printAttach" style="margin-top:0px;padding-top:0px;overflow:visible; height: auto; background-color:white;text-align:left;"></div></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
+				
+				<!-- 진행사항 -->
 				<tr id ="progresstr" style="height:20px">
 					<td><spring:message code='ezTask.t2011' /></td>
 				</tr>
 				<tr id ="printProgress">
-					<td style="padding-top:10px;padding-bottom:4px"><div class='margin' id="printDocument2" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;BACKGROUND-COLOR: white"></div></td>
+					<td style="padding-top:10px;padding-bottom:4px"><div class='margin' id="printDocument2" style="padding:10px;BORDER: #b6b6b6 1px solid;height:100%;background-color: white"></div></td>
 				</tr>
 				<tr id="printattachViewProgress" style="display:none">
 					<td style="height:20px" class="pad1">
 						<table class="file">
 							<tr>
 								<th><spring:message code='ezTask.t169' /></th>
-								<td style="width:100%"><div id="printAttach2" style="margin-top:0px;padding-top:0px;OVERFLOW:visible; HEIGHT: auto; background-color:white;text-align:left"></div></td>
+								<td style="width:100%"><div id="printAttach2" style="margin-top:0px;padding-top:0px;overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
+				<!-- 의견 -->
 				<tr id ="optiontr" style="height:20px">
 					<td><spring:message code='ezTask.t2013' /></td>
 				</tr>
@@ -1329,11 +1339,12 @@
 						<table class="file">
 							<tr>
 								<th><spring:message code='ezTask.t2013' /></th>
-								<td style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="OVERFLOW:visible; HEIGHT: auto; background-color:white;text-align:left"></div></td>
+								<td style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
+				
 			</table>
 		</div>
 

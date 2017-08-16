@@ -242,12 +242,12 @@
 		        var parentid = '0';
 		        var repeatcount = '0';
 		        var date = '2017-08-11';
-		        var feature = GetOpenPosition(780, 900);
+		        var feature = GetOpenPosition(780, 935);
 		        if (parentid != "0")
 		            taskid = parentid;
 		
 		        if (CrossYN()) {
-		            window.open("/ezTask/taskRead.do" + "?taskID=" + taskid + "&date=" + date, "", "height = 900px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            window.open("/ezTask/taskRead.do" + "?taskID=" + taskid + "&date=" + date, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        } else {
 		            if (pUse_Editor == "" || pUse_Editor == "CK") {
 		                window.open("/ezTask/taskRead.aspx" + "?taskID=" + taskid + "&date=" + date, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
