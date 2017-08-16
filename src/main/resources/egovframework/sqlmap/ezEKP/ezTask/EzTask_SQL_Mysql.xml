@@ -2,6 +2,7 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezTask">
+<<<<<<< HEAD
 	<typeAlias alias="TaskInfoVO"				type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
@@ -47,5 +48,42 @@
 				taskid = #taskID#
 		]]>
 	</select>
+=======
+	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				delaycolor
+			FROM
+				TBL_TASKCONFIG
+			WHERE
+				tenantid = #tenantID#
+			AND
+				userid = #memberID#
+		]]>
+	</select>
+
+	<insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
+        <![CDATA[
+            INSERT INTO TBL_TASKCONFIG
+                (userid, delaycolor, autodelete, tenantid)
+            VALUES
+                (#memberID#, #delayColor#, #autoDelete#, #tenantID#)
+        ]]>
+    </insert>
+
+    <update id="EzTaskDAO.taskUpdateConfig" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_TASKCONFIG
+            SET
+                delaycolor = #delayColor#,
+                autodelete = #autoDelete#
+            WHERE 
+                userid = #memberID#
+            AND
+                tenantid = #tenantID#      
+        ]]>
+    </update>
+>>>>>>> cdf7d517b3b4ffb5fd16871f91735d19d1302e9c
 </sqlMap>
 

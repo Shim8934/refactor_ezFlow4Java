@@ -140,8 +140,57 @@ public class EzTaskController {
 	 * 업무관리 환경설정
 	 */
 	@RequestMapping(value = "/ezTask/taskConfig.do")
-	public String taskConfig() throws Exception {
+	public String taskConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskConfig started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String _delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
+
+		if (_delayColor == null) {
+			_delayColor = "#ff0000";
+		}
+
+		model.addAttribute("_delayColor", _delayColor);
+
+		logger.debug("taskConfig ended.");
+
 		return "/ezTask/taskConfig";
+	}
+	
+	/**
+	 * 색상선택 화면 호출
+	 */
+	@RequestMapping(value = "/ezTask/taskManyColor.do")
+	public String taskManyColor() throws Exception {
+		logger.debug("taskManyColor started.");
+		
+		logger.debug("taskManyColor ended.");
+		
+		return "/ezTask/taskManyColor";
+	}
+
+	/**
+	 * 업무관리 색상 저장
+	 */
+	@RequestMapping(value = "/ezTask/taskSaveConfig.do")
+	public String taskSaveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("taskSaveConfig started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String delayColor = request.getParameter("delayColor");
+		int autoDelete = 0;
+
+		String _delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
+		
+		if (_delayColor != null) {
+			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, autoDelete, userInfo.getTenantId());
+		} else {
+			ezTaskService.taskSaveConfig(userInfo.getId(), delayColor, autoDelete, userInfo.getTenantId());
+		}
+
+		logger.debug("taskSaveConfig ended.");
+
+		return "json";
 	}
 
 	/**
@@ -153,7 +202,7 @@ public class EzTaskController {
 	}
 
 	/**
-	 * 업무관리 검색
+	 * 업무작성 조직도 호출
 	 */
 	@RequestMapping(value = "/ezTask/taskSelectAttendant.do")
 	public String taskSelectAttendant() throws Exception {
