@@ -66,8 +66,8 @@ public class MResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<MResourceGetAdmSubClsTreeVO> getResFavoriteList(Map<String, Object> map){
-		return  (List<MResourceGetAdmSubClsTreeVO>) list("MResourceDAO.getResFavoriteList", map);
+	public List<MResourceScheduleVO> getResFavoriteList(Map<String, Object> map){
+		return  (List<MResourceScheduleVO>) list("MResourceDAO.getResFavoriteList", map);
 	}
 	
 	@SuppressWarnings("unchecked")

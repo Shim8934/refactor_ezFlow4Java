@@ -29,6 +29,24 @@ public class ResGetScheduleRepetitionVO {
 	private String reCount;
 	/** 하루종일 여부*/
 	private String allDay;
+	/** 캘린더 날짜*/
+	private String date;
+	/** 캘린더 값*/
+	private String value;
+	
+
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
 	
 	public String getOwnerID() {
 		return ownerID;

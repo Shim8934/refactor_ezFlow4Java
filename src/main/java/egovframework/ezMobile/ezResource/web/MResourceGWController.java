@@ -1,27 +1,10 @@
 package egovframework.ezMobile.ezResource.web;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-
-
-
-
-
-
-
-
-
-
-
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -33,27 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
-
-
-
-
-
-
-
-
-
 import com.google.gson.Gson;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
-import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -91,6 +60,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원예약리스트조회
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/main-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceMainList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/main-list/users/{userId}] started.");
@@ -127,6 +97,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원예약리스트조회
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/{type}/list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceList(@PathVariable String type, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/{type}/list] started.");
@@ -137,25 +108,29 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
-			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();			
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
-			String companyId = request.getParameter("companyId");
-			String ownerId = request.getParameter("ownerId");
+			String companyId = info.getCompanyId();
+			//String ownerId = request.getParameter("ownerId"); 
 			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
-	    			
+	    	
+	    	String ownerId = request.getParameter("ownerId");;
+	    	
+	    	String writerDt = info.getDeptId();
+	    	
+	    	String offset = info.getOffSet();
+	    	
 	    	LOGGER.debug("utcStartDate: " + utcStartDate);
 	    	LOGGER.debug("utcEndDate: " + utcEndDate);
+	    	LOGGER.debug("writerDt: " + writerDt);
 	    	
-			List<MResourceScheduleVO> list = mResourceService.getResScheduleList(utcStartDate, utcEndDate, companyId, ownerId, tenantId);
-			
-			LOGGER.debug("size of result: " + list.size());
+	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", list);
+			result.put("data", resultMap);
 			
 		} catch (Exception e) {
 			
@@ -176,6 +151,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원리스트 조회
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/folder-list", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceFolderList(HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/folder-list] started.");
@@ -187,7 +163,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			String brdId = request.getParameter("brdId");
 			String brdCompany = request.getParameter("brdCompany");
@@ -219,6 +194,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 즐겨찾기 대상 자원리스트 조회
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/favorite-list/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceFavoriteList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/favorite-list/users/{userId}] started.");
@@ -229,10 +205,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String offset = info.getOffSet();
-			int tenantId = info.getTenantId();			
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
 
-			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResFavoriteList(userId, tenantId);
+			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId,tenantId);
 
 			LOGGER.debug("size of list: " + list);
 			
@@ -254,6 +230,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원예약 상세정보 조회 및 자원예약 권한 조회
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceSchDetail(@PathVariable String resourceId, @PathVariable String scheduleId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] started.");
@@ -265,7 +242,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			String companyId = request.getParameter("companyId");
 			
@@ -302,6 +278,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [get] 자원예약중복조회
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/check-repetition", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject resourceSchCheckRepeat(@PathVariable String resourceId, @PathVariable String scheduleId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}/check-repetition] started.");
@@ -309,11 +286,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 		
 		try {
 			
-
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			String companyId = request.getParameter("companyId");
 			
@@ -351,14 +326,12 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [post] 자원예약등록
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject addResourceSch(@PathVariable String resourceId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/resources/{resourceId}/schedules] started.");
 		JSONObject result = new JSONObject();
-		
-		String test = (String) jsonObject.get("userId");
-		LOGGER.debug("test: " + test);
-		
+
 		try {
 			
 
@@ -373,7 +346,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String pNum = "";
 			String endDate =  "";
 			String importance =  "";
-			String num = "";
 			String title =  ""; 
 			String deptNm =  "";
 			String timeDisplay =  ""; 
@@ -383,7 +355,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String ownerNm =  "";
 			String allDay =  "0"; 
 			String companyId =  "";
-			String writerDept = "";
 			String attachFlag =  ""; 
 			String entryList =  ""; 
 			String location =  ""; 
@@ -409,9 +380,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 				importance = jsonObject.get("importance").toString();
 			}
 			
-			if(jsonObject.containsKey("num")){
-				num = jsonObject.get("num").toString();
-			}
 			
 			if(jsonObject.containsKey("title")){
 				title = jsonObject.get("title").toString();
@@ -441,9 +409,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 				companyId = jsonObject.get("companyId").toString();
 			}
 			
-			if(jsonObject.containsKey("writerDept")){
-				writerDept = jsonObject.get("writerDept").toString();
-			}
 			
 			if(jsonObject.containsKey("attachFlag")){
 				attachFlag = jsonObject.get("attachFlag").toString();
@@ -516,6 +481,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [put] 자원예약수정
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject modResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [PUT /mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}] started.");
@@ -526,7 +492,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 		
 		try {
 			
-
 			String serverName = request.getHeader("x-user-host");
 			String userId =  jsonObject.get("userId").toString();
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
@@ -548,7 +513,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String ownerNm =  "";
 			String allDay =  "0"; 
 			String companyId =  "";
-			String writerDept = "";
 			String attachFlag =  ""; 
 			String entryList =  ""; 
 			String location =  ""; 
@@ -601,10 +565,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			if(jsonObject.containsKey("companyId")){
 				companyId = jsonObject.get("companyId").toString();
-			}
-			
-			if(jsonObject.containsKey("writerDept")){
-				writerDept = jsonObject.get("writerDept").toString();
 			}
 			
 			if(jsonObject.containsKey("attachFlag")){
@@ -686,6 +646,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [delete] 자원예약삭제
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/schedules/{scheduleId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delResourceSch(@PathVariable String resourceId, @PathVariable String scheduleId,  HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/schedules/{schuduleId}] started.");
@@ -698,7 +659,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			
@@ -729,6 +689,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [delete] 즐겨찾기삭제
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/favorite/users/{userId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
 	public JSONObject delFavorite(@PathVariable String resourceId, @PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [DELETE /mobile/ezresource/resources/{resourceId}/favorite/{userId}] started.");
@@ -736,10 +697,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 		
 		try {
 			
-
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
 
 			mResourceService.delResFavor(resourceId, userId, tenantId);
@@ -764,6 +723,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	/**
 	 * 모바일 G/W 자원관리 [post] 즐겨찾기추가
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezresource/resources/{resourceId}/favorite", method= RequestMethod.POST, produces="application/json;charset=utf-8")
 	public JSONObject addFavorite(@PathVariable String resourceId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W RESOURCE [POST /mobile/ezresource/resources/{resourceId}/favorite] started.");
@@ -771,17 +731,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 		
 		try {
 			
-
 			String serverName = request.getHeader("x-user-host");
 			String userId = (String) jsonObject.get("userId");
 			
 			LOGGER.debug("userId: " + userId);
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String offset = info.getOffSet();
 			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
 
-			mResourceService.addResFavor(resourceId, userId, tenantId);
+			mResourceService.addResFavor(resourceId, companyId,userId, tenantId);
 
 			result.put("status", "ok");
 			result.put("code", 0);			

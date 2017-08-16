@@ -1264,7 +1264,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
 				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + result.getFilePath();
 			} else {
-				filePath = "/images/default_pic.jpg";
+				filePath = "/images/default_pic.gif";
 			}
 			
 			if (userInfo.getPrimary().equals("1")) {

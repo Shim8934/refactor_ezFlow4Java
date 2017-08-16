@@ -1,6 +1,6 @@
 package egovframework.ezMobile.ezOption.web;
 
-import java.util.Map;
+
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
@@ -46,9 +47,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
 	
+    @Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+	
 	/**
 	 * 모바일 G/W 환경설정 [get] 환경설정조회
 	 */
+    @SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject optionDetail(@PathVariable String userId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W OPTION [GET /mobile/ezoption/option/users/{userId}] started.");
@@ -58,19 +63,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
-			//String serverName = "http://localhost:8080";
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
-			LOGGER.debug("userId: " + userId);
-			LOGGER.debug("tenantId: " + tenantId);
-			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
-			
+			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);			
 			LOGGER.debug("opt: " + opt.toString());
 			
 			String obj = "";
-			
 			Gson gson = new Gson();
-			
 			obj = gson.toJson(opt);
 			
 			result.put("status", "ok");
@@ -92,69 +91,29 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 	/**
 	 * 모바일 G/W 환경설정 [put] 환경설정수정
 	 */
+    @SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezoption/option/users/{userId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject optionUpdate(@PathVariable String userId, @RequestBody JSONObject jsonObject, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
-		
-		String test = (String) jsonObject.get("lang");
-		
-		LOGGER.debug("lang: " + test);
 
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
-			String timeZone = "235|+09:00";
-			String lang = "1";
-			String mainType = "P";
-			String listCnt = "10";
-			String useSearch = "Y";
-			String useSecurity = "N";
-			int tenantId = 0;
+			int tenantId = info.getTenantId();
 			
-			if(jsonObject.containsKey("timeZone")){
-				timeZone = jsonObject.get("timeZone").toString();
-			}
+			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSearch").toString(), jsonObject.get("useSecurity").toString(), tenantId);
 			
-			if(jsonObject.containsKey("lang")){
-				lang = jsonObject.get("lang").toString();
-			}
-			
-			if(jsonObject.containsKey("listCnt")){
-				listCnt = jsonObject.get("listCnt").toString();
-			}
-			
-			if(jsonObject.containsKey("useSearch")){
-				useSearch = jsonObject.get("useSearch").toString();
-			}
-			
-			if(jsonObject.containsKey("useSecurity")){
-				useSecurity = jsonObject.get("useSecurity").toString();
-			}
+			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 
-			if(jsonObject.containsKey("mainType")){
-				mainType = jsonObject.get("mainType").toString();
-			}
-			
-			tenantId = info.getTenantId();
-			
-			LOGGER.debug("userId: " + userId);
-			LOGGER.debug("timeZone: " + timeZone);
-			LOGGER.debug("lang: " + lang);
-			LOGGER.debug("mainType: " + mainType);
-			LOGGER.debug("listCnt: " + listCnt);
-			LOGGER.debug("useSearch: " + useSearch);
-			LOGGER.debug("useSecurity: " + useSecurity);
-			LOGGER.debug("tenantId: " + tenantId);
-			
-			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSearch, useSecurity, tenantId);
-			
+			LOGGER.debug("opt: " + opt.toString());
+
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");
+			result.put("data", opt);
 			
 		} catch (Exception e) {
 			

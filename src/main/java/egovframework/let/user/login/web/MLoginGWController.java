@@ -4,6 +4,8 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -172,12 +174,14 @@ public class MLoginGWController {
     				String timeZone = "";
     				String maintype = "";
     				String listCnt = "";
-					
-    				String returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+    				String useSearch = "";
+    				String useSecurity = "";					
+    				String returnValue = "";
+    				
+    				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
     				
     				//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
-    				if (mOptionVO == null || mOptionVO.equals("")) {
-    			        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+    				if (mOptionVO == null || mOptionVO.equals("")) {    			        
     					
     			        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
     			        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
@@ -205,22 +209,48 @@ public class MLoginGWController {
     				    timeZone = "235|+09:00";
     				    maintype = "D";
     				    listCnt = "10";
+    				    useSearch = "Y";
+    				    useSecurity = "N";
     				    
-    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, "Y", "N", tenantId);    					
+    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSearch, useSecurity, tenantId);    					
     				} else {
     					lang = mOptionVO.getLang();
     					timeZone = mOptionVO.getTimeZone();
         				maintype = mOptionVO.getMainType();
         				listCnt = mOptionVO.getListCnt();
+        				useSearch = mOptionVO.getUseSearch();
+        				useSecurity = mOptionVO.getUseSecurity();
+        				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
     				}
+ 				
+    				Map<String, Object> map = new HashMap<String, Object>();
+    				map.put("uid", uid);
+    				map.put("ip", ip);
+    				map.put("locale", returnValue);
+    				map.put("lang", lang);
+    				map.put("timeZone", timeZone);
+    				map.put("tenantId", tenantId+"");
+    				map.put("mainType", maintype);
+    				map.put("listCnt", listCnt);
+    				map.put("useSearch", useSearch);
+    				map.put("useSecurity", useSecurity);
     				
-    				StringBuilder cookieInfo = new StringBuilder();
-    				cookieInfo.append("{\"uid\" : \"" + uid + "\", \"ip\" : \"" + ip + "\", \"locale\" : \"" + returnValue + "\", \"lang\" : \"" + lang + "\", \"timeZone\" : \"" + timeZone + "\", \"tenantId\" : " + tenantId);
-    				cookieInfo.append("\"mainType\" : \"" + maintype + "\", \"listCnt\" : \"" + listCnt + "\" }");
-    				
+    				if (primaryLang.equals(lang)) {
+    					map.put("companyName", resultVO.getCompanyName1());
+    					map.put("deptName", resultVO.getDeptName1());
+    					map.put("displayName", resultVO.getDisplayName1());
+    					map.put("title", resultVO.getTitle1());
+    				} else {
+    					map.put("companyName", resultVO.getCompanyName2());
+    					map.put("deptName", resultVO.getDeptName2());
+    					map.put("displayName", resultVO.getDisplayName2());
+    					map.put("title", resultVO.getTitle2());
+    				}    			
+    				map.put("userFileUrl", resultVO.getUserFileUrl());
+    				    				
     				result.put("status", "ok");
     				result.put("code", "0");
-    				result.put("data", cookieInfo.toString());
+    				result.put("data", map);
     				
     				return result;
     			}			

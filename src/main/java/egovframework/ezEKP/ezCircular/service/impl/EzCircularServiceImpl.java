@@ -1421,14 +1421,14 @@ public class EzCircularServiceImpl implements EzCircularService {
 			updateUpdateStatus(circularID, memberID, nowDate, tenantID);
 			updateConfirmStatus(circularID, memberID, 1, nowDate, tenantID);
 		} else if (type.equals("commentConfirm")) {
-			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
-			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCommentState(circularID, "", memberID, 1, nowDate, tenantID);
+			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
+//			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 		} else {
 			updateUpdateStatus(circularID, memberID, nowDate, tenantID);
 			updateConfirmStatus(circularID, memberID, 1, nowDate, tenantID);
 			updateCircularCommentStatus(circularID, memberID, 0, 0, nowDate, tenantID);
-			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
+//			updateCircularShareStatus(circularID, memberID, 0, 0, nowDate, tenantID);
 			updateCommentState(circularID, "", memberID, 1, nowDate, tenantID);
 		}
 		
@@ -1482,22 +1482,22 @@ public class EzCircularServiceImpl implements EzCircularService {
 		logger.debug("updateCircularCommentStatus ended.");
 	}
 	
-	private void updateCircularShareStatus(String circularID, String memberID, int shareStatus, int deleteStatus, String nowDate, int tenantID) throws Exception {
-		logger.debug("updateCircularShareStatus started.");
-		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || shareStatus = " + " || tenantID = " + tenantID);
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("circularID", circularID);
-		map.put("memberID", memberID);
-		map.put("shareStatus", shareStatus);
-		map.put("deleteStatus", deleteStatus);
-		map.put("nowDate", nowDate);
-		map.put("tenantID", tenantID);
-		
-		ezCircularDAO.updateCircularShareStatus(map);
-		
-		logger.debug("updateCircularShareStatus ended.");
-	}
+//	private void updateCircularShareStatus(String circularID, String memberID, int shareStatus, int deleteStatus, String nowDate, int tenantID) throws Exception {
+//		logger.debug("updateCircularShareStatus started.");
+//		logger.debug("circularID = " + circularID + " || memberID = " + memberID + " || shareStatus = " + " || tenantID = " + tenantID);
+//		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("circularID", circularID);
+//		map.put("memberID", memberID);
+//		map.put("shareStatus", shareStatus);
+//		map.put("deleteStatus", deleteStatus);
+//		map.put("nowDate", nowDate);
+//		map.put("tenantID", tenantID);
+//		
+//		ezCircularDAO.updateCircularShareStatus(map);
+//		
+//		logger.debug("updateCircularShareStatus ended.");
+//	}
 	
 	private void updateCommentState(String circularID, String circularCommentID, String memberID, int confirmStatus, String nowDate, int tenantID) throws Exception {
 		logger.debug("updateCommentState started.");
@@ -1646,7 +1646,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String memberIDs[] = memberIDList.split(";");
 		
 		for (String memberID : memberIDs) {
-			updateCircularShareStatus(circularID, memberID, 1, 0, nowDate, tenantID);
+			updateCircularCommentStatus(circularID, memberID, 1, 0, nowDate, tenantID);
 			
 			String commentStateID = getCommentStateID(circularCommentID, memberID, tenantID);
 			
@@ -1729,6 +1729,25 @@ public class EzCircularServiceImpl implements EzCircularService {
 		ezCircularDAO.insertCommentState(map);
 		
 		logger.debug("insertCommentState ended.");
+	}
+
+	@Override
+	public int checkFolder(String deleteFolder, String memberID, int tenantID) throws Exception {
+		logger.debug("checkFolder started.");
+		logger.debug("folderID : " + deleteFolder);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("folderID", deleteFolder);
+		map.put("memberID", memberID);
+		map.put("tenantID", tenantID);
+		
+		int deleteListCount = ezCircularDAO.checkFolder(map);
+
+		logger.debug("deleteListCount : " + deleteListCount);
+		logger.debug("checkFolder ended.");
+
+		return deleteListCount;
 	}
 
 }
