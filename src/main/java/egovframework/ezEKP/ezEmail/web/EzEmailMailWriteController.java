@@ -472,7 +472,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale, null);					
 						tempBody = bodyInfoList.get(0);
 						
 						if (attachedFileList.size() > 0) {
@@ -555,7 +555,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						subject = (subject != null) ? subject : "";
 		        		
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale, null);					
 						bodyValue = bodyInfoList.get(0);
 		        		
 		        		if (attachedFileList.size() > 0) {
@@ -741,7 +741,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();		            
-						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale);					
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, false, locale, null);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
@@ -2978,7 +2978,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	sb.append("        <div class=\"security_layerpopup\">\n");
 		    		        	sb.append("            <p class=\"popup_img\"><img src=\"http://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
 		    		        	sb.append("            <p class=\"popup_txt\">해당 메일은 암호화되어있는 보안메일입니다.<br><span>메일을 열람하려면 보낸 사람이 지정한 암호를 입력해야 합니다.</span></p>\n");
-		    		        	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"http://" + serverName + "/ezEmail/mailSecureConfirm.do\">\n");
+		    		        	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"http://" + serverName + "/ezEmail/readSecureMail.do\">\n");
 		    		        	sb.append("                <fieldset>\n");
 		    		        	sb.append("                    <legend>암호입력 폼</legend>\n");
 		    		        	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" onchange=\"if(this.value.length!=0){this.className=&#39;input_text focus&#39;}\"\n");
