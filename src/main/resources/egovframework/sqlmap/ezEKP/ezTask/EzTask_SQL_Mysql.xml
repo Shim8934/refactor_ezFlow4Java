@@ -3,6 +3,7 @@
 
 <sqlMap namespace="ezTask">
 	<typeAlias alias="TaskInfoVO"				type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
+	<typeAlias alias="TaskShareVO"				type="egovframework.ezEKP.ezTask.vo.TaskShareVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
 	   <![CDATA[
