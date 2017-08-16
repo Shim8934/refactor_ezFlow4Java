@@ -5,7 +5,6 @@
 	<typeAlias alias="TaskInfoVO"				type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
-	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
 	   <![CDATA[
 		    SELECT
 				taskid,
