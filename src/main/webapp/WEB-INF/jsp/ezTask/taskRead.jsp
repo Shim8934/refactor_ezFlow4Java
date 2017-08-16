@@ -20,13 +20,14 @@
 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
 			var contentpath = "${taskInfoVO.contentPath }";
+			var personContentpath = "${taskInfoVO.personContentPath }";
 			var ownerid = "${taskInfoVO.ownerID }";
 			var creatorid = "${taskInfoVO.creatorID }";
 			var parentid = "${taskInfoVO.parentID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
 		    var admin = "${admin }";
-//담당자 인듯 이효진		    
+			/* 담당자 인듯 이효진 */		    
 // 		    var personlist = "${personList }";
 
 		    var shareid = "${shareID }";
@@ -36,27 +37,17 @@
 		    var type = "${type }";
 		    var personid = "${taskInfoVO.personID }";
 		    var attachFileInfo = "${attachFileInfo }";
-		    var optioncnt = "${optionCnt }";//taskInfoVO.commentDate 카운트
+		    var taskCommentListSize = "${taskCommentListSize }";
 		    var tempbody = "";
 		    var pUse_Editor = "{useEditor}";
 		    var AttachLimit = 5;
 		    
+		    var folderPath = "${folderPath }";
+		    
 		    $(document).ready(function() {
 		    	load_bodyhtml();
+		    	load_bodyhtml2();
 		    	
-		        if (personid != userid) {
-		            load_bodyhtml2();
-		            var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
-		            for (var i = 0; i < taskcheckbox.length; i++) {
-		                taskcheckbox[i].disabled = true;
-		            }
-
-		            taskcheckbox = document.getElementsByName("completeracheckbox");
-		            for (var i = 0; i < taskcheckbox.length; i++) {
-		                taskcheckbox[i].disabled = true;
-		            }
-		        }
-		        
 		        setTimeout(scrollTop, 1000);
 		        
 		        //담당자 지정하는부분인것 같음 이효진
@@ -104,7 +95,13 @@
 		                break;
 		            }
 		        }
-		        document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + optioncnt + ")";
+		        
+		        if (taskCommentListSize == 0) {
+		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
+		        } else {
+		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + optioncnt + ")";
+		        }
+		        
 		        if (type == "2") {
 		            selecttab = "3";
 		            document.getElementById("normalScreen").style.display = "none";
@@ -136,10 +133,6 @@
 			}
 
 			function load_bodyhtml() {
-// 				document.getElementById('message').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
-				
-				var fullPath = "${taskContentLocation1}";
-				
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -147,7 +140,7 @@
 					url : "/ezCommon/mhtToHTMLContent.do",
 					data : {
 							type : "TASKCONTENT",
-							href : fullPath
+							itemID : contentpath
 					},
 					success: function(result){
 						html = result;
@@ -163,10 +156,7 @@
 			}
 	
 			function load_bodyhtml2() {
-				var fullPath = "${taskContentLocation2}";
-				
-				if (content != "") {
-// 					var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx&TYPE=TASKCONTENT2&DOCID=" + escape(taskid);
+				if (personContentpath != "") {
 					$.ajax({
 						type : "POST",
 						dataType : "text",
@@ -174,7 +164,7 @@
 						url : "/ezCommon/mhtToHTMLContent.do",
 						data : {
 								type : "TASKCONTENT2",
-								href : fullPath
+								itemID : personContentpath
 						},
 						success: function(result){
 							html = result;
@@ -187,8 +177,6 @@
 							$("#message2").contents().find("body").css("word-wrap", "break-word");
 						}
 					});
-					
-// 					document.getElementById('message2').src = "/ezCommon/mhtToHTMLContent.do?href=" + fullPath;
 					
 					try {
 						var objTags = document.getElementById('message2').getElementsByTagName("a");
@@ -324,8 +312,9 @@
 				}
 	
 				deltaskid = id;
-	
-				if (repeatcount != "0") {
+				
+				/* 반복설정 이효진 */
+				/* if (repeatcount != "0") {
 					var rgParams = new Array();
 					rgParams["CancelOpen"] = false;
 					rgParams["InstanceType"] = "";
@@ -336,30 +325,47 @@
 					DivPopUpShow(390, 235, "/myoffice/ezTask/htm/task_repetition_del_Cross.aspx");
 					
 					return;
-				}
+				} */
 	
-				var xmlDom = createXmlDom();
-				var xmlHTTP = createXMLHttpRequest();
-				var objRoot;
+// 				var xmlDom = createXmlDom();
+// 				var xmlHTTP = createXMLHttpRequest();
+// 				var objRoot;
 	
-				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-				createNodeAndInsertText(xmlDom, objRoot, "DATA", deltaskid);
+// 				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+// 				createNodeAndInsertText(xmlDom, objRoot, "DATA", deltaskid);
 				
-				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
-				xmlHTTP.send(xmlDom);
+// 				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
+// 				xmlHTTP.send(xmlDom);
 	
-				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-					alert("<spring:message code='ezTask.t108' />");
-				} else {
-					try {
-						window.opener.RefreshView()
-					} catch (e) { }
+// 				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+// 					alert("<spring:message code='ezTask.t108' />");
+// 				} else {
+// 					try {
+// 						window.opener.RefreshView()
+// 					} catch (e) { }
 					
-					window.close();
-				}
+// 					window.close();
+// 				}
+
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/taskDelete.do",
+					dataType : "json",
+					data : {
+						taskID : deltaskid
+					},
+					success : function(result) {
+						window.opener.RefreshView()
+					},error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezTask.t108' />")
+					},complete : function() {
+						window.close();
+					}
+				});
 			}
-	
-			function DeleteTask_Complete(rgParams) {
+			
+			/* 반복설정 이효진 */
+			/* function DeleteTask_Complete(rgParams) {
 				if (rgParams["InstanceType"] == "Instance") {
 					var xmlDom = createXmlDom();
 					var xmlHTTP = createXMLHttpRequest();
@@ -405,8 +411,9 @@
 					
 					window.close();
 				}
-			}
-	
+			} */
+			
+			/* 업무수정 */
 			function edit_task() {
 			    var id = taskid;
 			    if (parentid != "0")
@@ -416,14 +423,12 @@
 			        var feature = GetOpenPosition(760, 750);
 			        win = window.open("/myoffice/ezTask/task_write_Cross.aspx?id=" + id, "",
 			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			    }
-			    else {
+			    } else {
 			        if (pUse_Editor == "" || pUse_Editor == "CK") {
 			            var feature = GetOpenPosition(760, 660);
 			            win = window.open("/myoffice/ezTask/task_write.aspx?id=" + id, "",
 			                "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        }
-			        else {
+			        } else {
 			            var feature = GetOpenPosition(760, 660);
 			            win = window.open("/myoffice/ezTask/task_write_IE.aspx?id=" + id, "",
 			               "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
@@ -433,6 +438,8 @@
 			    win.opener = window.opener;
 			    window.close();
 			}
+			
+			/* 의견삭제 */
 			function delete_comment(commentorid, commentid) {
 			    if (commentorid != userid) {
 			        alert("<spring:message code='ezTask.t146' />");
@@ -469,53 +476,55 @@
 			function update_status() {
 			    if (admin != "Y") {
 			        alert("<spring:message code='ezTask.t149' />");
-			    return;
+				    return;
+				}
+			
+				var id = taskid;
+				if (parentid != "0")
+				    id = parentid;
+				
+				var xmlDom = createXmlDom();
+				var xmlHTTP = createXMLHttpRequest();
+				var objRoot;
+				var objNode;
+				
+				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", id);
+				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
+				
+				var tempcheckvalue = "";
+				var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
+				for (var i = 0; i < taskcheckbox.length; i++) {
+				    if (taskcheckbox[i].checked) {
+				        tempcheckvalue = taskcheckbox[i].value;
+				        break;
+				    }
+				}
+			
+				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", tempcheckvalue);
+				
+				taskcheckbox = document.getElementsByName("completeracheckbox");
+				for (var i = 0; i < taskcheckbox.length; i++) {
+				    if (taskcheckbox[i].checked) {
+				        tempcheckvalue = taskcheckbox[i].value;
+				        break;
+				    }
+				}
+				
+				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", tempcheckvalue);
+				
+				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
+				xmlHTTP.send(xmlDom);
+				
+				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
+				    alert("<spring:message code='ezTask.t102' />");
+				else {
+				    alert("<spring:message code='ezTask.t150' />");
+					try { window.opener.RefreshView() } catch (e) { }
+				}
 			}
 			
-			var id = taskid;
-			if (parentid != "0")
-			    id = parentid;
-			
-			var xmlDom = createXmlDom();
-			var xmlHTTP = createXMLHttpRequest();
-			var objRoot;
-			var objNode;
-			
-			objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", id);
-			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
-			
-			var tempcheckvalue = "";
-			var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
-			for (var i = 0; i < taskcheckbox.length; i++) {
-			    if (taskcheckbox[i].checked) {
-			        tempcheckvalue = taskcheckbox[i].value;
-			        break;
-			    }
-			}
-			
-			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", tempcheckvalue);
-			
-			taskcheckbox = document.getElementsByName("completeracheckbox");
-			for (var i = 0; i < taskcheckbox.length; i++) {
-			    if (taskcheckbox[i].checked) {
-			        tempcheckvalue = taskcheckbox[i].value;
-			        break;
-			    }
-			}
-			
-			objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", tempcheckvalue);
-			
-			xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
-			xmlHTTP.send(xmlDom);
-			
-			if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-			    alert("<spring:message code='ezTask.t102' />");
-			else {
-			    alert("<spring:message code='ezTask.t150' />");
-			        try { window.opener.RefreshView() } catch (e) { }
-			    }
-			}
+			/* 진행단계변경시 스크립트? 안쓰는거같음 이효진 */
 			function status_change() {
 			    var rate = document.getElementById("completerateSelect").value;
 			    var status = document.getElementById("taskstatusSelect").value;
@@ -535,6 +544,8 @@
 			        return;
 			    }
 			}
+			
+			/* 완료율변경시 스크립트? 안쓰는거같음 이효진 */
 			function rate_change() {
 			    var rate = document.getElementById("completerateSelect").value;
 			    var status = document.getElementById("taskstatusSelect").value;
@@ -625,7 +636,6 @@
 			        add_comment();
 			}
 			
-			
 			function save_taskwrok() {
 			    var xmlDom = createXmlDom();
 			    var xmlHTTP = createXMLHttpRequest();
@@ -691,6 +701,7 @@
 			    }
 			}
 			
+			/* 진행상태변경시 스크립트 */
 			function changestatus(obj) {
 			    if (obj.id == "taskstatus")
 			        document.getElementById("completera").checked = true;
@@ -705,6 +716,7 @@
 			            document.getElementById("completera2").checked = true;
 			}
 			
+			/* 완료율변경시 스크립트 */
 			function changecomplete(obj) {
 			    if (obj.id == "completera")
 			        document.getElementById("taskstatus").checked = true;
@@ -1106,7 +1118,7 @@
 <%-- 		<%}%> --%>
 			<tr>
 				<td style="padding-bottom:4px;height: 520px;">
-					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;" onload ="messageload()"></iframe>
+					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
 				</td>
 			</tr>
 			<tr>
@@ -1200,7 +1212,7 @@
 <%-- 			<c:otherwise> --%>
 				<tr style="vertical-align:top">
 					<td colspan="3" style="padding-bottom:4px; height:520px;">
-						<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;" onload ="messageload()"></iframe>
+						<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
 					</td>
 				</tr>
 				<tr style="vertical-align:top">
@@ -1226,13 +1238,13 @@
 		
 		</table>
 		
-		<table id="tablecomment" class="layout" style="display:none;height:560px">
+		<table id="tablecomment" class="layout" style="display:none;height:580px">
 			<tr>
 				<td style="height:20px" colspan="3">
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="Comment" style="overflow: auto; width:100%; height: 520px; background-color: white; padding-top:3px;">
+								<div id="Comment" style="overflow: auto; width:100%; height: 540px; background-color: white; padding-top:3px;">
 									<%-- <asp:Repeater ID="ListComment" Runat="server">
 									<ItemTemplate>
 										<span onclick="show_personinfo('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORID").InnerText %>')" title="<spring:message code='ezTask.t139' />" style="cursor: pointer; color: #2828A5">

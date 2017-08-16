@@ -96,13 +96,20 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskRead started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String folderPath = commonUtil.getRealPath(request) + commonUtil.separator + commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator;
 		
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		
+		
+		
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 		
 		String parentID = taskInfoVO.getParentID();
 		
@@ -110,9 +117,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<TaskCommentVO> taskCommentList = null;
 		if (taskInfoVO.getHasComment().equals("Y")) {
 			if (parentID.equals("0")) {
-				taskCommentList = ezTaskService.getCommentList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+				taskCommentList = ezTaskService.getCommentList(parentID, offset, primary, tenantID);
 			} else {
-				taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+				taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
 			}
 		}
 		
@@ -120,9 +127,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<TaskShareVO> taskShareList = null;
 		if (taskInfoVO.getHasShare().equals("Y")) {
 			if (parentID.equals("0")) {
-				taskShareList = ezTaskService.getShareList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+				taskShareList = ezTaskService.getShareList(parentID, offset, primary, tenantID);
 			} else {
-				taskShareList = ezTaskService.getShareList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
 			}
 		}
 		
@@ -160,11 +167,14 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskCommentList", taskCommentList);
+		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
+		
 		model.addAttribute("taskShareList", taskShareList);
 		
 		model.addAttribute("type", type);
 		
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("folderPath", folderPath);
 		
 		logger.debug("taskRead ended.");
 		

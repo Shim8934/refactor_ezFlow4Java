@@ -773,6 +773,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
         } else if (type.equals("SCHEDULECONTENT")) {
         	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;        	
+        } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {
+        	url = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + itemID;
         }
         
         String m_strMHT = "";

@@ -36,9 +36,9 @@
 				personid,
 				case when #primary# = 1 then personname else personname2 end as personname,
 				case when #primary# = 1 then persondeptname else personDeptName2 end as persondeptname,
-				personAttach,
-				personContentPath
-				taskPersonID,
+				personattach,
+				personcontentpath,
+				taskpersonid,
 				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname
 			FROM
 				TBL_TASK
