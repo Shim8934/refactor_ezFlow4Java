@@ -88,6 +88,32 @@ public class EzTaskController {
 		
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 		
+		String parentID = taskInfoVO.getParentID();
+		
+		if (taskInfoVO.getHasComment().equals("Y")) {
+			if (parentID.equals("0")) {
+//				getCommentList(parentID);
+			} else {
+//				getCommentList(taskID);
+			}
+		}
+		
+		if (taskInfoVO.getHasShare().equals("Y")) {
+			if (parentID.equals("0")) {
+//				getShareList(parentID);
+			} else {
+//				getShareList(taskID);
+			}
+		}
+		
+		if (taskInfoVO.getHasAttach().equals("Y")) {
+			if (parentID.equals("0")) {
+//				getAttachList(parentID);
+			} else {
+//				getAttachList(taskID);
+			}
+		}
+		
 		/*var taskid = "${taskID }";
 		var contentpath = "${contentPath }";
 		var ownerid = "${ownerID }";

@@ -1,73 +1,73 @@
 package egovframework.ezEKP.ezTask.vo;
 
 public class TaskInfoVO {
-	/** 업무ID*/
-	String taskID;
-	/** 공유된 기존업무ID*/
-	String parentID;
-	/** 담당자ID*/
-	String ownerID;
-	/** 작성자ID*/
-	String creatorID;
-	/** 작성자이름*/
-	String creatorName;
-	/** 작성일*/
-	String createDate;
-	/** 업무상태*/
-	int taskStatus;
+	/** 업무ID */
+	private String taskID;
+	/** 업무원본ID */
+	private String parentID;
+	/** 소유자ID */
+	private String ownerID;
+	/** 작성자ID */
+	private String creatorID;
+	/** 작성자이름 */
+	private String creatorName;
+	/** 작성일 */
+	private String createDate;
+	/** 업무상태(시작안함, 진행중, 완료, 지연) */
+	private int taskStatus;
 	/** 완료율*/
-	int completeRate;
-	/** */
-	String completeDate;
+	private int completeRate;
+	/** 완료일 */
+	private String completeDate;
 	/** 중요도 */
-	int importance;
-	/** 업무공유*/
-	String hasShare;
-	/** 첨부파일*/
-	String hasAttach;
-	/** 의견*/
-	String hasComment;
-	/** 시작일*/
-	String startDate;
-	/** 완료기한*/
-	String endDate;
+	private int importance;
+	/** 공유여부 */
+	private String hasShare;
+	/** 첨부유무 */
+	private String hasAttach;
+	/** 메모유무 */
+	private String hasComment;
+	/** 시작일 */
+	private String startDate;
+	/** 완료기한 */
+	private String endDate;
 	
 	/////반복설정 관련정보들 필요없으면 추후 삭제
-	/** */
-	String repetition;
-	/** */
-	String repetitionDelete;
-	/** */
-	String repetitionStatus;
+	/** 반복업무설정 */
+	private String repetition;
+	/** 반복업무 인스턴스중 삭제된 리스트*/
+	private String repetitionDelete;
+	/** 반복업무 인스턴스중 상태변경된 리스트*/
+	private String repetitionStatus;
 	
 	/** 제목 */
-	String title;
-	/** */
-	String contentPath;
+	private String title;
+	/** 지시사항 본문경로*/
+	private String contentPath;
 	/** 업무구분(1:개인, 2:지시,협조)*/
-	String taskType;
+	private String taskType;
 	/** */
-	String updateTime;
+	private String updateTime;
 	/** */
-	String newAnswer;
+	private String newAnswer;
 	/** */
-	String newRefer;
+	private String newRefer;
+	/** 담당자ID*/
+	private String personID;
+	/** 담당자 이름*/
+	private String personName;
+	/** 담당자 부서명*/
+	private String personDeptName;
+	/** 진행사항 파일첨부*/
+	private String personAttach;
+	/** 진행사항 본문경로*/
+	private String personContentPath;
 	/** */
-	String personID;
+	private String taskPersonID;
 	/** */
-	String personName;
-	/** */
-	String personDeptName;
-	/** */
-	String personAttach;
-	/** */
-	String personContentPath;
-	/** */
-	String taskPersonID;
-	/** */
-	String taskPersonName;
+	private String taskPersonName;
 	/** 테넌트ID*/
-	int tenantID;
+	private int tenantID;
 	
 	public String getTaskID() {
 		return taskID;
