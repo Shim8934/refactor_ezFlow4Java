@@ -37,6 +37,8 @@
 		<result property="jobTitle"					column="JOBTITLE"					columnIndex="24"/>
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="25"/>
 		<result property="brdNm"				column="BRDNM"				columnIndex="26"/>
+		<result property="date"				column="DATE"				columnIndex="27"/>
+		<result property="value"				column="VALUE"				columnIndex="28"/>
 	</resultMap>
 	
 	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
@@ -109,6 +111,8 @@
 		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
 		<result property="brdNm"				column="BRDNM"				columnIndex="27"/>
+		<result property="date"				column="DATE"				columnIndex="28"/>
+		<result property="value"				column="VALUE"				columnIndex="29"/>
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
@@ -712,6 +716,8 @@
                 A.TIMEDISPLAY ,
                 DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
                 DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                A.title VALUE  ,
                 A.ALERTTIME ,
                 A.REFLAG ,
                 A.GRESFLAG ,
@@ -779,6 +785,8 @@
             	A.TIMEDISPLAY ,
             	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
             	DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                A.title VALUE  ,
             	A.ALERTTIME ,
             	A.REFLAG ,
             	A.GRESFLAG ,
