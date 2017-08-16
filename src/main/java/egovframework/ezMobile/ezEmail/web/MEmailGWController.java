@@ -426,9 +426,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			folder.close(false);
 			
 			JSONObject data = new JSONObject();
+			
 			data.put("messageJsonArray", messageJsonArray);
 			data.put("unreadCount", folder.getUnreadMessageCount());
-			data.put("folderId", folderId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", data);
