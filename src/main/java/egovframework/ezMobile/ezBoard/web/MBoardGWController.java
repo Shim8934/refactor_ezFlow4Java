@@ -203,7 +203,7 @@ public class MBoardGWController {
 			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
 			
 			//boardInfo
-			String primary = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
