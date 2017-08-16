@@ -306,7 +306,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
-						temp.setDate(format.format(dateArr[0]).substring(0,9));
+						temp.setDate(format.format(dateArr[0]).substring(0,10));
 						temp.setValue(getRepeatResult.get(i).getTitle());
 						
 						getScheduleList.add(temp);
