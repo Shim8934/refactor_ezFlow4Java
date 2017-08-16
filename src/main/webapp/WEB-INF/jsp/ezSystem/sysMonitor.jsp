@@ -307,7 +307,11 @@
 		    		}
 		    	}
 		    	if (diskioMax > 1) {
-		    		diskioDomain = [0, (diskioMax/10) * 10 + 10 ];
+		    		var domainVal = (parseInt(diskioMax/10)) * 10;
+		    		if (domainVal < 10) {
+		    			domainVal = 0;
+		    		}
+		    		diskioDomain = [0, domainVal + 10 ];
 		    		diskioStep = 2;
 		    	} else {
 		    		diskioDomain = [0, 1];
