@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -89,27 +90,32 @@ public class EzTaskController {
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		
+		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String parentID = taskInfoVO.getParentID();
 		
+		//의견목록 조회
+		List<TaskCommentVO> taskCommentList = null;
 		if (taskInfoVO.getHasComment().equals("Y")) {
 			if (parentID.equals("0")) {
-//				getCommentList(parentID);
+				taskCommentList = ezTaskService.getCommentList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 			} else {
-//				getCommentList(taskID);
+				taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 			}
 		}
 		
-		List<TaskShareVO> list = null;
+		//업무공유자목록조회
+		List<TaskShareVO> taskShareList = null;
 		if (taskInfoVO.getHasShare().equals("Y")) {
 			if (parentID.equals("0")) {
-				list = ezTaskService.getShareList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+				taskShareList = ezTaskService.getShareList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 			} else {
-				list = ezTaskService.getShareList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+				taskShareList = ezTaskService.getShareList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 			}
 		}
 		
+		//첨부파일목록조회
 		if (taskInfoVO.getHasAttach().equals("Y")) {
 			if (parentID.equals("0")) {
 //				getAttachList(parentID);
@@ -140,8 +146,11 @@ public class EzTaskController {
 	    */
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskID", taskID);
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("taskCommentList", taskCommentList);
+		model.addAttribute("taskShareList", taskShareList);
+		
 		model.addAttribute("type", type);
 		
 		model.addAttribute("useEditor", useEditor);

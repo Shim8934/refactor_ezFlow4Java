@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -46,6 +47,25 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	@Override
+	public List<TaskCommentVO> getCommentList(String taskID, String offset, String primary, int tenantID) throws Exception {
+		logger.debug("getCommentList started.");
+		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		
+		List<TaskCommentVO> list = ezTaskDAO.getCommentList(map);
+		
+		logger.debug("getCommentList ended.");
+		logger.debug("listSize = " + list.size());
+		
+		return list;
+	}
+	
+	@Override
 	public List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception {
 		//TaskShareVO 내부에 completeDate 있어서 우선 offset 가져오긴하는데 completeDate 사용안할시 VO에서 삭제 및 offset파라미터 제거. 이효진
 		logger.debug("getShareList started.");
@@ -64,6 +84,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		return list;
 	}
+	
 
 	/* 정수현*/
 	@Override

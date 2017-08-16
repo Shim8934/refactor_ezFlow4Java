@@ -2,8 +2,9 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezTask">
-	<typeAlias alias="TaskInfoVO"				type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
-	<typeAlias alias="TaskShareVO"				type="egovframework.ezEKP.ezTask.vo.TaskShareVO"/>
+	<typeAlias alias="TaskInfoVO"					type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
+	<typeAlias alias="TaskShareVO"					type="egovframework.ezEKP.ezTask.vo.TaskShareVO"/>
+	<typeAlias alias="TaskCommentVO"				type="egovframework.ezEKP.ezTask.vo.TaskCommentVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
 	   <![CDATA[
@@ -48,6 +49,23 @@
 		]]>
 	</select>
 	
+	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO">
+	   <![CDATA[
+		    SELECT
+				commentid,
+				commentorid,
+				case when #primary# = 1 then commentorname else commentorname2 end as commentorname,
+				DATE_ADD(DATE_FORMAT(commentdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as commentdate,
+				comment
+			FROM
+				TBL_TASKCOMMENT
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+		]]>
+	</select>
+	
 	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
 	   <![CDATA[
 		    SELECT
@@ -62,6 +80,7 @@
 				taskid = #taskID#
 		]]>
 	</select>
+	
 	
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">
 		<![CDATA[
