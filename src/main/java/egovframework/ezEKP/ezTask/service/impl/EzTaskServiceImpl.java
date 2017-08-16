@@ -1,28 +1,91 @@
 package egovframework.ezEKP.ezTask.service.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.ezEKP.ezCircular.service.impl.EzCircularServiceImpl;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
+import egovframework.ezEKP.ezTask.vo.TaskShareVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzTaskService")
 public class EzTaskServiceImpl implements EzTaskService{
+	private static final Logger logger = LoggerFactory.getLogger(EzTaskServiceImpl.class);
 	
-	private static final Logger logger = LoggerFactory.getLogger(EzCircularServiceImpl.class);
-
-	@Resource(name="EzTaskDAO")
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Autowired
 	private EzTaskDAO ezTaskDAO;
 	
 	/* 이효진*/
+	@Override
+	public TaskInfoVO getTaskInfo(String taskID, String offset, String primary, int tenantID) throws Exception {
+		logger.debug("getTaskInfo started.");
+		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		
+		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
+		
+		logger.debug("getTaskInfo ended.");
+		logger.debug(vo.toString());
+		
+		return vo;
+	}
 	
+	@Override
+	public List<TaskCommentVO> getCommentList(String taskID, String offset, String primary, int tenantID) throws Exception {
+		logger.debug("getCommentList started.");
+		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		
+		List<TaskCommentVO> list = ezTaskDAO.getCommentList(map);
+		
+		logger.debug("getCommentList ended.");
+		logger.debug("listSize = " + list.size());
+		
+		return list;
+	}
+	
+	@Override
+	public List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception {
+		//TaskShareVO 내부에 completeDate 있어서 우선 offset 가져오긴하는데 completeDate 사용안할시 VO에서 삭제 및 offset파라미터 제거. 이효진
+		logger.debug("getShareList started.");
+		logger.debug("taskID = " + taskID + " || offset = " + offset + " || primary = " + primary + " || tenantID = " + tenantID);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		
+		List<TaskShareVO> list = ezTaskDAO.getShareList(map);
+		
+		logger.debug("getShareList ended.");
+		logger.debug("listSize = " + list.size());
+		
+		return list;
+	}
+	
+
 	/* 정수현*/
 	@Override
 	public String getDelayColor(String memberID, int tenantID) throws Exception {

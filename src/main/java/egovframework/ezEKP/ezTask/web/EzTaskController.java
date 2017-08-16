@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
+
 import egovframework.let.user.login.vo.LoginSimpleVO;
+
+import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
+import egovframework.ezEKP.ezTask.vo.TaskShareVO;
+
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -44,8 +48,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
 public class EzTaskController extends EgovFileMngUtil {
-	private static final Logger logger = LoggerFactory.getLogger(EzEmailAdminController.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(EzTaskController.class);
+
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -97,6 +101,39 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		
+		//업무정보 조회
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		
+		String parentID = taskInfoVO.getParentID();
+		
+		//의견목록 조회
+		List<TaskCommentVO> taskCommentList = null;
+		if (taskInfoVO.getHasComment().equals("Y")) {
+			if (parentID.equals("0")) {
+				taskCommentList = ezTaskService.getCommentList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+			} else {
+				taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+			}
+		}
+		
+		//업무공유자목록조회
+		List<TaskShareVO> taskShareList = null;
+		if (taskInfoVO.getHasShare().equals("Y")) {
+			if (parentID.equals("0")) {
+				taskShareList = ezTaskService.getShareList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+			} else {
+				taskShareList = ezTaskService.getShareList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+			}
+		}
+		
+		//첨부파일목록조회
+		if (taskInfoVO.getHasAttach().equals("Y")) {
+			if (parentID.equals("0")) {
+//				getAttachList(parentID);
+			} else {
+//				getAttachList(taskID);
+			}
+		}
 		
 		/*var taskid = "${taskID }";
 		var contentpath = "${contentPath }";
@@ -117,10 +154,14 @@ public class EzTaskController extends EgovFileMngUtil {
 	    var attachFileInfo = "${attachFileInfo }";
 	    var optioncnt = "${optionCnt }";
 	    var tempbody = "";
-	    var pUse_Editor = "{useEditor}";*/
+	    */
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("taskCommentList", taskCommentList);
+		model.addAttribute("taskShareList", taskShareList);
+		
 		model.addAttribute("type", type);
 		
 		model.addAttribute("useEditor", useEditor);

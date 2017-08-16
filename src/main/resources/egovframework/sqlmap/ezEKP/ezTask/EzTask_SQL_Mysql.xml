@@ -2,6 +2,86 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezTask">
+	<typeAlias alias="TaskInfoVO"					type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
+	<typeAlias alias="TaskShareVO"					type="egovframework.ezEKP.ezTask.vo.TaskShareVO"/>
+	<typeAlias alias="TaskCommentVO"				type="egovframework.ezEKP.ezTask.vo.TaskCommentVO"/>
+	
+	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
+	   <![CDATA[
+		    SELECT
+				taskid,
+				parentid,
+				ownerid,
+				creatorid,
+				case when #primary# = 1 then creatorname else creatorName2 end as creatorname,
+				DATE_ADD(DATE_FORMAT(createdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as createDate,
+				taskstatus,
+				completerate,
+				DATE_ADD(DATE_FORMAT(completedate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as completedate,
+				importance,
+				hasshare,
+				hasattach,
+				hascomment,
+				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
+				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as enddate,
+				repetition,
+				repetitiondelete,
+				repetitionstatus,
+				title,
+				contentpath,
+				tasktype,
+				updatetime,
+				newanswer,
+				newrefer,
+				personid,
+				case when #primary# = 1 then personname else personname2 end as personname,
+				case when #primary# = 1 then persondeptname else personDeptName2 end as persondeptname,
+				personAttach,
+				personContentPath
+				taskPersonID,
+				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname
+			FROM
+				TBL_TASK
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO">
+	   <![CDATA[
+		    SELECT
+				commentid,
+				commentorid,
+				case when #primary# = 1 then commentorname else commentorname2 end as commentorname,
+				DATE_ADD(DATE_FORMAT(commentdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as commentdate,
+				comment
+			FROM
+				TBL_TASKCOMMENT
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
+	   <![CDATA[
+		    SELECT
+				SharerID,
+				case when #primary# = 1 then sharername else sharername2 end as sharername,
+				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname
+			FROM
+				TBL_TASKSHARE
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+		]]>
+	</select>
+	
+	
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT

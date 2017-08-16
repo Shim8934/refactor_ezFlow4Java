@@ -233,21 +233,8 @@ public class MLoginGWController {
     				map.put("mainType", maintype);
     				map.put("listCnt", listCnt);
     				map.put("useSearch", useSearch);
-    				map.put("useSecurity", useSecurity);
-    				
-    				if (primaryLang.equals(lang)) {
-    					map.put("companyName", resultVO.getCompanyName1());
-    					map.put("deptName", resultVO.getDeptName1());
-    					map.put("displayName", resultVO.getDisplayName1());
-    					map.put("title", resultVO.getTitle1());
-    				} else {
-    					map.put("companyName", resultVO.getCompanyName2());
-    					map.put("deptName", resultVO.getDeptName2());
-    					map.put("displayName", resultVO.getDisplayName2());
-    					map.put("title", resultVO.getTitle2());
-    				}    			
-    				map.put("userFileUrl", resultVO.getUserFileUrl());
-    				    				
+    				map.put("useSecurity", useSecurity);    				
+				    				    				
     				result.put("status", "ok");
     				result.put("code", "0");
     				result.put("data", map);
