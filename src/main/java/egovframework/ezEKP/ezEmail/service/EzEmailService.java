@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
+import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -55,5 +56,8 @@ public interface EzEmailService {
 	public List<MailDistributionVO> getDistributionSearchList(String companyId, int tenantId, String searchValue) throws Exception;
 	public int setMailSecure(int tenantId, String userId, String password, int maxReadCount, String maxReadDate) throws Exception;
 	public String updateMailSecure(int tenantId, String userId, int secureId, String url) throws Exception;
+	public int checkSecureMailPassword(String secureId, String reader, String password) throws Exception;
+	public MailSecureVO getSecureMailInfo(String secureId, String reader) throws Exception;
+	public String updateSecureMailReaderInfo(String secureId, String reader) throws Exception;
 	
 }

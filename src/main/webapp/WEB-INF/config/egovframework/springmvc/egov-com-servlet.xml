@@ -48,6 +48,10 @@
             <mvc:exclude-mapping path="/user/login/changeExPassword.do"/>
             <mvc:exclude-mapping path="/ezApprovalG/excelExportOut.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadAttachCommon.do"/>
+            <mvc:exclude-mapping path="/ezEmail/readSecureMail.do"/>
+            <mvc:exclude-mapping path="/ezEmail/readSecureMailContent.do"/>
+            <mvc:exclude-mapping path="/ezEmail/downloadSecureAttach.do"/>
+            <mvc:exclude-mapping path="/ezEmail/downloadSecureInline.do"/>
             <mvc:exclude-mapping path="/admin/ezApprovalG/componentListTransfer.do"/>
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>      
             <mvc:exclude-mapping path="/ezTalkGate/main.do"/>      

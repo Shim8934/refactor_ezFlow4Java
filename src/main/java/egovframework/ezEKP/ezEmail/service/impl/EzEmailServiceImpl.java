@@ -50,6 +50,7 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailPOP3VO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
+import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -1474,6 +1475,106 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("updateMailSecure ended. returnValue=" + returnValue);
 		return returnValue;
 		
+	}
+
+	@Override
+	public int checkSecureMailPassword(String secureId, String reader, String password) throws Exception {
+		logger.debug("checkSecureMailPassword started.");
+		logger.debug("secureId=" + secureId + ",reader=" + reader + ",password=" + password);
+		
+		String inputParams = "secureId=" + secureId;
+		inputParams += "&reader=" + URLEncoder.encode(reader, "UTF-8");
+		inputParams += "&password=" + URLEncoder.encode(password, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/checkSecureMailPassword";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+		
+		int returnValue = -100;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK")) {
+				returnValue = ((Long)responseObj.get("reasonCode")).intValue();
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("checkSecureMailPassword ended.");
+		return returnValue;
+	}
+
+	@Override
+	public MailSecureVO getSecureMailInfo(String secureId, String reader) throws Exception {
+		logger.debug("getSecureMailInfo started.");
+		logger.debug("secureId=" + secureId + ",reader=" + reader);
+		
+		String inputParams = "secureId=" + secureId;
+		inputParams += "&reader=" + URLEncoder.encode(reader, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSecureMailInfo";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+		
+		MailSecureVO vo = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONObject obj = (JSONObject)responseObj.get("result");
+				
+				vo = new MailSecureVO();
+				vo.setUserAccount((String)obj.get("userAccount"));
+        		vo.setFolderPath((String)obj.get("folderPath"));
+        		vo.setMailUid((String)obj.get("mailUid"));
+        		vo.setMaxReadCount((String)obj.get("maxReadCount"));
+        		vo.setMaxReadDate((String)obj.get("maxReadDate"));
+        		vo.setReadCount((String)obj.get("readCount"));
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getSecureMailInfo ended.");
+		return vo;
+	}
+
+	@Override
+	public String updateSecureMailReaderInfo(String secureId, String reader) throws Exception {
+		logger.debug("updateSecureMailReaderInfo started.");
+		logger.debug("secureId=" + secureId + ",reader=" + reader);
+		
+		String inputParams = "secureId=" + secureId;
+		inputParams += "&reader=" + URLEncoder.encode(reader, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/updateSecureMailReaderInfo";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+		logger.debug("response=" + response);
+		
+		String returnValue = "ERROR";
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				returnValue = "OK";
+			}
+		}
+		
+		logger.debug("updateSecureMailReaderInfo ended.");
+		return returnValue;
 	}
 	
 }
