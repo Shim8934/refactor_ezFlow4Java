@@ -77,19 +77,32 @@ public class MBoardGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
+			String boardId = request.getParameter("boardID");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			LOGGER.debug("deptPathCode = "+deptPathCode);
+			
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, info.getTenantId()); 
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
+			result.put("data2", boardInfo);
 			result.put("listSize", list.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			result.put("data2", "");
 			result.put("listSize", "");
 		}
 		LOGGER.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mainList/{userId}] ended.");
@@ -112,7 +125,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
-			String primary = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
