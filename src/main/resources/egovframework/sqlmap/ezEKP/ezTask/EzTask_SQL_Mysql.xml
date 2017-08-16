@@ -2,44 +2,42 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezTask">
-<<<<<<< HEAD
 	<typeAlias alias="TaskInfoVO"				type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
 	   <![CDATA[
 		    SELECT
-				taskID,
-				parentID,
-				ownerID,
-				creatorID,
-				case when #primary# = 1 then creatorName else creatorName2 end as creatorName,
-				DATE_ADD(DATE_FORMAT(createDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as createDate,
-				taskStatus,
-				completeRate,
-				DATE_ADD(DATE_FORMAT(completeDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as completeDate,
+				taskid,
+				parentid,
+				ownerid,
+				creatorid,
+				case when #primary# = 1 then creatorname else creatorName2 end as creatorname,
+				DATE_ADD(DATE_FORMAT(createdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as createDate,
+				taskstatus,
+				completerate,
+				DATE_ADD(DATE_FORMAT(completedate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as completedate,
 				importance,
-				hasShare,
-				hasAttach,
-				hasComment,
-				DATE_ADD(DATE_FORMAT(startDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startDate,
-				DATE_ADD(DATE_FORMAT(endDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as endDate,
+				hasshare,
+				hasattach,
+				hascomment,
+				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
+				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as enddate,
 				repetition,
-				repetitionDelete,
-				repetitionStatus,
+				repetitiondelete,
+				repetitionstatus,
 				title,
-				contentPath,
-				taskType,
-				updateTime,
-				newAnswer,
-				newRefer,
-				personID,
-				personName,
-				personName2,
-				case when #primary# = 1 then personDeptName else personDeptName2 end as personDeptName,
+				contentpath,
+				tasktype,
+				updatetime,
+				newanswer,
+				newrefer,
+				personid,
+				case when #primary# = 1 then personname else personname2 end as personname,
+				case when #primary# = 1 then persondeptname else personDeptName2 end as persondeptname,
 				personAttach,
 				personContentPath
 				taskPersonID,
-				case when #primary# = 1 then taskPersonName else taskPersonName2 end as taskPersonName
+				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname
 			FROM
 				TBL_TASK
 			WHERE
@@ -48,7 +46,7 @@
 				taskid = #taskID#
 		]]>
 	</select>
-=======
+	
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -84,6 +82,5 @@
                 tenantid = #tenantID#      
         ]]>
     </update>
->>>>>>> cdf7d517b3b4ffb5fd16871f91735d19d1302e9c
 </sqlMap>
 
