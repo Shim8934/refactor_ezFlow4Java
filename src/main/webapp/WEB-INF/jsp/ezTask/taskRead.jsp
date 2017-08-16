@@ -33,7 +33,9 @@
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
 		    var admin = "${admin }";
-		    var personlist = "${personList }";
+//담당자 인듯 이효진		    
+// 		    var personlist = "${personList }";
+
 		    var shareid = "${shareID }";
 		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
@@ -64,9 +66,10 @@
 		        
 		        setTimeout(scrollTop, 1000);
 		        
-		        if (personlist != "") {
+		        //담당자 지정하는부분인것 같음 이효진
+		        /* if (personlist != "") {
 		            document.getElementById("personlist").innerHTML = personlist;
-		        }
+		        } */
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
@@ -994,7 +997,11 @@
 						<tr id ="persontr">
 							<th><spring:message code='ezTask.t2005' /></th>
 							<td colspan="3" width="100%">
-								<div id="personlist" style="OVERFLOW-Y: auto; padding-top:2px">
+<!-- 							담당자부분인것같음 이효진 -->
+<!-- 								<div id="personlist" style="OVERFLOW-Y: auto; padding-top:2px"> -->
+<!-- 								</div> -->
+								<div style="CURSOR:pointer; " onClick="show_personinfo('${taskInfoVO.personID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+									<c:out value = '${taskInfoVO.personName }' />
 								</div>
 							</td>
 						</tr>

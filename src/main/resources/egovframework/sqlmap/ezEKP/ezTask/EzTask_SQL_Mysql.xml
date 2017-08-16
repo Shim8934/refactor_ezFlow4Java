@@ -5,6 +5,7 @@
 	<typeAlias alias="TaskInfoVO"				type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
+	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
 	   <![CDATA[
 		    SELECT
 				taskid,
@@ -40,6 +41,21 @@
 				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname
 			FROM
 				TBL_TASK
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getShareList" resultClass="TaskShareVO">
+	   <![CDATA[
+		    SELECT
+				SharerID,
+				case when #primary# = 1 then sharername else sharername2 end as sharername,
+				case when #primary# = 1 then sharerdeptname else sharerdeptname2 end as sharerdeptname
+			FROM
+				TBL_TASKSHARE
 			WHERE
 				tenantid = #tenantID#
 			AND

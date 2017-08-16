@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezTask.web;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +17,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
+import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -98,11 +101,12 @@ public class EzTaskController {
 			}
 		}
 		
+		List<TaskShareVO> list = null;
 		if (taskInfoVO.getHasShare().equals("Y")) {
 			if (parentID.equals("0")) {
-//				getShareList(parentID);
+				list = ezTaskService.getShareList(parentID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 			} else {
-//				getShareList(taskID);
+				list = ezTaskService.getShareList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 			}
 		}
 		
