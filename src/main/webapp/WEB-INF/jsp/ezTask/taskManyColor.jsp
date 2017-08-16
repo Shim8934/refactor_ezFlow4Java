@@ -6,7 +6,7 @@
 	<head>
 		<title>색상선택</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
-	    <link rel="stylesheet" href='<spring:message code="ezTask.e2" />' type="text/css" />    
+	    <link rel="stylesheet" href='<spring:message code="ezTask.e2" />' type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
@@ -118,7 +118,7 @@
 		<div class="box" style="width:256px;margin-top:2px">		
 		    <table>
 		        <tr>
-		            <td id="Td1">Color:</td>
+		            <td id="Td1" style="padding-right:10px">Color : </td>
 		            <td id="selColorShow" style="width:50px"></td>
 		            <td id="selColor" style="padding-left:10px"></td>
 		        </tr>
