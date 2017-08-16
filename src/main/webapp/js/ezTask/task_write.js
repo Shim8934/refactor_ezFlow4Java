@@ -1,730 +1,457 @@
-﻿function close_onclick() {
-    if (!confirm("" + strLang8 + ""))
-        window.close();
-    else
-        save_task();
+﻿document.write("<script type='text/javascript' src='/js/jquery/jquery-1.11.3.min.js'></script>");
+
+function close_onclick()
+{
+	if (!confirm(strLang8))
+		window.close();
+	else
+		save_schedule();
 }
 	
-function show_personinfo(userid) {
-    if (userid == "0")
-        userid = creatorid;
-
-    var feature = GetOpenPosition(420, 450);
-    window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+function show_personinfo(userid)
+{
+	if (userid == "0")
+		userid = creatorid;
+	else if (userid == "1")
+		userid = modifierid;
+		
+	var heigth = window.screen.availHeight;
+	var width = window.screen.availWidth;
+	var left = (width - 420) / 2;
+	var top = (heigth - 450) / 2;
+	window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 }
 
-function GetOpenPosition(popUpW, popUpH) {
-    var heigth = window.screen.availHeight;
-    var width = window.screen.availWidth;
-    var left = 0;
-    var top = 0;
+function check_time() {
+    var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
-    var pleftpos;
-    pleftpos = parseInt(width) - popUpW;
-    heigth = parseInt(heigth) - popUpH;
-    width = parseInt(width) - pleftpos;
+    var startYear = startDate.split("-")[0];
+    var startMonth = startDate.split("-")[1];
+    var startDay = startDate.split("-")[2];
+    var endYear = endDate.split("-")[0];
+    var endMonth = endDate.split("-")[1];
+    var endDay = endDate.split("-")[2];
+    var stime = $('#Stimepicker').val()
 
-    left = pleftpos / 2;
-    top = heigth / 2;
+    var shour, sminute;
+    var ehour, eminute;
 
-    var feature = ",left=" + left + ",top=" + top;
-    return feature
+    shour = stime.split(":")[0];
+    sminute = stime.split(":")[1];
+
+    var etime = $('#Etimepicker').val()
+
+    ehour = etime.split(":")[0];
+    eminute = etime.split(":")[1];
+
+    if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
+        return false;
+    }
+    else if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) == parseInt(endDay))) {
+        if (document.getElementById("alldaycheck").checked == false) {
+            if (shour > ehour || (shour == ehour && sminute >= eminute)) {
+                return false;
+            }
+            else
+                return true;
+        }
+        return true;
+    }
+    
+    return true;
 }
-					
-function save_task() {
-    var sDate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
-    var eDate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
 
-    if (sDate > eDate) {
-        alert(strLang_1);
-        return;
+var g_attendant = null;
+var schedule_select_attendant_dialogArguments = new Array();
+function _manage_attendant() {
+    check_name("attendant");
+}
+
+function manage_attendant_after() {
+    schedule_select_attendant_dialogArguments[0] = g_attendant;
+    schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+
+    GetOpenWindow("/ezTask/taskSelectAttendant.do", "", 970, 680);
+}
+
+function manage_attendant_Complete(rtn) {
+    if (typeof (rtn) != "undefined") {
+        g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+        document.getElementById("shareList").innerHTML = "";
+        
+        for (var i = 0; i < rtn["id"].length; i++) {
+            if (i == 0) {
+            	document.getElementById("shareList").innerHTML = rtn["name"][i];
+            	document.getElementById("shareID").innerHTML = rtn["id"][i];
+            	document.getElementById("shareList2").innerHTML = rtn["name1"][i];
+            } else {
+            	document.getElementById("shareList").innerHTML += ", " + rtn["name"][i];
+            	document.getElementById("shareID").innerHTML += ", " + rtn["id"][i];
+            	document.getElementById("shareList2").innerHTML += ", " + rtn["name1"][i];
+            }
+
+            g_attendant["name"][i] = rtn["name"][i];
+            g_attendant["id"][i] = rtn["id"][i];
+            g_attendant["deptname"][i] = rtn["deptname"][i];
+            g_attendant["name1"][i] = rtn["name1"][i];
+            g_attendant["name2"][i] = rtn["name2"][i];
+            g_attendant["deptname2"][i] = rtn["deptname2"][i];
+            g_attendant["jikwe"][i] = rtn["jikwe"][i];
+            g_attendant["phone"][i] = rtn["phone"][i];
+
+        }
     }
-    if (document.getElementById("TextTitle").value == "") {
-        alert("" + strLang9 + "");
-        document.getElementById("TextTitle").focus();
-        return;
+}
+
+function _on_keydown(e)
+{
+	if (e.keyCode == "13")
+		check_name();
+}
+
+var checkname_cross_dialogArguments = new Array();
+var i = 0;
+var namelength = 0;
+var checknametype = "";
+function check_name(type) {
+    if (type != undefined)
+        checknametype = type;
+    else
+        checknametype = "";
+
+    var name = document.getElementById("shareInput").value;
+    name = ReplaceText(name, ",", ";");
+
+    var names = name.split(";");
+    namelength = names.length;
+
+    for (; i < names.length; i++) {
+        names[i] = TrimText(names[i]);
+
+        if (names[i] == "")
+            continue;
+
+        var adCount = 0;        
+        var xmlDOM = createXmlDom();
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/getSearchList.do",
+    		data : {
+    			search : "displayName::" + names[i],
+    			cell   : "company;description;title;displayName;mail",
+    			prop   : "displayName;description",
+    			type   : "user"
+    		},
+    		success: function(xml){
+    			xmlDOM = loadXMLString(xml);
+                adCount = xmlDOM.getElementsByTagName("ROW").length;    			
+    		}    		
+    	});
+
+        if (adCount == 0) {
+            alert("'" + names[i] + "'" + strLang21);
+            continue;
+        } else if (adCount == 1) {
+            if (g_attendant == null)
+                g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+
+            if (getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) != userid) {
+                var length = g_attendant["name"].length;
+
+                for (var j = 0; j < length; j++) {
+                    if (g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
+                        alert(strLang22);
+                        return;
+                    }
+                }
+            } else {
+                alert(strLang24);
+                return;
+            }
+
+            g_attendant["name"][length] = getNodeText(GetChildNodes(SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW")[0])[3])
+            g_attendant["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
+            g_attendant["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7")[0]);
+            g_attendant["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5")[0]);
+            g_attendant["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6")[0]);
+            g_attendant["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8")[0]);
+
+            if (length == 0) {
+            	document.getElementById("shareList").innerHTML = g_attendant["name"][length];
+            	document.getElementById("shareList2").innerHTML = g_attendant["name2"][length];            	
+            }
+            else {
+            	document.getElementById("shareList").innerHTML += ", " + g_attendant["name"][length];
+            	document.getElementById("shareList2").innerHTML += ", " + g_attendant["name2"][length];
+            }
+        } else {
+            var rgParams = new Array();
+            rgParams["addrBook"] = xmlDOM;
+            rgParams["name"] = "";
+            rgParams["id"] = "";
+            rgParams["deptname"] = "";
+            rgParams["name1"] = "";
+            rgParams["name2"] = "";
+            rgParams["deptname2"] = "";
+
+            checkname_cross_dialogArguments[0] = rgParams;       
+            checkname_cross_dialogArguments[1] = check_name_Complete;
+            DivPopUpShow(610, 293, "/ezSchedule/checkName.do");
+            i++;
+            return;
+        }
     }
+    document.getElementById("shareInput").value = "";
+    i = 0;
+    if (checknametype != "")
+        manage_attendant_after();
+}
 
-    if (document.getElementById("taskstatusSelect").value != 3 && document.getElementById("TextCompleteDate").value != "") {
-        alert("" + strLang10 + "");
-        document.getElementById("TextCompleteDate").focus();
-        return;
-    }
+function check_name_Complete(rgParams) {
+    DivPopUpHidden();
+    if (rgParams["name"] != "") {
+        if (g_attendant == null)
+            g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
-    if (!check_length(document.getElementById("TextTitle").value, 100, "" + strLang11 + "")) return;
-    if (!check_length(document.getElementById("TextCompleteDate").value, 20, "" + strLang12 + "")) return;
-
-    var xmlDom = createXmlDom();
-    var xmlHTTP = createXMLHttpRequest();
-
-    var objRoot, objNode, attachnode, shobjnode;
-    objNode = createNodeInsert(xmlDom, objNode, "DATA");
-    createNodeAndInsertText(xmlDom, objNode, "TASKID", taskid);
-    createNodeAndInsertText(xmlDom, objNode, "OWNERID", userid);
-    createNodeAndInsertText(xmlDom, objNode, "CREATORID", userid);
-    createNodeAndInsertText(xmlDom, objNode, "CREATORNAME", username);
-    createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
-    createNodeAndInsertText(xmlDom, objNode, "HASSHARE", hasshare);
-    createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", document.getElementById("taskstatusSelect").value);
-    createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", document.getElementById("completerateSelect").value);
-    createNodeAndInsertText(xmlDom, objNode, "COMPLETEDATE", document.getElementById("TextCompleteDate").value);
-    createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importantSelect").value);
-
-    if (repetition == "") {
-        createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00");
-        createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59");
-    }
-    else {
-
-        var sdate, edate;
-
-        if (g_sdate == null) {
-            startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-            enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-            sdate = new Date(startdate.substring(0, 4), parseInt(startdate.substring(5, 7)) - 1, startdate.substring(8, 10));
-            edate = new Date(enddate.substring(0, 4), parseInt(enddate.substring(5, 7)) - 1, enddate.substring(8, 10));
+        if (rgParams["id"] != userid) {
+            var length = g_attendant["name"].length;
+            for (var j = 0; j < length; j++) {
+                if (g_attendant["id"][j] == rgParams["id"]) {
+                    alert(strLang22);
+                    return;
+                }
+            }
         }
         else {
-            sdate = new Date(g_sdate.substring(0, 4), parseInt(g_sdate.substring(5, 7)) - 1, g_sdate.substring(8, 10));
-            edate = new Date(g_edate.substring(0, 4), parseInt(g_edate.substring(5, 7)) - 1, g_edate.substring(8, 10));
-        }
-
-        createNodeAndInsertText(xmlDom, objNode, "STARTDATE", sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate() + " 00:00");
-        createNodeAndInsertText(xmlDom, objNode, "ENDDATE", edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate() + " 23:59");
-    }
-    createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
-    createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("TextTitle").value);
-
-
-
-    var linkColl = document.getElementById("tbContentElement").Editor.DOM.body.getElementsByTagName("A");
-    for (var i = 0; i < linkColl.length; i++)
-        linkColl.item(i).target = "_blank";
-
-    createNodeAndInsertText(xmlDom, objNode, "CONTENT", document.getElementById("tbContentElement").DocumentHTML);
-
-    if (taskid == "") {
-        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
-    }
-    else {
-        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);
-    }
-
-
-    var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-    ezUtil.UseUTF8 = true;
-
-    var fileNameList = form1.EzHTTPTrans.FileListAll().split("\\");
-
-    var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
-    for (var i = 0 ; i < fileNameList.length - 1 ; i++) {
-        var fileInfo = form1.EzHTTPTrans.GetfilePath(i);
-        var fileName = fileNameList[i];
-        var fileSize = form1.EzHTTPTrans.GetFileSize(i);
-
-        createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", fileInfo.substring(fileInfo.lastIndexOf("/"), fileInfo.length) + "/" + fileName + "/" + fileSize);
-    }
-
-    var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
-    if (g_share != null) {
-        for (var i = 0; i < g_share["id"].length; i++) {
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERID", g_share["id"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERNAME1", g_share["name1"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERNAME2", g_share["name2"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERDEPTNAME", g_share["deptname"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERDEPTNAME2", g_share["deptname2"][i]);
-        }
-    }
-    var personlist = createNodeAndAppandNode(xmlDom, objNode, personlist, "PERSONLIST");
-
-    if (taskType == 1) {
-        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", userid);
-        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", username);
-        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", username2);
-        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME", deptname);
-        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", deptname2);
-    }
-    else {
-        var person = "";
-
-        if (g_person != null) {
-            if (g_person["id"].length > 1) { alert("" + strLang41 + ""); return; }
-            for (var i = 0; i < g_person["id"].length; i++) {
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", g_person["id"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", g_person["name1"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", g_person["name2"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME", g_person["deptname"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", g_person["deptname2"][i]);
-
-                if (person != "")
-                    person += ", ";
-                person += g_person["name"][i] == "" ? g_person["deptname"][i] : g_person["name"][i];
-            }
-        }
-        if (person == "" || person == null) {
-            alert("" + strLang57 + "");
+            alert(strLang24);
             return;
         }
+
+        var length = g_attendant["name"].length;
+
+        g_attendant["name"][length] = rgParams["name"];
+        g_attendant["id"][length] = rgParams["id"];
+        g_attendant["deptname"][length] = rgParams["deptname"];
+        g_attendant["name1"][length] = rgParams["name1"];
+        g_attendant["name2"][length] = rgParams["name2"];
+        g_attendant["deptname2"][length] = rgParams["deptname2"];
+
+        if (length == 0)
+            document.getElementById("shareList").innerHTML = g_attendant["name"][length];
+        else
+            document.getElementById("shareList").innerHTML += ", " + g_attendant["name"][length];
+
+        if (i != namelength)
+            check_name();
     }
-
-    createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", taskType);
-
-    xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_save.aspx", false);
-    xmlHTTP.send(xmlDom);
-
-    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-        alert("" + strLang13 + "");
-    else {
-        alert("" + strLang14 + "");
-
-        try { window.opener.document.Script.RefreshView() } catch (e) { }
-        window.close();
+    if (i == namelength) {
+        i = 0;
+        document.getElementById("shareInput").value = "";
     }
+    if (checknametype != "")
+        manage_attendant_after();
 }
-
-function taskstatus_change() {
-    var rate = document.getElementById("completerateSelect").value;
-    var status = document.getElementById("taskstatusSelect").value;
-
-    if (status == "3") {
-        document.getElementById("completerateSelect").value = "100";
-        return;
-    }
-
-    if (status == "1") {
-        document.getElementById("completerateSelect").value = "0";
-        return;
-    }
-
-    if (rate == "100") {
-        document.getElementById("completerateSelect").value = "10";
-        return;
-    }
-}
-
-function rate_change() {
-    var rate = document.getElementById("completerateSelect").value;
-    var status = document.getElementById("taskstatusSelect").value;
-
-    if (rate == "100") {
-        document.getElementById("taskstatusSelect").value = "3";
-        return;
-    }
-
-    if (rate == "0") {
-        if (status == "3")
-            document.getElementById("taskstatusSelect").value = "1";
-        return;
-    }
-
-    if (status == "1" || status == "3")
-        document.getElementById("taskstatusSelect").value = "2";
-}
-
-function manage_share(type) {
-    switch (type) {
-        case 1:
-//            var rtn = window.showModalDialog("/ezTask/taskSelectAttendatn.do?type=P&title=" + encodeURI(strLang15) + "", g_person, "dialogHeight:655px; dialogWidth:970px; status:no; scroll:no; help:no; edge:sunken");
-        	var rtn = window.open("/ezTask/taskSelectAttendant.do", g_person, "height=660px, width=950px, status:no, scroll:no");
-        	if (typeof (rtn) != "undefined") {
-                if (rtn["id"].length > 1) {
-                    alert(strLang54);
-                    return;
-                }
-                if (g_share != null) {
-                    for (var i = 0; i < g_share["email"].length; i++) {
-                        if (rtn["email"][0] == g_share["email"][i]) {
-                            alert(rtn["name"][0] + strLang55);
-                            return;
-                        }
-                    }
-                }
-                g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-                if (rtn["id"].length == 0) {
-                    setNodeText(document.getElementById("personlist"), "");
-                    return;
-                }
-
-                setNodeText(document.getElementById("personlist"), rtn["name"][0]);
-
-                g_person["name"] = rtn["name"];
-                g_person["id"] = rtn["id"];
-                g_person["deptname"] = rtn["deptname"];
-                g_person["name1"] = rtn["name1"];
-                g_person["name2"] = rtn["name2"];
-                g_person["deptname2"] = rtn["deptname2"];
-                g_person["email"] = rtn["email"];
-            }
-            break;
-        case 2:
-//            var rtn = window.showModalDialog("/myoffice/ezTask/task_select_entity_Cross.aspx?title=" + encodeURI(strLang15) + "", g_share, "dialogHeight:655px; dialogWidth:970px; status:no; scroll:no; help:no; edge:sunken");
-        	var rtn = window.open("/ezTask/taskSelectAttendant.do", g_person, "height=660px, width=950px, status:no, scroll:no");
-        	if (typeof (rtn) != "undefined") {
-                g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-                setNodeText(document.getElementById("sharelist"), "");
-
-                var j = 0;
-                for (var i = 0; i < rtn["id"].length; i++) {
-                    if (g_person != null && g_person["email"][0] == rtn["email"][i]) {
-                        alert(rtn["name"][i] + strLang56);
-                    }
-                    else {
-                        if (getNodeText(document.getElementById("sharelist")) == "")
-                            setNodeText(document.getElementById("sharelist"), rtn["name"][i]);
-                        else
-                            setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + rtn["name"][i]);
-
-                        g_share["name"][j] = rtn["name"][i];
-                        g_share["id"][j] = rtn["id"][i];
-                        g_share["deptname"][j] = rtn["deptname"][i];
-                        g_share["name1"][j] = rtn["name1"][i];
-                        g_share["name2"][j] = rtn["name2"][i];
-                        g_share["deptname2"][j] = rtn["deptname2"][i];
-                        g_share["email"][j] = rtn["email"][i];
-                        j++;
-                    }
-                }
-            }
-            break;
-    }
-}
-
-function on_keydown(type)
-{
-	if (window.event.keyCode == "13")
-	    check_name(type);
-}
-
-function check_name(type)
-{
-    var name = "";
-    if (type == 1) {
-        name = document.getElementById("personinput").value;
-        list = document.getElementById("personlist").innerHTML;
-        name = ReplaceText(name, ",", ";");
-        var names = name.split(";");
-
-        if (names.length > 1 || list != "") {
-            alert("담당자는한명");
-            return;
-        }
-    }
-    else {
-        name = document.getElementById("receiverinput").value;
-        name = ReplaceText(name, ",", ";");
-        var names = name.split(";");
-    }
-
-	for (var i=0; i<names.length; i++)
-	{
-		names[i] = TrimText(names[i]);
-
-		if (names[i] == "")
-			continue;
-			
-		var adCount = 0;
-		
-		var xmlHTTP = createXMLHttpRequest();
-		var xmlDOM = createXmlDom();
-
-		var objNode;
-		createNodeInsert(xmlDOM, objNode, "DATA");
-		createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + names[i]);
-		createNodeAndInsertText(xmlDOM, objNode, "CELL", "company;description;title;displayname;mail");
-		createNodeAndInsertText(xmlDOM, objNode, "PROP", "displayname;description");
-		createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-
-		try {	
-			xmlHTTP.open("POST","/myoffice/ezOrgan/OrganInfo/GetSearchList.aspx",false);
-			xmlHTTP.send(xmlDOM.xml);
-
-			if (xmlHTTP.statusText != "OK")
-			{
-				alert("" + strLang16 + "" + xmlHTTP.statusText);
-				xmlDOM = null;
-				xmlHTTP = null;
-				continue;
-			}
-			else
-			{
-			    xmlDOM = loadXMLString(xmlHTTP.responseText);
-				adCount = xmlDOM.getElementsByTagName("ROW").length;
-			}
-		} catch(e) 
-		{
-			alert("" + strLang16 + "" + e.description);
-			xmlDOM = null;
-			xmlHTTP = null;
-			continue;
-		}
-
-		if (adCount == 0)
-		{
-			alert("'" + names[i] + "' " + strLang17 + "");
-			continue;
-		}
-		else if (adCount == 1)
-		{
-		    if (type == 1) {
-		        if (g_person == null)
-		            g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-		        if (getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0)) != userid) {
-		            var length = g_person["name"].length;
-		            for (var j = 0; j < length; j++)
-		                if (g_person["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0))) {
-		                    alert("" + strLang18 + "");
-		                    return;
-		                }
-		        }
-		        else {
-		            alert("" + strLang20 + "");
-		            return;
-		        }
-
-		        g_person["name"][length] = getNodeText(xmlDOM.getElementsByTagName("VALUE").item(3));
-		        g_person["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0));
-		        g_person["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7").item(0));
-		        g_person["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5").item(0));
-		        g_person["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6").item(0));
-		        g_person["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8").item(0));
-		        g_person["email"][i] = getNodeText(xmlDOM.getElementsByTagName("VALUE").item(4));
-		        setNodeText(document.getElementById("personlist"), g_person["name"][length]);
-		    }
-		    else {
-		        if (g_share == null)
-		            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-		        if (getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0)) != userid) {
-		            var length = g_share["name"].length;
-		            for (var j = 0; j < length; j++)
-		                if (g_share["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0))) {
-		                    alert("" + strLang18 + "");
-		                    return;
-		                }
-		        }
-		        else {
-		            alert("" + strLang20 + "");
-		            return;
-		        }
-
-		        g_share["name"][length] = getNodeText(xmlDOM.getElementsByTagName("VALUE").item(3));
-		        g_share["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2").item(0));
-		        g_share["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7").item(0));
-		        g_share["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5").item(0));
-		        g_share["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6").item(0));
-		        g_share["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8").item(0));
-		        g_share["email"][i] = getNodeText(xmlDOM.getElementsByTagName("VALUE").item(4));
-
-		        if (length == 0)
-		            setNodeText(document.getElementById("sharelist"), g_share["name"][length]);
-		        else
-		            setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + g_share["name"][length]);
-		    }
-		}
-		else 
-		{
-			var rgParams = new Array();
-			rgParams["addrBook"] = xmlDOM;
-			rgParams["name"] = "";
-			rgParams["id"] = "";
-			rgParams["deptname"] = "";
-			rgParams["name1"] = "";
-			rgParams["name2"] = "";
-			rgParams["deptname2"] = "";
-			rgParams["email"] = "";
-			
-			window.showModalDialog("/myoffice/ezTask/htm/checkName_Cross.aspx", rgParams, "dialogHeight:350px; dialogWidth:610px; status:no;scroll:no; help:no; edge:sunken");
-
-			if (rgParams["name"] != "")
-			{
-			    if (type == 1) {
-			        if (g_person == null)
-			            g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-			        if (rgParams["id"] != userid) {
-			            for (var j = 0; j < g_person["id"].length; j++)
-			                if (g_person["id"][j] == rgParams["id"]) {
-			                    alert("" + strLang18 + "");
-			                    return;
-			                }
-			        }
-			        else {
-			            alert("" + strLang20 + "");
-			            return;
-			        }
-
-			        var length = g_person["name"].length;
-			        g_person["name"][length] = rgParams["name"];
-			        g_person["id"][length] = rgParams["id"];
-			        g_person["deptname"][length] = rgParams["deptname"];
-			        g_person["name1"][length] = rgParams["name1"];
-			        g_person["name2"][length] = rgParams["name2"];
-			        g_person["deptname2"][length] = rgParams["deptname2"];
-			        g_person["email"][i] = rgParams["email"];
-			        setNodeText(document.getElementById("personlist"), g_person["name"][length]);
-			    }
-			    else {
-			        if (g_share == null)
-			            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
-			        if (rgParams["id"] != userid) {
-			            for (var j = 0; j < g_share["id"].length; j++)
-			                if (g_share["id"][j] == rgParams["id"]) {
-			                    alert("" + strLang18 + "");
-			                    return;
-			                }
-			        }
-			        else {
-			            alert("" + strLang20 + "");
-			            return;
-			        }
-
-			        var length = g_share["name"].length;
-			        g_share["name"][length] = rgParams["name"];
-			        g_share["id"][length] = rgParams["id"];
-			        g_share["deptname"][length] = rgParams["deptname"];
-			        g_share["name1"][length] = rgParams["name1"];
-			        g_share["name2"][length] = rgParams["name2"];
-			        g_share["deptname2"][length] = rgParams["deptname2"];
-			        g_share["email"][i] = rgParams["email"];
-			        if (length == 0)
-			            setNodeText(document.getElementById("sharelist"), g_share["name"][length]);
-			        else
-			            setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + g_share["name"][length]);
-			    }
-			}
-		}
-	}
-    if(type == 1)
-        document.getElementById("personinput").value = "";
-	else
-        document.getElementById("receiverinput").value = "";
-}
-	
 var g_progresswin;
 var g_fileList;
 var g_fileNameList = new Array();
 var g_fileInfoList = new Array();
 
-function attach_Add(ocx_file)
+function attach_Delete()
 {
-	var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-	ezUtil.UseUTF8 = true;
+    var checks = document.getElementById("attachedfileDIV").all.tags("input");
 	
-	if(!ocx_file)
-    {
-        var file = ezUtil.OpenLoadDlgMultiNew("All Files (*.*)\0*.*\0Microsoft Office Files\0*.doc;*.xls;*.ppt;*.pst;*.mdb;\0Image Files\0*.jpg;*.gif;*.bmp;*.jpe;*.png;*.emf;*.wmf;*.jpeg;*.jfif;*.dib;*.rle;*.bmz;*.gfa;*.emz;*.pcx;\0Text Files\0*.txt;*.csv;\0Archive Files\0*.zip;*.rar;*.cab;*.alz;*.tar\0Executable Files\0*.exe;*.com;*.bat;\0\0", "")
-
-        if (!file)
-            return;
-
-        g_fileList = file.split("|");
-	}
-	else
+	for (var i=0; i<checks.length; i++)
 	{
-	    g_fileList = ocx_file.split("|");
-	}
-
-	var fileSize = 0;
-
-	for (var i = 0; i < g_fileList.length - 1; i++) {	 
-	    fileSize += ezUtil.GetFileSize(g_fileList[i]);
-	}
-
-	ezUtil = null;
-
-	if (fileSize > 5 * 1024 * 1024)
-	{
-		alert("" + strLang21 + "");
-		return;
-	}
-    
-	var fileName = "";
-    form1.EzHTTPTrans.AddUploadFile("","");
-	for (var i=0; i<g_fileList.length-1; i++)
-	{
-		try 
+		if (checks.item(i).checked == true)
 		{
-			if (i > 0)
-				status_change(g_fileList[i].substr(g_fileList[i].lastIndexOf("\\")+1) + "" + strLang22 + "" + (i+1) + "/" + (g_fileList.length-1));
-
-            form1.EzHTTPTrans.AddUploadFile(g_fileList[i], "N");
-		} 
-		catch (e) 
-		{
-			try {
-			} catch(e) {}
-
-			alert(g_fileList[i] + " " + strLang24 + "" + "\n\n" + e.number + " - " + e.description);
-			return;
-		}	
-	}
-	
-	var RemotePath = document.location.protocol+"//" + document.location.hostname + "/myoffice/ezTask/remote/task_uploadfile.aspx";
-	var nCount = form1.EzHTTPTrans.StartUpload(RemotePath,"/Upload_DocManagement","DocManagement" , "","");
-
-    if (nCount == 0)
-	{
-	    alert(g_fileList[0] + strLang23);
-	    return false;
-	}
-	var newFileName = new Array();
-	var fileSize = new Array();
-	var localFilePath = new Array();
-	var extCheck = new Array();
-	var extFlag = false;
-    for (var i = 0; i < nCount; i++)
-	{
-        var fileinfo = form1.EzHTTPTrans.GetReturn(i);
-		var infos = fileinfo.split('/');
-		localFilePath[i] = infos[0];		
-		var fileName = infos[0].substr(infos[0].lastIndexOf("\\") + 1);
-		extCheck[i] = infos[1];
-		newFileName[i] = infos[2];
-		fileSize[i] = infos[4];
-		
-		if (extCheck[i] == "denied")
-		    extFlag = true;
-
-		if (fileName.length > 1000)
-		{			
-			alert(g_fileList[i] + " " + strLang23 + "");
-			return;
+			if(checks.length == 1) 
+			{
+				checks.item(i).parentElement.innerHTML = "&nbsp;";
+			}
+			else
+			{
+				checks.item(i).parentElement.parentElement.removeChild(checks.item(i).parentElement);
+			}
+			i--;
 		}
-		else
-		{
-			g_fileInfoList[i] = newFileName[i] + "/" + fileName + "/" + infos[3];
-			g_fileNameList[i] = fileName;
-		}
-    }
-    if (extFlag)
-        alert(strLang58);
-
-	var attachText = "";
-	for (var i = 0; i < g_fileList.length - 1; i++) {
-	    if (extCheck[i] == "OK") {
-	        form1.EzHTTPTrans.InsertFileList(g_fileNameList[i], localFilePath[i], "N", "N", fileSize[i]);
-	        form1.EzHTTPTrans.InsertFileInfo(newFileName[i]);
-	    }
 	}
-}
-
-function show_progress(fileinfo) {
-    g_progresswin = window.showModelessDialog("/myoffice/ezTask/task_progress.aspx?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken");
-}
-
-function status_change(fileinfo) {
-    try {
-        g_progresswin.document.Script.fileinfo_change(fileinfo);
-    } catch (e) { }
-}
-
-function attach_Delete() {
-    document.getElementById("EzHTTPTrans").DeleteFileList();
-}
-
-function restore_deleted()
-{
-	if (repetitiondel == "")
-	{
-		alert("" + strLang25 + "");
-		return;
-	}
-	
-	if (!confirm("" + strLang26 + ""))
-		return;
-		
-	var xmlDom = createXmlDom();
-	var xmlHTTP = createXMLHttpRequest();
-		
-	var objNode;
-	createNodeInsert(xmlDom, objNode, "DATA");
-	createNodeAndInsertText(xmlDom, objNode, "DATA", taskid);
-	
-	xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_restore_delete.aspx", false);
-	xmlHTTP.send(xmlDom);
-
-	if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		alert("" + strLang27 + "");
-	else
-	{
-		alert("" + strLang28 + "");
-		
-		try { window.opener.document.Script.RefreshView() } catch(e) {}
-		repetitiondel = "";
-		show_repetition_info();
-	}	
-}
+}		
 
 var g_sdate = null;
 var g_edate = null;
+var schedule_repetition_cross_dialogArguments = new Array();
 function config_repeat()
-{
-	var args = new Array();
-	if (g_sdate == null)
+{	
+	var args = new Array();	
+	if(pattern == "1")
 	{
-	    args["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	    args["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    args["SDATE"] = startDateStringOrgin;
+	    args["EDATE"] = endDateStringOrgin; 
 	}
 	else
 	{
-		args["SDATE"] = g_sdate;
-		args["EDATE"] = g_edate;
+	    if (g_sdate == null)
+	    {
+	        args["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+	        args["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+		    
+	    }
+	    else
+	    {    	    
+	        args["SDATE"] = g_sdate;
+	        args["EDATE"] = g_edate; 	        		   
+		} 	   
 	}
-		
 	args["REPETITION"] = repetition;
-	
-	var rtn = window.showModalDialog("/myoffice/ezTask/htm/task_repetition_Cross.aspx", args, "dialogHeight:450px; dialogWidth:460px; status:no;scroll:no;help:no;edge:sunken");
-	
-	if (typeof(rtn) != "undefined")
-	{
-		if (rtn["REPETITION"] == "")
-		{
-			repetition = "";
-			document.getElementById("periodblock").style.display = "";
-			document.getElementById("repeatblock").style.display = "none";
-			document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-		}
-		else
-		{
-			g_sdate = rtn["SDATE"];
-			g_edate = rtn["EDATE"];
-			repetition = rtn["REPETITION"];
-			show_repetition_info();
-		}
-	}
+
+	schedule_repetition_cross_dialogArguments[0] = args;
+	schedule_repetition_cross_dialogArguments[1] = config_repeat_Complete;
+
+	DivPopUpShow(450, 542, "/ezSchedule/scheduleRepetition.do");
+}
+
+function config_repeat_Complete(rtn) {
+    if (rtn["REPETITION"] == "") {
+        repetition = "";
+        document.getElementById("periodblock").style.display = "";
+        document.getElementById("repeatblock").style.display = "none";
+        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
+    }
+    else {
+        g_sdate = rtn["SDATE"];
+        g_edate = rtn["EDATE"];
+        repetition = rtn["REPETITION"];
+        show_repetition_info();
+        document.getElementById("repeatinfo").innerHTML = rtn["REPDISPLAY"];
+    }
 }
 
 function show_repetition_info()
 {
-	document.getElementById("periodblock").style.display = "none";
-	document.getElementById("repeatblock").style.display = "";
-			
+    document.getElementById("periodblock").style.display = "none";
+    document.getElementById("repeatblock").style.display = "";
 	var info = repetition.split("|");
-	var repeatinfo = "" + strLang29 + "";
+	var repeatinfo = strLang33;
 	
 	switch (info[2])
 	{
 		case "0":
-			repeatinfo += "" + strLang30 + "";
+			repeatinfo += strLang34;
 			break;
 		case "1":
-			repeatinfo += "" + strLang31 + "";
+			repeatinfo += strLang35;
 			break;
-		case "2":
-			repeatinfo += "" + strLang32 + "";
+	    case "2":
+	        {
+	            repeatinfo += strLang36;
+
+	            repeatinfo += " ";
+	            for (var i = 0; i < info[4].length; i++) {
+	                var idx = info[4].substr(i, 1);
+	                switch (idx) {
+	                    case "0":
+	                        repeatinfo += strLang48;
+	                        break;
+	                    case "1":
+	                        repeatinfo += strLang49;
+	                        break;
+	                    case "2":
+	                        repeatinfo += strLang50;
+	                        break;
+	                    case "3":
+	                        repeatinfo += strLang51;
+	                        break;
+	                    case "4":
+	                        repeatinfo += strLang52;
+	                        break;
+	                    case "5":
+	                        repeatinfo += strLang53;
+	                        break;
+	                    case "6":
+	                        repeatinfo += strLang54;
+	                        break;
+	                }
+	            }
+	        }
 			break;
 		case "3":
-			repeatinfo += "" + strLang33 + "";
+			repeatinfo += strLang37;
 			break;
-	}
+	}	
+
+	repeatinfo += ", " + strLang38;
 	
-	if (repetitiondel != "")
-		repeatinfo += ", " + strLang34 + "" + repetitiondel + " " + strLang35 + "";
+	if (info[1] == "1")
+		repeatinfo += strLang39;
+	else
+	{
+		var sdate, edate;
+		if (g_sdate == null)
+		{	
+		    var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    var sYear = sDate.split("-")[0];
+		    var sMon = sDate.split("-")[1];
+		    var sDay = sDate.split("-")[2];
+		    var sTime = $('#Stimepicker').val();
+		    var sHour = sTime.split(":")[0];
+		    var sMin = sTime.split(":")[1];
+
+
+		    var eDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    var eYear = eDate.split("-")[0];
+		    var eMon = eDate.split("-")[1];
+		    var eDay = eDate.split("-")[2];
+		    var eTime = $('#Etimepicker').val();
+		    var eHour = eTime.split(":")[0];
+		    var eMin = eTime.split(":")[1];
+
+		    sdate = sYear + "-" + sMon + "-" + sDay + " " + sHour + ":" + sMin;
+		    edate = eYear + "-" + eMon + "-" + eDay + " " + eHour + ":" + eMin;
+		}
+		else
+		{
+			sdate = new Date(g_sdate);
+			edate = new Date(g_edate);
+			sdate = sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate() + " " + sdate.getHours() + ":" + sdate.getMinutes();
+		    edate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate() + " " + edate.getHours() + ":" + edate.getMinutes();
+		}
+        
+        var reStartHour = sdate.split(" ")[1].split(":")[0];
+		var reEndHour = edate.split(" ")[1].split(":")[0];
 		
+		var reStartMinute = sdate.split(" ")[1].split(":")[1];
+		reStartMinute = reStartMinute.length==1?reStartMinute+"0":reStartMinute;
+		var reEndMinute = edate.split(" ")[1].split(":")[1];
+		reEndMinute = reEndMinute.length==1?reEndMinute+"0":reEndMinute;
+        
+        if( Number(reStartHour) < 12)   
+        { 
+			repeatinfo += "" + strLang1 + " "; 			
+		}
+        else    
+        { 
+			repeatinfo += "" + strLang2 + " "; 
+			reStartHour = Number(reStartHour)-12; 
+		}        
+                
+        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
+        
+        if(Number(reEndHour) < 12)   
+        { 
+			repeatinfo += "" + strLang1 + " "; 
+		}
+        else
+        {
+			repeatinfo += "" + strLang2 + " ";
+			reEndHour = Number(reEndHour)-12;
+		}
+        
+        repeatinfo += reEndHour + ":" + reEndMinute;
+	}
 	document.getElementById("repeatinfo").innerHTML = repeatinfo;
 }
 
@@ -734,7 +461,6 @@ function ReplaceText( orgStr, findStr, replaceStr )
 	
 	return ( orgStr.replace( re, replaceStr ) );
 }
-
 
 function TrimText( orgStr )
 {
@@ -748,7 +474,6 @@ function TrimText( orgStr )
 			break;
 		}
 	}
-	
 	for ( strIndex = copyStr.length - 1; strIndex >= 0; strIndex -- ) {
 		if ( copyStr.charAt(strIndex) == ' ' ) continue;
 		else {
@@ -756,7 +481,6 @@ function TrimText( orgStr )
 			break;
 		}
 	}
-	
 	return copyStr;
 }
 
@@ -769,53 +493,273 @@ function check_length(chkstr, maxlength, fieldname)
 
 	if (length > maxlength)
 	{
-		alert(fieldname + "" + strLang36 + "" + maxlength + "" + strLang37 + "");
-		return false
+		alert(fieldname + strLang43 + maxlength + "" + strLang44 + "");
+		return false;
 	}
-
 	return true;
 }
 
-DECMD_SETFONTSIZE = 5045;
-OLECMDEXECOPT_DODEFAULT = 0;
+function CheckStartEndDateTime() {
+    var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+    var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 
-var g_originalHTML = null;
-var flag = false;
-function pzFormProc_DocumentComplete()
-{
-	if (flag == false) 
-	{
-	    var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(content);
-	    objMHT.sync = true;
-	    var strMht = objMHT.DownloadURL(URL);
-	    objMHT.mhtData = strMht;
-	    objMHT.filterIn();
-	    document.getElementById("tbContentElement").editor.DOM.body.style.fontFamily = strLang38;
-	    document.getElementById("tbContentElement").Editor.Dom.body.style.fontSize = "10pt";
-	    var htmlData = objMHT.htmlData;
-	    document.getElementById("tbContentElement").Editor.Dom.body.innerHTML = htmlData;
-
-	    var FormProc = document.getElementById("tbContentElement").object;
-	    document.getElementById("tbContentElement").MHTMLSave = 1;
-	    FormProc.Editor.DOM.body.setAttribute("free", "");
-	    MHTLoadComplete = "true";
-	    document.getElementById("tbContentElement").SetFontInfo(strLang38, 10);
-	}
+    if (start >= end)
+        return false;
+    else
+        return true;
 }
 
-function pzFormProc_FieldsAvailable()
-{
-    document.getElementById("tbContentElement").ShowWorkingDlg("", false);
+function AllDayCheckStartEndDateTime() {
+    var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
+    var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
+
+    if (start > end)
+        return false;
+    else
+        return true;
 }
 
-function ModifyAttachOCX(forfilelist)
-{
-    var arrFiles = forfilelist.split("/");
-    
-    for(var i = 0; i<arrFiles.length-1 ; i++)
-    {
-        var fileInfo = arrFiles[i].split("|");
-        form1.EzHTTPTrans.InsertFileList(fileInfo[1], document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/downloadattach.aspx?filename="+escape(fileInfo[1])+"&filepath="+escape("/Upload_Task/File/" + fileInfo[0],"N","N",fileInfo[2]) +"&regData="+clientInformation.systemLanguage,"N","N",fileInfo[2]);
-	    form1.EzHTTPTrans.InsertFileInfo(fileInfo[0]);
+function TimeRevision(szTime) {
+    if (parseInt(szTime) == 0)
+        return szTime = "00";
+
+    return szTime
+}
+
+function CheckTimeRevision(szTime) {
+    if (parseInt(szTime) == 0) {
+        szTime = "00";
     }
+    else if (parseInt(szTime) > 0 && parseInt(szTime) < 10) {
+        szTime = "0" + szTime;
+    }
+
+    return szTime
+}
+
+function replaceSingleQuotation(reStr) {
+    reStr = reStr.replace(/'/g, "''");
+    return reStr;
+}
+
+function trim(parm_str) {
+    return rtrim(ltrim(parm_str));
+}
+
+function ltrim(parm_str) {
+    str_temp = parm_str;
+
+    while (str_temp.length != 0) {
+        if (str_temp.substring(0, 1) == " ") {
+            str_temp = str_temp.substring(1, str_temp.length);
+        }
+        else {
+            return str_temp;
+        }
+    }
+    return str_temp;
+}
+
+function rtrim(parm_str) {
+    str_temp = parm_str;
+
+    while (str_temp.length != 0) {
+        int_last_blnk_pos = str_temp.lastIndexOf(" ");
+
+        if ((str_temp.length - 1) == int_last_blnk_pos) {
+            str_temp = str_temp.substring(0, str_temp.length - 1);
+        }
+        else {
+            return str_temp;
+        }
+    }
+    return str_temp;
+}
+
+function setAttachFileInfo(strXML) {
+    if (strXML == "ERROR") {
+        alert(strLang28);
+        return;
+    }
+    var xml = loadXMLString(strXML);
+
+    try {
+        var strAttach = "";
+        strPreViewAttach = "";
+        var listtable;
+
+        listtable = dadiframe.document.getElementById("filelist");
+        dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+
+        var extCheck = false;
+        for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
+            var newFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
+            var pFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
+            var fileSize = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]);
+            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
+
+            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
+                objTr = document.createElement("TR");
+                objTr.setAttribute("DATA2", newFileName + ";" + fileSize);
+
+                var objTd = document.createElement("TD");
+                objTd.style.textAlign = "center";
+
+                var input = document.createElement("input");
+                input.type = "checkbox";
+                input.name = "fileSelect";
+
+                objTd.appendChild(input);
+                objTr.appendChild(objTd);
+
+                var objTd2 = document.createElement("TD");
+
+                objTd2.setAttribute("NAME", "fileName");
+                objTd2.innerHTML = pFileName;
+                objTd2.style.wordWrap = "break-word";
+                objTr.appendChild(objTd2);
+
+                var fileSize = parseInt(fileSize);
+
+                if (fileSize / 1024 / 1024 > 1) {
+                    fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+                }
+                else if (fileSize / 1024 > 1) {
+                    fileSize = parseInt(fileSize / 1024) + "KB";
+                }
+                else {
+                    fileSize = fileSize + "B";
+                }
+
+                var objTd3 = document.createElement("TD");
+                setNodeText(objTd3, fileSize);
+                objTr.appendChild(objTd3);
+
+                dadiframe.document.getElementById("filelist").appendChild(objTr);
+            }
+            else
+                extCheck = true;          
+        }
+        if (extCheck)
+            alert(strLang267);
+    }
+    catch (e) { alert("returnvalue :: " + e.description); }
+}
+
+function GetEncodeTextNew(pUrl) {
+    var XmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "URL", encodeURIComponent(pUrl));
+    try {
+        XmlHttp.open("POST", "/myoffice/ezSchedule/remote/LoadMailImage.aspx", false);
+        XmlHttp.send(xmlDom);
+        return XmlHttp.responseText;
+    }
+    catch (e) { }
+}
+
+function GetEncodeTextNew_LinkedSystem(pUrl) {
+    var XmlHttp = createXMLHttpRequest();
+    var xmlDom = createXmlDom();
+    var objNode;
+    createNodeInsert(xmlDom, objNode, "DATA");
+    createNodeAndInsertText(xmlDom, objNode, "URL", encodeURIComponent(pUrl));
+    try {
+        XmlHttp.open("POST", pUrl + "&type=1", false);
+        XmlHttp.send(xmlDom);
+        return XmlHttp.responseText;
+    }
+    catch (e) { }
+}
+
+function EmbedImageIntoXML(xmlDoc, rootNode) {
+    var tempDiv = document.createElement("DIV");
+    tempDiv.innerHTML = message.GetEditorContent();
+    var imgColl = tempDiv.getElementsByTagName("IMG");
+
+    for (var i = 0; i < imgColl.length; i++) {
+        var newformname = "";
+        var encodedText
+        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0)
+            encodedText = GetEncodeTextNew(imgColl.item(i).src);
+        else {
+            encodedText = GetEncodeTextNew_LinkedSystem(imgColl.item(i).src);
+        }
+        var formname = imgColl.item(i).src.substr(imgColl.item(i).src.lastIndexOf("/") + 1)
+        var OrgHteml = imgColl.item(i).outerHTML;
+
+        imgColl.item(i).setAttribute("src", formname);
+        imgColl.item(i).removeAttribute("embedding");
+        imgColl.item(i).outerHTML = imgColl.item(i).outerHTML.replace("src=\"" + formname + "\"", "src=\"" + formname + "\" embedding=\"1\" ")
+        //imgColl.item(i).setAttribute("embedding", "1");
+
+        if (CrossYN())
+            GetElementsByTagName(xmlDoc, "CONTENT")[0].textContent = GetElementsByTagName(xmlDoc, "CONTENT")[0].textContent.replace(OrgHteml, imgColl.item(i).outerHTML);
+        else
+            GetElementsByTagName(xmlDoc, "CONTENT")[0].text = GetElementsByTagName(xmlDoc, "CONTENT")[0].text.replace(OrgHteml, imgColl.item(i).outerHTML);
+
+        MakeXmlNode(xmlDoc, rootNode, "IMAGENAME", formname);
+        MakeXmlNode(xmlDoc, rootNode, "IMAGECONTENT", encodedText);
+    }
+
+    if (CrossYN())
+        GetElementsByTagName(xmlDoc, "CONTENT")[0].textContent = pidCryptUtil.encodeBase64(GetElementsByTagName(xmlDoc, "CONTENT")[0].textContent, 64);
+    else
+        GetElementsByTagName(xmlDoc, "CONTENT")[0].text = pidCryptUtil.encodeBase64(GetElementsByTagName(xmlDoc, "CONTENT")[0].text, 64);
+}
+function MakeXmlNode(xmldoc, root, key, value) {
+    var childNode = xmldoc.createElement(key);
+    try {
+        var cDataNode = xmldoc.createCDATASection(String(value));
+        childNode.appendChild(cDataNode);
+    }
+    catch (e) {
+        childNode.text = String(value);
+    }
+    root.appendChild(childNode);
+}
+
+function EmbedContentIntoXML(xmlDoc, rootNode) {
+    var tempDiv = document.createElement("DIV");
+    tempDiv.innerHTML = message.GetEditorContent();
+    var imgColl = tempDiv.getElementsByTagName("IMG");
+
+    for (var i = 0; i < imgColl.length; i++) {
+        if (typeof (imgColl.item(i).srcorg) != "undefined" && imgColl.item(i).src.toLowerCase().indexOf(document.location.protocol + "//") == 0) {
+
+            imgColl.item(i).src = ReplaceText(imgColl.item(i).srcorg, "%25", "");
+            imgColl.item(i).removeAttribute("srcorg");
+        }
+        else if (typeof (imgColl.item(i).srcorgEmbedImage) != "undefined" && imgColl.item(i).src.toLowerCase().indexOf(document.location.protocol + "//") == 0) {
+            imgColl.item(i).src = ReplaceText(imgColl.item(i).srcorgEmbedImage, "%25", "");
+            imgColl.item(i).removeAttribute("srcorgEmbedImage");
+        }
+            // HTTPS:// 은 0~8 임
+        else if (imgColl.item(i).src.substr(0, 7) == "file://" || (imgColl.item(i).embedding == 1 && imgColl.item(i).src.substr(0, 7) == document.location.protocol + "//") || (imgColl.item(i).embedding == 1 && imgColl.item(i).src.substr(0, 8) == document.location.protocol + "//")) {
+            if (typeof (imgColl.item(i).srcorg) != "undefined")
+                imgColl.item(i).removeAttribute("srcorg");
+
+            //수정 (2010. 5. 3) : 아래 경로 수정
+            if (imgColl.item(i).src.indexOf("mode=inlineimage") > 0) {
+                imgColl.item(i).src = imgColl.item(i).src.split("&")[1].split("%")[0].replace("ATTID=", "");
+            }
+        }
+    }
+
+    var BodyHTMLContent = HTMLtoMHT_MakeTag(tempDiv);
+    MakeXmlNode(xmlDoc, rootNode, "CONTENT", BodyHTMLContent);
+}
+
+function ReplaceText(orgStr, findStr, replaceStr) {
+    var re = new RegExp(findStr, "gi");
+    return (orgStr.replace(re, replaceStr));
+}
+
+function setLength(num) {
+    if (num < 10) {
+        num = "0" + num;
+    }
+    return num;
 }

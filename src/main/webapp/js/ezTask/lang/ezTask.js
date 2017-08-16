@@ -41,6 +41,7 @@ var strLang40 = "다음"
 var strLang41 = "총 "
 var strLang42 = "개"
 var strLang43 = "명";
+var strLang44 = "검색결과";
 
 var strLang48 = "첨부파일명"
 var strLang49 = "파일사이즈"

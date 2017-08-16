@@ -1,8 +1,13 @@
 package egovframework.ezEKP.ezTask.web;
 
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.taskdefs.condition.Http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +16,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -33,7 +43,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzTaskController {
+public class EzTaskController extends EgovFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailAdminController.class);
 	
 	@Autowired
@@ -208,4 +218,146 @@ public class EzTaskController {
 		return "/ezTask/taskSelectAttendant";
 	}
 
+	/**
+	 * draganddrop 호출 Method
+	 */
+	@RequestMapping(value = "/ezTask/dragAndDrop.do")
+	public String dragAndDrop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("dragAndDrop started.");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo",userInfo);
+
+		logger.debug("dragAndDrop ended.");
+		
+		return "/ezTask/taskDragAndDrop";
+	}
+	
+	/**
+	 * 첨부파일 업로드
+	 */
+	@RequestMapping(value = "/ezTask/uploadItemAttach.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String uploadItemAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
+		logger.debug("uploadItemAttach started");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
+		int cnt = multiFile.size();
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String[] pFileName = new String[cnt];
+        Long[] fileSize = new Long[cnt];        
+        String[] resultUpload = new String[cnt];
+        String[] sGUID = new String[cnt];
+        String[] pUploadSN = new String[cnt];
+        
+        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
+
+        for (int i = 0; i < cnt; i++) {
+            resultUpload[i] = "false";
+            sGUID[i] = UUID.randomUUID().toString();
+            pUploadSN[i] = "{" + sGUID[i] + "}";
+        }
+
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
+            for (int i = 0; i < cnt; i++) {
+                String _pFileName = multiFile.get(i).getOriginalFilename();
+                if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                    _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+                }
+                pFileName[i] = _pFileName;
+            }
+        }
+
+        for (int i = 0; i < cnt; i++) {
+            pFileName[i] = pFileName[i].replace("%2b", "+");
+            pFileName[i] = pFileName[i].replace("%3b", ";");
+        }
+        
+        String pDirPath = commonUtil.getUploadPath("upload_task.ROOT", loginSimpleVO.getTenantId());
+
+        pDirPath = realPath + pDirPath;
+        
+        logger.debug("pDirPath : " + pDirPath);
+        
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+        File file = new File(pDirPath + "uploadFile");
+        File tempFile = new File(pDirPath + "tempUploadFile");
+
+        if (!file.exists()) {
+        	file.mkdir();
+        }
+        
+        if (!tempFile.exists()) {
+        	tempFile.mkdir();
+        }
+
+        StringBuffer strXML = new StringBuffer();
+        strXML.append("<ROOT><NODES>");
+        
+        for (int i = 0; i < cnt; i++) {        	
+        	fileSize[i] = multiFile.get(i).getSize();
+            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+            String newFileName = pUploadSN[i];
+
+            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
+				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
+            } else {
+            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");
+            	
+				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+				strXML.append("<DATA4><![CDATA[]]></DATA4>");
+				strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
+            }
+        }
+        strXML.append("</NODES></ROOT>");
+        
+        logger.debug("uploadItemAttach ended");
+        
+        return strXML.toString();
+    }
+
+	/**
+	 * 닫기 클릭시 임시첨부파일 삭제
+	 */
+	@RequestMapping(value = "/ezTask/tempUploadFileDelete.do")
+	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		logger.debug("tempUploadFileDelete started");
+
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_task.ROOT", loginSimpleVO.getTenantId());
+		String fileList = request.getParameter("fileList");
+		String filePath = "";
+		
+		logger.debug("fileList : " + fileList);
+
+		filePath = "tempUploadFile";
+
+		if (fileList.length() != 0) {
+			String[] data = fileList.split(","); 
+			
+			for (int i=0; i<data.length; i++) {
+				String sGUID = data[i].split(";")[0];
+				String fileName = data[i].split(";")[1];
+				
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				
+				file.delete();
+			}			
+		}
+
+        logger.debug("tempUploadFileDelete ended");
+        
+        return "json";
+    }
 }

@@ -19,56 +19,57 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<script>
-			var userid = "_userid";
-			var username = "_username";
-		    var username2 = "_username2";
-		    var deptname = "userinfo.DeptName";
-		    var deptname2 = "userinfo.DeptName2";
-			var taskid = " _taskid";
-			var taskstatus = "_taskstatus";
-			var completerate = "_completerate";
-			var startdate = "_startdate";
-			var enddate = "_enddate";
-			var content = "_content";
-			var importance = "_importance";
-		    var repetition = "_repetition";
-		    var tasktype = "_tasktype";
-			var repetitiondel = "_repetitiondel";
-		    var TextCompleteDate1 = "_TextCompleteDate";
-		    var creatorid = "_creatorid";
-		    var _hasattach = "_hasattach";
-		    var taskType = "";
-		    var strLang_1 = "<spring:message code='ezTask.t22' />";
-		    var hasshare = "_hasshare";
-		    var personlist = "_personlist";
-		    var sharelist = "_sharelist";
-		    var g_person = null;
-		    var g_share = null;
-		    var shareid = "_shareid";
-		    var sharename = "_sharename";
-		    var sharename2 = "_sharename2";
-		    var sharedept = "_sharedept";
-		    var sharedept2 = "_sharedept2";
-		    var sharemail = "_sharemail";
+// 			var userid = "_userid";
+// 			var username = "_username";
+// 		    var username2 = "_username2";
+// 		    var deptname = "userinfo.DeptName";
+// 		    var deptname2 = "userinfo.DeptName2";
+// 			var taskid = " _taskid";
+// 			var taskstatus = "_taskstatus";
+// 			var completerate = "_completerate";
+			var title = "";
+			var startdate = "";
+			var enddate = "";
+// 			var content = "_content";
+			var importance = "";
+// 		    var repetition = "_repetition";
+// 		    var tasktype = "_tasktype";
+// 			var repetitiondel = "_repetitiondel";
+// 		    var TextCompleteDate1 = "_TextCompleteDate";
+// 		    var creatorid = "_creatorid";
+// 		    var _hasattach = "_hasattach";
+		    var tasktype = "";
+// 		    var strLang_1 = "<spring:message code='ezTask.t22' />";
+// 		    var hasshare = "_hasshare";
+		    var personlist = "";
+		    var sharelist = "";
+// 		    var g_person = null;
+// 		    var g_share = null;
+// 		    var shareid = "_shareid";
+// 		    var sharename = "_sharename";
+// 		    var sharename2 = "_sharename2";
+// 		    var sharedept = "_sharedept";
+// 		    var sharedept2 = "_sharedept2";
+// 		    var sharemail = "_sharemail";
 // 		    var objMHT = new ActiveXObject("MhtFormat.Convert");
-		    var isreadpage = false;
-		    var FormProcSpelling = "FormProcSpelling";
+// 		    var isreadpage = false;
+// 		    var FormProcSpelling = "FormProcSpelling";
 		    window.onload = function () {
 		        window.onresize();
-		        form1.EzHTTPTrans.SetBigLang = "${userinfo.lang}" == "1" ? 1 : 2;
+// 		        form1.EzHTTPTrans.SetBigLang = "${userinfo.lang}" == "1" ? 1 : 2;
 		        document.getElementById("TextCompleteDate").value = "";
 		//         if (_hasattach == "YES")
 		<%--             ModifyAttachOCX("<%= _attachFileName %>"); --%>
 		
-		        if (taskid != "") {
-		            document.getElementById("importantSelect").value = importance;
-		            document.getElementById("taskstatusSelect").value = taskstatus;
-		            document.getElementById("completerateSelect").value = completerate;
-		            document.getElementById("TextCompleteDate").value = TextCompleteDate1;
-		            if (repetition != "") {
-		                show_repetition_info();            	
-		            }
-		        }
+// 		        if (taskid != "") {
+// 		            document.getElementById("importantSelect").value = importance;
+// 		            document.getElementById("taskstatusSelect").value = taskstatus;
+// 		            document.getElementById("completerateSelect").value = completerate;
+// 		            document.getElementById("TextCompleteDate").value = TextCompleteDate1;
+// 		            if (repetition != "") {
+// 		                show_repetition_info();            	
+// 		            }
+// 		        }
 		
 		        if (tasktype == "1") {
 		            document.getElementById("P").click();
@@ -128,7 +129,7 @@
 // 		        document.getElementById("tbContentElement").height = document.documentElement.clientHeight - 300;
 // 		    }
 		    window.onresize = function () {
-				document.getElementById("EdtorSize").style.height = document.body.clientHeight + "PX";
+				document.getElementById("EdtorSize").style.height = document.body.clientHeight - 150 + "PX";
 			}
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -224,10 +225,10 @@
 		        setNodeText(document.getElementById("printCompleteRate"), getNodeText(document.getElementById("completerateSelect").options[document.getElementById("completerateSelect").selectedIndex]));
 		        setNodeText(document.getElementById("printStatus"), getNodeText(document.getElementById("taskstatusSelect").options[document.getElementById("taskstatusSelect").selectedIndex]));
 		        setNodeText(document.getElementById("printImportance"), getNodeText(document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex]));
-		        setNodeText(document.getElementById("printRepetition"), getNodeText(document.getElementById("repeatinfo")));
+// 		        setNodeText(document.getElementById("printRepetition"), getNodeText(document.getElementById("repeatinfo")));
 		
 		
-		        var tasktype = document.getElementsByName("tasktypesel");
+// 		        var tasktype = document.getElementsByName("tasktypesel");
 		        var tasktypename;
 		
 		        for (var i = 0; i < tasktype.length; i++) {
@@ -250,12 +251,12 @@
 		        }
 		        setNodeText(document.getElementById("printTasktype"), tasktypename);
 		
-		        if (repetition == "")
-		            setNodeText(document.getElementById("printDate"), $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "<spring:message code='ezTask.t207' />");
-		        else
-		            setNodeText(document.getElementById("printDate"), "<spring:message code='ezTask.t208' />");
+// 		        if (repetition == "")
+// 		            setNodeText(document.getElementById("printDate"), $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "<spring:message code='ezTask.t207' />");
+// 		        else
+// 		            setNodeText(document.getElementById("printDate"), "<spring:message code='ezTask.t208' />");
 		
-		        setNodeText(document.getElementById("printTitle"), document.getElementById("TextTitle").value);
+		        setNodeText(document.getElementById("printTitle"), document.getElementById("title").value);
 		
 		        var fileNameList = form1.EzHTTPTrans.FileListAll().split("\\");
 		        var html = "";
@@ -274,33 +275,156 @@
 				document.all.normalScreen.style.display = "block";
 			}
 		
-			function changemenu(obj) {
-			    if (obj.id == "P") {
-			        taskType = obj.value;
-			        document.getElementById("personinputtr").style.display = "none";
+// 			function changemenu(obj) {
+// 			    if (obj.id == "P") {
+// 			    	tasktype = obj.value;
+// 			        document.getElementById("personinputtr").style.display = "none";
 // 			        document.getElementById("trrepeatinfo").style.display = "";
-			    }
-			    else if (obj.id == "I") {
-			        taskType = obj.value;
-			        document.getElementById("personinputtr").style.display = "";
+// 			    }
+// 			    else if (obj.id == "I") {
+// 			    	tasktype = obj.value;
+// 			        document.getElementById("personinputtr").style.display = "";
 // 			        document.getElementById("trrepeatinfo").style.display = "none";
-			        repetition = "";
-			        document.getElementById("periodblock").style.display = "";
-			        document.getElementById("repeatblock").style.display = "none";
-			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-			    }
-			    else if (obj.id == "C") {
-			        taskType = obj.value;
-			        document.getElementById("personinputtr").style.display = "";
+// 			        repetition = "";
+// 			        document.getElementById("periodblock").style.display = "";
+// 			        document.getElementById("repeatblock").style.display = "none";
+// 			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
+// 			    } else {
+// 			    	tasktype = obj.value;
+// 			        document.getElementById("personinputtr").style.display = "";
 // 			        document.getElementById("trrepeatinfo").style.display = "none";
-			        repetition = "";
-			        document.getElementById("periodblock").style.display = "";
-			        document.getElementById("repeatblock").style.display = "none";
-			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-			    }
-			    else {
-			        document.getElementById("importantSelect").value = obj.value;
-			    }
+// 			        repetition = "";
+// 			        document.getElementById("periodblock").style.display = "";
+// 			        document.getElementById("repeatblock").style.display = "none";
+// 			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
+// 			    }
+// 			    else {
+// 			    	importance = document.getElementById("important").value;
+// 			    }
+// 			}
+
+			function Editor_Complete() {
+    	    	message.SetEditorContent(sigBody.innerHTML);
+    	    }
+
+			// 버튼 중복클릭 방지
+		    var doubleSubmitFlag = false;
+		    function doubleSubmitCheck() {
+		    	if (doubleSubmitFlag) {
+		    		return doubleSubmitFlag;
+		    	} else {
+		    		doubleSubmitFlag = true;
+		    		return false;
+		    	}
+		    }
+
+			function save_task() {
+				if (doubleSubmitCheck()){
+	        		return;
+	        	}
+
+				if ($("#title").val() == "") {
+					alert("<spring:message code='ezTask.t994'/>");
+					doubleSubmitFlag = false;
+					
+					return;
+				}
+
+				if ($.trim($("#title").val()) == "") {
+		        	alert("<spring:message code='ezTask.t995' />");
+		        	doubleSubmitFlag = false;
+
+		        	return;
+		        }
+
+				var sdate = "";
+				var edate = "";
+
+				if ($("#Sdatepicker").is(":enabled")) {
+				    sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				    edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				}
+
+				if (sdate > edate) {
+					alert("<spring:message code='ezTask.t993'/>");
+					return;
+				}
+				
+				title = $("#title").val();
+				importance = $(":input:radio[name=important]:checked").val();
+				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
+
+				//업무공유자 목록
+				var shareList = document.getElementById("shareList").innerHTML;
+				var shareList2 = document.getElementById("shareList2").innerHTML;
+				var shareID = document.getElementById("shareID").innerHTML;
+
+				//첨부파일 목록
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				var fileList = "";
+
+				for (var i = 0; i < filelist.length - 1; i++) {
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "data2");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+					}
+				}
+
+				$.ajax({
+					url : '/ezTask/taskSave.do',
+					type : 'POST',
+					dataType : 'text',
+					data : {
+						sdate : sdate,
+						edate : edate,
+						title : title,
+						importance : importance,
+						tasktype : tasktype,
+						shareList : shareList,
+						shareList2 : shareList2,
+						shareID : shareID,
+						fileList : fileList
+					},
+					success : function() {
+						alert("<spring:message code='ezTask.t991'/>");
+					},
+					error : function() {
+						
+					}
+				});
+			}
+
+			function btn_Close() {
+				//파일 첨부된 목록 가져오기
+				var listtable = dadiframe.document.getElementById("filelist");
+				var filelist = GetChildNodes(listtable);
+				var fileList = "";
+
+				for (var i = 0; i < filelist.length - 1; i++) {	    
+					if (i == 0) {
+						fileList = GetAttribute(filelist[i + 1], "data2");
+					} else {
+						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+            		}
+				}
+
+				$.ajax({
+					async : false,
+					url : '/ezTask/tempUploadFileDelete.do',
+	                type : 'POST',
+	                dataType : 'json',
+	                data : {
+	                	fileList : fileList
+	                },
+	                success: function() {
+						window.close();
+	                },
+	                error: function() {
+	                	alert("<spring:message code='ezTask.t992'/>");	
+	                }
+				});
 			}
 		</script>
 		<script type="text/javascript" FOR="tbContentElement" EVENT="FieldsAvailable">
@@ -309,14 +433,17 @@
 		<script type="text/javascript" FOR="tbContentElement" EVENT="DocumentComplete">
 		    pzFormProc_DocumentComplete();
 		    SetFormProc_SetLineStyle(tbContentElement);
-		    if (document.getElementById("TextTitle").value == "") {
-		        document.getElementById("TextTitle").focus();		    	
+		    if (document.getElementById("title").value == "") {
+		        document.getElementById("title").focus();		    	
 		    }
 		</script>				
 		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
 			attach_Add(filename);
 		</script>
 	</HEAD>
+	
+	<xmp id="sigBody" style="display: none;"></xmp>
+	
 	<body class="popup">
 		<form method="post" runat="server" id="form1">
 			<div id="main_body">
@@ -325,18 +452,18 @@
 						<td height="20" id="menuTable">
 							<div id="menu">
 								<ul>
-									<c:choose>
-										<c:when test="${_taskid == ''}">
+<%-- 									<c:choose> --%>
+<%-- 										<c:when test="${_taskid == ''}"> --%>
+<%-- 											<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li> --%>
+<%-- 											<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li> --%>
+<%-- 											<li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" align="absmiddle"><spring:message code='ezTask.t156' /></li> --%>
+<%-- 										</c:when> --%>
+<%-- 										<c:otherwise> --%>
 											<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 											<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
 											<li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" align="absmiddle"><spring:message code='ezTask.t156' /></li>
-										</c:when>
-										<c:otherwise>
-											<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-											<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
-											<li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" align="absmiddle"><spring:message code='ezTask.t156' /></li>
-										</c:otherwise>
-									</c:choose>
+<%-- 										</c:otherwise> --%>
+<%-- 									</c:choose> --%>
 									
 									<li class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;display:none">
 										<select id="importantSelect" name="importantSelect">
@@ -372,14 +499,14 @@
 											<option value='100'>100%</option>
 										</select>
 									</li>
-									<c:if test="${_repetition != '' }">
-										<li><SPAN onClick="restore_deleted()"><spring:message code='ezTask.t211' /></SPAN></li>
-									</c:if>
+<%-- 									<c:if test="${_repetition != '' }"> --%>
+<%-- 										<li><SPAN onClick="restore_deleted()"><spring:message code='ezTask.t211' /></SPAN></li> --%>
+<%-- 									</c:if> --%>
 								</ul>
 							</div>
 							<div id="close">
 								<ul>
-									<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+									<li><span onClick="btn_Close()"><spring:message code='ezTask.t9' /></span></li>
 								</ul>
 							</div>
 							<script type="text/javascript">
@@ -394,25 +521,26 @@
 							<table class="content">
 								<tr>
 									<th><spring:message code='ezTask.t118' /></th>
-									<td colspan="3"><asp:TextBox ID="TextTitle" Runat="server" width="100%" maxlength=100></asp:TextBox></td>
+									<td colspan="3" style="width:100%"><input type="text" id="title" style="width:100%"></td>
+<!-- 									<td colspan="3"><asp:TextBox ID="title" Runat="server" width="100%" maxlength=100></asp:TextBox></td> -->
 								</tr>
 								<tr>
 									<th><spring:message code='ezTask.t2003' /></th>
 									<td style="width:300px">
-										<input type ="radio" id="P" name="tasktypesel" checked="checked" onclick="changemenu(this)" value ="1" />
+										<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" />
 										<label for ="P"><spring:message code='ezTask.t2000' /></label>
-										<input type ="radio" id="I" name="tasktypesel" onclick="changemenu(this)" value ="2" />
+										<input type ="radio" id="I" name="tasktypesel" value ="2" />
 										<label for ="I"><spring:message code='ezTask.t2001' /></label>
-										<input type ="radio" id="C" name="tasktypesel" onclick="changemenu(this)" value ="3" />
+										<input type ="radio" id="C" name="tasktypesel" value ="3" />
 										<label for ="C"><spring:message code='ezTask.t2002' /></label>
 									</td>
 									<th><spring:message code='ezTask.t2004' /></th>
 									<td style="width:300px">
-										<input type ="radio" id="important1" name="important" onclick="changemenu(this)" value ="1" />
+										<input type ="radio" id="important1" name="important" value ="1" />
 										<label for ="important1"><spring:message code='ezTask.t171' /></label>
-										<input type ="radio" id="important2" name="important" checked="checked"  onclick="changemenu(this)" value ="2" />
+										<input type ="radio" id="important2" name="important" checked="checked" value ="2" />
 										<label for ="important2"><spring:message code='ezTask.t172' /></label>
-										<input type ="radio" id="important3" name="important" onclick="changemenu(this)" value ="3" />
+										<input type ="radio" id="important3" name="important" value ="3" />
 										<label for ="important3"><spring:message code='ezTask.t173' /></label>
 									</td>
 								</tr>
@@ -430,10 +558,15 @@
 <!-- 										</TR>	            	 -->
 <%-- 									</c:otherwise> --%>
 <%-- 								</c:choose> --%>
-								<TR id="shareinputtr">
-									<th ><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
-									<TD colspan ="3"><DIV id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD>
-								</TR>
+								<tr id="shareinputtr">
+									<th ><a class="imgbtn"><span onClick="_manage_attendant()"><spring:message code='ezTask.t157' /></span></a></th>
+									<td colspan ="3">
+										<input name="Input" id="shareInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
+										<div id="shareList" style="OVERFLOW-Y: auto; HEIGHT: 17px; display: inline;"></div>
+										<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+	         							<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+									</td>
+								</tr>
 								<tr style="display:none">
 									<th><spring:message code='ezTask.t212' /></th>
 									<td colspan="3">
@@ -450,7 +583,7 @@
 									<td colspan="3"><span id="periodblock">
 									<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
 									<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-									</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span> </td>
+<%-- 									</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span> </td> --%>
 								</tr>
 							</table>
 						</td>
@@ -461,19 +594,10 @@
 		      			</td>
 	  				</tr>
 					<tr>
-						<td height="20" style="padding-top:10px">
-							<table id="attachTable" class="file">
-								<tr>
-									<th><spring:message code='ezTask.t160' /></th>
-									<td class="pos1" style="height:60px">
-<!-- 										<SCRIPT language='JavaScript'>EzHTTPTrans_ActiveX2("EzHTTPTrans");</SCRIPT> -->
-									</td>
-									<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="attach_Add()"><spring:message code='ezTask.t215' /></span></a><br>
-									<a class="imgbtn"><span id="btn_AttachDel" onClick="attach_Delete()"><spring:message code='ezTask.t216' /></span></a></td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+		  				<td>
+			       			<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>	
+		  				</td>
+		  			</tr>
 				</table>
 			</div>
 			<div id="printScreen" style="DISPLAY: none">
@@ -502,10 +626,10 @@
 						<th><spring:message code='ezTask.t120' /></th>
 						<td><div id="printCompleteRate"></div></td>
 					</tr>
-					<tr>
-						<th><spring:message code='ezTask.t213' /></th>
-						<td><div id="printRepetition"></div></td>
-					</tr>
+<!-- 					<tr> -->
+<%-- 						<th><spring:message code='ezTask.t213' /></th> --%>
+<!-- 						<td><div id="printRepetition"></div></td> -->
+<!-- 					</tr> -->
 					<tr>
 						<th><spring:message code='ezTask.t218' /></th>
 						<td><div id="printDate"></div></td>
