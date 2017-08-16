@@ -2,6 +2,50 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="ezTask">
-
+	<typeAlias alias="TaskInfoVO"				type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
+	
+	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
+	   <![CDATA[
+		    SELECT
+				taskID,
+				parentID,
+				ownerID,
+				creatorID,
+				case when #primary# = 1 then creatorName else creatorName2 end as creatorName,
+				DATE_ADD(DATE_FORMAT(createDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as createDate,
+				taskStatus,
+				completeRate,
+				DATE_ADD(DATE_FORMAT(completeDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as completeDate,
+				importance,
+				hasShare,
+				hasAttach,
+				hasComment,
+				DATE_ADD(DATE_FORMAT(startDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startDate,
+				DATE_ADD(DATE_FORMAT(endDate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as endDate,
+				repetition,
+				repetitionDelete,
+				repetitionStatus,
+				title,
+				contentPath,
+				taskType,
+				updateTime,
+				newAnswer,
+				newRefer,
+				personID,
+				personName,
+				personName2,
+				case when #primary# = 1 then personDeptName else personDeptName2 end as personDeptName,
+				personAttach,
+				personContentPath
+				taskPersonID,
+				case when #primary# = 1 then taskPersonName else taskPersonName2 end as taskPersonName
+			FROM
+				TBL_TASK
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+		]]>
+	</select>
 </sqlMap>
 

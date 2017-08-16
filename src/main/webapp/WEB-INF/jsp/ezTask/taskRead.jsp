@@ -12,8 +12,8 @@
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezTask/js/AttachItem_CK.js")"></script>
-		<script type="text/javascript" src="/js/ezTask/js/AttachMain_CK.js")"></script>
+		<script type="text/javascript" src="/js/ezTask/js/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="/js/ezTask/js/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<style>
@@ -25,23 +25,23 @@
 		
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
-			var taskid = "${taskID }";
-			var contentpath = "${contentPath }";
-			var ownerid = "${ownerID }";
-			var creatorid = "${creatorID }";
-			var parentid = "${parentID }";
-			var taskstatus = "${taskStatus }";
-			var completerate = "${completeRate }";
+			var taskid = "${taskInfoVO.taskID }";
+			var contentpath = "${taskInfoVO.contentPath }";
+			var ownerid = "${taskInfoVO.ownerID }";
+			var creatorid = "${taskInfoVO.creatorID }";
+			var parentid = "${taskInfoVO.parentID }";
+			var taskstatus = "${taskInfoVO.taskStatus }";
+			var completerate = "${taskInfoVO.completeRate }";
 		    var admin = "${admin }";
 		    var personlist = "${personList }";
 		    var shareid = "${shareID }";
-		    var tasktype = "${taskType }";
+		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
 		    var date = "${date }";
 		    var type = "${type }";
-		    var personid = "${personID }";
+		    var personid = "${taskInfoVO.personID }";
 		    var attachFileInfo = "${attachFileInfo }";
-		    var optioncnt = "${optionCnt }";
+		    var optioncnt = "${optionCnt }";//taskInfoVO.commentDate 카운트
 		    var tempbody = "";
 		    var pUse_Editor = "{useEditor}";
 		    var AttachLimit = 5;
@@ -72,12 +72,12 @@
 		            document.getElementById("MailEnv_sub2").style.display = "none";
 		            document.getElementById("persontr").style.display = "none";
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
-		            document.getElementById("tasktype").innerHTML = "<spring:message code='ezTask.t2000' />";
+		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2000' />";
 		            document.getElementById("message").style.height = "295px";
 		        } else if (tasktype == "2") {
-		            document.getElementById("tasktype").innerHTML = "<spring:message code='ezTask.t2001' />";
+		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2001' />";
 		        } else {
-		            document.getElementById("tasktype").innerHTML = "<spring:message code='ezTask.t2002' />";
+		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2002' />";
 		        }
 
 		        if (ownerid == userid) {
@@ -218,12 +218,21 @@
 			}
 			
 			function show_personinfo(userid) {
-				if (userid == "0") {
+				/* if (userid == "0") {
 					userid = creatorid;
 				}
 	
 				var feature = GetOpenPosition(420, 450);
-				window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature); */
+				
+				if (userid == "0")
+					userid = creatorid;
+					
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+				var left = (width - 420) / 2;
+				var top = (heigth - 450) / 2;
+				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 			
 			function attach_SelectAll(type) {
@@ -803,13 +812,13 @@
 			
 				status += ", <spring:message code='ezTask.t144' />" + completerate + "%";
 			
-			    setNodeText(document.getElementById("printCreator"), getNodeText(document.getElementById("LabelCreator")));
-			    setNodeText(document.getElementById("printCreateDate"), getNodeText(document.getElementById("LabelCreateDate")));
+			    setNodeText(document.getElementById("printCreator"), '${taskInfoVO.creatorName }');
+			    setNodeText(document.getElementById("printCreateDate"), '${taskInfoVO.createDate }');
 			    setNodeText(document.getElementById("printStatus"), status);
-			    setNodeText(document.getElementById("printImportance"), getNodeText(document.getElementById("LabelImportance")));
+			    setNodeText(document.getElementById("printImportance"), '${taskInfoVO.importance }');
 			    setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("LabelShare")));
-			    setNodeText(document.getElementById("printDate"), getNodeText(document.getElementById("LabelDate")));
-			    setNodeText(document.getElementById("printTitle"), getNodeText(document.getElementById("LabelSubject")));
+			    setNodeText(document.getElementById("printDate"), '${taskInfoVO.completeDate }');
+			    setNodeText(document.getElementById("printTitle"), '${taskInfoVO.title }');
 			    document.getElementById("printComment").innerHTML = document.getElementById("Comment").innerHTML;
 			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
@@ -925,8 +934,8 @@
 		<div id="menu">
 			<ul>
 <!-- 				<asp:PlaceHolder ID="HolderEdit" Runat="server"> -->
-				<li id="edit"><SPAN onClick="edit_task()"><spring:message code='ezTask.t151' /></SPAN></li>
-				<li id="save"><SPAN onClick="save_taskwrok()"><spring:message code='ezTask.t96' /></SPAN></li>
+<%-- 				<li id="edit"><SPAN onClick="edit_task()"><spring:message code='ezTask.t151' /></SPAN></li> 수정--%>
+<%-- 				<li id="save"><SPAN onClick="save_taskwrok()"><spring:message code='ezTask.t96' /></SPAN></li> 저장--%>
 				<li id="delete"><SPAN onClick="delete_task()"><spring:message code='ezTask.t115' /></SPAN></li>
 				<li id="share" style="display:none"><SPAN onClick="manage_share()"><spring:message code='ezTask.t152' /></SPAN></li>
 <!-- 		    	</asp:PlaceHolder> -->
@@ -952,23 +961,33 @@
 							<th><spring:message code='ezTask.t117' /></th>
 							<td style="white-space:nowrap">
 								<div style="CURSOR:pointer; " onClick="show_personinfo('0')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
-									<asp:label id="LabelCreator" Runat="server"></asp:label>
+									<c:out value = '${taskInfoVO.creatorName }' />
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t155' /></th>
-							<td style="padding-right:15px;white-space:nowrap"><asp:label id="LabelCreateDate" Runat="server"></asp:label></td>
+							<td style="padding-right:15px;white-space:nowrap">${taskInfoVO.createDate }</td>
 						</tr>
 						<tr>
 							<th><spring:message code='ezTask.t2003' /></th>
 							<td style="width:100%">
 								<div>
-									<asp:label id="tasktype" Runat="server"></asp:label>
+									<span id="taskType"></span>
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t156' /></th>
 							<td>
 								<div>
-									<asp:label id="LabelImportance" Runat="server"></asp:label>
+									<c:choose>
+										<c:when test="${taskInfoVO.importance == '1' }">
+											<spring:message code = 'ezTask.t171' />
+										</c:when>
+										<c:when test="${taskInfoVO.importance == '2' }">
+											<spring:message code = 'ezTask.t172' />
+										</c:when>
+										<c:otherwise>
+											<spring:message code = 'ezTask.t173' />
+										</c:otherwise>
+									</c:choose>
 								</div>
 							</td>
 						</tr>
@@ -988,10 +1007,16 @@
 							</td>
 						</tr>
 						<tr>
-							<th><spring:message code='ezTask.t158' /></th>
-							<td colspan="3">
+							<th><spring:message code='ezTask.t121' /></th>
+							<td>
 								<div>
-									<asp:Label ID="LabelDate" runat="server"></asp:Label>
+									<c:out value = '${taskInfoVO.startDate }' />
+								</div>
+							</td>
+							<th><spring:message code='ezTask.t122' /></th>
+							<td>
+								<div>
+									<c:out value = '${taskInfoVO.endDate }' />
 								</div>
 							</td>
 						</tr>
@@ -999,7 +1024,7 @@
 							<th><spring:message code='ezTask.t118' /></th>
 							<td colspan="3">
 								<div style="overflow-y:auto;padding-top:2px">
-									<asp:label id="LabelSubject" Runat="server"></asp:label>
+									<c:out value = '${taskInfoVO.title }' />
 								</div>
 							</td>
 						</tr>

@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezTask.web;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.web.EzEmailAdminController;
+import egovframework.ezEKP.ezTask.service.EzTaskService;
+import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -33,13 +33,16 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
 public class EzTaskController {
-	private static final Logger logger = LoggerFactory.getLogger(EzEmailAdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzTaskController.class);
 	
 	@Autowired
 	private CommonUtil commonUtil;
 	
 	@Autowired
 	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private EzTaskService ezTaskService;
 	
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -83,6 +86,7 @@ public class EzTaskController {
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		/*var taskid = "${taskID }";
 		var contentpath = "${contentPath }";
@@ -103,9 +107,10 @@ public class EzTaskController {
 	    var attachFileInfo = "${attachFileInfo }";
 	    var optioncnt = "${optionCnt }";
 	    var tempbody = "";
-	    var pUse_Editor = "{useEditor}";*/
+	    */
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("type", type);
 		
