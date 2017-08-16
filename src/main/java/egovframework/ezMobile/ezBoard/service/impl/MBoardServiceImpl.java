@@ -1,15 +1,19 @@
 package egovframework.ezMobile.ezBoard.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezMobile.ezBoard.service.MBoardService;
@@ -49,6 +54,9 @@ public class MBoardServiceImpl implements MBoardService {
 	
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -976,4 +984,37 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getDeptPathCode(map);
 	}
+
+	@Override
+	public String getMhtContent(String realPath, String domain, MCommonVO userInfo, String url,Locale locale) throws Exception {
+		String filePath = "";
+		String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator;
+		
+		filePath = realPath + uploadModule;
+		
+	    File file = new File(filePath);
+	        
+	    if (!file.exists()) {
+	    	file.mkdir();
+	    }
+	    
+	    String m_strMHT = "";
+        
+        try {
+    		m_strMHT = ezCommonService.loadMHTFile(realPath + url);
+		} catch (Exception e) {
+			m_strMHT= "";
+		}
+	    
+        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
+        logger.debug("strHTML : " + strHTML);
+        
+        Document doc = Jsoup.parse(strHTML);
+        
+        String bodyHTML = doc.getElementsByTag("BODY").html();
+        
+		return bodyHTML;
+	}
+	
+	
 }

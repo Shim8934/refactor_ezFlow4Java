@@ -109,11 +109,12 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 
 	@Override
-	public List<MResourceGetAdmSubClsTreeVO> getResFavoriteList(String userId,
-			int tenantId) {
+	public List<MResourceScheduleVO> getResFavoriteList(String userId,
+			String companyId,int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userId);
 		map.put("tenantID", tenantId);
+		map.put("v_PCOMPANYID", companyId);
 		return mResourceDAO.getResFavoriteList(map);
 	}
 
@@ -199,9 +200,10 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	}
 
 	@Override
-	public void addResFavor(String resId, String userId, int tenantId) {
+	public void addResFavor(String resId, String companyId, String userId, int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PRESID", resId);
+		map.put("v_PCOMPANYID", companyId);
 		map.put("v_PUSERID", userId);
 		map.put("tenantID", tenantId);
 		mResourceDAO.addResFavor(map);
@@ -304,6 +306,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
+						temp.setDate(format.format(dateArr[0]).substring(0,10));
+						temp.setValue(getRepeatResult.get(i).getTitle());
 						
 						getScheduleList.add(temp);
 					}

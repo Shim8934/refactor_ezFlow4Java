@@ -27,7 +27,7 @@ public interface MResourceService {
 	
 	public List<MResourceGetAdmSubClsTreeVO> getResBrdList(String brdId, String brdCompany, int tenantId);
 	
-	public List<MResourceGetAdmSubClsTreeVO> getResFavoriteList(String userId, int tenantId);
+	public List<MResourceScheduleVO> getResFavoriteList(String userId, String companyId, int tenantId);
 	
 	public void addResSch(String ownerId, String companyId, int tenantId, String pNum, String writerId, String deptNm, String ownerNm, String title, 
 			String location, String timeDisplay, String startDate, String endDate, String allDay, String alterTime, String content, String importance, 
@@ -39,7 +39,7 @@ public interface MResourceService {
 	
 	public void delResSch(String companyId, String ownerId, String num, int tenantId);
 	
-	public void addResFavor(String resId, String userId, int tenantId);
+	public void addResFavor(String resId, String companyId, String userId, int tenantId);
 	
 	public void delResFavor(String resId, String userId, int tenantId);
 	

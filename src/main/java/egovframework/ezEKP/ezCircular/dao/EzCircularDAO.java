@@ -341,7 +341,10 @@ public class EzCircularDAO extends EgovAbstractDAO{
 
 	public void restoreCircular(Map<String, Object> map) throws Exception {
 		update("EzCircularDAO.restoreCircular", map);
-		
+	}
+
+	public int checkFolder(Map<String, Object> map) throws Exception {
+		return (int) select("EzCircularDAO.checkFolder", map);
 	}
 
 }

@@ -63,6 +63,33 @@ public class MResourceScheduleVO {
 	private String resId;
 	/** 사용자아이디*/
 	private String userId;
+	/** 자원명 */
+	private String brdNm;
+	/** 캘린더 날짜*/
+	private String date;
+	/** 캘린더 값*/
+	private String value;
+	
+
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+	public String getBrdNm() {
+		return brdNm;
+	}
+	public void setBrdNm(String brdNm) {
+		this.brdNm = brdNm;
+	}
+	
 	public String getResId() {
 		return resId;
 	}
