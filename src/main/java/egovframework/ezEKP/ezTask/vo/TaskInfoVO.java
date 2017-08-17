@@ -34,19 +34,11 @@ public class TaskInfoVO {
 	/** 완료기한 */
 	private String endDate;
 	
-	/////반복설정 관련정보들 필요없으면 추후 삭제
-	/** 반복업무설정 */
-	private String repetition;
-	/** 반복업무 인스턴스중 삭제된 리스트*/
-	private String repetitionDelete;
-	/** 반복업무 인스턴스중 상태변경된 리스트*/
-	private String repetitionStatus;
-	
 	/** 제목 */
 	private String title;
-	/** 지시사항 본문경로*/
+	/** 지시사항 본문경로 */
 	private String contentPath;
-	/** 업무구분(1:개인, 2:지시,협조)*/
+	/** 업무구분(1:개인, 2:지시, 3:협조) */
 	private String taskType;
 	/** */
 	private String updateTime;
@@ -54,9 +46,9 @@ public class TaskInfoVO {
 	private String newAnswer;
 	/** */
 	private String newRefer;
-	/** 담당자ID*/
+	/** 담당자ID */
 	private String personID;
-	/** 담당자 이름*/
+	/** 담당자 이름 */
 	private String personName;
 	/** 담당자 이름2*/
 	private String personName2;
@@ -66,7 +58,7 @@ public class TaskInfoVO {
 	private String personDeptName2;
 	/** 진행사항 파일첨부*/
 	private String personAttach;
-	/** 진행사항 본문경로*/
+	/** 진행사항 본문경로 */
 	private String personContentPath;
 	/** */
 	private String taskPersonID;
@@ -172,24 +164,6 @@ public class TaskInfoVO {
 	}
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
-	}
-	public String getRepetition() {
-		return repetition;
-	}
-	public void setRepetition(String repetition) {
-		this.repetition = repetition;
-	}
-	public String getRepetitionDelete() {
-		return repetitionDelete;
-	}
-	public void setRepetitionDelete(String repetitionDelete) {
-		this.repetitionDelete = repetitionDelete;
-	}
-	public String getRepetitionStatus() {
-		return repetitionStatus;
-	}
-	public void setRepetitionStatus(String repetitionStatus) {
-		this.repetitionStatus = repetitionStatus;
 	}
 	public String getTitle() {
 		return title;
@@ -303,9 +277,7 @@ public class TaskInfoVO {
 				+ ", completeDate=" + completeDate + ", importance="
 				+ importance + ", hasShare=" + hasShare + ", hasAttach="
 				+ hasAttach + ", hasComment=" + hasComment + ", startDate="
-				+ startDate + ", endDate=" + endDate + ", repetition="
-				+ repetition + ", repetitionDelete=" + repetitionDelete
-				+ ", repetitionStatus=" + repetitionStatus + ", title=" + title
+				+ startDate + ", endDate=" + endDate + ", title=" + title
 				+ ", contentPath=" + contentPath + ", taskType=" + taskType
 				+ ", updateTime=" + updateTime + ", newAnswer=" + newAnswer
 				+ ", newRefer=" + newRefer + ", personID=" + personID

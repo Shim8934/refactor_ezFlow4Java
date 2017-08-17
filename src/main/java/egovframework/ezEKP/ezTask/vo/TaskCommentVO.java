@@ -8,7 +8,7 @@ public class TaskCommentVO {
 	/** 메모작성자 ID*/
 	private String commentorID;
 	/** 메모작성자 이름*/
-	private String commentName;
+	private String commentorName;
 	/** 메모작성일*/
 	private String commentDate;
 	/** 메모내용*/
@@ -33,11 +33,11 @@ public class TaskCommentVO {
 	public void setCommentorID(String commentorID) {
 		this.commentorID = commentorID;
 	}
-	public String getCommentName() {
-		return commentName;
+	public String getCommentorName() {
+		return commentorName;
 	}
-	public void setCommentName(String commentName) {
-		this.commentName = commentName;
+	public void setCommentorName(String commentorName) {
+		this.commentorName = commentorName;
 	}
 	public String getCommentDate() {
 		return commentDate;
@@ -60,8 +60,8 @@ public class TaskCommentVO {
 	@Override
 	public String toString() {
 		return "TaskCommentVO [commentID=" + commentID + ", taskID=" + taskID
-				+ ", commentorID=" + commentorID + ", commentName="
-				+ commentName + ", commentDate=" + commentDate + ", comment="
+				+ ", commentorID=" + commentorID + ", commentorName="
+				+ commentorName + ", commentDate=" + commentDate + ", comment="
 				+ comment + ", tenantID=" + tenantID + "]";
 	}
 }

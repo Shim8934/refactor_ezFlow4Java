@@ -18,6 +18,10 @@ public interface EzTaskService {
 	
 	List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception;
 	
+	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception;
+	
+	void deleteComment(String taskID, String commentID, int tenantID) throws Exception;
+	
 	/* 정수현*/
 	public void taskSaveConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
 

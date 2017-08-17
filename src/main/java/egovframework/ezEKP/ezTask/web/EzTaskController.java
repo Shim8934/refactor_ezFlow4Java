@@ -111,8 +111,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
 		
-		
-		
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 		
@@ -122,9 +120,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<TaskCommentVO> taskCommentList = null;
 		if (taskInfoVO.getHasComment().equals("Y")) {
 			if (parentID.equals("0")) {
-				taskCommentList = ezTaskService.getCommentList(parentID, offset, primary, tenantID);
-			} else {
 				taskCommentList = ezTaskService.getCommentList(taskID, offset, primary, tenantID);
+			} else {
+				taskCommentList = ezTaskService.getCommentList(parentID, offset, primary, tenantID);
 			}
 		}
 		
@@ -132,18 +130,18 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<TaskShareVO> taskShareList = null;
 		if (taskInfoVO.getHasShare().equals("Y")) {
 			if (parentID.equals("0")) {
-				taskShareList = ezTaskService.getShareList(parentID, offset, primary, tenantID);
-			} else {
 				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
+			} else {
+				taskShareList = ezTaskService.getShareList(parentID, offset, primary, tenantID);
 			}
 		}
 		
 		//첨부파일목록조회
 		if (taskInfoVO.getHasAttach().equals("Y")) {
 			if (parentID.equals("0")) {
-//				getAttachList(parentID);
-			} else {
 //				getAttachList(taskID);
+			} else {
+//				getAttachList(parentID);
 			}
 		}
 		
@@ -186,12 +184,52 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskRead";
 	}
 	
-	/*@RequestMapping(value = "/ezTask/taskSearch.do")
-	public String taskSearch() throws Exception {
-		return "/ezTask/taskSearch";
+	/** 의견작성 Method*/
+	@RequestMapping(value = "/ezTask/taskSaveComment.do")
+	public String taskSaveComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskSaveComment started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
+		String taskID = request.getParameter("taskID");
+		String textComment = request.getParameter("textComment");
+		
+		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, tenantID);
+		
+		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
+		
+		model.addAttribute("result", result);
+		model.addAttribute("taskCommentList", taskCommentList);
+		
+		logger.debug("taskSaveComment ended.");
+		
+		return "json";
 	}
 	
-	@RequestMapping(value = "/ezTask/taskSearch.do")
+	/** 의견삭제 Method*/
+	@RequestMapping(value = "/ezTask/taskDeleteComment.do")
+	public String taskDeleteComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskDeleteComment started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
+		String taskID = request.getParameter("taskID");
+		String commentID = request.getParameter("commentID");
+		
+		ezTaskService.deleteComment(taskID, commentID, tenantID);
+		
+		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
+		
+		model.addAttribute("taskCommentList", taskCommentList);
+		
+		logger.debug("taskDeleteComment ended.");
+		
+		return "json";
+	}
+	
+	/*@RequestMapping(value = "/ezTask/taskSearch.do")
 	public String taskSearch() throws Exception {
 		return "/ezTask/taskSearch";
 	}*/

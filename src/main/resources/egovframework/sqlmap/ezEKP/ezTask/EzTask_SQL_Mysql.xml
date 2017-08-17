@@ -24,9 +24,6 @@
 				hascomment,
 				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
 				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as enddate,
-				repetition,
-				repetitiondelete,
-				repetitionstatus,
 				title,
 				contentpath,
 				tasktype,
@@ -52,6 +49,7 @@
 	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO">
 	   <![CDATA[
 		    SELECT
+		    	taskID,
 				commentid,
 				commentorid,
 				case when #primary# = 1 then commentorname else commentorname2 end as commentorname,
@@ -80,6 +78,66 @@
 				taskid = #taskID#
 		]]>
 	</select>
+	
+	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
+		<isEqual property="hasComment" compareValue="Y">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					(taskid = #taskID# OR parentID = #taskID#)
+	        ]]>
+		</isEqual>
+		<isEqual property="hasComment" compareValue="N">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					(taskid = #taskID# OR parentID = #taskID#)
+				AND
+					(SELECT
+						COUNT(*)
+					FROM
+						TBL_TASKCOMMENT
+					WHERE
+						tenantid = #tenantID#
+					AND
+						taskid = #taskID#
+					) IS NULL
+	        ]]>
+		</isEqual>
+		
+    </update>
+    
+    <update id="EzTaskDAO.insertComment" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKCOMMENT
+				(taskid, commentorid, commentorname, commentorname2, commentdate, comment, tenantID)
+			VALUES
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#, #tenantID#)
+        ]]>
+    </update>
+    
+    <delete id="EzTaskDAO.deleteComment" parameterClass="Map">
+    	<![CDATA[
+			DELETE FROM
+				TBL_TASKCOMMENT
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+			AND
+				commentid = #commentID#
+        ]]>
+    </delete>
 	
 	
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">

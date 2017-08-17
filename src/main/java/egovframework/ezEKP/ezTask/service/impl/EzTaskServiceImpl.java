@@ -87,6 +87,43 @@ public class EzTaskServiceImpl implements EzTaskService{
 		return list;
 	}
 	
+	@Override
+	public int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception {
+		logger.debug("insertComment started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("commentorID", commentorID);
+		map.put("commentorName", commentorName);
+		map.put("commentorName2", commentorName2);
+		map.put("comment", comment);
+		map.put("hasComment", "Y");
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.updateHasComment(map);
+		int result = ezTaskDAO.insertComment(map);
+		
+		logger.debug("insertComment ended.");
+		
+		return result;
+	}
+	
+	@Override
+	public void deleteComment(String taskID, String commentID, int tenantID) throws Exception {
+		logger.debug("insertComment started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("commentID", commentID);
+		map.put("hasComment", "N");
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.deleteComment(map);
+		ezTaskDAO.updateHasComment(map);
+		
+		logger.debug("insertComment ended.");
+	}
 
 	/* 정수현*/
 	@Override

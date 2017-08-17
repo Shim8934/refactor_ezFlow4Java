@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -12,8 +13,8 @@
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezTask/js/AttachItem_CK.js"></script>
-		<script type="text/javascript" src="/js/ezTask/js/AttachMain_CK.js"></script>
+		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 
 		<script type="text/javascript">
@@ -39,7 +40,7 @@
 		    var attachFileInfo = "${attachFileInfo }";
 		    var taskCommentListSize = "${taskCommentListSize }";
 		    var tempbody = "";
-		    var pUse_Editor = "{useEditor}";
+		    var pUse_Editor = "${useEditor}";
 		    var AttachLimit = 5;
 		    
 		    var folderPath = "${folderPath }";
@@ -67,10 +68,11 @@
 		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2002' />";
 		        }
 
+				/* 저장 수정버튼 숨김스크립트 */
 		        if (ownerid == userid) {
-		            document.getElementById("save").style.display = "none";
+// 		            document.getElementById("save").style.display = "none";
 		        } else if (personid == userid) {
-		            document.getElementById("edit").style.display = "none";
+// 		            document.getElementById("edit").style.display = "none";
 		            document.getElementById("delete").style.display = "none";
 		            
 		            if(attachFileInfo != "") {
@@ -96,24 +98,14 @@
 		            }
 		        }
 		        
+				/* 의견카운트 */
 		        if (taskCommentListSize == 0) {
 		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
-		        } else {
-		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + optioncnt + ")";
+		        } else { 
+		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
 		        }
 		        
-		        if (type == "2") {
-		            selecttab = "3";
-		            document.getElementById("normalScreen").style.display = "none";
-		            document.getElementById("tablework").style.display = "none";
-		            document.getElementById("tablecomment").style.display = "";
-
-		            var obj = document.getElementById("1tab3");
-		            obj.className = "tabon";
-		            Tab1_SelectID = obj.id;
-		        } else {
-		            setTimeout(onloadchangtab, 100);
-		        }
+				setTimeout(onloadchangtab, 100);
 		    });
    
 			function scrollTop() {
@@ -122,6 +114,7 @@
 				} catch (e) { }
 			}
 
+			/* 초기 탭선택스크립트 */
 			function onloadchangtab() {
 				if (type == "1" && (tasktype != "1" && ownerid == userid)) {
 					Tab1_MouseClick(document.getElementById("1tab2"));
@@ -132,6 +125,7 @@
 				}
 			}
 
+			/* 지시사항 본문 */
 			function load_bodyhtml() {
 				$.ajax({
 					type : "POST",
@@ -154,7 +148,8 @@
 					}
 				});
 			}
-	
+			
+			/* 진행사항 본문 */
 			function load_bodyhtml2() {
 				if (personContentpath != "") {
 					$.ajax({
@@ -189,7 +184,7 @@
 					} catch (e) { }
 				}
 			}
-	
+			
 			function ImageUrl(pUrl, cnt) {
 				var link = "/myoffice/Common/ImgFileRead.asp?PUrl=" + pUrl + "&Cnt=" + cnt;
 	
@@ -202,15 +197,9 @@
 			}
 			
 			function show_personinfo(userid) {
-				/* if (userid == "0") {
+				if (userid == "0") {
 					userid = creatorid;
 				}
-	
-				var feature = GetOpenPosition(420, 450);
-				window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature); */
-				
-				if (userid == "0")
-					userid = creatorid;
 					
 				var heigth = window.screen.availHeight;
 				var width = window.screen.availWidth;
@@ -260,6 +249,7 @@
 				}
 			}
 			
+			/* 의견작성 */
 			function add_comment() {
 				var id = taskid;
 				if (parentid != "0") {
@@ -270,22 +260,50 @@
 					alert("<spring:message code='ezTask.t241' />");
 					return;
 				}
-	
-				var xmlDom = createXmlDom();
-				var xmlHTTP = createXMLHttpRequest();
-		
-				var objNode;
-				objNode = createNodeInsert(xmlDom, objNode, "DATA");
-				createNodeAndInsertText(xmlDom, objNode, "TASKID", id);
-				createNodeAndInsertText(xmlDom, objNode, "TEXTCOMMENT", document.getElementById("TextComment").value);
-		
-				xmlHTTP.open("POST", "/myoffice/ezTask/task_savemeno.aspx", false);
-				xmlHTTP.send(xmlDom);
-	
-				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
-					alert("<spring:message code='ezTask.t222' />");
-					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
-				}
+				
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezTask/taskSaveComment.do",
+					data : {
+							taskID : id,
+							textComment : $("#TextComment").val()
+					},
+					success: function(result){
+						/* alert("<spring:message code='ezTask.t222' />"); */
+						
+						var list = result.taskCommentList;
+						taskCommentListSize = list.length;
+						
+						/* 탭의견 카운트 */
+						if (taskCommentListSize == 0) {
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
+						} else { 
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
+						}
+						
+						/* commentList */
+						taskCommentList = "";
+						list.forEach(function(vo, index) {
+							commentorID = "\"" + vo.commentorID + "\"";
+							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
+							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
+							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate + ") : </span>";
+							taskCommentList += "<span>";
+							taskCommentList += vo.comment;
+							taskCommentList += "<img src='/images/comment_delete.gif' title='asdf' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
+							taskCommentList += "</span>";
+							taskCommentList += "<br/>";
+						});
+						
+						console.log(taskCommentList);
+						$("#taskCommentList").html(taskCommentList);
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				});
 			}
 			
 			function manage_share() {
@@ -356,9 +374,11 @@
 					},
 					success : function(result) {
 						window.opener.RefreshView()
-					},error : function(jqXHR, textStatus, errorThrown) {
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezTask.t108' />")
-					},complete : function() {
+					},
+					complete : function() {
 						window.close();
 					}
 				});
@@ -453,7 +473,7 @@
 				if (parentid != "0")
 				    id = parentid;
 				
-				var xmlDom = createXmlDom();
+				/* var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
 				var objRoot;
 				var objNode;
@@ -470,7 +490,50 @@
 				} else {
 					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
 			        try { window.opener.location.reload(); } catch (e) { }
-			    }
+			    } */
+			    
+			    $.ajax({
+					type : "POST",
+					url : "/ezTask/taskDeleteComment.do",
+					dataType : "json",
+					data : {
+						taskID : id,
+						commentID : commentid
+					},
+					success : function(result) {
+						/* alert("<spring:message code='ezTask.t148' />"); */
+						
+						var list = result.taskCommentList;
+						taskCommentListSize = list.length;
+						
+						/* 탭의견 카운트 */
+						if (taskCommentListSize == 0) {
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
+						} else { 
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
+						}
+						
+						/* commentList */
+						taskCommentList = "";
+						list.forEach(function(vo, index) {
+							commentorID = "\"" + vo.commentorID + "\"";
+							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
+							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
+							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate.substring(0, 16) + ") : </span>";
+							taskCommentList += "<span>";
+							taskCommentList += vo.comment;
+							taskCommentList += "<img src='/images/comment_delete.gif' title='asdf' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
+							taskCommentList += "</span>";
+							taskCommentList += "<br/>";
+						});
+						
+						console.log(taskCommentList);
+						$("#taskCommentList").html(taskCommentList);
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				});
 			}
 			
 			function update_status() {
@@ -525,7 +588,7 @@
 			}
 			
 			/* 진행단계변경시 스크립트? 안쓰는거같음 이효진 */
-			function status_change() {
+			/* function status_change() {
 			    var rate = document.getElementById("completerateSelect").value;
 			    var status = document.getElementById("taskstatusSelect").value;
 			
@@ -543,10 +606,10 @@
 			        document.getElementById("completerateSelect").value = "10";
 			        return;
 			    }
-			}
+			} */
 			
 			/* 완료율변경시 스크립트? 안쓰는거같음 이효진 */
-			function rate_change() {
+			/* function rate_change() {
 			    var rate = document.getElementById("completerateSelect").value;
 			    var status = document.getElementById("taskstatusSelect").value;
 			
@@ -563,7 +626,7 @@
 			
 			    if (status == "1" || status == "3")
 			        document.getElementById("taskstatusSelect").value = "2";
-			}
+			} */
 			
 			function Tab1_NewTabIni(pTabNodeID) {
 			    for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
@@ -582,14 +645,17 @@
 			        }
 			    }
 			}
+			
 			var Tab1_SelectID = "";
 			function Tab1_MouserOver(obj) {
 			    obj.className = "tabover";
 			}
+			
 			function Tab1_MouserOut(obj) {
 			    if (Tab1_SelectID != obj.id)
 			        obj.className = "";
 			}
+			
 			function Tab1_MouseClick(obj) {
 			    obj.className = "tabon";
 			    if (obj.id != Tab1_SelectID) {
@@ -656,49 +722,49 @@
 			    if (taskvalue == "3") {
 			        if (message2.GetEditorContent() == tempbody) {
 			            alert("<spring:message code='ezTask.t2014' />");
-			        return;
-			    }
-			}
+				        return;
+				    }
+				}
 			
-			createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", taskvalue);
-			var taskcheckbox = document.getElementsByName("completeracheckbox");
-			taskvalue = "";
-			for (var i = 0; i < taskcheckbox.length; i++) {
-			    if (taskcheckbox[i].checked == true) {
-			        taskvalue = taskcheckbox[i].value;
-			        break;
-			    }
-			}
-			createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", taskvalue);
-			
-			var strBody = message2.GetEditorContent();
-			
-			var tempDiv = document.createElement("DIV");
-			tempDiv.innerHTML = strBody;
-			
-			strBody = ConvertHTMLtoMHT(HTMLtoMHT_MakeTag(tempDiv));
-			createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
-			
-			var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
-			if (pAttachListXml != "") {
-			    var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-			    for (var i = 0; i < nodes.length; i++) {
-			        createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6"));
-			    }
-			}
-			
-			if(content != "")
-			    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);
-			else
-			    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
-			
-			xmlHTTP.open("POST", "/myoffice/ezTask/remote/taskwrok_save.aspx", false);
-			xmlHTTP.send(xmlDom);
-			
-			if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
-			    alert("<spring:message code='ezTask.t2009' />");
-			        window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
-			    }
+				createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", taskvalue);
+				var taskcheckbox = document.getElementsByName("completeracheckbox");
+				taskvalue = "";
+				for (var i = 0; i < taskcheckbox.length; i++) {
+				    if (taskcheckbox[i].checked == true) {
+				        taskvalue = taskcheckbox[i].value;
+				        break;
+				    }
+				}
+				createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", taskvalue);
+				
+				var strBody = message2.GetEditorContent();
+				
+				var tempDiv = document.createElement("DIV");
+				tempDiv.innerHTML = strBody;
+				
+				strBody = ConvertHTMLtoMHT(HTMLtoMHT_MakeTag(tempDiv));
+				createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
+				
+				var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
+				if (pAttachListXml != "") {
+				    var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
+				    for (var i = 0; i < nodes.length; i++) {
+				        createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6"));
+				    }
+				}
+				
+				if(content != "")
+				    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);
+				else
+				    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
+				
+				xmlHTTP.open("POST", "/myoffice/ezTask/remote/taskwrok_save.aspx", false);
+				xmlHTTP.send(xmlDom);
+				
+				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
+					alert("<spring:message code='ezTask.t2009' />");
+					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
+				}
 			}
 			
 			/* 진행상태변경시 스크립트 */
@@ -736,6 +802,7 @@
 			        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(content);
 			        message2.SetEditorContentURL(fullPath);
 			    }
+			    
 			    try {
 			        var objTags = document.getElementById('message2').getElementsByTagName("a");
 			
@@ -758,11 +825,11 @@
 			        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 			        var frm = document.getElementById('form');
 			        frm.submit();
-			    }
-			    else {
+			    } else {
 			        alert("<spring:message code='ezTask.t145' />");
 			    }
 			}
+			
 			function returnvalue(strXML) {
 			    var ndx = strXML.indexOf("</ROOT>");
 			    strXML = strXML.substr(0, ndx + 7);
@@ -776,19 +843,19 @@
 			                alert(strLang51);
 			                return;
 			            }
-			        }
-			        else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
 			            extFlag = true;
-			        else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
 			            alert(strLang52 + AttachLimit + "MB" + strLang53);
 			            return;
-			        }
-			        else {
+			        } else {
 			            alert(strLang24);
 			        }
 			    }
-			    if (extFlag)
-			        alert(strLang58);
+			    
+				if (extFlag) {
+					alert(strLang58);
+			    }
 			
 			    AttachFileInfo(strXML);
 			}
@@ -827,7 +894,9 @@
 			    setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("LabelShare")));
 			    setNodeText(document.getElementById("printDate"), '${taskInfoVO.completeDate }');
 			    setNodeText(document.getElementById("printTitle"), '${taskInfoVO.title }'); */
-			    document.getElementById("printComment").innerHTML = document.getElementById("Comment").innerHTML;
+			    $("#printComment").html($("#taskCommentList").html());
+			    $("#printComment img").remove();
+			    
 			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
 			
@@ -888,8 +957,8 @@
 			        if (checks[i].type == "checkbox")
 			            checks[i].style.display = "none";
 			    }
-			
-			    if (getNodeText(document.getElementById("Comment")).trim() != "") {
+			    
+			    if ($("#taskCommentList").html().trim() != "") {
 			        document.getElementById("printCommentView").style.display = "";
 			        document.getElementById("optiontr").style.display = "";
 			    }
@@ -982,7 +1051,7 @@
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t155' /></th>
-							<td style="padding-right:15px;white-space:nowrap">${taskInfoVO.createDate }</td>
+							<td style="padding-right:15px;white-space:nowrap">${fn:substring(taskInfoVO.createDate, 0, 16) }</td>
 						</tr>
 						<tr>
 							<th><spring:message code='ezTask.t2003' /></th>
@@ -1022,7 +1091,7 @@
 						<tr>
 							<th><spring:message code='ezTask.t157' /></th>
 							<td colspan="3" style="width:100%">
-								<div id="taskShareList" style="overflow-Y: auto; height: 20px;">
+								<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
 									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
 											<c:out value = '${taskShareVO.sharerName }' /> (<c:out value = '${taskShareVO.sharerDeptName }' />)
@@ -1036,13 +1105,13 @@
 							<th><spring:message code='ezTask.t121' /></th>
 							<td>
 								<div>
-									<c:out value = '${taskInfoVO.startDate }' />
+									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 16) }' />
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t122' /></th>
 							<td>
 								<div>
-									<c:out value = '${taskInfoVO.endDate }' />
+									<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 16) }' />
 								</div>
 							</td>
 						</tr>
@@ -1138,15 +1207,8 @@
 			</tr>
 		</table>
 	
-		<c:choose>
-			<c:when test="${type != '2' }">
-				<table id="tablework" class="layout" style="height: 560px;" >
-			</c:when>
-			<c:otherwise>
-				<table id="tablework" class="layout" style="height: 560px;display:none;" >
-			</c:otherwise>
-		</c:choose>
 		
+		<table id="tablework" class="layout" style="height: 560px;display:none;" >
 		<%-- <tr>
 			<td style="height:20px">
 				<table class="content">
@@ -1244,23 +1306,13 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="Comment" style="overflow: auto; width:100%; height: 540px; background-color: white; padding-top:3px;">
-									<%-- <asp:Repeater ID="ListComment" Runat="server">
-									<ItemTemplate>
-										<span onclick="show_personinfo('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORID").InnerText %>')" title="<spring:message code='ezTask.t139' />" style="cursor: pointer; color: #2828A5">
-	                                     <%if (userinfo.primary == "1")
-	                                       {%>
-	                                     <%#Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORNAME").InnerText) %>
-	                                     <% }
-	                                       else %>
-	                                     <%{ %>
-	                                     <%#Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORNAME2").InnerText) %>
-	                                     <%} %>
-										</span><span style="cursor: pointer; color: #2828A5">(<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTDATE").InnerText %>)</span>&nbsp;:&nbsp; <%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("T_COMMENT").InnerText) %>&nbsp;
-										<img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORID").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTID").InnerText %>')" style="cursor: pointer" width="11" height="11">
-										<br>
-									</ItemTemplate>
-									</asp:Repeater> --%>
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 540px; background-color: white; padding-top:3px;">
+									<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
+										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
+										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
+										<span><c:out value='${taskCommentVO.comment}'/><img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
+										<br/>
+									</c:forEach>
 								</div>
 							</td>
 						</tr>
@@ -1279,7 +1331,7 @@
 				</td>
 			</tr>
 		</table>
-		<div id="printScreen" style="DISPLAY: none; padding-top:50px;">
+		<div id="printScreen" style="display: none; padding-top:50px;">
 			<table class="layout" >
 				<%-- <tr>
 					<td style="height:20px">
