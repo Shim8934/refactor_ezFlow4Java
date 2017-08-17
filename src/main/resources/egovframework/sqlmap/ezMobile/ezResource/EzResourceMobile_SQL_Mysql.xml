@@ -137,7 +137,7 @@
         <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceBrdVO">
       <result property="brdID"          column="BRD_ID"         columnIndex="1"/>
       <result property="brdNm"          column="BRD_NM"         columnIndex="2"/>
-      <result property="approveFlag"      column="APPROVEFLAG"      columnIndex="16"/>
+      <result property="approveFlag"      column="APPROVEFLAG"      columnIndex="3"/>
     </resultMap>
     
     	<resultMap class="MResourceScheduleVO" 		id="mResourceScheduleVO">
@@ -547,7 +547,7 @@
 		]]>
 	</select>
 	
-	<select id="MResourceDAO.getResBrdList" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
+	<select id="MResourceDAO.getResBrdList" parameterClass="Map" resultMap="mResourceBrdVO">
 		<![CDATA[
 			SELECT 
 				BRD_ID,
@@ -717,7 +717,7 @@
                 DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
                 DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
                 DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
-                A.title VALUE  ,
+                A.ownerID VALUE  ,
                 A.ALERTTIME ,
                 A.REFLAG ,
                 A.GRESFLAG ,
@@ -747,9 +747,9 @@
 			ON
 				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
           	WHERE
-				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T') <= STARTDATE  
 			AND
-				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
+				ENDDATE  <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 				]]>
@@ -786,7 +786,7 @@
             	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
             	DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
             	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
-                A.title VALUE  ,
+                A.ownerID VALUE  ,
             	A.ALERTTIME ,
             	A.REFLAG ,
             	A.GRESFLAG ,

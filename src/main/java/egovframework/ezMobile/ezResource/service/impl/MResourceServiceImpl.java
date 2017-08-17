@@ -228,9 +228,11 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		LOGGER.debug("getScheduleList Start");
 
 		Map<String, Object> result = new HashMap<>();
-		String startDateLimit = eDate + " 23:59:59";
-		String endDateLimit = sDate + " 00:00:01";
+		String startDateLimit = sDate + " 00:00:01";
+		String endDateLimit = eDate + " 23:59:59";
 
+		LOGGER.debug("");
+		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleList = getScheduleNormalList(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
@@ -307,7 +309,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
 						temp.setDate(format.format(dateArr[0]).substring(0,10));
-						temp.setValue(getRepeatResult.get(i).getTitle());
+						temp.setValue(getRepeatResult.get(i).getOwnerID());
 						
 						getScheduleList.add(temp);
 					}
@@ -1116,8 +1118,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
     	LOGGER.debug("writerDt: " + writerDt);
     	LOGGER.debug("tenantId: " + tenantId);
     	LOGGER.debug("offset: " + offset);
-
-    	
+  	
 		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt);
 
 		LOGGER.debug("result: " + result);

@@ -113,8 +113,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String endDate = request.getParameter("endDate");
 			String companyId = info.getCompanyId();
 			//String ownerId = request.getParameter("ownerId"); 
-			String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
-	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
+			//String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
+	    	//String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);
 	    	
 	    	String ownerId = request.getParameter("ownerId");;
 	    	
@@ -122,11 +122,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	
 	    	String offset = info.getOffSet();
 	    	
-	    	LOGGER.debug("utcStartDate: " + utcStartDate);
-	    	LOGGER.debug("utcEndDate: " + utcEndDate);
+	    	//LOGGER.debug("utcStartDate: " + utcStartDate);
+	    	//LOGGER.debug("utcEndDate: " + utcEndDate);
 	    	LOGGER.debug("writerDt: " + writerDt);
 	    	
-	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, "");
+	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -165,7 +165,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			String brdId = request.getParameter("brdId");
-			String brdCompany = request.getParameter("brdCompany");
+			String brdCompany = info.getCompanyId();
 			
 			LOGGER.debug("brdId: " + brdId);
 			LOGGER.debug("brdCompany: " + brdCompany);
