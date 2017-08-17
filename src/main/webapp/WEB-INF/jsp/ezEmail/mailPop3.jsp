@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -279,7 +280,8 @@
 		        		|| svElem.options[svElem.selectedIndex].value == 'pop3.nate.com' 
 		        		|| svElem.options[svElem.selectedIndex].value == 'pop.gmail.com' 
 		        		|| svElem.options[svElem.selectedIndex].value == 'pop3.live.com' 
-		        		|| svElem.options[svElem.selectedIndex].value == 'pop.mail.yahoo.com') {
+		        		|| svElem.options[svElem.selectedIndex].value == 'pop.mail.yahoo.com'
+		        		|| svElem.options[svElem.selectedIndex].value == 'pop.mail.yahoo.co.jp') {
 		            if (!CrossYN()) {
 		                document.body.all("popPort" + idx).value = "995";
 		                document.body.all("popSSL" + idx).checked = true;
@@ -430,12 +432,24 @@
 		    <td colspan="3"> <input type="text" name="popServer1" id="popServer1" class="textarea" style="width:200px" disabled /> 
 		      <select name="popSelect1" id="popSelect1" class="select" onChange="popChange(1)" style="vertical-align:middle;width:200px;"> 
 			    <OPTION VALUE=""><spring:message code='ezEmail.t731' /></option>
-			    <OPTION VALUE="pop.naver.com"><spring:message code='ezEmail.t732' /></option>
-			    <OPTION VALUE="pop.daum.net"><spring:message code='ezEmail.t740' /></option>
-			    <OPTION VALUE="pop3.nate.com"><spring:message code='ezEmail.t733' /></option>
-			    <OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
-			    <OPTION VALUE="pop3.live.com"><spring:message code='ezEmail.t735' /></option>
-			    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    <c:choose>
+			    	<c:when test="${primaryLang == '1'}">
+			    		<OPTION VALUE="pop.naver.com"><spring:message code='ezEmail.t732' /></option>
+					    <OPTION VALUE="pop.daum.net"><spring:message code='ezEmail.t740' /></option>
+					    <OPTION VALUE="pop3.nate.com"><spring:message code='ezEmail.t733' /></option>
+					    <OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop3.live.com"><spring:message code='ezEmail.t735' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    	</c:when>
+			    	<c:when test="${primaryLang == '2'}">
+			    		<OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.co.jp"><spring:message code='ezEmail.t737' /></option>
+			    	</c:when>
+			    	<c:otherwise>
+			    		<OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    	</c:otherwise>
+			    </c:choose>
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 			</select>	
 		      Port : <input type="text" name="popPort1" id="popPort1" class="textarea" style="width:30px" value="110"> 
@@ -463,12 +477,24 @@
 		    <td colspan="3"> <input type="text" name="popServer2" id="popServer2" class="textarea" style="width:200px" disabled /> 
 		      <select name="popSelect2" id="popSelect2" class="select" onChange="popChange(2)" style="vertical-align:middle;width:200px;"> 
 		        <OPTION VALUE=""><spring:message code='ezEmail.t731' /></option>
-			    <OPTION VALUE="pop.naver.com"><spring:message code='ezEmail.t732' /></option>
-			    <OPTION VALUE="pop.daum.net"><spring:message code='ezEmail.t740' /></option>
-			    <OPTION VALUE="pop3.nate.com"><spring:message code='ezEmail.t733' /></option>
-			    <OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
-			    <OPTION VALUE="pop3.live.com"><spring:message code='ezEmail.t735' /></option>
-			    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    <c:choose>
+			    	<c:when test="${primaryLang == '1'}">
+			    		<OPTION VALUE="pop.naver.com"><spring:message code='ezEmail.t732' /></option>
+					    <OPTION VALUE="pop.daum.net"><spring:message code='ezEmail.t740' /></option>
+					    <OPTION VALUE="pop3.nate.com"><spring:message code='ezEmail.t733' /></option>
+					    <OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop3.live.com"><spring:message code='ezEmail.t735' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    	</c:when>
+			    	<c:when test="${primaryLang == '2'}">
+			    		<OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.co.jp"><spring:message code='ezEmail.t737' /></option>
+			    	</c:when>
+			    	<c:otherwise>
+			    		<OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    	</c:otherwise>
+			    </c:choose>
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 		      </select> 
 		      Port : <input type="text" name="popPort2" id="popPort2" class="textarea" style="width:30px" value="110"> 
@@ -496,12 +522,24 @@
 		    <td colspan="3"> <input type="text" name="popServer3" id="popServer3" class="textarea" style="width:200px" disabled /> 
 		      <select name="popSelect3" id="popSelect3" class="select" onChange="popChange(3)" style="vertical-align:middle;width:200px;"> 
 		        <OPTION VALUE=""><spring:message code='ezEmail.t731' /></option>
-			    <OPTION VALUE="pop.naver.com"><spring:message code='ezEmail.t732' /></option>
-			    <OPTION VALUE="pop.daum.net"><spring:message code='ezEmail.t740' /></option>
-			    <OPTION VALUE="pop3.nate.com"><spring:message code='ezEmail.t733' /></option>
-			    <OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
-			    <OPTION VALUE="pop3.live.com"><spring:message code='ezEmail.t735' /></option>
-			    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    <c:choose>
+			    	<c:when test="${primaryLang == '1'}">
+			    		<OPTION VALUE="pop.naver.com"><spring:message code='ezEmail.t732' /></option>
+					    <OPTION VALUE="pop.daum.net"><spring:message code='ezEmail.t740' /></option>
+					    <OPTION VALUE="pop3.nate.com"><spring:message code='ezEmail.t733' /></option>
+					    <OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop3.live.com"><spring:message code='ezEmail.t735' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    	</c:when>
+			    	<c:when test="${primaryLang == '2'}">
+			    		<OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.co.jp"><spring:message code='ezEmail.t737' /></option>
+			    	</c:when>
+			    	<c:otherwise>
+			    		<OPTION VALUE="pop.gmail.com"><spring:message code='ezEmail.t734' /></option>
+					    <OPTION VALUE="pop.mail.yahoo.com"><spring:message code='ezEmail.t736' /></option>
+			    	</c:otherwise>
+			    </c:choose>
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 		      </select> 
 		      Port : <input type="text" name="popPort3" id="popPort3" class="textarea" style="width:30px" value="110"> 
