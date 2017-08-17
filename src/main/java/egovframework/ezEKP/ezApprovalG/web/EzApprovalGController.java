@@ -4154,7 +4154,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
-		String dirYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String dirYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -5502,46 +5502,44 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			for (int p = 0; p < objCell.getLength(); p++) {
 				Element cell = (Element) objCell.item(p);
-   				String cellValue = " " + cell.getElementsByTagName("VALUE").item(0).getTextContent() + " ";
+   				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
-
-				if (cellValue.trim().equals("001")) {
+				if (cellValue.equals("001")) {
 					cellValue = "품의";
-				} else if (cellValue.trim().equals("002")) {
+				} else if (cellValue.equals("002")) {
 					cellValue = "협조";
-				} else if (cellValue.trim().equals("003")) {
+				} else if (cellValue.equals("003")) {
 					cellValue = "감사";
-				} else if (cellValue.trim().equals("004")) {
+				} else if (cellValue.equals("004")) {
 					cellValue = "심사";
-				} else if (cellValue.trim().equals("011")) {
+				} else if (cellValue.equals("011")) {
 					cellValue = "수신";
-				} else if (cellValue.trim().equals("012")) {
+				} else if (cellValue.equals("012")) {
 					cellValue = "합의";
-				} else if (cellValue.trim().equals("013")) {
+				} else if (cellValue.equals("013")) {
 					cellValue = "시행";
-				} else if (cellValue.trim().equals("014")) {
+				} else if (cellValue.equals("014")) {
 					cellValue = "검사부 감사";
-				} else if (cellValue.trim().equals("015")) {
+				} else if (cellValue.equals("015")) {
 					cellValue = "공람";
-				} else if (cellValue.trim().equals("016")) {
+				} else if (cellValue.equals("016")) {
 					cellValue = "회람";
-				} else if (cellValue.trim().equals("017")) {
+				} else if (cellValue.equals("017")) {
 					cellValue = "참조";
-				} else if (cellValue.trim().equals("018")) {
+				} else if (cellValue.equals("018")) {
 					cellValue = "후결";
-				} else if (cellValue.trim().equals("019")) {
+				} else if (cellValue.equals("019")) {
 					cellValue = "발신";
-				} else if (cellValue.trim().equals("020")) {
+				} else if (cellValue.equals("020")) {
 					cellValue = "신청";
-				} else if (cellValue.trim().equals("031")) {
+				} else if (cellValue.equals("031")) {
 					cellValue = "반송";
-				} else if (cellValue.trim().equals("032")) {
+				} else if (cellValue.equals("032")) {
 					cellValue = "회송";
 				}
 					
 				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + " </p></td>       ");
-
 			}
 			resultExcel.append("</tr>");
 		}

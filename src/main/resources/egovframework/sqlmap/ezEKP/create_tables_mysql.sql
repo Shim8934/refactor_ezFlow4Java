@@ -662,6 +662,44 @@ CREATE TABLE `jmocha_mail_reserve` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_mail_secure`
+--
+
+DROP TABLE IF EXISTS `jmocha_mail_secure`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_mail_secure` (
+  `secure_id` int(11) NOT NULL AUTO_INCREMENT,
+  `mailbox_id` bigint(20) DEFAULT NULL,
+  `mail_uid` bigint(20) DEFAULT NULL,
+  `user_name` varchar(100) DEFAULT NULL,
+  `password` varchar(128) DEFAULT NULL,
+  `max_read_count` int(11) DEFAULT NULL,
+  `max_read_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`secure_id`),
+  KEY `fk_mail_secure_idx` (`mailbox_id`,`mail_uid`),
+  CONSTRAINT `fk_mail_secure` FOREIGN KEY (`mailbox_id`, `mail_uid`) REFERENCES `james_mail` (`MAILBOX_ID`, `MAIL_UID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_mail_secure_read`
+--
+
+DROP TABLE IF EXISTS `jmocha_mail_secure_read`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_mail_secure_read` (
+  `secure_id` int(11) NOT NULL,
+  `reader_id` varchar(100) NOT NULL,
+  `read_count` int(11) DEFAULT NULL,
+  `read_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`secure_id`,`reader_id`),
+  CONSTRAINT `fk_mail_secure_read` FOREIGN KEY (`secure_id`) REFERENCES `jmocha_mail_secure` (`secure_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_mail_signature`
 --
 
@@ -2578,7 +2616,7 @@ CREATE TABLE `tbl_cabinet` (
   `CABINETCLASSNO` varchar(100) NOT NULL,
   `DELETEDATE` datetime DEFAULT NULL,
   `VOLUMENO` varchar(12) DEFAULT NULL,
-  `DELFLAG` varchar(4) DEFAULT '(0)',
+  `DELFLAG` varchar(4) DEFAULT '0',
   `TCABINETID` varchar(112) DEFAULT NULL,
   `TDEPTCODE` varchar(28) DEFAULT NULL,
   `TCABINETNAME` varchar(200) DEFAULT NULL,
@@ -2589,12 +2627,12 @@ CREATE TABLE `tbl_cabinet` (
   `TREGSERIALNO` varchar(24) DEFAULT NULL,
   `TVOLUMENO` varchar(12) DEFAULT NULL,
   `TRANSFERDATE` datetime DEFAULT NULL,
-  `CABINETTRANSFERFLAG` varchar(4) DEFAULT '(0)',
+  `CABINETTRANSFERFLAG` varchar(4) DEFAULT '0',
   `PRODREPORTFLAG` bigint(10) DEFAULT '0',
   `TRANSFERFLAG` bigint(10) DEFAULT '0',
-  `CATALOGTRANSFERFLAG` varchar(4) DEFAULT '(0)',
+  `CATALOGTRANSFERFLAG` varchar(4) DEFAULT '0',
   `CATALOGTRANSFERYEAR` bigint(10) DEFAULT NULL,
-  `DOCTRANSFERFLAG` varchar(4) DEFAULT '(0)',
+  `DOCTRANSFERFLAG` varchar(4) DEFAULT '0',
   `DOCTRANSFERYEAR` bigint(10) DEFAULT NULL,
   `TCABINETNAME2` varchar(200) DEFAULT NULL,
   `TDEPTNAME2` varchar(200) DEFAULT NULL,
@@ -2751,7 +2789,7 @@ CREATE TABLE `tbl_circular` (
   `memberName2` varchar(100) DEFAULT NULL,
   `regDate` varchar(40) DEFAULT NULL,
   `endDate` varchar(40) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2769,7 +2807,7 @@ CREATE TABLE `tbl_circular_bm` (
   `title` varchar(500) DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
   `regDate` varchar(40) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularBMId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2786,9 +2824,9 @@ CREATE TABLE `tbl_circular_bmuser` (
   `circularBMUserId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularBMId` bigint(10) DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
   `memberName` varchar(100) DEFAULT NULL,
   `memberName2` varchar(100) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularBMUserId`),
   KEY `tenantId_memberId_circularBMId_index` (`tenantId`,`memberId`,`circularBMId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2830,7 +2868,7 @@ CREATE TABLE `tbl_circular_commentstate` (
   `status` mediumint(5) DEFAULT NULL,
   `confirmDate` varchar(40) DEFAULT NULL,
   `updateDate` varchar(40) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularCommentStateId`),
   KEY `tenantId_cn_circularCommentId_index` (`tenantId`,`memberId`,`circularCommentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2849,7 +2887,7 @@ CREATE TABLE `tbl_circular_file` (
   `fileName` varchar(200) DEFAULT NULL,
   `fileSize` bigint(10) DEFAULT NULL,
   `filePath` varchar(500) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularFileId`),
   KEY `tenantId_circularId_index` (`tenantId`,`circularId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2867,7 +2905,7 @@ CREATE TABLE `tbl_circular_folder` (
   `circularFolderName` varchar(100) DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
   `regDate` varchar(40) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularFolderId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2885,7 +2923,7 @@ CREATE TABLE `tbl_circular_link` (
   `circularFolderId` bigint(10) DEFAULT NULL,
   `circularId` bigint(10) DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularLinkId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2926,7 +2964,7 @@ CREATE TABLE `tbl_circular_option` (
   `isPreview` mediumint(5) DEFAULT NULL,
   `previewListValue` varchar(10) DEFAULT NULL,
   `previewContentValue` varchar(10) DEFAULT NULL,
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularOptionId`),
   KEY `tenantId_memberId_index` (`tenantId`,`memberId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2952,7 +2990,7 @@ CREATE TABLE `tbl_circular_user` (
   `commentStatus` mediumint(5) DEFAULT '0',
   `shareStatus` mediumint(5) DEFAULT '0',
   `deleteStatus` mediumint(5) DEFAULT '0',
-  `tenantId` mediumint(5) DEFAULT NULL,
+  `tenantId` mediumint(5) NOT NULL,
   PRIMARY KEY (`circularUserId`),
   KEY `tenantId_memberId_circularId_index` (`tenantId`,`memberId`,`circularId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5826,6 +5864,22 @@ CREATE TABLE `tbl_rs_brd` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_rs_favorite`
+--
+
+DROP TABLE IF EXISTS `tbl_rs_favorite`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_rs_favorite` (
+  `RESID` varchar(40) NOT NULL,
+  `RESCOMPANY` varchar(40) NOT NULL,
+  `USERID` varchar(40) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`TENANT_ID`,`RESID`,`USERID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_rs_resacl`
 --
 
@@ -6409,7 +6463,8 @@ CREATE TABLE `tbl_task` (
   `TASKPERSONID` varchar(100) DEFAULT NULL,
   `TASKPERSONNAME` varchar(100) DEFAULT NULL,
   `TASKPERSONNAME2` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`TASKID`)
+  `TENANTID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TASKID`,`TENANTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6571,9 +6626,9 @@ DROP TABLE IF EXISTS `tbl_taskconfig`;
 CREATE TABLE `tbl_taskconfig` (
   `USERID` varchar(100) NOT NULL,
   `DELAYCOLOR` varchar(12) NOT NULL,
-  `COMPLETECOLOR` varchar(12) NOT NULL,
   `AUTODELETE` bigint(10) NOT NULL,
-  PRIMARY KEY (`USERID`)
+  `TENANTID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANTID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6659,7 +6714,8 @@ CREATE TABLE `tbl_taskshare` (
   `HASATTACH` varchar(2) DEFAULT NULL,
   `UPDATETIME` datetime DEFAULT NULL,
   `NEWORDER` varchar(4) DEFAULT NULL,
-  PRIMARY KEY (`TASKID`,`SHARERID`)
+  `TENANTID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TASKID`,`SHARERID`,`TENANTID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -7080,6 +7136,22 @@ CREATE TABLE `tbl_topmenu_items` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_user_config`
+--
+
+DROP TABLE IF EXISTS `tbl_user_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_user_config` (
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `USER_ID` varchar(80) NOT NULL,
+  `PROPERTY_NAME` varchar(100) NOT NULL,
+  `PROPERTY_VALUE` varchar(2000) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`USER_ID`,`PROPERTY_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_usercont`
 --
 
@@ -7274,6 +7346,26 @@ CREATE TABLE `tbl_usermaster_retire` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   `PASSWORD` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`CN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_usermobileinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_usermobileinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_usermobileinfo` (
+  `USERID` varchar(200) NOT NULL,
+  `TIMEZONE` varchar(40) NOT NULL,
+  `LANG` varchar(4) NOT NULL,
+  `MAINTYPE` char(1) NOT NULL,
+  `LISTCNT` mediumint(5) NOT NULL,
+  `USESEARCH` char(1) NOT NULL,
+  `USESECURITY` char(1) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

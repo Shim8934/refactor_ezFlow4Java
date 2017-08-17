@@ -16003,6 +16003,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_CONTID", containerID);
 		map.put("v_USERID", userID);
 		map.put("v_USERSECCODE", userSecurityCode);
+		map.put("v_PSTRLANG", langType);
+
 		if (publicFlag) {
 			map.put("v_PUBFLAG", "Y");
 		} else {
