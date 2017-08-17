@@ -86,6 +86,7 @@
 	    var g_newid = "${newWindowId}";
 	    var FileUploadtype = "${fileUploadType}";
 	    var iseachMail = "${isEach}";
+	    var isSecureMail = "${isSecureMail}";
 	    var individualmailuser = "${individualMailUser}";
 	    var pSecurity = "${pSecurity}";
 	    var docHref = "${docHref}";
@@ -130,6 +131,9 @@
 	            try {
 	                window.opener.document.Script.refreshUnreadCount()
 	            } catch (e) { }
+	        }
+	        if (isSecureMail == "true") {
+	        	document.getElementById("chkSecureMail").checked = true;
 	        }
 	        if (pSecurity == "Security") {
 	            pSecurity = "3";

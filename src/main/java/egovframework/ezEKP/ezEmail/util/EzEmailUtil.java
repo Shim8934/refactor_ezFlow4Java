@@ -1755,6 +1755,26 @@ public class EzEmailUtil {
 		message.setFlags(mdnSentFlag, isSet);
 	}
 	
+	public boolean hasSecureMailFlag(Message message) throws MessagingException {
+		boolean isSecureMail = false;
+		String[] flags = message.getFlags().getUserFlags();		
+		
+		for (String flag : flags) {
+			if (flag.equals("$SecureMail")) {
+				isSecureMail = true;
+				break;
+			}
+		}
+
+		return isSecureMail;
+	}
+	
+	public void setSecureMailFlag(Message message, boolean isSet) throws MessagingException {
+		Flags secureMailFlag = new Flags("$SecureMail");
+		
+		message.setFlags(secureMailFlag, isSet);
+	}
+	
 	public List<String> getInnerDomain(int tenantId) throws Exception {
 		List<String> innerDomainList = new ArrayList<String>();
 		

@@ -442,6 +442,10 @@ public class EzEmailMailListController {
 				subject = (subject != null) ? subject : "";
 				subject = commonUtil.cleanValue(subject);
 				
+				if (ezEmailUtil.hasSecureMailFlag(message)) {
+					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+				}
+				
 				if (viewSelectIndex.equals("1")) {
 					((IMAPMessage)message).setPeek(true);
 					List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uidFolder.getUID(message), -1, null, false, locale, null);
@@ -1101,6 +1105,10 @@ public class EzEmailMailListController {
 				// subject
 				String subject = ezEmailUtil.getSubject(message);				
 				subject = (subject != null) ? subject : "";
+				
+				if (ezEmailUtil.hasSecureMailFlag(message)) {
+					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
+				}
 				
 				sb.append("<NODE>");
 				sb.append("<HREF><![CDATA[" + href + "]]></HREF>");

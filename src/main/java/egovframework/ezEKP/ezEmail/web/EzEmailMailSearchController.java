@@ -364,6 +364,7 @@ public class EzEmailMailSearchController {
 					String subject = ezEmailUtil.getSubject(message);
 									
 					subject = (subject != null) ? subject : "";
+					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + subject;
 					sb.append(String.format("<SUBJECT><![CDATA[%s]]></SUBJECT>", subject));
 					
 					String[] headers = message.getHeader("X-Priority");

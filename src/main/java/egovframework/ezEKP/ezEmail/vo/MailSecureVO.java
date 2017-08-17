@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.vo;
 
 public class MailSecureVO {
 	
+	private String secureId;
 	private String userAccount;
 	private String folderPath;
 	private String mailUid;
@@ -10,6 +11,12 @@ public class MailSecureVO {
 	private String maxReadDate;
 	private String readCount;
 	
+	public String getSecureId() {
+		return secureId;
+	}
+	public void setSecureId(String secureId) {
+		this.secureId = secureId;
+	}
 	public String getUserAccount() {
 		return userAccount;
 	}

@@ -178,6 +178,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String bodyType = "0";
 		String importance = "1";
 		String isEach = "FALSE";
+		String isSecureMail = "FALSE";
+		String securePassword = null;
+		String secureMaxReadCount = null;
+		String secureMaxReadDate = null;
 		String replySendTime = "0";
 		String replyReadTime = "1";
 		String pReservedSaveTime = "";
@@ -439,6 +443,16 @@ public class EzEmailReservationController extends EgovFileMngUtil {
         		isEach = message.getHeader("X-JMocha-Each-Mail")[0];
     		}  
 			
+        	//set isSecureMail
+    		if (message.getHeader("X-JMocha-Secure-Mail-ID") != null) {
+    			String secureId = message.getHeader("X-JMocha-Secure-Mail-ID")[0];
+    			if (!secureId.equals("0")) {
+    				isSecureMail = "true";
+    				//TODO: 보안정보 setting - 저장 클릭 시 레이어팝업창에 초기 값으로 뿌려줘야함.
+    				//TODO: 스케줄러에서도 보안메일 처리 해줘야함.
+    			}
+    		}
+        	
         	//set bodyType
         	if (message.getHeader("Content-Type") != null) {
         		String tempBodyType = ezEmailUtil.getTextPart(message).get(1);

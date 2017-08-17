@@ -180,6 +180,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String attach = "";
 		String importance = "1";
 		String isEach = "FALSE";
+		String isSecureMail = "FALSE";
 		String bodyType = "0";
 		String replySendTime = "0";
 		String replyReadTime = "1";
@@ -805,9 +806,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		
 		        	}
 		        	
-		        	//set importance
 		        	if(_cmd.equals("EDIT")) {
 		        		logger.debug("EDIT MODE : set mail option start");
+		        		
+		        		//set importance
 		        		if (orgMessage.getHeader("X-Priority") != null) {
 		        			String tempImportance = orgMessage.getHeader("X-Priority")[0];
 		        			if (tempImportance.equals("1")) {
@@ -823,6 +825,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        		//set isEachMail
 		        		if (orgMessage.getHeader("X-JMocha-Each-Mail") != null) {
 		        			isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
+		        		}
+		        		//set isSecureMail
+		        		if (orgMessage.getHeader("X-JMocha-Secure-Mail") != null) {
+		        			isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
 		        		}
 		        		//set bodyType
 		        		if (orgMessage.getHeader("Content-Type") != null) {
@@ -926,6 +932,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("encodedSubject", EgovStringUtil.getSpclStrCnvr(subject));
 		model.addAttribute("importance", importance);
 		model.addAttribute("isEach", isEach);
+		model.addAttribute("isSecureMail", isSecureMail);
 		model.addAttribute("bodyType", bodyType);
 		model.addAttribute("replySendTime", replySendTime);
 		model.addAttribute("replyReadTime", replyReadTime);
@@ -2440,9 +2447,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        }
 				
 				// 보안메일
-				if (pSecurityMail.equals("3")) {
-					message.setHeader("Sensitivity", "company-confidential");
-		        }
+//				if (pSecurityMail.equals("3")) {
+//					message.setHeader("Sensitivity", "company-confidential");
+//		        }
 				
 				// 메일 중요도
 				switch (importance) { // 2: High, 1: Normal, 0: Low
@@ -2820,6 +2827,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		if (delaySendTime != ""){
 		    			message.setHeader("Delivery-Date", delaySendTime);
 		    		}
+		    		if (isSecureMail) {
+		    			message.setHeader("X-JMocha-Secure-Mail", "true");
+		    		}
+		    		
 		    		message.setFlag(Flags.Flag.SEEN, true);
 		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
 		    		if (uids != null && uids[0] != null) {
@@ -2835,8 +2846,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        } else if (cmd.equalsIgnoreCase("SEND")) {
 		        	logger.debug("Sending the message");
 		        	
-                    Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
-                    		        
 //					String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
 			        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
 			        
@@ -2861,7 +2870,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                    
 			        	//예약발송
 			        	String delaySendTimeUTC = commonUtil.getDateStringInUTC(delaySendTime, userInfo.getOffset(), true);
-			            doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
+			            
+			        	// 보안메일 처리
+		            	if (isSecureMail) {
+	    		        	message.addHeader("X-JMocha-Secure-Mail-Info", securePassword);
+	    		        	message.addHeader("X-JMocha-Secure-Mail-Info", secureReadCount);
+	    		        	message.addHeader("X-JMocha-Secure-Mail-Info", secureReadDate);
+		            	}
+			        	
+			        	doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
 			        				            
 			            //임시보관함에서 삭제
 			            Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
@@ -2877,11 +2894,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
+			            	Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
 			            	
 			            	// 보안메일 처리
 			            	if (isSecureMail) {
 			            		// save secure mail info and get secureId
-			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
+			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), commonUtil.getDateStringInUTC(secureReadDate, userInfo.getOffset(), true));
 		    		        	
 		    		        	if (secureId == 0) {
 		    		        		throw new Exception("INSERTSECUREMAILFAIL");
@@ -3035,8 +3053,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	
 		    		        	secureMessage.setContent(secureMixedPart);
 		    		        	
-		    		        	// TODO: set secureMail Flag
-//		    		        	secureMessage.setFlag(, set);
+		    		        	ezEmailUtil.setSecureMailFlag(secureMessage, true);
 		    		        	secureMessage.setFlag(Flags.Flag.SEEN, true);
 		    		        	
 			            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
