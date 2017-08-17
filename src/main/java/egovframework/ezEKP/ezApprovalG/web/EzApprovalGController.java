@@ -3037,6 +3037,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht"; 
 		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		
+		logger.debug("<<<realPath : " + realPath);
+		logger.debug("<<<path : " + path);
+		logger.debug("<<<saveFileName : " + saveFileName);
+		logger.debug("<<<saveDir : " + saveDir);
+		logger.debug("<<<formText : " + formText);
+		
 		try {
 			File file = new File(saveDir);
 			
@@ -3045,6 +3051,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+			
+			logger.debug("<<<stream : " + stream);
 			
 			bos = new FileOutputStream(saveFileName);
 			

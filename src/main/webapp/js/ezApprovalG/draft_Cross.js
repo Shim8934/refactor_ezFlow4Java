@@ -1,5 +1,8 @@
 ﻿var lastKyulName, lastKyuljiwee, LastSignSN;
 var DraftLastFlag = false;
+/**
+ *  양식에 출력될 결재라인 가져오기
+ * */
 function GetDraftAprLineInfo(ret) {
   try{
       DraftLastFlag = false;
@@ -129,7 +132,9 @@ function GetDraftAprLineInfo(ret) {
 	            field.innerHTML = "<br type='_moz'>";
 	    }
 	}
-		
+	/**
+	 *  결재양식 결재라인에 저장될 내용 처리
+	 * */	
 	for(i=0;i < count;i++) {
 	    var Cell = GetChildNodes(objNodes[i]);
 	    var KyljeaOrder = getNodeText(Cell[0]);
@@ -164,7 +169,7 @@ function GetDraftAprLineInfo(ret) {
 		SplitSign(OrderType,OrderName,OrderDept,OrderStat,OrderJobtitle);
     
 	LastSignSN = OrderType.length;
-	
+	// 마지막 결재하는 사람 찾기
     for(i=1;i<OrderType.length;i++) {
 		if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16) {
 			LastSignSN = i;
@@ -214,6 +219,7 @@ function GetDraftAprLineInfo(ret) {
 	}
 	var idx = 1;
 	var hidx = 1;	  
+	// 결재자 직위 출력
 	for(i=1;i < OrderJobtitle.length;i ++) {
 		if(OrderType[i] == strAprType18 || OrderType[i] == strAprType19  || OrderType[i] == strAprType1 || OrderType[i] == strAprType4  || OrderType[i] == strAprType16 || OrderType[i] == strAprType3) 	{
 			fieldname = "jikwe" + idx;
@@ -1197,7 +1203,9 @@ function SGetDraftAprLineInfo(ret) {
         alert("SGetDraftAprLineInfo(ret)" + e.description);
     }
 }
-
+/**
+ *  수신부서 수신자 관련 설정
+ * */
 function setRecevInfo(ret) {
     var fields = message.GetFieldsList();
     setDeptLinesXML(ret);
@@ -1285,7 +1293,7 @@ function setRecevInfo(ret) {
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
     }
-
+    // 수신자 ROW 갯수 만큼 실행
     for (i = rows.length - 1; i >= 0; i--) {
         var row = rows[i];
         var params = new Array();
@@ -2474,7 +2482,9 @@ function openAaprDocAttachUI_Complete(ret) {
         setAttachInfo(pDocID, "APR", lstAttachLink);
     }
 }
-
+/**
+ *  기안진행 중인 문서 파일 생성
+ * */
 function SaveDraftDocInfo() {
     var rtnVal;
     SaveFile();
@@ -2631,6 +2641,9 @@ function getfieldValue(pfield) {
 }
 
 var aprsign1_cross_dialogArguments = new Array();
+/**
+ * 결재자의 사인 저장 여부 확인
+ * */
 function openSignUI() {
     try {
     	var result = "";
@@ -3283,6 +3296,9 @@ function setMenuBar(id, flag) {
     strCmd = id + ".style.display='" + display_Value + "'";
     eval(strCmd);
 }
+/**
+ *  mht파일 생성.
+ * */
 function SaveFile() {
 	var result = "";
 	var mhtBody = "";
