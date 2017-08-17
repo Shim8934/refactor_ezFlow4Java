@@ -1375,6 +1375,7 @@ function OpenAlertUI_Complete() {
 
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
+	alert(3);
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
@@ -1398,8 +1399,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction, type) {
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
