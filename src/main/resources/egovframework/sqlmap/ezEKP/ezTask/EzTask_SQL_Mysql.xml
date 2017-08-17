@@ -24,9 +24,6 @@
 				hascomment,
 				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
 				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as enddate,
-				repetition,
-				repetitiondelete,
-				repetitionstatus,
 				title,
 				contentpath,
 				tasktype,
@@ -80,6 +77,29 @@
 				taskid = #taskID#
 		]]>
 	</select>
+	
+	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TASK
+			SET
+				hascomment='Y'
+			WHERE
+				tenantID = #tenantID#
+			AND
+				(taskid = #taskID# OR parentID = #taskID#)
+        ]]>
+    </update>
+    
+    <update id="EzTaskDAO.insertComment" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKCOMMENT
+				(taskid, commentorid, commentorname, commentorname2, commentdate, comment)
+			VALUES
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#)
+			
+        ]]>
+    </update>
 	
 	
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">

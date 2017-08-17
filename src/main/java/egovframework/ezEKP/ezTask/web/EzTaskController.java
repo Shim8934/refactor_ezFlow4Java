@@ -179,12 +179,29 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskRead";
 	}
 	
-	/*@RequestMapping(value = "/ezTask/taskSearch.do")
-	public String taskSearch() throws Exception {
-		return "/ezTask/taskSearch";
+	@RequestMapping(value = "/ezTask/taskSaveComment.do")
+	public String taskSaveComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskSaveComment started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
+		String taskID = request.getParameter("taskID");
+		String textComment = request.getParameter("textComment");
+		
+		int result = ezTaskService.insertComment(taskID, userInfo.getId(), userInfo.getDisplayName1(), userInfo.getDisplayName2(), textComment, tenantID);
+		
+		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
+		
+		model.addAttribute("result", result);
+		model.addAttribute("taskCommentList", taskCommentList);
+		
+		logger.debug("taskSaveComment ended.");
+		
+		return "json";
 	}
 	
-	@RequestMapping(value = "/ezTask/taskSearch.do")
+	/*@RequestMapping(value = "/ezTask/taskSearch.do")
 	public String taskSearch() throws Exception {
 		return "/ezTask/taskSearch";
 	}*/

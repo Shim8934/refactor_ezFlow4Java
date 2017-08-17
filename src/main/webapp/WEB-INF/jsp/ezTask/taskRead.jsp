@@ -67,7 +67,8 @@
 		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2002' />";
 		        }
 
-		        if (ownerid == userid) {
+				/* 저장 수정버튼 숨김스크립트 */
+		        /* if (ownerid == userid) {
 		            document.getElementById("save").style.display = "none";
 		        } else if (personid == userid) {
 		            document.getElementById("edit").style.display = "none";
@@ -78,7 +79,7 @@
 		            }
 		            
 		            tempbody = message2.GetEditorContent();
-		        }
+		        } */
 
 		        var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
 		        for (var i = 0; i < taskcheckbox.length; i++) {
@@ -103,18 +104,7 @@
 		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + optioncnt + ")";
 		        }
 		        
-		        if (type == "2") {
-		            selecttab = "3";
-		            document.getElementById("normalScreen").style.display = "none";
-		            document.getElementById("tablework").style.display = "none";
-		            document.getElementById("tablecomment").style.display = "";
-
-		            var obj = document.getElementById("1tab3");
-		            obj.className = "tabon";
-		            Tab1_SelectID = obj.id;
-		        } else {
-		            setTimeout(onloadchangtab, 100);
-		        }
+				setTimeout(onloadchangtab, 100);
 		    });
    
 			function scrollTop() {
@@ -123,6 +113,7 @@
 				} catch (e) { }
 			}
 
+			/* 초기 탭선택스크립트 */
 			function onloadchangtab() {
 				if (type == "1" && (tasktype != "1" && ownerid == userid)) {
 					Tab1_MouseClick(document.getElementById("1tab2"));
@@ -133,6 +124,7 @@
 				}
 			}
 
+			/* 지시사항 본문 */
 			function load_bodyhtml() {
 				$.ajax({
 					type : "POST",
@@ -155,7 +147,8 @@
 					}
 				});
 			}
-	
+			
+			/* 진행사항 본문 */
 			function load_bodyhtml2() {
 				if (personContentpath != "") {
 					$.ajax({
@@ -190,7 +183,7 @@
 					} catch (e) { }
 				}
 			}
-	
+			
 			function ImageUrl(pUrl, cnt) {
 				var link = "/myoffice/Common/ImgFileRead.asp?PUrl=" + pUrl + "&Cnt=" + cnt;
 	
@@ -261,6 +254,7 @@
 				}
 			}
 			
+			/* 의견작성 */
 			function add_comment() {
 				var id = taskid;
 				if (parentid != "0") {
@@ -271,8 +265,8 @@
 					alert("<spring:message code='ezTask.t241' />");
 					return;
 				}
-	
-				var xmlDom = createXmlDom();
+				
+				/* var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
 		
 				var objNode;
@@ -286,7 +280,26 @@
 				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
 					alert("<spring:message code='ezTask.t222' />");
 					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
-				}
+				} */
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskSaveComment.do",
+					data : {
+							taskID : id,
+							textComment : $("#TextComment").val()
+					},
+					success: function(result){
+						alert("<spring:message code='ezTask.t222' />");
+						/* window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2"; */
+						/* comment만 다시 가져와라 */
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert("<spring:message code='ezTask.t108' />")
+					}
+				});
 			}
 			
 			function manage_share() {
@@ -526,7 +539,7 @@
 			}
 			
 			/* 진행단계변경시 스크립트? 안쓰는거같음 이효진 */
-			function status_change() {
+			/* function status_change() {
 			    var rate = document.getElementById("completerateSelect").value;
 			    var status = document.getElementById("taskstatusSelect").value;
 			
@@ -544,10 +557,10 @@
 			        document.getElementById("completerateSelect").value = "10";
 			        return;
 			    }
-			}
+			} */
 			
 			/* 완료율변경시 스크립트? 안쓰는거같음 이효진 */
-			function rate_change() {
+			/* function rate_change() {
 			    var rate = document.getElementById("completerateSelect").value;
 			    var status = document.getElementById("taskstatusSelect").value;
 			
@@ -564,7 +577,7 @@
 			
 			    if (status == "1" || status == "3")
 			        document.getElementById("taskstatusSelect").value = "2";
-			}
+			} */
 			
 			function Tab1_NewTabIni(pTabNodeID) {
 			    for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
@@ -583,14 +596,17 @@
 			        }
 			    }
 			}
+			
 			var Tab1_SelectID = "";
 			function Tab1_MouserOver(obj) {
 			    obj.className = "tabover";
 			}
+			
 			function Tab1_MouserOut(obj) {
 			    if (Tab1_SelectID != obj.id)
 			        obj.className = "";
 			}
+			
 			function Tab1_MouseClick(obj) {
 			    obj.className = "tabon";
 			    if (obj.id != Tab1_SelectID) {
@@ -1139,15 +1155,8 @@
 			</tr>
 		</table>
 	
-		<c:choose>
-			<c:when test="${type != '2' }">
-				<table id="tablework" class="layout" style="height: 560px;" >
-			</c:when>
-			<c:otherwise>
-				<table id="tablework" class="layout" style="height: 560px;display:none;" >
-			</c:otherwise>
-		</c:choose>
 		
+		<table id="tablework" class="layout" style="height: 560px;display:none;" >
 		<%-- <tr>
 			<td style="height:20px">
 				<table class="content">
@@ -1280,7 +1289,7 @@
 				</td>
 			</tr>
 		</table>
-		<div id="printScreen" style="DISPLAY: none; padding-top:50px;">
+		<div id="printScreen" style="display: none; padding-top:50px;">
 			<table class="layout" >
 				<%-- <tr>
 					<td style="height:20px">
