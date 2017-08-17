@@ -78,6 +78,7 @@ import egovframework.ezMobile.ezEmail.vo.MEmailFolderVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -165,8 +166,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //				folder.setName(f.getName());
 //				folder.setFullName(f.getFullName());
 //				folder.setUnReadCount(f.getUnreadMessageCount());
-				
-				folder.put("name", f.getName());
+				if ( f.getName().equals("INBOX") ) {
+					folder.put("name", "받은 편지함");
+				} else {
+					folder.put("name", f.getName());
+				}
 				folder.put("fullName", f.getFullName());
 				folder.put("unReadCount", f.getUnreadMessageCount());
 				
@@ -422,13 +426,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				messageJsonArray.add(messageJson);
 			}
-			
+			String folderName = folder.getName();
+			if ( folderName.equals("INBOX") ) {
+				folderName = "받은 편지함";
+			}
 			folder.close(false);
 			
 			JSONObject data = new JSONObject();
 			
 			data.put("messageJsonArray", messageJsonArray);
 			data.put("unreadCount", folder.getUnreadMessageCount());
+			data.put("folderName", folderName);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -462,7 +470,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/mail-write/option", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void mMailWriteOption(HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] started.");
+//		String serverName = request.getHeader("x-user-host");
+//		MCommonVO info = mOptionService.commonInfo(serverName, userId);
 		
+//		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+//		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] ended.");		
 	}
 	
@@ -778,17 +790,60 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		String importance = "3";
 		
-		String subject = (String) jsonObject.get("subject");
-		String to = (String) jsonObject.get("to");
-		String cc = (String) jsonObject.get("cc");
-		String bcc = (String) jsonObject.get("bcc");
-		String textBody = (String) jsonObject.get("textbody");
-		String from = (String) jsonObject.get("from");
-		String charset = (String) jsonObject.get("charset");
-		String htmlbody = (String) jsonObject.get("htmlbody");
-		String displayName = (String) jsonObject.get("displayName");
-		String stateName = (String) jsonObject.get("stateName");
-//		String importance = (String) jsonObject.get("importance");
+		String subject = "";
+		String to = "";
+		String cc = "";
+		String bcc = "";
+		String textBody = "";
+		String from = "";
+		String charset = "";
+		String htmlbody = "";
+		String displayName = "";
+		String stateName = "";
+		
+		if (jsonObject.get("subject") != null) {
+			subject = (String) jsonObject.get("subject");
+		}
+		
+		if (jsonObject.get("to") != null) {
+			to = (String) jsonObject.get("to");
+		}
+		
+		if (jsonObject.get("cc") != null) {
+			cc = (String) jsonObject.get("cc");
+		}
+		
+		if (jsonObject.get("bcc") != null) {
+			bcc = (String) jsonObject.get("bcc");
+		}
+		
+		if (jsonObject.get("textBody") != null) {
+			textBody = (String) jsonObject.get("textBody");
+		}
+		
+		if (jsonObject.get("from") != null) {
+			from = (String) jsonObject.get("from");
+		}
+		
+		if (jsonObject.get("charset") != null) {
+			charset = (String) jsonObject.get("charset");
+		}
+		
+		if (jsonObject.get("htmlbody") != null) {
+			htmlbody = (String) jsonObject.get("htmlbody");
+		}
+		
+		if (jsonObject.get("displayName") != null) {
+			displayName = (String) jsonObject.get("displayName");
+		}
+		
+		if (jsonObject.get("stateName") != null) {
+			stateName = (String) jsonObject.get("stateName");
+		}
+		
+		if (jsonObject.get("importance") != null) {
+			importance = (String) jsonObject.get("importance");
+		}
 		
 		String realPath = commonUtil.getRealPath(request);
 
@@ -1723,17 +1778,60 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		String importance = "3";
 		
-		String subject = (String) jsonObject.get("subject");
-		String to = (String) jsonObject.get("to");
-		String cc = (String) jsonObject.get("cc");
-		String bcc = (String) jsonObject.get("bcc");
-		String textBody = (String) jsonObject.get("textbody");
-		String from = (String) jsonObject.get("from");
-		String charset = (String) jsonObject.get("charset");
-		String htmlbody = (String) jsonObject.get("htmlbody");
-		String displayName = (String) jsonObject.get("displayName");
-		String stateName = (String) jsonObject.get("stateName");
-//		String importance = (String) jsonObject.get("importance");
+		String subject = "";
+		String to = "";
+		String cc = "";
+		String bcc = "";
+		String textBody = "";
+		String from = "";
+		String charset = "";
+		String htmlbody = "";
+		String displayName = "";
+		String stateName = "";
+		
+		if (jsonObject.get("subject") != null) {
+			subject = (String) jsonObject.get("subject");
+		}
+		
+		if (jsonObject.get("to") != null) {
+			to = (String) jsonObject.get("to");
+		}
+		
+		if (jsonObject.get("cc") != null) {
+			cc = (String) jsonObject.get("cc");
+		}
+		
+		if (jsonObject.get("bcc") != null) {
+			bcc = (String) jsonObject.get("bcc");
+		}
+		
+		if (jsonObject.get("textBody") != null) {
+			textBody = (String) jsonObject.get("textBody");
+		}
+		
+		if (jsonObject.get("from") != null) {
+			from = (String) jsonObject.get("from");
+		}
+		
+		if (jsonObject.get("charset") != null) {
+			charset = (String) jsonObject.get("charset");
+		}
+		
+		if (jsonObject.get("htmlbody") != null) {
+			htmlbody = (String) jsonObject.get("htmlbody");
+		}
+		
+		if (jsonObject.get("displayName") != null) {
+			displayName = (String) jsonObject.get("displayName");
+		}
+		
+		if (jsonObject.get("stateName") != null) {
+			stateName = (String) jsonObject.get("stateName");
+		}
+		
+		if (jsonObject.get("importance") != null) {
+			importance = (String) jsonObject.get("importance");
+		}
 		
 		String realPath = commonUtil.getRealPath(request);
 
