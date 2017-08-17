@@ -5502,10 +5502,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			for (int p = 0; p < objCell.getLength(); p++) {
 				Element cell = (Element) objCell.item(p);
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
    				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
