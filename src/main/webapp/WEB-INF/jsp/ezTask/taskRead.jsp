@@ -96,6 +96,7 @@
 		            }
 		        }
 		        
+				/* 의견카운트 */
 		        if (taskCommentListSize == 0) {
 		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
 		        } else {
@@ -1022,7 +1023,7 @@
 						<tr>
 							<th><spring:message code='ezTask.t157' /></th>
 							<td colspan="3" style="width:100%">
-								<div id="taskShareList" style="overflow-Y: auto; height: 20px;">
+								<div id="taskShareList" style="overflow-Y: auto; height: 20px; line-height: 1.5em;">
 									<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 										<span style="cursor:pointer;margin-top: 0px;margin-bottom: 0px;" onclick="show_personinfo('${taskShareVO.sharerID }')" >
 											<c:out value = '${taskShareVO.sharerName }' /> (<c:out value = '${taskShareVO.sharerDeptName }' />)
