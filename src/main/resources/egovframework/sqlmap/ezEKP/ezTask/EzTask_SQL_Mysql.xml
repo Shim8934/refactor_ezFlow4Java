@@ -94,10 +94,9 @@
     <update id="EzTaskDAO.insertComment" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASKCOMMENT
-				(taskid, commentorid, commentorname, commentorname2, commentdate, comment)
+				(taskid, commentorid, commentorname, commentorname2, commentdate, comment, tenantID)
 			VALUES
-				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#)
-			
+				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#, #tenantID#)
         ]]>
     </update>
 	

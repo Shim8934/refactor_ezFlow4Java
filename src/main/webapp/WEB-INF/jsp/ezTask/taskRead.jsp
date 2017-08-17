@@ -68,10 +68,10 @@
 		        }
 
 				/* 저장 수정버튼 숨김스크립트 */
-		        /* if (ownerid == userid) {
-		            document.getElementById("save").style.display = "none";
+		        if (ownerid == userid) {
+// 		            document.getElementById("save").style.display = "none";
 		        } else if (personid == userid) {
-		            document.getElementById("edit").style.display = "none";
+// 		            document.getElementById("edit").style.display = "none";
 		            document.getElementById("delete").style.display = "none";
 		            
 		            if(attachFileInfo != "") {
@@ -79,7 +79,7 @@
 		            }
 		            
 		            tempbody = message2.GetEditorContent();
-		        } */
+		        }
 
 		        var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
 		        for (var i = 0; i < taskcheckbox.length; i++) {
@@ -203,8 +203,9 @@
 				var feature = GetOpenPosition(420, 450);
 				window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature); */
 				
-				if (userid == "0")
+				if (userid == "0") {
 					userid = creatorid;
+				}
 					
 				var heigth = window.screen.availHeight;
 				var width = window.screen.availWidth;
@@ -266,22 +267,6 @@
 					return;
 				}
 				
-				/* var xmlDom = createXmlDom();
-				var xmlHTTP = createXMLHttpRequest();
-		
-				var objNode;
-				objNode = createNodeInsert(xmlDom, objNode, "DATA");
-				createNodeAndInsertText(xmlDom, objNode, "TASKID", id);
-				createNodeAndInsertText(xmlDom, objNode, "TEXTCOMMENT", document.getElementById("TextComment").value);
-		
-				xmlHTTP.open("POST", "/myoffice/ezTask/task_savemeno.aspx", false);
-				xmlHTTP.send(xmlDom);
-	
-				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
-					alert("<spring:message code='ezTask.t222' />");
-					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
-				} */
-				
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -297,7 +282,7 @@
 						/* comment만 다시 가져와라 */
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezTask.t108' />")
+						
 					}
 				});
 			}
@@ -673,49 +658,49 @@
 			    if (taskvalue == "3") {
 			        if (message2.GetEditorContent() == tempbody) {
 			            alert("<spring:message code='ezTask.t2014' />");
-			        return;
-			    }
-			}
+				        return;
+				    }
+				}
 			
-			createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", taskvalue);
-			var taskcheckbox = document.getElementsByName("completeracheckbox");
-			taskvalue = "";
-			for (var i = 0; i < taskcheckbox.length; i++) {
-			    if (taskcheckbox[i].checked == true) {
-			        taskvalue = taskcheckbox[i].value;
-			        break;
-			    }
-			}
-			createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", taskvalue);
-			
-			var strBody = message2.GetEditorContent();
-			
-			var tempDiv = document.createElement("DIV");
-			tempDiv.innerHTML = strBody;
-			
-			strBody = ConvertHTMLtoMHT(HTMLtoMHT_MakeTag(tempDiv));
-			createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
-			
-			var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
-			if (pAttachListXml != "") {
-			    var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-			    for (var i = 0; i < nodes.length; i++) {
-			        createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6"));
-			    }
-			}
-			
-			if(content != "")
-			    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);
-			else
-			    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
-			
-			xmlHTTP.open("POST", "/myoffice/ezTask/remote/taskwrok_save.aspx", false);
-			xmlHTTP.send(xmlDom);
-			
-			if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
-			    alert("<spring:message code='ezTask.t2009' />");
-			        window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
-			    }
+				createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", taskvalue);
+				var taskcheckbox = document.getElementsByName("completeracheckbox");
+				taskvalue = "";
+				for (var i = 0; i < taskcheckbox.length; i++) {
+				    if (taskcheckbox[i].checked == true) {
+				        taskvalue = taskcheckbox[i].value;
+				        break;
+				    }
+				}
+				createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", taskvalue);
+				
+				var strBody = message2.GetEditorContent();
+				
+				var tempDiv = document.createElement("DIV");
+				tempDiv.innerHTML = strBody;
+				
+				strBody = ConvertHTMLtoMHT(HTMLtoMHT_MakeTag(tempDiv));
+				createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
+				
+				var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
+				if (pAttachListXml != "") {
+				    var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
+				    for (var i = 0; i < nodes.length; i++) {
+				        createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6"));
+				    }
+				}
+				
+				if(content != "")
+				    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);
+				else
+				    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
+				
+				xmlHTTP.open("POST", "/myoffice/ezTask/remote/taskwrok_save.aspx", false);
+				xmlHTTP.send(xmlDom);
+				
+				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
+					alert("<spring:message code='ezTask.t2009' />");
+					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
+				}
 			}
 			
 			/* 진행상태변경시 스크립트 */
