@@ -11,6 +11,8 @@ public class TaskInfoVO {
 	private String creatorID;
 	/** 작성자이름 */
 	private String creatorName;
+	/** 작성자이름2 */
+	private String creatorName2;
 	/** 작성일 */
 	private String createDate;
 	/** 업무상태(시작안함, 진행중, 완료, 지연) */
@@ -56,8 +58,12 @@ public class TaskInfoVO {
 	private String personID;
 	/** 담당자 이름*/
 	private String personName;
+	/** 담당자 이름2*/
+	private String personName2;
 	/** 담당자 부서명*/
 	private String personDeptName;
+	/** 담당자 부서명2*/
+	private String personDeptName2;
 	/** 진행사항 파일첨부*/
 	private String personAttach;
 	/** 진행사항 본문경로*/
@@ -66,6 +72,8 @@ public class TaskInfoVO {
 	private String taskPersonID;
 	/** */
 	private String taskPersonName;
+	/** */
+	private String taskPersonName2;
 	/** 테넌트ID*/
 	private int tenantID;
 	
@@ -98,6 +106,12 @@ public class TaskInfoVO {
 	}
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
+	}
+	public String getCreatorName2() {
+		return creatorName2;
+	}
+	public void setCreatorName2(String creatorName2) {
+		this.creatorName2 = creatorName2;
 	}
 	public String getCreateDate() {
 		return createDate;
@@ -225,11 +239,23 @@ public class TaskInfoVO {
 	public void setPersonName(String personName) {
 		this.personName = personName;
 	}
+	public String getPersonName2() {
+		return personName2;
+	}
+	public void setPersonName2(String personName2) {
+		this.personName2 = personName2;
+	}
 	public String getPersonDeptName() {
 		return personDeptName;
 	}
 	public void setPersonDeptName(String personDeptName) {
 		this.personDeptName = personDeptName;
+	}
+	public String getPersonDeptName2() {
+		return personDeptName2;
+	}
+	public void setPersonDeptName2(String personDeptName2) {
+		this.personDeptName2 = personDeptName2;
 	}
 	public String getPersonAttach() {
 		return personAttach;
@@ -255,6 +281,12 @@ public class TaskInfoVO {
 	public void setTaskPersonName(String taskPersonName) {
 		this.taskPersonName = taskPersonName;
 	}
+	public String getTaskPersonName2() {
+		return taskPersonName2;
+	}
+	public void setTaskPersonName2(String taskPersonName2) {
+		this.taskPersonName2 = taskPersonName2;
+	}
 	public int getTenantID() {
 		return tenantID;
 	}
@@ -265,21 +297,24 @@ public class TaskInfoVO {
 	public String toString() {
 		return "TaskInfoVO [taskID=" + taskID + ", parentID=" + parentID
 				+ ", ownerID=" + ownerID + ", creatorID=" + creatorID
-				+ ", creatorName=" + creatorName + ", createDate=" + createDate
-				+ ", taskStatus=" + taskStatus + ", completeRate="
-				+ completeRate + ", completeDate=" + completeDate
-				+ ", importance=" + importance + ", hasShare=" + hasShare
-				+ ", hasAttach=" + hasAttach + ", hasComment=" + hasComment
-				+ ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", repetition=" + repetition + ", repetitionDelete="
-				+ repetitionDelete + ", repetitionStatus=" + repetitionStatus
-				+ ", title=" + title + ", contentPath=" + contentPath
-				+ ", taskType=" + taskType + ", updateTime=" + updateTime
-				+ ", newAnswer=" + newAnswer + ", newRefer=" + newRefer
-				+ ", personID=" + personID + ", personName=" + personName
-				+ ", personDeptName=" + personDeptName + ", personAttach="
-				+ personAttach + ", personContentPath=" + personContentPath
+				+ ", creatorName=" + creatorName + ", creatorName2="
+				+ creatorName2 + ", createDate=" + createDate + ", taskStatus="
+				+ taskStatus + ", completeRate=" + completeRate
+				+ ", completeDate=" + completeDate + ", importance="
+				+ importance + ", hasShare=" + hasShare + ", hasAttach="
+				+ hasAttach + ", hasComment=" + hasComment + ", startDate="
+				+ startDate + ", endDate=" + endDate + ", repetition="
+				+ repetition + ", repetitionDelete=" + repetitionDelete
+				+ ", repetitionStatus=" + repetitionStatus + ", title=" + title
+				+ ", contentPath=" + contentPath + ", taskType=" + taskType
+				+ ", updateTime=" + updateTime + ", newAnswer=" + newAnswer
+				+ ", newRefer=" + newRefer + ", personID=" + personID
+				+ ", personName=" + personName + ", personName2=" + personName2
+				+ ", personDeptName=" + personDeptName + ", personDeptName2="
+				+ personDeptName2 + ", personAttach=" + personAttach
+				+ ", personContentPath=" + personContentPath
 				+ ", taskPersonID=" + taskPersonID + ", taskPersonName="
-				+ taskPersonName + ", tenantID=" + tenantID + "]";
+				+ taskPersonName + ", taskPersonName2=" + taskPersonName2
+				+ ", tenantID=" + tenantID + "]";
 	}
 }

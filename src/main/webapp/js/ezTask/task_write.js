@@ -62,14 +62,14 @@ function check_time() {
     return true;
 }
 
-var g_attendant = null;
+var g_share = null;
 var schedule_select_attendant_dialogArguments = new Array();
 function _manage_attendant() {
     check_name("attendant");
 }
 
 function manage_attendant_after() {
-    schedule_select_attendant_dialogArguments[0] = g_attendant;
+    schedule_select_attendant_dialogArguments[0] = g_share;
     schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
     GetOpenWindow("/ezTask/taskSelectAttendant.do", "", 970, 680);
@@ -77,7 +77,7 @@ function manage_attendant_after() {
 
 function manage_attendant_Complete(rtn) {
     if (typeof (rtn) != "undefined") {
-        g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+        g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
         document.getElementById("shareList").innerHTML = "";
         
         for (var i = 0; i < rtn["id"].length; i++) {
@@ -85,20 +85,24 @@ function manage_attendant_Complete(rtn) {
             	document.getElementById("shareList").innerHTML = rtn["name"][i];
             	document.getElementById("shareID").innerHTML = rtn["id"][i];
             	document.getElementById("shareList2").innerHTML = rtn["name1"][i];
+            	document.getElementById("shareDept").innerHTML = rtn["deptname"][i];
+            	document.getElementById("shareDept2").innerHTML = rtn["deptname2"][i];
             } else {
             	document.getElementById("shareList").innerHTML += ", " + rtn["name"][i];
             	document.getElementById("shareID").innerHTML += ", " + rtn["id"][i];
             	document.getElementById("shareList2").innerHTML += ", " + rtn["name1"][i];
+            	document.getElementById("shareDept").innerHTML += ", " + rtn["deptname"][i];
+            	document.getElementById("shareDept2").innerHTML += ", " + rtn["deptname2"][i];
             }
 
-            g_attendant["name"][i] = rtn["name"][i];
-            g_attendant["id"][i] = rtn["id"][i];
-            g_attendant["deptname"][i] = rtn["deptname"][i];
-            g_attendant["name1"][i] = rtn["name1"][i];
-            g_attendant["name2"][i] = rtn["name2"][i];
-            g_attendant["deptname2"][i] = rtn["deptname2"][i];
-            g_attendant["jikwe"][i] = rtn["jikwe"][i];
-            g_attendant["phone"][i] = rtn["phone"][i];
+            g_share["name"][i] = rtn["name"][i];
+            g_share["id"][i] = rtn["id"][i];
+            g_share["deptname"][i] = rtn["deptname"][i];
+            g_share["name1"][i] = rtn["name1"][i];
+            g_share["name2"][i] = rtn["name2"][i];
+            g_share["deptname2"][i] = rtn["deptname2"][i];
+            g_share["jikwe"][i] = rtn["jikwe"][i];
+            g_share["phone"][i] = rtn["phone"][i];
 
         }
     }
@@ -156,14 +160,14 @@ function check_name(type) {
             alert("'" + names[i] + "'" + strLang21);
             continue;
         } else if (adCount == 1) {
-            if (g_attendant == null)
-                g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+            if (g_share == null)
+                g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
             if (getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) != userid) {
-                var length = g_attendant["name"].length;
+                var length = g_share["name"].length;
 
                 for (var j = 0; j < length; j++) {
-                    if (g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
+                    if (g_share["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
                         alert(strLang22);
                         return;
                     }
@@ -173,20 +177,20 @@ function check_name(type) {
                 return;
             }
 
-            g_attendant["name"][length] = getNodeText(GetChildNodes(SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW")[0])[3])
-            g_attendant["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
-            g_attendant["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7")[0]);
-            g_attendant["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5")[0]);
-            g_attendant["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6")[0]);
-            g_attendant["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8")[0]);
+            g_share["name"][length] = getNodeText(GetChildNodes(SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW")[0])[3])
+            g_share["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
+            g_share["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7")[0]);
+            g_share["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5")[0]);
+            g_share["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6")[0]);
+            g_share["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8")[0]);
 
             if (length == 0) {
-            	document.getElementById("shareList").innerHTML = g_attendant["name"][length];
-            	document.getElementById("shareList2").innerHTML = g_attendant["name2"][length];            	
+            	document.getElementById("shareList").innerHTML = g_share["name"][length];
+            	document.getElementById("shareList2").innerHTML = g_share["name2"][length];            	
             }
             else {
-            	document.getElementById("shareList").innerHTML += ", " + g_attendant["name"][length];
-            	document.getElementById("shareList2").innerHTML += ", " + g_attendant["name2"][length];
+            	document.getElementById("shareList").innerHTML += ", " + g_share["name"][length];
+            	document.getElementById("shareList2").innerHTML += ", " + g_share["name2"][length];
             }
         } else {
             var rgParams = new Array();
@@ -214,13 +218,13 @@ function check_name(type) {
 function check_name_Complete(rgParams) {
     DivPopUpHidden();
     if (rgParams["name"] != "") {
-        if (g_attendant == null)
-            g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+        if (g_share == null)
+            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
         if (rgParams["id"] != userid) {
-            var length = g_attendant["name"].length;
+            var length = g_share["name"].length;
             for (var j = 0; j < length; j++) {
-                if (g_attendant["id"][j] == rgParams["id"]) {
+                if (g_share["id"][j] == rgParams["id"]) {
                     alert(strLang22);
                     return;
                 }
@@ -231,19 +235,19 @@ function check_name_Complete(rgParams) {
             return;
         }
 
-        var length = g_attendant["name"].length;
+        var length = g_share["name"].length;
 
-        g_attendant["name"][length] = rgParams["name"];
-        g_attendant["id"][length] = rgParams["id"];
-        g_attendant["deptname"][length] = rgParams["deptname"];
-        g_attendant["name1"][length] = rgParams["name1"];
-        g_attendant["name2"][length] = rgParams["name2"];
-        g_attendant["deptname2"][length] = rgParams["deptname2"];
+        g_share["name"][length] = rgParams["name"];
+        g_share["id"][length] = rgParams["id"];
+        g_share["deptname"][length] = rgParams["deptname"];
+        g_share["name1"][length] = rgParams["name1"];
+        g_share["name2"][length] = rgParams["name2"];
+        g_share["deptname2"][length] = rgParams["deptname2"];
 
         if (length == 0)
-            document.getElementById("shareList").innerHTML = g_attendant["name"][length];
+            document.getElementById("shareList").innerHTML = g_share["name"][length];
         else
-            document.getElementById("shareList").innerHTML += ", " + g_attendant["name"][length];
+            document.getElementById("shareList").innerHTML += ", " + g_share["name"][length];
 
         if (i != namelength)
             check_name();

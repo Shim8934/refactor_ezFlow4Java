@@ -40,4 +40,16 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public void taskUpdateConfig(Map<String, Object> map) throws Exception {
 		update("EzTaskDAO.taskUpdateConfig", map);
 	}
+
+	public String taskSave(TaskInfoVO taskInfoVO) throws Exception {
+		return (String) insert("EzTaskDAO.taskSave", taskInfoVO);
+	}
+	public void shareTaskSave(TaskInfoVO taskInfoVO) throws Exception {
+		insert("EzTaskDAO.shareTaskSave", taskInfoVO);
+	}
+
+//	public int taskSave(Map<String, Object> map) throws Exception {
+//		return (int) insert("EzTaskDAO.taskSave", map);
+//	}
+//
 }

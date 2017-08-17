@@ -2,9 +2,12 @@ package egovframework.ezEKP.ezTask.service;
 
 import java.util.List;
 
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzTaskService {
 
@@ -21,4 +24,8 @@ public interface EzTaskService {
 	public String getDelayColor(String memberID, int tenantID) throws Exception;
 
 	public void taskUpdateConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
+
+	public String taskSave(Document doc, String realPath, LoginVO userInfo) throws Exception;
+
+//	public void taskSave(LoginVO userInfo, String regDate, int taskStatus, int importance, String fileList, String title, int taskType, String sdate, String edate, String[] shareID, String[] shareName, String[] shareName2, String[] shareDepts, String[] shareDepts2) throws Exception;
 }

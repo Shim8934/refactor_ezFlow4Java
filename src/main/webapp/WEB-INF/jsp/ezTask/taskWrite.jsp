@@ -13,51 +13,48 @@
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezTask/task_write.js"></script>
+		<script type="text/javascript" src="/js/ezTask/task_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<script>
-// 			var userid = "_userid";
-// 			var username = "_username";
-// 		    var username2 = "_username2";
-// 		    var deptname = "userinfo.DeptName";
-// 		    var deptname2 = "userinfo.DeptName2";
-// 			var taskid = " _taskid";
-// 			var taskstatus = "_taskstatus";
-// 			var completerate = "_completerate";
-			var title = "";
-			var startdate = "";
-			var enddate = "";
-// 			var content = "_content";
+			var userid = "${userInfo.id}";
+			var username = "${userInfo.displayName}";
+		    var username2 = "${userInfo.displayName1}";
+		    var deptname = "${userInfo.deptName}";
+		    var deptname2 = "${userInfo.deptName1}";
+			var taskid = " _taskid";
+			var taskstatus = "_taskstatus";
+			var completerate = "_completerate";
+			var startdate = "_startdate";
+			var enddate = "_enddate";
+			var content = "${newGuid}";
 			var importance = "";
 // 		    var repetition = "_repetition";
-// 		    var tasktype = "_tasktype";
-// 			var repetitiondel = "_repetitiondel";
-// 		    var TextCompleteDate1 = "_TextCompleteDate";
-// 		    var creatorid = "_creatorid";
-// 		    var _hasattach = "_hasattach";
 		    var tasktype = "";
-// 		    var strLang_1 = "<spring:message code='ezTask.t22' />";
-// 		    var hasshare = "_hasshare";
-		    var personlist = "";
+// 			var repetitiondel = "_repetitiondel";
+		    var TextCompleteDate1 = "_TextCompleteDate";
+		    var creatorid = "_creatorid";
+		    var hasattach = "_hasattach";
+		    var hasshare = "";
+// 		    var personlist = "_personlist";
 		    var sharelist = "";
-// 		    var g_person = null;
-// 		    var g_share = null;
-// 		    var shareid = "_shareid";
-// 		    var sharename = "_sharename";
-// 		    var sharename2 = "_sharename2";
-// 		    var sharedept = "_sharedept";
-// 		    var sharedept2 = "_sharedept2";
-// 		    var sharemail = "_sharemail";
-// 		    var objMHT = new ActiveXObject("MhtFormat.Convert");
-// 		    var isreadpage = false;
-// 		    var FormProcSpelling = "FormProcSpelling";
+		    var g_person = null;
+		    var g_share = null;
+		    var shareid = "_shareid";
+		    var sharename = "_sharename";
+		    var sharename2 = "_sharename2";
+		    var sharedept = "_sharedept";
+		    var sharedept2 = "_sharedept2";
+		    var sharemail = "_sharemail";
+		    var isreadpage = false;
+		    var FormProcSpelling = "FormProcSpelling";
 		    window.onload = function () {
 		        window.onresize();
 // 		        form1.EzHTTPTrans.SetBigLang = "${userinfo.lang}" == "1" ? 1 : 2;
-		        document.getElementById("TextCompleteDate").value = "";
+// 		        document.getElementById("TextCompleteDate").value = "";
 		//         if (_hasattach == "YES")
 		<%--             ModifyAttachOCX("<%= _attachFileName %>"); --%>
 		
@@ -71,26 +68,26 @@
 // 		            }
 // 		        }
 		
-		        if (tasktype == "1") {
-		            document.getElementById("P").click();
-		        } else if (tasktype == "2") {
-		            document.getElementById("I").click();
-		        } else if (tasktype == "3") {
-		            document.getElementById("C").click();
-		        }
+// 		        if (tasktype == "1") {
+// 		            document.getElementById("P").click();
+// 		        } else if (tasktype == "2") {
+// 		            document.getElementById("I").click();
+// 		        } else if (tasktype == "3") {
+// 		            document.getElementById("C").click();
+// 		        }
 		
-		        if (importance == "1") {
-		            document.getElementById("important1").click();
-		        } else if (importance == "2") {
-		            document.getElementById("important2").click();
-		        } else if (importance == "3") {
-		            document.getElementById("important3").click();
-		        }
+// 		        if (importance == "1") {
+// 		            document.getElementById("important1").click();
+// 		        } else if (importance == "2") {
+// 		            document.getElementById("important2").click();
+// 		        } else if (importance == "3") {
+// 		            document.getElementById("important3").click();
+// 		        }
 		
-		        if (personlist != "") {
-		            document.getElementById("personlist").innerHTML = personlist;
+// 		        if (personlist != "") {
+// 		            document.getElementById("personlist").innerHTML = personlist;
 		
-		            g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+// 		            g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 		
 		<%--             g_person["name"][0] = "<%= _personname %>"; --%>
 		<%--             g_person["id"][0] = "<%= _personid %>"; --%>
@@ -99,29 +96,29 @@
 		<%--             g_person["name2"][0] = "<%= _personname2 %>"; --%>
 		<%--             g_person["deptname2"][0] = "<%= _persondept2 %>"; --%>
 		<%--             g_person["email"][0] = "<%= _personemail %>"; --%>
-		        }
-		        if (sharelist != "") {
-		            document.getElementById("sharelist").innerHTML = sharelist;
+// 		        }
+// 		        if (sharelist != "") {
+// 		            document.getElementById("shareList").innerHTML = sharelist;
 		
-		            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+// 		            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 		
-		            shareid = shareid.split(";");
-		            sharename = sharename.split(";");
-		            sharename2 = sharename2.split(";");
-		            sharedept = sharedept.split(";");
-		            sharedept2 = sharedept2.split(";");
-		            sharemail = sharemail.split(";");
+// 		            shareid = shareid.split(";");
+// 		            sharename = sharename.split(";");
+// 		            sharename2 = sharename2.split(";");
+// 		            sharedept = sharedept.split(";");
+// 		            sharedept2 = sharedept2.split(";");
+// 		            sharemail = sharemail.split(";");
 		
-		            for (var i = 0; i < shareid.length; i++) {
-		                g_share["name"][i] = sharename[i];
-		                g_share["id"][i] = shareid[i];
-		                g_share["deptname"][i] = sharedept[i];
-		                g_share["name1"][i] = sharename[i];
-		                g_share["name2"][i] = sharename2[i];
-		                g_share["deptname2"][i] = sharedept2[i];
-		                g_share["email"][i] = sharemail[i];
-		            }
-		        }
+// 		            for (var i = 0; i < shareid.length; i++) {
+// 		                g_share["name"][i] = sharename[i];
+// 		                g_share["id"][i] = shareid[i];
+// 		                g_share["deptname"][i] = sharedept[i];
+// 		                g_share["name1"][i] = sharename[i];
+// 		                g_share["name2"][i] = sharename2[i];
+// 		                g_share["deptname2"][i] = sharedept2[i];
+// 		                g_share["email"][i] = sharemail[i];
+// 		            }
+// 		        }
 		    }
 		
 // 		    window.onresize = function () {
@@ -221,14 +218,14 @@
 		        document.all.normalScreen.style.display = "none";
 		
 		        setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("sharelist")));
-		        setNodeText(document.getElementById("printPerson"), getNodeText(document.getElementById("personlist")));
+// 		        setNodeText(document.getElementById("printPerson"), getNodeText(document.getElementById("personlist")));
 		        setNodeText(document.getElementById("printCompleteRate"), getNodeText(document.getElementById("completerateSelect").options[document.getElementById("completerateSelect").selectedIndex]));
 		        setNodeText(document.getElementById("printStatus"), getNodeText(document.getElementById("taskstatusSelect").options[document.getElementById("taskstatusSelect").selectedIndex]));
 		        setNodeText(document.getElementById("printImportance"), getNodeText(document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex]));
 // 		        setNodeText(document.getElementById("printRepetition"), getNodeText(document.getElementById("repeatinfo")));
 		
 		
-// 		        var tasktype = document.getElementsByName("tasktypesel");
+		        var tasktype = document.getElementsByName("tasktypesel");
 		        var tasktypename;
 		
 		        for (var i = 0; i < tasktype.length; i++) {
@@ -254,9 +251,9 @@
 // 		        if (repetition == "")
 // 		            setNodeText(document.getElementById("printDate"), $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "<spring:message code='ezTask.t207' />");
 // 		        else
-// 		            setNodeText(document.getElementById("printDate"), "<spring:message code='ezTask.t208' />");
+		            setNodeText(document.getElementById("printDate"), "<spring:message code='ezTask.t208' />");
 		
-		        setNodeText(document.getElementById("printTitle"), document.getElementById("title").value);
+		        setNodeText(document.getElementById("printTitle"), document.getElementById("TextTitle").value);
 		
 		        var fileNameList = form1.EzHTTPTrans.FileListAll().split("\\");
 		        var html = "";
@@ -277,20 +274,21 @@
 		
 // 			function changemenu(obj) {
 // 			    if (obj.id == "P") {
-// 			    	tasktype = obj.value;
+// 			        taskType = obj.value;
 // 			        document.getElementById("personinputtr").style.display = "none";
 // 			        document.getElementById("trrepeatinfo").style.display = "";
 // 			    }
 // 			    else if (obj.id == "I") {
-// 			    	tasktype = obj.value;
+// 			        taskType = obj.value;
 // 			        document.getElementById("personinputtr").style.display = "";
 // 			        document.getElementById("trrepeatinfo").style.display = "none";
 // 			        repetition = "";
 // 			        document.getElementById("periodblock").style.display = "";
 // 			        document.getElementById("repeatblock").style.display = "none";
 // 			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-// 			    } else {
-// 			    	tasktype = obj.value;
+// 			    }
+// 			    else if (obj.id == "C") {
+// 			        taskType = obj.value;
 // 			        document.getElementById("personinputtr").style.display = "";
 // 			        document.getElementById("trrepeatinfo").style.display = "none";
 // 			        repetition = "";
@@ -299,105 +297,175 @@
 // 			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
 // 			    }
 // 			    else {
-// 			    	importance = document.getElementById("important").value;
+// 			        document.getElementById("importantSelect").value = obj.value;
 // 			    }
 // 			}
-
+			
 			function Editor_Complete() {
     	    	message.SetEditorContent(sigBody.innerHTML);
     	    }
-
-			// 버튼 중복클릭 방지
-		    var doubleSubmitFlag = false;
-		    function doubleSubmitCheck() {
-		    	if (doubleSubmitFlag) {
-		    		return doubleSubmitFlag;
-		    	} else {
-		    		doubleSubmitFlag = true;
-		    		return false;
-		    	}
-		    }
-
+			
 			function save_task() {
-				if (doubleSubmitCheck()){
-	        		return;
-	        	}
+			    if (document.getElementById("TextTitle").value == "") {
+			        alert("제목을 입력해주세요.");
+			        document.getElementById("TextTitle").focus();
+			        return;
+			    }
 
-				if ($("#title").val() == "") {
-					alert("<spring:message code='ezTask.t994'/>");
-					doubleSubmitFlag = false;
-					
-					return;
-				}
+			    var startdate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+			    var enddate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
 
-				if ($.trim($("#title").val()) == "") {
-		        	alert("<spring:message code='ezTask.t995' />");
-		        	doubleSubmitFlag = false;
+			    if (startdate > enddate) {
+			        alert("<spring:message code='ezTask.t22' />");
+			        return;
+			    }
 
-		        	return;
-		        }
-
-				var sdate = "";
-				var edate = "";
-
-				if ($("#Sdatepicker").is(":enabled")) {
-				    sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				    edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				}
-
-				if (sdate > edate) {
-					alert("<spring:message code='ezTask.t993'/>");
-					return;
-				}
-				
-				title = $("#title").val();
-				importance = $(":input:radio[name=important]:checked").val();
-				tasktype = $(":input:radio[name=tasktypesel]:checked").val();
-
-				//업무공유자 목록
-				var shareList = document.getElementById("shareList").innerHTML;
+			    tasktype = $(":input:radio[name=tasktypesel]:checked").val();
+			    importance = $(":input:radio[name=important]:checked").val();
+alert("tasktype : " + tasktype);
+			    var shareList = document.getElementById("shareList").innerHTML;
 				var shareList2 = document.getElementById("shareList2").innerHTML;
 				var shareID = document.getElementById("shareID").innerHTML;
-
-				//첨부파일 목록
-				var listtable = dadiframe.document.getElementById("filelist");
-				var filelist = GetChildNodes(listtable);
-				var fileList = "";
-
-				for (var i = 0; i < filelist.length - 1; i++) {
-					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
-					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
-					}
+				var shareDept = document.getElementById("shareDept").innerHTML;
+				var shareDept2 = document.getElementById("shareDept2").innerHTML;
+alert("shareList : " + shareList);
+				if (shareList.split(",").length > 0) {
+					hasshare = "Y";
+				} else {
+					hasshare = "N";
 				}
+alert("hasshare : " + hasshare);
+			    // 완료관련?
+// 			    if (document.getElementById("taskstatusSelect").value != 3 && document.getElementById("TextCompleteDate").value != "") {
+// 			        alert("" + strLang10 + "");
+// 			        document.getElementById("TextCompleteDate").focus();
+// 			        return;
+// 			    }
 
-				$.ajax({
-					url : '/ezTask/taskSave.do',
-					type : 'POST',
-					dataType : 'text',
-					data : {
-						sdate : sdate,
-						edate : edate,
-						title : title,
-						importance : importance,
-						tasktype : tasktype,
-						shareList : shareList,
-						shareList2 : shareList2,
-						shareID : shareID,
-						fileList : fileList
-					},
-					success : function() {
-						alert("<spring:message code='ezTask.t991'/>");
-					},
-					error : function() {
-						
-					}
-				});
-			}
+			    if (!check_length(document.getElementById("TextTitle").value, 100, "제목")) return;
+// 			    if (!check_length(document.getElementById("TextCompleteDate").value, 20, "완료날짜")) return;
 
-			function btn_Close() {
-				//파일 첨부된 목록 가져오기
+			    var xmlDom = createXmlDom();
+			    var xmlHTTP = createXMLHttpRequest();
+			    var objRoot, objNode, attachnode, shobjnode;
+			    objNode = createNodeInsert(xmlDom, objNode, "DATA");
+			    createNodeAndInsertText(xmlDom, objNode, "TASKID", taskid);
+			    createNodeAndInsertText(xmlDom, objNode, "OWNERID", userid);
+			    createNodeAndInsertText(xmlDom, objNode, "CREATORID", userid);
+			    createNodeAndInsertText(xmlDom, objNode, "CREATORNAME1", username);
+			    createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
+			    createNodeAndInsertText(xmlDom, objNode, "HASSHARE", hasshare);
+			    createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
+			    createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", document.getElementById("taskstatusSelect").value);
+			    createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", document.getElementById("completerateSelect").value);
+// 			    createNodeAndInsertText(xmlDom, objNode, "COMPLETEDATE", document.getElementById("TextCompleteDate").value);
+			    createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", importance);
+
+//			    if (repetition == "") {
+			    createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00");
+			    createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59");
+//			    }
+//			    else {
+//			        var sdate, edate;
+			//
+//			        if (g_sdate == null) {
+//			            startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+//			            enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+//			            sdate = new Date(startdate.substring(0, 4), parseInt(startdate.substring(5, 7)) - 1, startdate.substring(8, 10));
+//			            edate = new Date(enddate.substring(0, 4), parseInt(enddate.substring(5, 7)) - 1, enddate.substring(8, 10));
+//			        }
+//			        else {
+//			            sdate = new Date(g_sdate.substring(0, 4), parseInt(g_sdate.substring(5, 7)) - 1, g_sdate.substring(8, 10));
+//			            edate = new Date(g_edate.substring(0, 4), parseInt(g_edate.substring(5, 7)) - 1, g_edate.substring(8, 10));
+//			        }
+			//
+//			        createNodeAndInsertText(xmlDom, objNode, "STARTDATE", sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate() + " 00:00");
+//			        createNodeAndInsertText(xmlDom, objNode, "ENDDATE", edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate() + " 23:59");
+			//
+//			    }
+
+//			    createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
+			    createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("TextTitle").value);
+alert("1");
+			    var Doc_ContentHtml = document.createElement("DIV");
+			    var strBody = message.GetEditorContent();
+			    Doc_ContentHtml.innerHTML = strBody;
+alert("2" + strBody);
+			    strBody = ConvertHTMLtoMHT(EmbedContentIntoXML(strBody));
+			    createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
+
+// 			    if (taskid == "") {
+// 			        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");			    	
+// 			    } else {
+			        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);			    	
+// 			    }
+// alert("3" + pAttachListXml);
+// 			    var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
+// 			    if (pAttachListXml != "") {
+// 			        var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
+// 			        for (var i = 0; i < nodes.length; i++) {
+// 			            createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6")));
+// 			        }
+// 			    }
+
+			    var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
+alert(hasshare);
+			    if (hasshare == "Y") {
+			    	for (var i = 0; i < g_share["id"].length; i++) {
+alert("id : " + g_share["id"][i]);
+alert("dn : " + g_share["deptname2"][i]);
+			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREID", g_share["id"][i]);
+			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME1", g_share["name"][i]);
+			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME2", g_share["name1"][i]);
+			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME1", g_share["deptname"][i]);
+			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME2", g_share["deptname2"][i]);
+			        }
+			    }
+
+			    var personlist = createNodeAndAppandNode(xmlDom, objNode, personlist, "PERSONLIST");
+alert("tasktype : " + tasktype);
+			    if (tasktype == 1) {
+alert(deptname)
+			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", userid);
+			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", username);
+			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", username2);
+			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME1", deptname);
+			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", deptname2);
+			    } else {
+// 			        var person = "";
+
+			        if (shareID != null) {
+// 			            if (g_person["id"].length > 1) { 
+// 			            	alert("총");
+// 			            	return; 
+// 			            }
+						for (var i = 0; i < g_share["id"].length; i++) {
+alert("@@" + g_share["id"][i]);
+alert("@@" + g_share["name1"][i]);							
+			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", g_share["id"][i]);
+			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", g_share["name"][i]);
+			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", g_share["name1"][i]);
+			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME1", g_share["deptname"][i]);
+			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", g_share["deptname2"][i]);							
+						}
+// 		                if (person != "") {
+// 		                    person += ", ";		                	
+// 		                }
+
+// 		                person += g_person["name"][i] == "" ? g_person["deptname"][i] : g_person["name"][i];
+			        } else {
+			        	alert("담당자를 지정해주세요.");
+			        	return;
+			        }
+// 			        if (person == "" || person == null) {
+// 			            alert("담당자를 지정해주세요.");
+// 			            return;
+// 			        }
+			    }
+alert("##" + g_share["id"].length);
+				createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "SHARELENGTH", g_share["id"].length);
+			    
+			  //파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
 				var filelist = GetChildNodes(listtable);
 				var fileList = "";
@@ -409,23 +477,31 @@
 						fileList += "," + GetAttribute(filelist[i + 1], "data2");
             		}
 				}
+				
+// 				for (var i=0; i<fileList.length; i++) {
+// 					createNodeAndInsertText(xmlDom, objNode, "FILEPATH", fileList[i]);			
+// 				}
+				if (fileList.length > 0) {
+					createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "Y");
+				} else {
+					createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "N");
+				}
 
-				$.ajax({
-					async : false,
-					url : '/ezTask/tempUploadFileDelete.do',
-	                type : 'POST',
-	                dataType : 'json',
-	                data : {
-	                	fileList : fileList
-	                },
-	                success: function() {
-						window.close();
-	                },
-	                error: function() {
-	                	alert("<spring:message code='ezTask.t992'/>");	
-	                }
-				});
+			    createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
+			    
+			    xmlHTTP.open("POST", "/ezTask/taskSave.do", false);
+			    xmlHTTP.send(xmlDom);
+
+			    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+			        alert("업무를 저장하는 도중 오류 발생.");			    	
+			    } else {
+			        alert("업부를 저장하였습니다.");
+
+			        try { window.opener.RefreshView(); } catch (e) { }
+			        window.close();
+			    }
 			}
+
 		</script>
 		<script type="text/javascript" FOR="tbContentElement" EVENT="FieldsAvailable">
 			pzFormProc_FieldsAvailable();
@@ -433,17 +509,13 @@
 		<script type="text/javascript" FOR="tbContentElement" EVENT="DocumentComplete">
 		    pzFormProc_DocumentComplete();
 		    SetFormProc_SetLineStyle(tbContentElement);
-		    if (document.getElementById("title").value == "") {
-		        document.getElementById("title").focus();		    	
+		    if (document.getElementById("TextTitle").value == "") {
+		        document.getElementById("TextTitle").focus();		    	
 		    }
-		</script>				
-		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
-			attach_Add(filename);
 		</script>
+
+		<xmp id="sigBody" style="display: none;"></xmp>
 	</HEAD>
-	
-	<xmp id="sigBody" style="display: none;"></xmp>
-	
 	<body class="popup">
 		<form method="post" runat="server" id="form1">
 			<div id="main_body">
@@ -452,18 +524,18 @@
 						<td height="20" id="menuTable">
 							<div id="menu">
 								<ul>
-<%-- 									<c:choose> --%>
-<%-- 										<c:when test="${_taskid == ''}"> --%>
-<%-- 											<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li> --%>
-<%-- 											<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li> --%>
-<%-- 											<li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" align="absmiddle"><spring:message code='ezTask.t156' /></li> --%>
-<%-- 										</c:when> --%>
-<%-- 										<c:otherwise> --%>
+									<c:choose>
+										<c:when test="${_taskid == ''}">
 											<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 											<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
 											<li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" align="absmiddle"><spring:message code='ezTask.t156' /></li>
-<%-- 										</c:otherwise> --%>
-<%-- 									</c:choose> --%>
+										</c:when>
+										<c:otherwise>
+											<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
+											<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
+											<li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" align="absmiddle"><spring:message code='ezTask.t156' /></li>
+										</c:otherwise>
+									</c:choose>
 									
 									<li class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;display:none">
 										<select id="importantSelect" name="importantSelect">
@@ -506,7 +578,7 @@
 							</div>
 							<div id="close">
 								<ul>
-									<li><span onClick="btn_Close()"><spring:message code='ezTask.t9' /></span></li>
+									<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
 								</ul>
 							</div>
 							<script type="text/javascript">
@@ -521,8 +593,7 @@
 							<table class="content">
 								<tr>
 									<th><spring:message code='ezTask.t118' /></th>
-									<td colspan="3" style="width:100%"><input type="text" id="title" style="width:100%"></td>
-<!-- 									<td colspan="3"><asp:TextBox ID="title" Runat="server" width="100%" maxlength=100></asp:TextBox></td> -->
+									<td colspan="3"><input type="text" id="TextTitle" style="width:100%"></td>
 								</tr>
 								<tr>
 									<th><spring:message code='ezTask.t2003' /></th>
@@ -558,22 +629,26 @@
 <!-- 										</TR>	            	 -->
 <%-- 									</c:otherwise> --%>
 <%-- 								</c:choose> --%>
-								<tr id="shareinputtr">
+								<TR id="shareinputtr">
 									<th ><a class="imgbtn"><span onClick="_manage_attendant()"><spring:message code='ezTask.t157' /></span></a></th>
-									<td colspan ="3">
-										<input name="Input" id="shareInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
-										<div id="shareList" style="OVERFLOW-Y: auto; HEIGHT: 17px; display: inline;"></div>
-										<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-	         							<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-									</td>
-								</tr>
-								<tr style="display:none">
-									<th><spring:message code='ezTask.t212' /></th>
-									<td colspan="3">
-										<input type="text" id='TextCompleteDate' class='datepicker_date' name="txtPermanence" readonly ="true">
-										<IMG width="19" height="15" align="absMiddle" border="0" popupLocation='topright' forceMarginLeft='-10' id="img1" src="/images/i_scheduler.gif" style="CURSOR: pointer; POSITION: relative">
-									</td>
-								</tr>
+<!-- 									<TD colspan ="3"><DIV id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD> -->
+			         				<td colspan="3" id ="itemList">
+			         					<input name="Input" id="shareInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
+			         					<div id="shareList" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;"></div>
+			         					<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+			         					<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+			         					<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+			         					<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+			         				</td>
+								</TR>
+
+<!-- 								<tr style="display:none"> -->
+<%-- 									<th><spring:message code='ezTask.t212' /></th> --%>
+<!-- 									<td colspan="3"> -->
+<!-- 										<input type="text" id='TextCompleteDate' class='datepicker_date' name="txtPermanence" readonly ="true"> -->
+<!-- 										<IMG width="19" height="15" align="absMiddle" border="0" popupLocation='topright' forceMarginLeft='-10' id="img1" src="/images/i_scheduler.gif" style="CURSOR: pointer; POSITION: relative"> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
 <!-- 								<tr id="trrepeatinfo"> -->
 <%-- 									<th><a class="imgbtn"><span onClick="config_repeat()"><spring:message code='ezTask.t213' /></span></a></th> --%>
 <!-- 									<td class="pos1" colspan="3"><div id="repeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; width:100%; HEIGHT: 19px"></div></td> -->
@@ -583,7 +658,7 @@
 									<td colspan="3"><span id="periodblock">
 									<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
 									<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-<%-- 									</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span> </td> --%>
+									</span> <span id="repeatblock" style="DISPLAY:none"><spring:message code='ezTask.t214' /></span> </td>
 								</tr>
 							</table>
 						</td>
@@ -593,9 +668,23 @@
 				  			<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
 		      			</td>
 	  				</tr>
+<!-- 					<tr> -->
+<!-- 						<td height="20" style="padding-top:10px"> -->
+<!-- 							<table id="attachTable" class="file"> -->
+<!-- 								<tr> -->
+<%-- 									<th><spring:message code='ezTask.t160' /></th> --%>
+<!-- 									<td class="pos1" style="height:60px"> -->
+<!-- 										<SCRIPT language='JavaScript'>EzHTTPTrans_ActiveX2("EzHTTPTrans");</SCRIPT> -->
+<!-- 									</td> -->
+<%-- 									<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="attach_Add()"><spring:message code='ezTask.t215' /></span></a><br> --%>
+<%-- 									<a class="imgbtn"><span id="btn_AttachDel" onClick="attach_Delete()"><spring:message code='ezTask.t216' /></span></a></td> --%>
+<!-- 								</tr> -->
+<!-- 							</table> -->
+<!-- 						</td> -->
+<!-- 					</tr> -->
 					<tr>
 		  				<td>
-			       			<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>	
+	       					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>	
 		  				</td>
 		  			</tr>
 				</table>

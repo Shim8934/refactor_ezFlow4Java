@@ -1194,10 +1194,10 @@
 		            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");
-		            //rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
-		            //rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
+		            rtn["deptname"][i] = GetAttribute(totalRows[i], "DATA4");
+		            rtn["deptname2"][i] = GetAttribute(totalRows[i], "DATA5");
 		            //rtn["jikwe"][i] = GetAttribute(totalRows[i], "DATA7");
-		            //rtn["phone"][i] = GetAttribute(totalRows[i], "DATA8");
+		            //rtn["phone"][i] = GetAttribute(totalRows[i], "DATA8");		            
 		        }
 		        
 		        if (!CrossYN()) {

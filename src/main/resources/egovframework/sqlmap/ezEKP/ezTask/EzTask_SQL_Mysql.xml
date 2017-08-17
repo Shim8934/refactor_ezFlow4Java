@@ -104,6 +104,28 @@
         ]]>
     </insert>
 
+    <insert id="EzTaskDAO.taskSave" parameterClass="TaskInfoVO">
+        <![CDATA[
+             INSERT INTO TBL_TASK
+                 (Parentid, ownerid, creatorid, creatorname, creatorname2, createdate, taskstatus, completerate, completedate, importance, hasshare, hasattach, hascomment, startdate, enddate, title, contentpath, tasktype, updatetime, newanswer, newrefer, personid, personname, personname2, persondeptname, persondeptname2, taskpersonid, taskpersonname, taskpersonname2, tenantid)
+             VALUES
+                 (0, #ownerID#, #creatorID#, #creatorName#, #creatorName2#, #updateTime#, #taskStatus#, 0, '', #importance#, #hasShare#, #hasAttach#, 'N', #startDate#, #endDate#, #title#, #contentPath#, #taskType#, #updateTime#, #newAnswer#, #newRefer#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, #taskPersonID#, #taskPersonName#, #taskPersonName2#, #tenantID#)
+         ]]>
+        
+        <selectKey keyProperty="taskID" resultClass="String">
+        	SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    
+    <insert id="EzTaskDAO.shareTaskSave" parameterClass="TaskInfoVO">
+        <![CDATA[
+             INSERT INTO TBL_TASK
+                 (Parentid, ownerid, creatorid, creatorname, creatorname2, createdate, taskstatus, completerate, completedate, importance, hasshare, hasattach, hascomment, startdate, enddate, title, contentpath, tasktype, updatetime, newanswer, newrefer, personid, personname, personname2, persondeptname, persondeptname2, taskpersonid, taskpersonname, taskpersonname2, tenantid)
+             VALUES
+                 (#taskID#, #ownerID#, #creatorID#, #creatorName#, #creatorName2#, #updateTime#, #taskStatus#, 0, '', #importance#, #hasShare#, #hasAttach#, 'N', #startDate#, #endDate#, #title#, #contentPath#, #taskType#, #updateTime#, #newAnswer#, #newRefer#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, #taskPersonID#, #taskPersonName#, #taskPersonName2#, #tenantID#)
+         ]]>
+    </insert>
+
     <update id="EzTaskDAO.taskUpdateConfig" parameterClass="Map">
         <![CDATA[
             UPDATE
