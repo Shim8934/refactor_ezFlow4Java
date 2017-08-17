@@ -1545,8 +1545,7 @@ function makePageSelPage() {
         strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
-    }
-    else {
+    } else {
         strtext = "<span class='btnimg'><a >";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
@@ -1576,6 +1575,10 @@ function makePageSelPage() {
     }
     else {
         MaxNum = totalPage;
+    }
+    
+    if(totalPage == "0") {
+    	MaxNum = 1;
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
