@@ -49,6 +49,7 @@
 	<select id="EzTaskDAO.getCommentList" resultClass="TaskCommentVO">
 	   <![CDATA[
 		    SELECT
+		    	taskID,
 				commentid,
 				commentorid,
 				case when #primary# = 1 then commentorname else commentorname2 end as commentorname,
@@ -79,16 +80,41 @@
 	</select>
 	
 	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_TASK
-			SET
-				hascomment='Y'
-			WHERE
-				tenantID = #tenantID#
-			AND
-				(taskid = #taskID# OR parentID = #taskID#)
-        ]]>
+		<isEqual property="hasComment" compareValue="Y">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					(taskid = #taskID# OR parentID = #taskID#)
+	        ]]>
+		</isEqual>
+		<isEqual property="hasComment" compareValue="N">
+			<![CDATA[
+				UPDATE
+					TBL_TASK
+				SET
+					hascomment=#hasComment#
+				WHERE
+					tenantID = #tenantID#
+				AND
+					(taskid = #taskID# OR parentID = #taskID#)
+				AND
+					(SELECT
+						COUNT(*)
+					FROM
+						TBL_TASKCOMMENT
+					WHERE
+						tenantid = #tenantID#
+					AND
+						taskid = #taskID#
+					) IS NULL
+	        ]]>
+		</isEqual>
+		
     </update>
     
     <update id="EzTaskDAO.insertComment" parameterClass="Map">

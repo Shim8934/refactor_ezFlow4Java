@@ -12,8 +12,8 @@
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezTask/js/AttachItem_CK.js"></script>
-		<script type="text/javascript" src="/js/ezTask/js/AttachMain_CK.js"></script>
+		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 
 		<script type="text/javascript">
@@ -39,7 +39,7 @@
 		    var attachFileInfo = "${attachFileInfo }";
 		    var taskCommentListSize = "${taskCommentListSize }";
 		    var tempbody = "";
-		    var pUse_Editor = "{useEditor}";
+		    var pUse_Editor = "${useEditor}";
 		    var AttachLimit = 5;
 		    
 		    var folderPath = "${folderPath }";
@@ -100,8 +100,8 @@
 				/* 의견카운트 */
 		        if (taskCommentListSize == 0) {
 		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
-		        } else {
-		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + optioncnt + ")";
+		        } else { 
+		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
 		        }
 		        
 				setTimeout(onloadchangtab, 100);
@@ -196,13 +196,6 @@
 			}
 			
 			function show_personinfo(userid) {
-				/* if (userid == "0") {
-					userid = creatorid;
-				}
-	
-				var feature = GetOpenPosition(420, 450);
-				window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature); */
-				
 				if (userid == "0") {
 					userid = creatorid;
 				}
@@ -269,7 +262,7 @@
 				
 				$.ajax({
 					type : "POST",
-					dataType : "text",
+					dataType : "json",
 					async : false,
 					url : "/ezTask/taskSaveComment.do",
 					data : {
@@ -277,9 +270,34 @@
 							textComment : $("#TextComment").val()
 					},
 					success: function(result){
-						alert("<spring:message code='ezTask.t222' />");
-						/* window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2"; */
-						/* comment만 다시 가져와라 */
+						/* alert("<spring:message code='ezTask.t222' />"); */
+						
+						var list = result.taskCommentList;
+						taskCommentListSize = list.length;
+						
+						/* 탭의견 카운트 */
+						if (taskCommentListSize == 0) {
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
+						} else { 
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
+						}
+						
+						/* commentList */
+						taskCommentList = "";
+						list.forEach(function(vo, index) {
+							commentorID = "\"" + vo.commentorID + "\"";
+							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
+							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
+							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate + ") : </span>";
+							taskCommentList += "<span>";
+							taskCommentList += vo.comment;
+							taskCommentList += "<img src='/images/comment_delete.gif' title='asdf' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
+							taskCommentList += "</span>";
+							taskCommentList += "<br/>";
+						});
+						
+						console.log(taskCommentList);
+						$("#taskCommentList").html(taskCommentList);
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
@@ -355,9 +373,11 @@
 					},
 					success : function(result) {
 						window.opener.RefreshView()
-					},error : function(jqXHR, textStatus, errorThrown) {
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezTask.t108' />")
-					},complete : function() {
+					},
+					complete : function() {
 						window.close();
 					}
 				});
@@ -452,7 +472,7 @@
 				if (parentid != "0")
 				    id = parentid;
 				
-				var xmlDom = createXmlDom();
+				/* var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
 				var objRoot;
 				var objNode;
@@ -469,7 +489,50 @@
 				} else {
 					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
 			        try { window.opener.location.reload(); } catch (e) { }
-			    }
+			    } */
+			    
+			    $.ajax({
+					type : "POST",
+					url : "/ezTask/taskDeleteComment.do",
+					dataType : "json",
+					data : {
+						taskID : id,
+						commentID : commentid
+					},
+					success : function(result) {
+						/* alert("<spring:message code='ezTask.t148' />"); */
+						
+						var list = result.taskCommentList;
+						taskCommentListSize = list.length;
+						
+						/* 탭의견 카운트 */
+						if (taskCommentListSize == 0) {
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
+						} else { 
+							document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />" + "(" + taskCommentListSize + ")";
+						}
+						
+						/* commentList */
+						taskCommentList = "";
+						list.forEach(function(vo, index) {
+							commentorID = "\"" + vo.commentorID + "\"";
+							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
+							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
+							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate + ") : </span>";
+							taskCommentList += "<span>";
+							taskCommentList += vo.comment;
+							taskCommentList += "<img src='/images/comment_delete.gif' title='asdf' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
+							taskCommentList += "</span>";
+							taskCommentList += "<br/>";
+						});
+						
+						console.log(taskCommentList);
+						$("#taskCommentList").html(taskCommentList);
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				});
 			}
 			
 			function update_status() {
@@ -738,6 +801,7 @@
 			        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(content);
 			        message2.SetEditorContentURL(fullPath);
 			    }
+			    
 			    try {
 			        var objTags = document.getElementById('message2').getElementsByTagName("a");
 			
@@ -760,11 +824,11 @@
 			        document.getElementById("cnt").value = document.getElementById("form").file1.files.length;
 			        var frm = document.getElementById('form');
 			        frm.submit();
-			    }
-			    else {
+			    } else {
 			        alert("<spring:message code='ezTask.t145' />");
 			    }
 			}
+			
 			function returnvalue(strXML) {
 			    var ndx = strXML.indexOf("</ROOT>");
 			    strXML = strXML.substr(0, ndx + 7);
@@ -778,19 +842,19 @@
 			                alert(strLang51);
 			                return;
 			            }
-			        }
-			        else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied")
+			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
 			            extFlag = true;
-			        else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+			        } else if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
 			            alert(strLang52 + AttachLimit + "MB" + strLang53);
 			            return;
-			        }
-			        else {
+			        } else {
 			            alert(strLang24);
 			        }
 			    }
-			    if (extFlag)
-			        alert(strLang58);
+			    
+				if (extFlag) {
+					alert(strLang58);
+			    }
 			
 			    AttachFileInfo(strXML);
 			}
@@ -1239,23 +1303,13 @@
 					<table class ="content" style="width:100%">
 						<tr>
 							<td style="vertical-align:top">
-								<div id="Comment" style="overflow: auto; width:100%; height: 540px; background-color: white; padding-top:3px;">
-									<%-- <asp:Repeater ID="ListComment" Runat="server">
-									<ItemTemplate>
-										<span onclick="show_personinfo('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORID").InnerText %>')" title="<spring:message code='ezTask.t139' />" style="cursor: pointer; color: #2828A5">
-	                                     <%if (userinfo.primary == "1")
-	                                       {%>
-	                                     <%#Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORNAME").InnerText) %>
-	                                     <% }
-	                                       else %>
-	                                     <%{ %>
-	                                     <%#Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORNAME2").InnerText) %>
-	                                     <%} %>
-										</span><span style="cursor: pointer; color: #2828A5">(<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTDATE").InnerText %>)</span>&nbsp;:&nbsp; <%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("T_COMMENT").InnerText) %>&nbsp;
-										<img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTORID").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMMENTID").InnerText %>')" style="cursor: pointer" width="11" height="11">
-										<br>
-									</ItemTemplate>
-									</asp:Repeater> --%>
+								<div id="taskCommentList" style="overflow: auto; width:100%; height: 540px; background-color: white; padding-top:3px;">
+									<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
+										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
+										<span style="color: #2828A5;">(<c:out value = '${taskCommentVO.commentDate }' />) : </span>
+										<span><c:out value='${taskCommentVO.comment}'/><img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
+										<br/>
+									</c:forEach>
 								</div>
 							</td>
 						</tr>
