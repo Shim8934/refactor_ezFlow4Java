@@ -35,8 +35,8 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		return update("EzTaskDAO.insertComment", map);
 	}
 	
-	public int deleteComment(Map<String, Object> map) {
-		return update("EzTaskDAO.deleteComment", map);
+	public void deleteComment(Map<String, Object> map) {
+		delete("EzTaskDAO.deleteComment", map);
 	}
 	/* 정수현*/
 	public void taskSaveConfig(Map<String, Object> map) throws Exception {

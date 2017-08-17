@@ -108,7 +108,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	@Override
-	public int deleteComment(String taskID, String commentID, int tenantID) throws Exception {
+	public void deleteComment(String taskID, String commentID, int tenantID) throws Exception {
 		logger.debug("insertComment started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -117,12 +117,10 @@ public class EzTaskServiceImpl implements EzTaskService{
 		map.put("hasComment", "N");
 		map.put("tenantID", tenantID);
 		
-		int result = ezTaskDAO.deleteComment(map);
+		ezTaskDAO.deleteComment(map);
 		ezTaskDAO.updateHasComment(map);
 		
 		logger.debug("insertComment ended.");
-		
-		return result;
 	}
 
 	/* 정수현*/

@@ -125,6 +125,19 @@
 				(#taskID#, #commentorID#, #commentorName#, #commentorName2#, #nowDate#, #comment#, #tenantID#)
         ]]>
     </update>
+    
+    <delete id="EzTaskDAO.deleteComment" parameterClass="Map">
+    	<![CDATA[
+			DELETE FROM
+				TBL_TASKCOMMENT
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+			AND
+				commentid = #commentID#
+        ]]>
+    </delete>
 	
 	
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -518,7 +519,7 @@
 							commentorID = "\"" + vo.commentorID + "\"";
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
 							taskCommentList += "<span style='cursor:pointer;color: #2828A5;' onclick='show_personinfo(" + commentorID + ")'>" + vo.commentorName + "</span>";
-							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate + ") : </span>";
+							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate.substring(0, 16) + ") : </span>";
 							taskCommentList += "<span>";
 							taskCommentList += vo.comment;
 							taskCommentList += "<img src='/images/comment_delete.gif' title='asdf' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
@@ -893,7 +894,9 @@
 			    setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("LabelShare")));
 			    setNodeText(document.getElementById("printDate"), '${taskInfoVO.completeDate }');
 			    setNodeText(document.getElementById("printTitle"), '${taskInfoVO.title }'); */
-			    document.getElementById("printComment").innerHTML = document.getElementById("Comment").innerHTML;
+			    $("#printComment").html($("#taskCommentList").html());
+			    $("#printComment img").remove();
+			    
 			    document.getElementById("printAttach").innerHTML = document.getElementById("attachedfileDIV").innerHTML;
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
 			
@@ -954,8 +957,8 @@
 			        if (checks[i].type == "checkbox")
 			            checks[i].style.display = "none";
 			    }
-			
-			    if (getNodeText(document.getElementById("Comment")).trim() != "") {
+			    
+			    if ($("#taskCommentList").html().trim() != "") {
 			        document.getElementById("printCommentView").style.display = "";
 			        document.getElementById("optiontr").style.display = "";
 			    }
@@ -1048,7 +1051,7 @@
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t155' /></th>
-							<td style="padding-right:15px;white-space:nowrap">${taskInfoVO.createDate }</td>
+							<td style="padding-right:15px;white-space:nowrap">${fn:substring(taskInfoVO.createDate, 0, 16) }</td>
 						</tr>
 						<tr>
 							<th><spring:message code='ezTask.t2003' /></th>
@@ -1102,13 +1105,13 @@
 							<th><spring:message code='ezTask.t121' /></th>
 							<td>
 								<div>
-									<c:out value = '${taskInfoVO.startDate }' />
+									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 16) }' />
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t122' /></th>
 							<td>
 								<div>
-									<c:out value = '${taskInfoVO.endDate }' />
+									<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 16) }' />
 								</div>
 							</td>
 						</tr>
@@ -1306,7 +1309,7 @@
 								<div id="taskCommentList" style="overflow: auto; width:100%; height: 540px; background-color: white; padding-top:3px;">
 									<c:forEach var="taskCommentVO" varStatus="status" items="${taskCommentList}">
 										<span style="cursor:pointer;color: #2828A5;" onclick="show_personinfo('${taskCommentVO.commentorID }')" ><c:out value = '${taskCommentVO.commentorName }' /></span>
-										<span style="color: #2828A5;">(<c:out value = '${taskCommentVO.commentDate }' />) : </span>
+										<span style="color: #2828A5;">(<c:out value = '${fn:substring(taskCommentVO.commentDate, 0, 16) }' />) : </span>
 										<span><c:out value='${taskCommentVO.comment}'/><img src="/images/comment_delete.gif" title="<spring:message code='ezTask.t159' />" onclick="delete_comment('${taskCommentVO.commentorID }', '${taskCommentVO.commentID }')" style="cursor: pointer" width="11" height="11" /></span>
 										<br/>
 									</c:forEach>

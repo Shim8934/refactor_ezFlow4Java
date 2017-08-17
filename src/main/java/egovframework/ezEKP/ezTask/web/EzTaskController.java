@@ -213,11 +213,10 @@ public class EzTaskController extends EgovFileMngUtil {
 		String taskID = request.getParameter("taskID");
 		String commentID = request.getParameter("commentID");
 		
-		int result = ezTaskService.deleteComment(taskID, commentID, tenantID);
+		ezTaskService.deleteComment(taskID, commentID, tenantID);
 		
 		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
 		
-		model.addAttribute("result", result);
 		model.addAttribute("taskCommentList", taskCommentList);
 		
 		logger.debug("taskDeleteComment ended.");
