@@ -1026,5 +1026,41 @@
                 cn = #departmentID# AND tenant_id = #tenantID#
         ]]>
     </select>
+    
+    <select id="MBoardDAO.photoViewDB" parameterClass="Map" resultClass="MBoardAttachVO">
+        <![CDATA[
+              SELECT 
+                IMAGEID ,
+                FILEPATH ,
+                FILECONTENT ,
+                MAIN_FLAG FLAG  ,
+                IMAGENAME 
+              FROM 
+                TBL_Photo_ImageItem 
+              WHERE  
+                TENANT_ID = #tenantID#
+              AND
+                ItemID = #itemID#
+              AND 
+                BoardID = #boardID#
+              ORDER BY 
+                WriteDate ASC
+        ]]>
+    </select>
+    
+    <select id="MBoardDAO.photoViewDBCount" parameterClass="Map" resultClass="Integer">
+        <![CDATA[
+            SELECT
+                COUNT(*)
+            FROM
+                TBL_Photo_ImageItem 
+            WHERE  
+                TENANT_ID = #tenantID#
+            AND
+                ItemID = #itemID#
+            AND 
+                BoardID = #boardID#
+        ]]>
+    </select>
 </sqlMap>
 
