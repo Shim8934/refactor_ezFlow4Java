@@ -245,7 +245,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		TaskInfoVO taskInfoVO = null;
 		List<TaskShareVO> taskShareList = null;
 		
-		if (taskID.equals("")) {
+		if (taskID == null) {
 			/*업무작성*/
 		} else {
 			/*업무수정*/
@@ -262,7 +262,6 @@ public class EzTaskController extends EgovFileMngUtil {
 			if (taskInfoVO.getHasAttach().equals("Y")) {
 //				getAttachList(taskID);
 			}
-			
 		}
 		
 		model.addAttribute("userInfo", userInfo);

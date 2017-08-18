@@ -37,6 +37,7 @@
 		    var creatorid = "${taskInfoVO.creatorID }";
 		    var hasattach = "${taskInfoVO.hasAttach }";
 		    var hasshare = "${taskInfoVO.hasShare}";
+		    var contentPath = "${taskInfoVO.contentPath }";
 		    var sharelist = "";
 		    var g_person = null;
 		    var g_share = null;
@@ -48,6 +49,7 @@
 		    var sharemail = "_sharemail";
 		    var isreadpage = false;
 		    var FormProcSpelling = "FormProcSpelling";
+		    
 		    window.onload = function () {
 // 		    	document.getElementById("TextCompleteDate").value = "";
 
@@ -55,13 +57,14 @@
 			        document.getElementById("importantSelect").value = importance;
 			        document.getElementById("taskstatusSelect").value = taskstatus;
 			        document.getElementById("completerateSelect").value = completerate;
+			        $("#TextTitle").val("${taskInfoVO.title }");
 // 			        document.getElementById("TextCompleteDate").value = TextCompleteDate1;
 
 			        pAttachListXml = MakeAttachList();
 			        AppendFileAttachInfo(pAttachListXml);
-			        if (repetition != "") {
+			        /* if (repetition != "") {
 			            show_repetition_info();
-			        }
+			        } */
 
 			        Editor_Complete();
 			    }
@@ -72,14 +75,6 @@
 			        document.getElementById("I").click();
 			    } else if (tasktype == "3") {
 			        document.getElementById("C").click();
-			    }
-
-			    if (importance == "1") {
-			        document.getElementById("important1").click();
-			    } else if (importance == "2") {
-			        document.getElementById("important2").click();
-			    } else if (importance == "3") {
-			        document.getElementById("important3").click();
 			    }
 
 			    if (personlist != "") {
@@ -278,8 +273,20 @@
 		    
 		    function Editor_Complete() {
 		        if (taskid != "") {
-		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(content);
-		            message.SetEditorContentURL(fullPath);
+		            $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : {
+								type : "TASKCONTENT",
+								itemID : contentPath
+						},
+						success: function(result){
+							message.SetEditorContent(result);
+						}
+		            });
+		            
 		            try {
 		                var objTags = document.getElementById('message').getElementsByTagName("a");
 
@@ -502,37 +509,77 @@
 							<tr>
 								<th><spring:message code='ezTask.t2003' /></th>
 								<td style="width:300px">
-									<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" style="margin:0px 0px 0px 3px" />
-									<label for ="P"><spring:message code='ezTask.t2000' /></label>
-									<input type ="radio" id="I" name="tasktypesel" value ="2" style="margin:0px 0px 0px 3px" />
-									<label for ="I"><spring:message code='ezTask.t2001' /></label>
-									<input type ="radio" id="C" name="tasktypesel" value ="3" style="margin:0px 0px 0px 3px" />
-									<label for ="C"><spring:message code='ezTask.t2002' /></label>
+									<c:choose>
+										<c:when test="${taskInfoVO.taskType == '2'}">
+											<input type ="radio" id="P" name="tasktypesel" value ="1" style="margin:0px 0px 0px 3px" />
+											<label for ="P"><spring:message code='ezTask.t2000' /></label>
+											<input type ="radio" id="I" name="tasktypesel" value ="2" checked="checked" style="margin:0px 0px 0px 3px" />
+											<label for ="I"><spring:message code='ezTask.t2001' /></label>
+											<input type ="radio" id="C" name="tasktypesel" value ="3" style="margin:0px 0px 0px 3px" />
+											<label for ="C"><spring:message code='ezTask.t2002' /></label>
+										</c:when>
+										<c:when test="${taskInfoVO.taskType == '3'}">
+											<input type ="radio" id="P" name="tasktypesel" value ="1" style="margin:0px 0px 0px 3px" />
+											<label for ="P"><spring:message code='ezTask.t2000' /></label>
+											<input type ="radio" id="I" name="tasktypesel" value ="2" style="margin:0px 0px 0px 3px" />
+											<label for ="I"><spring:message code='ezTask.t2001' /></label>
+											<input type ="radio" id="C" name="tasktypesel" value ="3" checked="checked" style="margin:0px 0px 0px 3px" />
+											<label for ="C"><spring:message code='ezTask.t2002' /></label>
+										</c:when>
+										<c:otherwise>
+											<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" style="margin:0px 0px 0px 3px" />
+											<label for ="P"><spring:message code='ezTask.t2000' /></label>
+											<input type ="radio" id="I" name="tasktypesel" value ="2" style="margin:0px 0px 0px 3px" />
+											<label for ="I"><spring:message code='ezTask.t2001' /></label>
+											<input type ="radio" id="C" name="tasktypesel" value ="3" style="margin:0px 0px 0px 3px" />
+											<label for ="C"><spring:message code='ezTask.t2002' /></label>
+										</c:otherwise>
+									</c:choose>
 								</td>
 								<th><spring:message code='ezTask.t2004' /></th>
 								<td style="width:300px">
-									<input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
-									<label for ="important1"><spring:message code='ezTask.t171' /></label>
-									<input type ="radio" id="important2" name="important" checked="checked" value ="2" style="margin:0px 0px 0px 3px" />
-									<label for ="important2"><spring:message code='ezTask.t172' /></label>
-									<input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
-									<label for ="important3"><spring:message code='ezTask.t173' /></label>
+									<c:choose>
+										<c:when test="${taskInfoVO.importance == '1' }">
+											<input type ="radio" id="important1" name="important" value ="1" checked="checked" style="margin:0px 0px 0px 3px" />
+											<label for ="important1"><spring:message code='ezTask.t171' /></label>
+											<input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
+											<label for ="important2"><spring:message code='ezTask.t172' /></label>
+											<input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
+											<label for ="important3"><spring:message code='ezTask.t173' /></label>
+										</c:when>
+										<c:when test="${taskInfoVO.importance == '3' }">
+											<input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
+											<label for ="important1"><spring:message code='ezTask.t171' /></label>
+											<input type ="radio" id="important2" name="important" value ="2" style="margin:0px 0px 0px 3px" />
+											<label for ="important2"><spring:message code='ezTask.t172' /></label>
+											<input type ="radio" id="important3" name="important" value ="3" checked="checked" style="margin:0px 0px 0px 3px" />
+											<label for ="important3"><spring:message code='ezTask.t173' /></label>
+										</c:when>
+										<c:otherwise>
+											<input type ="radio" id="important1" name="important" value ="1" style="margin:0px 0px 0px 3px" />
+											<label for ="important1"><spring:message code='ezTask.t171' /></label>
+											<input type ="radio" id="important2" name="important" value ="2" checked="checked" style="margin:0px 0px 0px 3px" />
+											<label for ="important2"><spring:message code='ezTask.t172' /></label>
+											<input type ="radio" id="important3" name="important" value ="3" style="margin:0px 0px 0px 3px" />
+											<label for ="important3"><spring:message code='ezTask.t173' /></label>
+										</c:otherwise>
+									</c:choose>
 								</td>
 							</tr>
-<%-- 								<c:choose> --%>
-<%-- 									<c:when test="${_creatorid == userinfo.UserID || _creatorid == ''}"> --%>
-<!-- 										<TR id="personinputtr" style="display:none"> -->
-<%-- 											<th ><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th> --%>
-<!-- 											<TD colspan ="3"><DIV id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD> -->
-<!-- 										</TR> -->
-<%-- 									</c:when> --%>
-<%-- 									<c:otherwise> --%>
-<!-- 										<TR id="personinputtr" style="display:none"> -->
-<%-- 											<th ><spring:message code='ezTask.t2005' /></th> --%>
-<!-- 											<TD colspan ="3"><DIV id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD> -->
-<!-- 										</TR>	            	 -->
-<%-- 									</c:otherwise> --%>
-<%-- 								</c:choose> --%>
+								<c:choose>
+									<c:when test="${taskInfoVO.creatorID == userinfo.UserID || taskInfoVO.creatorID== ''}">
+										<TR id="personinputtr" style="display:none">
+											<th ><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
+											<TD colspan ="3"><DIV id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD>
+										</TR>
+									</c:when>
+									<c:otherwise>
+										<TR id="personinputtr" style="display:none">
+											<th ><spring:message code='ezTask.t2005' /></th>
+											<TD colspan ="3"><DIV id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD>
+										</TR>	            	
+									</c:otherwise>
+								</c:choose>
 
 							<TR id="shareinputtr">
 								<th ><a class="imgbtn"><span onClick="_manage_attendant()"><spring:message code='ezTask.t157' /></span></a></th>
