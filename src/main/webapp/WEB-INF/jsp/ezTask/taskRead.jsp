@@ -439,9 +439,12 @@
 			    if (parentid != "0")
 			        id = parentid;
 			    var win;
-			    if (CrossYN() || pNoneActiveX == "YES") {
+			    
+				/* 레이어팝업으로 taskWriteCross 호출 */
+				/* 수현이 소스랑 겹쳐서 걍 새로짬 */
+			    if (CrossYN()) {
 			        var feature = GetOpenPosition(760, 750);
-			        win = window.open("/myoffice/ezTask/task_write_Cross.aspx?id=" + id, "",
+			        win = window.open("/ezTask/taskWrite2.do?taskID=" + id, "",
 			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			    } else {
 			        if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -454,7 +457,7 @@
 			               "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			        }
 			    }
-			
+				
 			    win.opener = window.opener;
 			    window.close();
 			}
@@ -1010,12 +1013,10 @@
 	<body class="popup" style="overflow:hidden; height:99%">
 		<div id="menu">
 			<ul>
-<!-- 				<asp:PlaceHolder ID="HolderEdit" Runat="server"> -->
-<%-- 				<li id="edit"><SPAN onClick="edit_task()"><spring:message code='ezTask.t151' /></SPAN></li> 수정--%>
-<%-- 				<li id="save"><SPAN onClick="save_taskwrok()"><spring:message code='ezTask.t96' /></SPAN></li> 저장--%>
+<%-- 				<li id="edit"><SPAN onClick="edit_task()"><spring:message code='ezTask.t151' /></SPAN></li> 지시사항 수정화면호출--%>
+<%-- 				<li id="save"><SPAN onClick="save_taskwrok()"><spring:message code='ezTask.t96' /></SPAN></li> 진행사항 저장--%>
 				<li id="delete"><SPAN onClick="delete_task()"><spring:message code='ezTask.t115' /></SPAN></li>
 				<li id="share" style="display:none"><SPAN onClick="manage_share()"><spring:message code='ezTask.t152' /></SPAN></li>
-<!-- 		    	</asp:PlaceHolder> -->
 				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 			</ul>
 		</div>
@@ -1177,6 +1178,15 @@
 				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
 				<!-- 이효진 저장버튼추가필요 -->
+				
+				<div id="close">
+					<ul>
+						<!-- 지시사항 수정화면호출 -->
+						<li id="edit"><span onClick="edit_task()"><spring:message code='ezTask.t151' /></span></li>
+						<!-- 진행사항 저장 -->
+						<li id="save"><span onClick="save_taskwrok()"><spring:message code='ezTask.t96' /></span></li>
+					</ul>
+				</div>
 			</div>
 		</div> 
 		
