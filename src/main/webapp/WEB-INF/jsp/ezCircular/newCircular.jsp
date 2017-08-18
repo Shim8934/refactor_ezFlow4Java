@@ -80,6 +80,8 @@
 	        var strMemberListInfo = "";
 	        window.onunload = Window_onunload;
 	        var window_onunload_Event = false;
+	        var pageCnt = "";
+            var perCnt = "";
 	
 	        window.onresize = function () {
 	            var height = parseInt(document.documentElement.clientHeight - 320);
@@ -201,9 +203,9 @@
                 if (listNode == null) return;
             	
                 var lstCnt = getNodeText(cntNode);
-                var pageCnt = getNodeText(pageNode);
-                var perCnt = getNodeText(perNode);
- 
+                pageCnt = getNodeText(pageNode);
+                perCnt = getNodeText(perNode);
+
                 listcount.value = perCnt;
                 totalPage = Math.ceil(new Number(pageCnt / perCnt));
                 pTotalCnt = lstCnt;
@@ -461,6 +463,13 @@
 		    }
 		    
 		    function refresh_onclick() {
+		    	var strListArr = new Array();
+	        	strListArr = strListInfo.split(";");
+
+	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {
+					CurPage = CurPage - 1;
+				}
+
 		    	getBoardList();
 		    }
 		

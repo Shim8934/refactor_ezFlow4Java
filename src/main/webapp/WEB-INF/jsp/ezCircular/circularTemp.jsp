@@ -541,7 +541,7 @@
 							memberIDList : strMemberListInfo
 						},
 						success: function() {
-							if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+							if ((pageCnt - strListArr.length + 1) % 10 == 0) {
 								CurPage = CurPage - 1;
 							}
 
