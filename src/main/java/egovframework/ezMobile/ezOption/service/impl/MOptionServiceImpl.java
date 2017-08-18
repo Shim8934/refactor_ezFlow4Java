@@ -67,7 +67,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public void insertOption(String uid, String timeZone, String lang, String mainType, String listCnt, String useSearch, String useSecurity, int tenantId) throws Exception {
+	public void insertOption(String uid, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception {
 		LOGGER.debug("insertOption started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -75,8 +75,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("timeZone", timeZone);
 		map.put("lang", lang);
 		map.put("mainType", mainType);
-		map.put("listCnt", listCnt);
-		map.put("useSearch", useSearch);
+		map.put("listCnt", listCnt);		
 		map.put("useSecurity", useSecurity);
 		map.put("tenantId", tenantId);			
 		
@@ -86,9 +85,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 	}
 
 	@Override
-	public void updateOption(String userId, String timeZone, String lang,
-			String mainType, String listCnt, String useSearch,
-			String useSecurity, int tenantId) throws Exception {
+	public void updateOption(String userId, String timeZone, String lang, String mainType, String listCnt, String useSecurity, int tenantId) throws Exception {
 		
 		LOGGER.debug("updateOption started");	
 		
@@ -97,8 +94,7 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		map.put("timeZone", timeZone);
 		map.put("lang", lang);
 		map.put("mainType", mainType);
-		map.put("listCnt", listCnt);
-		map.put("useSearch", useSearch);
+		map.put("listCnt", listCnt);		
 		map.put("useSecurity", useSecurity);
 		map.put("tenantId", tenantId);
 		

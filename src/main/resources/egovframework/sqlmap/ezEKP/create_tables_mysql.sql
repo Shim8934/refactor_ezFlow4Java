@@ -7361,8 +7361,7 @@ CREATE TABLE `tbl_usermobileinfo` (
   `TIMEZONE` varchar(40) NOT NULL,
   `LANG` varchar(4) NOT NULL,
   `MAINTYPE` char(1) NOT NULL,
-  `LISTCNT` mediumint(5) NOT NULL,
-  `USESEARCH` char(1) NOT NULL,
+  `LISTCNT` mediumint(5) NOT NULL,  
   `USESECURITY` char(1) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`USERID`,`TENANT_ID`)

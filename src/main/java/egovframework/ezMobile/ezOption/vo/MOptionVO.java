@@ -11,9 +11,7 @@ public class MOptionVO {
 	private String mainType;		/** 개인환경설정  메인화면 타입설정  */
 	
 	private String listCnt;			/** 개인환경설정  메인화면 리스트 표출갯수 설정  */
-	
-	private String useSearch;		/** 개인환경설정  메인화면 직원검색 표출여부 설정*/
-	
+		
 	private String useSecurity;		/** 개인환경설정  전자결재 보안설정  */
 		
 	private int tenantId;			/** 계열사 Id */
@@ -58,14 +56,6 @@ public class MOptionVO {
 		this.listCnt = listCnt;
 	}
 
-	public String getUseSearch() {
-		return useSearch;
-	}
-
-	public void setUseSearch(String useSearch) {
-		this.useSearch = useSearch;
-	}
-
 	public String getUseSecurity() {
 		return useSecurity;
 	}
@@ -80,14 +70,6 @@ public class MOptionVO {
 
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
-	}
-
-	@Override
-	public String toString() {
-		return "MOptionVO [userId=" + userId + ", timeZone=" + timeZone
-				+ ", lang=" + lang + ", mainType=" + mainType + ", listCnt="
-				+ listCnt + ", useSearch=" + useSearch + ", useSecurity="
-				+ useSecurity + ", tenantId=" + tenantId + "]";
-	}
+	}	
 	
 }

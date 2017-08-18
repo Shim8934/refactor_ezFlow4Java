@@ -218,8 +218,7 @@ function searchResSchMainList(){
     			id  : "1",
     			timeZone: "",
     			lang: "",
-    			listCnt: "",
-    			useSearch: "",
+    			listCnt: "",    			
     			useSecurity: ""
     		},
     		success: function(e) {		    			
@@ -239,8 +238,7 @@ function searchResSchMainList(){
     			id  : "1",
     			timeZone: "",
     			lang: "",
-    			listCnt: "",
-    			useSearch: "",
+    			listCnt: "",    			
     			useSecurity: ""
     		},
     		success: function(e) {		    			
