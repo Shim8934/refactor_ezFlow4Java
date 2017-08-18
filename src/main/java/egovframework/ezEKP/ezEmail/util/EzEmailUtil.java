@@ -54,6 +54,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
+import javax.mail.search.ComparisonTerm;
 import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -1121,7 +1122,7 @@ public class EzEmailUtil {
 			) throws Exception {
 		Message[] messages = folder.getMessages();
 		
-		logger.debug("searchField=" + searchField);
+		logger.debug("searchField=" + searchField + ", endDate=" + endDate + ", isImportantOnly=" + isImportantOnly );
 		
 		SearchTerm sTerm = existingSearchTerm; 
 		
@@ -1281,7 +1282,7 @@ public class EzEmailUtil {
 			}
 			
 			if (startDate != null) {
-				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.GE, startDate));
+				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.GT, startDate));
 			}
 
 			if (endDate != null) {
@@ -1323,13 +1324,59 @@ public class EzEmailUtil {
 			
 			messages = folder.search(sTerm);
 		}
+		
 		else if (isImportantOnly) {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
 			
 			messages = folder.search(sTerm);
-		}
+		} 
+		
 		else {
-			return null;
+//			messages = null;
+		}
+		
+		if (endDate != null) {
+			if(sTerm == null) {
+				logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+folder.getFullName()+folder.getMessageCount());
+				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);;
+				logger.debug(sTerm.toString());	
+				messages = folder.search(sTerm);
+				logger.debug("!!!!!@@message length@@!!!!!" + messages.length);
+				
+				Date from = endDate;       
+				Folder f = folder;
+				
+				int end = f.getMessageCount();       
+				long lFrom = from.getTime(); //endDate
+				
+				Date rDate;//message Date       
+				long lrDate;//message Date long for  comparing endDate       
+				int start = end;       
+				
+				do {         
+						start = start - 10;         
+						Message testMsg = f.getMessage(start);         
+						rDate = testMsg.getReceivedDate();         
+						lrDate = rDate.getTime();       
+					} 
+				while (lrDate > lFrom);       
+				
+				Message msg[] = f.getMessages(start, end);
+				
+				for (int i=0, n=msg.length; i<n; i++) {
+					lrDate = msg[i].getReceivedDate().getTime();         
+					if (lrDate > lFrom) {           
+						System.out.println(i + ": " + msg[i].getFrom()[0] + "\t" + msg[i].getSubject());
+					}       
+				}
+				return msg;
+			} else { 
+				logger.debug("#########################################"+folder.getFullName()+folder.getMessageCount());
+				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.LT, endDate));
+
+				messages = folder.search(sTerm);
+				logger.debug("#####@@message length@@#####" + messages.length);
+			}
 		}
 		
 		return messages;
