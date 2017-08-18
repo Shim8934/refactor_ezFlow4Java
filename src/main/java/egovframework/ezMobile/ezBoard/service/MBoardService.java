@@ -50,6 +50,8 @@ public interface MBoardService {
 	
 	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
+	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID) throws Exception;
+	
 	Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
 	
 	void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception;

@@ -621,7 +621,8 @@ public class MBoardServiceImpl implements MBoardService {
 		return list;
 	}
 	
-	private int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
+	@Override
+	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
 		logger.debug("getBoardItemListCount started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
 		

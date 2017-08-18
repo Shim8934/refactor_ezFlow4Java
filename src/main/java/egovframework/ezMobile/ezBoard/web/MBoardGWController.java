@@ -90,13 +90,16 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, info.getTenantId()); 
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, info.getTenantId());
+			
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			LOGGER.debug("listCount ="+listCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
 			result.put("data2", boardInfo);
-			result.put("listSize", list.size());
+			result.put("listCount", listCount);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -136,11 +139,15 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
 			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, info.getUserId());
+			int listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(),info.getTenantId());
+			
+			LOGGER.debug("listCount : "+listCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
 			result.put("data2", boardInfo);
+			result.put("listCount", listCount);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
