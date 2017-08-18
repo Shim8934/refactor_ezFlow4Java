@@ -463,6 +463,13 @@
 		    	}
 		    }
 		    function refresh_onclick() {
+		    	var strListArr = new Array();
+	        	strListArr = strListInfo.split(";");
+
+	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+					CurPage = CurPage - 1;
+				}
+
 		    	getBoardList();
 		    }
 		
@@ -529,8 +536,7 @@
 	        		
 	        		return;
 	        	}
-    			
-	        	
+
 	        	if (confirm("<spring:message code='ezCircular.t170'/>")) {
 		        	$.ajax({
 						type : "POST",
@@ -541,7 +547,8 @@
 							circularIDList : strListInfo
 						},
 						success: function(){
-							refresh_onclick();
+// 							refresh_onclick();
+							getBoardList();
 						}, error: function() {
 							alert("<spring:message code='ezCircular.t102'/>");
 						}
@@ -550,9 +557,6 @@
 	        }
 	        
 	        function CircularDelete_onclick() {
-	        	var strListArr = new Array();
-	        	strListArr = strListInfo.split(";");
-	        	
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
@@ -567,10 +571,6 @@
 						data : { circularIDList : strListInfo
 								},
 						success: function() {
-							if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
-								CurPage = CurPage - 1;
-							}
-
 							refresh_onclick();
 						},
 						error: function() {

@@ -466,6 +466,13 @@
 		    }
 		    
 		    function refresh_onclick() {
+		    	var strListArr = new Array();
+	        	strListArr = strListInfo.split(";");
+
+	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
+					CurPage = CurPage - 1;
+				}
+
 		    	getBoardList();
 		    }
 		    
@@ -511,31 +518,6 @@
 	            }
 	        }
 
-	        function CircularClose_onclick() {
-	        	if (strListInfo.length == 0) {
-	        		alert("<spring:message code='ezCircular.t75'/>");
-	        		return;
-	        	}
-	        	
-	        	if (confirm("<spring:message code='ezCircular.t170'/>")) {
-		        	$.ajax({
-						type : "POST",
-						dataType : "json",
-						async : false,
-						url : "/ezCircular/circularClose.do",
-						data : {
-							circularIDList : strListInfo
-						},
-						success: function(result){
-							refresh_onclick();
-						},
-						error: function() {
-							alert("<spring:message code='ezCircular.t102'/>");
-						}
-		        	});	
-	        	}
-	        }
-
 	        function CircularWrite_onclick() {
 	        	var feature = GetOpenPosition(820, 700);
 	        	url = "/ezCircular/circularWrite.do";
@@ -544,9 +526,6 @@
 	        }
 
 	        function CircularDelete_onclick() {
-	        	var strListArr = new Array();
-	        	strListArr = strListInfo.split(";");
-
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
 	        		return;
@@ -561,10 +540,6 @@
 						data : { circularIDList : strListInfo
 								},
 						success: function() {
-							if ((pageCnt - strListArr.length + 1) % 10 == 0) {						
-								CurPage = CurPage - 1;
-							}
-
 							refresh_onclick();
 						},
 						error: function() {
@@ -574,7 +549,7 @@
 
 	        	}
 	        }
-	        
+
 	        function CircularMove_onclick() {
 	        	if (strListInfo.length == 0) {
 	        		alert("<spring:message code='ezCircular.t75'/>");
@@ -610,7 +585,7 @@
 					});
 		        }		
 	        }
-	
+
 	        function keyword_Clear() {
 	            document.getElementById('txt_keyword').value = "";
 	        } 
