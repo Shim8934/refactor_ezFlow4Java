@@ -2047,6 +2047,8 @@
 			WHERE 
 				circularid = #circularId#
 			AND
+				memberid = #memberId#
+			AND
 				tenantid = #tenantId#
         ]]>
     </update>

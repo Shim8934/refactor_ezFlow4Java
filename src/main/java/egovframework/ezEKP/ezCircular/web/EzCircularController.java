@@ -2083,15 +2083,18 @@ public class EzCircularController extends EgovFileMngUtil {
 		String originLoc = request.getParameter("originLoc");
 		String memberId = userInfo.getId();
 		int tenantId = userInfo.getTenantId();
+		
+		logger.debug("circularList : " + circularIdList + " | folderId : " + folderId + " | oldFolderId : " + oldFolderId + " | originLoc : " + originLoc);
 
-		if (oldFolderId.equals("")) { // 확인완료 및 작성한 회람판에서 폴더로 이동 시
+		if (oldFolderId.equals("")) {
 			updateStatus = "3";
 			ezCircularService.moveCircular(folderId, circularIdList, memberId, updateStatus, originLoc, tenantId);
+		} else {
+			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId); // 폴더에서 폴더로 이동 시			
 		}
 		
-		if (oldFolderId != null && folderId != "") { // 폴더에서 폴더로 이동 시
-			ezCircularService.updateFolderId(folderId, circularIdList, memberId, tenantId);
-		}
+//		if (oldFolderId != null && folderId != "") { 
+//		}
 
 		logger.debug("moveCircular ended");
 	}
