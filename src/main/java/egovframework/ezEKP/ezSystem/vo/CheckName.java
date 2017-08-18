@@ -12,5 +12,6 @@ public enum CheckName {
 	USE_FileExtension,
 	ExpirePassPeriod,
 	LicenseKey,
-	Use_FromAddress
+	Use_FromAddress,
+	MaxAllowedCountOfLoginFail
 }
