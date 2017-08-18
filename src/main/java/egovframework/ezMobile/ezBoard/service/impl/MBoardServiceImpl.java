@@ -843,8 +843,7 @@ public class MBoardServiceImpl implements MBoardService {
 	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
-		map.put("rowCount", listCnt);
-		map.put("limit", 0);
+		map.put("listSize", listCnt);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getNewItemList(map);
