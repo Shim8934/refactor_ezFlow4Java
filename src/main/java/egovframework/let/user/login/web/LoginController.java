@@ -194,7 +194,7 @@ public class LoginController {
         	//Check login state of the use
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
         	
-        	if(check != -2){
+        	if(check != -3){
 	        	//비밀번호 변경 팝업 상태 값 초기화
 	        	int diff = 1;
 	        	
@@ -275,20 +275,20 @@ public class LoginController {
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);        
 
         	switch(check){
+				case -3: 
+	    			//Show block message
+	            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+	            	return "forward:/user/login/login.do";
+    			case -2:
+	        		//The first time this user login failed
+	        		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
+	        		//Show warning message
+	            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {1, numberOfLoginFailPermit}, locale));
+	            	return "forward:/user/login/login.do";
         		case -1:
         			//Show normal login fail message
                 	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
-                	return "forward:/user/login/login.do";                	
-        		case -2: 
-        			//Show block message
-                	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
-                	return "forward:/user/login/login.do";
-        		case 0:
-            		//The first time this user login failed
-            		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
-            		//Show warning message
-                	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {1, numberOfLoginFailPermit}, locale));
-                	return "forward:/user/login/login.do";
+                	return "forward:/user/login/login.do";            	
         		default:
         			//Increase number of attempts in database
         			ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginFailCount", Integer.toString(check + 1));
@@ -484,23 +484,23 @@ public class LoginController {
     
     private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception{
     	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");            
-           
-        if(numberOfLoginFailPermit <= 0){
+        
+        if(numberOfLoginFailPermit <= 0){        	
         	//Users will never be blocked
         	return -1; 
         }
         if(userLoginFailedAttempt.equals("")){
-        	//This is the first time this user logins fail
-        	return 0; 
+        	//This is the first time this user logins fail        	
+        	return -2; 
         }
         else{
         	int currentNumber = Integer.parseInt(userLoginFailedAttempt);
         	if(currentNumber >= numberOfLoginFailPermit){
-        		//User has been blocked
-        		return -2;
+        		//User has been blocked        		
+        		return -3;
         	}
         	else{
-        		//User has some remain times to try to login
+        		//User has some remain times to try to login        		
         		return currentNumber;
         	}
         } 
