@@ -150,109 +150,162 @@ public class LoginController {
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		
+		//Check if this user is exist
 		loginVO.setId(_uid);
-		loginVO.setPassword(_pwd);
 		loginVO.setTenantId(tenantId);
+		loginVO.setDn("NOPASSWORD");
+		LoginVO resultVO = loginService.selectUser(loginVO);
 		
-    	//일반 로그인 처리
-        LoginVO resultVO = loginService.selectUser(loginVO);
-        
-        String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
-        
-        if (useEmpNumberLogin.equals("YES")) {
-	        if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
-	        	logger.debug(_uid + " failed to login. Trying using it as an employee number");
-	        	
-	        	loginVO.setDn("NOPASSWORD");
-	        	resultVO = loginService.selectUser(loginVO);
-	        	        	
-	        	if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
-	        		_uid = resultVO.getId();
-	        		
-	        		logger.debug("found user id=" + _uid);
-	        		
-	        		_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-	        		loginVO.setId(_uid);
-	        		loginVO.setPassword(_pwd);
-	            	loginVO.setDn("PASSWORD");
-	            	resultVO = loginService.selectUser(loginVO);
-	        	}
-	        }
-        }
-        
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {        	
-        	//비밀번호 변경 팝업 상태 값 초기화
-        	int diff = 1;
-        	
-        	if (resultVO.getLoginCnt() == 0) {
-        		diff = 0;
-        		model.addAttribute("isFirstLogin", "Y");
-        	} else {
-	        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
-	        	
-	        	if (!expirePassPeriod.trim().equals("0")) {
-	        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
-	        		
-	        		Calendar cal = Calendar.getInstance();
-	        		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	            	
-	            	String baseStr = commonUtil.getTodayUTCTime("");        	
-	            	Date baseDT = date.parse(baseStr);
-	            	            	
-	            	cal.setTime(baseDT);
-	            	cal.add(Calendar.DATE, realPeriod);
-	            	
-	            	baseDT = cal.getTime();
-	            	Date lastDT = resultVO.getUpdateDT();
-	            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-	    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
-	        	}	        	
-        	}        	        	
-			//0보다 작아지면 패스워드 변경기한 Expired
-			if (diff <= 0) {				
-				model.addAttribute("isExpireDate", "Y");
-				model.addAttribute("userId", _uid);
-				
-	        	return "forward:/user/login/login.do";
-			} else {			
-				String ip = ClientUtil.getClientIP(request);		
-				loginVO.setIp(ip);
-				
-				//IP Address,  마지막 login시간 저장
-				loginService.updateUser(loginVO);
-				
-				//접속 로그정보 저장
-				resultVO.setIp(ip);
-				resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-				resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-				resultVO.setTenantId(tenantId);
-
-				if(resultVO.getTitle2() == null){
-					resultVO.setTitle2("");
-				}
-				
-				loginService.insertLog(resultVO);
-
-				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response);
-	        	
-	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
-	        	cookieName.setPath("/");
-	        	response.addCookie(cookieName);
-	        	
-	        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
-	        	//session = request.getSession();	        	
-	        	
-	        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
-	        	    return "redirect:/ezEmail/mailAloneMain.do";
-	        	} else {
-	        	    return "redirect:/ezPortal/portalMain.do";
-	        	}
-			}			
-        } else {
+		if(resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")){
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
-        }        
+		}
+		else{
+			if(_uid.equals(resultVO.getId())){
+				//User uses his/her username to login
+				_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+	        	loginVO.setId(_uid);
+	        	loginVO.setPassword(_pwd);
+	            loginVO.setDn("PASSWORD");
+	            resultVO = loginService.selectUser(loginVO);
+			}
+			else{
+				//Check if his/her tenant allows using employeeID to login
+				 String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+				 if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
+					 _uid = resultVO.getId();
+					 _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+		        	loginVO.setId(_uid);
+		        	loginVO.setPassword(_pwd);
+		            loginVO.setDn("PASSWORD");
+		            resultVO = loginService.selectUser(loginVO);
+				 }
+				 else{
+					 //This kind of login is not allowed in his/her tenant
+			        model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+			        return "forward:/user/login/login.do";
+				 }
+			}
+		}
+		
+		int numberOfLoginFailPermit = Integer.parseInt(ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId)); 
+		
+        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {  
+        	//Check login state of the use
+        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
+        	
+        	if(check != -2){
+	        	//비밀번호 변경 팝업 상태 값 초기화
+	        	int diff = 1;
+	        	
+	        	if (resultVO.getLoginCnt() == 0) {
+	        		diff = 0;
+	        		model.addAttribute("isFirstLogin", "Y");
+	        	} else {
+		        	String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
+		        	
+		        	if (!expirePassPeriod.trim().equals("0")) {
+		        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
+		        		
+		        		Calendar cal = Calendar.getInstance();
+		        		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		            	
+		            	String baseStr = commonUtil.getTodayUTCTime("");        	
+		            	Date baseDT = date.parse(baseStr);
+		            	            	
+		            	cal.setTime(baseDT);
+		            	cal.add(Calendar.DATE, realPeriod);
+		            	
+		            	baseDT = cal.getTime();
+		            	Date lastDT = resultVO.getUpdateDT();
+		            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
+		    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+		        	}	        	
+	        	}        	        	
+				//0보다 작아지면 패스워드 변경기한 Expired
+				if (diff <= 0) {				
+					model.addAttribute("isExpireDate", "Y");
+					model.addAttribute("userId", _uid);
+					
+		        	return "forward:/user/login/login.do";
+				} else {			
+					String ip = ClientUtil.getClientIP(request);		
+					loginVO.setIp(ip);
+					
+					//IP Address,  마지막 login시간 저장
+					loginService.updateUser(loginVO);
+					
+					//접속 로그정보 저장
+					resultVO.setIp(ip);
+					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+					resultVO.setTenantId(tenantId);
+	
+					if(resultVO.getTitle2() == null){
+						resultVO.setTitle2("");
+					}
+					
+					loginService.insertLog(resultVO);
+	
+					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response);
+		        	
+		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
+		        	cookieName.setPath("/");
+		        	response.addCookie(cookieName);
+		        	
+		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
+		        	//session = request.getSession();	        	
+		        	
+		        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
+		        	    return "redirect:/ezEmail/mailAloneMain.do";
+		        	} else {
+		        	    return "redirect:/ezPortal/portalMain.do";
+		        	}
+				}
+            }
+        	else{
+        		//User has been blocked
+    			//Show block message
+            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+            	return "forward:/user/login/login.do";
+        	}
+        } else {     	
+        	//Check login state of the user 
+        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);        
+
+        	switch(check){
+        		case -1:
+        			//Show normal login fail message
+                	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+                	return "forward:/user/login/login.do";                	
+        		case -2: 
+        			//Show block message
+                	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+                	return "forward:/user/login/login.do";
+        		case 0:
+            		//The first time this user login failed
+            		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
+            		//Show warning message
+                	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {1, numberOfLoginFailPermit}, locale));
+                	return "forward:/user/login/login.do";
+        		default:
+        			//Increase number of attempts in database
+        			ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginFailCount", Integer.toString(check + 1));
+        			if(check >= numberOfLoginFailPermit - 1){
+        				//Show block message
+                    	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
+                    	return "forward:/user/login/login.do";
+        			}
+        			else{
+            			//Show warning message
+                    	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {check + 1, numberOfLoginFailPermit}, locale));
+                    	return "forward:/user/login/login.do";
+        			}
+        	}
+
+        } 
+  
     }
     
     public void createLoginCookie(
@@ -427,6 +480,30 @@ public class LoginController {
         } else {
         	return "LOGINERROR";
         }    	
+    }
+    
+    private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception{
+    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");            
+           
+        if(numberOfLoginFailPermit <= 0){
+        	//Users will never be blocked
+        	return -1; 
+        }
+        if(userLoginFailedAttempt.equals("")){
+        	//This is the first time this user logins fail
+        	return 0; 
+        }
+        else{
+        	int currentNumber = Integer.parseInt(userLoginFailedAttempt);
+        	if(currentNumber >= numberOfLoginFailPermit){
+        		//User has been blocked
+        		return -2;
+        	}
+        	else{
+        		//User has some remain times to try to login
+        		return currentNumber;
+        	}
+        } 
     }
     
 }
