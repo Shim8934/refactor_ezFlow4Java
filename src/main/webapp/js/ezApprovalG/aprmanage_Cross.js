@@ -1375,6 +1375,7 @@ function OpenAlertUI_Complete() {
 
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
+	alert(3);
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
@@ -1398,8 +1399,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction, type) {
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -1545,8 +1545,7 @@ function makePageSelPage() {
         strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
-    }
-    else {
+    } else {
         strtext = "<span class='btnimg'><a >";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
@@ -1576,6 +1575,10 @@ function makePageSelPage() {
     }
     else {
         MaxNum = totalPage;
+    }
+    
+    if(totalPage == "0") {
+    	MaxNum = 1;
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
