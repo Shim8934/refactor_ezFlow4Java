@@ -513,6 +513,10 @@ public class MBoardServiceImpl implements MBoardService {
 			vo.setType("boardItemList");
 		}
 		
+		if (vo.getGuBun().equals("4")) {
+			vo.setType("photoBoardItem");
+		}
+		
 		logger.debug("getBoardProperty ended.");
 		
 		return vo;
@@ -1015,6 +1019,25 @@ public class MBoardServiceImpl implements MBoardService {
         
 		return bodyHTML;
 	}
+
+	@Override
+	public List<MBoardAttachVO> photoViewDB(String itemID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.photoViewDB(map);
+	}
+
+	@Override
+	public Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		return mBoardDAO.photoViewDBCount(map);
+	}
+	
 	
 	
 }

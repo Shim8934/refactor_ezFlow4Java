@@ -65,16 +65,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
-			LOGGER.debug("userId: " + userId);
-			LOGGER.debug("tenantId: " + tenantId);
-			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
-			
+			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);			
 			LOGGER.debug("opt: " + opt.toString());
 			
 			String obj = "";
-			
 			Gson gson = new Gson();
-			
 			obj = gson.toJson(opt);
 			
 			result.put("status", "ok");
@@ -102,36 +97,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 		LOGGER.debug("MOBILE G/W OPTION [PUT /mobile/ezoption/option/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
-		
-		String test = (String) jsonObject.get("lang");
-		
-		LOGGER.debug("lang: " + test);
 
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
-			String	timeZone = jsonObject.get("timeZone").toString();
-			String	lang = jsonObject.get("lang").toString();
-			String	listCnt = jsonObject.get("listCnt").toString();
-			String	useSearch = jsonObject.get("useSearch").toString();
-			String	useSecurity = jsonObject.get("useSecurity").toString();
-			String	mainType = jsonObject.get("mainType").toString();			
+			
 			int tenantId = info.getTenantId();
 			
-			LOGGER.debug("userId: " + userId);
-			LOGGER.debug("timeZone: " + timeZone);
-			LOGGER.debug("lang: " + lang);
-			LOGGER.debug("mainType: " + mainType);
-			LOGGER.debug("listCnt: " + listCnt);
-			LOGGER.debug("useSearch: " + useSearch);
-			LOGGER.debug("useSecurity: " + useSecurity);
-			LOGGER.debug("tenantId: " + tenantId);
-			
-			mOptionService.updateOption(userId, timeZone, lang, mainType, listCnt, useSearch, useSecurity, tenantId);
+			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSearch").toString(), jsonObject.get("useSecurity").toString(), tenantId);
 			
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
-
 
 			LOGGER.debug("opt: " + opt.toString());
 

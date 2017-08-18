@@ -37,6 +37,8 @@
 		<result property="jobTitle"					column="JOBTITLE"					columnIndex="24"/>
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="25"/>
 		<result property="brdNm"				column="BRDNM"				columnIndex="26"/>
+		<result property="date"				column="DATE"				columnIndex="27"/>
+		<result property="value"				column="VALUE"				columnIndex="28"/>
 	</resultMap>
 	
 	<resultMap class="MResourceGetScheduleVO" id="resGetScheduleListMainVO">
@@ -109,6 +111,8 @@
 		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
 		<result property="brdNm"				column="BRDNM"				columnIndex="27"/>
+		<result property="date"				column="DATE"				columnIndex="28"/>
+		<result property="value"				column="VALUE"				columnIndex="29"/>
 	</resultMap>
     
     <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceGetAdmSubClsTreeVO">
@@ -133,7 +137,7 @@
         <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceBrdVO">
       <result property="brdID"          column="BRD_ID"         columnIndex="1"/>
       <result property="brdNm"          column="BRD_NM"         columnIndex="2"/>
-      <result property="approveFlag"      column="APPROVEFLAG"      columnIndex="16"/>
+      <result property="approveFlag"      column="APPROVEFLAG"      columnIndex="3"/>
     </resultMap>
     
     	<resultMap class="MResourceScheduleVO" 		id="mResourceScheduleVO">
@@ -488,42 +492,45 @@
 	
 	<select id="MResourceDAO.getResScheduleDetail" parameterClass="Map" resultClass="MResourceScheduleVO">
 		<![CDATA[
-			SELECT 
-				NUM ,
-                PNUM ,
-                OWNERID ,
+			SELECT
+				A.NUM ,
+                A.PNUM ,
+                A.OWNERID ,
+                A.TENANT_ID,
+                A.COMPANYID,
                 A.title title  ,
-                LOCATION ,
-                TIMEDISPLAY ,
-                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-                ALERTTIME ,
-                REFLAG ,
-                GRESFLAG ,
-                WRITERID ,
-                IMPORTANCE ,
-                ENTRYLIST ,
-                ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
-                ATTACHFLAG ,
-                CHARACTERID ,
-                APPROVEFLAG ,
+                A.LOCATION ,
+                A.TIMEDISPLAY ,
+                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+                DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                A.ALERTTIME ,
+                A.REFLAG ,
+                A.GRESFLAG ,
+                A.WRITERID ,
+                A.IMPORTANCE ,
+                A.ENTRYLIST ,
+                A.ALLDAY ,
+                DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                A.ATTACHFLAG ,
+                A.CHARACTERID ,
+                A.APPROVEFLAG ,
                 B.DISPLAYNAME OWNERNM  ,
                 B.DISPLAYNAME2 OWNERNM2  ,
                 B.DESCRIPTION DEPTNM  ,
                 B.DESCRIPTION2 DEPTNM2  ,
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2,
-				IF(isnull(F.RESID),'N','Y') FAVORITE  
-           	FROM 
-           		TBL_RS_SCHEDULE A
-			JOIN
-				TBL_USERMASTER B 
-			ON
-				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
-			LEFT JOIN 
-				TBL_RS_FAVORITE F
-			ON A.OWNERID = F.RESID AND A.TENANT_ID = F.TENANT_ID AND A.WRITERID = F.USERID	
+				IF(isnull(F.RESID),'N','Y') FAVORITE,
+				    C.BRD_NM BRDNM,
+					 D.STARTDATETIME REPSTARTDATE,
+					 D.ENDDATETIME REPENDDATE,
+					 CASE A.REFLAG WHEN '0' THEN '비반복' WHEN '1' THEN '반복' ELSE '불확실' END REPTYPE  
+			FROM TBL_RS_SCHEDULE A 
+			
+			LEFT JOIN TBL_USERMASTER B ON A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
+			LEFT JOIN TBL_RS_BRD C ON A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID AND A.COMPANYID = C.BRD_COMPANY
+			LEFT JOIN TBL_RS_SCHEDULEREPETITION D ON A.OWNERID = D.OWNERID AND A.NUM = D.NUM AND A.TENANT_ID = D.TENANT_ID AND A.COMPANYID = D.COMPANYID
+			LEFT JOIN TBL_RS_FAVORITE F ON A.OWNERID = F.RESID AND A.TENANT_ID = F.TENANT_ID AND A.WRITERID = F.USERID
           	WHERE
 				A.COMPANYID = #v_PCOMPANYID#			
 			AND
@@ -531,7 +538,7 @@
 			AND  
 				A.OWNERID = #v_POWNERID#
 			AND
-				REFLAG IN('0', '1')
+				A.REFLAG NOT IN('4')
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -540,7 +547,7 @@
 		]]>
 	</select>
 	
-	<select id="MResourceDAO.getResBrdList" parameterClass="Map" resultClass="MResourceGetAdmSubClsTreeVO">
+	<select id="MResourceDAO.getResBrdList" parameterClass="Map" resultMap="mResourceBrdVO">
 		<![CDATA[
 			SELECT 
 				BRD_ID,
@@ -709,6 +716,8 @@
                 A.TIMEDISPLAY ,
                 DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
                 DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                A.ownerID VALUE  ,
                 A.ALERTTIME ,
                 A.REFLAG ,
                 A.GRESFLAG ,
@@ -738,9 +747,9 @@
 			ON
 				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
           	WHERE
-				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T') <= STARTDATE  
 			AND
-				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
+				ENDDATE  <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 				]]>
@@ -776,6 +785,8 @@
             	A.TIMEDISPLAY ,
             	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
             	DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                A.ownerID VALUE  ,
             	A.ALERTTIME ,
             	A.REFLAG ,
             	A.GRESFLAG ,

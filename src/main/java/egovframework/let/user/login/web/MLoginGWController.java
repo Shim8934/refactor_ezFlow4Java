@@ -4,6 +4,8 @@ import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -173,13 +175,13 @@ public class MLoginGWController {
     				String maintype = "";
     				String listCnt = "";
     				String useSearch = "";
-    				String useSecurity = "";
-					
-    				String returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
+    				String useSecurity = "";					
+    				String returnValue = "";
+    				
+    				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
     				
     				//userMobileInfo 테이블에 정보가 없을 때 (첫 로그인)
-    				if (mOptionVO == null || mOptionVO.equals("")) {
-    			        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+    				if (mOptionVO == null || mOptionVO.equals("")) {    			        
     					
     			        //UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
     			        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
@@ -218,15 +220,24 @@ public class MLoginGWController {
         				listCnt = mOptionVO.getListCnt();
         				useSearch = mOptionVO.getUseSearch();
         				useSecurity = mOptionVO.getUseSecurity();
+        				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
     				}
-    				
-    				StringBuilder cookieInfo = new StringBuilder();
-    				cookieInfo.append("{\"uid\" : \"" + uid + "\", \"ip\" : \"" + ip + "\", \"locale\" : \"" + returnValue + "\", \"lang\" : \"" + lang + "\", \"timeZone\" : \"" + timeZone + "\", \"tenantId\" : " + tenantId);
-    				cookieInfo.append("\"mainType\" : \"" + maintype + "\", \"listCnt\" : \"" + listCnt + "\", \"useSearch\" : \"" + useSearch + "\", \"useSecurity\" : \"" + useSecurity + "\" }");
-    				
+ 				
+    				Map<String, Object> map = new HashMap<String, Object>();
+    				map.put("uid", uid);
+    				map.put("ip", ip);
+    				map.put("locale", returnValue);
+    				map.put("lang", lang);
+    				map.put("timeZone", timeZone);
+    				map.put("tenantId", tenantId+"");
+    				map.put("mainType", maintype);
+    				map.put("listCnt", listCnt);
+    				map.put("useSearch", useSearch);
+    				map.put("useSecurity", useSecurity);    				
+				    				    				
     				result.put("status", "ok");
     				result.put("code", "0");
-    				result.put("data", cookieInfo.toString());
+    				result.put("data", map);
     				
     				return result;
     			}			

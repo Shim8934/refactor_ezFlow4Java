@@ -191,6 +191,35 @@ public class MPortalGWController extends EgovFileMngUtil {
 		logger.debug("portalFooterList End");
 		
 		return result;
-	}	
+	}
+	
+	/**
+	 * 모바일 G/W 포탈 [GET] 왼쪽 유저정보 
+	 */
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezPortal/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject portalUserInfo(@PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("portalUserInfo Start");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");			
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", info);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");		
+		}		
+		
+		logger.debug("portalUserInfo End");
+		
+		return result;
+	}
 	
 }
