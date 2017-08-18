@@ -1,13 +1,19 @@
 package egovframework.ezMobile.ezEmail.web;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -37,10 +43,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,10 +75,10 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezEmail.vo.MEmailFolderVO;
-import egovframework.ezMobile.ezEmail.vo.MEmailMessageVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -124,11 +131,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		IMAPAccess ia = null;
 		
 		try {
-		
+			folderId = URLDecoder.decode(folderId, "UTF-8");
 			LOGGER.debug("folderId=" + folderId);
 		
-			List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
-		
+//			List<MEmailFolderVO> mailFolderList = new ArrayList<MEmailFolderVO>();
+			JSONArray mailFolderList = new JSONArray();
 		
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
@@ -147,20 +154,32 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				subMailFolder = ia.getTopLevelFolders();
 			}
 			
-			MEmailFolderVO folder = null;
+//			MEmailFolderVO folder = null;
+			JSONObject folder = null;
 			
 			for (int i=0; i<subMailFolder.size(); i++) {
 				Folder f = subMailFolder.get(i);
 				
-				folder = new MEmailFolderVO();
+//				folder = new MEmailFolderVO();
+				folder = new JSONObject();
 				
-				folder.setName(f.getName());
-				folder.setFullName(f.getFullName());
-				folder.setUnReadCount(f.getUnreadMessageCount());
-				if (f.list().length > 0) {
-					folder.setHasSub(true);
+//				folder.setName(f.getName());
+//				folder.setFullName(f.getFullName());
+//				folder.setUnReadCount(f.getUnreadMessageCount());
+				if ( f.getName().equals("INBOX") ) {
+					folder.put("name", "받은 편지함");
 				} else {
-					folder.setHasSub(false);
+					folder.put("name", f.getName());
+				}
+				folder.put("fullName", f.getFullName());
+				folder.put("unReadCount", f.getUnreadMessageCount());
+				
+				if (f.list().length > 0) {
+//					folder.setHasSub(true);
+					folder.put("hasSub", true);
+				} else {
+//					folder.setHasSub(false);
+					folder.put("hasSub", false);
 				}
 				mailFolderList.add(folder);
 			}
@@ -407,15 +426,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				messageJsonArray.add(messageJson);
 			}
-			JSONArray folderList = MEmailService.getFolderList(info, locale, "");
-			
+			String folderName = folder.getName();
+			if ( folderName.equals("INBOX") ) {
+				folderName = "받은 편지함";
+			}
 			folder.close(false);
 			
 			JSONObject data = new JSONObject();
+			
 			data.put("messageJsonArray", messageJsonArray);
 			data.put("unreadCount", folder.getUnreadMessageCount());
-			data.put("folderList", folderList);
-			data.put("folderId", folderId);
+			data.put("folderName", folderName);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", data);
@@ -448,7 +470,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/mail-write/option", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void mMailWriteOption(HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] started.");
+//		String serverName = request.getHeader("x-user-host");
+//		MCommonVO info = mOptionService.commonInfo(serverName, userId);
 		
+//		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+//		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] ended.");		
 	}
 	
@@ -764,17 +790,60 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		String importance = "3";
 		
-		String subject = (String) jsonObject.get("subject");
-		String to = (String) jsonObject.get("to");
-		String cc = (String) jsonObject.get("cc");
-		String bcc = (String) jsonObject.get("bcc");
-		String textBody = (String) jsonObject.get("textbody");
-		String from = (String) jsonObject.get("from");
-		String charset = (String) jsonObject.get("charset");
-		String htmlbody = (String) jsonObject.get("htmlbody");
-		String displayName = (String) jsonObject.get("displayName");
-		String stateName = (String) jsonObject.get("stateName");
-//		String importance = (String) jsonObject.get("importance");
+		String subject = "";
+		String to = "";
+		String cc = "";
+		String bcc = "";
+		String textBody = "";
+		String from = "";
+		String charset = "";
+		String htmlbody = "";
+		String displayName = "";
+		String stateName = "";
+		
+		if (jsonObject.get("subject") != null) {
+			subject = (String) jsonObject.get("subject");
+		}
+		
+		if (jsonObject.get("to") != null) {
+			to = (String) jsonObject.get("to");
+		}
+		
+		if (jsonObject.get("cc") != null) {
+			cc = (String) jsonObject.get("cc");
+		}
+		
+		if (jsonObject.get("bcc") != null) {
+			bcc = (String) jsonObject.get("bcc");
+		}
+		
+		if (jsonObject.get("textBody") != null) {
+			textBody = (String) jsonObject.get("textBody");
+		}
+		
+		if (jsonObject.get("from") != null) {
+			from = (String) jsonObject.get("from");
+		}
+		
+		if (jsonObject.get("charset") != null) {
+			charset = (String) jsonObject.get("charset");
+		}
+		
+		if (jsonObject.get("htmlbody") != null) {
+			htmlbody = (String) jsonObject.get("htmlbody");
+		}
+		
+		if (jsonObject.get("displayName") != null) {
+			displayName = (String) jsonObject.get("displayName");
+		}
+		
+		if (jsonObject.get("stateName") != null) {
+			stateName = (String) jsonObject.get("stateName");
+		}
+		
+		if (jsonObject.get("importance") != null) {
+			importance = (String) jsonObject.get("importance");
+		}
 		
 		String realPath = commonUtil.getRealPath(request);
 
@@ -1709,17 +1778,60 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		String importance = "3";
 		
-		String subject = (String) jsonObject.get("subject");
-		String to = (String) jsonObject.get("to");
-		String cc = (String) jsonObject.get("cc");
-		String bcc = (String) jsonObject.get("bcc");
-		String textBody = (String) jsonObject.get("textbody");
-		String from = (String) jsonObject.get("from");
-		String charset = (String) jsonObject.get("charset");
-		String htmlbody = (String) jsonObject.get("htmlbody");
-		String displayName = (String) jsonObject.get("displayName");
-		String stateName = (String) jsonObject.get("stateName");
-//		String importance = (String) jsonObject.get("importance");
+		String subject = "";
+		String to = "";
+		String cc = "";
+		String bcc = "";
+		String textBody = "";
+		String from = "";
+		String charset = "";
+		String htmlbody = "";
+		String displayName = "";
+		String stateName = "";
+		
+		if (jsonObject.get("subject") != null) {
+			subject = (String) jsonObject.get("subject");
+		}
+		
+		if (jsonObject.get("to") != null) {
+			to = (String) jsonObject.get("to");
+		}
+		
+		if (jsonObject.get("cc") != null) {
+			cc = (String) jsonObject.get("cc");
+		}
+		
+		if (jsonObject.get("bcc") != null) {
+			bcc = (String) jsonObject.get("bcc");
+		}
+		
+		if (jsonObject.get("textBody") != null) {
+			textBody = (String) jsonObject.get("textBody");
+		}
+		
+		if (jsonObject.get("from") != null) {
+			from = (String) jsonObject.get("from");
+		}
+		
+		if (jsonObject.get("charset") != null) {
+			charset = (String) jsonObject.get("charset");
+		}
+		
+		if (jsonObject.get("htmlbody") != null) {
+			htmlbody = (String) jsonObject.get("htmlbody");
+		}
+		
+		if (jsonObject.get("displayName") != null) {
+			displayName = (String) jsonObject.get("displayName");
+		}
+		
+		if (jsonObject.get("stateName") != null) {
+			stateName = (String) jsonObject.get("stateName");
+		}
+		
+		if (jsonObject.get("importance") != null) {
+			importance = (String) jsonObject.get("importance");
+		}
 		
 		String realPath = commonUtil.getRealPath(request);
 
@@ -3026,53 +3138,50 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	 * 모바일 G/W 이메일 [GET] 파일 다운로드
 	 */
 	@RequestMapping(value="/mobile/ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object mMailFileDown(HttpServletRequest request, HttpServletResponse response, 
-			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String strIndex, @PathVariable String userId, Locale locale) throws Exception {
+	public Object mMailFileDown(HttpServletRequest request,
+			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId, Locale locale) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}] started.");
 		
+		String filename = "";
+		
+		InputStream input = null;
+		OutputStream output = null;
 		IMAPAccess ia = null;
 		JSONObject result = new JSONObject();
-		
+				
 		try {
-		
-		// get user credentials
-		String serverName = request.getHeader("x-user-host");
-		MCommonVO info = mOptionService.commonInfo(serverName, userId);
-		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
-		String userEmail = info.getUserId() + "@" + domainName;
-		String password = jspw;
-
-		LOGGER.debug("userEmail=" + userEmail);
-		
-		// retrieve the passed in parameters
-		String folderPath = folderId;
-		String strUid = messageId;
-		long uid = strUid != null ? Long.parseLong(strUid) : 0;
-		String filename = request.getParameter("filename");
-		
-		
-		
-		LOGGER.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename);
-		
-		if (folderPath == null || strUid == null || filename == null) {
-			LOGGER.debug("downloadAttach illegal arguments.");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+			String userEmail = info.getUserId() + "@" + domainName;
+			String password = jspw;
+			LOGGER.debug("userEmail=" + userEmail);
 			
-			result.put("status", "error");
-			result.put("code", 1);			
-			result.put("data", "");
+			// retrieve the passed in parameters
+			String folderPath = folderId;
+			String strUid = messageId;
+			long uid = strUid != null ? Long.parseLong(strUid) : 0;
+			filename = request.getParameter("filename");
+			LOGGER.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename);
 			
-//			return result;
-		}
-		
-		int index = -1;
-		
-		if(strIndex != null){
-			index = Integer.parseInt(strIndex);
-		}
-		LOGGER.debug("index=" + index);
-		
-		
-		byte[]out = null;
+			if (folderPath == null || strUid == null || filename == null) {
+				LOGGER.debug("downloadAttach illegal arguments.");
+				
+				result.put("status", "error");
+				result.put("code", 1);			
+				result.put("data", "");
+				
+				return result;
+			}
+			
+			String strIndex = index;
+			int intIndex = -1;
+			if(strIndex != null){
+				intIndex = Integer.parseInt(strIndex);
+			}
+			LOGGER.debug("index=" + intIndex);
+			
+			
 		
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale);
@@ -3090,40 +3199,87 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				if (message == null) {
 					LOGGER.error("Message not found. uid=" + uid);
+					result.put("status", "error");
+					result.put("code", 1);			
+					result.put("data", "");
 				} else {
 					Part part = null;
-					if (index == -1) {
+					if (intIndex == -1) {
 						part = message;
 					}
 					else {
-						part = ezEmailUtil.getAttachPart(message, index);
+						part = ezEmailUtil.getAttachPart(message, intIndex);
 					}
 					
 					if (part == null) {
 						LOGGER.error("AttachPart not found. AttachPartIndex=" + index);
 					} else {
-						response.setContentType(part.getContentType());
+//						response.setContentType(part.getContentType());
 						
 						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
-						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
+//						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
 						LOGGER.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
-						
-						InputStream input = null;
-						OutputStream output = null;
 						
 						try {
 							input = part.getInputStream();
-							output = response.getOutputStream();
-							
-							org.apache.commons.io.IOUtils.copy(input, output);
-							
-							byte[] buffer = new byte[4096];
+//							output = response.getOutputStream();
+							String[] encoding_type = part.getHeader("Content-Transfer-Encoding");
+							for(int i = 0; i < encoding_type.length ; i++) {
+								LOGGER.debug("@@@@@@@@@@@@@@@@@@@@@@@@" + encoding_type[i]);
+							}
+//							byte[] buffer = new byte[4096];
 							int byteRead;
 							
-							while ((byteRead = input.read(buffer)) != -1) {
-								output.write(buffer, 0, byteRead);
-							}
-						} catch(IOException e) {
+//							while ((byteRead = input.read(buffer)) != -1) {
+//								output.write(buffer, 0, byteRead);
+//							}
+							Encoder encoder = Base64.getEncoder();
+//							Decoder decoder = Base64.getDecoder();
+
+							BufferedReader streamReader = new BufferedReader(new InputStreamReader(input)); 
+							StringBuilder responseStrBuilder = new StringBuilder();
+
+							int i;
+							StringBuffer buffer = new StringBuffer();
+							
+//							byte[] b = new byte[4096]; 
+//							while ( (i = input.read(b)) != -1) {
+//								buffer.append(new String(b, 0, i)); 
+//							} 
+							
+							InputStream is;
+							byte[] bytes = IOUtils.toByteArray(input);
+							
+//							String inputStr;
+//							while ((inputStr = streamReader.readLine()) != null) {
+//							    responseStrBuilder.append(inputStr);
+//							}
+//							new JSONObject(responseStrBuilder.toString());
+														
+							JSONObject data = new JSONObject();
+							
+							JSONParser jp = new JSONParser();
+							
+//							JSONObject partJSON = jp.parse(input , "UTF-8");
+							LOGGER.debug("buffer : " + buffer.toString());
+							LOGGER.debug("responseStrBuilder : " + responseStrBuilder.toString());
+							LOGGER.debug("bytes : " + ByteBuffer.wrap(bytes));
+							
+							data.put("buffer", buffer.toString());
+							data.put("bytes", bytes);
+							data.put("responseStrBuilder", responseStrBuilder.toString());
+							data.put("filename",filename);
+							data.put("filetype",part.getContentType());
+							
+							result.put("status", "success");
+							result.put("code", 0);			
+							result.put("data", data);
+							
+						} catch(Exception e) {
+							e.printStackTrace();
+							result.put("status", "error");
+							result.put("code", 1);			
+							result.put("data", "");
 						} finally {
 							if (ia != null) {
 								ia.close();
@@ -3132,19 +3288,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								try { input.close(); } catch (IOException e1) {}
 							}
 							if (output != null) {
-								try { output.flush(); } catch (IOException e1) {}
-								try { output.close(); } catch (IOException e1) {}
+//								try { output.flush(); } catch (IOException e1) {}
+//								try { output.close(); } catch (IOException e1) {}
 							}
 						}
 						
 					}
 				}
 			}
-			
-			result.put("status", "success");
-			result.put("code", 0);			
-			result.put("data", out);
-			
 		} catch (MessagingException e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -3155,8 +3306,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				ia.close();
 			}
 		}
-		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/{messageId}/attach/{index}/users/{userId}] ended.");
-		return result;		
+		
+		LOGGER.debug("downloadAttach ended.");
+		
+//		return Response.ok(output)
+//                .header("Content-Disposition", "attachment; filename=\"" + filename + "\"" )
+//                .build();	
+		return result;
 	}
 	
 	/**

@@ -27,6 +27,12 @@ public class MCommonVO {
 	private String userName2;		/** 사용자이름2  */
 	
 	private String rollInfo;		/** 사용자 권한  */
+	
+	private String title;			/** 직급 */
+	
+	private String title2;			/** 직급2 */
+	
+	private String userFileUrl;		/** 사용자 사진 */
 
 	public int getTenantId() {
 		return tenantId;
@@ -60,12 +66,44 @@ public class MCommonVO {
 		this.deptId = deptId;
 	}
 
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+	public String getDeptName2() {
+		return deptName2;
+	}
+
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
+
 	public String getCompanyId() {
 		return companyId;
 	}
 
 	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getCompanyName2() {
+		return companyName2;
+	}
+
+	public void setCompanyName2(String companyName2) {
+		this.companyName2 = companyName2;
 	}
 
 	public String getUserId() {
@@ -92,38 +130,6 @@ public class MCommonVO {
 		this.userName2 = userName2;
 	}
 
-	public String getDeptName() {
-		return deptName;
-	}
-
-	public void setDeptName(String deptName) {
-		this.deptName = deptName;
-	}
-
-	public String getDeptName2() {
-		return deptName2;
-	}
-
-	public void setDeptName2(String deptName2) {
-		this.deptName2 = deptName2;
-	}
-
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public String getCompanyName2() {
-		return companyName2;
-	}
-
-	public void setCompanyName2(String companyName2) {
-		this.companyName2 = companyName2;
-	}
-
 	public String getRollInfo() {
 		return rollInfo;
 	}
@@ -131,6 +137,29 @@ public class MCommonVO {
 	public void setRollInfo(String rollInfo) {
 		this.rollInfo = rollInfo;
 	}
-	
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getTitle2() {
+		return title2;
+	}
+
+	public void setTitle2(String title2) {
+		this.title2 = title2;
+	}
+
+	public String getUserFileUrl() {
+		return userFileUrl;
+	}
+
+	public void setUserFileUrl(String userFileUrl) {
+		this.userFileUrl = userFileUrl;
+	}
 	
 }

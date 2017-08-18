@@ -56,6 +56,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (List<MBoardAttachVO>) list("MBoardDAO.getAttachList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MBoardAttachVO> photoViewDB(Map<String, Object> map) throws Exception{		
+		return (List<MBoardAttachVO>) list("MBoardDAO.photoViewDB", map);
+	}
+	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {
 		return (MBoardItemVO) select("MBoardDAO.getBrdItemInfo", map);
 	}
@@ -96,6 +101,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public Integer getNewBoardListCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("MBoardDAO.getNewBoardListCount", map);
+	}
+	
+	public Integer photoViewDBCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.photoViewDBCount", map);
 	}
 	
 	public void insertBrdItem(Map<String, Object> map) throws Exception{

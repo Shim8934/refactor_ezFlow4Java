@@ -19,7 +19,10 @@
       <result property="userId"       		column="cn"        							columnIndex="10"/>
       <result property="userName"       	column="displayName"        				columnIndex="11"/>
       <result property="userName2"       	column="displayName2"        				columnIndex="12"/>
-      <result property="rollInfo"          column="rollinfo"                       columnIndex="13"/>
+      <result property="title"       		column="title"        						columnIndex="13"/>
+      <result property="title2"       		column="title2"		        				columnIndex="14"/>      
+      <result property="rollInfo"          	column="rollinfo"                       	columnIndex="15"/>
+      <result property="userFileUrl"       	column="userFileUrl"   						columnIndex="16"/>
     </resultMap>
     
     <resultMap class="MOptionVO" id="MOptionVO">
@@ -48,7 +51,10 @@
 			    b.cn,
 			    b.displayName,
 			    b.displayName2,
-                b.extensionattribute1 as rollinfo
+			    b.title,
+			    b.title2,
+                b.extensionattribute1 as rollinfo,
+                b.extensionattribute2 as userFileUrl
 			FROM
 				TBL_USERLOCALINFO a inner join TBL_USERMASTER b ON a.userid = b.cn AND a.tenant_id = b.tenant_id
 			WHERE

@@ -201,12 +201,13 @@ public class EzSystemAdminController {
 		}
 		
 		int maxItemPerPage = 20; 
+		int currentPage = Integer.parseInt(currPage);
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
-		int currentPage = Integer.parseInt(currPage);
-		
+
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		if ( userInfo.getLang().equals(sysLang))  {
