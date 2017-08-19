@@ -150,51 +150,47 @@ public class LoginController {
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		
-		//Check if this user is exist
+		//Check if this user exists
 		loginVO.setId(_uid);
 		loginVO.setTenantId(tenantId);
 		loginVO.setDn("NOPASSWORD");
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
-		if(resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")){
+		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
-		}
-		else{
-			if(_uid.equals(resultVO.getId())){
+		} else {
+			if (_uid.equals(resultVO.getId())) {
 				//User uses his/her username to login
-				_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 	        	loginVO.setId(_uid);
 	        	loginVO.setPassword(_pwd);
 	            loginVO.setDn("PASSWORD");
 	            resultVO = loginService.selectUser(loginVO);
-			}
-			else{
-				//Check if his/her tenant allows using employeeID to login
-				 String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
-				 if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
-					 _uid = resultVO.getId();
-					 _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+			} else {
+				//Check if his/her tenant allows using employeeID to login				
+				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
+					_uid = resultVO.getId();
+					_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		        	loginVO.setId(_uid);
 		        	loginVO.setPassword(_pwd);
 		            loginVO.setDn("PASSWORD");
 		            resultVO = loginService.selectUser(loginVO);
-				 }
-				 else{
-					 //This kind of login is not allowed in his/her tenant
+				} else {
+					//This kind of login is not allowed in his/her tenant
 			        model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
 			        return "forward:/user/login/login.do";
-				 }
+				}
 			}
 		}
 		
 		int numberOfLoginFailPermit = Integer.parseInt(ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId)); 
 		
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {  
-        	//Check login state of the use
+        	//Check login state of the user
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
         	
-        	if(check != -3){
+        	if (check != -3) {
 	        	//비밀번호 변경 팝업 상태 값 초기화
 	        	int diff = 1;
 	        	
@@ -222,6 +218,7 @@ public class LoginController {
 		    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
 		        	}	        	
 	        	}        	        	
+	        	
 				//0보다 작아지면 패스워드 변경기한 Expired
 				if (diff <= 0) {				
 					model.addAttribute("isExpireDate", "Y");
@@ -242,7 +239,7 @@ public class LoginController {
 					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
 					resultVO.setTenantId(tenantId);
 	
-					if(resultVO.getTitle2() == null){
+					if (resultVO.getTitle2() == null) {
 						resultVO.setTitle2("");
 					}
 					
@@ -263,8 +260,7 @@ public class LoginController {
 		        	    return "redirect:/ezPortal/portalMain.do";
 		        	}
 				}
-            }
-        	else{
+            } else {
         		//User has been blocked
     			//Show block message
             	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
@@ -274,7 +270,7 @@ public class LoginController {
         	//Check login state of the user 
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);        
 
-        	switch(check){
+        	switch (check) {
 				case -3: 
 	    			//Show block message
 	            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
@@ -292,20 +288,18 @@ public class LoginController {
         		default:
         			//Increase number of attempts in database
         			ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginFailCount", Integer.toString(check + 1));
-        			if(check >= numberOfLoginFailPermit - 1){
+        			
+        			if (check >= numberOfLoginFailPermit - 1) {
         				//Show block message
                     	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
                     	return "forward:/user/login/login.do";
-        			}
-        			else{
+        			} else {
             			//Show warning message
                     	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {check + 1, numberOfLoginFailPermit}, locale));
                     	return "forward:/user/login/login.do";
         			}
         	}
-
         } 
-  
     }
     
     public void createLoginCookie(
@@ -482,25 +476,25 @@ public class LoginController {
         }    	
     }
     
-    private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception{
-    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");            
-        
-        if(numberOfLoginFailPermit <= 0){        	
+    private int checkState(int tenantID, String userId, int numberOfLoginFailPermit) throws Exception {        
+        if (numberOfLoginFailPermit <= 0) {        	
         	//Users will never be blocked
         	return -1; 
         }
-        if(userLoginFailedAttempt.equals("")){
-        	//This is the first time this user logins fail        	
+        
+    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");            
+        
+        if (userLoginFailedAttempt.equals("")) {
+        	//This is the first time this user failed to login        	
         	return -2; 
-        }
-        else{
+        } else {
         	int currentNumber = Integer.parseInt(userLoginFailedAttempt);
-        	if(currentNumber >= numberOfLoginFailPermit){
+        	
+        	if (currentNumber >= numberOfLoginFailPermit) {
         		//User has been blocked        		
         		return -3;
-        	}
-        	else{
-        		//User has some remain times to try to login        		
+        	} else {
+        		//User has some remaining times to try to login        		
         		return currentNumber;
         	}
         } 
