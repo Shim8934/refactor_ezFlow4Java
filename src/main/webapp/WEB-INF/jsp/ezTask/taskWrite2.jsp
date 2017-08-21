@@ -49,6 +49,7 @@
 		    var sharemail = "_sharemail";
 		    var isreadpage = false;
 		    var FormProcSpelling = "FormProcSpelling";
+		    var personid = "${taskInfoVO.personID }";
 		    
 		    window.onload = function () {
 // 		    	document.getElementById("TextCompleteDate").value = "";
@@ -77,8 +78,8 @@
 			        document.getElementById("C").click();
 			    }
 
-			    if (personlist != "") {
-			        document.getElementById("personlist").innerHTML = personlist;
+			    if (personid != "") {
+			        document.getElementById("personlist").innerHTML = personid;
 		        }
 			    
 			    if (sharelist != "") {
@@ -307,7 +308,7 @@
 		        } else if (obj.id == "I") {
 		            taskType = obj.value;
 		            document.getElementById("personinputtr").style.display = "";
-		            document.getElementById("trrepeatinfo").style.display = "none";
+// 		            document.getElementById("trrepeatinfo").style.display = "none";
 // 		            repetition = "";
 		            document.getElementById("periodblock").style.display = "";
 // 		            document.getElementById("repeatblock").style.display = "none";
@@ -511,27 +512,27 @@
 								<td style="width:300px">
 									<c:choose>
 										<c:when test="${taskInfoVO.taskType == '2'}">
-											<input type ="radio" id="P" name="tasktypesel" value ="1" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="P"><spring:message code='ezTask.t2000' /></label>
-											<input type ="radio" id="I" name="tasktypesel" value ="2" checked="checked" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="I" name="tasktypesel" value ="2" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="I"><spring:message code='ezTask.t2001' /></label>
-											<input type ="radio" id="C" name="tasktypesel" value ="3" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="C"><spring:message code='ezTask.t2002' /></label>
 										</c:when>
 										<c:when test="${taskInfoVO.taskType == '3'}">
-											<input type ="radio" id="P" name="tasktypesel" value ="1" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="P" name="tasktypesel" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="P"><spring:message code='ezTask.t2000' /></label>
-											<input type ="radio" id="I" name="tasktypesel" value ="2" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="I"><spring:message code='ezTask.t2001' /></label>
-											<input type ="radio" id="C" name="tasktypesel" value ="3" checked="checked" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="C" name="tasktypesel" value ="3" checked="checked" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="C"><spring:message code='ezTask.t2002' /></label>
 										</c:when>
 										<c:otherwise>
-											<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="P"><spring:message code='ezTask.t2000' /></label>
-											<input type ="radio" id="I" name="tasktypesel" value ="2" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="I" name="tasktypesel" value ="2" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="I"><spring:message code='ezTask.t2001' /></label>
-											<input type ="radio" id="C" name="tasktypesel" value ="3" style="margin:0px 0px 0px 3px" />
+											<input type ="radio" id="C" name="tasktypesel" value ="3" onclick="changemenu(this)" style="margin:0px 0px 0px 3px" />
 											<label for ="C"><spring:message code='ezTask.t2002' /></label>
 										</c:otherwise>
 									</c:choose>
@@ -567,17 +568,17 @@
 								</td>
 							</tr>
 								<c:choose>
-									<c:when test="${taskInfoVO.creatorID == userinfo.UserID || taskInfoVO.creatorID== ''}">
-										<TR id="personinputtr" style="display:none">
+									<c:when test="${taskInfoVO.creatorID == userInfo.id || taskInfoVO.creatorID== ''}">
+										<tr id="personinputtr" style="display:none">
 											<th ><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
-											<TD colspan ="3"><DIV id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD>
-										</TR>
+											<td colspan ="3"><div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div></td>
+										</tr>
 									</c:when>
 									<c:otherwise>
-										<TR id="personinputtr" style="display:none">
+										<tr id="personinputtr" style="display:none">
 											<th ><spring:message code='ezTask.t2005' /></th>
-											<TD colspan ="3"><DIV id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD>
-										</TR>	            	
+											<td colspan ="3"><div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div></td>
+										</tr>
 									</c:otherwise>
 								</c:choose>
 
