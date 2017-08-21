@@ -695,7 +695,7 @@
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>
 		<div style="border:1px solid gray;width:450px;position:absolute;background-color:#ffffff;z-index:8000;text-align:center;display:none;" id="progressviewerRayer">
-		    <iframe src="/blank.htm" style="width:450px;height:170px;border:none" id="progressviewer"></iframe>
+		    <iframe src="<spring:message code='main.kms4' />" style="width:450px;height:170px;border:none" id="progressviewer"></iframe>
 		</div>
 		<script type="text/javascript">
 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
