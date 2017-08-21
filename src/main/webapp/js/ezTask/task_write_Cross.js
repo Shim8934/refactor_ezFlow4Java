@@ -523,7 +523,6 @@ function save_task() {
 
         createNodeAndInsertText(xmlDom, objNode, "STARTDATE", sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate() + " 00:00");
         createNodeAndInsertText(xmlDom, objNode, "ENDDATE", edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate() + " 23:59");
-
     }
 
     createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
@@ -549,7 +548,6 @@ function save_task() {
             createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6")));
         }
     }
-
 
     var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
     if (g_share != null) {
@@ -584,8 +582,10 @@ function save_task() {
                 createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME", g_person["deptname"][i]);
                 createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", g_person["deptname2"][i]);
 
-                if (person != "")
+                if (person != "") {
                     person += ", ";
+                }
+                
                 person += g_person["name"][i] == "" ? g_person["deptname"][i] : g_person["name"][i];
             }
         }

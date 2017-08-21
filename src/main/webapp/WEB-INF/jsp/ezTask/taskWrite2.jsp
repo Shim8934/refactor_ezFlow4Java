@@ -681,9 +681,9 @@
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		 
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezTask/interASP/upload.aspx" target="ifrm" style="visibility:hidden;" >
-		<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;"/>
-		<input type="hidden" name="maxsize" id="maxsize" />
-		<input type="hidden" name="cnt" id="cnt" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;"/>
+			<input type="hidden" name="maxsize" id="maxsize" />
+			<input type="hidden" name="cnt" id="cnt" />
 		</form>
 		
 		<form method="post" id="nameValue" name="nameValue" enctype="multipart/form-data" action="#" target="child" style="visibility:hidden;" >
