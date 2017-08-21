@@ -465,8 +465,8 @@ function check_length(chkstr, maxlength, fieldname) {
     return true;
 }
 function save_task() {
-    if (document.getElementById("TextTitle").value == "") {
-        alert("" + strLang9 + "");
+	if (document.getElementById("TextTitle").value == "") {
+    	alert("" + strLang9 + "");
         document.getElementById("TextTitle").focus();
         return;
     }
@@ -475,18 +475,32 @@ function save_task() {
     var enddate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
 
     if (startdate > enddate) {
-        alert(strLang_1);
+    	alert(strLang_1);
         return;
     }
 
-    if (document.getElementById("taskstatusSelect").value != 3 && document.getElementById("TextCompleteDate").value != "") {
-        alert("" + strLang10 + "");
-        document.getElementById("TextCompleteDate").focus();
-        return;
-    }
+    tasktype = $(":input:radio[name=tasktypesel]:checked").val();
+    importance = $(":input:radio[name=important]:checked").val();
 
-    if (!check_length(document.getElementById("TextTitle").value, 100, "" + strLang11 + "")) return;
-    if (!check_length(document.getElementById("TextCompleteDate").value, 20, "" + strLang12 + "")) return;
+    var sharelist = document.getElementById("sharelist").innerHTML;
+	var shareList2 = document.getElementById("shareList2").innerHTML;
+	var shareID = document.getElementById("shareID").innerHTML;
+	var shareDept = document.getElementById("shareDept").innerHTML;
+	var shareDept2 = document.getElementById("shareDept2").innerHTML;
+	
+	var taskPersonList = document.getElementById("personlist").innerHTML;
+	var taskpersonList2 = document.getElementById("personList2").innerHTML;
+	var taskpersonID = document.getElementById("personID").innerHTML;
+	var taskpersonDept = document.getElementById("personDept").innerHTML;
+	var taskpersonDept2 = document.getElementById("personDept2").innerHTML;
+
+	if (sharelist != "") {
+		hasshare = "Y";
+	} else {
+		hasshare = "N";
+	}
+
+    if (!check_length(document.getElementById("TextTitle").value, 100, "<spring:message code='ezTask.t996' />")) return;
 
     var xmlDom = createXmlDom();
     var xmlHTTP = createXMLHttpRequest();
@@ -495,115 +509,96 @@ function save_task() {
     createNodeAndInsertText(xmlDom, objNode, "TASKID", taskid);
     createNodeAndInsertText(xmlDom, objNode, "OWNERID", userid);
     createNodeAndInsertText(xmlDom, objNode, "CREATORID", userid);
-    createNodeAndInsertText(xmlDom, objNode, "CREATORNAME", username);
+    createNodeAndInsertText(xmlDom, objNode, "CREATORNAME1", username);
     createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
     createNodeAndInsertText(xmlDom, objNode, "HASSHARE", hasshare);
+    createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
     createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", document.getElementById("taskstatusSelect").value);
     createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", document.getElementById("completerateSelect").value);
-    createNodeAndInsertText(xmlDom, objNode, "COMPLETEDATE", document.getElementById("TextCompleteDate").value);
-    createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importantSelect").value);
-
-    if (repetition == "") {
-    createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00");
-    createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59");
-    }
-    else {
-        var sdate, edate;
-
-        if (g_sdate == null) {
-            startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-            enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-            sdate = new Date(startdate.substring(0, 4), parseInt(startdate.substring(5, 7)) - 1, startdate.substring(8, 10));
-            edate = new Date(enddate.substring(0, 4), parseInt(enddate.substring(5, 7)) - 1, enddate.substring(8, 10));
-        }
-        else {
-            sdate = new Date(g_sdate.substring(0, 4), parseInt(g_sdate.substring(5, 7)) - 1, g_sdate.substring(8, 10));
-            edate = new Date(g_edate.substring(0, 4), parseInt(g_edate.substring(5, 7)) - 1, g_edate.substring(8, 10));
-        }
-
-        createNodeAndInsertText(xmlDom, objNode, "STARTDATE", sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate() + " 00:00");
-        createNodeAndInsertText(xmlDom, objNode, "ENDDATE", edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate() + " 23:59");
-    }
-
-    createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
+    createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", importance);
+    createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00");
+    createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59");
     createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("TextTitle").value);
 
     var Doc_ContentHtml = document.createElement("DIV");
     var strBody = message.GetEditorContent();
     Doc_ContentHtml.innerHTML = strBody;
 
-    strBody = ConvertHTMLtoMHT(EmbedContentIntoXML(strBody));
+    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+
     createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
-
-    if (taskid == "")
-        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
-    else
-        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);
-
-
-    var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
-    if (pAttachListXml != "") {
-        var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-        for (var i = 0; i < nodes.length; i++) {
-            createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6")));
-        }
-    }
+    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);			    	
 
     var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
-    if (g_share != null) {
-        for (var i = 0; i < g_share["id"].length; i++) {
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERID", g_share["id"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERNAME1", g_share["name1"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERNAME2", g_share["name2"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERDEPTNAME", g_share["deptname"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARERDEPTNAME2", g_share["deptname2"][i]);
+
+    if (hasshare == "Y") {
+    	for (var i = 0; i < g_share["id"].length; i++) {
+            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREID", g_share["id"][i]);
+            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME1", g_share["name"][i]);
+            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME2", g_share["name1"][i]);
+            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME1", g_share["deptname"][i]);
+            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME2", g_share["deptname2"][i]);
         }
     }
 
     var personlist = createNodeAndAppandNode(xmlDom, objNode, personlist, "PERSONLIST");
+    var taskpersonlist = createNodeAndAppandNode(xmlDom, objNode, taskpersonlist, "TASKPERSONLIST");
 
-    if (taskType == 1) {
+    if (tasktype == 1) {
         createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", userid);
         createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", username);
         createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", username2);
-        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME", deptname);
+        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME1", deptname);
         createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", deptname2);
-    }
-    else {
-        var person = "";
-
-        if (g_person != null) {
-            if (g_person["id"].length > 1) { alert("" + strLang41 + ""); return; }
+    } else {
+        if (taskpersonID != null) {			        	
             for (var i = 0; i < g_person["id"].length; i++) {
-
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", g_person["id"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", g_person["name1"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", g_person["name2"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME", g_person["deptname"][i]);
-                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", g_person["deptname2"][i]);
-
-                if (person != "") {
-                    person += ", ";
-                }
-                
-                person += g_person["name"][i] == "" ? g_person["deptname"][i] : g_person["name"][i];
-            }
-        }
-        if (person == "" || person == null) {
-            alert("" + strLang57 + "");
-            return;
+                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONID", g_person["id"][i]);
+                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME1", g_person["name"][i]);
+                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME2", g_person["name1"][i]);
+                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONDEPTNAME1", g_person["deptname"][i]);
+                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONDEPTNAME2", g_person["deptname2"][i]);							
+			}
+        } else {
+        	alert("" + strLang57 + "");
+        	return;
         }
     }
 
-    createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", taskType);
+    if (hasshare == "Y") {
+		createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "SHARELENGTH", g_share["id"].length);			    	
+    } else {
+    	createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "SHARELENGTH", 0);
+    }
+    
+  //파일 첨부된 목록 가져오기
+	var listtable = dadiframe.document.getElementById("filelist");
+	var filelist = GetChildNodes(listtable);
+	var fileList = "";
+
+	for (var i = 0; i < filelist.length - 1; i++) {	    
+		if (i == 0) {
+			fileList = GetAttribute(filelist[i + 1], "data2");
+		} else {
+			fileList += "," + GetAttribute(filelist[i + 1], "data2");
+		}
+	}
+
+	if (fileList.length > 0) {
+		createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "Y");
+	} else {
+		createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "N");
+	}
+
+    createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
     
     xmlHTTP.open("POST", "/ezTask/taskSave.do", false);
     xmlHTTP.send(xmlDom);
 
-    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-        alert("" + strLang13 + "");
-    else {
-        alert("" + strLang14 + "");
+    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+    	alert("" + strLang13 + "");
+    } else {
+    	alert("" + strLang14 + "");
 
         try { window.opener.RefreshView(); } catch (e) { }
         window.close();
@@ -655,4 +650,74 @@ function ConvertSaveImageFile(pUrl, pImgWidth, pImgHeight) {
         XmlHttp.send(xmlDom);
     }
     catch (e) { }
+}
+
+function setAttachFileInfo(strXML) {
+	if (strXML == "ERROR") {
+        alert(strLang24);
+        return;
+    }
+    var xml = loadXMLString(strXML);
+
+    try {
+        var strAttach = "";
+        strPreViewAttach = "";
+        var listtable;
+
+        listtable = dadiframe.document.getElementById("filelist");
+        dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
+
+        var extCheck = false;
+        for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
+            var newFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
+            var pFileName = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
+            var fileSize = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]);
+            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA4")[i]);
+
+            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA5")[i]) == "OK") {
+                objTr = document.createElement("TR");
+                objTr.setAttribute("DATA2", newFileName + ";" + fileSize);
+
+                var objTd = document.createElement("TD");
+                objTd.style.textAlign = "center";
+
+                var input = document.createElement("input");
+                input.type = "checkbox";
+                input.name = "fileSelect";
+
+                objTd.appendChild(input);
+                objTr.appendChild(objTd);
+
+                var objTd2 = document.createElement("TD");
+
+                objTd2.setAttribute("NAME", "fileName");
+                objTd2.innerHTML = pFileName;
+                objTd2.style.wordWrap = "break-word";
+                objTr.appendChild(objTd2);
+
+                var fileSize = parseInt(fileSize);
+
+                if (fileSize / 1024 / 1024 > 1) {
+                    fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
+                }
+                else if (fileSize / 1024 > 1) {
+                    fileSize = parseInt(fileSize / 1024) + "KB";
+                }
+                else {
+                    fileSize = fileSize + "B";
+                }
+
+                var objTd3 = document.createElement("TD");
+                setNodeText(objTd3, fileSize);
+                objTr.appendChild(objTd3);
+
+                dadiframe.document.getElementById("filelist").appendChild(objTr);
+            }
+            else
+                extCheck = true;          
+        }
+        if (extCheck)
+            alert(strLang58);
+    }
+    catch (e) { alert("returnvalue :: " + e.description); }
 }

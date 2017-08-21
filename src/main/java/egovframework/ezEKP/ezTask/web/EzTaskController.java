@@ -74,25 +74,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		return "/ezTask/taskMain";
 	}
-	
-	/**
-	 * 업무작성화면 조회
-	 */
-	@RequestMapping(value = "/ezTask/taskWrite.do")
-	public String taskWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("taskWrite started.");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String newGuid = UUID.randomUUID().toString();
-
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("newGuid", newGuid);
-		
-		logger.debug("taskWrite ended.");
-		
-		return "/ezTask/taskWrite";
-	}
-	
 	/**
 	 * 업무상세화면 조회
 	 */
@@ -228,53 +210,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		return "json";
 	}
-	
-	/** 업무작성, 수정화면조회 Method*/
-	@RequestMapping(value = "/ezTask/taskWrite2.do")
-	public String taskEditPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("taskWrite2 started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String offset = userInfo.getOffset();
-		String primary = userInfo.getPrimary();
-		int tenantID = userInfo.getTenantId();
-		
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
-		String taskID = request.getParameter("taskID");
-		TaskInfoVO taskInfoVO = null;
-		List<TaskShareVO> taskShareList = null;
-		
-		if (taskID == null) {
-			/*업무작성*/
-		} else {
-			/*업무수정*/
-			
-			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
-			
-			//업무공유자목록조회
-			
-			if (taskInfoVO.getHasShare().equals("Y")) {
-				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
-			}
-			
-			//첨부파일목록조회
-			if (taskInfoVO.getHasAttach().equals("Y")) {
-//				getAttachList(taskID);
-			}
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("taskID", taskID);
-		model.addAttribute("taskInfoVO", taskInfoVO);
-		model.addAttribute("taskShareList", taskShareList);
-		
-		logger.debug("taskWrite2 ended.");
-		
-		return "/ezTask/taskWrite2";
-	}
-	
+
 	/**
 	 * 조직도화면조회
 	 */
@@ -351,14 +287,6 @@ public class EzTaskController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezTask/taskSearch.do")
 	public String taskSearch() throws Exception {
 		return "/ezTask/taskSearch";
-	}
-
-	/**
-	 * 업무작성 조직도 호출
-	 */
-	@RequestMapping(value = "/ezTask/taskSelectAttendant.do")
-	public String taskSelectAttendant() throws Exception {
-		return "/ezTask/taskSelectAttendant";
 	}
 
 	/**
@@ -524,59 +452,54 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		return ret;
 	}
-//	/**
-//	 * 업무등록 실행
-//	 */
-//	@RequestMapping(value = "/ezTask/taskSave.do")
-//	public void taskSave(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-//		logger.debug("taskSave started");
-//
-//		userInfo = commonUtil.userInfo(loginCookie);
-//
-//		String realPath = request.getServletContext().getRealPath("");
-//		String fileList = "";
-//		String pDirPath = "";
-//
-//		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
-//			fileList = request.getParameter("fileList");
-//			
-//			pDirPath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
-//
-//	        pDirPath = realPath + pDirPath;
-//        
-//	        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
-//	        	pDirPath = pDirPath + commonUtil.separator;
-//	        }
-//		}
-//		
-//		logger.debug("fileList : " + fileList);
-//
-//		String title = request.getParameter("title");
-//		int taskType = Integer.parseInt(request.getParameter("tasktype"));
-//		int importance = Integer.parseInt(request.getParameter("importance"));
-//		String sdate = request.getParameter("sdate");
-//		String edate = request.getParameter("edate");
-//		String shareIDs = request.getParameter("shareID");
-//		String shareList = request.getParameter("shareList");
-//		String shareList2 = request.getParameter("shareList2");
-//		String shareDept = request.getParameter("shareDept");
-//		String shareDept2 = request.getParameter("shareDept2");
-//		int taskStatus = 1;
-//		String regDate = commonUtil.getTodayUTCTime("");
-//
-//		logger.debug("title : " + title + " | taskType : " + taskType + " | importance : " + importance + " | sdate : " + sdate + " | edate : " + edate);
-//		logger.debug("shareIDs : " + shareIDs);
-//		logger.debug("shareList : " + shareList);
-//		logger.debug("shareDepts : " + shareDept);
-//		
-//		String[] shareID = shareIDs.split(",");
-//		String[] shareName = shareList.split(",");
-//		String[] shareName2 = shareList2.split(",");
-//		String[] shareDepts = shareDept.split(",");
-//		String[] shareDepts2 = shareDept.split(",");
-//
-//		ezTaskService.taskSave(userInfo, regDate, taskStatus, importance, fileList, title, taskType, sdate, edate, shareID, shareName, shareName2, shareDepts, shareDepts2);
-//		
-//		logger.debug("taskSave ended");
-//	}
+
+	/**
+	 * 업무작성, 수정화면조회 조회
+	 */
+	@RequestMapping(value = "/ezTask/taskWrite.do")
+	public String taskWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskWrite started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String newGuid = UUID.randomUUID().toString();
+		
+		String taskID = request.getParameter("taskID");
+		TaskInfoVO taskInfoVO = null;
+		List<TaskShareVO> taskShareList = null;
+		
+		if (taskID == null) {
+			/*업무작성*/
+		} else {
+			/*업무수정*/
+			
+			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+			
+			//업무공유자목록조회
+			
+			if (taskInfoVO.getHasShare().equals("Y")) {
+				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
+			}
+			
+			//첨부파일목록조회
+			if (taskInfoVO.getHasAttach().equals("Y")) {
+//				getAttachList(taskID);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("newGuid", newGuid);
+		model.addAttribute("taskID", taskID);
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("taskShareList", taskShareList);
+		
+		logger.debug("taskWrite ended.");
+		
+		return "/ezTask/taskWrite";
+	}
 }

@@ -443,12 +443,12 @@
 				/* 레이어팝업으로 taskWriteCross 호출 */
 				/* 수현이 소스랑 겹쳐서 걍 새로짬 */
 				var feature = GetOpenPosition(760, 750);
-				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite2.do?taskID=" + id, "",
+				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
 		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				
 			    /* if (CrossYN()) {
 			        var feature = GetOpenPosition(760, 750);
-			        win = window.open("/ezTask/taskWrite2.do?taskID=" + id, "",
+			        win = window.open("/ezTask/taskWrite.do?taskID=" + id, "",
 			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			    } else {
 			        if (pUse_Editor == "" || pUse_Editor == "CK") {
