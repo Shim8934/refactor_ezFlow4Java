@@ -15,6 +15,67 @@
 		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript">
+			var userid = "${userInfo.id }";
+	        var username = "${userInfo.displayName }";
+	        var username2 = "${userInfo.displayName1 }";
+	        var deptname = "${userInfo.deptName }";
+	        var deptname2 = "${userInfo.deptName1 }";
+	        var taskid = "${taskInfoVO.taskID }";
+			/* 필요하면 주석제거하고 하나씩 빼쓰자
+	        var taskstatus = "${taskInfoVO.taskStatus }";
+	        var completerate = "${taskInfoVO.completeRate }";
+	        var startdate = "${taskInfoVO.startDate }";
+	        var enddate = "${taskInfoVO.endDate }";
+	        var importance = "${taskInfoVO.importance }";
+	        var tasktype = "${taskInfoVO.taskType }";
+	        var creatorid = "${taskInfoVO.creatorID }";
+	        var hasattach = "${taskInfoVO.hasAttach }";
+	        var hasshare = "${taskInfoVO.hasShare}";
+	        var contentPath = "${taskInfoVO.contentPath }"; */
+	        var personContentpath = "${taskInfoVO.personContentPath }";
+			/* 필요하면 주석제거하고 하나씩 빼쓰자
+	        var sharelist = "";
+	        var g_person = null;
+	        var g_share = null;
+	        var shareid = "_shareid";
+	        var sharename = "_sharename";
+	        var sharename2 = "_sharename2";
+	        var sharedept = "_sharedept";
+	        var sharedept2 = "_sharedept2";
+	        var sharemail = "_sharemail";
+	        var isreadpage = false;
+	        var FormProcSpelling = "FormProcSpelling";
+	        var personid = "${taskInfoVO.personID }"; */
+	        
+			function Editor_Complete() {
+	            if (taskid != "") {
+	                $.ajax({
+		                type : "POST",
+		                dataType : "text",
+		                async : false,
+		                url : "/ezCommon/mhtToHTMLContent.do",
+		                data : {
+		                      type : "TASKCONTENT2",
+		                      itemID : personContentpath
+		                },
+		                success: function(result){
+		                	message.SetEditorContent(result);
+		                }
+	                });
+	                
+	               try {
+	                    var objTags = document.getElementById('message').getElementsByTagName("a");
+	
+	                    for (var i = 0 ; i < objTags.length ; i++) {
+	                        if (objTags.item(i).href.indexOf("javascript:") == -1)
+	                            objTags.item(i).target = "_blink";
+	                    }
+	                }
+	                catch (e) { }
+	            }
+	        }
+		</script>
 	</head>
 	<body class="popup">
 		<div id="main_body">
@@ -39,7 +100,7 @@
 				</tr>
 				<tr>
 					<td>
-						<br/> 
+						<br/>
 						<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>   
 					</td>
 	            </tr>
