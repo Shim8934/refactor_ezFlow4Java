@@ -1064,7 +1064,7 @@
 		<div class="layerpopup"
 			style="z-index: 2000; position: absolute; display: none;"
 			id="iFramePanel">
-			<iframe src="/blank.htm" style="border: none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

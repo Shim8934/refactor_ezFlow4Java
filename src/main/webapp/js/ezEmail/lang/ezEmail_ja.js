@@ -290,6 +290,7 @@ var strLangLHM14 = "一回に送信可能なサイズ : ";
 var strLangLHM15 = ", 現在のサイズ : ";
 var strLangLHM16 = "アカウント情報の見つからない受信者が存在します。メールアドレスを確かめてください。";
 var strLangLHM17 = "このメールアドレス以外の宛先にメールを送信しますか？";
+var strLangLHM18 = "/blank_jp.htm";
 var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "添付フォイルのサイズが ";
 var strLangKMS03 = "メールがありません。";
