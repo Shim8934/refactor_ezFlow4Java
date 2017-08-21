@@ -117,6 +117,9 @@
 	    var uploadCommunityPath = "${uploadCommunityPath}";
 	    var defaultFont = "<spring:message code='main.t246' />";
 	    var isCrossBrowser = "${isCrossBrowser}";
+	    var securePassword = "";
+	    var secureReadCount = "0";
+	    var secureReadDate = "";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {

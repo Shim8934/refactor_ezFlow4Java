@@ -106,9 +106,12 @@
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 		    var defaultFont = "<spring:message code='main.t246' />";
 		    var isCrossBrowser = "${isCrossBrowser}";
+		    var isSecureMail = "${isSecureMail}";
+		    var securePassword = "${securePassword}";
+		    var secureReadCount = "${secureMaxReadCount}";
+		    var secureReadDate = "${secureMaxReadDate}";
 		    
-			function window_onload()
-			{
+			function window_onload() {
 	            if (!CrossYN()) {
 	                document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
 	                EzHTTPTrans.UseDbCl = true;
@@ -192,6 +195,10 @@
 					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
 				}
+		        
+		        if (isSecureMail == "true") {
+		        	document.getElementById("chkSecureMail").checked = true;
+		        }
 		        
 		        <c:if test="${useFromAddress == 'YES'}">
 		            var selectTarget = $('.selectbox select'); 
@@ -751,7 +758,6 @@
                         	<option value="1">Plain Text</option>
                         </select>
                     </li>
-                    
 		            <li style="display:none;">
 		                <select id="SelMailSign" onchange="MailSignSel()">
 		                    <option value='0' selected><spring:message code='ezEmail.t825' /></option>
@@ -760,7 +766,13 @@
 		                    <option value='3'><spring:message code='ezEmail.t828' /></option>
 		                </select>
 	                </li>
-					 
+				 	<li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
+                        <img src="/images/pbar.gif">
+                    </li>
+                    <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+                    	<input type="checkbox" id="chkSecureMail" />
+                    	<label for="chkSecureMail" style="color:white">보안메일</label>
+                    </li>
 		          </ul>
 		        </div>
 		        <div id="close">

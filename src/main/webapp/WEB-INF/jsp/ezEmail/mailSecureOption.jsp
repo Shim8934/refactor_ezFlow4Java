@@ -24,8 +24,8 @@
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<script type="text/javascript">
-	
 			var offsetMin = "${offsetMin}";
+			
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -100,6 +100,23 @@
 		            } catch (e) { rgParams = dialogArguments; }
 		        }
 		        
+		        document.getElementById("securePassword").value = RetValue["securePassword"];
+		        
+		        if (RetValue["secureReadCount"] != "0") {
+		        	document.getElementById("maxReadCount").value = RetValue["secureReadCount"];
+		        	document.getElementById("maxReadCount").disabled = false;
+		        	document.getElementById("countUnlimit").checked = false;
+		        }
+		        
+		        if (RetValue["secureReadDate"] != "") {
+		        	var secureDate = new Date(Number(RetValue["secureReadDate"]));
+		        	$("#Sdatepicker").datepicker('setDate', secureDate);
+		        	$('#Stimepicker').timepicker('setTime', secureDate);
+		        	document.getElementById("Sdatepicker").disabled = false;
+		        	document.getElementById("Stimepicker").disabled = false;
+		        	document.getElementById("dateUnlimit").checked = false;
+		        }
+		        
 		        document.getElementById("securePassword").focus();
 		    }
 		
@@ -110,8 +127,9 @@
 	            	return;
 	            }
 	            
+	            var secureReadDate = null;
 	            if (document.getElementById("dateUnlimit").checked == false) {
-	            	var secureReadDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+	            	secureReadDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 	            	secureReadDate = secureReadDate.replace(/-/gi, "/");
 	            	
 		            var now = utcDate2(offsetMin);
@@ -134,7 +152,7 @@
 	            if (document.getElementById("dateUnlimit").checked == true) {
 	            	RetValue["secureReadDate"] = "";
 	            } else {
-	            	RetValue["secureReadDate"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+	            	RetValue["secureReadDate"] = Date.parse(secureReadDate);
 	            }
 	            
 		        if (ReturnFunction != null)
@@ -167,7 +185,6 @@
 	            else
 	                CancelFunction();
 		    }
-			
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">

@@ -23,6 +23,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -180,8 +181,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String isEach = "FALSE";
 		String isSecureMail = "FALSE";
 		String securePassword = null;
-		String secureMaxReadCount = null;
-		String secureMaxReadDate = null;
+		String secureReadCount = null;
+		String secureReadDate = null;
 		String replySendTime = "0";
 		String replyReadTime = "1";
 		String pReservedSaveTime = "";
@@ -444,13 +445,21 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     		}  
 			
         	//set isSecureMail
-    		if (message.getHeader("X-JMocha-Secure-Mail-ID") != null) {
-    			String secureId = message.getHeader("X-JMocha-Secure-Mail-ID")[0];
-    			if (!secureId.equals("0")) {
-    				isSecureMail = "true";
-    				//TODO: 보안정보 setting - 저장 클릭 시 레이어팝업창에 초기 값으로 뿌려줘야함.
-    				//TODO: 스케줄러에서도 보안메일 처리 해줘야함.
-    			}
+    		if (message.getHeader("X-JMocha-Secure-Mail-Info") != null) {
+    			String secureInfo = message.getHeader("X-JMocha-Secure-Mail-Info")[0];
+    			secureInfo = MimeUtility.decodeText(secureInfo);
+				isSecureMail = "true";
+				
+				int index = secureInfo.lastIndexOf("/");
+				secureReadDate = secureInfo.substring(index + 1);
+				
+				secureInfo = secureInfo.substring(0, index);
+				index = secureInfo.lastIndexOf("/");
+				secureReadCount = secureInfo.substring(index + 1);
+				
+				securePassword = secureInfo.substring(0, index);
+				
+				logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount + ",secureReadDate=" + secureReadDate);
     		}
         	
         	//set bodyType
@@ -574,7 +583,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("useFromAddress", useFromAddress);
-		model.addAttribute("fromAddressHtml", fromAddressHtml);
+		model.addAttribute("isSecureMail", isSecureMail);
+		model.addAttribute("securePassword", securePassword);
+		model.addAttribute("secureMaxReadCount", secureReadCount);
+		model.addAttribute("secureMaxReadDate", secureReadDate);
 		
         logger.debug("mailEdit ended.");
         

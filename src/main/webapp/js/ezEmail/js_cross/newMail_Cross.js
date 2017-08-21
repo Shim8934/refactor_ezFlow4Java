@@ -730,6 +730,10 @@ function Send_onClick_Complete(ReturnValue) {
             
             // 보안메일 체크되어있을 경우 보안메일 설정 팝업창을 띄운다.
             if (document.getElementById("chkSecureMail").checked) {
+            	secureMailParams["securePassword"] = securePassword;
+            	secureMailParams["secureReadCount"] = secureReadCount;
+            	secureMailParams["secureReadDate"] = secureReadDate;
+            	
             	secureMail_dialogArguments[0] = secureMailParams;
             	secureMail_dialogArguments[1] = secureMail_Complete;
             	secureMail_dialogArguments[2] = DivPopUpHidden;

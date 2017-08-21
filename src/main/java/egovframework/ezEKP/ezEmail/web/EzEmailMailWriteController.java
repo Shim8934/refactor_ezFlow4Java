@@ -2868,18 +2868,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		                	message.setHeader("X-JMocha-Each-Mail", "true");
 	                    }
 	                    
-			        	//예약발송
+			        	// 예약발송
 			        	String delaySendTimeUTC = commonUtil.getDateStringInUTC(delaySendTime, userInfo.getOffset(), true);
 			            
 			        	// 보안메일 처리
 		            	if (isSecureMail) {
-	    		        	message.addHeader("X-JMocha-Secure-Mail-Info", securePassword);
-	    		        	message.addHeader("X-JMocha-Secure-Mail-Info", secureReadCount);
-	    		        	message.addHeader("X-JMocha-Secure-Mail-Info", secureReadDate);
+		            		String secureInfo = MimeUtility.encodeText(securePassword + "/" + secureReadCount + "/" + secureReadDate, "UTF-8", null);
+	    		        	message.setHeader("X-JMocha-Secure-Mail-Info", secureInfo);
 		            	}
 			        	
 			        	doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
-			        				            
+			        	
 			            //임시보관함에서 삭제
 			            Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
 		        		draftMessage.setFlag(Flags.Flag.DELETED, true);
