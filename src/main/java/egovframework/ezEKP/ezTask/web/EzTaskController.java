@@ -229,10 +229,59 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "json";
 	}
 	
-	/*@RequestMapping(value = "/ezTask/taskSearch.do")
-	public String taskSearch() throws Exception {
-		return "/ezTask/taskSearch";
-	}*/
+	/** 업무작성, 수정화면조회 Method*/
+	@RequestMapping(value = "/ezTask/taskWrite2.do")
+	public String taskEditPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskWrite2 started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String taskID = request.getParameter("taskID");
+		TaskInfoVO taskInfoVO = null;
+		List<TaskShareVO> taskShareList = null;
+		
+		if (taskID == null) {
+			/*업무작성*/
+		} else {
+			/*업무수정*/
+			
+			taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+			
+			//업무공유자목록조회
+			
+			if (taskInfoVO.getHasShare().equals("Y")) {
+				taskShareList = ezTaskService.getShareList(taskID, offset, primary, tenantID);
+			}
+			
+			//첨부파일목록조회
+			if (taskInfoVO.getHasAttach().equals("Y")) {
+//				getAttachList(taskID);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("taskID", taskID);
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("taskShareList", taskShareList);
+		
+		logger.debug("taskWrite2 ended.");
+		
+		return "/ezTask/taskWrite2";
+	}
+	
+	/**
+	 * 조직도화면조회
+	 */
+	@RequestMapping(value = "/ezTask/taskSelectEntity.do")
+	public String taskSelectEntity() throws Exception {
+		return "/ezTask/taskSelectEntity";
+	}
 	
 	
 	
