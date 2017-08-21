@@ -7,12 +7,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1112,7 +1116,8 @@ public class EzEmailUtil {
 			Date endDate,
 			boolean searchSubFolder,
 			SearchTerm existingSearchTerm,
-			boolean isUnreadOnly
+			boolean isUnreadOnly,
+			boolean isImportantOnly
 			) throws Exception {
 		Message[] messages = folder.getMessages();
 		
@@ -1287,6 +1292,10 @@ public class EzEmailUtil {
 				sTerm = new AndTerm(sTerm, new FlagTerm(new Flags(Flags.Flag.SEEN), false));
 			}
 			
+			if (isImportantOnly) {
+				sTerm = new AndTerm(sTerm, new FlagTerm(new Flags(Flags.Flag.FLAGGED), true));
+			}
+			
 			messages = folder.search(sTerm);
 			
 			Folder[] subFolders = folder.list();
@@ -1295,7 +1304,7 @@ public class EzEmailUtil {
 			if (searchSubFolder) {
 				for (Folder subFolder : subFolders) {
 					subFolder.open(Folder.READ_ONLY);
-					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm, isUnreadOnly);
+					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm, isUnreadOnly, isImportantOnly);
 					
 					if (subMessages.length > 0) {
 					   int mainLen = messages.length;
@@ -1313,7 +1322,12 @@ public class EzEmailUtil {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
 			
 			messages = folder.search(sTerm);
-		}		
+		}
+		else if (isImportantOnly) {
+			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
+			
+			messages = folder.search(sTerm);
+		}
 		else {
 			return null;
 		}
@@ -1956,6 +1970,42 @@ public class EzEmailUtil {
     	return credential;
     }
     
+    /**
+     * Bizmeka API를 호출할 때 인증을 위해 관리자의 id와 pw를 이 메소드를 사용해 암호화한 후 보낸다.
+     * 현재 구현은 Tenant Config에 이미 암호화된 형태로 입력해 놓았기 때문에(BizmekaAdminId와 BizmekaAdminPw)
+     * App내에서 이 메소드를 직접 호출하지는 않는다.
+     * @param value
+     * @return
+     * @throws Exception
+     */
+    public String getEncryptedCredentialForBizmekaAPI(String value) throws Exception {
+    	String encryptedValue = "";
+    	
+    	// RSA 키의 Modulus를 대입
+    	String modulusInBase64 = "iWJy6wVrRTu4FcieK+FOyVaoxhMC0Ng6APQD5wefVEWFbcx8S9iOtj+JOith3XYeZi9E3+0rqhwgcGKDYryYRMrmWDAcLqwWHO/Cp9EX3uQw3GDLSwo4TwkwcXhtAwKXL5mttkX76p9eSUWwbKLRq+Eq+0oeh6ZUkcYLiwIY5Q8=";
+    	// RSA 키의 Exponent를 대입
+    	String exponentInBase64 = "AQAB";
+    	
+    	java.util.Base64.Decoder decoder = java.util.Base64.getDecoder();
+    	String modulusInHex = toHexString(decoder.decode(modulusInBase64));
+    	String exponentInHex = toHexString(decoder.decode(exponentInBase64));
+
+    	BigInteger modulus = new BigInteger(modulusInHex, 16);
+    	BigInteger pubExp = new BigInteger(exponentInHex, 16);
+
+    	KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    	RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(modulus, pubExp);
+    	RSAPublicKey key = (RSAPublicKey) keyFactory.generatePublic(pubKeySpec);
+    	Cipher cipher = Cipher.getInstance("RSA");
+    	cipher.init(Cipher.ENCRYPT_MODE, key);
+    	
+    	byte[] cipherData = cipher.doFinal(value.getBytes());
+    	
+    	encryptedValue = toHexString(cipherData);
+    	
+    	return encryptedValue;
+    }
+    
     public String bizmekaAddUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
     		String userPw, String userName, String deptId) throws Exception {
     	String result = "ERROR";
@@ -1972,6 +2022,41 @@ public class EzEmailUtil {
     	sb.append("<USERPW>" + commonUtil.cleanValue(userPw) + "</USERPW>");
     	sb.append("<USERNAME>" + commonUtil.cleanValue(userName) + "</USERNAME>");
     	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaMoveUser(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String userId, 
+    								String deptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=MOVE" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_USER";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<PARENTDEPTID>" + commonUtil.cleanValue(deptId) + "</PARENTDEPTID>");    	
+    	sb.append("<USERID>" + commonUtil.cleanValue(userId) + "</USERID>");
     	sb.append("</ROWS>");
     	sb.append("</DATA>");
     	
@@ -2041,6 +2126,41 @@ public class EzEmailUtil {
     	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
     	sb.append("<PARENTDEPTID>" + commonUtil.cleanValue(parentDeptId) + "</PARENTDEPTID>");    	
     	sb.append("<DEPTNAME>" + commonUtil.cleanValue(deptName) + "</DEPTNAME>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaMoveDept(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String deptId, 
+    								String parentDeptId) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=MOVE" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_DEPT";
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<DEPTID>" + commonUtil.cleanValue(deptId) + "</DEPTID>");
+    	sb.append("<PARENTDEPTID>" + commonUtil.cleanValue(parentDeptId) + "</PARENTDEPTID>");    	
     	sb.append("</ROWS>");
     	sb.append("</DATA>");
     	
@@ -2201,6 +2321,57 @@ public class EzEmailUtil {
     	sb.append("<DATA>");
     	sb.append("<ROWS>");
     	sb.append("<DISTID>" + commonUtil.cleanValue(distId) + "</DISTID>");
+    	sb.append("</ROWS>");
+    	sb.append("</DATA>");
+    	
+    	String inputParams = sb.toString();
+    	
+    	logger.debug("inputParams=" + inputParams);
+    	
+    	result = getWebServiceResult(urlString, inputParams);
+    	
+		logger.debug("result=" + result);
+    	
+		Document doc = commonUtil.convertStringToDocument(result);		
+		NodeList rtnValueList = doc.getElementsByTagName("RTNVAL");
+		
+		if (rtnValueList != null && rtnValueList.getLength() > 0) {
+			result = rtnValueList.item(0).getTextContent();
+		}
+    	
+    	return result;
+    }
+    
+    public String bizmekaEditEmailList(String bizmekaAdminId, String bizmekaAdminPw, String companyId, String emailId, 
+    		String mainEmail, List<String> subEmailList) throws Exception {
+    	String result = "ERROR";
+    	
+    	String urlString = config.getProperty("config.BizmekaAPIGateURL") + "?UID=" + bizmekaAdminId 
+    			+ "&UPW=" + bizmekaAdminPw + "&PPARAM=EDIT" + "&CID=" + companyId
+    			+ "&PFLAG=ORGAN_EMAIL";
+    	
+    	StringBuilder sbMembers = new StringBuilder();    
+    	int memberCount = subEmailList.size();
+    	
+    	for (int i = 0; i < memberCount; i++) {
+    		sbMembers.append(subEmailList.get(i));
+    		
+    		if (i != memberCount - 1) {
+    			sbMembers.append(";");
+    		}
+    	}
+    	
+    	if (memberCount == 0) {
+    		sbMembers.append(mainEmail);
+    	}
+
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("<DATA>");
+    	sb.append("<ROWS>");
+    	sb.append("<EMAILID>" + commonUtil.cleanValue(emailId) + "</EMAILID>");
+    	sb.append("<EDITMAINEMAIL>" + commonUtil.cleanValue(mainEmail) + "</EDITMAINEMAIL>");    	
+    	sb.append("<EDITSUBEMAIL>" + commonUtil.cleanValue(sbMembers.toString()) + "</EDITSUBEMAIL>");
     	sb.append("</ROWS>");
     	sb.append("</DATA>");
     	

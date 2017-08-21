@@ -2231,4 +2231,20 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I19", map);
     }
     
+	/**
+	 * 그룹웨어 계정으로 비즈메카톡 계정을 동기화한다.
+	 */    
+    public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("TENANT_ID", tenantID);
+		
+		update("EzOrganAdminDAO.talk_SP_CONN_COMPANY", map);
+		update("EzOrganAdminDAO.talk_SP_CONN_DEPT", map);
+		update("EzOrganAdminDAO.talk_SP_CONN_USER", map);
+		update("EzOrganAdminDAO.talk_SP_CONN_ADDJOB", map);
+		update("EzOrganAdminDAO.talk_SP_CONN_DEFAULTSVRID", map);
+		update("EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE", map);
+    }
+    
 }

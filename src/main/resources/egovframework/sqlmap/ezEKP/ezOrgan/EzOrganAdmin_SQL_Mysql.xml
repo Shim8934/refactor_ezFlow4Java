@@ -989,7 +989,7 @@
                  ('A03','001','결재','1','일반','Approval','決栽','审批',#tenantID#, #companyID#),
                  ('A03','002','확인','0','확인','Confirmation','回覧','確認',#tenantID#, #companyID#),
                  ('A03','003','결재안함','0','결재안함','Skip-approval','決栽しない','不审批',#tenantID#, #companyID#),
-                 ('A03','004','전결','1','전결','Pre-approval','前決','先决',#tenantID#, #companyID#),
+                 ('A03','004','전결','1','전결','Pre-approval','専決','先决',#tenantID#, #companyID#),
                  ('A03','005','준법감시','0','감사','Audit','遵法監視','监督',#tenantID#, #companyID#),
                  ('A03','006','발송의뢰','0','심사','Request Sending','審査','审查',#tenantID#, #companyID#),
                  ('A03','007','참조','0','참조','Reference','参照','抄送',#tenantID#, #companyID#),
@@ -1111,7 +1111,7 @@
            ('SA03','001','결재','Approval','決栽','审批','1','일반',#companyID#, #tenantID# ),
            ('SA03','002','확인','Confirmation','回覧','確認','1','확인',#companyID#, #tenantID# ),
            ('SA03','003','결재안함','Skip-approval','決栽しない','不审批','0','결재안함',#companyID#, #tenantID# ),
-           ('SA03','004','전결','Pre-approval','前決','先决','1','전결',#companyID#, #tenantID# ),
+           ('SA03','004','전결','Pre-approval','専決','先决','1','전결',#companyID#, #tenantID# ),
            ('SA03','005','준법감시','Audit','遵法監視','监督','0','감사',#companyID#, #tenantID# ),
            ('SA03','006','발송의뢰','Request Sending','審査','审查','0','심사',#companyID#, #tenantID# ),
            ('SA03','007','참조','Reference','参照','抄送','1','참조',#companyID#, #tenantID# ),
@@ -3064,7 +3064,7 @@
             TENANT_ID = #v_TENANT_ID#
      </delete>
      
-      <delete id="EzOrganAdminDAO.deleteCompany_D18" parameterClass="Map">
+     <delete id="EzOrganAdminDAO.deleteCompany_D18" parameterClass="Map">
         DELETE FROM
             TBL_RS_BRD    
         WHERE  
@@ -3081,5 +3081,29 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
+ 
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
+       {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
+     </procedure>
+ 
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_DEPT" parameterClass="Map">
+       {CALL talk_SP_CONN_DEPT(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_USER" parameterClass="Map">
+       {CALL talk_SP_CONN_USER(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_ADDJOB" parameterClass="Map">
+       {CALL talk_SP_CONN_ADDJOB(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_DEFAULTSVRID" parameterClass="Map">
+       {CALL talk_SP_CONN_DEFAULTSVRID(#TENANT_ID#)}
+     </procedure>
+
+     <procedure id="EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE" parameterClass="Map">
+       {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
+     </procedure>
  
 </sqlMap>

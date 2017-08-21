@@ -112,9 +112,11 @@
 		                setBujaeOff();
 		            	checkBujaeInfo_Complete_After();
 		                return true;
+		            } else if (tmpStartDate > "${nowDate}") {
+		                return true;
 		            }
-		            
-		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate.substring(0,16) + " ~ " + tmpEndDate.substring(0,16) + " <spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
 		                checkBujaeInfo_Complete(true);
@@ -123,29 +125,29 @@
 		                checkBujaeInfo_Complete(false);
 		            }
 		        } else if (proxyInfo != null && proxyInfo != "") {
-			        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
-			            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
-			
-			            tmpStartDate = tmpStartDate.replace("/", ":");
-			            tmpEndDate = tmpEndDate.replace("/", ":");
-			            if (tmpEndDate < "${nowDate}") {
-			                setBujaeOff();
-			                return true;
-			            }
-			            else if (tmpStartDate > "${nowDate}") {
-			                return true;
-			            }
-			            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate.substring(0,10) + " <spring:message code='ezApprovalG.t1722'/>" + tmpEndDate.substring(0,10) + " <spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
-			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
-			            if (Rtnval) {
-			                checkBujaeInfo_Complete(true);
-			            }
-			            else {
-			                checkBujaeInfo_Complete(false);
-			            }
-			        } else {
-			            checkBujaeInfo_Complete(true);
-			        }
+		        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
+		            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
+		
+		            tmpStartDate=tmpStartDate.replace("/", ":");
+		            tmpEndDate=tmpEndDate.replace("/", ":");
+		            if (tmpEndDate < "${nowDate}") {
+		                setBujaeOff();
+		                return true;
+		            }
+		            else if (tmpStartDate > "${nowDate}") {
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+		            if (Rtnval) {
+		                checkBujaeInfo_Complete(true);
+		            }
+		            else {
+		                checkBujaeInfo_Complete(false);
+		            }
+		        } else {
+		            checkBujaeInfo_Complete(true);
+		        }
 		    }
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
@@ -502,11 +504,15 @@
                             var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
                             var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
                             AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
-                            
+                          
                             if (AttachfilenameN1 < 0) {
                                 Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
                             } else {
-                                Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+                            	if (AttachUrlA2 == ".mht") {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText + AttachUrlA2);
+	                        	} else {
+		                            Attachfilename = encodeURIComponent(tr.cells[1].innerText);
+	                        	}
                             }
 
                             if (AttachUrl != "null") {
@@ -1657,7 +1663,7 @@
 					<li id="tbtnApprove2"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				</c:if>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
-				<li id="tbtnReturn"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
+				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
 				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
@@ -1716,7 +1722,7 @@
 		</script>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<form id="formAPP">
 	        <input type="hidden"  id="APPXML" name="APPXML" />

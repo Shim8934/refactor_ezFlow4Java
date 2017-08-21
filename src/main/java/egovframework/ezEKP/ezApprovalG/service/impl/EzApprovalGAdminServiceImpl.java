@@ -76,7 +76,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
 	@Override
-	public String getContainerInfoManage(String deptID, String type, String companyID, String primary, int tenantID) throws Exception {
+	public String getContainerInfoManage(String deptID, String type, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getContainerInfoManage started.");
 		StringBuilder sb = new StringBuilder();
 
@@ -89,12 +89,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		List<ApprGContInfoVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
 		
-		String strMultiData = commonUtil.getMultiData(primary, tenantID);
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
 		if (type.equals("LIST")){
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_LISTTYPE", "106");
-			map.put("v_LANGTYPE", primary);
+			map.put("v_LANGTYPE", lang);
 			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			
@@ -418,7 +418,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			duplicated = "";
 		}
 		
-		if (duplicated.equals("1")) {
+		if (duplicated == null) {
 			logger.debug("insertContainer duplicated.");
 			
 			return "FALSE";

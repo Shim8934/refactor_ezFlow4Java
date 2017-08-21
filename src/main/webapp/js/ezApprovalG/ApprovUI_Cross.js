@@ -74,6 +74,7 @@ function putBansongSign() {
     }
     return signInfo;
 }
+
 function AprrovMappingSign(ret) {
     var fields = message.GetFieldsList();
     var field;
@@ -136,8 +137,12 @@ function AprrovMappingSign(ret) {
                 var strimg;
                 strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                 strimg = strimg + " width=" + signWidth;
-                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
-
+                
+                if (signImageType == "NAME") {
+                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+				} else {
+				    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+				}
                 if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
                     strimg = strLang8 + strimg;
 
@@ -153,7 +158,6 @@ function AprrovMappingSign(ret) {
                 
                 signCnt = signCnt + 1;
                 SingFlag = true;
-
             } else {
                 if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
                     field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
@@ -270,7 +274,6 @@ function AprrovMappingSign(ret) {
     	}
         
         if (junGyulFlag == "1") {
-        	
             //전결자, 결재안함 결재칸에 전결String
             for (var i = pAprMemberSignSN; i < LastKyulSN; i++) {
             	signID = pSusinSN2 + "sign" + i;
@@ -336,8 +339,12 @@ function AprrovMappingSign(ret) {
                         }
 
                         strimg = strimg + " width=" + signWidth;
-                        strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
-
+                        
+                        if (signImageType == "NAME") {
+                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
+						} else {
+						    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+						}
                         var contents = "";
                         if (!message.GetListItem(fields, seumyungdateID)) {
                             strimg = OpinionText + strimg;
@@ -536,9 +543,19 @@ function AprrovMappingSign(ret) {
                         strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
 
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
-
-                    strimg = OpinionText + strimg;
+                    
+                    if (signImageType = "NAME") {
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    } else {
+                        strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    }
+                    
+                    //대결 시 서명 데이트 입력란 없으면 날짜 표시
+					if (!message.GetListItem(fields, seumyungdateID)) {
+						strimg = OpinionText + strimg;
+					} else {
+						strimg = "<br>" + strimg;
+					}
                     strimg = strLang7 + strimg;
 
                     field.innerHTML = strimg;
@@ -609,8 +626,7 @@ function AprrovMappingSign(ret) {
                     if (signWidth > signHeight) {
                         signHeight = signHeight - 15;
                         signWidth = signHeight;
-                    }
-                    else {
+                    } else {
                         signWidth = signWidth - 15;
                         sighHeight = signWidth;
                     }
@@ -627,12 +643,17 @@ function AprrovMappingSign(ret) {
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
                     else {
+                    	signHeight = 28;
                     	strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
                     }
 
                     strimg = strimg + " width=" + signWidth;
-                    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
-
+                    
+                    if (signImageType = "NAME") {
+                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
+					} else {
+					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+					}
                     var contents = "";
                     if (!message.GetListItem(fields, seumyungdateID)) {
                         strimg = OpinionText + strimg;
@@ -2759,7 +2780,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[0] = parameter;
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
 
-        DivPopUpShow(800, 370, "/ezApprovalG/aprCabinetAttach.do");
+        DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
     } catch (e) {
         alert(e.description);
     }
@@ -2877,7 +2898,11 @@ function putSignXML(SignXML) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                            if (signImage = "NAME") {
+                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+                            } else {
+                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                            }
                         }
                         
                         if (seumyung) {

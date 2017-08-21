@@ -5206,6 +5206,10 @@
 			TBL_APRLINEINFO 
 		WHERE 
 			DOCID = #v_DOCID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #v_TENANTID#
 		ORDER BY 
 			APRMEMBERSN
 		LIMIT 1
@@ -6538,7 +6542,11 @@
 								   		 TBL_EXPENDAPRDOCINFO.EDMSYN,
 								   		 IFNULL(TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL,'') AS SECURITYAPPROVAL
 							   	<isEqual property="approvalFlag" compareValue="S">
-								   		  , C.NAME as DOCSTATENAME ,
+								   		  ,CASE WHEN $v_PSTRLANG$ = '1' THEN C.NAME
+								   		  		WHEN $v_PSTRLANG$ = '2' THEN C.NAME2
+								   		  		WHEN $v_PSTRLANG$ = '3' THEN C.NAME3
+								   		  		WHEN $v_PSTRLANG$ = '4' THEN C.NAME4
+								   		  END as DOCSTATENAME,
 								   		  CASE WHEN processYN = 'H' THEN #v_H#
 							 				   WHEN processYN = 'I' THEN #v_I#
 							                   WHEN processYN = 'N' THEN #v_N#
@@ -7677,8 +7685,12 @@
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT 
-					code2, 
-					name$v_LANGTYPE$ AS name
+					code2,
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 
@@ -7697,7 +7709,11 @@
 			<![CDATA[
 				SELECT 
 					code2, 
-					name$v_LANGTYPE$ AS name
+					CASE WHEN $v_LANGTYPE$ = '1' THEN NAME
+								   		  		WHEN $v_LANGTYPE$ = '2' THEN NAME2
+								   		  		WHEN $v_LANGTYPE$ = '3' THEN NAME3
+								   		  		WHEN $v_LANGTYPE$ = '4' THEN NAME4
+								   		  END as name
 				FROM 
 					TBL_CODELIST 
 				WHERE 
@@ -21006,7 +21022,7 @@
    			TBL_ENDAPRDOCINFO.HASATTACHYN, 
    			TBL_ENDAPRDOCINFO.HASOPINIONYN, 
    			TBL_ENDAPRDOCINFO.STARTDATE,   
-   			TBL_ENDAPRDOCINFO.ENDDATE, 
+   			DATE_ADD(DATE_FORMAT(TBL_ENDAPRDOCINFO.ENDDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) ENDDATE, 
    			TBL_ENDAPRDOCINFO.WRITERID, 
    			TBL_ENDAPRDOCINFO.WRITERNAME$v_PSTRMULTIDATA$ AS WRITERNAME, 
    			TBL_ENDAPRDOCINFO.WRITERJOBTITLE$v_PSTRMULTIDATA$ AS WRITERJOBTITLE, 

@@ -1416,7 +1416,7 @@ public class EzAddressController{
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			String strListPageSize = ezAddressService.getListCnt(userInfo.getTenantId(), userInfo.getId());
-			if (strListPageSize == null) {
+			if (strListPageSize == null || strListPageSize.trim().equals("")) {
 				strListPageSize = "20";
 			}
 			
@@ -1438,7 +1438,7 @@ public class EzAddressController{
 			
 			String pOrderOption = "";
 			String pFilter = "";
-			String strCurrentPage = "1";
+			String strCurrentPage = "";
 			
 			if (xmldom.getElementsByTagName("ORDERBY").item(0) != null) {
 				pOrderOption = xmldom.getElementsByTagName("ORDERBY").item(0).getTextContent().trim();
@@ -1452,6 +1452,10 @@ public class EzAddressController{
 			
 			int pListPageSize = Integer.parseInt(strListPageSize);
 			int pCurrentPage = Integer.parseInt(strCurrentPage);
+			
+			if (pCurrentPage < 1) {
+				pCurrentPage = 1;
+			}
 			
 			int start = pListPageSize * (pCurrentPage - 1);
 			

@@ -1798,7 +1798,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
         if (pRetransType != "boardAttach")
-            document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
+            document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "<br><br>" + htmlData;
 
         xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + pItemID + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
         xmlHTTP.send();

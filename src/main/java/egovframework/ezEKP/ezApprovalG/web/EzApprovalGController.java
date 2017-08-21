@@ -142,7 +142,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String hideCabinet = config.getProperty("config.hideCabinet");
 		String userCont = "";
 		StringBuffer containers = new StringBuffer();
-		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
 		
@@ -749,6 +748,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		
 		String docSN = "";
@@ -865,7 +865,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("beforeUrl", beforeUrl);
-		
+		model.addAttribute("signImageType", signImageType);
+
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
@@ -2153,9 +2154,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String draftflag = request.getParameter("draftFlag");
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		model.addAttribute("draftFlag", draftflag);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("aprCabinetAttach ended.");
 		
@@ -3219,7 +3222,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String susinAdmin = "";
 		String hideCabinet = config.getProperty("config.hideCabinet");
-
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -3245,7 +3249,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docDir = "0";
 		}
 		
-		dirPath = dirPath + docDir + "." + docID + ".mht";
+		dirPath = dirPath + docDir + "/" + docID + ".mht";
 		
 		if (!allFlag.equals("1") && !allFlag.equals("2")) {
 			allFlag = "0";
@@ -3317,7 +3321,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
-		
+		model.addAttribute("signImageType", signImageType);
+
 		logger.debug("approvui ended");
 		
 		return "ezApprovalG/apprGapprovui";
@@ -3911,7 +3916,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String draftFlag = request.getParameter("draftFlag");
 		String retFlag = request.getParameter("retFlag");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		
+		String signImageType = ezCommonService.getTenantConfig("SignImageType", userInfo.getTenantId());
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optisSplit = "";
 		
@@ -3975,7 +3980,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
-		
+		model.addAttribute("signImageType", signImageType);
+
 		logger.debug("recevGSusin ended.");
 		
 		return "ezApprovalG/apprGrecevGSusin";
@@ -4148,7 +4154,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
-		String dirYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		String dirYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -5223,7 +5230,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         String result = ezApprovalGService.getSearchDocList(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY, draftToYEAR,
         		draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY, myApprToYEAR, myApprToMONTH,
-        		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+        		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         
         logger.debug("getFormSearchDocList ended");
         
@@ -5468,7 +5475,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String orderOption = request.getParameter("OO");
             String subQuery = request.getParameter("SQ");
             
-            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag);
+            excelValue = ezApprovalGService.getSearchDocList(P24, userInfo.getId(), subQuery, P0, P1, P2, P21, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15, P16, P17, P18, P19, P20, P23, "", "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(),  approvalFlag, userInfo.getLocale());
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
@@ -5496,11 +5503,44 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			for (int p = 0; p < objCell.getLength(); p++) {
 				Element cell = (Element) objCell.item(p);
-				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
+   				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
 				int width = Integer.parseInt(headerWidth) * 2;
-				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				if (cellValue.equals("001")) {
+					cellValue = "품의";
+				} else if (cellValue.equals("002")) {
+					cellValue = "협조";
+				} else if (cellValue.equals("003")) {
+					cellValue = "감사";
+				} else if (cellValue.equals("004")) {
+					cellValue = "심사";
+				} else if (cellValue.equals("011")) {
+					cellValue = "수신";
+				} else if (cellValue.equals("012")) {
+					cellValue = "합의";
+				} else if (cellValue.equals("013")) {
+					cellValue = "시행";
+				} else if (cellValue.equals("014")) {
+					cellValue = "검사부 감사";
+				} else if (cellValue.equals("015")) {
+					cellValue = "공람";
+				} else if (cellValue.equals("016")) {
+					cellValue = "회람";
+				} else if (cellValue.equals("017")) {
+					cellValue = "참조";
+				} else if (cellValue.equals("018")) {
+					cellValue = "후결";
+				} else if (cellValue.equals("019")) {
+					cellValue = "발신";
+				} else if (cellValue.equals("020")) {
+					cellValue = "신청";
+				} else if (cellValue.equals("031")) {
+					cellValue = "반송";
+				} else if (cellValue.equals("032")) {
+					cellValue = "회송";
+				}
+					
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + " </p></td>       ");
 			}
 			resultExcel.append("</tr>");
 		}

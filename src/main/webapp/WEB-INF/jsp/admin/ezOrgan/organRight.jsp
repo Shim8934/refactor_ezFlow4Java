@@ -995,7 +995,13 @@
 		        }
 		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
 		        //if (CrossYN()){
-		            window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		        	 //크롬일때 alert창 크기때문에 크롬일때 구별
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=315px,width=449px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(449, 315));	
+		            } else {
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		            }
 		        /* }else{
 		            window.open("ConfigSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=297px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 297));
 		        } */
@@ -1013,7 +1019,15 @@
 				}
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
-		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));
+		        
+		      //크롬일때 alert창 크기때문에 크롬일때 구별
+	            var agent = navigator.userAgent.toLowerCase();
+	            if (agent.indexOf("chrome") != -1) {
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(450, 185));	
+	            } else {
+	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(330, 185));	
+	            }
+	            
 		        try { OpenWin.focus(); } catch (e) { }
 			}
 			
@@ -1273,6 +1287,26 @@
 	            	}
 	            });				
 			}
+		    
+		    function syncWithBizmekaTalkAccounts() {
+	            $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezOrgan/syncWithBizmekaTalkAccounts.do",
+	            	async : true,
+	            	success : function(result) {
+	            	    if (result == "OK") {
+	            	        alert("<spring:message code='ezTalkGate.ldh004' />");
+	            	    } else {
+	            	        alert("<spring:message code='ezQuestion.t263' />");
+	            	    }
+	            	},
+	            	error : function(error) {
+	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
+	            	}
+	            });		        
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -1392,16 +1426,11 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='ezOrgan.t92' /></span></a></td>
 						</tr>		                
-		                <c:if test="${useOCS == 'YES'}">
+						<c:if test="${useBizmekaTalk == 'YES'}">			
 						<tr>
-							<td><a class="imgbtn" id="usermenusipuri"><span onClick="ocssip_manage()">Lync <spring:message code='ezOrgan.t1012' /></span></a></td>
-						</tr>
-						</c:if>			
-						<!--			
-						<tr>
-		                	<td><a class="imgbtn" id="usermenu21"><span onClick="SettingMsn()"><spring:message code='ezOrgan.t1002' /></span></a></td>
+		                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
 		                </tr>
-		                -->
+		                </c:if>
 					</table>
 				</th>
 			</tr>

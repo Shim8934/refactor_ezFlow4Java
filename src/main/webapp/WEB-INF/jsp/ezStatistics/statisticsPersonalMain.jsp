@@ -238,14 +238,15 @@
         function drawingchart(type) {
             document.getElementById("statisticschart").innerHTML = "";
 
-            var data = new Array();
-            var data2 = new Array();
-            for (var i = 0; i < 24; i++) {
-                data.push(new Array(i + 1, parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
-                data2.push(new Array(i + 1, parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
+            var line1 = new Array();
+            var line2 = new Array();
+            
+            for (var i = 0; i < 24 ; i++) {
+            	line1.push(new Array((i + '~' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
+	            line2.push(new Array((i + '~' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
             }
-           
-            plot2 = $.jqplot('statisticschart', [data, data2], {
+
+            plot2 = $.jqplot('statisticschart', [line1, line2], {
                 animate: false,
                 series: [{
                     renderer: $.jqplot.BarRenderer
@@ -254,7 +255,7 @@
                 axesDefaults: {
                     tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                     tickOptions: {
-                        angle: 30
+                        angle: 50
                     }
                 },
                 axes: {

@@ -123,7 +123,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String multiData = userInfo.getPrimary();
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 //		폼프로세서 사용하려면 useEditor "" 으로 세팅
@@ -362,7 +362,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String companyID = request.getParameter("companyID");
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
@@ -406,7 +406,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
 		String type = request.getParameter("type");
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String companyID = request.getParameter("companyID");
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
@@ -845,9 +845,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("comID");
-		String primary = userInfo.getPrimary();
+		String lang = userInfo.getLang();
 
-		String result = ezApprovalGAdminService.getContainerInfoManage(deptID, "LIST", companyID, primary, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getContainerInfoManage(deptID, "LIST", companyID, lang, userInfo.getTenantId());
 		
 		logger.debug("apprMgetContInfo ended.");
 		
@@ -2730,7 +2730,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         } else {
         	result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
     				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-    				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+    				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
         }
         
         logger.debug("result = " + result);

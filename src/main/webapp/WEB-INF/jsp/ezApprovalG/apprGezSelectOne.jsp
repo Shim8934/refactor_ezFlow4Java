@@ -256,88 +256,135 @@
 		    		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
 		    	}
 		    });	
-		   
-		}
-		
-		function event_displayUserList(result) {
-		    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 0) {
-		        var listview = new ListView();
-		        listview.LoadFromID("OrganList");
-		        listview.DataSource(result);
-		        listview.RowDataBind();
-		    }
-		    else {
-		        document.getElementById("OrganListView").innerHTML = "";
-		        var listview = new ListView();
-		        listview.SetID("OrganList");
-		        listview.SetMulSelectable(false);
-		        listview.SetRowOnDblClick("btnAssign_onclick");
-		        listview.DataSource(listviewheader);
-		        listview.DataBind("OrganListView");
-		    }
-		}
-		
-		function textUser_onkeypress()
-		{
-			if (window.event.keyCode == "13")
-			{
-				btn_searchUser_onclick();
-			}
-		}
-		</script>
-	</head>
-	<body class="popup">
-		<xml id="listviewheader" style="display:none">
-			<LISTVIEWDATA>
-				<HEADERS>
-					<HEADER>
-						<NAME><spring:message code='ezApprovalG.t229'/></NAME>
-						<WIDTH>50</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezApprovalG.t230'/></NAME>
-						<WIDTH>50</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezApprovalG.t108'/></NAME>
-						<WIDTH>70</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezApprovalG.t231'/></NAME>
-						<WIDTH>70</WIDTH>
-					</HEADER>
-				</HEADERS>
-			</LISTVIEWDATA>
-		</xml>
-		<h1><spring:message code='ezApprovalG.t223'/></h1>
-		<table style="margin-top:-15px;" >
-			<tr>
-				<td style="vertical-align:top">
-					<h2><spring:message code='ezApprovalG.t232'/></h2>
-					<div class="box" style="overflow:auto;height:380px; width:250px" id="TreeView"></div>
-				</td>
-				<td style="vertical-align:top;padding-left:5px" >
-					<h2><spring:message code='ezApprovalG.t233'/></h2>
-					<div class="listview">
-						<DIV id="OrganListView" class="text" style="overflow:auto; border:0;Width:320px; Height:358px;margin:1px 1px 1px 1px;"></DIV>
-					</div>
-					<table style="width:100%">
-						<tr>
-							<td style="width:25px"><input type="text" id="textUser" name="textUser" style="width:130px;" value="" onKeyPress="return textUser_onkeypress()">
-								<a class="imgbtn" style="vertical-align:middle"><span onClick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-		<div class="btnposition">
-			<a class="imgbtn"><span onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-			<a class="imgbtn"><span onClick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
-		</div>
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-		</div>
-	</body>
+}
+
+    var ezapralert_cross_dialogArguments = new Array();
+    function OpenAlertUI(pAlertContent, CompleteFunction) {
+        var parameter = pAlertContent;
+        var url = "/ezApprovalG/ezAprAlert.do";
+
+        if (CrossYN()) {
+            ezapralert_cross_dialogArguments[0] = parameter;
+            if (CompleteFunction != undefined)
+                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            else
+                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+            DivPopUpShow(330, 205, url);
+        }
+        else {
+            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+            feature = feature + GetShowModalPosition(330, 205);
+            var RtnVal = window.showModalDialog(url, parameter, feature);
+        }
+    }
+
+    function OpenAlertUI_Complete() {
+        DivPopUpHidden();
+    }
+
+function TreeViewNodeClick()
+{
+    var treeView = new TreeView();
+    treeView.LoadFromID("FromTreeView");
+
+	var nodeIdx = treeView.GetSelectNode();
+	displayUserList(nodeIdx.GetNodeData("CN"));
+}
+
+function displayUserList(DeptID)
+{
+    $.ajax({
+    	type : "POST",
+    	dataType : "text",
+    	url : "/ezOrgan/getSearchList.do",
+    	async : false,
+    	data : {search : "EXACT_Department::" + DeptID + ";;extensionAttribute1::i=1" , cell : "displayname;title;description;telephonenumber", prop : "Department;extensionAttribute4;displayname;title;description", type : "user"},
+    	success : function(result){	
+    		event_displayUserList(loadXMLString(result));
+
+    	},
+    	error : function(error){
+    		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
+    	}
+    });	
+   
+}
+
+function event_displayUserList(result)
+{
+    if (SelectNodes(result, "LISTVIEWDATA/ROWS/ROW").length > 0) {
+        var listview = new ListView();
+        listview.LoadFromID("OrganList");
+        listview.DataSource(result);
+        listview.RowDataBind();
+    }
+    else {
+        document.getElementById("OrganListView").innerHTML = "";
+        var listview = new ListView();
+        listview.SetID("OrganList");
+        listview.SetMulSelectable(false);
+        listview.SetRowOnDblClick("btnAssign_onclick");
+        listview.DataSource(listviewheader);
+        listview.DataBind("OrganListView");
+    }
+}
+
+function textUser_onkeypress()
+{
+	if (window.event.keyCode == "13")
+	{
+		btn_searchUser_onclick();
+	}
+}
+</script>
+</head>
+<body class="popup">
+<xml id="listviewheader" style="display:none">
+  <LISTVIEWDATA>
+    <HEADERS>
+      <HEADER>
+        <NAME><spring:message code='ezApprovalG.t229'/></NAME>
+        <WIDTH>50</WIDTH>
+      </HEADER>
+      <HEADER>
+        <NAME><spring:message code='ezApprovalG.t230'/></NAME>
+        <WIDTH>50</WIDTH>
+      </HEADER>
+      <HEADER>
+        <NAME><spring:message code='ezApprovalG.t108'/></NAME>
+        <WIDTH>70</WIDTH>
+      </HEADER>
+      <HEADER>
+        <NAME><spring:message code='ezApprovalG.t231'/></NAME>
+        <WIDTH>70</WIDTH>
+      </HEADER>
+    </HEADERS>
+  </LISTVIEWDATA>
+</xml>
+<h1><spring:message code='ezApprovalG.t223'/></h1>
+    <table style="margin-top:-15px;" >
+        <tr>
+        <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t232'/></h2>
+        <div class="box" style="overflow:auto;height:380px; width:250px" id="TreeView"></div></td>
+        <td style="vertical-align:top;padding-left:5px" ><h2><spring:message code='ezApprovalG.t233'/></h2>
+        <div class="listview">
+        <DIV id="OrganListView" class="text" style="overflow:auto; border:0;Width:320px; Height:358px;margin:1px 1px 1px 1px;"></DIV>
+        </div>
+        <table style="width:100%">
+        <tr>
+        <td style="width:25px"><input type="text" id="textUser" name="textUser" style="width:130px;" value="" onKeyPress="return textUser_onkeypress()">
+        <a class="imgbtn" style="vertical-align:middle"><span onClick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a></td>
+        </tr>
+        </table></td>
+        </tr>
+    </table>
+<div class="btnposition">
+   <a class="imgbtn"><span onClick="return btnAssign_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
+   <a class="imgbtn"><span onClick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
+</div>
+    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
+</body>
 </html>

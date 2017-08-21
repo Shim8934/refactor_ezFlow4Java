@@ -800,11 +800,55 @@ function event_displayUserList(xml) {
         check_presence();
     }
 }
+
+function event_displayUserListCC(xml) {
+	var retXml = createXmlDom();
+	
+	if (document.getElementById("UserListCC").innerHTML != "")
+		document.getElementById("UserListCC").innerHTML = "";
+	
+	var headerData = createXmlDom();
+	headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+	if (xml != "") {
+		if (CrossYN()) {
+			var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+			var Node = headerData.importNode(xmlRtn, true);
+			headerData.documentElement.appendChild(Node);
+		}
+		else {
+			var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+			headerData.documentElement.appendChild(xmlRtn);
+		}
+	}
+	var pUserList = new ListView();
+	pUserList.SetID("DivUserList");
+	pUserList.SetRowOnClick("list3_onSel_Click"); 
+	pUserList.SetRowOnDblClick("list4_onSel_DBclick");
+	pUserList.SetSelectFlag(false);
+	pUserList.SetHeightFree(true);
+	pUserList.DataSource(headerData);                 
+	pUserList.DataBind("UserListCC");                   
+	
+	var userRows = pUserList.GetDataRows();
+	
+	if (userRows.length <= 0) {
+		OpenAlertUI(linealt11);
+	}
+	else if (USE_OCS.toUpperCase() == "YES") {
+		check_presence();
+	}
+}
 //############################################################################################################################################# 조직도 사용자 검색
 function textUser_onkeypress(e) {
     if (e.keyCode == "13") {
         document.getElementById("btn_searchUser").onclick();
     }
+}
+//############################################################################################################################################# 조직도 사용자 검색
+function textUserCC_onkeypress(e) {
+	if (e.keyCode == "13") {
+		document.getElementById("btn_searchUserCC").onclick();
+	}
 }
 //############################################################################################################################################# 조직도 사용자 검색 
 function btn_searchUser_onclick() {
@@ -849,6 +893,51 @@ function searchUserList(search)
   }catch(ErrMsg){
     alert(ErrMsg.description);
   }
+}
+
+//############################################################################################################################################# 회람 조직도 사용자 검색
+function btn_searchUserCC_onclick() {
+	searchUserListCC();
+}
+
+function searchUserListCC(search)
+{
+	try{
+		var searchdoc = document.getElementById("textUserCC");
+		var strSearch = searchdoc.value + "";
+		if (textUser.value =="")
+		{
+			var pAlertContent = linealt3;
+			OpenAlertUI(pAlertContent);
+			document.getElementById("textUserCC").focus();
+		}
+		else if (strSearch.length < 2 )
+		{
+			var pAlertContent = linealt4;
+			OpenAlertUI(pAlertContent);
+			document.getElementById("textUserCC").focus();
+		}
+		else
+		{
+			$.ajax({
+				type : "POST",
+				dataType : "text",
+				async : true,
+				url : "/ezOrgan/getSearchList.do",
+				data : {
+					search : "displayName::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
+					cell   : "displayName;description;title;telephoneNumber",
+					prop   : "department;displayName;description;title",
+					type   : "user"
+				},
+				success: function(xml){
+					event_displayUserListCC(loadXMLString(xml));
+				}    			
+			});
+		}
+	}catch(ErrMsg){
+		alert(ErrMsg.description);
+	}
 }
 function GetProcessAprType(AprLineAddIndex, AprLineRow, pClass) {
     var retVal = "";
