@@ -21578,9 +21578,153 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception {
-		
-		content = beforeXmlConverter(content);
+		String strErrorMsg = "";
+		try {
+			content = beforeXmlConverter("<CONTENT>" + content + "</CONTENT>");
+			
+			Document xmlDom = commonUtil.convertStringToDocument(content);
+			Node node = xmlDom.getDocumentElement();
+			for(int i=0; i < xmlDom.getElementsByTagName("span").getLength(); i++) {
+				String strInnerHtml = xmlDom.getElementsByTagName("span").item(0).getTextContent();
+				Node parentNode = node.getChildNodes().item(i).getParentNode();
+//                 strInnerHtml = spanElement.innerHTML;
+//
+//                 if (spanElement.style.fontWeight != null)
+//                 {
+//                     if (spanElement.style.fontWeight.ToLower().Equals("bold"))
+//                     {
+//                         strInnerHtml = "<b>" + strInnerHtml + "</b>";
+//                     }
+//                 }
+//
+//                 if (spanElement.style.fontStyle != null)
+//                 {
+//                     if (spanElement.style.fontStyle.ToLower().Equals("italic"))
+//                     {
+//                         strInnerHtml = "<i>" + strInnerHtml + "</i>";
+//                     }
+//                 }
+//
+//                 if (spanElement.style.textDecoration != null)
+//                 {
+//                     if (spanElement.style.textDecoration.ToLower().Equals("underline"))
+//                     {
+//                         strInnerHtml = "<u>" + strInnerHtml + "</u>";
+//                     }
+//                 }
+
+//                 string strFontFamily = string.Empty;
+//                 string strFontSize = string.Empty;
+//                 string strStyle = string.Empty;
+//
+//                 if (spanElement.style.fontFamily != null)
+//                 {
+//                     strFontFamily = spanElement.style.fontFamily.ToString();
+//                 }
+//
+//                 if (spanElement.style.fontSize != null)
+//                 {
+//                     strFontSize = spanElement.style.fontSize.ToString();
+//                 }
+
+                 // body 바로 밑에 span이 존재할 경우 P태그로 감싸준다.
+//                 if (spanElement.parentElement.tagName.ToLower().Equals("body"))
+//                 {
+//                     if (strFontFamily != string.Empty)
+//                     {
+//                         strStyle = "font-family:" + strFontFamily;
+//                     }
+//
+//                     if (strFontSize != string.Empty)
+//                     {
+//                         if (strStyle != string.Empty)
+//                         {
+//                             strStyle += ";";
+//                         }
+//
+//                         strStyle = "font-size:" + strFontSize;
+//                     }
+//
+//                     if (strStyle != string.Empty)
+//                     {
+//                         strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
+//                     }
+//                     else
+//                     {
+//                         strInnerHtml = "<p>" + strInnerHtml + "</p>";
+//                     }
+//                 } else if (spanElement.parentElement.tagName.ToLower().Equals("p")) {
+//                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
+//                     if (!string.IsNullOrEmpty(spanElement.parentElement.innerText) && !string.IsNullOrEmpty(spanElement.innerText))
+//                     {
+//                         if (spanElement.parentElement.innerText.Trim() == spanElement.innerText.Trim())
+//                         {
+//                             if (spanElement.style.fontFamily != null)
+//                             {
+//                                 if (spanElement.parentElement.style.fontFamily != null)
+//                                 {
+//                                     spanElement.parentElement.style.fontFamily = spanElement.style.fontFamily;
+//                                 }
+//                             }
+//
+//                             if (spanElement.style.fontSize != null)
+//                             {
+//                                 if (spanElement.parentElement.style.fontSize != null)
+//                                 {
+//                                     spanElement.parentElement.style.fontSize = spanElement.style.fontSize;
+//                                 }
+//                             }
+//
+//                             if (spanElement.style.lineHeight != null)
+//                             {
+//                                 if (spanElement.parentElement.style.lineHeight != null)
+//                                 {
+//                                     spanElement.parentElement.style.lineHeight = spanElement.style.lineHeight;
+//                                 }
+//                             }
+//                         }
+//                     }
+//                 }
+//
+//                 spanElement.outerHTML = strInnerHtml;
+			}
+			
+			boolean hasBRTag = true;
+			 
+			do {
+				if(xmlDom.getElementsByTagName("br").getLength() > 0) {
+					String strInnerHtml = xmlDom.getElementsByTagName("br").item(0).getTextContent();
+					Node parentNode = xmlDom.getElementsByTagName("br").item(0).getParentNode();
+					
+					if (parentNode.getTextContent() != null) {
+						if (parentNode.getTextContent().toLowerCase().equals("p")) {
+							if (parentNode.getTextContent().toUpperCase().indexOf("<BR>") > -1 ) {
+								
+								String stringSeparators = "<BR>";
+								String[] result = parentNode.getTextContent().split(stringSeparators);
+							}
+							
+						}
+					}
+				} else {
+					hasBRTag = false;
+				}
+			} while(hasBRTag);
+			
+			//strong 태그를 b태그로 변경
+		} catch (Exception e) {
+			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
+			return ReturnErrorContent(strErrorMsg);
+		}
 		return null;
+	}
+
+	private String ReturnErrorContent(String strErrorMsg) {
+		String strRtnContent = "<DATA>" +
+	                "<RESULT>ERROR</RESULT>" +
+	                "<CONTENT><![CDATA[" + strErrorMsg + "]]></CONTENT>" +
+	                "</DATA>";
+	    return strRtnContent;
 	}
 
 	private String beforeXmlConverter(String content) {
@@ -21593,22 +21737,49 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         // 상위/하위 Element 의 innerText가 동일하다면 Style을 맞춰준다.
 
         // 리턴시 div태그를 p태그로 변경하여 리턴한다.
-//		String html = content;
-		String html = "<body><p>text <div style='text-align: center; line-height: 1.2; font-size: 12pt; margin-top: 0px; margin-bottom: 0px;'>";
-		org.jsoup.nodes.Document doc = null;
-//		if (content.indexOf("body") > 0) {
-			 doc = Jsoup.parseBodyFragment(html);
-			 for ( Element element : doc.getAllElements()) {
-			        for ( TextNode textNode : element.textNodes()) {
-			        	String text = textNode.text();
-			        	String parentText = element.parent().text();
-			        	String parentText2 = element.parent().tagName();
-			        	System.out.println(parentText);
-			        	System.out.println(text);
-			        }
-			 }
-			 
-//		}
-		return null;
+//		String html = "<body style='width=100'><p>text</p>dddddd <div style='text-align: center; line-height: 1.2; font-size: 12pt; margin-top: 0px; margin-bottom: 0px;'></div></body>";
+		Document xmlDom = commonUtil.convertStringToDocument(content);
+  		Node node = xmlDom.getDocumentElement();
+		for(int i=0; i < xmlDom.getElementsByTagName("body").getLength(); i++) {
+			for(int j=0; j<node.getChildNodes().getLength(); j++) {
+				if(node.getChildNodes().item(j).getNodeType() == 3) {
+					Node parentNode = node.getChildNodes().item(j).getParentNode();
+					Node newChild = xmlDom.createElement("p");
+					
+					if(!parentNode.equals(newChild)) {
+						newChild.appendChild(node.getChildNodes().item(j));
+						parentNode.replaceChild(newChild, node.getChildNodes().item(j));
+					}
+				}
+			}
+		}
+		
+		for(int i=0; i < xmlDom.getElementsByTagName("div").getLength(); i++) {
+			for(int j=0; j<node.getChildNodes().getLength(); j++) {
+				if(node.getChildNodes().item(j).getNodeType() == 3) {
+					Node parentNode = node.getChildNodes().item(j).getParentNode();
+					Node newChild = xmlDom.createElement("p");
+					if(!parentNode.equals(newChild)) {
+						newChild.appendChild(node.getChildNodes().item(j));
+						parentNode.replaceChild(newChild, node.getChildNodes().item(j));
+					}
+				} else {
+					
+				}
+			}
+		}
+		
+		String strRtnHTML = null;
+		
+		if (xmlDom.getElementsByTagName("*").getLength() == 0) {
+            strRtnHTML = "<CONTENT><![CDATA[[<p style=\"margin-top:0px;margin-bottom:0px\">" + xmlDom.getDocumentElement().getTextContent() + "</p>]]></CONTENT>";
+		} else {
+			strRtnHTML = "<CONTENT><![CDATA[[" + xmlDom.getDocumentElement().getTextContent() +"]]></CONTENT>";
+		}
+		
+		 // 리턴시 div태그를 p태그로 변경하여 리턴한다.
+        strRtnHTML = strRtnHTML.replace("<div", "<p").replace("<DIV", "<p").replace("</div", "</p").replace("</DIV", "</p");
+        
+		return strRtnHTML;
 	}
 }

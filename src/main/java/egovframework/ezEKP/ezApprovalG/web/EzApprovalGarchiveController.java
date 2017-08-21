@@ -2231,7 +2231,7 @@ public class EzApprovalGarchiveController {
 		
         String fontFamily = request.getParameter("fontFamily");
 		String fontSize = request.getParameter("fontSize"); 
-		String content = request.getParameter("content");
+		String content = "<![CDATA[" + request.getParameter("content") + "]]>";
 
 		String result = ezApprovalGService.startXmlConvert(content, fontFamily, fontSize, userInfo);
 		logger.debug("getContentXml ended");

@@ -815,7 +815,6 @@
 		    }
 		
 	        function Document_Encode(text, pDefaultFontFamily, pDefaultFontSize) {
-	            alert(100);
 	        	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
