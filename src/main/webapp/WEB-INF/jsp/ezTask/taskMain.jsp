@@ -73,7 +73,7 @@
 	
 		    function WriteTask() {
                 var feature = GetOpenPosition(760, 660);
-                window.open("/ezTask/taskWrite.do", "", "height=675px, width=760px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+                window.open("/ezTask/taskWrite.do", "", "height=715px, width=760px, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
 		    }
 	
 			var BlockSize = 10;

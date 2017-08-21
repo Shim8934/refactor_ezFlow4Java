@@ -58,6 +58,10 @@ public class EzTaskDAO extends EgovAbstractDAO {
 		insert("EzTaskDAO.shareTaskSave", taskInfoVO);
 	}
 
+	public void shareTaskSave2(TaskInfoVO taskInfoVO) throws Exception {
+		insert("EzTaskDAO.shareTaskSave2", taskInfoVO);
+	}
+
 //	public int taskSave(Map<String, Object> map) throws Exception {
 //		return (int) insert("EzTaskDAO.taskSave", map);
 //	}

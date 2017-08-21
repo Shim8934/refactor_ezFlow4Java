@@ -6,11 +6,11 @@
 <html>
 	<head>
 		<title>조직도</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>	    
+	    <script type="text/javascript" src="<spring:message code='ezTask.e1'/>"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
         <script type="text/javascript" src="/js/ezTask/TreeView.js"></script>
@@ -1189,8 +1189,8 @@
 		        var totalRows = selList.GetDataRows();
 		        var totalLen = totalRows.length;
 
-		        for (var i = 0; i < totalLen; i++) {	        	
-		            rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");
+		        for (var i = 0; i < totalLen; i++) {
+		            rtn["id"][i] = GetAttribute(totalRows[i], "DATA1");     	
 		            rtn["name"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["name1"][i] = GetAttribute(totalRows[i], "DATA2");
 		            rtn["name2"][i] = GetAttribute(totalRows[i], "DATA3");

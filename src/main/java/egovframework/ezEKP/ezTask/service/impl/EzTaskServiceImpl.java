@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezTask.service.impl;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -180,9 +182,9 @@ public class EzTaskServiceImpl implements EzTaskService{
 	@Override
 	public String taskSave(Document doc, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("taskSave started.");
-		
+
 		TaskInfoVO taskInfoVO = new TaskInfoVO();
-		
+
 		taskInfoVO.setOwnerID(doc.getElementsByTagName("OWNERID").item(0).getTextContent());
 		taskInfoVO.setCreatorID(doc.getElementsByTagName("CREATORID").item(0).getTextContent());
 		taskInfoVO.setCreatorName(doc.getElementsByTagName("CREATORNAME1").item(0).getTextContent());
@@ -199,20 +201,35 @@ public class EzTaskServiceImpl implements EzTaskService{
 		taskInfoVO.setUpdateTime(commonUtil.getTodayUTCTime(""));
 		taskInfoVO.setNewAnswer("N");
 		taskInfoVO.setNewRefer("N");
-		taskInfoVO.setPersonID(doc.getElementsByTagName("PERSONID").item(0).getTextContent());
-		taskInfoVO.setPersonName(doc.getElementsByTagName("PERSONNAME1").item(0).getTextContent());
-		taskInfoVO.setPersonName2(doc.getElementsByTagName("PERSONNAME2").item(0).getTextContent());
-		taskInfoVO.setPersonDeptName(doc.getElementsByTagName("PERSONDEPTNAME1").item(0).getTextContent());
-		taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("PERSONDEPTNAME2").item(0).getTextContent());
-		taskInfoVO.setTaskPersonID(doc.getElementsByTagName("CREATORID").item(0).getTextContent());
-		taskInfoVO.setTaskPersonName(doc.getElementsByTagName("CREATORNAME1").item(0).getTextContent());
-		taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("CREATORNAME2").item(0).getTextContent());
 		taskInfoVO.setTenantID(userInfo.getTenantId());
+
+		if (taskInfoVO.getTaskType().equals("1")) { // 업무구분 : 개인
+			taskInfoVO.setPersonID(doc.getElementsByTagName("PERSONID").item(0).getTextContent());
+			taskInfoVO.setPersonName(doc.getElementsByTagName("PERSONNAME1").item(0).getTextContent());
+			taskInfoVO.setPersonName2(doc.getElementsByTagName("PERSONNAME2").item(0).getTextContent());
+			taskInfoVO.setPersonDeptName(doc.getElementsByTagName("PERSONDEPTNAME1").item(0).getTextContent());
+			taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("PERSONDEPTNAME2").item(0).getTextContent());
+
+			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("CREATORID").item(0).getTextContent());
+			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("CREATORNAME1").item(0).getTextContent());
+			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("CREATORNAME2").item(0).getTextContent());
+		} else { // 업무구분 : 지시, 협조
+			taskInfoVO.setPersonID(doc.getElementsByTagName("TASKPERSONID").item(0).getTextContent());
+			taskInfoVO.setPersonName(doc.getElementsByTagName("TASKPERSONNAME1").item(0).getTextContent());
+			taskInfoVO.setPersonName2(doc.getElementsByTagName("TASKPERSONNAME2").item(0).getTextContent());
+			taskInfoVO.setPersonDeptName(doc.getElementsByTagName("TASKPERSONDEPTNAME1").item(0).getTextContent());
+			taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("TASKPERSONDEPTNAME2").item(0).getTextContent());
+			
+			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("TASKPERSONID").item(0).getTextContent());
+			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("TASKPERSONNAME1").item(0).getTextContent());
+			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("TASKPERSONNAME2").item(0).getTextContent());			
+		}
 
 		int shareLength = Integer.parseInt(doc.getElementsByTagName("SHARELENGTH").item(0).getTextContent());
 
 		logger.debug("OwnerID : " + taskInfoVO.getOwnerID() + " | CreatorName : " + taskInfoVO.getCreatorName() + " | HasShare : " + taskInfoVO.getHasShare() + " | TaskStatus : " + taskInfoVO.getTaskStatus() + " | Importance : " + taskInfoVO.getImportance() + " | ContentPath : " + taskInfoVO.getContentPath());
 		logger.debug("HasAttach : " + taskInfoVO.getHasAttach() + " | StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle() + " | TaskType : " + taskInfoVO.getTaskType() + " | PersonID : " + taskInfoVO.getPersonID() + " | TaskPersonID : " + taskInfoVO.getTaskPersonID());
+		logger.debug("TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName());
 
 		String taskID = ezTaskDAO.taskSave(taskInfoVO);
 		
@@ -233,10 +250,26 @@ public class EzTaskServiceImpl implements EzTaskService{
 			taskInfoVO.setPersonName2(shareName2);
 			taskInfoVO.setPersonDeptName(shareDeptName1);
 			taskInfoVO.setPersonDeptName2(shareDeptName2);
-			
-			ezTaskDAO.shareTaskSave(taskInfoVO);			
-		}
 
+			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 Insert
+			ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert
+		}
+		
+		PrintWriter pw = null;
+
+		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent() + "}" + ".mht";
+
+		logger.debug("mhtPath : " + mhtPath);
+		
+		try {
+			pw = new PrintWriter(new File(mhtPath));
+			pw.print(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			pw.flush();
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		logger.debug("taskSave ended.");
 
 		return "OK";

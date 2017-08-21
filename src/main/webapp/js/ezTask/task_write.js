@@ -63,49 +63,87 @@ function check_time() {
 }
 
 var g_share = null;
+var g_person = null;
 var schedule_select_attendant_dialogArguments = new Array();
 function _manage_attendant() {
     check_name("attendant");
 }
 
-function manage_attendant_after() {
-    schedule_select_attendant_dialogArguments[0] = g_share;
-    schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+var m_type;
+function manage_attendant_after(type) {
+	if (type == 1) {
+		m_type = 1;
+		
+		schedule_select_attendant_dialogArguments[0] = g_share;
+		schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+				
+	} else {
+		m_type = 2;
+		
+		schedule_select_attendant_dialogArguments[0] = g_person;
+		schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+	}		
 
     GetOpenWindow("/ezTask/taskSelectAttendant.do", "", 970, 680);
 }
 
 function manage_attendant_Complete(rtn) {
-    if (typeof (rtn) != "undefined") {
-        g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
-        document.getElementById("shareList").innerHTML = "";
-        
-        for (var i = 0; i < rtn["id"].length; i++) {
-            if (i == 0) {
-            	document.getElementById("shareList").innerHTML = rtn["name"][i];
-            	document.getElementById("shareID").innerHTML = rtn["id"][i];
-            	document.getElementById("shareList2").innerHTML = rtn["name1"][i];
-            	document.getElementById("shareDept").innerHTML = rtn["deptname"][i];
-            	document.getElementById("shareDept2").innerHTML = rtn["deptname2"][i];
-            } else {
-            	document.getElementById("shareList").innerHTML += ", " + rtn["name"][i];
-            	document.getElementById("shareID").innerHTML += ", " + rtn["id"][i];
-            	document.getElementById("shareList2").innerHTML += ", " + rtn["name1"][i];
-            	document.getElementById("shareDept").innerHTML += ", " + rtn["deptname"][i];
-            	document.getElementById("shareDept2").innerHTML += ", " + rtn["deptname2"][i];
-            }
+	if (m_type == 1) {
+		if (typeof (rtn) != "undefined") {
+			g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 
-            g_share["name"][i] = rtn["name"][i];
-            g_share["id"][i] = rtn["id"][i];
-            g_share["deptname"][i] = rtn["deptname"][i];
-            g_share["name1"][i] = rtn["name1"][i];
-            g_share["name2"][i] = rtn["name2"][i];
-            g_share["deptname2"][i] = rtn["deptname2"][i];
-            g_share["jikwe"][i] = rtn["jikwe"][i];
-            g_share["phone"][i] = rtn["phone"][i];
+			document.getElementById("shareList").innerHTML = "";
 
-        }
-    }
+			for (var i = 0; i < rtn["id"].length; i++) {
+				if (i == 0) {
+					document.getElementById("shareList").innerHTML = rtn["name"][i];
+					document.getElementById("shareList2").innerHTML = rtn["name1"][i];
+					document.getElementById("shareID").innerHTML = rtn["id"][i];
+					document.getElementById("shareDept").innerHTML = rtn["deptname"][i];
+					document.getElementById("shareDept2").innerHTML = rtn["deptname2"][i];
+				} else {
+					document.getElementById("shareList").innerHTML += ", " + rtn["name"][i];
+					document.getElementById("shareID").innerHTML += ", " + rtn["id"][i];
+					document.getElementById("shareList2").innerHTML += ", " + rtn["name1"][i];
+					document.getElementById("shareDept").innerHTML += ", " + rtn["deptname"][i];
+					document.getElementById("shareDept2").innerHTML += ", " + rtn["deptname2"][i];
+				}
+
+				g_share["name"][i] = rtn["name"][i];
+				g_share["id"][i] = rtn["id"][i];
+				g_share["deptname"][i] = rtn["deptname"][i];
+				g_share["name1"][i] = rtn["name1"][i];
+				g_share["name2"][i] = rtn["name2"][i];
+				g_share["deptname2"][i] = rtn["deptname2"][i];
+				g_share["jikwe"][i] = rtn["jikwe"][i];
+				g_share["phone"][i] = rtn["phone"][i];
+			}
+		}
+	} else {
+		if (typeof (rtn) != "undefined") {
+			if (rtn["id"].length > 1) {
+				alert(strLang54);
+				return;
+			}
+
+			g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+
+			document.getElementById("personList").innerHTML = "";
+
+			document.getElementById("personList").innerHTML = rtn["name"];
+			document.getElementById("personList2").innerHTML = rtn["name1"];
+			document.getElementById("personID").innerHTML = rtn["id"];
+			document.getElementById("personDept").innerHTML = rtn["deptname"];
+			document.getElementById("personDept2").innerHTML = rtn["deptname2"];
+
+			g_person["name"][0] = rtn["name"][0];
+            g_person["id"][0] = rtn["id"][0];
+            g_person["deptname"][0] = rtn["deptname"][0];
+            g_person["name1"][0] = rtn["name1"][0];
+            g_person["name2"][0] = rtn["name2"][0];
+            g_person["deptname2"][0] = rtn["deptname2"][0];
+		}
+	}
 }
 
 function _on_keydown(e)
@@ -118,147 +156,147 @@ var checkname_cross_dialogArguments = new Array();
 var i = 0;
 var namelength = 0;
 var checknametype = "";
-function check_name(type) {
-    if (type != undefined)
-        checknametype = type;
-    else
-        checknametype = "";
+//function check_name(type) {
+//    if (type != undefined)
+//        checknametype = type;
+//    else
+//        checknametype = "";
+//
+//    var name = document.getElementById("shareInput").value;
+//    name = ReplaceText(name, ",", ";");
+//
+//    var names = name.split(";");
+//    namelength = names.length;
+//
+//    for (; i < names.length; i++) {
+//        names[i] = TrimText(names[i]);
+//
+//        if (names[i] == "")
+//            continue;
+//
+//        var adCount = 0;        
+//        var xmlDOM = createXmlDom();
+//        
+//        $.ajax({
+//    		type : "POST",
+//    		dataType : "text",
+//    		async : false,
+//    		url : "/ezOrgan/getSearchList.do",
+//    		data : {
+//    			search : "displayName::" + names[i],
+//    			cell   : "company;description;title;displayName;mail",
+//    			prop   : "displayName;description",
+//    			type   : "user"
+//    		},
+//    		success: function(xml){
+//    			xmlDOM = loadXMLString(xml);
+//                adCount = xmlDOM.getElementsByTagName("ROW").length;    			
+//    		}    		
+//    	});
+//
+//        if (adCount == 0) {
+//            alert("'" + names[i] + "'" + strLang21);
+//            continue;
+//        } else if (adCount == 1) {
+//            if (g_share == null)
+//                g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+//
+//            if (getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) != userid) {
+//                var length = g_share["name"].length;
+//
+//                for (var j = 0; j < length; j++) {
+//                    if (g_share["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
+//                        alert(strLang22);
+//                        return;
+//                    }
+//                }
+//            } else {
+//                alert(strLang24);
+//                return;
+//            }
+//
+//            g_share["name"][length] = getNodeText(GetChildNodes(SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW")[0])[3])
+//            g_share["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
+//            g_share["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7")[0]);
+//            g_share["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5")[0]);
+//            g_share["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6")[0]);
+//            g_share["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8")[0]);
+//
+//            if (length == 0) {
+//            	document.getElementById("shareList").innerHTML = g_share["name"][length];
+//            	document.getElementById("shareList2").innerHTML = g_share["name2"][length];            	
+//            }
+//            else {
+//            	document.getElementById("shareList").innerHTML += ", " + g_share["name"][length];
+//            	document.getElementById("shareList2").innerHTML += ", " + g_share["name2"][length];
+//            }
+//        } else {
+//            var rgParams = new Array();
+//            rgParams["addrBook"] = xmlDOM;
+//            rgParams["name"] = "";
+//            rgParams["id"] = "";
+//            rgParams["deptname"] = "";
+//            rgParams["name1"] = "";
+//            rgParams["name2"] = "";
+//            rgParams["deptname2"] = "";
+//
+//            checkname_cross_dialogArguments[0] = rgParams;       
+//            checkname_cross_dialogArguments[1] = check_name_Complete;
+//            DivPopUpShow(610, 293, "/ezSchedule/checkName.do");
+//            i++;
+//            return;
+//        }
+//    }
+//    document.getElementById("shareInput").value = "";
+//    i = 0;
+//    if (checknametype != "")
+//        manage_attendant_after();
+//}
 
-    var name = document.getElementById("shareInput").value;
-    name = ReplaceText(name, ",", ";");
-
-    var names = name.split(";");
-    namelength = names.length;
-
-    for (; i < names.length; i++) {
-        names[i] = TrimText(names[i]);
-
-        if (names[i] == "")
-            continue;
-
-        var adCount = 0;        
-        var xmlDOM = createXmlDom();
-        
-        $.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezOrgan/getSearchList.do",
-    		data : {
-    			search : "displayName::" + names[i],
-    			cell   : "company;description;title;displayName;mail",
-    			prop   : "displayName;description",
-    			type   : "user"
-    		},
-    		success: function(xml){
-    			xmlDOM = loadXMLString(xml);
-                adCount = xmlDOM.getElementsByTagName("ROW").length;    			
-    		}    		
-    	});
-
-        if (adCount == 0) {
-            alert("'" + names[i] + "'" + strLang21);
-            continue;
-        } else if (adCount == 1) {
-            if (g_share == null)
-                g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
-
-            if (getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) != userid) {
-                var length = g_share["name"].length;
-
-                for (var j = 0; j < length; j++) {
-                    if (g_share["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
-                        alert(strLang22);
-                        return;
-                    }
-                }
-            } else {
-                alert(strLang24);
-                return;
-            }
-
-            g_share["name"][length] = getNodeText(GetChildNodes(SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW")[0])[3])
-            g_share["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
-            g_share["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7")[0]);
-            g_share["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5")[0]);
-            g_share["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6")[0]);
-            g_share["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8")[0]);
-
-            if (length == 0) {
-            	document.getElementById("shareList").innerHTML = g_share["name"][length];
-            	document.getElementById("shareList2").innerHTML = g_share["name2"][length];            	
-            }
-            else {
-            	document.getElementById("shareList").innerHTML += ", " + g_share["name"][length];
-            	document.getElementById("shareList2").innerHTML += ", " + g_share["name2"][length];
-            }
-        } else {
-            var rgParams = new Array();
-            rgParams["addrBook"] = xmlDOM;
-            rgParams["name"] = "";
-            rgParams["id"] = "";
-            rgParams["deptname"] = "";
-            rgParams["name1"] = "";
-            rgParams["name2"] = "";
-            rgParams["deptname2"] = "";
-
-            checkname_cross_dialogArguments[0] = rgParams;       
-            checkname_cross_dialogArguments[1] = check_name_Complete;
-            DivPopUpShow(610, 293, "/ezSchedule/checkName.do");
-            i++;
-            return;
-        }
-    }
-    document.getElementById("shareInput").value = "";
-    i = 0;
-    if (checknametype != "")
-        manage_attendant_after();
-}
-
-function check_name_Complete(rgParams) {
-    DivPopUpHidden();
-    if (rgParams["name"] != "") {
-        if (g_share == null)
-            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
-
-        if (rgParams["id"] != userid) {
-            var length = g_share["name"].length;
-            for (var j = 0; j < length; j++) {
-                if (g_share["id"][j] == rgParams["id"]) {
-                    alert(strLang22);
-                    return;
-                }
-            }
-        }
-        else {
-            alert(strLang24);
-            return;
-        }
-
-        var length = g_share["name"].length;
-
-        g_share["name"][length] = rgParams["name"];
-        g_share["id"][length] = rgParams["id"];
-        g_share["deptname"][length] = rgParams["deptname"];
-        g_share["name1"][length] = rgParams["name1"];
-        g_share["name2"][length] = rgParams["name2"];
-        g_share["deptname2"][length] = rgParams["deptname2"];
-
-        if (length == 0)
-            document.getElementById("shareList").innerHTML = g_share["name"][length];
-        else
-            document.getElementById("shareList").innerHTML += ", " + g_share["name"][length];
-
-        if (i != namelength)
-            check_name();
-    }
-    if (i == namelength) {
-        i = 0;
-        document.getElementById("shareInput").value = "";
-    }
-    if (checknametype != "")
-        manage_attendant_after();
-}
+//function check_name_Complete(rgParams) {
+//    DivPopUpHidden();
+//    if (rgParams["name"] != "") {
+//        if (g_share == null)
+//            g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+//
+//        if (rgParams["id"] != userid) {
+//            var length = g_share["name"].length;
+//            for (var j = 0; j < length; j++) {
+//                if (g_share["id"][j] == rgParams["id"]) {
+//                    alert(strLang22);
+//                    return;
+//                }
+//            }
+//        }
+//        else {
+//            alert(strLang24);
+//            return;
+//        }
+//
+//        var length = g_share["name"].length;
+//
+//        g_share["name"][length] = rgParams["name"];
+//        g_share["id"][length] = rgParams["id"];
+//        g_share["deptname"][length] = rgParams["deptname"];
+//        g_share["name1"][length] = rgParams["name1"];
+//        g_share["name2"][length] = rgParams["name2"];
+//        g_share["deptname2"][length] = rgParams["deptname2"];
+//
+//        if (length == 0)
+//            document.getElementById("shareList").innerHTML = g_share["name"][length];
+//        else
+//            document.getElementById("shareList").innerHTML += ", " + g_share["name"][length];
+//
+//        if (i != namelength)
+//            check_name();
+//    }
+//    if (i == namelength) {
+//        i = 0;
+//        document.getElementById("shareInput").value = "";
+//    }
+//    if (checknametype != "")
+//        manage_attendant_after();
+//}
 var g_progresswin;
 var g_fileList;
 var g_fileNameList = new Array();

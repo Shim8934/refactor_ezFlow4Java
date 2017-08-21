@@ -467,14 +467,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		String realPath = commonUtil.getRealPath(request);
 
 		Document doc = commonUtil.convertStringToDocument(xmlData.toString());
-		
-//		String ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
+
 		String ret = ezTaskService.taskSave(doc, realPath, userInfo);
 
 		logger.debug("ret : " + ret);
 		logger.debug("taskSave ended");
 		
-		return "<RESULT>" + ret + "</RESULT>";
+		return ret;
 	}
 //	/**
 //	 * 업무등록 실행

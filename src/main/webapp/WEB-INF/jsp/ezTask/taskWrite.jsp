@@ -6,11 +6,11 @@
 	<HEAD>
 		<title><spring:message code='ezTask.t206' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezTask.e1' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<script type="text/javascript" src="<spring:message code='ezTask.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezTask/task_write.js"></script>
 		<script type="text/javascript" src="/js/ezTask/task_write_Cross.js"></script>
@@ -126,7 +126,7 @@
 // 		        document.getElementById("tbContentElement").height = document.documentElement.clientHeight - 300;
 // 		    }
 		    window.onresize = function () {
-				document.getElementById("EdtorSize").style.height = document.body.clientHeight - 150 + "PX";
+		    	document.getElementById("EdtorSize").style.height = document.body.clientHeight - 150 + "PX";
 			}
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -216,7 +216,7 @@
 		    window.onbeforeprint = function () {
 		        document.all.printScreen.style.display = "block";
 		        document.all.normalScreen.style.display = "none";
-		
+
 		        setNodeText(document.getElementById("printShare"), getNodeText(document.getElementById("sharelist")));
 // 		        setNodeText(document.getElementById("printPerson"), getNodeText(document.getElementById("personlist")));
 		        setNodeText(document.getElementById("printCompleteRate"), getNodeText(document.getElementById("completerateSelect").options[document.getElementById("completerateSelect").selectedIndex]));
@@ -225,7 +225,7 @@
 // 		        setNodeText(document.getElementById("printRepetition"), getNodeText(document.getElementById("repeatinfo")));
 		
 		
-		        var tasktype = document.getElementsByName("tasktypesel");
+		        tasktype = document.getElementsByName("tasktypesel");
 		        var tasktypename;
 		
 		        for (var i = 0; i < tasktype.length; i++) {
@@ -234,7 +234,7 @@
 		                break;
 		            }
 		        }
-		
+
 		        switch (tasktypename) {
 		            case "1":
 		                tasktypename = "<spring:message code='ezTask.t2000' />";
@@ -258,7 +258,6 @@
 		        var fileNameList = form1.EzHTTPTrans.FileListAll().split("\\");
 		        var html = "";
 		        for (var i = 0 ; i < fileNameList.length - 1 ; i++) {
-		
 		            var fileName = fileNameList[i];
 		            html = html + "<span><input type='checkbox'><img src='/images/email/mail_006.gif'> " + fileName + "&nbsp;&nbsp;<br></span>";
 		        }
@@ -272,34 +271,32 @@
 				document.all.normalScreen.style.display = "block";
 			}
 		
-// 			function changemenu(obj) {
-// 			    if (obj.id == "P") {
-// 			        taskType = obj.value;
-// 			        document.getElementById("personinputtr").style.display = "none";
+			function changemenu(obj) {
+				
+			    if (obj.id == "P") {
+			        taskType = obj.value;
+			        document.getElementById("personinputtr").style.display = "none";
 // 			        document.getElementById("trrepeatinfo").style.display = "";
-// 			    }
-// 			    else if (obj.id == "I") {
-// 			        taskType = obj.value;
-// 			        document.getElementById("personinputtr").style.display = "";
+			    } else if (obj.id == "I") {
+			        taskType = obj.value;
+			        document.getElementById("personinputtr").style.display = "";
 // 			        document.getElementById("trrepeatinfo").style.display = "none";
 // 			        repetition = "";
-// 			        document.getElementById("periodblock").style.display = "";
+			        document.getElementById("periodblock").style.display = "";
 // 			        document.getElementById("repeatblock").style.display = "none";
 // 			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-// 			    }
-// 			    else if (obj.id == "C") {
-// 			        taskType = obj.value;
-// 			        document.getElementById("personinputtr").style.display = "";
+			    } else if (obj.id == "C") {
+			        taskType = obj.value;
+			        document.getElementById("personinputtr").style.display = "";
 // 			        document.getElementById("trrepeatinfo").style.display = "none";
 // 			        repetition = "";
-// 			        document.getElementById("periodblock").style.display = "";
+			        document.getElementById("periodblock").style.display = "";
 // 			        document.getElementById("repeatblock").style.display = "none";
 // 			        document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-// 			    }
-// 			    else {
-// 			        document.getElementById("importantSelect").value = obj.value;
-// 			    }
-// 			}
+			    } else {
+			        document.getElementById("importantSelect").value = obj.value;
+			    }
+			}
 			
 			function Editor_Complete() {
     	    	message.SetEditorContent(sigBody.innerHTML);
@@ -307,7 +304,7 @@
 			
 			function save_task() {
 			    if (document.getElementById("TextTitle").value == "") {
-			        alert("제목을 입력해주세요.");
+			        alert("업무명을 입력해주세요.");
 			        document.getElementById("TextTitle").focus();
 			        return;
 			    }
@@ -322,28 +319,26 @@
 
 			    tasktype = $(":input:radio[name=tasktypesel]:checked").val();
 			    importance = $(":input:radio[name=important]:checked").val();
-alert("tasktype : " + tasktype);
+
 			    var shareList = document.getElementById("shareList").innerHTML;
 				var shareList2 = document.getElementById("shareList2").innerHTML;
 				var shareID = document.getElementById("shareID").innerHTML;
 				var shareDept = document.getElementById("shareDept").innerHTML;
 				var shareDept2 = document.getElementById("shareDept2").innerHTML;
-alert("shareList : " + shareList);
-				if (shareList.split(",").length > 0) {
+				
+				var taskPersonList = document.getElementById("personList").innerHTML;
+				var taskpersonList2 = document.getElementById("personList2").innerHTML;
+				var taskpersonID = document.getElementById("personID").innerHTML;
+				var taskpersonDept = document.getElementById("personDept").innerHTML;
+				var taskpersonDept2 = document.getElementById("personDept2").innerHTML;
+
+				if (shareList != "") {
 					hasshare = "Y";
 				} else {
 					hasshare = "N";
 				}
-alert("hasshare : " + hasshare);
-			    // 완료관련?
-// 			    if (document.getElementById("taskstatusSelect").value != 3 && document.getElementById("TextCompleteDate").value != "") {
-// 			        alert("" + strLang10 + "");
-// 			        document.getElementById("TextCompleteDate").focus();
-// 			        return;
-// 			    }
 
-			    if (!check_length(document.getElementById("TextTitle").value, 100, "제목")) return;
-// 			    if (!check_length(document.getElementById("TextCompleteDate").value, 20, "완료날짜")) return;
+			    if (!check_length(document.getElementById("TextTitle").value, 100, "<spring:message code='ezTask.t996' />")) return;
 
 			    var xmlDom = createXmlDom();
 			    var xmlHTTP = createXMLHttpRequest();
@@ -358,62 +353,24 @@ alert("hasshare : " + hasshare);
 			    createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
 			    createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", document.getElementById("taskstatusSelect").value);
 			    createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", document.getElementById("completerateSelect").value);
-// 			    createNodeAndInsertText(xmlDom, objNode, "COMPLETEDATE", document.getElementById("TextCompleteDate").value);
 			    createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", importance);
-
-//			    if (repetition == "") {
 			    createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00");
 			    createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59");
-//			    }
-//			    else {
-//			        var sdate, edate;
-			//
-//			        if (g_sdate == null) {
-//			            startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-//			            enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-//			            sdate = new Date(startdate.substring(0, 4), parseInt(startdate.substring(5, 7)) - 1, startdate.substring(8, 10));
-//			            edate = new Date(enddate.substring(0, 4), parseInt(enddate.substring(5, 7)) - 1, enddate.substring(8, 10));
-//			        }
-//			        else {
-//			            sdate = new Date(g_sdate.substring(0, 4), parseInt(g_sdate.substring(5, 7)) - 1, g_sdate.substring(8, 10));
-//			            edate = new Date(g_edate.substring(0, 4), parseInt(g_edate.substring(5, 7)) - 1, g_edate.substring(8, 10));
-//			        }
-			//
-//			        createNodeAndInsertText(xmlDom, objNode, "STARTDATE", sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate() + " 00:00");
-//			        createNodeAndInsertText(xmlDom, objNode, "ENDDATE", edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate() + " 23:59");
-			//
-//			    }
-
-//			    createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
 			    createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("TextTitle").value);
-alert("1");
+
 			    var Doc_ContentHtml = document.createElement("DIV");
 			    var strBody = message.GetEditorContent();
 			    Doc_ContentHtml.innerHTML = strBody;
-alert("2" + strBody);
-			    strBody = ConvertHTMLtoMHT(EmbedContentIntoXML(strBody));
-			    createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
 
-// 			    if (taskid == "") {
-// 			        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");			    	
-// 			    } else {
-			        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);			    	
-// 			    }
-// alert("3" + pAttachListXml);
-// 			    var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
-// 			    if (pAttachListXml != "") {
-// 			        var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-// 			        for (var i = 0; i < nodes.length; i++) {
-// 			            createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE")) + "/" + unescape(SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6")));
-// 			        }
-// 			    }
+			    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+
+			    createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
+		        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);			    	
 
 			    var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
-alert(hasshare);
+
 			    if (hasshare == "Y") {
 			    	for (var i = 0; i < g_share["id"].length; i++) {
-alert("id : " + g_share["id"][i]);
-alert("dn : " + g_share["deptname2"][i]);
 			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREID", g_share["id"][i]);
 			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME1", g_share["name"][i]);
 			            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME2", g_share["name1"][i]);
@@ -423,47 +380,34 @@ alert("dn : " + g_share["deptname2"][i]);
 			    }
 
 			    var personlist = createNodeAndAppandNode(xmlDom, objNode, personlist, "PERSONLIST");
-alert("tasktype : " + tasktype);
+			    var taskpersonlist = createNodeAndAppandNode(xmlDom, objNode, taskpersonlist, "TASKPERSONLIST");
+
 			    if (tasktype == 1) {
-alert(deptname)
 			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", userid);
 			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", username);
 			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", username2);
 			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME1", deptname);
 			        createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", deptname2);
 			    } else {
-// 			        var person = "";
-
-			        if (shareID != null) {
-// 			            if (g_person["id"].length > 1) { 
-// 			            	alert("총");
-// 			            	return; 
-// 			            }
-						for (var i = 0; i < g_share["id"].length; i++) {
-alert("@@" + g_share["id"][i]);
-alert("@@" + g_share["name1"][i]);							
-			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONID", g_share["id"][i]);
-			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME1", g_share["name"][i]);
-			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONNAME2", g_share["name1"][i]);
-			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME1", g_share["deptname"][i]);
-			                createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", g_share["deptname2"][i]);							
+			        if (taskpersonID != null) {			        	
+			            for (var i = 0; i < g_person["id"].length; i++) {
+			                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONID", g_person["id"][i]);
+			                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME1", g_person["name"][i]);
+			                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME2", g_person["name1"][i]);
+			                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONDEPTNAME1", g_person["deptname"][i]);
+			                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONDEPTNAME2", g_person["deptname2"][i]);							
 						}
-// 		                if (person != "") {
-// 		                    person += ", ";		                	
-// 		                }
-
-// 		                person += g_person["name"][i] == "" ? g_person["deptname"][i] : g_person["name"][i];
 			        } else {
-			        	alert("담당자를 지정해주세요.");
+			        	alert("<spring:message code='ezTask.t996' />");
 			        	return;
 			        }
-// 			        if (person == "" || person == null) {
-// 			            alert("담당자를 지정해주세요.");
-// 			            return;
-// 			        }
 			    }
-alert("##" + g_share["id"].length);
-				createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "SHARELENGTH", g_share["id"].length);
+
+			    if (hasshare == "Y") {
+					createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "SHARELENGTH", g_share["id"].length);			    	
+			    } else {
+			    	createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "SHARELENGTH", 0);
+			    }
 			    
 			  //파일 첨부된 목록 가져오기
 				var listtable = dadiframe.document.getElementById("filelist");
@@ -477,10 +421,7 @@ alert("##" + g_share["id"].length);
 						fileList += "," + GetAttribute(filelist[i + 1], "data2");
             		}
 				}
-				
-// 				for (var i=0; i<fileList.length; i++) {
-// 					createNodeAndInsertText(xmlDom, objNode, "FILEPATH", fileList[i]);			
-// 				}
+
 				if (fileList.length > 0) {
 					createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "Y");
 				} else {
@@ -493,7 +434,7 @@ alert("##" + g_share["id"].length);
 			    xmlHTTP.send(xmlDom);
 
 			    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-			        alert("업무를 저장하는 도중 오류 발생.");			    	
+			        alert("업무를 저장하는 도중 오류 발생.");
 			    } else {
 			        alert("업부를 저장하였습니다.");
 
@@ -503,17 +444,6 @@ alert("##" + g_share["id"].length);
 			}
 
 		</script>
-		<script type="text/javascript" FOR="tbContentElement" EVENT="FieldsAvailable">
-			pzFormProc_FieldsAvailable();
-		</script>
-		<script type="text/javascript" FOR="tbContentElement" EVENT="DocumentComplete">
-		    pzFormProc_DocumentComplete();
-		    SetFormProc_SetLineStyle(tbContentElement);
-		    if (document.getElementById("TextTitle").value == "") {
-		        document.getElementById("TextTitle").focus();		    	
-		    }
-		</script>
-
 		<xmp id="sigBody" style="display: none;"></xmp>
 	</HEAD>
 	<body class="popup">
@@ -598,11 +528,11 @@ alert("##" + g_share["id"].length);
 								<tr>
 									<th><spring:message code='ezTask.t2003' /></th>
 									<td style="width:300px">
-										<input type ="radio" id="P" name="tasktypesel" checked="checked" value ="1" />
+										<input type ="radio" id="P" name="tasktypesel" checked="checked" onclick="changemenu(this)" value ="1" />
 										<label for ="P"><spring:message code='ezTask.t2000' /></label>
-										<input type ="radio" id="I" name="tasktypesel" value ="2" />
+										<input type ="radio" id="I" name="tasktypesel" onclick="changemenu(this)" value ="2" />
 										<label for ="I"><spring:message code='ezTask.t2001' /></label>
-										<input type ="radio" id="C" name="tasktypesel" value ="3" />
+										<input type ="radio" id="C" name="tasktypesel" onclick="changemenu(this)" value ="3" />
 										<label for ="C"><spring:message code='ezTask.t2002' /></label>
 									</td>
 									<th><spring:message code='ezTask.t2004' /></th>
@@ -623,18 +553,24 @@ alert("##" + g_share["id"].length);
 <!-- 										</TR> -->
 <%-- 									</c:when> --%>
 <%-- 									<c:otherwise> --%>
-<!-- 										<TR id="personinputtr" style="display:none"> -->
-<%-- 											<th ><spring:message code='ezTask.t2005' /></th> --%>
-<!-- 											<TD colspan ="3"><DIV id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD> -->
-<!-- 										</TR>	            	 -->
+								<tr id="personinputtr" style="display:none">
+									<th ><a class="imgbtn"><span onClick="manage_attendant_after(2)"><spring:message code='ezTask.t2005' /></span></a></th>
+									<td colspan ="3">
+										<div id="personList" style="OVERFLOW-Y: auto; HEIGHT: 17px;display: inline;"></div>
+										<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+			         					<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+			         					<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+			         					<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+									</td>
+								</tr>	            	
 <%-- 									</c:otherwise> --%>
 <%-- 								</c:choose> --%>
 								<TR id="shareinputtr">
-									<th ><a class="imgbtn"><span onClick="_manage_attendant()"><spring:message code='ezTask.t157' /></span></a></th>
+									<th ><a class="imgbtn"><span onClick="manage_attendant_after(1)"><spring:message code='ezTask.t157' /></span></a></th>
 <!-- 									<TD colspan ="3"><DIV id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD> -->
 			         				<td colspan="3" id ="itemList">
-			         					<input name="Input" id="shareInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
-			         					<div id="shareList" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;"></div>
+<!-- 			         					<input name="Input" id="shareInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)"> -->
+			         					<div id="shareList" style="OVERFLOW-Y: auto; HEIGHT: 17px; display: inline;"></div>
 			         					<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 			         					<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 			         					<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
@@ -668,20 +604,6 @@ alert("##" + g_share["id"].length);
 				  			<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
 		      			</td>
 	  				</tr>
-<!-- 					<tr> -->
-<!-- 						<td height="20" style="padding-top:10px"> -->
-<!-- 							<table id="attachTable" class="file"> -->
-<!-- 								<tr> -->
-<%-- 									<th><spring:message code='ezTask.t160' /></th> --%>
-<!-- 									<td class="pos1" style="height:60px"> -->
-<!-- 										<SCRIPT language='JavaScript'>EzHTTPTrans_ActiveX2("EzHTTPTrans");</SCRIPT> -->
-<!-- 									</td> -->
-<%-- 									<td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="attach_Add()"><spring:message code='ezTask.t215' /></span></a><br> --%>
-<%-- 									<a class="imgbtn"><span id="btn_AttachDel" onClick="attach_Delete()"><spring:message code='ezTask.t216' /></span></a></td> --%>
-<!-- 								</tr> -->
-<!-- 							</table> -->
-<!-- 						</td> -->
-<!-- 					</tr> -->
 					<tr>
 		  				<td>
 	       					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>	
