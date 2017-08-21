@@ -290,6 +290,7 @@ var strLangLHM14 = "최대 허용 크기 : ";
 var strLangLHM15 = ", 현재 크기 : ";
 var strLangLHM16 = "유효하지 않은 수신인이 있습니다. 이메일 주소를 확인해주세요.";
 var strLangLHM17 = "해당 수신인을 제외하고 메일을 발송하시겠습니까?";
+var strLangLHM18 = "/blank_us.htm";
 var strLangKMS01 = "";
 var strLangKMS02 = "첨부파일 총 크기가 ";
 var strLangKMS03 = "No mail.";

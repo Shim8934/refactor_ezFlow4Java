@@ -1137,8 +1137,8 @@
 	        </tr>
 	      </table>
 	    </div>
-	    <iframe id="frmPrint" name="printname" src="/blank.htm" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
-	    <iframe id="printtest" src="/blank.htm" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
+	    <iframe id="frmPrint" name="printname" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
+	    <iframe id="printtest" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 5px; height: 5px;display:none"></iframe>
 	    <input type="hidden" name="eImportant" style="display: none;">
 	    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailInterUploadXCK.do?timestamp=${stateName}" target="ifrm" style="display:none;" >
@@ -1155,7 +1155,7 @@
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
 	    <span class="loading_layer" style="z-index:6000;position:absolute;top:400px;left:300px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="messageInSending"><spring:message code='ezEmail.t679' /></span><spring:message code='ezEmail.t680' /></span></span>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	    <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 	    <script type="text/javascript">
