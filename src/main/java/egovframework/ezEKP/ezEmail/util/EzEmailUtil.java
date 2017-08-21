@@ -1337,10 +1337,21 @@ public class EzEmailUtil {
 		
 		if (endDate != null) {
 			if(sTerm == null) {// filter 없을 때
-			
-				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);;
-
-				messages = folder.search(sTerm);
+//				logger.debug("END DATE :" + endDate);
+//				sTerm = new ReceivedDateTerm(ComparisonTerm.LE, endDate);
+//
+//				messages = folder.search(sTerm);
+//				logger.debug("messages length LE : " + messages.length);
+//				for (int i = 0; i < messages.length; i++) {
+//					logger.debug("GET RECEIVEDDATE :" + messages[i].getReceivedDate());
+//				}
+//				
+//				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);
+//
+//				messages = folder.search(sTerm);
+//				logger.debug("messages length LT : " + messages.length);
+				
+				ArrayList<Message> arrayList = new ArrayList<>();
 				
 				Date from = endDate;       
 				Folder f = folder;
@@ -1350,25 +1361,21 @@ public class EzEmailUtil {
 				
 				Date rDate;//message Date       
 				long lrDate;//message Date long for  comparing endDate       
-				int start = 1;       
-				
+
+				int j = 0;
 				do {                
 						Message testMsg = f.getMessage(end);         
 						rDate = testMsg.getReceivedDate();         
 						lrDate = rDate.getTime();
 						end--;
 						if (lrDate < lFrom) {
-							start = end - 10;
-							break;
+							arrayList.add(testMsg);
+							j++;
 						}
 					} 
-				while (end > 1);// 더 빨리 온 메세지를 뽑는다.
-				
-				if (start < 1) { 
-					start = 1;
-				}
-				
-				Message msg[] = f.getMessages(start, end);
+				while (j < 10 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 
 				for (int i=0, n=msg.length; i<n; i++) {
 					lrDate = msg[i].getReceivedDate().getTime();         

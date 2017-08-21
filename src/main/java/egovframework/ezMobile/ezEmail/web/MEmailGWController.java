@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -234,7 +235,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String tempName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		
 	        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
-	        
+	        	        
 	        senderReceiverFlag = folderId.equals(sendName) ? true : false;
 	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
 	        
@@ -248,6 +249,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //				String receivedDateStr = sdf.format(receivedDate);
 				ed = sdf.parse(endDate);
 			}
+	        
+	        folderId = URLDecoder.decode(folderId, "UTF-8");
 	        
 	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",start : " + start 
 	        		+ ",end : " + end + "search : " + search + "endDate : " + ed); 
