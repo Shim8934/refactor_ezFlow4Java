@@ -173,8 +173,7 @@ public class MLoginGWController {
     				String lang = "";
     				String timeZone = "";
     				String maintype = "";
-    				String listCnt = "";
-    				String useSearch = "";
+    				String listCnt = "";    				
     				String useSecurity = "";					
     				String returnValue = "";
     				
@@ -208,17 +207,15 @@ public class MLoginGWController {
     					
     				    timeZone = "235|+09:00";
     				    maintype = "D";
-    				    listCnt = "10";
-    				    useSearch = "Y";
+    				    listCnt = "10";    				    
     				    useSecurity = "N";
     				    
-    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSearch, useSecurity, tenantId);    					
+    					mOptionService.insertOption(uid, timeZone, lang, maintype, listCnt, useSecurity, tenantId);    					
     				} else {
     					lang = mOptionVO.getLang();
     					timeZone = mOptionVO.getTimeZone();
         				maintype = mOptionVO.getMainType();
-        				listCnt = mOptionVO.getListCnt();
-        				useSearch = mOptionVO.getUseSearch();
+        				listCnt = mOptionVO.getListCnt();        				
         				useSecurity = mOptionVO.getUseSecurity();
         				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
     				}
@@ -231,8 +228,7 @@ public class MLoginGWController {
     				map.put("timeZone", timeZone);
     				map.put("tenantId", tenantId+"");
     				map.put("mainType", maintype);
-    				map.put("listCnt", listCnt);
-    				map.put("useSearch", useSearch);
+    				map.put("listCnt", listCnt);    				
     				map.put("useSecurity", useSecurity);    				
 				    				    				
     				result.put("status", "ok");

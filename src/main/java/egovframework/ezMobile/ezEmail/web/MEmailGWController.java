@@ -213,7 +213,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			@RequestParam(value="start", required=true) String start,
 			@RequestParam(value="end", required=true) String end,
 			@RequestParam(value="search", required=false) String search,
-			@RequestParam(value="filter", required=false) String filter, Locale locale) {
+			@RequestParam(value="filter", required=false) String filter,
+			@RequestParam(value="endDate", required=false) String endDate,
+			Locale locale) {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
@@ -222,6 +224,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		try {
 				
 			JSONArray messageJsonArray = new JSONArray();
+			
+			Date ed = null;
 			
 			boolean senderReceiverFlag = false;
        
@@ -234,7 +238,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        senderReceiverFlag = folderId.equals(sendName) ? true : false;
 	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
 	        
-	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",start : " + start + ",end : " + end + "search : " + search); 
+	        if (endDate == null) {
+	        	endDate = "";
+	        }
+	        
+			else if (!endDate.equals("")) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//				String receivedDateStr = sdf.format(receivedDate);
+				ed = sdf.parse(endDate);
+			}
+	        
+	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",start : " + start 
+	        		+ ",end : " + end + "search : " + search + "endDate : " + ed); 
 	        
 	        Message[] messages = null;
 			
@@ -274,11 +290,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 			}
 			else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, false);
 			}
 			
 			else if (isImportantOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, false, isImportantOnly);
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, false, isImportantOnly);
+			}
+			
+			if (!endDate.equals("")) {
+				LOGGER.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, isImportantOnly);
 			}
 			
 			if (messages == null) {
@@ -397,7 +418,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				// received date
 				Date receivedDate = message.getReceivedDate();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String receivedDateStr = sdf.format(receivedDate);
 				

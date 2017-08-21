@@ -212,7 +212,7 @@
 			ORDER BY
 				A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE
 			LIMIT
-				#limit#, #rowCount#
+				#listSize#
 		]]>
 	</select>
 	
@@ -533,7 +533,7 @@
                       S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
               ORDER BY
                   A.writedate DESC
-              LIMIT #rowCount#
+              LIMIT #listSize#
       ]]>
   </select>
   

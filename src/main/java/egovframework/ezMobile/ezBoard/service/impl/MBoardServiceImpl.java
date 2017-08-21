@@ -347,24 +347,13 @@ public class MBoardServiceImpl implements MBoardService {
 		String offset = info.getOffSet();
 		int tenantID = info.getTenantId();
 		
-		/** 공지사항 카운트 및 리스트 */
-		Integer noticeCount = 0;
-		if (((gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun).equals("1")) {
-			noticeCount = getNoticePostItemListCount(boardID, userID, gubun, tenantID);
-		}
-		
 		List<MBoardItemVO> mBoardNoticeItemList = getNoticePostItemList(boardID, userID, gubun, page, tenantID, offset);
-        
-		/** 전체 리스트 카운트 및 리스트 */
-		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
-        int endRow = (mobileListSize * page) - noticeCount;
-        
-        if (startRow <= 0) {
-        	startRow = 1;
-        }
+		
+		//임시로 10으로 지정
+		int listSize = 10;
         
 		int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID);
-		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset);
+		List<MBoardItemVO> mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, tenantID, offset);
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -538,20 +527,15 @@ public class MBoardServiceImpl implements MBoardService {
 		return vo;
 	}
 	
-	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int startRow, int endRow, int boardItemListCount, int tenantID, String offset) throws Exception {
+	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, int tenantID, String offset) throws Exception {
 		logger.debug("getBoarditemList started.");
-		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || startRow = " + startRow + " || endRow = " + endRow + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID);
+		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardID", boardID);
 		map.put("userID", userID);
 		map.put("gubun", (gubun == null || !gubun.equals("2") || !gubun.equals("3")) ? "1" : gubun);
-		//Oracle
-		map.put("startRow", startRow);
-		map.put("endRow", endRow);
-		//Maria
-		map.put("rowCount", endRow - (startRow - 1));
-		map.put("limit", startRow - 1);
+		map.put("listSize", listSize);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
@@ -621,7 +605,8 @@ public class MBoardServiceImpl implements MBoardService {
 		return list;
 	}
 	
-	private int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
+	@Override
+	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID) throws Exception {
 		logger.debug("getBoardItemListCount started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
 		
@@ -848,8 +833,7 @@ public class MBoardServiceImpl implements MBoardService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		//mainList 임시 10까지
-		map.put("rowCount", 10);
-		map.put("limit", 0);
+		map.put("listSize", 10);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getNewItemList(map);
@@ -859,8 +843,7 @@ public class MBoardServiceImpl implements MBoardService {
 	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
-		map.put("rowCount", listCnt);
-		map.put("limit", 0);
+		map.put("listSize", listCnt);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getNewItemList(map);
