@@ -442,7 +442,11 @@
 			    
 				/* 레이어팝업으로 taskWriteCross 호출 */
 				/* 수현이 소스랑 겹쳐서 걍 새로짬 */
-			    if (CrossYN()) {
+				var feature = GetOpenPosition(760, 750);
+				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite2.do?taskID=" + id, "",
+		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				
+			    /* if (CrossYN()) {
 			        var feature = GetOpenPosition(760, 750);
 			        win = window.open("/ezTask/taskWrite2.do?taskID=" + id, "",
 			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
@@ -459,7 +463,7 @@
 			    }
 				
 			    win.opener = window.opener;
-			    window.close();
+			    window.close(); */
 			}
 			
 			/* 의견삭제 */
@@ -1444,7 +1448,7 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 			
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/myoffice/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 	
