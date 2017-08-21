@@ -298,7 +298,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			if (!endDate.equals("")) {
-				LOGGER.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, isImportantOnly);
 			}
 			
@@ -367,6 +366,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				messageJson.put("flag",flagged);
 				
+				if( filter.equals("isImportantOnly") && flagged != 1 ) {
+					continue;
+				}
+				
 				// attachment
 				boolean isAttached = IMAPAccess.hasAttachment(message);
 				int attached = isAttached ? 1 : 0;
@@ -432,7 +435,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				// read/unread
 				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 				messageJson.put("read",readFlag);
-							
+				
+				if( filter.equals("isUnreadOnly") && readFlag == 1 ) {
+					continue;
+				}
+				
 				if (message.isSet(Flags.Flag.ANSWERED)) {
 					messageJson.put("contentclass","REPLY");
 				} else {
@@ -445,7 +452,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						messageJson.put("contentclass","IPM.Note");
 					}
 				}
-				messageJsonArray.add(messageJson);
+				if (!endDate.equals(receivedDateStr)) {
+					messageJsonArray.add(messageJson);
+				}
 			}
 			String folderName = folder.getName();
 			if ( folderName.equals("INBOX") ) {

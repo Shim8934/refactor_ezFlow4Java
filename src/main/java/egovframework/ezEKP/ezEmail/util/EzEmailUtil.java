@@ -1336,12 +1336,11 @@ public class EzEmailUtil {
 		}
 		
 		if (endDate != null) {
-			if(sTerm == null) {
-				logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+folder.getFullName()+folder.getMessageCount());
+			if(sTerm == null) {// filter 없을 때
+			
 				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);;
-				logger.debug(sTerm.toString());	
+
 				messages = folder.search(sTerm);
-				logger.debug("!!!!!@@message length@@!!!!!" + messages.length);
 				
 				Date from = endDate;       
 				Folder f = folder;
@@ -1351,18 +1350,26 @@ public class EzEmailUtil {
 				
 				Date rDate;//message Date       
 				long lrDate;//message Date long for  comparing endDate       
-				int start = end;       
+				int start = 1;       
 				
-				do {         
-						start = start - 10;         
-						Message testMsg = f.getMessage(start);         
+				do {                
+						Message testMsg = f.getMessage(end);         
 						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();       
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							start = end - 10;
+							break;
+						}
 					} 
-				while (lrDate > lFrom);       
+				while (end > 1);// 더 빨리 온 메세지를 뽑는다.
+				
+				if (start < 1) { 
+					start = 1;
+				}
 				
 				Message msg[] = f.getMessages(start, end);
-				
+
 				for (int i=0, n=msg.length; i<n; i++) {
 					lrDate = msg[i].getReceivedDate().getTime();         
 					if (lrDate > lFrom) {           
@@ -1370,12 +1377,49 @@ public class EzEmailUtil {
 					}       
 				}
 				return msg;
-			} else { 
-				logger.debug("#########################################"+folder.getFullName()+folder.getMessageCount());
-				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.LT, endDate));
+			} else { //filter 있을 때
+				
+				ArrayList<Message> arrayList = new ArrayList<>();
+
+				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);;
 
 				messages = folder.search(sTerm);
-				logger.debug("#####@@message length@@#####" + messages.length);
+				
+				Date from = endDate;       
+				Folder f = folder;
+				
+				int end = f.getMessageCount();       
+				long lFrom = from.getTime(); //endDate
+				
+				Date rDate;//message Date       
+				long lrDate;//message Date long for  comparing endDate       
+				int j = 0;
+				
+				do {                
+						Message testMsg = f.getMessage(end);         
+						rDate = testMsg.getReceivedDate();         
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							if (isUnreadOnly || isImportantOnly) {
+								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
+									arrayList.add(testMsg);
+									j++;
+								} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
+										arrayList.add(testMsg);
+										j++;
+								}
+							} else {
+								arrayList.add(testMsg);
+								j++;
+							}
+						}
+					} 
+				while (j < 10 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+				
+				messages = msg;
 			}
 		}
 		
