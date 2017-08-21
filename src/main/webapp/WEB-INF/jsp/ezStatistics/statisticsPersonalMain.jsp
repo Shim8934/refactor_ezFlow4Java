@@ -241,9 +241,14 @@
             var line1 = new Array();
             var line2 = new Array();
             
-            for (var i = 0; i < 24 ; i++) {
-            	line1.push(new Array((i + '~' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
-	            line2.push(new Array((i + '~' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
+            for (var i = 0; i < 10 ; i++) {
+            	line1.push(new Array((i + '<br/>≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
+	            line2.push(new Array((i + '<br/>≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
+            }
+            
+            for (var i = 10; i < 24 ; i++) {
+            	line1.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
+	            line2.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
             }
 
             plot2 = $.jqplot('statisticschart', [line1, line2], {
