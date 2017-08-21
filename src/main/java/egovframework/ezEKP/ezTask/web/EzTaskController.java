@@ -166,6 +166,36 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskRead";
 	}
 	
+	/**
+	 * 지시사항 수정화면 조회
+	 */
+	@RequestMapping(value = "/ezTask/taskWorkWrite.do")
+	public String taskWorkWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskWorkWrite started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		String taskID = request.getParameter("taskID");
+		TaskInfoVO taskInfoVO = null;
+		
+		taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		
+		//첨부파일목록조회
+		if (taskInfoVO.getHasAttach().equals("Y")) {
+//			getAttachList(taskID);
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("taskID", taskID);
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		
+		logger.debug("taskWorkWrite ended.");
+		
+		return "/ezTask/taskWorkWrite";
+	}
+	
 	/** 의견작성 Method*/
 	@RequestMapping(value = "/ezTask/taskSaveComment.do")
 	public String taskSaveComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {

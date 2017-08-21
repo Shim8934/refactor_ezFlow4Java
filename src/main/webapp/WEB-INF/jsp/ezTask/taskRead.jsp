@@ -731,7 +731,8 @@
 			
 			/* 진행사항 수정 스크립트 */
 			function edit_taskwrok() {
-			    var xmlDom = createXmlDom();
+				/* 기존 */
+			    /* var xmlDom = createXmlDom();
 			    var xmlHTTP = createXMLHttpRequest();
 			
 			    var objRoot, objNode, attachnode, shobjnode;
@@ -792,7 +793,37 @@
 				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
 					alert("<spring:message code='ezTask.t2009' />");
 					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
-				}
+				} */
+				
+				var id = taskid;
+			    if (parentid != "0")
+			        id = parentid;
+			    var win;
+			    
+				/* 레이어팝업으로 taskWriteCross 호출 */
+				/* 수현이 소스랑 겹쳐서 걍 새로짬 */
+				var feature = GetOpenPosition(760, 750);
+				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWorkWrite.do?taskID=" + id, "",
+		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				
+			    /* if (CrossYN()) {
+			        var feature = GetOpenPosition(760, 750);
+			        win = window.open("/ezTask/taskWrite.do?taskID=" + id, "",
+			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			    } else {
+			        if (pUse_Editor == "" || pUse_Editor == "CK") {
+			            var feature = GetOpenPosition(760, 660);
+			            win = window.open("/myoffice/ezTask/task_write.aspx?id=" + id, "",
+			                "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			        } else {
+			            var feature = GetOpenPosition(760, 660);
+			            win = window.open("/myoffice/ezTask/task_write_IE.aspx?id=" + id, "",
+			               "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			        }
+			    }
+				
+			    win.opener = window.opener;
+			    window.close(); */
 			}
 			
 			/* 진행상태변경시 스크립트 */
