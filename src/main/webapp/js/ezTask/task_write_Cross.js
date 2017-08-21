@@ -111,7 +111,6 @@ function manage_share_Complete(retVal) {
             }
             break;
         case 2:
-
             if (typeof (retVal) != "undefined") {
                 g_share = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 

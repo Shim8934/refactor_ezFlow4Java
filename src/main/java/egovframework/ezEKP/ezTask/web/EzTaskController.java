@@ -275,10 +275,13 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskWrite2";
 	}
 	
-	/*@RequestMapping(value = "/ezTask/taskSearch.do")
-	public String taskSearch() throws Exception {
-		return "/ezTask/taskSearch";
-	}*/
+	/**
+	 * 조직도화면조회
+	 */
+	@RequestMapping(value = "/ezTask/taskSelectEntity.do")
+	public String taskSelectEntity() throws Exception {
+		return "/ezTask/taskSelectEntity";
+	}
 	
 	
 	

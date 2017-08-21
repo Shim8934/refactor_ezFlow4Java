@@ -581,18 +581,18 @@
 									</c:otherwise>
 								</c:choose>
 
-							<TR id="shareinputtr">
-								<th ><a class="imgbtn"><span onClick="_manage_attendant()"><spring:message code='ezTask.t157' /></span></a></th>
-<!-- 									<TD colspan ="3"><DIV id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></DIV></TD> -->
-		         				<td colspan="3" id ="itemList">
+							<tr id="shareinputtr">
+								<th ><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
+									<td colspan ="3"><div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div></td>
+		         				<!-- <td colspan="3" id ="itemList">
 		         					<input name="Input" id="shareInput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;" onkeyup="return on_keydown(event)">
 		         					<div id="shareList" style="OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;"></div>
 		         					<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 		         					<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 		         					<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 		         					<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-		         				</td>
-							</TR>
+		         				</td> -->
+							</tr>
 
 <!-- 								<tr style="display:none"> -->
 <%-- 									<th><spring:message code='ezTask.t212' /></th> --%>
