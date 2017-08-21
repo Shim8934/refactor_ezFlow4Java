@@ -45,6 +45,9 @@
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/resource_jp_05" target="right">様式登録</a></span></h2>
 				<ul>
 				</ul>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/resource_jp_06" target="right">承認待ち</a></span></h2>
+				<ul>
+				</ul>
 			</c:otherwise>
 		</c:choose>
 		
