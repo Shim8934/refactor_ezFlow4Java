@@ -1001,23 +1001,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	private void checkUserConfig(String userID, int tenantID) throws Exception{
 		String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userID, "LoginFailCount"); 
-		if(userLoginFailedAttempt.equals("")){
+		
+		if (userLoginFailedAttempt.equals("")) {
 			//User hasn't logged in fail yet
 			return;
-		}
-		else{
+		} else {
 			//Check if user's account is locked
 			int currentNumber = Integer.parseInt(userLoginFailedAttempt);
 			int numberOfLoginFailPermit = Integer.parseInt(ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantID));
-			if(currentNumber >= numberOfLoginFailPermit){
+			
+			if (currentNumber >= numberOfLoginFailPermit) {
 				//Reset current number of login fail attempt to 0
 				ezCommonService.updateUserConfigInfo(tenantID, userID, "LoginFailCount", "0");
-			}
-			else{
+			} else {
 				//We don't need to do anything
 				return;
 			}
-		}
+		}		
 	}
 	
 }

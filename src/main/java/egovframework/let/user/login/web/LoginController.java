@@ -254,6 +254,9 @@ public class LoginController {
 		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
 		        	//session = request.getSession();	        	
 		        	
+		        	//Reset number of login fail attempts
+		        	resetLoginFailAttempts(_uid, tenantId);
+		        	
 		        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 		        	    return "redirect:/ezEmail/mailAloneMain.do";
 		        	} else {
@@ -500,4 +503,15 @@ public class LoginController {
         } 
     }
     
+    private void resetLoginFailAttempts(String userID, int tenantID) throws Exception{
+    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userID, "LoginFailCount"); 
+    	
+		if (userLoginFailedAttempt.equals("")) {
+			//User hasn't logged in fail yet
+			return;
+		} else {
+			//Reset the number to 0
+			ezCommonService.updateUserConfigInfo(tenantID, userID, "LoginFailCount", "0");
+		}
+    }
 }
