@@ -3370,6 +3370,21 @@ public class EzPortalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 포탈 - 도움말 leftCircular 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftCircular.do")
+	public String leftCircular(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("leftCircular started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("leftCircular ended");
+		return "/ezPortal/help/leftCircular";
+	}
+	
+	/**
 	 * 포탈 - 도움말 topPortal 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/help/topPortal.do")
