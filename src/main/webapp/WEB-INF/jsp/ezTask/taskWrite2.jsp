@@ -618,7 +618,7 @@
 				</tr>
 				<tr>
 		  			<td id="EdtorSize" style="height:100%;">
-			  			<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
+			  			<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
 	      			</td>
   				</tr>
 				<tr>
@@ -680,13 +680,13 @@
 
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		 
-		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezTask/interASP/upload.aspx" target="ifrm" style="visibility:hidden;" >
+		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/myoffice/ezTask/interASP/upload.aspx" target="ifrm" style="display:none;" >
 			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;"/>
 			<input type="hidden" name="maxsize" id="maxsize" />
 			<input type="hidden" name="cnt" id="cnt" />
 		</form>
 		
-		<form method="post" id="nameValue" name="nameValue" enctype="multipart/form-data" action="#" target="child" style="visibility:hidden;" >
+		<form method="post" id="nameValue" name="nameValue" enctype="multipart/form-data" action="#" target="child" style="display:none;" >
 			<input type="hidden" name="addrBook" id="addrBook" />
 			<input type="hidden" name="name" id="name" />
 			<input type="hidden" name="id" id="id" />
