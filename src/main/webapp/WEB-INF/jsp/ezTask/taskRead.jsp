@@ -58,10 +58,8 @@
 
 		        if (tasktype == "1") {
 		            document.getElementById("MailEnv_sub2").style.display = "none";
-		            document.getElementById("persontr").style.display = "none";
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2000' />";
-		            document.getElementById("message").style.height = "295px";
 		        } else if (tasktype == "2") {
 		            document.getElementById("taskType").innerHTML = "<spring:message code='ezTask.t2001' />";
 		        } else {
@@ -69,10 +67,10 @@
 		        }
 
 				/* 저장 수정버튼 숨김스크립트 */
-		        if (ownerid == userid) {
-// 		            document.getElementById("save").style.display = "none";
+		        /* if (ownerid == userid) {
+		        	document.getElementById("editTask").style.display = "";
 		        } else if (personid == userid) {
-// 		            document.getElementById("edit").style.display = "none";
+		        	document.getElementById("editTaskWork").style.display = "";
 		            document.getElementById("delete").style.display = "none";
 		            
 		            if(attachFileInfo != "") {
@@ -80,7 +78,7 @@
 		            }
 		            
 		            tempbody = message2.GetEditorContent();
-		        }
+		        } */
 
 		        var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
 		        for (var i = 0; i < taskcheckbox.length; i++) {
@@ -684,6 +682,15 @@
 			            document.getElementById("normalScreen").style.display = "";
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "none";
+			            
+			            if (ownerid == userid) {
+				        	document.getElementById("editTask").style.display = "";
+				        	document.getElementById("editTaskWork").style.display = "none";
+				        } else if (personid == userid) {
+				        	document.getElementById("editTask").style.display = "none";
+				        	document.getElementById("editTaskWork").style.display = "none";
+				        }
+			            
 			            break;
 			        case "MailEnv_div2":
 			            selecttab = "2";
@@ -694,12 +701,25 @@
 			                if (!CrossYN())
 			                    document.getElementById("message2").style.height = (document.body.clientHeight - 220) + "px";
 			            } catch (e) {}
+			            
+			            if (ownerid == userid) {
+				        	document.getElementById("editTask").style.display = "none";
+				        	document.getElementById("editTaskWork").style.display = "none";
+				        } else if (personid == userid) {
+				        	document.getElementById("editTask").style.display = "none";
+				        	document.getElementById("editTaskWork").style.display = "";
+				        }
+			            
 			            break;
 			        case "MailEnv_div3":
 			            selecttab = "3";
 			            document.getElementById("normalScreen").style.display = "none";
 			            document.getElementById("tablework").style.display = "none";
 			            document.getElementById("tablecomment").style.display = "";
+			            
+			        	document.getElementById("editTask").style.display = "none";
+			        	document.getElementById("editTaskWork").style.display = "none";
+			            
 			            break;
 			    }
 			}
@@ -709,7 +729,8 @@
 			        add_comment();
 			}
 			
-			function save_taskwrok() {
+			/* 진행사항 수정 스크립트 */
+			function edit_taskwrok() {
 			    var xmlDom = createXmlDom();
 			    var xmlHTTP = createXMLHttpRequest();
 			
@@ -1017,8 +1038,6 @@
 	<body class="popup" style="overflow:hidden; height:99%">
 		<div id="menu">
 			<ul>
-<%-- 				<li id="edit"><SPAN onClick="edit_task()"><spring:message code='ezTask.t151' /></SPAN></li> 지시사항 수정화면호출--%>
-<%-- 				<li id="save"><SPAN onClick="save_taskwrok()"><spring:message code='ezTask.t96' /></SPAN></li> 진행사항 저장--%>
 				<li id="delete"><SPAN onClick="delete_task()"><spring:message code='ezTask.t115' /></SPAN></li>
 				<li id="share" style="display:none"><SPAN onClick="manage_share()"><spring:message code='ezTask.t152' /></SPAN></li>
 				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
@@ -1035,6 +1054,7 @@
 			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
+		<!-- 이쪽에 진행단계 -->
 		<table id="taskProgress" class="layout content">
 			<tr>
 				<td>
@@ -1043,6 +1063,7 @@
 			</tr>
 		</table>
 		<br/>
+		<!-- 이쪽에 업무정보 -->
 		 
 		 <table id="taskInfo" class="layout">
 		 	<tr>
@@ -1088,7 +1109,7 @@
 <!-- 							담당자부분인것같음 이효진 -->
 <!-- 								<div id="personlist" style="overflow-Y: auto; padding-top:2px"> -->
 <!-- 								</div> -->
-								<div style="CURSOR:pointer; " onClick="show_personinfo('${taskInfoVO.personID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
+								<div style="cursor:pointer; " onClick="show_personinfo('${taskInfoVO.personID }')" onMouseOver="this.style.color='#006BB6'" onMouseOut="this.style.color='#393939'">
 									<c:out value = '${taskInfoVO.personName }' />
 								</div>
 							</td>
@@ -1175,21 +1196,18 @@
 				</td>
 			</tr>
 		</table>
-		<br />
-		<div id="tabpart" class="portlet_tabpart03">
-			<div class="portlet_tabpart03_top" id="tab1">
+		
+		<div id="tabpart" class="portlet_tabpart01" style="margin-top: 3px; margin-bottom: 3px;">
+			<div class="portlet_tabpart01_top" id="tab1">
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
 				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
 				<!-- 이효진 저장버튼추가필요 -->
 				
-				<div id="close">
-					<ul>
-						<!-- 지시사항 수정화면호출 -->
-						<li id="edit"><span onClick="edit_task()"><spring:message code='ezTask.t151' /></span></li>
-						<!-- 진행사항 저장 -->
-						<li id="save"><span onClick="save_taskwrok()"><spring:message code='ezTask.t96' /></span></li>
-					</ul>
+				<!-- 지시사항 수정, 진행사항 수정 레이어팝업호출-->
+				<div style="float: right; margin-top: 3px;">
+					<a id="editTask" class="imgbtn" style="display:none; "><span onclick="return edit_task()"><spring:message code='ezTask.t151' /></span></span></a>
+					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t151' /></span></a>
 				</div>
 			</div>
 		</div> 
@@ -1311,7 +1329,6 @@
 				</tr>
 <%-- 			</c:otherwise> --%>
 <%-- 		</c:choose> --%>
-		
 		</table>
 		
 		<table id="tablecomment" class="layout" style="display:none;height:580px">
