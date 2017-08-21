@@ -244,7 +244,7 @@
                 data.push(new Array(i + 1, parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
                 data2.push(new Array(i + 1, parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
             }
-           
+
             plot2 = $.jqplot('statisticschart', [data, data2], {
                 animate: false,
                 series: [{
