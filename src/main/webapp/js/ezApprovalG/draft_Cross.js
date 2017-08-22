@@ -2497,7 +2497,7 @@ function SaveDraftDocInfo() {
     if (rtnVal.toUpperCase() == "FALSE") {
     	 return rtnVal;
     }
-    rtnVal = SaveFile();
+//    rtnVal = SaveFile();
     if (rtnVal.toUpperCase() != "TRUE") {
         SaveOrgFile();
     }

@@ -7147,7 +7147,6 @@ CREATE TABLE `tbl_user_config` (
   `USER_ID` varchar(80) NOT NULL,
   `PROPERTY_NAME` varchar(100) NOT NULL,
   `PROPERTY_VALUE` varchar(2000) NOT NULL,
-  `DESCRIPTION` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`USER_ID`,`PROPERTY_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

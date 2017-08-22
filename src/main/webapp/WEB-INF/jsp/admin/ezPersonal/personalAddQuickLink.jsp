@@ -518,7 +518,7 @@
 	</head>
 	<body class="popup">
 		<xml id="listviewheader" style ="display:none"></xml>
-	    <h1>Quick Link <spring:message code = 'ezPersonal.t105' /></h1>
+	    <h1>Quick Link <spring:message code = 'ezPersonal.t105' /><spring:message code = 'ezPersonal.t169' /></h1>
 	    <span style="color:red"><spring:message code = 'ezPersonal.t00008' /></span>
 	    <table class="content" style="height:300px;width:100%;">
 	        <tr>
