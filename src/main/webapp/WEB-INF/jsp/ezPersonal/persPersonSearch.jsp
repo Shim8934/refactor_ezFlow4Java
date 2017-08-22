@@ -459,7 +459,7 @@
 		    }
 	    	var issearch = false;
 	    	function search_click(type) {
-		        if (keyword.value == "") {
+		        if (document.getElementById("keyword").value.trim() == "") {
 	            	alert("<spring:message code='ezPersonal.t61'/>");
 	            	keyword.focus();
 	            	return;
