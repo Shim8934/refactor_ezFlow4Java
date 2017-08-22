@@ -63,6 +63,9 @@
 		            }
 		        }
 		    };
+		    /**
+		    * 글림으로된 서명을 선택해서 진행할 경우
+		    */
 		    function btn_ImageSave_onclick() {
 		        var listview = new ListView();
 		        listview.LoadFromID("listSIGNLIST");
@@ -80,7 +83,7 @@
 		                var AprSignName = AprSign[0].cells[0].innerText;
 		                var AprSignURL = AprSign[0].getAttribute("DATA1");
 		                var AprSignInfo = BaseURL + AprSignURL;
-		
+		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(AprSignInfo);
 		                }

@@ -2850,14 +2850,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		// <HERF></HERF>에 저장된 .htm 파일의 위치를 .mht 파일이 저장될 위치로 변경해준다.
 		xmlDom.getDocumentElement().getChildNodes().item(6).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + 
 				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + ".mht");
-		String aprState = "003";
+		String aprState = "003"; // 003 승인
 		
 		if (xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent().equals("000")) {
-			aprState = "000";
+			aprState = "000"; // 000 미결
 		} else if (xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent().equals("001")) {
-			aprState = "001";
+			aprState = "001"; // 001 대기
 			xmlDom.getDocumentElement().getChildNodes().item(6).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + 
 				commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + "TMP" + commonUtil.separator + xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent() + ".mht");
 		}
@@ -3041,7 +3042,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("<<<path : " + path);
 		logger.debug("<<<saveFileName : " + saveFileName);
 		logger.debug("<<<saveDir : " + saveDir);
-		logger.debug("<<<formText : " + formText);
 		
 		try {
 			File file = new File(saveDir);
@@ -3051,8 +3051,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
-			
-			logger.debug("<<<stream : " + stream);
 			
 			bos = new FileOutputStream(saveFileName);
 			

@@ -723,7 +723,7 @@ var strLangDocState24 = "배부";
 var strLangDocState31 = "반송";
 var strLangDocState32 = "회송";
 
-// AprType, FunctionType : 결재 형태A03
+// AprType, FunctionType : 결재 형태 A03
 var strAprType1 = "001";
 var strAprType2 = "002";
 var strAprType3 = "003";

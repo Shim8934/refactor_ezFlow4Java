@@ -57,7 +57,8 @@ function GetDraftAprLineInfo(ret) {
     
 	 
 	xmldom = loadXMLString(xmlKuljea);
-	  
+	 
+	// 결재리스트를 objNodes에 담아둔다.
     objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
     fields = message.GetFieldsList();
 	count = objNodes.length;
@@ -1567,6 +1568,10 @@ function putJunkyulSign(signID) {
         field.textContent = strLang6;
     }
 }
+/**
+ *  결재 서명관련 Customize
+ *  서명의 사이즈 조절 등이 이뤄지는 함수
+ * */
 function SendDraftMappingSign(ret) {
     try {
         var fields = message.GetFieldsList();
