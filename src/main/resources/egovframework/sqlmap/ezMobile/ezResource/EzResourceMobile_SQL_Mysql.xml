@@ -19,6 +19,7 @@
 		<result property="isRest"			column="ISREST"				columnIndex="7"/>
 		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
 		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
+		<result property="calendarDay"		column="CALENDARDAY"			columnIndex="10"/>
 		</resultMap>
 	
 		<resultMap class="MResourceGetScheduleVO" 		id="resGetScheduleListVO">
@@ -1039,6 +1040,7 @@
 	                holidayname,
 	                holidayname2,
 	                holidaydate,
+	                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
 	                ifnull(issolar, '0') issolar,
 	                ifnull(isrepeat, '0') isrepeat,
 	                ifnull(isuse, '0') isuse,
@@ -1058,6 +1060,7 @@
 		                holidayname,
 		                holidayname2,
 		                holidaydate,
+		                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
 		                ifnull(issolar, '0') issolar,
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,
@@ -1078,6 +1081,7 @@
 		                holidayname,
 		                holidayname2,
 		                holidaydate,
+		                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
 		                ifnull(issolar, '0') issolar,
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,

@@ -19,6 +19,15 @@ public class ResScheGetHolidayVO {
 	private int isUse;
 	/** 사용 회사*/
 	private String useCompany;
+	/** 캘린더 날짜*/
+	private String calendarDay;
+
+	public String getCalendarDay() {
+		return calendarDay;
+	}
+	public void setCalendarDay(String calendarDay) {
+		this.calendarDay = calendarDay;
+	}
 	
 	public int getHolidayID() {
 		return holidayID;
