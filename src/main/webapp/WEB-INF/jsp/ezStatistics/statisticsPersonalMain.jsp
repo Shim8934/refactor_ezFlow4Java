@@ -240,6 +240,7 @@
 
             var line1 = new Array();
             var line2 = new Array();
+<<<<<<< HEAD
             
             for (var i = 0; i < 10 ; i++) {
             	line1.push(new Array((i + '<br/>≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
@@ -250,6 +251,18 @@
             	line1.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
 	            line2.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
             }
+=======
+
+            for (var i = 0; i < 10 ; i++) {
+            	line1.push(new Array((i + '<br/>≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
+	            line2.push(new Array((i + '<br/>≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
+            }
+
+            for (var i = 10; i < 24 ; i++) {
+            	line1.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[1]))));
+	            line2.push(new Array((i + '<br/> ≀<br/>' + (i+1)), parseInt(getnodetext(GetChildNodes(document.getElementById("TR" + i))[2]))));
+            }
+>>>>>>> 3be6b68... 관리자>통계>사용자 통계 그래프 X 축 수정
 
             plot2 = $.jqplot('statisticschart', [line1, line2], {
                 animate: false,
