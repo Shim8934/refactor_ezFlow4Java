@@ -35,26 +35,26 @@
 				</ul>
 			</c:when>
 			<c:otherwise>
-				<h1>日程管理</h1>
+				<h1>スケジュール</h1>
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_01" target="right">メイン画面</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_02" target="right">日程登録</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_02" target="right">日程の登録</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_03" target="right">日程表示</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_03" target="right">日程の表示</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_04" target="right">日程管理</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_04" target="right">日程の管理</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_05" target="right">日程グループ管理</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_05" target="right">日程グループの管理</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_06" target="right">日程検索</a></span> </h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_06" target="right">日程の検索</a></span> </h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_07" target="right">公開日程検索</a></span> </h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/schedule_jp_07" target="right">公開日程の検索</a></span> </h2>
 				<ul>
 				</ul>
 			</c:otherwise>

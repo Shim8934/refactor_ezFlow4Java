@@ -36,10 +36,10 @@
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/poll_jp_01" target="right">メイン画面</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/poll_jp_02" target="right">アンケート登録</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/poll_jp_02" target="right">アンケートの登録</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/poll_jp_03" target="right">アンケート管理</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/poll_jp_03" target="right">アンケートの管理</a></span></h2>
 				<ul>
 				</ul>
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/poll_jp_04" target="right">アンケートへの参加</a></span></h2>
