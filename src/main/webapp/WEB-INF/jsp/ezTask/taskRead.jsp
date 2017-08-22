@@ -10,12 +10,14 @@
 		<title><spring:message code='ezTask.t143' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
@@ -104,6 +106,15 @@
 		        }
 		        
 				setTimeout(onloadchangtab, 100);
+				
+				$('#taskProgressBar').LineProgressbar({
+					percentage: 90,
+					fillBackgroundColor: '#3498db',
+					backgroundColor: '#EEEEEE',
+					radius: '10px',
+					height: '10px',
+					width: '100%'
+				});
 		    });
    
 			function scrollTop() {
@@ -1086,10 +1097,20 @@
 		</script>
 		
 		<!-- 이쪽에 진행단계 -->
-		<table id="taskProgress" class="layout content">
+		<table id="taskProgress" class="layout">
 			<tr>
 				<td>
-					progressBar
+					<table>
+						<colgroup><col width='80%' /><col width='20%' /></colgroup>
+						<tr>
+							<td>
+								<div id="taskProgressBar"></div>
+							</td>
+							<td>
+								상태수정버튼
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 		</table>
