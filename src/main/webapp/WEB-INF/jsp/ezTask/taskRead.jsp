@@ -629,7 +629,7 @@
 						taskID : id
 					},
 					success : function(result) {
-						/* alert("<spring:message code='ezTask.t150' />"); */
+						//alert("<spring:message code='ezTask.t150' />");
 						
 						try { window.opener.RefreshView() } catch (e) { }
 						//progressBar refresh시켜야함
