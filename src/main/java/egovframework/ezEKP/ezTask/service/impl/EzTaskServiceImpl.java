@@ -193,8 +193,8 @@ public class EzTaskServiceImpl implements EzTaskService{
 		taskInfoVO.setHasAttach(doc.getElementsByTagName("HASATTACH").item(0).getTextContent());
 		taskInfoVO.setTaskStatus(Integer.parseInt(doc.getElementsByTagName("TASKSTATUS").item(0).getTextContent()));
 		taskInfoVO.setImportance(Integer.parseInt(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
-		taskInfoVO.setStartDate(doc.getElementsByTagName("STARTDATE").item(0).getTextContent());
-		taskInfoVO.setEndDate(doc.getElementsByTagName("ENDDATE").item(0).getTextContent());
+		taskInfoVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+		taskInfoVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		taskInfoVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
 		taskInfoVO.setContentPath(commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent() + "}" + ".mht");
 		taskInfoVO.setTaskType(doc.getElementsByTagName("TASKTYPE").item(0).getTextContent());
