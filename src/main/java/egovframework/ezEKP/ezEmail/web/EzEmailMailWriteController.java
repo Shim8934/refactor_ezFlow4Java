@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -2873,8 +2874,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            
 			        	// 보안메일 처리
 		            	if (isSecureMail) {
-		            		String secureInfo = MimeUtility.encodeText(securePassword + "/" + secureReadCount + "/" + secureReadDate, "UTF-8", null);
-	    		        	message.setHeader("X-JMocha-Secure-Mail-Info", secureInfo);
+	    		        	message.setHeader("X-JMocha-Secure-Mail", "true");
+	    		        	message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
+	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
+	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadDate", secureReadDate);
+	    		        	message.setHeader("X-JMocha-Secure-Mail-ServerName", userInfo.getServerName());
 		            	}
 			        	
 			        	doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
@@ -2889,7 +2893,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                             oldMessage.setFlag(Flags.Flag.DELETED, true);
                         }		        		
 		        	// 즉시 발송의 경우	
-			        } else {         
+			        } else {
+			        	
+			        	String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
+						String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
+						
+						if (eachMailHeader != null) {
+							message.removeHeader("X-JMocha-Each-Mail");
+						}
+						
+						File encryptedFile = null; // 보안메일 관련 파일 변수
+			        	
 			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
 			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
 			            if (mailSendCompleted == false) {
@@ -2897,8 +2911,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			            	// 보안메일 처리
 			            	if (isSecureMail) {
+			            		if (!secureReadDate.equals("")) {
+			            			Date date = new Date(Long.parseLong(secureReadDate));
+			            			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			            			secureReadDate = sdf.format(date);
+			            			secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, userInfo.getOffset(), true);
+			            		}
+			            		
 			            		// save secure mail info and get secureId
-			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), commonUtil.getDateStringInUTC(secureReadDate, userInfo.getOffset(), true));
+			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
 		    		        	
 		    		        	if (secureId == 0) {
 		    		        		throw new Exception("INSERTSECUREMAILFAIL");
@@ -2957,7 +2978,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	secureMixedPart.addBodyPart(secureBodyPart);
 		    		        	// make secureBodyPart and add to secureMixedPart - end
 		    		        	
-		    		        	// make secureBodyPart and add to secureMixedPart
+		    		        	// make secureAttachPart and add to secureMixedPart
 		    		        	MimeBodyPart secureAttachPart = new MimeBodyPart();
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureAttachPart.setHeader("Content-Type", "text/html");
@@ -3008,19 +3029,18 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	sb.append("    </body>\n");
 		    		        	sb.append("</html>\n");
 		    		        	
-		    		        	// TODO: secureMailKey 암호화
 		    		        	String secureMailKey = userAccount + "/" + secureId;
+		    		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
+		    		        	
 		    		        	secureAttachPart.setContent(sb.toString().replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
 		    		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
 		    		        	secureMixedPart.addBodyPart(secureAttachPart);
-		    		        	// make secureBodyPart and add to secureMixedPart - end
+		    		        	// make secureAttachPart and add to secureMixedPart - end
 		    		        	
 		    		        	// make encryptedOriginalPart and add to secureMixedPart
 		    		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
 		    		        	
-		    		        	// TODO: originalFile, encryptedFile 삭제
 		    		        	String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempFileUpload";
-		    		        	
 		    		        	File file = new File(pDirPath);
 		    		        	if (!file.exists()) {
 		    		        		file.mkdirs();
@@ -3040,8 +3060,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    						}
 		    					}
 		    		        	
-		    		        	File encryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
+		    		        	encryptedFile = new File(pDirPath + commonUtil.separator + UUID.randomUUID().toString());
 		    		        	egovFileScrty.cryptFile(Cipher.ENCRYPT_MODE, originalFile, encryptedFile);
+		    		        	
+		    		        	// 보안메일 관련 임시파일 삭제
+		    		        	if (originalFile.delete()) {
+		    		        		logger.debug("originalFile is deleted. fileName=" + originalFile.getName());
+		    		        	}
 		    		        	
 		    		        	encryptedOriginalPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"originalMail.eml\"");
 		    		        	encryptedOriginalPart.setHeader("Content-Type", "message/rfc822");
@@ -3092,15 +3117,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    	                        sentFolderMessageUID = uids[0].uid;
 	    	                    }
 			            	}
-			            	
 			            }
-			            
-			            String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
-						String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
-						
-						if (eachMailHeader != null) {
-							message.removeHeader("X-JMocha-Each-Mail");
-						}
 			            
 			            // 개별발신
 			            if (isEachMailB) {
@@ -3190,9 +3207,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			    			}
 			            }
 			            
+			            // 보안메일 관련 임시파일 삭제
+				        if (encryptedFile != null) {
+				        	if (encryptedFile.delete()) {
+				        		logger.debug("encryptedFile is deleted. fileName=" + encryptedFile.getName());
+				        	}
+				        }
 			        }
 			        
-			        //file system의 templist txt파일 삭제
+			        // file system의 templist txt파일 삭제
 			        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
 			        pDirPath += commonUtil.separator + stateName + ".txt";
 			        File f = new File(pDirPath);

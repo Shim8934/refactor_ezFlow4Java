@@ -445,19 +445,11 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     		}  
 			
         	//set isSecureMail
-    		if (message.getHeader("X-JMocha-Secure-Mail-Info") != null) {
-    			String secureInfo = message.getHeader("X-JMocha-Secure-Mail-Info")[0];
-    			secureInfo = MimeUtility.decodeText(secureInfo);
-				isSecureMail = "true";
-				
-				int index = secureInfo.lastIndexOf("/");
-				secureReadDate = secureInfo.substring(index + 1);
-				
-				secureInfo = secureInfo.substring(0, index);
-				index = secureInfo.lastIndexOf("/");
-				secureReadCount = secureInfo.substring(index + 1);
-				
-				securePassword = secureInfo.substring(0, index);
+    		if (message.getHeader("X-JMocha-Secure-Mail") != null) {
+    			isSecureMail = message.getHeader("X-JMocha-Secure-Mail")[0];
+    			securePassword = message.getHeader("X-JMocha-Secure-Mail-Password")[0];
+    			secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
+    			secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
 				
 				logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount + ",secureReadDate=" + secureReadDate);
     		}
