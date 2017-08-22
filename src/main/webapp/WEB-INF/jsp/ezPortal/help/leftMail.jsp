@@ -51,7 +51,7 @@
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_01" target="right"><span>メイン画面</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_02" target="right"><span>メール作</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_02" target="right"><span>メールの作成</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_03" target="right"><span>送信メール</span></a></h2>
@@ -60,25 +60,25 @@
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_04" target="right"><span>受信メール</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_05" target="right"><span>ポストボックス管理</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_05" target="right"><span>メールフォルダの管理</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_06" target="right"><span>メールの移動・コピー</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_07" target="right"><span>メールの削除</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_07" target="right"><span>メールの削除、永久削除</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_08" target="right"><span>削除メールの管理</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_09" target="right"><span>メール検索</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_09" target="right"><span>メールの検索</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_10" target="right"><span>外部メールの確認</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_11" target="right"><span>メールをＰ・Ｃに保存</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_11" target="right"><span>メールをPCに保存</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/mail_jp_12" target="right"><span>予約送信管理</span></a></h2>

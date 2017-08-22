@@ -59,42 +59,42 @@
 				<h1>環境設定</h1>
 				<c:choose>
 					<c:when test="${pakageType == 'basic'}">
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_02" target="right"><span>個人情報管理</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_02" target="right"><span>個人情報の管理</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_03" target="right"><span>メール環境設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_03" target="right"><span>メールの環境設定</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_04" target="right"><span>PIMS環境設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_04" target="right"><span>スケジュールの環境設定</span></a></h2>
 						<ul>
 						</ul>
 						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_06" target="right"><span>掲示板の環境設定</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_07" target="right"><span>言語及び標準時間帯の設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_07" target="right"><span>言語及び標準時の設定</span></a></h2>
 						<ul>
 						</ul>
 					</c:when>
 					<c:otherwise>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_01" target="right"><span>マイポータルの設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_01" target="right"><span>マイポータルページの設定</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_02" target="right"><span>個人情報管理</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_02" target="right"><span>個人情報の管理</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_03" target="right"><span>メール環境設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_03" target="right"><span>メールの環境設定</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_04" target="right"><span>PIMS環境設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_04" target="right"><span>スケジュールの環境設定</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_05" target="right"><span>電子決裁の環境設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_05" target="right"><span>決裁の環境設定</span></a></h2>
 						<ul>
 						</ul>
 						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_06" target="right"><span>掲示板の環境設定</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_07" target="right"><span>言語及び標準時間帯の設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_07" target="right"><span>言語及び標準時の設定</span></a></h2>
 						<ul>
 						</ul>
 					</c:otherwise>
