@@ -29,7 +29,7 @@ public interface EzTaskService {
 
 	public void taskUpdateConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
 
-	public String taskSave(Document doc, String realPath, LoginVO userInfo) throws Exception;
+	public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception;
 
 //	public void taskSave(LoginVO userInfo, String regDate, int taskStatus, int importance, String fileList, String title, int taskType, String sdate, String edate, String[] shareID, String[] shareName, String[] shareName2, String[] shareDepts, String[] shareDepts2) throws Exception;
 }

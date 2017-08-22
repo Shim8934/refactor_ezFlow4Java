@@ -529,7 +529,12 @@ function save_task() {
     strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
 
     createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
-    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);			    	
+    
+    if (taskid == "") {
+    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");    	
+    } else {
+    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);    	
+    }
 
     var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
 

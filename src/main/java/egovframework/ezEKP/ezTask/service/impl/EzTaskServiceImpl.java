@@ -180,7 +180,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 
 	@Override
-	public String taskSave(Document doc, String realPath, LoginVO userInfo) throws Exception {
+	public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception {
 		logger.debug("taskSave started.");
 
 		TaskInfoVO taskInfoVO = new TaskInfoVO();
@@ -257,7 +257,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		PrintWriter pw = null;
 
-		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent() + "}" + ".mht";
+		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + newGuid + "}" + ".mht";
 
 		logger.debug("mhtPath : " + mhtPath);
 		
