@@ -29,7 +29,7 @@
 			var parentid = "${taskInfoVO.parentID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
-		    var admin = "${admin }";
+// 		    var admin = "Y";
 			/* 담당자 인듯 이효진 */		    
 // 		    var personlist = "${personList }";
 
@@ -48,6 +48,7 @@
 		    var folderPath = "${folderPath }";
 		    
 		    $(document).ready(function() {
+		    	
 		    	load_bodyhtml();
 		    	load_bodyhtml2();
 		    	
@@ -107,14 +108,27 @@
 		        
 				setTimeout(onloadchangtab, 100);
 				
-				$('#taskProgressBar').LineProgressbar({
-					percentage: 90,
-					fillBackgroundColor: '#3498db',
-					backgroundColor: '#EEEEEE',
-					radius: '10px',
-					height: '10px',
-					width: '100%'
-				});
+				if (taskstatus == '4') {
+					$('#taskProgressBar').LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: '#FF0000',
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '100%'
+					});
+				} else {
+					$('#taskProgressBar').LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: '#3498db',
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '100%'
+					});
+				}
+				/* 진행상태바 */
+				
 		    });
    
 			function scrollTop() {
@@ -315,6 +329,7 @@
 				});
 			}
 			
+			/* 사용하지 않는 것같은 공유자지정
 			function manage_share() {
 				var id = taskid;
 				
@@ -324,9 +339,9 @@
 	
 				var feature = GetOpenPosition(432, 363);
 				window.open("/myoffice/ezTask/task_manage_share_Cross.aspx?id=" + id + "&personid=" + personid, "", "height = 363px, width = 432px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
-			}
+			} */
 			
-			var task_repetition_del_cross_dialogArguments = new Array();
+			/* var task_repetition_del_cross_dialogArguments = new Array(); */
 			var deltaskid = "";
 			function delete_task() {
 				if (!confirm("<spring:message code='ezTask.t106' />")) {
@@ -552,8 +567,9 @@
 				});
 			}
 			
+			/* 진행상태 수정 */
 			function update_status() {
-			    if (admin != "Y") {
+			    if (parentid != '0' || personid != userid && ownerid != userid) {
 			        alert("<spring:message code='ezTask.t149' />");
 				    return;
 				}
@@ -562,7 +578,7 @@
 				if (parentid != "0")
 				    id = parentid;
 				
-				var xmlDom = createXmlDom();
+				/* var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
 				var objRoot;
 				var objNode;
@@ -600,7 +616,28 @@
 				else {
 				    alert("<spring:message code='ezTask.t150' />");
 					try { window.opener.RefreshView() } catch (e) { }
-				}
+				} */
+				
+				
+				
+				/* 내가 만들꺼 레이어 안쪽으로 집어넣어야함
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/taskUpdateInstance.do",
+					dataType : "json",
+					data : {
+						taskID : id
+					},
+					success : function(result) {
+						/* alert("<spring:message code='ezTask.t150' />"); */
+						
+						try { window.opener.RefreshView() } catch (e) { }
+						//progressBar refresh시켜야함
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				}); */
 			}
 			
 			/* 진행단계변경시 스크립트? 안쓰는거같음 이효진 */
@@ -1081,7 +1118,7 @@
 		<div id="menu">
 			<ul>
 				<li id="delete"><SPAN onClick="delete_task()"><spring:message code='ezTask.t115' /></SPAN></li>
-				<li id="share" style="display:none"><SPAN onClick="manage_share()"><spring:message code='ezTask.t152' /></SPAN></li>
+				<%-- <li id="share" style="display:none"><span onclick="manage_share()"><spring:message code='ezTask.t152' /></span></li> --%>
 				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 			</ul>
 		</div>
@@ -1100,14 +1137,16 @@
 		<table id="taskProgress" class="layout">
 			<tr>
 				<td>
-					<table>
-						<colgroup><col width='80%' /><col width='20%' /></colgroup>
+					<table style = "border: 1px solid #b6b6b6;margin: 0; width: 100%;">
+						<colgroup><col width="80%" /><col width="20%" /></colgroup>
 						<tr>
-							<td>
+							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
 								<div id="taskProgressBar"></div>
 							</td>
-							<td>
-								상태수정버튼
+							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
+								<div style="float: right; margin-top: 3px;">
+									<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
+								</div>
 							</td>
 						</tr>
 					</table>
