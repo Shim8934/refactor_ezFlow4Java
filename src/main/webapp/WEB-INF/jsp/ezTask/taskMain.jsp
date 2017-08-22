@@ -276,7 +276,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
-			                tr.cells[4].appendChild(div);
+			                tr.cells[5].appendChild(div);
 			                break;
 			            case "2":
 			                var div = document.createElement("DIV");
@@ -287,7 +287,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
-			                tr.cells[4].appendChild(div);
+			                tr.cells[5].appendChild(div);
 			                break;
 			            case "3":
 			                var div = document.createElement("DIV");
@@ -298,56 +298,57 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
-			                tr.cells[4].appendChild(div);
-			                break;
-			        }
-		
-			        switch (SelectSingleNodeValue(node, "TASKSTATUS")) {
-			            case "1":
-			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/status_nothing.gif)";
-			                div.style.width = "61px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t97' />"); 
-			                tr.cells[5].appendChild(div);
-			                break;
-			            case "2":
-			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/status_working.gif)";
-			                div.style.width = "61px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t98' />"); 
-			                tr.cells[5].appendChild(div);
-			                break;
-			            case "3":
-			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/status_finish.gif)";
-			                div.style.width = "61px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t99' />"); 
-			                tr.cells[5].appendChild(div);
-			                break;
-			            case "4":
-			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/status_delay.gif)";
-			                div.style.width = "61px";
-			                div.style.lineHeight = "18px";
-			                div.style.height = "17px";
-			                div.style.textAlign = "center";
-			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t100' />"); 
 			                tr.cells[5].appendChild(div);
 			                break;
 			        }
+
+			        // 진행단계
+// 			        switch (SelectSingleNodeValue(node, "TASKSTATUS")) {
+// 			            case "1":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_nothing.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t97' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "2":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_working.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t98' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "3":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_finish.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t99' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "4":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_delay.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t100' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			        }
 			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
 			        var span = document.createElement("SPAN");
 			        span.className = "workprogress";
@@ -680,7 +681,7 @@
 
 
 		
-		        xmlHTTP2 = createXMLHttpRequest();
+// 		        xmlHTTP2 = createXMLHttpRequest();
 // 		        var xmlDom = createXmlDom();
 		
 // 		        var objRoot, objNode;
@@ -966,8 +967,9 @@
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
+<%-- 							<th ><spring:message code='ezTask.t170' /></th> --%>
+							<th ></th>
 		                    <th ><spring:message code='ezTask.t2003' /></th>
-							<th ><spring:message code='ezTask.t119' /></th>
 							<th ><spring:message code='ezTask.t120' /></th>
 							<th ><spring:message code='ezTask.t121' /></th>
 							<th ><spring:message code='ezTask.t122' /></th>

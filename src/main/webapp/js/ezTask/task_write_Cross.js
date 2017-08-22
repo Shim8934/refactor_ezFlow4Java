@@ -124,10 +124,19 @@ function manage_share_Complete(retVal) {
                         alert(retVal["name"][i] + strLang56);
                     }
                     else {
-                        if (getNodeText(document.getElementById("sharelist")) == "")
-                            setNodeText(document.getElementById("sharelist"), retVal["name"][i]);
-                        else
-                            setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + retVal["name"][i]);
+                        if (getNodeText(document.getElementById("sharelist")) == "") {
+                        	if (retVal["id"][i] == userid) {
+                            	alert("" + strLang20 + "");
+                            } else {
+                            	setNodeText(document.getElementById("sharelist"), retVal["name"][i]);                            	
+                            }
+                        } else {
+                        	if (retVal["id"][i] == userid) {
+                            	alert("" + strLang20 + "");
+                            } else {
+                            	setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + retVal["name"][i]);                            	
+                            }
+                        }
 
                         g_share["name"][j] = retVal["name"][i];
                         g_share["id"][j] = retVal["id"][i];

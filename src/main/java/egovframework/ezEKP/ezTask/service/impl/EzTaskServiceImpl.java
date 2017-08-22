@@ -195,7 +195,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		taskInfoVO.setImportance(Integer.parseInt(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
 		taskInfoVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		taskInfoVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-		taskInfoVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+		taskInfoVO.setTitle(commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
 		taskInfoVO.setContentPath(commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent() + "}" + ".mht");
 		taskInfoVO.setTaskType(doc.getElementsByTagName("TASKTYPE").item(0).getTextContent());
 		taskInfoVO.setUpdateTime(commonUtil.getTodayUTCTime(""));
@@ -252,7 +252,9 @@ public class EzTaskServiceImpl implements EzTaskService{
 			taskInfoVO.setPersonDeptName2(shareDeptName2);
 
 			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 Insert
-			ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert
+			if (!shareID.equals(userInfo.getId())) {
+				ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert				
+			}
 		}
 		
 		PrintWriter pw = null;
@@ -271,7 +273,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 
 		try {
 			pw = new PrintWriter(new File(mhtPath));
-			pw.print(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			pw.print(commonUtil.cleanValue(doc.getElementsByTagName("CONTENT").item(0).getTextContent()));
 			pw.flush();
 			pw.close();
 		} catch (Exception e) {

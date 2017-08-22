@@ -181,35 +181,39 @@
 			FROM
 				TBL_TASK
 			WHERE
-				ownerid = #memberID#
-			AND
 		]]>
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
-					personid = creatorid
+					taskPersonid = #memberID#
 				AND
-					taskstatus != '3'
+					personid = taskpersonid
+				AND
+					taskstatus != 3
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="2">
 			<![CDATA[
 					creatorid = #memberID#
 				AND
-					creatorid != taskpersonid
+					parentid = 0
+				AND
+					tasktype != 1
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="3">
 			<![CDATA[
 					creatorid = #memberID#
 				AND
-					creatorid != taskpersonid
+					parentid = 0
+				AND
+					tasktype != 1
 			]]>
 		</isEqual>
 		<![CDATA[
 			AND
 				tenantid = #tenantID#
 			ORDER BY
-				startDate ASC				
+				startDate DESC
 		]]>
 	</select>
 
