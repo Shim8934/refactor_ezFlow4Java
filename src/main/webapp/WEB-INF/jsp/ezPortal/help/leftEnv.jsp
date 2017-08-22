@@ -94,7 +94,10 @@
 						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_06" target="right"><span>掲示板の環境設定</span></a></h2>
 						<ul>
 						</ul>
-						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_07" target="right"><span>言語及び標準時の設定</span></a></h2>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_07" target="right"><span>回覧板の環境設定</span></a></h2>
+						<ul>
+						</ul>
+						<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_08" target="right"><span>言語及び標準時の設定</span></a></h2>
 						<ul>
 						</ul>
 					</c:otherwise>
