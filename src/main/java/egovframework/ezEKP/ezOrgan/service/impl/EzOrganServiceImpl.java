@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -35,6 +36,9 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
     @Autowired
     private Properties config;
+    
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
     // 지정된 사원 혹은 부서의 특정 필드의 값을 반환한다.
 	@Override
@@ -249,6 +253,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList) throws Exception {
 		logger.debug("getTreeNodeInfo started");
+		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", vo.getTenantId());
 
 		StringBuilder nodeInfo = new StringBuilder();
 		
@@ -304,13 +310,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 			}
 		}
 		
-	    /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
-		if (vo.getExtensionAttribute11() != null) {
-		    if (vo.getExtensionAttribute11().toUpperCase().equals("N")) {
-		        nodeInfo.append("<SETTEXTCOLORBYNAME>GRAY</SETTEXTCOLORBYNAME>");
-		    }		    
+		if (approvalFlag.equals("G")) {
+		    /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
+			if (vo.getExtensionAttribute11() != null) {
+			    if (vo.getExtensionAttribute11().toUpperCase().equals("N")) {
+			        nodeInfo.append("<SETTEXTCOLORBYNAME>GRAY</SETTEXTCOLORBYNAME>");
+			    }		    
+			}
 		}
-		
 	    nodeInfo.append("</NODE>");
 
 	    logger.debug("nodeInfo=" + nodeInfo.toString());

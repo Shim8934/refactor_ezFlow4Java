@@ -146,7 +146,7 @@
 			var type = "ING";
 			var pGongRamDocID = "";
 			var singImageType = "${signImageType}";
-
+			var isused = "${isused}";
 		    window.onload = function ()
 		    {
 		        try {
@@ -1471,7 +1471,7 @@
 		  </tr>
 		  <tr>
 		    <td  style="padding-bottom:10px;height:90%;" >
-		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isused=${isused}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>
 		  <tr>
