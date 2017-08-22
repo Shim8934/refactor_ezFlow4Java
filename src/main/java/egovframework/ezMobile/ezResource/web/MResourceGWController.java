@@ -764,14 +764,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 	 * 모바일 G/W 자원관리 [post] 휴일조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezresource/holiday/users/{userId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getHoliday(@PathVariable String userId, HttpServletRequest request) throws Exception {		
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/holiday/users/{userId}] started.");
+	@RequestMapping(value="/mobile/ezresource/holiday", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getHoliday( HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/holiday] started.");
 		JSONObject result = new JSONObject();
 		
 		try {
 			
-			String serverName = request.getHeader("x-user-host");				
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
 			LOGGER.debug("userId: " + userId);		
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String cID = request.getParameter("COMPANYID");
@@ -793,7 +794,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		}
 
-		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/holiday/users/{userId}] ended.");
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/holiday] ended.");
 		return result;
 	}
 
