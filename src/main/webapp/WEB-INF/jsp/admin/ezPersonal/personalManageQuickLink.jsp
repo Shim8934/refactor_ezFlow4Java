@@ -151,7 +151,7 @@
 					<LISTVIEWDATA>
 						<HEADERS>
 					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t304' /></NAME>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
 					     	<HEADER>
@@ -183,15 +183,15 @@
 					<LISTVIEWDATA>
 						<HEADERS>
 					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t304' /></NAME>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
 					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
 							<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
+					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
 					      	<%-- <HEADER>
