@@ -65,14 +65,14 @@ function manage_share(type) {
             m_type = 1;
             task_select_entity_cross_dialogArguments[0] = g_person;
             task_select_entity_cross_dialogArguments[1] = manage_share_Complete;
-            var OpenWin = window.open("/ezTask/taskSelectEntity.do?title=" + encodeURI(strLang15) + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
+            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "&title=" + encodeURI(strLang15) + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
             try { OpenWin.focus(); } catch (e) { }
             break;
         case 2:
             m_type = 2;
             task_select_entity_cross_dialogArguments[0] = g_share;
             task_select_entity_cross_dialogArguments[1] = manage_share_Complete;
-            var OpenWin = window.open("/ezTask/taskSelectEntity.do?title=" + encodeURI(strLang15) + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
+            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "&title=" + encodeURI(strLang15) + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
             try { OpenWin.focus(); } catch (e) { }
             break;
     }
@@ -542,7 +542,7 @@ function save_task() {
     if (taskid == "") {
     	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");    	
     } else {
-    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);    	
+    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", contentPath);    	
     }
 
     var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
@@ -567,7 +567,12 @@ function save_task() {
         createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME1", deptname);
         createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", deptname2);
     } else {
-        if (taskpersonID != null) {			        	
+        if (taskpersonID != null) {
+        	/*alert(personid);
+        	alert(personname);
+        	alert(personname2);
+        	alert(persondeptname);
+        	alert(persondeptname2);*/
             for (var i = 0; i < g_person["id"].length; i++) {
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONID", g_person["id"][i]);
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME1", g_person["name"][i]);
@@ -617,6 +622,7 @@ function save_task() {
     	alert("" + strLang14 + "");
 
         try { window.opener.RefreshView(); } catch (e) { }
+        parent.DivPopUpHidden();
         window.close();
     }
 }

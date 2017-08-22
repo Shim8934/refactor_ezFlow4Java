@@ -127,22 +127,10 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 		}
 		
-		/*var taskid = "${taskID }";
-		var contentpath = "${contentPath }";
-		var ownerid = "${ownerID }";
-		var creatorid = "${creatorID }";
-		var parentid = "${parentID }";
-		var repeatcount = "${repeatCount }";
-		var taskstatus = "${taskStatus }";
-		var completerate = "${completeRate }";
-	    var admin = "${admin }";
+		/*
 	    var personlist = "${personList }";
-	    var shareid = "${shareID }";
-	    var tasktype = "${taskType }";
 	    var content = "${contentPerson }";
 	    var date = "${date }";
-	    var type = "${type }";
-	    var personid = "${personID }";
 	    var attachFileInfo = "${attachFileInfo }";
 	    var optioncnt = "${optionCnt }";
 	    var tempbody = "";
@@ -244,7 +232,17 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 조직도화면조회
 	 */
 	@RequestMapping(value = "/ezTask/taskSelectEntity.do")
-	public String taskSelectEntity() throws Exception {
+	public String taskSelectEntity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskSelectEntity started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String type = request.getParameter("type");
+		String title = request.getParameter("title");
+		
+		model.addAttribute("type", type);
+		
+		logger.debug("taskSelectEntity ended.");
+		
 		return "/ezTask/taskSelectEntity";
 	}
 	

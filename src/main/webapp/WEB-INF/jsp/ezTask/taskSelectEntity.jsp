@@ -87,7 +87,7 @@
 	        ListTypeChangeIcon();
 	        recevieListview("MsgToList", "ListViewMsgTo");
 
-	        if (type == "P")
+	        if (type == "1")
 	            document.getElementById("ToTitleStr").innerHTML = "<spring:message code='ezTask.t2005' />";
 	        else
 	            document.getElementById("ToTitleStr").innerHTML = "<spring:message code='ezTask.t137' />";

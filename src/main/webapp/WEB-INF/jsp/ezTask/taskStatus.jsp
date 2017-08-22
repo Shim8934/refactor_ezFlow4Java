@@ -12,7 +12,6 @@
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezTask/task_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -27,7 +26,6 @@
 	        var personid = "${taskInfoVO.personID }";
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var importance = "${taskInfoVO.importance }";
-	        var tasktype = "${taskInfoVO.taskType }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
 	        
 	        $(document).ready(function() {
@@ -85,7 +83,12 @@
 					}
 				}); */
 				
+				parent.DivPopUpHidden();
 				/* 닫는거 추가 */
+	        }
+	        
+	        function close_onclick() {
+	        	parent.DivPopUpHidden();
 	        }
 		</script>
 	</head>
@@ -103,15 +106,14 @@
 				</ul>
 			</div>
 			
-			<table>
-				<colgroup><col width="50%" /><col width="50%" /></colgroup>
+			<table style="width:100%;">
 				<tr>
-					<td colspan='2'>
+					<td>
 						<div id="taskProgressBar"></div>
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td style = "text-align: center;">
 						<select id = "completeRate">
 							<option value = "0">0%</option>
 							<option value = "10">10%</option>
@@ -125,8 +127,6 @@
 							<option value = "90">90%</option>
 							<option value = "100">100%</option>
 						</select>
-					</td>
-					<td>
 						<select id = "taskStatus">
 							<option value = "1">시작안함</option>
 							<option value = "2">진행중</option>
