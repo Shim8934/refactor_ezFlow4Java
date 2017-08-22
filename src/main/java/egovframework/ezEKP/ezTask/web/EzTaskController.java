@@ -177,9 +177,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		String taskID = request.getParameter("taskID");
-		TaskInfoVO taskInfoVO = null;
 		
-		taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		//첨부파일목록조회
 		if (taskInfoVO.getHasAttach().equals("Y")) {
@@ -249,7 +248,25 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskSelectEntity";
 	}
 	
-	
+	/**
+	 * 진행상태 수정화면 조회
+	 */
+	@RequestMapping(value = "/ezTask/taskStatus.do")
+	public String taskStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskStatus started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String taskID = request.getParameter("taskID");
+		
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		
+		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("taskStatus ended.");
+		
+		return "/ezTask/taskStatus";
+	}
 	
 	
 	/* 정수현*/

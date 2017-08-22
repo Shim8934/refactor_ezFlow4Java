@@ -618,6 +618,7 @@
 					try { window.opener.RefreshView() } catch (e) { }
 				} */
 				
+				DivPopUpShow(300, 150, "/ezTask/taskStatus.do?taskID=" + id);
 				
 				
 				/* 내가 만들꺼 레이어 안쪽으로 집어넣어야함
