@@ -50,7 +50,7 @@
           var isreadpage = false;
           var FormProcSpelling = "FormProcSpelling";
           var personid = "${taskInfoVO.personID }";
-          var content = "${newGuid}";
+//           var content = "${newGuid}";
           
           window.onload = function () {
 //              document.getElementById("TextCompleteDate").value = "";
@@ -401,7 +401,6 @@
               }
 
               setNodeText(document.getElementById("printStatus"), taskstatus);
-              setNodeText(document.getElementById("printRepetition"), getNodeText(document.getElementById("repeatinfo")));
 
               var printdate;
 
@@ -444,12 +443,12 @@
                            <c:when test="${taskID == ''}">
                               <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
                               <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
-                              <li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
+                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
                               <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
                            </c:when>
                            <c:otherwise>
                               <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-                              <li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
+                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
                               <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
                            </c:otherwise>
                         </c:choose>

@@ -472,10 +472,11 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
+		String newGuid = UUID.randomUUID().toString();
 
 		Document doc = commonUtil.convertStringToDocument(xmlData.toString());
 
-		String ret = ezTaskService.taskSave(doc, realPath, userInfo);
+		String ret = ezTaskService.taskSave(doc, realPath, userInfo, newGuid);
 
 		logger.debug("ret : " + ret);
 		logger.debug("taskSave ended");
@@ -496,7 +497,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String newGuid = UUID.randomUUID().toString();
 		
 		String taskID = request.getParameter("taskID");
 		TaskInfoVO taskInfoVO = null;
@@ -523,7 +523,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("newGuid", newGuid);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskShareList", taskShareList);
