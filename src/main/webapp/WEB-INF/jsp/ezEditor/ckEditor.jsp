@@ -39,10 +39,12 @@
 			
 			function SetEditorContent(Data) {
 				try {
-	                CKEDITOR.instances.editor1.editable().setHtml(Data);
-	                if (type == "APPROVAL" || type == "APPROVALG") {
-	                    Set_CellLocked();
-	                }
+	              	  CKEDITOR.instances.editor1.editable().setHtml(Data);
+	                	if (type == "APPROVAL" || type == "APPROVALG") {
+	                		if ("${isused}" != "reuse") {
+	                    		Set_CellLocked();
+	                		}
+	                	}
 	            } catch (e) { }
 			}
 
