@@ -648,7 +648,7 @@ var strLang940 = "前へ"
 var strLang941 = "次へ"
 var strLang942 = "総 "
 var strLang943 = "件"
-var strLang944 = "データが存在しません。";
+var strLang944 = "検索結果がありません。";
 var strLang945 = "起案者は削除することができません。"
 // TreeViewCtrl.js
 var strLang1001 ="選択した項目がないです。文書だけ印刷しますか?";
