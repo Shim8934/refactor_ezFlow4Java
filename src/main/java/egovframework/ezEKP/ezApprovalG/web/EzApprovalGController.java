@@ -903,6 +903,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			mode = request.getParameter("draftFlag");
 		}
 		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
 		model.addAttribute("editor", editor);
 		

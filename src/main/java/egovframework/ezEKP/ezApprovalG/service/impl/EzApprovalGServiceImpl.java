@@ -14030,11 +14030,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				map.put("v_DOCTITLE", tempValue);
+				map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
 				map.put("v_FIRSTFLAG7", firstFlag);
 				firstFlag = false;
 			} else {
-				map.put("v_DOCTITLE", tempValue);
+				map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
 				map.put("v_FIRSTFLAG7", firstFlag);
 			}
 		}
