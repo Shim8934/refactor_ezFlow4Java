@@ -17602,7 +17602,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 				// hourGap
 				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String now = date.format(new Date());
+				String now = commonUtil.getTodayUTCTime("");
 				
 				Date nowDate = date.parse(now);
 				Date endDate = date.parse(pReceivedDate);
