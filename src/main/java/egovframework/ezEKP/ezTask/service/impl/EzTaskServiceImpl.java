@@ -260,7 +260,15 @@ public class EzTaskServiceImpl implements EzTaskService{
 		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + newGuid + "}" + ".mht";
 
 		logger.debug("mhtPath : " + mhtPath);
+
+		File folderDir = new File(commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId());
+
+		logger.debug("folderDir : " + folderDir.exists());
 		
+        if (!folderDir.exists()) {
+        	folderDir.mkdir();
+        }
+
 		try {
 			pw = new PrintWriter(new File(mhtPath));
 			pw.print(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
@@ -275,61 +283,24 @@ public class EzTaskServiceImpl implements EzTaskService{
 		return "OK";
 	}
 
-//	@Override
-//	public void taskSave(LoginVO userInfo, String regDate, int taskStatus, int importance, String fileList, String title, int taskType, 
-//			String sdate, String edate, String[] shareID, String[] shareName, String[] shareName2, String[] shareDepts, String[] shareDepts2) throws Exception {
-//		logger.debug("taskSave started.");
-//		logger.debug("taskStatus : " + taskStatus + " | importance : " + importance + " | title : " + title + " | taskType : " + taskType);
-//
-//		String hasShare = "";
-//		String hasAttach = "";
-//
-//		if (shareID.length > 0) {
-//			hasShare = "Y";
-//		} else {
-//			hasShare = "N";
-//		}
-//
-//		if (fileList.split(",").length > 0) {
-//			hasAttach = "Y";
-//		} else {
-//			hasAttach = "N";
-//		}
-//		
-//		Map<String, Object> map = new HashMap<String, Object>();
-//
-//		map.put("ownerID", userInfo.getId());
-//		map.put("ownerName", userInfo.getDisplayName());
-//		map.put("ownerName2", userInfo.getDisplayName1());
-//		map.put("regDate", regDate);
-//		map.put("taskStatus", taskStatus);
-//		map.put("importance", importance);
-//		map.put("hasShare", hasShare);
-//		map.put("hasAttach", hasAttach);
-//		map.put("sdate", sdate);
-//		map.put("edate", edate);
-//		map.put("title", title);
-//		map.put("taskType", taskType);
-//		map.put("personDeptName", userInfo.getDeptName());
-//		map.put("personDeptName2", userInfo.getDeptName2());
-//		map.put("tenantID", userInfo.getTenantId());
-//
-//		int taskID = ezTaskDAO.taskSave(map);
-//
-//		if (hasShare.equals("Y")) {
-//			map.put("taskID", taskID);
-//
-//			for (int i=0; i<shareID.length; i++) {
-//				map.put("shareID", shareID[i].trim());
-//				map.put("shareName", shareName[i].trim());
-//				map.put("shareName2", shareName2[i].trim());
-//				map.put("shareDept", shareDepts[i].trim());
-//				map.put("shareDept2", shareDepts2[i].trim());
-//
-//				ezTaskDAO.shareTaskSave(map);
-//			}
-//		}
-//
-//		logger.debug("taskSave ended.");
-//	}
+	@Override
+	public List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, int tenantID) throws Exception {
+		logger.debug("taskGetList started.");
+		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("memberID", memberID);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("offset", offset);
+		map.put("type", type);
+		map.put("tenantID", tenantID);
+		
+		List<TaskInfoVO> list = ezTaskDAO.taskGetList(map); 
+		
+		logger.debug("taskGetList ended.");
+
+		return list;
+	}
 }

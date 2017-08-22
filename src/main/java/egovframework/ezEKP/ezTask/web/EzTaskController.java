@@ -387,6 +387,7 @@ public class EzTaskController extends EgovFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
+
         File file = new File(pDirPath + "uploadFile");
         File tempFile = new File(pDirPath + "tempUploadFile");
 
@@ -531,4 +532,67 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		return "/ezTask/taskWrite";
 	}
+	
+	/**
+     * 지시화면 목록 조회
+     * 
+     */
+    @RequestMapping(value = "/ezTask/taskGetList.do", produces = "text/xml; charset=utf-8")
+    @ResponseBody
+    public String taskGetList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+    	logger.debug("taskGetList started.");
+    	
+    	LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+    	String offset = userInfo.getOffset();
+    	String startDate = request.getParameter("startDate");
+    	String endDate = request.getParameter("endDate");
+    	String app = request.getParameter("app");
+    	String type = request.getParameter("type");
+    	
+    	List<TaskInfoVO> list = ezTaskService.taskGetList(userInfo.getId(), startDate, endDate, offset, app, type, userInfo.getTenantId());
+    	
+    	StringBuffer resultXML = new StringBuffer();
+    	
+    	resultXML.append("<DATA>");
+    	
+    	for (int i = 0; i < list.size(); i++) {
+    		resultXML.append("<ROW>");
+    		
+    		resultXML.append("<TASKID>" + list.get(i).getTaskID() + "</TASKID>");
+    		resultXML.append("<PARENTID>" + list.get(i).getParentID() + "</PARENTID>");
+    		resultXML.append("<OWNERID>" + list.get(i).getOwnerID() + "</OWNERID>");
+    		resultXML.append("<CREATORID>" + list.get(i).getCreatorID() + "</CREATORID>");
+    		resultXML.append("<CREATORNAME>" + list.get(i).getCreatorName() + "</CREATORNAME>");
+    		resultXML.append("<CREATORNAME2>" + list.get(i).getCreatorName2() + "</CREATORNAME2>");
+    		resultXML.append("<TASKSTATUS>" + list.get(i).getTaskStatus() + "</TASKSTATUS>");
+    		resultXML.append("<COMPLETERATE>" + list.get(i).getCompleteRate() + "</COMPLETERATE>");
+    		resultXML.append("<COMPLETEDATE>" + list.get(i).getCompleteDate() + "</COMPLETEDATE>");
+    		resultXML.append("<IMPORTANCE>" + list.get(i).getImportance() + "</IMPORTANCE>");
+    		resultXML.append("<STARTDATE>" + list.get(i).getStartDate() + "</STARTDATE>");
+    		resultXML.append("<ENDDATE>" + list.get(i).getEndDate() + "</ENDDATE>");
+    		resultXML.append("<TITLE>" + list.get(i).getTitle() + "</TITLE>");
+    		resultXML.append("<HASATTACH>" + list.get(i).getHasAttach() + "</HASATTACH>");
+    		resultXML.append("<HASCOMMENT>" + list.get(i).getHasComment() + "</HASCOMMENT>");
+    		resultXML.append("<PERSONID>" + list.get(i).getPersonID() + "</PERSONID>");
+    		resultXML.append("<PERSONNAME>" + list.get(i).getPersonName() + "</PERSONNAME>");
+    		resultXML.append("<PERSONNAME2>" + list.get(i).getPersonName2() + "</PERSONNAME2>");
+    		resultXML.append("<TASKTYPE>" + list.get(i).getTaskType() + "</TASKTYPE>");
+    		resultXML.append("<TASKPERSONID>" + list.get(i).getTaskPersonID() + "</TASKPERSONID>");
+    		resultXML.append("<TASKPERSONNAME>" + list.get(i).getTaskPersonName() + "</TASKPERSONNAME>");
+    		resultXML.append("<TASKPERSONNAME2>" + list.get(i).getTaskPersonName2() + "</TASKPERSONNAME2>");
+    		
+    		resultXML.append("</ROW>");
+    	}
+
+    	resultXML.append("<CNT>2</CNT>");
+    	resultXML.append("<CNT2>2</CNT2>");
+    	resultXML.append("<CNT3>0</CNT3>");
+
+    	resultXML.append("</DATA>");
+
+    	logger.debug("taskGetList ended.");
+
+    	return resultXML.toString();
+    }
 }

@@ -152,6 +152,66 @@
 				userid = #memberID#
 		]]>
 	</select>
+	
+	<select id="EzTaskDAO.taskGetList" resultClass="TaskInfoVO">
+	   <![CDATA[
+		    SELECT
+		    	taskID,
+				parentID,
+				ownerID,
+				creatorID,
+				creatorName,
+				creatorName2,
+				importance,
+				hasAttach,
+				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startDate,
+				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as endDate,
+				title,
+				taskType,
+				taskStatus,
+				completeRate,
+				completeDate,
+				personID,
+				personName,
+				personName2,
+				taskPersonID,
+				taskPersonName,
+				taskPersonName2,
+				hasComment
+			FROM
+				TBL_TASK
+			WHERE
+				ownerid = #memberID#
+			AND
+		]]>
+		<isEqual property="type" compareValue="1">
+			<![CDATA[
+					personid = creatorid
+				AND
+					taskstatus != '3'
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="2">
+			<![CDATA[
+					creatorid = #memberID#
+				AND
+					creatorid != taskpersonid
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="3">
+			<![CDATA[
+					creatorid = #memberID#
+				AND
+					creatorid != taskpersonid
+			]]>
+		</isEqual>
+		<![CDATA[
+			AND
+				tenantid = #tenantID#
+			ORDER BY
+				startDate ASC				
+		]]>
+	</select>
 
 	<insert id="EzTaskDAO.taskSaveConfig" parameterClass="Map">
         <![CDATA[

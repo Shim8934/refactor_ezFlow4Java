@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezTask.e1' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<STYLE type="text/css"> 
@@ -23,7 +24,7 @@
 			var delaycolor = "_delaycolor";
 			var completecolor = "_completecolor";
 			var userid = "${userinfo.UserID}";
-			var listdom = null;
+			var listdom = "";
 			var pagecount = 0;
 			var totalcount = 0;
 			var currentpage = 0;
@@ -35,7 +36,7 @@
 		    var offSetNum = "timeZoneStr";
 		    var startdate = "_initdate";
 		    var enddate = "_initdate";
-		    var type = "1";
+		    var type = "";
 		    var userlang = "${userinfo.lang}";
 		    var pUse_Editor = "Use_Editor";
 		    var primary = "${userinfo.primary}";
@@ -85,31 +86,31 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalcount + " </span>" + strLang42 + "]";
+			    document.getElementById("mailBoxInfo").innerHTML = " - [" + "<spring:message code='ezTask.t109' />" + "<span style='color:#017BEC;'> " + totalcount + "</span>" + "<spring:message code='ezTask.t110' />" + "]";
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    var totalPage = totalpage;
 			    var pageNum = currentpage;
 			    if (totalPage > 1 && pageNum != 1) {
-			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/Sub/btn_p_prev.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/Sub/btn_p_prev01.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > BlockSize) {
 			        if (pageNum > BlockSize) {
-			            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/Sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+			            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
-			            strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+			            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/Sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
 			        PagingHTML += strtext;
 			    }
 			    var MaxNum;
@@ -133,27 +134,27 @@
 			    }
 			    if (totalPage > BlockSize) {
 			        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-			            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/Sub/btn_next.gif' width='16' height='16'></span>";
+			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
+			            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
-			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-			            strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
+			            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
-			        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-			        strtext = strtext + "<span class='btnimg'><img src='/images/Sub/btn_next01.gif' width='16' height='16'></span>";
+			        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
+			        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-			        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/Sub/btn_n_next.gif' width='16' height='16'></span>";
+			        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/Sub/btn_n_next01.gif' width='16' height='16'></span>";
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
 			        PagingHTML += strtext;
 			    }
 			    PagingHTML += "</div>";
@@ -203,23 +204,24 @@
 			function show_page() {
 			    selectelem = null;
 			    makePageSelPage();
-		
+
 			    var length = list_body.children[1].rows.length;
-			    for (var i = 3; i < length; i++)
-			        list_body.children[1].removeChild(list_body.children[1].rows[3])
-		
+			    
+			    for (var i = 3; i < length; i++) {
+			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
+			    }
+
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 			        if (totalcount == 0 || i == totalcount) {
 			            break;
 			        }
 			        document.getElementById("tr_ing").style.display = "none";
 			        var node;
-			        if (CrossYN())
-			            node = GetChildNodesByNodeName(listdom, "ROW")[i];
-			        else
-			            node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
+
+			        node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
+
 			        var tr = row_body.cloneNode(true);
-		
+
 			        tr.style.display = "";
 			        tr.id = "";
 		
@@ -375,8 +377,7 @@
 			            for (var j = 2; j < 9; j++)
 			                tr.cells[j].style.color = completecolor;
 			        }
-		
-		
+
 			        list_body.children[1].appendChild(tr);
 			    }
 			    if (totalcount == 0) {
@@ -651,8 +652,7 @@
 		
 		        return v_str.toString();
 		    }
-		
-		    var xmlHTTP2;
+
 		    function DateChange(start, end) {
 		        var startYearMontgday = start.split("-");
 		        var endYearMontgday = end.split("-");
@@ -661,68 +661,86 @@
 		        var startDay = startYearMontgday[2];
 		        var endDay = endYearMontgday[2];
 		
-		        if (startMonth.length == 1) {
-		            startMonth = "0" + startMonth;
-		        }
-		        if (endMonth.length == 1) {
-		            endMonth = "0" + endMonth;
-		        }
-		        if (startDay.length == 1) {
-		            startDay = "0" + startDay;
-		        }
-		        if (endDay.length == 1) {
-		            endDay = "0" + endDay;
-		        }
+// 		        if (startMonth.length == 1) {
+// 		            startMonth = "0" + startMonth;
+// 		        }
+// 		        if (endMonth.length == 1) {
+// 		            endMonth = "0" + endMonth;
+// 		        }
+// 		        if (startDay.length == 1) {
+// 		            startDay = "0" + startDay;
+// 		        }
+// 		        if (endDay.length == 1) {
+// 		            endDay = "0" + endDay;
+// 		        }
 		
-		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
-		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
+// 		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
+// 		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
+
+
+
 		
 		        xmlHTTP2 = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
+// 		        var xmlDom = createXmlDom();
 		
-		        var objRoot, objNode;
-		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
+// 		        var objRoot, objNode;
+// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
 		
-		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
-		        xmlHTTP2.onreadystatechange = after_DateChange;
-		        xmlHTTP2.send(xmlDom);
+// 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
+// 		        xmlHTTP2.onreadystatechange = after_DateChange;
+// 		        xmlHTTP2.send(xmlDom);
+
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskGetList.do",
+					data : {
+						startDate : startdate,
+						endDate : enddate,
+						app : 1,
+						type : type
+					},
+					success : function(xml) {
+						after_DateChange(xml);
+					},
+					error : function() {
+						alert("에러발생");
+					}
+				});
 		    }
 		
-		    function after_DateChange() {
-		        if (xmlHTTP2.readyState == 4 && xmlHTTP2 != null) {
-		
-		            listdom = loadXMLString(xmlHTTP2.responseText);
-		            totalcount = GetChildNodes(listdom.documentElement).length - 3;
-		            totalpage = Math.ceil(new Number(totalcount / pagesize));
-		
-		            if (isrefresh)
-		                isrefresh = false;
-		            else
-		                currentpage = 1;
-		
-		            if (currentpage > totalpage)
-		                currentpage = totalpage;
-		
-		            if (currentpage == 0)
-		                currentpage = 1;
-		
-		            makePageSelPage();
-		            show_page();
-		            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-		            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
-		            var cnt3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
-		
-		            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
-		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
-	// 	            document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t99' />" + " (" + cnt3 + ")";
-		            xmlHTTP2 = null;
-		            return;
-		        }
+		    function after_DateChange(xml) {
+	            listdom = loadXMLString(xml);
+
+	            totalcount = GetChildNodes(listdom.documentElement).length - 3;
+	            totalpage = Math.ceil(new Number(totalcount / pagesize));
+
+	            if (isrefresh)
+	                isrefresh = false;
+	            else
+	                currentpage = 1;
+	
+	            if (currentpage > totalpage)
+	                currentpage = totalpage;
+	
+	            if (currentpage == 0)
+	                currentpage = 1;
+	
+	            makePageSelPage();
+	            show_page();
+	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+	
+	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
+	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
+
+	            return;
 		    }
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
