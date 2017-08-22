@@ -17,10 +17,14 @@ import org.springframework.stereotype.Repository;
 
 
 
+
+
+import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("MResourceDAO")
@@ -123,6 +127,12 @@ public class MResourceDAO extends EgovAbstractDAO {
 	public ResGetScheduleRepetitionVO getRepDateTimes(Map<String, Object> map) {
 		return (ResGetScheduleRepetitionVO) select("MResourceDAO.getRepDateTimes", map);
 	}
+	
+		@SuppressWarnings("unchecked")
+	public List<ResScheGetHolidayVO> getTholiday(Map<String, Object> map){
+	return  (List<ResScheGetHolidayVO>) list("MResourceDAO.getTholiday", map);
+}
+	
 	
 }
 
