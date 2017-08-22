@@ -14,7 +14,6 @@
 		.node_normal{
 			padding-top: 3px;
 			vertical-align:top;
-			font-family: "<spring:message code='ezBoard.t347'/>";
 			font-size: 9pt;
 			background-color : #ffffff;
 			height : 15px;
@@ -23,7 +22,6 @@
 		.node_selected{
 			padding-top: 3px;
 			vertical-align:top;
-			font-family: "<spring:message code='ezBoard.t347'/>";
 			font-size: 9pt;
 			height : 15px;
 			background-color : rgb(233, 241, 244);
@@ -32,7 +30,6 @@
 		.node_hover{
 			padding-top: 3px;
 			vertical-align:top;
-			font-family: "<spring:message code='ezBoard.t347'/>";
 			font-size: 9pt;
 			background-color : #F7FAE0;
 			height : 15px;

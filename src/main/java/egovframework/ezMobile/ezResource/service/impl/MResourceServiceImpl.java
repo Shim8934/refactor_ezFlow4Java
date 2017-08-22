@@ -18,8 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.ezMobile.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
@@ -228,8 +230,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		LOGGER.debug("getScheduleList Start");
 
 		Map<String, Object> result = new HashMap<>();
-		String startDateLimit = sDate + " 00:00:01";
-		String endDateLimit = eDate + " 23:59:59";
+		String startDateLimit = eDate + " 23:59:59";
+		String endDateLimit = sDate + " 00:00:01";
 
 		LOGGER.debug("");
 		
@@ -1127,8 +1129,18 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		return result;
 	}
-	
-	
+
+	//휴일가져오기
+	@Override
+	public List<ResScheGetHolidayVO> getTholiday(String companyId,
+			String userCompany, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyId);
+		map.put("v_USERCOMPANY", userCompany);
+		map.put("v_TENANTID", tenantId);
+		
+		return mResourceDAO.getTholiday(map);
+	}
 	
 }
 

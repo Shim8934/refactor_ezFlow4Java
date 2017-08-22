@@ -1969,11 +1969,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (apprGDocListVO != null) {
 			orgDocNumCode = apprGDocListVO.getOrgDocNumCode();
-			sn = getCabinetNum(deptID, "", companyID, tenantID, offSet);
-			sn = sn.replace("<REGNUM>", "").replace("</REGNUM>", "");
-			sn = sn.replace("<RESULT>", "").replace("</RESULT>", "");
+//			sn = getCabinetNum(deptID, "", companyID, tenantID, offSet);
+//			sn = sn.replace("<REGNUM>", "").replace("</REGNUM>", "");
+//			sn = sn.replace("<RESULT>", "").replace("</RESULT>", "");
 			
-			if (!sn.trim().equals("")) {
+//			if (!sn.trim().equals("")) {
 				newDocID = getNewID(companyID, tenantID);
 				
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
@@ -1997,7 +1997,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docNo = "";
 				}
 			}
-		}
+//		}
 		
 		if (strSQL.toString().equals("FALSE") || newDocID.trim().equals("")) {
 			if (!sn.trim().equals("")) {
@@ -8468,7 +8468,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (aprCount < 1 && !aprState.equals(staASmikyul)) {
 			rtnVal = false;
 		} else {
-			switch (aprState) {
+   			switch (aprState) {
 			case "000":
 				if (rtnVal) {
 					subSQL = updateDocInfo(strXML, userID, companyID, lang, userInfo.getTenantId());
@@ -10700,7 +10700,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						}
 						
 						if (!subTitleFlag) {
-							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj15", userInfo.getLocale()));
+							rtnVal.append("- " + tmpUserName + messageSource.getMessage("ezApprovalG.pjj155", userInfo.getLocale()));
                             rtnVal.append(userCompanyID + ", " + userDeptID + ", " + userDeptName + "(" + userDeptName2 + "), ");
                             rtnVal.append(userJobTitle + "(" + userJobTitle2 + ")" + messageSource.getMessage("ezApprovalG.pjj10", userInfo.getLocale()));
                             
@@ -14091,11 +14091,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				map.put("v_DOCTITLE", tempValue);
+				map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
 				map.put("v_FIRSTFLAG7", firstFlag);
 				firstFlag = false;
 			} else {
-				map.put("v_DOCTITLE", tempValue);
+				map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
 				map.put("v_FIRSTFLAG7", firstFlag);
 			}
 		}
@@ -17667,7 +17667,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 				// hourGap
 				SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String now = date.format(new Date());
+				String now = commonUtil.getTodayUTCTime("");
 				
 				Date nowDate = date.parse(now);
 				Date endDate = date.parse(pReceivedDate);

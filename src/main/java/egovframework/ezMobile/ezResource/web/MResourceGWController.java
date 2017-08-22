@@ -24,6 +24,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.service.MResourceService;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -759,5 +760,42 @@ public class MResourceGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	/**
+	 * 모바일 G/W 자원관리 [post] 휴일조회
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/holiday", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getHoliday( HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/holiday] started.");
+		JSONObject result = new JSONObject();
+		
+		try {
+			
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			LOGGER.debug("userId: " + userId);		
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String cID = request.getParameter("COMPANYID");
+			LOGGER.debug("cID: " + cID);
+			//의미확인후 삭제
+			cID = "VIEW";	
+			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
+			
+
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", getHoliday);
+			
+		} catch (Exception e) {
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			
+		}
+
+		LOGGER.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/holiday] ended.");
+		return result;
+	}
 
 }

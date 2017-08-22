@@ -1336,12 +1336,22 @@ public class EzEmailUtil {
 		}
 		
 		if (endDate != null) {
-			if(sTerm == null) {
-				logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+folder.getFullName()+folder.getMessageCount());
-				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);;
-				logger.debug(sTerm.toString());	
-				messages = folder.search(sTerm);
-				logger.debug("!!!!!@@message length@@!!!!!" + messages.length);
+			if(sTerm == null) {// filter 없을 때
+//				logger.debug("END DATE :" + endDate);
+//				sTerm = new ReceivedDateTerm(ComparisonTerm.LE, endDate);
+//
+//				messages = folder.search(sTerm);
+//				logger.debug("messages length LE : " + messages.length);
+//				for (int i = 0; i < messages.length; i++) {
+//					logger.debug("GET RECEIVEDDATE :" + messages[i].getReceivedDate());
+//				}
+//				
+//				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);
+//
+//				messages = folder.search(sTerm);
+//				logger.debug("messages length LT : " + messages.length);
+				
+				ArrayList<Message> arrayList = new ArrayList<>();
 				
 				Date from = endDate;       
 				Folder f = folder;
@@ -1351,31 +1361,72 @@ public class EzEmailUtil {
 				
 				Date rDate;//message Date       
 				long lrDate;//message Date long for  comparing endDate       
-				int start = end;       
 				
-				do {         
-						start = start - 10;         
-						Message testMsg = f.getMessage(start);         
+//				FetchProfile fp = new FetchProfile();
+//				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+//				folder.fetch(messages, fp);
+				
+				Message orgMsg[] = f.getMessages(); 
+				this.sortMessages(folder, orgMsg, "receivedDate", true);
+				
+				int j = 0;
+				do {                
+						Message testMsg = orgMsg[end-1];         
 						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();       
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							arrayList.add(testMsg);
+							j++;
+						}
 					} 
-				while (lrDate > lFrom);       
-				
-				Message msg[] = f.getMessages(start, end);
-				
-				for (int i=0, n=msg.length; i<n; i++) {
-					lrDate = msg[i].getReceivedDate().getTime();         
-					if (lrDate > lFrom) {           
-						System.out.println(i + ": " + msg[i].getFrom()[0] + "\t" + msg[i].getSubject());
-					}       
-				}
-				return msg;
-			} else { 
-				logger.debug("#########################################"+folder.getFullName()+folder.getMessageCount());
-				sTerm = new AndTerm(sTerm, new ReceivedDateTerm(DateTerm.LT, endDate));
+				while (j < 10 && end > 0);// 더 빨리 온 메세지를 뽑는다.
 
-				messages = folder.search(sTerm);
-				logger.debug("#####@@message length@@#####" + messages.length);
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+
+				return msg;
+			} else { //filter 있을 때
+				
+				ArrayList<Message> arrayList = new ArrayList<>();
+				
+				Date from = endDate;       
+				Folder f = folder;
+				
+				int end = f.getMessageCount();       
+				long lFrom = from.getTime(); //endDate
+				
+				Date rDate;//message Date       
+				long lrDate;//message Date long for  comparing endDate       
+				int j = 0;
+				
+				Message orgMsg[] = f.getMessages(); 
+				this.sortMessages(folder, orgMsg, "receivedDate", true);
+				
+				do {                
+						Message testMsg = orgMsg[end-1];         
+						rDate = testMsg.getReceivedDate();         
+						lrDate = rDate.getTime();
+						end--;
+						if (lrDate < lFrom) {
+							if (isUnreadOnly || isImportantOnly) {
+								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
+									arrayList.add(testMsg);
+									j++;
+								} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
+										arrayList.add(testMsg);
+										j++;
+								}
+							} else {
+								arrayList.add(testMsg);
+								j++;
+							}
+						}
+					} 
+				while (j < 10 && end > 0);// 더 빨리 온 메세지를 뽑는다.
+				
+				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+				
+				messages = msg;
 			}
 		}
 		

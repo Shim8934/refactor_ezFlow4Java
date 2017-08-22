@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -234,7 +235,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String tempName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		
 	        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
-	        
+	        	        
 	        senderReceiverFlag = folderId.equals(sendName) ? true : false;
 	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
 	        
@@ -248,6 +249,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //				String receivedDateStr = sdf.format(receivedDate);
 				ed = sdf.parse(endDate);
 			}
+	        
+	        folderId = URLDecoder.decode(folderId, "UTF-8");
 	        
 	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",start : " + start 
 	        		+ ",end : " + end + "search : " + search + "endDate : " + ed); 
@@ -298,7 +301,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			}
 			
 			if (!endDate.equals("")) {
-				LOGGER.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, isImportantOnly);
 			}
 			
@@ -367,6 +369,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				messageJson.put("flag",flagged);
 				
+				if( filter.equals("isImportantOnly") && flagged != 1 ) {
+					continue;
+				}
+				
 				// attachment
 				boolean isAttached = IMAPAccess.hasAttachment(message);
 				int attached = isAttached ? 1 : 0;
@@ -432,7 +438,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				// read/unread
 				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 				messageJson.put("read",readFlag);
-							
+				
+				if( filter.equals("isUnreadOnly") && readFlag == 1 ) {
+					continue;
+				}
+				
 				if (message.isSet(Flags.Flag.ANSWERED)) {
 					messageJson.put("contentclass","REPLY");
 				} else {
@@ -445,7 +455,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						messageJson.put("contentclass","IPM.Note");
 					}
 				}
-				messageJsonArray.add(messageJson);
+				if (!endDate.equals(receivedDateStr)) {
+					messageJsonArray.add(messageJson);
+				}
 			}
 			String folderName = folder.getName();
 			if ( folderName.equals("INBOX") ) {
@@ -457,6 +469,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			data.put("messageJsonArray", messageJsonArray);
 			data.put("unreadCount", folder.getUnreadMessageCount());
+			data.put("fullCount", folder.getMessageCount());
 			data.put("folderName", folderName);
 			
 			result.put("status", "ok");

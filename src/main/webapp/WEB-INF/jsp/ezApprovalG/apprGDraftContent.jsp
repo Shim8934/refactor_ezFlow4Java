@@ -244,7 +244,11 @@
 	                                Document_Ptag[i].style.marginBottom = "0px";
 	                            if (Document_Ptag[i].style.marginTop == "")
 	                                Document_Ptag[i].style.marginTop = "0px";
-	                            Document_Ptag[i].style.fontFamily = "Gulim";
+	                            if ("${userInfo.lang}" == "3") {
+	                            	Document_Ptag[i].style.fontFamily = "メイリオ";
+	                            } else {
+	                            	Document_Ptag[i].style.fontFamily = "Gulim";
+	                            }
 	                        }
 	                    }
 	                    
