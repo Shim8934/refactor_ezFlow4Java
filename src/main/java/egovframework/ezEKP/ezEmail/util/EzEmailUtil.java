@@ -1361,17 +1361,10 @@ public class EzEmailUtil {
 				
 				Date rDate;//message Date       
 				long lrDate;//message Date long for  comparing endDate       
-				
-//				FetchProfile fp = new FetchProfile();
-//				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-//				folder.fetch(messages, fp);
-				
-				Message orgMsg[] = f.getMessages(); 
-				this.sortMessages(folder, orgMsg, "receivedDate", true);
-				
+
 				int j = 0;
 				do {                
-						Message testMsg = orgMsg[end-1];         
+						Message testMsg = f.getMessage(end);         
 						rDate = testMsg.getReceivedDate();         
 						lrDate = rDate.getTime();
 						end--;
@@ -1384,10 +1377,20 @@ public class EzEmailUtil {
 
 				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
 
+				for (int i=0, n=msg.length; i<n; i++) {
+					lrDate = msg[i].getReceivedDate().getTime();         
+					if (lrDate > lFrom) {           
+						System.out.println(i + ": " + msg[i].getFrom()[0] + "\t" + msg[i].getSubject());
+					}       
+				}
 				return msg;
 			} else { //filter 있을 때
 				
 				ArrayList<Message> arrayList = new ArrayList<>();
+
+				sTerm = new ReceivedDateTerm(ComparisonTerm.LT, endDate);;
+
+				messages = folder.search(sTerm);
 				
 				Date from = endDate;       
 				Folder f = folder;
@@ -1399,11 +1402,8 @@ public class EzEmailUtil {
 				long lrDate;//message Date long for  comparing endDate       
 				int j = 0;
 				
-				Message orgMsg[] = f.getMessages(); 
-				this.sortMessages(folder, orgMsg, "receivedDate", true);
-				
 				do {                
-						Message testMsg = orgMsg[end-1];         
+						Message testMsg = f.getMessage(end);         
 						rDate = testMsg.getReceivedDate();         
 						lrDate = rDate.getTime();
 						end--;
