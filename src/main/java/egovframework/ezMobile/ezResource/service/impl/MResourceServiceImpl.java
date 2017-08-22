@@ -228,8 +228,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		LOGGER.debug("getScheduleList Start");
 
 		Map<String, Object> result = new HashMap<>();
-		String startDateLimit = sDate + " 00:00:01";
-		String endDateLimit = eDate + " 23:59:59";
+		String startDateLimit = eDate + " 23:59:59";
+		String endDateLimit = sDate + " 00:00:01";
 
 		LOGGER.debug("");
 		

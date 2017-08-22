@@ -747,9 +747,9 @@
 			ON
 				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
           	WHERE
-				STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T') <= STARTDATE  
+				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
-				ENDDATE  <= STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T')
+				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 				]]>
