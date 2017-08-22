@@ -526,7 +526,7 @@ public class MApprovalGGWController {
 	 * 모바일 G/W 전자결재 [PUT] 부재자설정 등록
 	 */
 	@RequestMapping(value = "/mobile/ezapproval/absentee/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, @RequestParam MApprovalGAbsenteeInfoVO absenteeInfoVO) {
+	public JSONObject mApprovalSetAbsenteeInfo(@PathVariable String userId, HttpServletRequest request, MApprovalGAbsenteeInfoVO absenteeInfoVO) {
 		LOGGER.debug("MOBILE G/W APPROVAL [PUT /mobile/ezapproval/absentee/users/" + userId + "] started.");
 		
 		JSONObject result = new JSONObject();
