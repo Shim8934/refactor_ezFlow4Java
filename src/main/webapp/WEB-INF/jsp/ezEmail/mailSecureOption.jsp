@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<title>보안메일</title>
+		<title><spring:message code='ezEmail.lhm31' /></title>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
@@ -134,7 +134,7 @@
 		
 		    function confirm() {
 	            if (document.getElementById("securePassword").value.trim() == "") {
-	            	alert("암호를 입력하세요.");
+	            	alert("<spring:message code='ezEmail.lhm42' />");
 	            	document.getElementById("securePassword").focus();
 	            	return;
 	            }
@@ -148,7 +148,7 @@
 		            var nowmonth = now.getMonth() + 1;
 		            var pTime = now.getFullYear() + "/" + nowmonth + "/" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes();
 		            if (Date.parse(secureReadDate) < Date.parse(pTime)) {
-		            	alert("열람 허용 기간이 현재 시간보다 이전으로 설정되었습니다.\n다시 설정해주시기 바랍니다.");
+		            	alert("<spring:message code='ezEmail.lhm43' />");
 		            	return;
 		            }
 	            }
@@ -200,20 +200,20 @@
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1>보안메일</h1>
-		<span>※ 보안메일 열람에 필요한 암호와 열람 허용 횟수, 열람 허용 기간을 설정합니다.</span><br>
-		<span>※ 보안메일 암호는 수신자에게 따로 공지해야 합니다.</span><br>
-		<span>※ 보안메일 열람 시 인터넷에 연결되어있어야 합니다.</span><br>
-		<span>※ 보낸편지함에서 해당 보안메일을 삭제하면 열람 불가능합니다.</span><br>
+		<h1><spring:message code='ezEmail.lhm31' /></h1>
+		<span><spring:message code='ezEmail.lhm38' /></span><br>
+		<span><spring:message code='ezEmail.lhm39' /></span><br>
+		<span><spring:message code='ezEmail.lhm40' /></span><br>
+		<span><spring:message code='ezEmail.lhm41' /></span><br>
 		<br>
 		
 		<table style="width:100%;" class="content">
 		  <tr>
-		    <th>보안메일 암호</th>
+		    <th><spring:message code='ezEmail.lhm32' /></th>
 		    <td><input type="text" id="securePassword" maxlength="50" /></td>
 		  </tr>
 		  <tr>
-		    <th>열람 허용 횟수</th>
+		    <th><spring:message code='ezEmail.lhm33' /></th>
 		    <td>
 		    	<select id="maxReadCount" style="width:50px" disabled>
 		    		<option value=1>1</option>
@@ -222,18 +222,18 @@
 		    		<option value=4>4</option>
 		    		<option value=5>5</option>
 		    	</select>
-		    	회/인
+		    	<spring:message code='ezEmail.lhm36' />
 		    	<span class="right">
-		    		<input type="checkbox" id="countUnlimit" onclick="chkMaxReadCount()" checked /><label for="countUnlimit">무제한</label>
+		    		<input type="checkbox" id="countUnlimit" onclick="chkMaxReadCount()" checked /><label for="countUnlimit"><spring:message code='ezEmail.lhm35' /></label>
 		    	</span>
 		    </td>
 		  </tr>
 		  <tr>
-		  	<th>열람 허용 기간</th>
+		  	<th><spring:message code='ezEmail.lhm34' /></th>
 		  	<td>
 		  		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled />
-		  		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" disabled />
-		  		<input type="checkbox" id="dateUnlimit" onclick="chkMaxReadDate()" checked /><label for="dateUnlimit">무제한</label>
+		  		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" disabled /> <spring:message code='ezEmail.lhm37' />
+		  		<input type="checkbox" id="dateUnlimit" onclick="chkMaxReadDate()" checked /><label for="dateUnlimit"><spring:message code='ezEmail.lhm35' /></label>
 		  	</td>
 		  </tr>
 		</table>

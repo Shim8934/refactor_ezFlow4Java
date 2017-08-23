@@ -1747,7 +1747,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			secureKey = request.getParameter("secureKey");
 			secureKey = egovFileScrty.decryptAES(secureKey);
 			securePassword = request.getParameter("securePassword");
-			logger.debug("key=" + secureKey + ",password=" + securePassword);
+			logger.debug("secureKey=" + secureKey + ",password=" + securePassword);
 			
 			String reader = secureKey.split("/")[0];
 			String secureId = secureKey.split("/")[1];
@@ -1765,21 +1765,24 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			if (result != 0) {
 				String message = null;
 				
+				//TODO: locale 어떡하지
+				Locale locale = Locale.getDefault();
+				
 				switch (result) {
 					case -1 : 
-						message = "발신자가 메일을 삭제하여 해당 보안메일을 열람할 수 없습니다.";
+						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
 						break;
 					case -2 : 
-						message = "보안메일 암호가 올바르지 않습니다. 암호를 정확히 입력해주세요.";
+						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
 						break;
 					case -3 : 
-						message = "보안메일 열람기간이 지나 해당 보안메일을 열람할 수 없습니다.";
+						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
 						break;
 					case -4 : 
-						message = "보안메일 열람횟수를 초과하여 해당 보안메일을 열람할 수 없습니다.";
+						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
 						break;
 					default : 
-						message = "보안메일을 가져오는 도중 에러가 발생하였습니다.";
+						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
 						break;
 				}
 				
@@ -2012,14 +2015,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					// readCountStr
 					if (maxReadCount == 0) {
-						readCountStr = "무제한";
+						readCountStr = egovMessageSource.getMessage("ezEmail.lhm35", locale);
 					} else {
-						readCountStr = maxReadCount + "회 중 <span style=\"color:red\">" + (maxReadCount - readCount - 1) + "회</span> 남음";
+						readCountStr = maxReadCount + egovMessageSource.getMessage("ezEmail.lhm55", locale) 
+							+ " <span style=\"color:red\">" + (maxReadCount - readCount - 1) + egovMessageSource.getMessage("ezEmail.lhm56", locale) + "</span>";
 					}
 					
 					// readDateStr
 					if (maxReadDate == null) {
-						readDateStr = "무제한";
+						readDateStr = egovMessageSource.getMessage("ezEmail.lhm35", locale);
 					} else {
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -2028,7 +2032,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						sdf.setTimeZone(TimeZone.getDefault());
 						maxReadDate = sdf.format(date);
 						
-						readDateStr = "<span style=\"color:red\">" + maxReadDate + "</span> 까지";
+						readDateStr = "<span style=\"color:red\">" + maxReadDate + "</span> " + egovMessageSource.getMessage("ezEmail.lhm37", locale);
 					}
 					
 					// 임시파일 삭제

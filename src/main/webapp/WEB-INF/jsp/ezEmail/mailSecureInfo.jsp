@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css">
-		<title>보안정보</title>
+		<title><spring:message code='ezEmail.lhm44' /></title>
 		<script type="text/javascript" src="/js/ezEmail/lang/ezEmail_ko.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
@@ -32,43 +32,43 @@
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1>보안정보</h1>
-		<span>※ 보낸편지함에서 해당 보안메일을 삭제하면 열람 불가능합니다.</span><br/>
+		<h1><spring:message code='ezEmail.lhm44' /></h1>
+		<span><spring:message code='ezEmail.lhm45' /></span><br/>
 		<br/>
 		
-		<h2>보안정보</h2>
+		<h2><spring:message code='ezEmail.lhm44' /></h2>
 		<table style="width:100%;" class="content">
 		  <tr>
-		    <th>보안메일 암호</th>
+		    <th><spring:message code='ezEmail.lhm32' /></th>
 		    <td>${secureInfo.password}</td>
 		  </tr>
 		  <tr>
-		    <th>열람 허용 횟수</th>
+		    <th><spring:message code='ezEmail.lhm33' /></th>
 	    	<c:if test="${secureInfo.maxReadCount == '0'}">
-	    		<td>무제한</td>
+	    		<td><spring:message code='ezEmail.lhm35' /></td>
 	    	</c:if>
 		    <c:if test="${secureInfo.maxReadCount != '0'}">
-	    		<td>${secureInfo.maxReadCount}회</td>
+	    		<td>${secureInfo.maxReadCount} <spring:message code='ezEmail.lhm36' /></td>
 	    	</c:if>
 		  </tr>
 		  <tr>
-		  	<th>열람 허용 기간</th>
+		  	<th><spring:message code='ezEmail.lhm34' /></th>
 		  	<c:if test="${secureInfo.maxReadDate == null}">
-	    		<td>무제한</td>
+	    		<td><spring:message code='ezEmail.lhm35' /></td>
 	    	</c:if>
 		    <c:if test="${secureInfo.maxReadDate != null}">
-	    		<td>${secureInfo.maxReadDate} 까지</td>
+	    		<td>${secureInfo.maxReadDate} <spring:message code='ezEmail.lhm37' /></td>
 	    	</c:if>
 		  </tr>
 		</table>
 		<br/>
 		
-		<h2>수신자별 열람정보</h2>
+		<h2><spring:message code='ezEmail.lhm46' /></h2>
 		<table style="width:100%;">
 		  <tr>
-			<th>수신자</th>
-			<th width="60px">열람 횟수</th>
-			<th width="150px">최근 열람 시각</th>
+			<th><spring:message code='ezEmail.lhm47' /></th>
+			<th width="60px"><spring:message code='ezEmail.lhm48' /></th>
+			<th width="150px"><spring:message code='ezEmail.lhm49' /></th>
 		  </tr>
 		</table>
 		
@@ -85,7 +85,7 @@
 		</div>
 		
 		<div class="btnposition">
-		   <a class="imgbtn" onClick="confirm()" ><span>확인</span></a>
+		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		</div>
 	</body>
 </html>
