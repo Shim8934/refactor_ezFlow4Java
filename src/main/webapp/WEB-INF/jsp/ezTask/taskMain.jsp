@@ -232,7 +232,7 @@
 		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
-alert(startdate + " / " + enddate);
+
 			        tr.setAttribute("startdate", startdate);
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
