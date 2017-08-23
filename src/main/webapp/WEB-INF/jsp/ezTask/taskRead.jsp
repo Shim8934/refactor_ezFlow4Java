@@ -29,6 +29,7 @@
 			var parentid = "${taskInfoVO.parentID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
+			var duration = 1000;
 			var delayColor = "${delayColor }";
 			/* 담당자 인듯 이효진 */		    
 // 		    var personlist = "${personList }";
@@ -46,6 +47,7 @@
 		    var AttachLimit = 5;
 		    
 		    var folderPath = "${folderPath }";
+		    
 		    
 		    $(document).ready(function() {
 		    	
@@ -120,6 +122,9 @@
 
 			/* progressBar 조회 */
 			function initProgressBar(taskstatus, completerate) {
+				if (completerate == '0') {
+					duration = 0;
+				}
 				if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
@@ -127,7 +132,8 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%'
+						width: '100%',
+						duration : duration
 					});
 				} else {
 					$('#taskProgressBar').LineProgressbar({
@@ -136,7 +142,8 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%'
+						width: '100%',
+						duration : duration
 					});
 				}
 				
