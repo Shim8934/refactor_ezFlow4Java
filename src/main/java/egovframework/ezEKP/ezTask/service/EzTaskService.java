@@ -22,6 +22,8 @@ public interface EzTaskService {
 	
 	void deleteComment(String taskID, String commentID, int tenantID) throws Exception;
 	
+	void updateTaskStatus(String taskID, String taskStatus, String completeRate, int tenantID) throws Exception;
+	
 	/* 정수현*/
 	public void taskSaveConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
 

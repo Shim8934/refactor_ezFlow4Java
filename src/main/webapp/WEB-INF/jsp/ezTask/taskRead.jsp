@@ -29,7 +29,7 @@
 			var parentid = "${taskInfoVO.parentID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
-// 		    var admin = "Y";
+			var delayColor = "${delayColor }";
 			/* 담당자 인듯 이효진 */		    
 // 		    var personlist = "${personList }";
 
@@ -83,7 +83,8 @@
 		            tempbody = message2.GetEditorContent();
 		        } */
 
-		        var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
+				/* 진행상태 disable */
+		       /*  var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
 		        for (var i = 0; i < taskcheckbox.length; i++) {
 		            if (taskcheckbox[i].value == taskstatus) {
 		                taskcheckbox[i].checked = true;
@@ -97,7 +98,7 @@
 		                taskcheckbox[i].checked = true;
 		                break;
 		            }
-		        }
+		        } */
 		        
 				/* 의견카운트 */
 		        if (taskCommentListSize == 0) {
@@ -108,10 +109,21 @@
 		        
 				setTimeout(onloadchangtab, 100);
 				
+				initProgressBar(taskstatus, completerate);
+		    });
+   
+			function scrollTop() {
+				try {
+					window.scroll(0, 1);
+				} catch (e) { }
+			}
+
+			/* progressBar 조회 */
+			function initProgressBar(taskstatus, completerate) {
 				if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
-						fillBackgroundColor: '#FF0000',
+						fillBackgroundColor: delayColor,
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
@@ -127,16 +139,9 @@
 						width: '100%'
 					});
 				}
-				/* 진행상태바 */
 				
-		    });
-   
-			function scrollTop() {
-				try {
-					window.scroll(0, 1);
-				} catch (e) { }
 			}
-
+			
 			/* 초기 탭선택스크립트 */
 			function onloadchangtab() {
 				if (type == "1" && (tasktype != "1" && ownerid == userid)) {
@@ -569,15 +574,19 @@
 			
 			/* 진행상태 수정 */
 			function update_status() {
-				/** 이쪽 수정필요함 */
-			    if (parentid != '0' || personid != userid && ownerid != userid) {
-			        alert("<spring:message code='ezTask.t149' />");
-				    return;
+				if (personid != userid) {
+					alert("<spring:message code='ezTask.t149' />");
+					return;
 				}
+				
+			    /* if (parentid != '0' || personid != userid && ownerid != userid) {
+			    	alert("<spring:message code='ezTask.t149' />");
+				    return;
+				} */
 			
-				var id = taskid;
-				if (parentid != "0")
-				    id = parentid;
+// 				var id = taskid;
+// 				if (parentid != "0")
+// 				    id = parentid;
 				
 				/* var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
@@ -619,8 +628,7 @@
 					try { window.opener.RefreshView() } catch (e) { }
 				} */
 				
-				DivPopUpShow(200, 150, "/ezTask/taskStatus.do?taskID=" + id);
-				
+				DivPopUpShow(200, 150, "/ezTask/taskStatus.do?taskID=" + taskid);
 				
 				/* 내가 만들꺼 레이어 안쪽으로 집어넣어야함
 				$.ajax({
@@ -1170,7 +1178,7 @@
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t155' /></th>
-							<td style="padding-right:15px;white-space:nowrap">${fn:substring(taskInfoVO.createDate, 0, 16) }</td>
+							<td style="padding-right:15px;white-space:nowrap">${fn:substring(taskInfoVO.createDate, 0, 10) }</td>
 						</tr>
 						<tr>
 							<th><spring:message code='ezTask.t2003' /></th>
@@ -1224,13 +1232,13 @@
 							<th><spring:message code='ezTask.t121' /></th>
 							<td>
 								<div>
-									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 16) }' />
+									<c:out value = '${fn:substring(taskInfoVO.startDate, 0, 10) }' />
 								</div>
 							</td>
 							<th><spring:message code='ezTask.t122' /></th>
 							<td>
 								<div>
-									<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 16) }' />
+									<c:out value = '${fn:substring(taskInfoVO.endDate, 0, 10) }' />
 								</div>
 							</td>
 						</tr>

@@ -126,23 +126,38 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		logger.debug("insertComment ended.");
 	}
+	
+	@Override
+	public void updateTaskStatus(String taskID, String taskStatus, String completeRate, int tenantID) throws Exception {
+		logger.debug("updateTaskStatus started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("taskStatus", taskStatus);
+		map.put("completeRate", completeRate);
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.updateTaskStatus(map);
+		
+		logger.debug("updateTaskStatus ended.");
+	}
 
 	/* 정수현*/
 	@Override
-	public String getDelayColor(String memberID, int tenantID) throws Exception {
+	public String getDelayColor(String userID, int tenantID) throws Exception {
 		logger.debug("getDelayColor started.");
+		logger.debug("userID = " + userID + " || tenantID = " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("memberID", memberID);
+		map.put("userID", userID);
 		map.put("tenantID", tenantID);
 
-		String _delayColor = ezTaskDAO.getDelayColor(map);
+		String result = ezTaskDAO.getDelayColor(map);
 
-		logger.debug("_delayColor : " + _delayColor);
-		logger.debug("getDelayColor ended.");
+		logger.debug("getDelayColor ended. delayColor = " + result);
 		
-		return _delayColor;
+		return result;
 	}
 
 	@Override

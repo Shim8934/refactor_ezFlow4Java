@@ -98,11 +98,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 		
 		String parentID = taskInfoVO.getParentID();
-		String admin = "Y";
-		
-		if (parentID.equals("0") || taskInfoVO.getPersonID().equals(userID) && taskInfoVO.getOwnerID().equals(userID)) {
-			admin = "N";
-		}
 		
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
@@ -133,6 +128,9 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 		}
 		
+		//delayColor
+		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
+		
 		/*
 	    var personlist = "${personList }";
 	    var content = "${contentPerson }";
@@ -151,6 +149,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskShareList", taskShareList);
 		
 		model.addAttribute("type", type);
+		model.addAttribute("delayColor", delayColor);
 		
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("folderPath", folderPath);
@@ -189,7 +188,28 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskWorkWrite";
 	}
 	
-	/** 의견작성 Method*/
+	/**
+	 * 진행상태 수정 Method
+	 */
+	@RequestMapping(value = "/ezTask/updateTaskStatus.do")
+	public String updateTaskStatus(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskUpdateInstance started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String taskID = request.getParameter("taskID");
+		String taskStatus = request.getParameter("taskStatus");
+		String completeRate = request.getParameter("completeRate");
+		
+		ezTaskService.updateTaskStatus(taskID, taskStatus, completeRate, userInfo.getTenantId());
+		
+		logger.debug("updateTaskStatus ended.");
+		
+		return "json";
+	}
+	
+	/**
+	 * 의견작성 Method
+	 */
 	@RequestMapping(value = "/ezTask/taskSaveComment.do")
 	public String taskSaveComment(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSaveComment started.");
