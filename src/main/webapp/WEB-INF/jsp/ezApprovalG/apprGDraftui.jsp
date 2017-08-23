@@ -146,7 +146,7 @@
 			var type = "ING";
 			var pGongRamDocID = "";
 			var singImageType = "${signImageType}";
-
+			var isused = "${isused}";
 		    window.onload = function ()
 		    {
 		        try {
@@ -1471,7 +1471,7 @@
 		  </tr>
 		  <tr>
 		    <td  style="padding-bottom:10px;height:90%;" >
-		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		      <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="/ezApprovalG/draftContent.do?isused=${isused}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		      </td>
 		  </tr>
 		  <tr>
@@ -1492,7 +1492,7 @@
 		<input type="file" id="pFile" style="display:none;" />
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

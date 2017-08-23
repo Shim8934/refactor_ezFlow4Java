@@ -47,7 +47,7 @@
 		            if (type == 1) {
 		                for (var count1 = 0; count1 < length; count1++) {
 		                    if (listview.GetSelectedIndexes().split(",")[count1] == "0")
-		                        alert("\"" + listview.GetSelectedRows()[count1].cells[0].innerText + "\"" + " <spring:message code='ezBoard.t125'/>");
+		                        alert("<spring:message code='ezBoard.t125'/>");
 		                    else {
 		                        var item1 = selRow[count1];
 		                        var item2 = selRow[count1].previousSibling;
@@ -62,7 +62,7 @@
 		            else {
 		                for (var count1 = 0; count1 < length; length--) {
 		                    if (listview.GetSelectedIndexes().split(",")[length - 1] == cnt - 1)
-		                        alert("\"" + listview.GetSelectedRows()[length - 1].cells[0].innerText + "\"" + " <spring:message code='ezBoard.t125'/>");
+		                        alert("<spring:message code='ezBoard.t125'/>");
 		                else {
 		                    var item1 = selRow[length - 1];
 		                    var item2 = selRow[length - 1].nextSibling;

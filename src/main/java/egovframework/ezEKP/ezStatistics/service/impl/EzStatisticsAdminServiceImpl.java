@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzStatisticsAdminService")
@@ -358,6 +359,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					Date dbDate = format.parse(logTime);
 					String dateStr = "";
+					
 					if (isPrimaryLang.equals("1")) {
 						SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss");
 						dateStr = newFormat.format(dbDate);

@@ -376,7 +376,7 @@
 							 FROM TBL_RS_BRD 
 							 WHERE  BRD_UPPER = A.BRD_ID
 							 AND Brd_Company = #v_P_CompanyID#
-							 AND Brd_GB = '2' 
+							 AND Brd_GB = '1' 
 							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
 						   '0' Access_Lvl ,
 						   A.APPROVEFLAG 

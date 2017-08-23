@@ -821,11 +821,11 @@ function MailList_ChangeStatus(obj) {
 function prevShow_Clear() {
     if (pPreviewShow_HOW == "W") {
         document.getElementById("Preview_HeaderW").style.display = "none";
-        document.getElementById("ifrmPreViewW").src = "/blank.htm";
+        document.getElementById("ifrmPreViewW").src = strLangLHM18;
     }
     else {
         document.getElementById("Preview_HeaderH").style.display = "none";
-        document.getElementById("ifrmPreViewH").src = "/blank.htm";
+        document.getElementById("ifrmPreViewH").src = strLangLHM18;
     }
 }
 function ReceiverDetail_view(obj) {
