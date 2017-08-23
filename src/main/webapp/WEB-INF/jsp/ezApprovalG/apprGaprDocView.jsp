@@ -63,7 +63,8 @@
 		    var pHasOpinion = "${hasOpinionYN}";
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
-		
+		    var signImageType = "${signImageType}";
+		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
@@ -180,7 +181,11 @@
 		                            if (img.length >= 1) {
 		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
-		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
+		                                if (signImageType == "NAME") {
+		                                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
+		                                } else {
+		                                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+		                                }
 		                            }
 		                            
 		                            if (seumyung) {

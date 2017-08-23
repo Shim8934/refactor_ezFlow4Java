@@ -545,7 +545,7 @@ function AprrovMappingSign(ret) {
 
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (signImageType = "NAME") {
+                    if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -650,7 +650,7 @@ function AprrovMappingSign(ret) {
 
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (signImageType = "NAME") {
+                    if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
