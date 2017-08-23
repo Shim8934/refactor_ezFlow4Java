@@ -143,6 +143,7 @@
 		                    var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
 		                    var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
 		                    var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
+		                    var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
 		                    
 		                    var field = message.GetListItem(fields, SignName);
 
@@ -179,7 +180,7 @@
 		                            if (img.length >= 1) {
 		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
-		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2];
+		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
 		                            }
 		                            
 		                            if (seumyung) {
