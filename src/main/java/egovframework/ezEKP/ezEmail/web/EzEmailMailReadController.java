@@ -2506,10 +2506,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		// securePassword 복호화
 		String securePassword = secureInfo.getPassword();
-		securePassword = egovFileScrty.encryptAES(securePassword);
+		securePassword = egovFileScrty.decryptAES(securePassword);
 		secureInfo.setPassword(securePassword);
 		
+		String maxReadDate = secureInfo.getMaxReadDate();
+		if (maxReadDate != null) {
+			maxReadDate = commonUtil.getDateStringInUTC(maxReadDate, userInfo.getOffset(), false);
+			secureInfo.setMaxReadDate(maxReadDate);
+		}
+		
 		List<MailSecureReaderVO> secureReaderList = ezEmailService.getSecureMailReaderInfo(secureInfo.getSecureId());
+		
+		for (MailSecureReaderVO vo : secureReaderList) {
+			vo.setReadDate(commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false));
+		}
 		
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
