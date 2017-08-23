@@ -385,7 +385,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				try {
 					// 로컬 시스템에서 해당 User의 암호를 변경한다.
 					setPassword(cn, password, tenantID);
-					checkUserConfig(cn, tenantID);
+					checkLoginFailCountConfig(cn, tenantID);
 				} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 					ezEmailUserAdminService.updateUserPasswordWithEncryptedPassword(mailAddr, existingEncryptedPassword);
 					
@@ -999,7 +999,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
 	}
 	
-	private void checkUserConfig(String userID, int tenantID) throws Exception{
+	private void checkLoginFailCountConfig(String userID, int tenantID) throws Exception {
 		String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userID, "LoginFailCount"); 
 		
 		if (userLoginFailedAttempt.equals("")) {
