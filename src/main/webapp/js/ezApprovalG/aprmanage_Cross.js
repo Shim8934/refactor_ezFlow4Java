@@ -1375,7 +1375,6 @@ function OpenAlertUI_Complete() {
 
 var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, CompleteFunction, type) {
-	alert(3);
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
 
