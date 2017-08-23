@@ -326,7 +326,7 @@
         ]]>
     </insert>
 
-    <update id="EzTaskDAO.taskUpdateConfig" parameterClass="Map">
+    <update id="EzTaskDAO.taskUpdateConfig" parameterClass="map">
         <![CDATA[
             UPDATE
                 TBL_TASKCONFIG
@@ -339,5 +339,38 @@
                 tenantid = #tenantID#      
         ]]>
     </update>
+    
+    <delete id="EzTaskDAO.taskDelete" parameterClass="map">
+	  	<![CDATA[
+			DELETE FROM
+				TBL_TASK
+			WHERE
+				taskid = #taskID# or parentid = #taskID#
+			AND
+				tenantid = #tenantID#
+	    ]]>
+	</delete>
+
+	<delete id="EzTaskDAO.taskDeleteShare" parameterClass="map">
+	  	<![CDATA[
+			DELETE FROM
+				TBL_TASKSHARE
+			WHERE
+				taskid = #taskID#
+			AND
+				tenantid = #tenantID#
+	    ]]>
+	</delete>
+
+	<delete id="EzTaskDAO.taskDeleteAttach" parameterClass="map">
+	  	<![CDATA[
+			DELETE FROM
+				TBL_TASKATTACH
+			WHERE
+				taskid = #taskID#
+			AND
+				tenantid = #tenantID#
+	    ]]>
+	</delete>
 </sqlMap>
 

@@ -82,4 +82,16 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public void insertTaskAttach(Map<String, Object> map) throws Exception {
 		insert("EzTaskDAO.insertTaskAttach", map);
 	}
+
+	public void taskDelete(Map<String, Object> map) throws Exception {
+		delete("EzTaskDAO.taskDelete", map);
+	}
+
+	public void taskDeleteShare(Map<String, Object> map) throws Exception {
+		delete("EzTaskDAO.taskDeleteShare", map);
+	}
+
+	public void taskDeleteAttach(Map<String, Object> map) throws Exception {
+		delete("EzTaskDAO.taskDeleteAttach", map);
+	}
 }

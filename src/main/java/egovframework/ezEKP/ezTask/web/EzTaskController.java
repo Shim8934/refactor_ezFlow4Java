@@ -69,8 +69,12 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 업무관리 메인화면
 	 */
 	@RequestMapping(value="/ezTask/taskMain.do")
-	public String taskMain() throws Exception {
+	public String taskMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskMain started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("taskMain ended.");
 		
@@ -644,4 +648,33 @@ public class EzTaskController extends EgovFileMngUtil {
 
     	return resultXML.toString();
     }
+    
+    /**
+	 * 업무 삭제 Method
+	 */
+	@RequestMapping(value = "/ezTask/taskDelete.do")
+	public String taskDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskDelete started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		String taskIDList = request.getParameter("taskIDList");
+
+		String pDirPath = "";
+		String realPath = request.getServletContext().getRealPath("");
+
+		pDirPath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
+        pDirPath = realPath + pDirPath;
+
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+
+        ezTaskService.taskDelete(taskIDList, pDirPath, offset, primary, userInfo.getId(), userInfo.getTenantId());
+
+		logger.debug("taskDelete ended.");
+
+		return "json";
+	}
 }

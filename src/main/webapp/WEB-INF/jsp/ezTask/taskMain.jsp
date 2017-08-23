@@ -23,7 +23,7 @@
 		<script type="text/javascript">
 			var delaycolor = "_delaycolor";
 			var completecolor = "_completecolor";
-			var userid = "${userinfo.UserID}";
+			var userid = "${userInfo.id}";
 			var listdom = "";
 			var pagecount = 0;
 			var totalcount = 0;
@@ -32,14 +32,14 @@
 			var isrefresh = false;
 			var selectelem = null;
 			var initdate = "_initdate";
-		    var ownerid = "${userinfo.DeptPathCode}";
+			var ownerid = "";
 		    var offSetNum = "timeZoneStr";
 		    var startdate = "_initdate";
 		    var enddate = "_initdate";
 		    var type = "";
-		    var userlang = "${userinfo.lang}";
+		    var userlang = "${userInfo.lang}";
 		    var pUse_Editor = "Use_Editor";
-		    var primary = "${userinfo.primary}";
+		    var primary = "${userInfo.primary}";
 		    document.onselectstart = function () { return false; };
 		    function select_row(elem) {
 		        if (selectelem != null) {
@@ -198,7 +198,21 @@
 			        return;		    	
 			    }
 			}
-	
+
+			var strListInfo = "";
+			function chk_onselect(obj) {
+		        if (obj.checked) {
+		            strListInfo += $(obj).attr("taskID") + ";";
+		        } else {
+		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
+		        }
+		    }
+
+			function ReplaceText(orgStr, findStr, replaceStr) {
+		        var re = new RegExp(findStr, "gi");
+		        return (orgStr.replace(re, replaceStr));
+		    }
+
 			function show_page() {
 			    selectelem = null;
 			    makePageSelPage();
@@ -235,32 +249,34 @@
 
 			        tr.setAttribute("startdate", startdate);
 
-			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
-			            tr.cells[0].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
-			        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
-			            tr.cells[0].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
+			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
-			        tr.cells[0].style.textAlign = "center";
+			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
+			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
+			        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
+			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
+
+			        tr.cells[1].style.textAlign = "center";
 
 			        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
-			            tr.cells[1].innerHTML += "<img src='/images/newAttach.gif' >";
+			            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
 			        else
-			            tr.cells[1].innerHTML += "&nbsp;";
+			            tr.cells[2].innerHTML += "&nbsp;";
 		
 			        if (primary == "1") {
-			            setNodeText(tr.cells[2], SelectSingleNodeValue(node, "PERSONNAME"));
+			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
 			        }
 			        else {
-			            setNodeText(tr.cells[2], SelectSingleNodeValue(node, "PERSONNAME2"));
+			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
 			        }
 		
 			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N") {
-			            tr.cells[3].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
+			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
 			        }
 			        else
-			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "TITLE"));
-			        tr.cells[3].style.overflow = "hidden"
-			        tr.cells[3].style.textOverflow = "ellipsis"
+			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
+			        tr.cells[4].style.overflow = "hidden"
+			        tr.cells[4].style.textOverflow = "ellipsis"
 		
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
@@ -272,7 +288,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
-			                tr.cells[5].appendChild(div);
+			                tr.cells[6].appendChild(div);
 			                break;
 			            case "2":
 			                var div = document.createElement("DIV");
@@ -283,7 +299,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
-			                tr.cells[5].appendChild(div);
+			                tr.cells[6].appendChild(div);
 			                break;
 			            case "3":
 			                var div = document.createElement("DIV");
@@ -294,7 +310,7 @@
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
 			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
-			                tr.cells[5].appendChild(div);
+			                tr.cells[6].appendChild(div);
 			                break;
 			        }
 
@@ -360,10 +376,10 @@
 		
 			        span.appendChild(span2);
 			        
-			        tr.cells[6].appendChild(span);
-			        tr.cells[6].appendChild(span3);
-			        setNodeText(tr.cells[7], startdate);
-			        tr.cells[8].innerHTML = "<B>" + enddate + "</B>";
+			        tr.cells[7].appendChild(span);
+			        tr.cells[7].appendChild(span3);
+			        setNodeText(tr.cells[8], startdate);
+			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
 		
 			        if (SelectSingleNodeValue(node, "TASKSTATUS") == "4") {
 			            for (var j = 2; j < 9; j++)
@@ -482,8 +498,7 @@
 		            "height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        }
 		    }
-		
-		    var task_repetition_del_cross_dialogArguments = new Array();
+
 		    var deltaskid = "";
 		    var delparentid = "";
 		    var delrepeatcount = "";
@@ -492,92 +507,38 @@
 		            alert("<spring:message code='ezTask.t104' />");
 		            return;
 		        }
-		
+
 		        deltaskid = GetAttribute(selectelem, "taskid")
 		        delparentid = GetAttribute(selectelem, "parentid");
-		        delrepeatcount = GetAttribute(selectelem, "repeatcount");
+// 		        delrepeatcount = GetAttribute(selectelem, "repeatcount");
 		        var creatorId = GetAttribute(selectelem, "creatorid");
-		
+
 		        if (creatorId != userid) {
 		            alert("<spring:message code='ezTask.t146' />");
 		            return;
 		        }
-		
-		
+
 		        if (delparentid != "0") {
 		            alert("<spring:message code='ezTask.t105' />");
 		            return;
 		        }
-		
-		        if (!confirm("<spring:message code='ezTask.t106' />"))
-		            return;
-		
-		        if (delrepeatcount != "0") {
-		            var rgParams = new Array();
-		            rgParams["CancelOpen"] = false;
-		            rgParams["InstanceType"] = "";
-		
-		            task_repetition_del_cross_dialogArguments[0] = rgParams;
-		            task_repetition_del_cross_dialogArguments[1] = DeleteTask_Complete;
-		            
-		            var result = GetOpenWindow("/myoffice/ezTask/htm/task_repetition_del_Cross.aspx", "", 390, 235, "NO");
-		
-		            return;
-		        }
-		
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		
-		        var objRoot, objNode;
-		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", deltaskid);
-		
-		        xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
-		        xmlHTTP.send(xmlDom);
-		
-		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		            alert("<spring:message code='ezTask.t108' />");
-		        else
-		            RefreshView();
-		
-		    }
-		
-		    function DeleteTask_Complete(rgParams) {
-		        if (rgParams["InstanceType"] == "Instance") {
-		            var xmlHTTP = createXMLHttpRequest();
-		            var xmlDom = createXmlDom();
-		
-		            var objRoot, objNode;
-		            objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", deltaskid);
-		            objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", delrepeatcount);
-		
-		            xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_del_repeat_instance.aspx", false);
-		            xmlHTTP.send(xmlDom);
-		
-		            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		                alert("<spring:message code='ezTask.t107' />");
-		            else
-		                RefreshView();
-		            DivPopUpHidden();
-		
-		            return;
-		        }
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		
-		        var objRoot, objNode;
-		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", deltaskid);
-		
-		        xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
-		        xmlHTTP.send(xmlDom);
-		
-		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		            alert("<spring:message code='ezTask.t108' />");
-		        else
-		            RefreshView();
-		        DivPopUpHidden();
+
+				if (confirm("<spring:message code='ezTask.t106' />")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						url : "/ezTask/taskDelete.do",
+						data : {
+							taskIDList : strListInfo
+						},
+						success : function() {
+							RefreshView();
+						},
+						error : function() {
+							alert("<spring:message code='ezTask.t107' />");
+						}
+					})					
+				}
 		    }
 		</script>
 		<script>
@@ -707,9 +668,11 @@
 						after_DateChange(xml);
 					},
 					error : function() {
-						alert("에러발생");
+						alert("<spring:message code='ezTask.t992' />");
 					}
 				});
+
+				strListInfo = "";
 		    }
 		
 		    function after_DateChange(xml) {
@@ -954,9 +917,10 @@
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
-						<col style ="width:50px;">
 						<col style ="width:30px;">
-						<col style ="width:80px;">
+						<col style ="width:50px;">
+						<col style ="width:20px;">
+						<col style ="width:60px;">
 						<col >
 						<col style ="width:90px;">
 		                <col style ="width:90px;">
@@ -964,6 +928,7 @@
 						<col style ="width:80px;">
 						<col style ="width:97px;">
 						<tr>
+							<th ><input id="checkboxAll" type="checkbox" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 							<th ><spring:message code='ezTask.t156' /></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
@@ -981,6 +946,7 @@
 							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 		                    <td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>

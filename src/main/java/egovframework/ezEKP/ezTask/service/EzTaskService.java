@@ -36,4 +36,6 @@ public interface EzTaskService {
 	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, int tenantID) throws Exception;
 
 	String getTaskCount(String memberID, String startDate, String endDate, String offset, String type, int tenantID) throws Exception;
+
+	public void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception;
 }
