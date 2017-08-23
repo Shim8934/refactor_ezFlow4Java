@@ -64,8 +64,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
-   	
-	
+		
 	/**
 	 * 모바일 G/W 일정관리 [GET] 일정 리스트 (월간,주간,일정검색)
 	 */	
@@ -407,9 +406,11 @@ public class MScheduleGWController extends EgovFileMngUtil {
 	    	
 	    	String utcStartDate = commonUtil.getDateStringInUTC(startDate, info.getOffSet(), true);
 	    	String utcEndDate = commonUtil.getDateStringInUTC(endDate, info.getOffSet(), true);	        
-	        String defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", info.getTenantId());
-	        	        
-	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, defaultPath, info.getTenantId()); 
+	        
+	        String realPath = commonUtil.getRealPath(request);
+	        Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(info.getLang()));
+	        	        	        
+	        int resultScheduleID = mScheduleService.insertSchedule(jsonParam, utcStartDate, utcEndDate, info.getTenantId(), realPath, locale); 
 	        
 	        result.put("status", "ok");
 			result.put("code", 0);			
