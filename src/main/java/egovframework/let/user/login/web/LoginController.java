@@ -218,6 +218,9 @@ public class LoginController {
 		    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
 		        	}	        	
 	        	}        	        	
+	        		        	
+	        	//Reset number of login fail attempts
+	        	commonUtil.resetLoginFailAttempts(_uid, tenantId);
 	        	
 				//0보다 작아지면 패스워드 변경기한 Expired
 				if (diff <= 0) {				
@@ -252,10 +255,7 @@ public class LoginController {
 		        	response.addCookie(cookieName);
 		        	
 		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
-		        	//session = request.getSession();	        	
-		        	
-		        	//Reset number of login fail attempts
-		        	commonUtil.resetLoginFailAttempts(_uid, tenantId);
+		        	//session = request.getSession();       	
 		        	
 		        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 		        	    return "redirect:/ezEmail/mailAloneMain.do";
