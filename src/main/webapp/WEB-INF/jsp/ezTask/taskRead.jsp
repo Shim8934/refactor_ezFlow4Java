@@ -124,7 +124,10 @@
 			function initProgressBar(taskstatus, completerate) {
 				if (completerate == '0') {
 					duration = 0;
+				} else {
+					duration = 1000;
 				}
+				
 				if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
@@ -1305,8 +1308,8 @@
 			</tr>
 		</table>
 		
-		<div id="tabpart" class="portlet_tabpart01" style="margin-top: 3px; margin-bottom: 3px;">
-			<div class="portlet_tabpart01_top" id="tab1">
+		<div id="tabpart" class="portlet_tabpart03" style="margin-top: 3px; margin-bottom: 3px;">
+			<div class="portlet_tabpart03_top" id="tab1">
 				<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
 				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
