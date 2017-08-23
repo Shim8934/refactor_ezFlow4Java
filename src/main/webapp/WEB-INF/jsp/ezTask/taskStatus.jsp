@@ -26,11 +26,16 @@
 	        var creatorid = "${taskInfoVO.creatorID }";
 	        var personid = "${taskInfoVO.personID }";
 	        var delayColor = "${delayColor }";
+	        var duration = 1000;
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
 	        
 	        $(document).ready(function() {
+	        	if (completerate == '0') {
+	        		duration = 0
+	        	}
+	        	
 	        	if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
@@ -38,7 +43,8 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%'
+						width: '100%',
+						duration : duration
 					});
 				} else {
 					$('#taskProgressBar').LineProgressbar({
@@ -47,7 +53,8 @@
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
-						width: '100%'
+						width: '100%',
+						duration : duration
 					});
 				}
 	        	
