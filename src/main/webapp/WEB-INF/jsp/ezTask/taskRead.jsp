@@ -569,6 +569,7 @@
 			
 			/* 진행상태 수정 */
 			function update_status() {
+				/** 이쪽 수정필요함 */
 			    if (parentid != '0' || personid != userid && ownerid != userid) {
 			        alert("<spring:message code='ezTask.t149' />");
 				    return;

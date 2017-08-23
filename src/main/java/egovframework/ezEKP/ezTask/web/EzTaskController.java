@@ -83,6 +83,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskRead started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
@@ -92,11 +93,16 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
-System.out.println("@@" + taskID);		
+
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 		
 		String parentID = taskInfoVO.getParentID();
+		String admin = "Y";
+		
+		if (parentID.equals("0") || taskInfoVO.getPersonID().equals(userID) && taskInfoVO.getOwnerID().equals(userID)) {
+			admin = "N";
+		}
 		
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
