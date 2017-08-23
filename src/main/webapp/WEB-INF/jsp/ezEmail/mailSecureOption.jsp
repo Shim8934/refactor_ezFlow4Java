@@ -23,8 +23,18 @@
 		<!-- time picker-->
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<!-- crypt -->
+		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
+		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
+		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		
 		<script type="text/javascript">
 			var offsetMin = "${offsetMin}";
+			var rsa = new RSAKey();
 			
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -84,6 +94,8 @@
 		    var isDivPopUp = false;
 		    
 		    window.onload = function () {
+		    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+		    	
 		        var rgParams;
 		        try {
 		            RetValue = parent.secureMail_dialogArguments[0];
@@ -141,7 +153,7 @@
 		            }
 	            }
 	            
-	            RetValue["securePassword"] = document.getElementById("securePassword").value;
+	            RetValue["securePassword"] = rsa.encrypt(document.getElementById("securePassword").value);
 	            
 	            if (document.getElementById("countUnlimit").checked == true) {
 	            	RetValue["secureReadCount"] = 0;
@@ -230,6 +242,9 @@
 		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
+		
+		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
+		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	</body>
 </html>
 

@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -2216,6 +2217,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					tempNode = root.getElementsByTagName("SECUREPASSWORD").item(0);
 					if (tempNode != null) {
 						securePassword = tempNode.getTextContent();
+						
 					}
 				}
 				if (root.getElementsByTagName("SECUREREADCOUNT") != null) {
@@ -2874,6 +2876,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            
 			        	// 보안메일 처리
 		            	if (isSecureMail) {
+		            		// client단에서 암호화되어 넘겨진 securePassword 복호화
+		            		String prm = egovFileScrty.getPrm();
+		                	String pre = egovFileScrty.getPre();
+		                	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		                	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
+		                	
 	    		        	message.setHeader("X-JMocha-Secure-Mail", "true");
 	    		        	message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
@@ -2917,6 +2925,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            			secureReadDate = sdf.format(date);
 			            			secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, userInfo.getOffset(), true);
 			            		}
+
+			            		// client단에서 암호화되어 넘겨진 securePassword 복호화
+			            		String prm = egovFileScrty.getPrm();
+			                	String pre = egovFileScrty.getPre();
+			                	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+			                	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
+			            		
+			            		// securePassword 암호화
+			            		securePassword = egovFileScrty.encryptAES(securePassword);
 			            		
 			            		// save secure mail info and get secureId
 			            		secureId = ezEmailService.setMailSecure(userInfo.getTenantId(), userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
@@ -2959,7 +2976,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	sb.append("        <img src=\"cid:" + tempFileName + ".gif@12345678.87654321\">\n");
 		    		        	sb.append("        <section class=\"security_txt\">\n");
 		    		        	sb.append("            <h4>해당 메일은 <span>암호화</span>되어있는 <span>보안메일</span>입니다.</h4>\n");
-		    		        	sb.append("            <p>메일을 열람하려면 첨부파일을 다운로드한 후<br>보낸 사람이 지정한 암호를 입력해야 합니다.<br>열람 허용 횟수와 열람 허용 기간이 지정되어있으니<br>주의하시기 바랍니다.</p>\n");
+		    		        	sb.append("            <p>메일을 열람하려면 첨부된 html파일을 다운로드하여 더블클릭 후<br>보낸 사람이 지정한 암호를 입력해야 합니다.<br>열람 허용 횟수와 열람 허용 기간이 지정되어있으니<br>주의하시기 바랍니다.</p>\n");
 		    		        	sb.append("        </section>\n");
 		    		        	sb.append("    </div>\n");
 		    		        	sb.append("</div>\n");
@@ -3811,6 +3828,31 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 보안메일 설정화면 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/mailSecureOption.do", produces = "text/xml; charset=utf-8")
+	public String secureMailOption(
+			@CookieValue("loginCookie") String loginCookie, 
+			Locale locale, 
+			Model model, 
+			@RequestBody String bodyData) throws Exception{
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+		// client단에 publicKey 뿌림
+		String publicModulus = egovFileScrty.getPbm();
+		String publicExponent = "10001";
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("publicModulus", publicModulus);
+		model.addAttribute("publicExponent", publicExponent);
+		
+		return "ezEmail/mailSecureOption";
+	}
+
+	/**
 	 * 메일쓰기 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezEmail/mailNewReceiverChoose.do")
@@ -4020,25 +4062,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		return "<DATA>OK</DATA>";
 	}
 	
-	
-	/**
-	 * 보안메일 설정화면 호출 함수
-	 */
-	@RequestMapping(value="/ezEmail/secureMailOption.do", produces = "text/xml; charset=utf-8")
-	public String secureMailOption(
-			@CookieValue("loginCookie") String loginCookie, 
-			Locale locale, 
-			Model model, 
-			@RequestBody String bodyData) throws Exception{
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("offsetMin", offsetMin);
-		
-		return "ezEmail/mailSecureOption";
-	}
 	
 	/**
 	 * 사원 Organ 정보 호출 함수

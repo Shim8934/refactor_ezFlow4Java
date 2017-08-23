@@ -1756,6 +1756,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			// secureKey는 메일 본문내용 호출에 쓰이기 때문에 secureKey를 다시 암호화한다.
 			secureKey = egovFileScrty.encryptAES(secureKey);
 			
+			// securePassword 암호화
+			securePassword = egovFileScrty.encryptAES(securePassword);
+			
 			int result = ezEmailService.checkSecureMailPassword(secureId, reader, securePassword);
 			logger.debug("result=" + result);
 			
@@ -2500,6 +2503,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("url=" + url);
 		
 		MailSecureVO secureInfo = ezEmailService.getSecureMailInfoWithPassword(userInfo.getId(), userInfo.getTenantId(), url);
+		
+		// securePassword 복호화
+		String securePassword = secureInfo.getPassword();
+		securePassword = egovFileScrty.encryptAES(securePassword);
+		secureInfo.setPassword(securePassword);
+		
 		List<MailSecureReaderVO> secureReaderList = ezEmailService.getSecureMailReaderInfo(secureInfo.getSecureId());
 		
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
