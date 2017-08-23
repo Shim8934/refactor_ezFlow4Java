@@ -136,7 +136,7 @@
     		WHERE
     			tenantid = #tenantID#
     		AND
-    			taskid = #taskID# OR parentid = #taskID#
+    			(taskid = #taskID# OR parentid = #taskID#)
     	]]>
     </update>
     

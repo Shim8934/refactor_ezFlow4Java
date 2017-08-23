@@ -29,7 +29,7 @@
 			var parentid = "${taskInfoVO.parentID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
-			var duration = 1000;
+			var duration = 500;
 			var delayColor = "${delayColor }";
 			/* 담당자 인듯 이효진 */		    
 // 		    var personlist = "${personList }";
@@ -125,7 +125,7 @@
 				if (completerate == '0') {
 					duration = 0;
 				} else {
-					duration = 1000;
+					duration = 500;
 				}
 				
 				if (taskstatus == '4') {
@@ -149,7 +149,6 @@
 						duration : duration
 					});
 				}
-				
 			}
 			
 			/* 초기 탭선택스크립트 */
@@ -589,15 +588,6 @@
 					return;
 				}
 				
-			    /* if (parentid != '0' || personid != userid && ownerid != userid) {
-			    	alert("<spring:message code='ezTask.t149' />");
-				    return;
-				} */
-			
-// 				var id = taskid;
-// 				if (parentid != "0")
-// 				    id = parentid;
-				
 				/* var xmlDom = createXmlDom();
 				var xmlHTTP = createXMLHttpRequest();
 				var objRoot;
@@ -639,25 +629,6 @@
 				} */
 				
 				DivPopUpShow(200, 150, "/ezTask/taskStatus.do?taskID=" + taskid);
-				
-				/* 내가 만들꺼 레이어 안쪽으로 집어넣어야함
-				$.ajax({
-					type : "POST",
-					url : "/ezTask/taskUpdateInstance.do",
-					dataType : "json",
-					data : {
-						taskID : id
-					},
-					success : function(result) {
-						//alert("<spring:message code='ezTask.t150' />");
-						
-						try { window.opener.RefreshView() } catch (e) { }
-						//progressBar refresh시켜야함
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						
-					}
-				}); */
 			}
 			
 			/* 진행단계변경시 스크립트? 안쓰는거같음 이효진 */
@@ -1164,7 +1135,7 @@
 								<div id="taskProgressBar"></div>
 							</td>
 							<td style = "padding: 0px 2px 0px 2px; background: #FFF; border: 1px solid #b6b6b6;">
-								<div style="float: right; margin-top: 3px;">
+								<div style="text-align:center; vertical-align: middle;">
 									<a id="updateStatus" class="imgbtn"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
 								</div>
 							</td>

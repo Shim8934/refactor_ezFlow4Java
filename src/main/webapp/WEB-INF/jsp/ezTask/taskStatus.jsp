@@ -26,19 +26,62 @@
 	        var creatorid = "${taskInfoVO.creatorID }";
 	        var personid = "${taskInfoVO.personID }";
 	        var delayColor = "${delayColor }";
-	        var duration = 1000;
+	        var duration = 500;
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
 	        
 	        $(document).ready(function() {
-	        	if (completerate == '0') {
+	        	initProgressBar(taskstatus, completerate)
+	        	
+				$("#taskStatus").val(taskstatus);
+				$("#completeRate").val(completerate);
+	        	
+	        	/* 진행상태 변경시 */
+	        	$("#taskStatus").change(function() {
+					if ($("#taskStatus").val() == "1") {
+						$("#completeRate").val("0");
+					} else if ($("#taskStatus").val() == "2") {
+						if (taskstatus != "4") {
+							$("#completeRate").val(completerate);
+						}
+					} else if ($("#taskStatus").val() == "3") {
+						$("#completeRate").val("100");
+					}
+					
+					initProgressBar($("#taskStatus").val(), $("#completeRate").val());
+					
+					if ($("#taskStatus").val() == 2 || $("#taskStatus").val() == 4) {
+						taskstatus = $("#taskStatus").val();
+					}
+				});
+	        	
+	        	/* 완료율 변경시 */
+	        	$("#completeRate").change(function() {
+	        		if ($("#completeRate").val() == "0") {
+						$("#taskStatus").val("1");
+					} else if ($("#completeRate").val() == "100" && taskstatus != "4") {
+						$("#taskStatus").val("3");
+					} else {
+						if (taskstatus == "2" || taskstatus == "4") {
+							$("#taskStatus").val(taskstatus);
+						}
+					}
+				
+					initProgressBar($("#taskStatus").val(), $("#completeRate").val());
+			    	completerate = $("#completeRate").val();
+				});
+	        });
+	        
+	        /* progressBar 조회 */
+			function initProgressBar(taskstatus, completerate) {
+				if (completerate == '0') {
 					duration = 0;
 				} else {
-					duration = 1000;
+					duration = 500;
 				}
-	        	
-	        	if (taskstatus == '4') {
+				
+				if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
 						fillBackgroundColor: delayColor,
@@ -59,22 +102,7 @@
 						duration : duration
 					});
 				}
-	        	
-				$("#taskStatus").val(taskstatus);
-				$("#completeRate").val(completerate);
-	        	
-	        	/* 진행상태 변경시 */
-	        	$("#taskStatus").change(function() {
-					alert($(this).val());
-					alert($(this).children("option:selected").text());
-				});
-	        	
-	        	/* 완료율 변경시 */
-	        	$("#completeRate").change(function() {
-					alert($(this).val());
-					alert($(this).children("option:selected").text());
-				});
-	        });
+			}
 	        
 	        /* 진행상태 저장 스크립트*/
 			function taskUpdateInstance() {
