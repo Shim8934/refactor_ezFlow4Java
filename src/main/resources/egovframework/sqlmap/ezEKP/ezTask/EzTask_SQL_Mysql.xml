@@ -126,6 +126,20 @@
         ]]>
     </update>
     
+    <update id="EzTaskDAO.updateTaskStatus" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+    			taskstatus = #taskStatus#,
+    			completerate = #completeRate#
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			taskid = #taskID# OR parentid = #taskID#
+    	]]>
+    </update>
+    
     <delete id="EzTaskDAO.deleteComment" parameterClass="Map">
     	<![CDATA[
 			DELETE FROM
@@ -142,13 +156,14 @@
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				delaycolor
-			FROM
-				TBL_TASKCONFIG
-			WHERE
-				tenantid = #tenantID#
-			AND
-				userid = #memberID#
+				IFNULL((SELECT
+							delaycolor
+						FROM
+							TBL_TASKCONFIG
+						WHERE
+							tenantid = #tenantID#
+						AND
+							userid = #userID#), '##FF0000') as delaycolor
 		]]>
 	</select>
 	

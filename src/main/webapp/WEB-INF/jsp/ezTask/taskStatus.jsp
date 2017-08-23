@@ -20,10 +20,12 @@
 		<script type="text/javascript">
 			var userid = "${userInfo.id }";
 	        var taskid = "${taskInfoVO.taskID }";
+	        var parentid = "${taskInfoVO.parentID }";
 	        var taskstatus = "${taskInfoVO.taskStatus }";
 	        var completerate = "${taskInfoVO.completeRate }";
 	        var creatorid = "${taskInfoVO.creatorID }";
 	        var personid = "${taskInfoVO.personID }";
+	        var delayColor = "${delayColor }";
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
@@ -32,7 +34,7 @@
 	        	if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
-						fillBackgroundColor: '#FF0000',
+						fillBackgroundColor: delayColor,
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',
@@ -64,27 +66,33 @@
 	        
 	        /* 진행상태 저장 스크립트*/
 			function taskUpdateInstance() {
-	        	alert("진행상태 저장");
-				/* $.ajax({
+				var id = taskid;
+				if (parentid != "0") {
+				    id = parentid;
+				}
+				
+				$.ajax({
 					type : "POST",
-					url : "/ezTask/taskUpdateInstance.do",
+					url : "/ezTask/updateTaskStatus.do",
 					dataType : "json",
 					data : {
-						taskID : id
+						taskID : id,
+						taskStatus : $("#taskStatus").val(),
+						completeRate : $("#completeRate").val()
 					},
 					success : function(result) {
 						//alert("<spring:message code='ezTask.t150' />");
 						
 						try { window.opener.RefreshView() } catch (e) { }
+						alert("<spring:message code='ezTask.t102' />");
 						//progressBar refresh시켜야함
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
 					}
-				}); */
+				});
 				
-				parent.DivPopUpHidden();
-				/* 닫는거 추가 */
+				close_onclick();
 	        }
 	        
 	        function close_onclick() {
