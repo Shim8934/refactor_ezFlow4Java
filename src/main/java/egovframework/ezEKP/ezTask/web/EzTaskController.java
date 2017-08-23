@@ -592,7 +592,10 @@ public class EzTaskController extends EgovFileMngUtil {
     	String type = request.getParameter("type");
     	
     	List<TaskInfoVO> list = ezTaskService.taskGetList(userInfo.getId(), startDate, endDate, offset, app, type, userInfo.getTenantId());
-    	
+    	String cnt = ezTaskService.getTaskCount(userInfo.getId(), startDate, endDate, offset, type, userInfo.getTenantId());
+
+    	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
+
     	StringBuffer resultXML = new StringBuffer();
     	
     	resultXML.append("<DATA>");
@@ -624,11 +627,14 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<TASKPERSONNAME2>" + list.get(i).getTaskPersonName2() + "</TASKPERSONNAME2>");
     		
     		resultXML.append("</ROW>");
+    		
+    		if (list.get(i).getTaskType().equals("1")) {
+    			
+    		}
     	}
 
-    	resultXML.append("<CNT>2</CNT>");
-    	resultXML.append("<CNT2>2</CNT2>");
-    	resultXML.append("<CNT3>0</CNT3>");
+    	resultXML.append("<CNT>" + cnt.split(",")[0] + "</CNT>");
+    	resultXML.append("<CNT2>" + cnt.split(",")[1]+ "</CNT2>");
 
     	resultXML.append("</DATA>");
 

@@ -152,8 +152,7 @@
 				commentid = #commentID#
         ]]>
     </delete>
-	
-	
+
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -202,8 +201,6 @@
 					taskPersonid = #memberID#
 				AND
 					personid = taskpersonid
-				AND
-					taskstatus != 3
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="2">
@@ -229,6 +226,38 @@
 				tenantid = #tenantID#
 			ORDER BY
 				startDate DESC
+		]]>
+	</select>
+
+	<select id="EzTaskDAO.getTaskCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		    SELECT
+		    	COUNT(taskID)
+			FROM
+				TBL_TASK
+			WHERE
+				taskPersonid = #memberID#
+			AND
+				personid = taskpersonid
+			AND
+				tenantid = #tenantID#
+		]]>
+	</select>
+
+	<select id="EzTaskDAO.getTaskCount2" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		    SELECT
+		    	COUNT(taskID)
+			FROM
+				TBL_TASK
+			WHERE
+				creatorid = #memberID#
+			AND
+				parentid = 0
+			AND
+				tasktype != 1
+			AND
+				tenantid = #tenantID#
 		]]>
 	</select>
 

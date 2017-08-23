@@ -320,4 +320,30 @@ public class EzTaskServiceImpl implements EzTaskService{
 
 		return list;
 	}
+
+	@Override
+	public String getTaskCount(String memberID, String startDate, String endDate, String offset, String type, int tenantID) throws Exception {
+		logger.debug("getTaskCount started.");
+		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("memberID", memberID);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("offset", offset);
+		map.put("type", type);
+		map.put("tenantID", tenantID);
+
+		String rtnCnt = "";
+		String cnt = ezTaskDAO.getTaskCount(map); // 진행업무 count
+		String cnt2 = ezTaskDAO.getTaskCount2(map); // 지시,협조 count
+		
+		rtnCnt = cnt + "," + cnt2;
+
+		logger.debug("rtnCnt : " + rtnCnt);
+		logger.debug("getTaskCount ended.");
+
+		return rtnCnt;
+	}
 }
