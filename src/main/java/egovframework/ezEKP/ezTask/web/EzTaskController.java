@@ -92,7 +92,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
-		
+System.out.println("@@" + taskID);		
 		//업무정보 조회
 		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
 		

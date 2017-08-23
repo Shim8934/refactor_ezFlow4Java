@@ -51,23 +51,21 @@
 		    }
 	
 		    function ReadTask(elem) {
-		        var taskid = GetAttribute(elem.parentElement, "taskid");
+		        var taskID = GetAttribute(elem.parentElement, "taskid");
 		        var parentid = GetAttribute(elem.parentElement, "parentid");
-		        var repeatcount = GetAttribute(elem.parentElement, "repeatcount")
+// 		        var repeatcount = GetAttribute(elem.parentElement, "repeatcount")
 		        var date = GetAttribute(elem.parentElement, "startdate")
 		        var feature = GetOpenPosition(780, 660);
 		        if (parentid != "0")
 		            taskid = parentid;
-		
+
 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/myoffice/ezTask/task_read_Cross.aspx" + "?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		        }
-		        else {
+		            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        } else {
 		            if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                window.open("/myoffice/ezTask/task_read.aspx" + "?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-		            }
-		            else {
-		                window.open("/myoffice/ezTask/task_read_IE.aspx" + "?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            } else {
+		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            }
 		        }
 		    }
@@ -236,16 +234,14 @@
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
 		
 			        tr.setAttribute("startdate", startdate);
-		
+
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
-			            tr.cells[0].innerHTML += "<img src='/images/icon/icon_redstar.gif'>";
+			            tr.cells[0].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
 			        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
-			            tr.cells[0].innerHTML += "<img src='/images/icon/icon_star.gif'>";
-			        else
-			            tr.cells[0].innerHTML += "<img src='/images/icon/icon_yellowstar.gif'>";
-		
+			            tr.cells[0].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
+
 			        tr.cells[0].style.textAlign = "center";
-		
+
 			        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
 			            tr.cells[1].innerHTML += "<img src='/images/newAttach.gif' >";
 			        else
