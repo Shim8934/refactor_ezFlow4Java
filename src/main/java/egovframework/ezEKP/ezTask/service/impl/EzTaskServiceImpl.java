@@ -241,7 +241,11 @@ public class EzTaskServiceImpl implements EzTaskService{
 		}
 
 		int shareLength = Integer.parseInt(doc.getElementsByTagName("SHARELENGTH").item(0).getTextContent());
-		String fileList = doc.getElementsByTagName("FILELIST").item(0).getTextContent();
+		String fileList = "";
+		
+		if (taskInfoVO.getHasAttach().equals("Y")) {
+			fileList = doc.getElementsByTagName("FILELIST").item(0).getTextContent();			
+		}
 
 		logger.debug("OwnerID : " + taskInfoVO.getOwnerID() + " | CreatorName : " + taskInfoVO.getCreatorName() + " | HasShare : " + taskInfoVO.getHasShare() + " | TaskStatus : " + taskInfoVO.getTaskStatus() + " | Importance : " + taskInfoVO.getImportance() + " | ContentPath : " + taskInfoVO.getContentPath());
 		logger.debug("HasAttach : " + taskInfoVO.getHasAttach() + " | StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle() + " | TaskType : " + taskInfoVO.getTaskType() + " | PersonID : " + taskInfoVO.getPersonID());

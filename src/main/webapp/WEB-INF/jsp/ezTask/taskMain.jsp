@@ -60,12 +60,12 @@
 		            taskid = parentid;
 
 		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		            window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        } else {
 		            if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            } else {
-		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 660px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                window.open("/ezTask/taskRead.do?taskID=" + taskID, "", "height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            }
 		        }
 		    }
@@ -232,7 +232,7 @@
 		
 			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
 			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
-		
+alert(startdate + " / " + enddate);
 			        tr.setAttribute("startdate", startdate);
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
