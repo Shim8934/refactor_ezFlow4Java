@@ -180,18 +180,29 @@
 		</isEqual>
 		
 		<isEqual property="gubun" compareValue="1">
-		  	<![CDATA[
-				AND
-					startdate <= #nowDate#
-				AND
-					enddate > #nowDate#
-			]]>
+            <isNotEmpty property="lastDate">
+                <![CDATA[
+                AND
+                    startdate < #lastDate#
+                AND
+                    enddate > #nowDate#
+            ]]>
+            </isNotEmpty>
+            <isEmpty property="lastDate">
+                <![CDATA[
+                AND
+                    startdate <= #nowDate#
+                AND
+                    enddate > #nowDate#
+            ]]>
+            </isEmpty>
+		  	
 		</isEqual>
 		
 		<isEqual property="gubun" compareValue="2">
 			<![CDATA[
 				AND
-					startdate <= #nowDate#
+					startdate <= #lastDate#
 				AND
 					enddate > #nowDate#
 				AND
@@ -202,7 +213,7 @@
 		<isEqual property="gubun" compareProperty="3">
 			<![CDATA[
 				AND
-					startdate <= #nowDate#
+					startdate <= #lastDate#
 				AND
 					enddate < #nowDate#
 			]]>
