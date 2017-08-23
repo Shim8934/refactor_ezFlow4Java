@@ -634,6 +634,13 @@
                      <iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
                 </td>
             </tr>
+            <!-- 메모  -->
+<!--             <tr style="display:inline;"> -->
+<%--             	<th><spring:message code='ezTask.t170' /></th> --%>
+<!--             	<td colspan="3" style="width:100%;"> -->
+<!--             		<input type="text" id="TextMemo" style="width:100%;"> -->
+<!--             	</td> -->
+<!--             </tr> -->
             <tr>
                 <td>
                      <br/> 

@@ -41,6 +41,7 @@ var strLang40 = "Next"
 var strLang41 = "Total "
 var strLang42 = "-items"
 var strLang43 = "Persons";
+var strLang44 = "검색결과";
 var strLang48 = "Attachment filename"
 var strLang49 = "Filesize"
 var strLang50 = "Filesize"

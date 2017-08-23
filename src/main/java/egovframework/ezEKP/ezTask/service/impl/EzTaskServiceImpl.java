@@ -428,7 +428,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 			if (vo.getHasAttach().equals("Y")) {
 				deleteDirectory(taskID[i], pDirPath, tenantID);
 			}
-			
+
 			String mhtPath = vo.getContentPath();
 
 			logger.debug("Delete mhtPath : " + mhtPath);
@@ -448,10 +448,10 @@ public class EzTaskServiceImpl implements EzTaskService{
 
 		logger.debug("taskDelete ended.");
 	}
-	
+
 	private void deleteDirectory(String taskID, String pDirpath, int tenantID) throws Exception {
 		logger.debug("deleteDirectory ended.");
-		
+
 		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile");
 		File[] deleteFileList = directoryFile.listFiles();
 

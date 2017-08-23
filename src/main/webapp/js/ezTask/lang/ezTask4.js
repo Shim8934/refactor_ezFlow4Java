@@ -42,6 +42,7 @@ var strLang41 = "总 "
 var strLang42 = "个"
 var strLang42 = "人";
 var strLang43 = "人";
+var strLang44 = "검색결과";
 
 var strLang48 = "附件文件名";
 var strLang49 = "文件大小";

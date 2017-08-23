@@ -41,6 +41,7 @@ var strLang40 = "次"
 var strLang41 = "総 "
 var strLang42 = "件"
 var strLang43 = "人";
+var strLang44 = "검색결과";
 var strLang48 = "添付ファイル名";
 var strLang49 = "ファイルサイズ";
 var strLang50 = "ファイルサイズ";
