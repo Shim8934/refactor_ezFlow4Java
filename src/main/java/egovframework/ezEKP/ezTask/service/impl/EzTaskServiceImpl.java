@@ -406,4 +406,70 @@ public class EzTaskServiceImpl implements EzTaskService{
 
 		return rtnCnt;
 	}
+
+	@Override
+	public void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception {
+		logger.debug("taskDelete started.");
+		logger.debug("taskIDList : " + taskIDList + " | pDirPath : " + pDirPath + " | offset : " + offset + " | primary : " + primary);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		String[] taskID = taskIDList.split(";");
+
+		for (int i=0; i<taskID.length; i++) {
+			map.put("taskID", taskID[i]);
+			map.put("offset", commonUtil.getMinuteUTC(offset));
+			map.put("primary", primary);
+			map.put("tenantID", tenantID);
+
+			TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
+
+			// 첨부파일이 있으면 첨부파일 삭제
+			if (vo.getHasAttach().equals("Y")) {
+				deleteDirectory(taskID[i], pDirPath, tenantID);
+			}
+			
+			String mhtPath = vo.getContentPath();
+
+			logger.debug("Delete mhtPath : " + mhtPath);
+
+			File file = new File(pDirPath + mhtPath);
+
+			if (file.exists()) {
+				file.delete();
+
+				logger.debug("mhtFile Delete Success");
+			}
+
+			ezTaskDAO.taskDelete(map);
+			ezTaskDAO.taskDeleteShare(map);
+			ezTaskDAO.taskDeleteAttach(map);
+		}
+
+		logger.debug("taskDelete ended.");
+	}
+	
+	private void deleteDirectory(String taskID, String pDirpath, int tenantID) throws Exception {
+		logger.debug("deleteDirectory ended.");
+		
+		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile");
+		File[] deleteFileList = directoryFile.listFiles();
+
+		if (directoryFile.exists()) {
+			// 디렉토리 하위의 파일을 모두 삭제 한뒤 디렉토리 삭제
+			if (deleteFileList.length >0) {
+				for (int i=0; i<deleteFileList.length; i++) {
+					if (deleteFileList[i].isFile()) {
+						deleteFileList[i].delete();
+					} else {
+						deleteDirectory(taskID, pDirpath, tenantID);
+					}
+				}
+			}
+
+			directoryFile.delete();
+		}
+
+		logger.debug("deleteDirectory ended.");
+	}
 }
