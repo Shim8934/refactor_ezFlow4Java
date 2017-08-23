@@ -28,7 +28,7 @@
 			var pagecount = 0;
 			var totalcount = 0;
 			var currentpage = 0;
-			var pagesize = 16;
+			var pagesize = 10;
 			var isrefresh = false;
 			var selectelem = null;
 			var initdate = "_initdate";
@@ -657,7 +657,7 @@
 		        var endMonth = endYearMontgday[1];
 		        var startDay = startYearMontgday[2];
 		        var endDay = endYearMontgday[2];
-		
+
 // 		        if (startMonth.length == 1) {
 // 		            startMonth = "0" + startMonth;
 // 		        }
@@ -739,6 +739,7 @@
 
 	            return;
 		    }
+
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
@@ -747,6 +748,10 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+
+		        var height = parseInt(document.documentElement.clientHeight - 200);
+
+		        document.getElementById("list").style.height = height + "px";
 		        ChangeTab(document.getElementById("1tab1"));
 		    }
 		    document.onselectstart = function () {
@@ -910,7 +915,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow-y:scroll">
+	<body class="mainbody">
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -945,9 +950,9 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<table>
+		<table style="WIDTH: 100%;overflow:AUTO;" id="list">
 			<tr>
-				<td style="WIDTH: 100%;HEIGHT: 365px;vertical-align:top">
+				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
 						<col style ="width:50px;">
 						<col style ="width:30px;">
@@ -985,12 +990,12 @@
 							<td colspan="9" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
-		            <div id="tblPageRayer"></div>
 				</td>
 				<td style="width:5px;">&nbsp;</td>
 				<td style="vertical-align:top;width:182px"></td>
 			</tr>
 		</table>
+		<div id="tblPageRayer"></div>
 	</body>
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");

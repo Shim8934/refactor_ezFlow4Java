@@ -74,4 +74,8 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	public String getTaskCount2(Map<String, Object> map) throws Exception {
 		return (String) select("EzTaskDAO.getTaskCount2", map);
 	}
+
+	public void insertTaskAttach(Map<String, Object> map) throws Exception {
+		insert("EzTaskDAO.insertTaskAttach", map);
+	}
 }

@@ -86,6 +86,14 @@ function manage_share_Complete(retVal) {
                     alert(strLang54);
                     return;
                 }
+
+                if (retVal["id"][0] == userid) {
+                	alert("" + strLang20 + "");
+                	retVal = null;
+                	
+                	return;
+                }
+
                 if (g_share != null) {
                     for (var i = 0; i < g_share["email"].length; i++) {
                         if (retVal["email"][0] == g_share["email"][i]) {
@@ -94,6 +102,7 @@ function manage_share_Complete(retVal) {
                         }
                     }
                 }
+
                 g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
                 if (retVal["id"].length == 0) {
@@ -122,8 +131,7 @@ function manage_share_Complete(retVal) {
                 for (var i = 0; i < retVal["id"].length; i++) {
                     if (g_person != null && g_person["email"][0] == retVal["email"][i]) {
                         alert(retVal["name"][i] + strLang56);
-                    }
-                    else {
+                    } else {
                         if (getNodeText(document.getElementById("sharelist")) == "") {
                         	if (retVal["id"][i] == userid) {
                             	alert("" + strLang20 + "");
@@ -131,7 +139,7 @@ function manage_share_Complete(retVal) {
                             	setNodeText(document.getElementById("sharelist"), retVal["name"][i]);                            	
                             }
                         } else {
-                        	if (retVal["id"][i] == userid) {
+                        	if (retVal["id"][i] == userid) {   		
                             	alert("" + strLang20 + "");
                             } else {
                             	setNodeText(document.getElementById("sharelist"), getNodeText(document.getElementById("sharelist")) + ", " + retVal["name"][i]);                            	
@@ -607,6 +615,7 @@ function save_task() {
 
 	if (fileList.length > 0) {
 		createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "Y");
+		createNodeAndInsertText(xmlDom, objNode, "FILELIST", fileList);
 	} else {
 		createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "N");
 	}

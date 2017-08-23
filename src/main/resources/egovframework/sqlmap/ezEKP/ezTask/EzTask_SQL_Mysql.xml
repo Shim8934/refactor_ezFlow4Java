@@ -302,6 +302,15 @@
          ]]>
     </insert>
 
+	<insert id="EzTaskDAO.insertTaskAttach" parameterClass="map">
+        <![CDATA[
+            INSERT INTO TBL_TASKATTACH
+                (taskid, filesize, filename, filepath, type, tenantid) 
+            VALUES
+                (#taskID#, #fileSize#, #fileName#, #filePath#, #taskType#, #tenantID#)
+        ]]>
+    </insert>
+
     <update id="EzTaskDAO.taskUpdateConfig" parameterClass="Map">
         <![CDATA[
             UPDATE

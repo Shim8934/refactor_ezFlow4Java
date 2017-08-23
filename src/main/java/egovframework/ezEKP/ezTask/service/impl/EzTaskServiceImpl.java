@@ -196,7 +196,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		taskInfoVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		taskInfoVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		taskInfoVO.setTitle(commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
-		taskInfoVO.setContentPath(commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent() + "}" + ".mht");
+		taskInfoVO.setContentPath(userInfo.getTenantId() + commonUtil.separator + "{" + newGuid + "}" + ".mht");
 		taskInfoVO.setTaskType(doc.getElementsByTagName("TASKTYPE").item(0).getTextContent());
 		taskInfoVO.setUpdateTime(commonUtil.getTodayUTCTime(""));
 		taskInfoVO.setNewAnswer("N");
@@ -226,10 +226,11 @@ public class EzTaskServiceImpl implements EzTaskService{
 		}
 
 		int shareLength = Integer.parseInt(doc.getElementsByTagName("SHARELENGTH").item(0).getTextContent());
+		String fileList = doc.getElementsByTagName("FILELIST").item(0).getTextContent();
 
 		logger.debug("OwnerID : " + taskInfoVO.getOwnerID() + " | CreatorName : " + taskInfoVO.getCreatorName() + " | HasShare : " + taskInfoVO.getHasShare() + " | TaskStatus : " + taskInfoVO.getTaskStatus() + " | Importance : " + taskInfoVO.getImportance() + " | ContentPath : " + taskInfoVO.getContentPath());
-		logger.debug("HasAttach : " + taskInfoVO.getHasAttach() + " | StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle() + " | TaskType : " + taskInfoVO.getTaskType() + " | PersonID : " + taskInfoVO.getPersonID() + " | TaskPersonID : " + taskInfoVO.getTaskPersonID());
-		logger.debug("TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName());
+		logger.debug("HasAttach : " + taskInfoVO.getHasAttach() + " | StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle() + " | TaskType : " + taskInfoVO.getTaskType() + " | PersonID : " + taskInfoVO.getPersonID());
+		logger.debug("TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName() + " | FileList : " + fileList);
 
 		String taskID = ezTaskDAO.taskSave(taskInfoVO);
 		
@@ -260,12 +261,9 @@ public class EzTaskServiceImpl implements EzTaskService{
 		PrintWriter pw = null;
 
 		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + newGuid + "}" + ".mht";
-
-		logger.debug("mhtPath : " + mhtPath);
-
 		File folderDir = new File(commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId());
 
-		logger.debug("folderDir : " + folderDir.exists());
+		logger.debug("mhtPath : " + mhtPath + " | folderDirIsExist : " + folderDir.exists());
 		
         if (!folderDir.exists()) {
         	folderDir.mkdir();
@@ -279,10 +277,68 @@ public class EzTaskServiceImpl implements EzTaskService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		// 첨부파일 저장
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+
+		if (fileList != null && !fileList.equals("")) {
+			String pDirPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+
+			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID + "_uploadFile");
+
+			if (!file.exists()) {
+	        	file.mkdir();
+	        }
+
+			int fileLength = fileList.split(",").length;
+			String[] fileLists = fileList.split(",");
+
+			attachMap.put("taskID", taskID);
+			attachMap.put("taskType", taskInfoVO.getTaskType());
+			attachMap.put("tenantID", userInfo.getTenantId());
+
+			for (int j=0; j<fileLength; j++) {
+				String[] files = fileLists[j].split(";");
+				String filePath = files[0];
+				String fileName = files[1];
+				String fileSize = files[2];
+
+				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
+
+				String uploadFilePath = commonUtil.separator + taskID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", uploadFilePath);
+				
+				logger.debug("uploadFilePath : " + uploadFilePath);
+				
+				ezTaskDAO.insertTaskAttach(attachMap);
+
+				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
+			}
+		}
 		
 		logger.debug("taskSave ended.");
 
 		return "OK";
+	}
+	
+	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
+		logger.debug("fileMove started.");
+		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
+
+		File file = new File(beforeFilePath);
+
+		try {
+			file.renameTo(new File(afterFilePath));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		logger.debug("fileMove ended.");
 	}
 
 	@Override
