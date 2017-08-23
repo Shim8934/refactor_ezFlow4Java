@@ -25,6 +25,7 @@
 	        var completerate = "${taskInfoVO.completeRate }";
 	        var creatorid = "${taskInfoVO.creatorID }";
 	        var personid = "${taskInfoVO.personID }";
+	        var delayColor = "${delayColor }";
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var importance = "${taskInfoVO.importance }";
 	        var personContentpath = "${taskInfoVO.personContentPath }"; */
@@ -33,7 +34,7 @@
 	        	if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,
-						fillBackgroundColor: '#FF0000',
+						fillBackgroundColor: delayColor,
 						backgroundColor: '#EEEEEE',
 						radius: '10px',
 						height: '10px',

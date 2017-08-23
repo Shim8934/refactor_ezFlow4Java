@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
+import com.sun.javafx.image.impl.ByteIndexed.Getter;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -280,12 +282,16 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskStatus started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
 		String taskID = request.getParameter("taskID");
 		
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, userInfo.getOffset(), userInfo.getPrimary(), tenantID);
+		String delayColor = ezTaskService.getDelayColor(userInfo.getId(), tenantID);
 		
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("delayColor", delayColor);
 		
 		logger.debug("taskStatus ended.");
 		
@@ -304,10 +310,6 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String _delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
-
-		if (_delayColor == null) {
-			_delayColor = "#ff0000";
-		}
 
 		model.addAttribute("_delayColor", _delayColor);
 
@@ -341,7 +343,7 @@ public class EzTaskController extends EgovFileMngUtil {
 
 		String _delayColor = ezTaskService.getDelayColor(userInfo.getId(), userInfo.getTenantId());
 		
-		if (_delayColor != null) {
+		if (!_delayColor.equals("#FF0000")) {
 			ezTaskService.taskUpdateConfig(userInfo.getId(), delayColor, autoDelete, userInfo.getTenantId());
 		} else {
 			ezTaskService.taskSaveConfig(userInfo.getId(), delayColor, autoDelete, userInfo.getTenantId());
