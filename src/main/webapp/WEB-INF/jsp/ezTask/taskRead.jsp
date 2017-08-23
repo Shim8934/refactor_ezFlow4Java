@@ -124,7 +124,10 @@
 			function initProgressBar(taskstatus, completerate) {
 				if (completerate == '0') {
 					duration = 0;
+				} else {
+					duration = 1000;
 				}
+				
 				if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
 						percentage: completerate,

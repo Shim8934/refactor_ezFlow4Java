@@ -33,8 +33,10 @@
 	        
 	        $(document).ready(function() {
 	        	if (completerate == '0') {
-	        		duration = 0
-	        	}
+					duration = 0;
+				} else {
+					duration = 1000;
+				}
 	        	
 	        	if (taskstatus == '4') {
 					$('#taskProgressBar').LineProgressbar({
@@ -57,6 +59,9 @@
 						duration : duration
 					});
 				}
+	        	
+				$("#taskStatus").val(taskstatus);
+				$("#completeRate").val(completerate);
 	        	
 	        	/* 진행상태 변경시 */
 	        	$("#taskStatus").change(function() {
@@ -91,15 +96,13 @@
 						//alert("<spring:message code='ezTask.t150' />");
 						
 						try { window.opener.RefreshView() } catch (e) { }
-						alert("<spring:message code='ezTask.t102' />");
-						//progressBar refresh시켜야함
+						close_onclick();
+						parent.initProgressBar($("#taskStatus").val(), $("#completeRate").val());
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						
 					}
 				});
-				
-				close_onclick();
 	        }
 	        
 	        function close_onclick() {
