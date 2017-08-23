@@ -63,12 +63,15 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<TaskInfoVO> taskGetList(Map<String, Object> map) {
+	public List<TaskInfoVO> taskGetList(Map<String, Object> map) throws Exception {
 		return (List<TaskInfoVO>) list("EzTaskDAO.taskGetList", map);
 	}
 
-//	public int taskSave(Map<String, Object> map) throws Exception {
-//		return (int) insert("EzTaskDAO.taskSave", map);
-//	}
-//
+	public String getTaskCount(Map<String, Object> map) throws Exception {
+		return (String) select("EzTaskDAO.getTaskCount", map);
+	}
+
+	public String getTaskCount2(Map<String, Object> map) throws Exception {
+		return (String) select("EzTaskDAO.getTaskCount2", map);
+	}
 }

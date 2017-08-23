@@ -80,7 +80,7 @@
 			    document.getElementById("tblPageRayer").innerHTML = strtext;
 			}
 	
-			function makePageSelPage() {
+			function makePageSelPage() {		
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
@@ -715,7 +715,7 @@
 		    function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
-	            totalcount = GetChildNodes(listdom.documentElement).length - 3;
+	            totalcount = GetChildNodes(listdom.documentElement).length - 2;
 	            totalpage = Math.ceil(new Number(totalcount / pagesize));
 
 	            if (isrefresh)
