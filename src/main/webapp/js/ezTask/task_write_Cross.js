@@ -618,6 +618,7 @@ function save_task() {
 		createNodeAndInsertText(xmlDom, objNode, "FILELIST", fileList);
 	} else {
 		createNodeAndInsertText(xmlDom, objNode, "HASATTACH", "N");
+		createNodeAndInsertText(xmlDom, objNode, "FILELIST", fileList);
 	}
 
     createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
