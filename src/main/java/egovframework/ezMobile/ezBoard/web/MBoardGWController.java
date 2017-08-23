@@ -312,7 +312,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/contents", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+	public JSONObject insertBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -334,6 +334,8 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -341,7 +343,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+	public JSONObject updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -363,6 +365,7 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] ended.");
+		return result;
 	}
 	
 	/**
@@ -370,7 +373,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteBoard(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
+	public JSONObject deleteBoard(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -393,6 +396,7 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");
+		return result;
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -707,7 +708,8 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
 		map.put("itemLevel", boardListVO.get("itemLevel"));
 		map.put("extensionAttribute1", boardListVO.get("extensionAttribute1"));
-		map.put("extensionAttribute2", boardListVO.get("extensionAttribute2"));
+		//공지사항 여부
+		map.put("extensionAttribute2", boardListVO.get("notice"));
 		map.put("extensionAttribute3", boardListVO.get("extensionAttribute3"));
 		map.put("extensionAttribute32", boardListVO.get("extensionAttribute32"));
 		map.put("extensionAttribute4", boardListVO.get("extensionAttribute4"));
