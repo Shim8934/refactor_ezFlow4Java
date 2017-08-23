@@ -370,7 +370,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		map.put("memberID", memberID);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("type", type);
 		map.put("tenantID", tenantID);
 		
@@ -391,7 +391,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		map.put("memberID", memberID);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("type", type);
 		map.put("tenantID", tenantID);
 
