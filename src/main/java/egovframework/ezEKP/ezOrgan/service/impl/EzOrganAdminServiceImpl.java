@@ -385,7 +385,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				try {
 					// 로컬 시스템에서 해당 User의 암호를 변경한다.
 					setPassword(cn, password, tenantID);
-					checkLoginFailCountConfig(cn, tenantID);
+					commonUtil.resetLoginFailAttempts(cn, tenantID);
 				} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 					ezEmailUserAdminService.updateUserPasswordWithEncryptedPassword(mailAddr, existingEncryptedPassword);
 					
@@ -997,27 +997,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Override
 	public void syncWithBizmekaTalkAccounts(int tenantID) throws Exception {
 		ezOrganAdminDao.syncWithBizmekaTalkAccounts(tenantID);
-	}
-	
-	private void checkLoginFailCountConfig(String userID, int tenantID) throws Exception {
-		String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userID, "LoginFailCount"); 
-		
-		if (userLoginFailedAttempt.equals("")) {
-			//User hasn't logged in fail yet
-			return;
-		} else {
-			//Check if user's account is locked
-			int currentNumber = Integer.parseInt(userLoginFailedAttempt);
-			int numberOfLoginFailPermit = Integer.parseInt(ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantID));
-			
-			if (currentNumber >= numberOfLoginFailPermit) {
-				//Reset current number of login fail attempt to 0
-				ezCommonService.updateUserConfigInfo(tenantID, userID, "LoginFailCount", "0");
-			} else {
-				//We don't need to do anything
-				return;
-			}
-		}		
 	}
 	
 }

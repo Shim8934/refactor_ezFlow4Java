@@ -857,5 +857,17 @@ public class CommonUtil {
 		
 		return packageType;
 	}
+	
+    public void resetLoginFailAttempts(String userID, int tenantID) throws Exception{
+    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userID, "LoginFailCount"); 
+    	
+		if (userLoginFailedAttempt.equals("")) {
+			//User hasn't logged in fail yet
+			return;
+		} else {
+			//Reset the number to 0
+			ezCommonService.updateUserConfigInfo(tenantID, userID, "LoginFailCount", "0");
+		}
+    }
 
 }
