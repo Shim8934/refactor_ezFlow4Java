@@ -703,13 +703,16 @@ public class MBoardServiceImpl implements MBoardService {
 			map.put("startDate", commonUtil.getTodayUTCTime(""));
 		}
 		
-		map.put("endDate", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("endDate")), offset, true));
+		//모바일에서는 영구게시만 지원
+		map.put("endDate", "9999-12-30 14:59:59");
 		map.put("abstract", boardListVO.get("abstract"));
 		map.put("hasAttach", boardListVO.get("hasAttach"));
 		
-		
 		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
-		map.put("itemLevel", boardListVO.get("itemLevel"));
+		//새로 작성할때는 1로 fix
+		map.put("itemLevel", "1");
+		//리플이나 수정일때는 값받아와야함.
+		map.put("parentWriteDate", "docNO");
 		map.put("extensionAttribute1", boardListVO.get("extensionAttribute1"));
 		//공지사항 여부
 		map.put("extensionAttribute2", boardListVO.get("notice"));
@@ -724,6 +727,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
 		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		
 		mBoardDAO.insertBrdItem(map);
 	}
 	
