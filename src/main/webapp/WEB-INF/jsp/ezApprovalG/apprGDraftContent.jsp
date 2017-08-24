@@ -310,7 +310,7 @@
 	                        if (document.getElementById("body") != null) {
 	                            if (BODYTag.getAttribute("editor") == null) {
 	                                isEditor = true;
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "' frameborder='0'></ifrmae>";
+	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "&isused=${isused}' frameborder='0'></ifrmae>";
 	                            }
 	                            else {
 	                                try {

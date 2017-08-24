@@ -8790,7 +8790,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSignInfo(String docID, String offset, Locale locale, String companyID, int tenantID) throws Exception {
+	public String getSignInfo(String docID, String offset, Locale locale, String primary, String companyID, int tenantID) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		
 		resultXML.append("<SIGNINFOS>");
@@ -8799,6 +8799,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_DOCID", docID.trim());
+		map.put("primary", primary);
 		
 		List<ApprGSignInfoVO> apprGSignInfoVOList = ezApprovalGDAO.getSignInfo(map);
 		
@@ -8833,6 +8834,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<CONTENT>" + makeXMLString(tempContent) + "</CONTENT>");
 				}
 			}
+			
+			resultXML.append("<APRMEMBERNAME>" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "</APRMEMBERNAME>");
+			
 			resultXML.append("</SIGNINFO>");
 		}
 		

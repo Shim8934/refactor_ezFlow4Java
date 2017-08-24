@@ -155,8 +155,8 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(2)"><spring:message code='ezStatistics.t1018' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(4)"><spring:message code='ezStatistics.t1023' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(5)"><spring:message code='ezStatistics.t1025' /></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(22)"><spring:message code='ezStatistics.t1050' /> <spring:message code='ezStatistics.t1052'/></span></li>
-                <li><span style="display:inline-block;width:100%;" onclick="goPage(23)"><spring:message code='ezStatistics.t1051' /> <spring:message code='ezStatistics.t1052'/></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(22)"><spring:message code='ezStatistics.kyj1' /></span></li>
+                <li><span style="display:inline-block;width:100%;" onclick="goPage(23)"><spring:message code='ezStatistics.kyj2' /></span></li>
 		    </ul>
             <c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
             <c:if test="${use_approvalG == 'YES'}">

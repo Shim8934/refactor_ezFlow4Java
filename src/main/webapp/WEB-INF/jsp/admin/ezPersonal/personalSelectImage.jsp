@@ -267,7 +267,7 @@
 	    <table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
-					<spring:message code = 'ezPersonal.t304' />
+					<spring:message code = 'ezPersonal.jjs03' />
 				</th>
 				<td>
 				    <table>
