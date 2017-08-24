@@ -463,4 +463,8 @@ public interface EzApprovalGService {
 
 	public String doBansong(String docID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo) throws Exception;
 
+	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
+
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
+
 }

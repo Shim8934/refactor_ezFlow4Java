@@ -8946,9 +8946,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnVal = false;
 			}
 			
-			aprType = makeListField(docXML.getElementsByTagName("APRSTATE").item(1).getTextContent());
+			String aprState = makeListField(docXML.getElementsByTagName("APRSTATE").item(1).getTextContent());
 			
-			if (!aprType.equals(staASJinHang)) {
+			if (!aprState.equals(staASJinHang)) {
 				rtnVal = false;
 			}
 			
@@ -10912,8 +10912,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return String.valueOf(maxCnt);
 	}
 
+	@Override
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception{
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_APRSTATE", aprState);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
@@ -11103,6 +11103,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
+	@Override
 	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception{
 		logger.debug("doApprove started");
 		logger.debug("docID : " + docID);
@@ -15698,18 +15699,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_USERID", userID);
 			map.put("v_TENANTID", tenantID);
 			
-				int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
-				if(aprMemberSn > 0) {
-					if(aprMemberSn == 1) {
-						ezApprovalGDAO.updateDoCallBack(map);
-					}
-					map.put("v_APRMEMBERSN", aprMemberSn);
-					ezApprovalGDAO.updateDoCallBack2(map);
-					
-					map.put("v_APRMEMBERSN", aprMemberSn + 1);
-					ezApprovalGDAO.updateDoCallBack3(map);
+			int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
+			
+			if (aprMemberSn > 0) {
+				if (aprMemberSn == 1) {
+					ezApprovalGDAO.updateDoCallBack(map);
 				}
-				rtnVal = true;
+				
+				map.put("v_APRMEMBERSN", aprMemberSn);
+				ezApprovalGDAO.updateDoCallBack2(map);
+				
+				map.put("v_APRMEMBERSN", aprMemberSn + 1);
+				ezApprovalGDAO.updateDoCallBack3(map);
+			}
+			
+			rtnVal = true;
 		}
 		
 		if (rtnVal) {

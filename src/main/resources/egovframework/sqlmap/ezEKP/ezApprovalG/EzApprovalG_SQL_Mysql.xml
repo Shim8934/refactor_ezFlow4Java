@@ -14872,7 +14872,9 @@
                                 AND
                                 	TENANT_ID = #v_TENANTID#
                                 AND
-                                	COMPANYID = #companyID# )
+                                	COMPANYID = #companyID# 
+                                LIMIT
+                                	1)
 			AND 
 				docid = #v_PDOCID#
 			AND 
@@ -14912,7 +14914,9 @@
                                 AND 
                                 	aprmemberid = #v_PUSERID#
                                 AND 
-                                	aprstate = #v_PAPRSTATE# )
+                                	aprstate = #v_PAPRSTATE# 
+                                LIMIT
+                                	1)
             AND 
             	docid = #v_PDOCID#
             AND
@@ -14944,7 +14948,9 @@
                                 AND 
                                 	aprmemberid = #v_PUSERID#
                                 AND 
-                                	aprstate = #v_PAPRSTATE# )
+                                	aprstate = #v_PAPRSTATE# 
+                                LIMIT
+                                	1)
             AND 
             	docid = #v_PDOCID#
             AND

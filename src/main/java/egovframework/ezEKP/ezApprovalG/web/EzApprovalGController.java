@@ -3318,7 +3318,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("allFlag", allFlag);
 		model.addAttribute("oldYear", oldYear);
-		model.addAttribute("tempUserID", tempUserID);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
