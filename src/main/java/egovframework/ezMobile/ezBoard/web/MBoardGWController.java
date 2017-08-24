@@ -321,7 +321,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
 			
-			mBoardService.insertBrdItem(jsonParam, info.getOffSet(),info.getTenantId());
+			mBoardService.insertBrdItem(jsonParam, info);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
