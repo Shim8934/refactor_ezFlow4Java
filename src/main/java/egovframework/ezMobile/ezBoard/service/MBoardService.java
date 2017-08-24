@@ -2,7 +2,6 @@ package egovframework.ezMobile.ezBoard.service;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -18,7 +17,7 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 public interface MBoardService {
 	List<MBoardListHeaderVO> getListHeader(MBoardInfoVO mBoardInfoVO, String lang, int tenantID) throws Exception;
 	
-	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
+	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID) throws Exception;
 
 	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
 	
@@ -54,7 +53,7 @@ public interface MBoardService {
 	
 	Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
 	
-	void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception;
+	void insertBrdItem(JSONObject boardListVO, MCommonVO info) throws Exception;
 	
 	void insertBrdItem2(JSONObject boardListVO) throws Exception;
 	

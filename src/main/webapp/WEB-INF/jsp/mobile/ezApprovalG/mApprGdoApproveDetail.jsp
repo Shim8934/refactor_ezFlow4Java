@@ -57,7 +57,19 @@
 			        				진행
 			        			</c:if>
 			        			<c:if test="${aprLineList.aprState == '003'}">
-			        				결재
+			        				승인
+			        			</c:if>
+			        			<c:if test="${aprLineList.aprState == '004'}">
+			        				반송
+			        			</c:if>
+			        			<c:if test="${aprLineList.aprState == '005'}">
+			        				보류
+			        			</c:if>
+			        			<c:if test="${aprLineList.aprState == '006'}">
+			        				회수
+			        			</c:if>
+			        			<c:if test="${aprLineList.aprState == '010'}">
+			        				완료
 			        			</c:if>
 				        	</div>
 			        	</div>	
