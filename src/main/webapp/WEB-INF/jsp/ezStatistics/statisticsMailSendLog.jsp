@@ -399,7 +399,7 @@
 </script>
 </head>
 <body class="mainbody">
-<h1><spring:message code="ezStatistics.t1051"/><spring:message code='ezStatistics.t1052'/></h1>
+<h1><spring:message code="ezStatistics.kyj2"/></h1>
 	<table style="width: 100%; background-color: #e9e9e9; border: 1px solid #d3d2d2;">
 		<tr>
 			<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
@@ -410,11 +410,11 @@
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/> : &nbsp;
 					<select id="searchField"> 
-						<option value="senderName"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t1068'/></option>
-						<option value="senderEmail"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t1055'/></option>
-						<option value="senderDeptName"><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t83'/></option>
-						<option value="recipientName"><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t1068'/></option>
-						<option value="recipientEmail"><spring:message code='ezStatistics.t1054'/> <spring:message code='ezStatistics.t1055'/></option>
+						<option value="senderName"><spring:message code='ezStatistics.kyj3'/></option>
+						<option value="senderEmail"><spring:message code='ezStatistics.kyj4'/></option>
+						<option value="senderDeptName"><spring:message code='ezStatistics.kyj5'/></option>
+						<option value="recipientName"><spring:message code='ezStatistics.kyj6'/></option>
+						<option value="recipientEmail"><spring:message code='ezStatistics.kyj7'/></option>
 						<option value="subject"><spring:message code='ezStatistics.t1056'/></option>
 						<option value="attachedFileName"><spring:message code='ezStatistics.t1057'/></option>
 					</select>
@@ -446,13 +446,13 @@
 	<table class="mainlist" style="width:100%;">
 		<thead>
 			<tr>
-				<th width='12%' ><spring:message code='ezStatistics.t1051'/> <spring:message code='ezStatistics.t214'/></th>
+				<th width='12%' ><spring:message code='ezStatistics.kyj9'/></th>
 				<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='8%'><spring:message code='ezStatistics.t1053'/> <spring:message code='ezStatistics.t83'/></th> 
+				<th width='8%'><spring:message code='ezStatistics.kyj5'/></th> 
 				<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='17%'><spring:message code='ezStatistics.t1056'/> </th>
-				<th width='15%'><spring:message code='ezStatistics.t1057'/> </th>
-				<th width='5%'><spring:message code='ezStatistics.t1058'/> </th>
+				<th width='17%'><spring:message code='ezStatistics.t1056'/></th>
+				<th width='15%'><spring:message code='ezStatistics.t1057'/></th>
+				<th width='5%'><spring:message code='ezStatistics.t1058'/></th>
 			</tr>
 		</thead>
 		<tbody id="mailLogListBody"></tbody>
