@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,14 +148,40 @@ public class EzTaskServiceImpl implements EzTaskService{
 		logger.debug("taskWorkSave started.");
 		logger.debug("taskID = " + taskID + " || content = " + content + " || attachList = " + attachList + " || contentPath = " + contentPath + " || realPath = " + realPath + " || uploadTaskPath = " + uploadTaskPath);
 		
+		String filePath = "";
 		if (contentPath.equals("")) {
 			/* 초기 */
-			
-			
+			filePath = realPath + uploadTaskPath + commonUtil.separator + "Doc" + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}.mht";
+			contentPath = "Doc" + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}.mht";
 		} else {
 			/* 수정 */
-			
+			filePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
 		}
+		
+		File folder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+		
+		PrintWriter pw = null;
+		
+		try {
+			pw = new PrintWriter(new File(filePath));
+			pw.println(content);
+			pw.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.close();
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("personAttach", "N");// 파일첨부이후 추가
+		map.put("personContentPath", contentPath);
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.updateTaskWork(map);
 		
 		logger.debug("taskWorkSave ended.");
 	}

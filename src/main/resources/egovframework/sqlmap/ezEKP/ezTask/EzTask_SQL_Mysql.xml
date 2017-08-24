@@ -140,6 +140,20 @@
     	]]>
     </update>
     
+    <update id="EzTaskDAO.updateTaskWork" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+    			personattach = #personAttach#,
+    			personcontentpath = #personContentPath#
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			(taskid = #taskID# OR parentid = #taskID#)
+    	]]>
+    </update>
+    
     <delete id="EzTaskDAO.deleteComment" parameterClass="Map">
     	<![CDATA[
 			DELETE FROM
