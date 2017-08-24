@@ -211,7 +211,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		taskInfoVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		taskInfoVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		taskInfoVO.setTitle(commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
-		taskInfoVO.setContentPath(userInfo.getTenantId() + commonUtil.separator + "{" + newGuid + "}" + ".mht");
+		taskInfoVO.setContentPath("Doc" + commonUtil.separator + "{" + newGuid + "}" + ".mht");
 		taskInfoVO.setTaskType(doc.getElementsByTagName("TASKTYPE").item(0).getTextContent());
 		taskInfoVO.setUpdateTime(commonUtil.getTodayUTCTime(""));
 		taskInfoVO.setNewAnswer("N");
@@ -251,7 +251,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		logger.debug("HasAttach : " + taskInfoVO.getHasAttach() + " | StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle() + " | TaskType : " + taskInfoVO.getTaskType() + " | PersonID : " + taskInfoVO.getPersonID());
 		logger.debug("TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName() + " | FileList : " + fileList);
 
-		String taskID = ezTaskDAO.taskSave(taskInfoVO);
+		String taskID = ezTaskDAO.taskSave(taskInfoVO); // taskID 받아옴
 		
 		logger.debug("taskID : " + taskID);
 
@@ -279,8 +279,8 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		PrintWriter pw = null;
 
-		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId() + commonUtil.separator + "{" + newGuid + "}" + ".mht";
-		File folderDir = new File(commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getTenantId());
+		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + "Doc" + commonUtil.separator + "{" + newGuid + "}" + ".mht";
+		File folderDir = new File(realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + "Doc");
 
 		logger.debug("mhtPath : " + mhtPath + " | folderDirIsExist : " + folderDir.exists());
 		

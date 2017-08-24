@@ -272,6 +272,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String title = request.getParameter("title");
 		
 		model.addAttribute("type", type);
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("taskSelectEntity ended.");
 		
