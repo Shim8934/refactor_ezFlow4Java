@@ -674,24 +674,27 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception {
+	public void insertBrdItem(JSONObject boardListVO, MCommonVO info) throws Exception {
+		int tenantID = info.getTenantId();
+		String offset = info.getOffSet();
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", boardListVO.get("itemID"));
 		map.put("boardID", boardListVO.get("boardID"));
-		map.put("writerID", boardListVO.get("writerID"));
-		map.put("writerName", boardListVO.get("writerName"));
-		map.put("writerName2", boardListVO.get("writerName2"));
-		map.put("writerDeptID", boardListVO.get("writerDeptID"));
-		map.put("writerDeptName", boardListVO.get("writerDeptName"));
-		map.put("writerDeptName2", boardListVO.get("writerDeptName2"));
-		map.put("writerCompanyID", boardListVO.get("writerCompanyID"));
-		map.put("writerCompanyName", boardListVO.get("writerCompanyName"));
-		map.put("writerCompanyName2", boardListVO.get("writerCompanyName2"));
+		map.put("writerID", boardListVO.get("userID"));
+		map.put("writerName", info.getUserName());
+		map.put("writerName2", info.getUserName2());
+		map.put("writerDeptID", info.getDeptId());
+		map.put("writerDeptName", info.getDeptName());
+		map.put("writerDeptName2", info.getDeptName2());
+		map.put("writerCompanyID", info.getCompanyId());
+		map.put("writerCompanyName", info.getCompanyName());
+		map.put("writerCompanyName2", info.getCompanyName2());
 		map.put("writeDate", commonUtil.getTodayUTCTime(""));
-		map.put("tenantID", tenantID);
+		map.put("tenantID", info.getTenantId());
 		map.put("importance", boardListVO.get("importance"));
 		map.put("title", boardListVO.get("title"));
-		map.put("contentLocation", commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + boardListVO.get("boardID") + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.separator + boardListVO.get("itemID") + ".mht");
+		map.put("contentLocation", commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + boardListVO.get("boardID") + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.get("itemID") + ".mht");
 		
 		if (boardListVO.get("startDate") != null && !boardListVO.get("startDate").equals("")) {
 			map.put("startDate", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("startDate")), offset, true));
@@ -700,13 +703,16 @@ public class MBoardServiceImpl implements MBoardService {
 			map.put("startDate", commonUtil.getTodayUTCTime(""));
 		}
 		
-		map.put("endDate", commonUtil.getDateStringInUTC(String.valueOf(boardListVO.get("endDate")), offset, true));
+		//모바일에서는 영구게시만 지원
+		map.put("endDate", "9999-12-30 14:59:59");
 		map.put("abstract", boardListVO.get("abstract"));
 		map.put("hasAttach", boardListVO.get("hasAttach"));
 		
-		
 		map.put("upperItemIDTree", boardListVO.get("upperItemIDTree"));
-		map.put("itemLevel", boardListVO.get("itemLevel"));
+		//새로 작성할때는 1로 fix
+		map.put("itemLevel", "1");
+		//리플이나 수정일때는 값받아와야함.
+		map.put("parentWriteDate", "docNO");
 		map.put("extensionAttribute1", boardListVO.get("extensionAttribute1"));
 		//공지사항 여부
 		map.put("extensionAttribute2", boardListVO.get("notice"));
@@ -721,6 +727,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
 		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		
 		mBoardDAO.insertBrdItem(map);
 	}
 	

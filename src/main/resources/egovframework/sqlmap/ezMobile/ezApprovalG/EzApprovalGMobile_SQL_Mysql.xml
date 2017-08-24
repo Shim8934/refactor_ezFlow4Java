@@ -561,9 +561,9 @@
 			FROM
 				TBL_USERMASTER
 			WHERE
-				TENANT_ID = #tenantId#
+				TENANT_ID = #tenantID#
 			AND
-				cn = #userId#
+				cn = #userID#
 			AND
 				password = #password#
 		]]>

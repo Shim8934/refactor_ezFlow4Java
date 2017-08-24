@@ -3414,7 +3414,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getSignInfo(docID, userInfo.getOffset(), userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.getSignInfo(docID, userInfo.getOffset(), userInfo.getLocale(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("getSignInfo ended");
 		
@@ -4339,6 +4339,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String crossEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+
 		String susinAdmin = "";
 		String hasOpinionYN = "";
 		String realPath = commonUtil.getRealPath(request);
@@ -4438,7 +4440,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("mode", mode);
 		model.addAttribute("callBackType", callBackType);
 		model.addAttribute("approvalFlag", approvalFlag);
-
+		model.addAttribute("signImageType", signImageType);
+		
 		logger.debug("aprDocView ended.");
 		
 		return "ezApprovalG/apprGaprDocView";
