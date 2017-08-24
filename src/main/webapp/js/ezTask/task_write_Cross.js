@@ -556,7 +556,6 @@ function save_task() {
             createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME2", g_share["name1"][i]);
             createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME1", g_share["deptname"][i]);
             createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME2", g_share["deptname2"][i]);
-        alert(g_share["id"][i]);
     	}
     }
 
@@ -618,18 +617,18 @@ function save_task() {
 
     createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
     
-//    xmlHTTP.open("POST", "/ezTask/taskSave.do", false);
-//    xmlHTTP.send(xmlDom);
-//
-//    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-//    	alert("" + strLang13 + "");
-//    } else {
-//    	alert("" + strLang14 + "");
-//
-//        try { window.opener.RefreshView(); } catch (e) { }
-//        parent.DivPopUpHidden();
-//        window.close();
-//    }
+    xmlHTTP.open("POST", "/ezTask/taskSave.do", false);
+    xmlHTTP.send(xmlDom);
+
+    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+    	alert("" + strLang13 + "");
+    } else {
+    	alert("" + strLang14 + "");
+
+        try { window.opener.RefreshView(); } catch (e) { }
+        parent.DivPopUpHidden();
+        window.close();
+    }
 }
 
 function EmbedContentIntoXML(bodyhtml) {

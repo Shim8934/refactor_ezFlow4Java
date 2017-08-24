@@ -405,7 +405,7 @@
               var printdate;
 
               if (document.getElementById("periodblock").style.display == "")
-                  printdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (<spring:message code = 'ezTask.t207' />";
+                  printdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (<spring:message code = 'ezTask.t207' />)";
               else
                   printdate = getNodeText(document.getElementById("repeatblock"));
 
@@ -684,7 +684,7 @@
                <td><div id="printDate"></div></td>
             </tr>
             <tr>
-               <th><spring:message code='ezTask.t182' /></th>
+               <th><spring:message code='ezTask.t118' /></th>
                <td><div id="printTitle"></div></td>
             </tr>
             <tr>

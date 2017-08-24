@@ -225,9 +225,9 @@ public class EzTaskServiceImpl implements EzTaskService{
 			taskInfoVO.setPersonDeptName(doc.getElementsByTagName("PERSONDEPTNAME1").item(0).getTextContent());
 			taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("PERSONDEPTNAME2").item(0).getTextContent());
 
-			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("CREATORID").item(0).getTextContent());
-			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("CREATORNAME1").item(0).getTextContent());
-			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("CREATORNAME2").item(0).getTextContent());
+			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("PERSONID").item(0).getTextContent());
+			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("PERSONNAME1").item(0).getTextContent());
+			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("PERSONNAME2").item(0).getTextContent());
 		} else { // 업무구분 : 지시, 협조
 			taskInfoVO.setPersonID(doc.getElementsByTagName("TASKPERSONID").item(0).getTextContent());
 			taskInfoVO.setPersonName(doc.getElementsByTagName("TASKPERSONNAME1").item(0).getTextContent());
@@ -247,9 +247,10 @@ public class EzTaskServiceImpl implements EzTaskService{
 			fileList = doc.getElementsByTagName("FILELIST").item(0).getTextContent();			
 		}
 
-		logger.debug("OwnerID : " + taskInfoVO.getOwnerID() + " | CreatorName : " + taskInfoVO.getCreatorName() + " | HasShare : " + taskInfoVO.getHasShare() + " | TaskStatus : " + taskInfoVO.getTaskStatus() + " | Importance : " + taskInfoVO.getImportance() + " | ContentPath : " + taskInfoVO.getContentPath());
-		logger.debug("HasAttach : " + taskInfoVO.getHasAttach() + " | StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle() + " | TaskType : " + taskInfoVO.getTaskType() + " | PersonID : " + taskInfoVO.getPersonID());
-		logger.debug("TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName() + " | FileList : " + fileList);
+		logger.debug("OwnerID : " + taskInfoVO.getOwnerID() + " | CreatorID : " + taskInfoVO.getCreatorID() + " | CreatorName : " + taskInfoVO.getCreatorName() + " | HasShare : " + taskInfoVO.getHasShare() + " | HasAttach : " + taskInfoVO.getHasAttach());
+		logger.debug("TaskStatus : " + taskInfoVO.getTaskStatus() + " | Importance : " + taskInfoVO.getImportance() + "StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle());
+		logger.debug("ContentPath : " + taskInfoVO.getContentPath() + " | TaskType : " + taskInfoVO.getTaskType() + " | FileList : " + fileList);
+		logger.debug("PersonID : " + taskInfoVO.getPersonID() + " | PersonName : " + taskInfoVO.getPersonName() + " | TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName());
 
 		String taskID = ezTaskDAO.taskSave(taskInfoVO); // taskID 받아옴
 		
@@ -271,7 +272,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 			taskInfoVO.setPersonDeptName(shareDeptName1);
 			taskInfoVO.setPersonDeptName2(shareDeptName2);
 
-			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 Insert
+			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 공유자 Insert
 			if (!shareID.equals(userInfo.getId())) {
 				ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert				
 			}
