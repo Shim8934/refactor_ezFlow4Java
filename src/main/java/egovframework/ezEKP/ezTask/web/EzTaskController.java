@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezTask.web;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -21,16 +22,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
-import com.sun.javafx.image.impl.ByteIndexed.Getter;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
-import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -195,6 +194,32 @@ public class EzTaskController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 지시사항 수정 Method
+	 */
+	@RequestMapping(value = "/ezTask/taskWorkSave.do")
+	public String taskWorkSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskWorkSave started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+		
+		String realPath = commonUtil.getRealPath(request);
+		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID);
+		String taskID = request.getParameter("taskID");
+		String taskStatus = request.getParameter("taskStatus");
+		String completeRate = request.getParameter("completeRate");
+		String content = request.getParameter("content");
+		String attachList = request.getParameter("attachList");
+		String contentPath = request.getParameter("contentPath");
+		
+		ezTaskService.taskWorkSave(taskID, taskStatus, completeRate, content, attachList, contentPath, realPath, uploadTaskPath, tenantID);
+		
+		logger.debug("taskWorkSave ended.");
+		
+		return "json";
+	}
+	
+	/**
 	 * 진행상태 수정 Method
 	 */
 	@RequestMapping(value = "/ezTask/updateTaskStatus.do")
@@ -268,11 +293,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskSelectEntity started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Locale locale = userInfo.getLocale();
 		String type = request.getParameter("type");
-		String title = request.getParameter("title");
 		
 		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("title", type.equals("1") ? egovMessageSource.getMessage("ezTask.t2005", locale) : egovMessageSource.getMessage("ezTask.t157", locale));
 		
 		logger.debug("taskSelectEntity ended.");
 		

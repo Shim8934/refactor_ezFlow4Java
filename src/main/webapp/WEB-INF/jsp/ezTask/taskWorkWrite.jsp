@@ -48,8 +48,12 @@
 	        var FormProcSpelling = "FormProcSpelling";
 	        var personid = "${taskInfoVO.personID }"; */
 	        
+	        window.onresize = function () {
+	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
+	         }
+	        
 			function Editor_Complete() {
-	            if (taskid != "") {
+	            if (taskid != "" && personContentpath != "") {
 	                $.ajax({
 		                type : "POST",
 		                dataType : "text",
@@ -79,20 +83,25 @@
 	</head>
 	<body class="popup">
 		<div id="main_body">
-			<div id="menu">
-				<ul>
-					<li><span onClick="save_taskWork()"><spring:message code='ezTask.t96' /></span></li>
-					<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
-				</ul>
-			</div>
 			
-			<div id="close">
-				<ul>
-					<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
-				</ul>
-			</div>
                   
 			<table id="normalScreen" class="layout">
+				<tr>
+					<td height="20" id="menuTable">
+						<div id="menu">
+							<ul>
+								<li><span onClick="save_taskWork()"><spring:message code='ezTask.t96' /></span></li>
+								<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
+							</ul>
+						</div>
+						
+						<div id="close">
+							<ul>
+								<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+							</ul>
+						</div>
+					</td>
+				</tr>
 				<tr>
 					<td id="EdtorSize" style="height:100%;">
 						<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
@@ -101,10 +110,13 @@
 				<tr>
 					<td>
 						<br/>
-						<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>   
+						<iframe id="dadiframe" name="dadiframe" style="width: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>   
 					</td>
 	            </tr>
 			</table>
 		</div>
+		<script>
+			document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
+		</script>
 	</body>
 </html>

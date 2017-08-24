@@ -141,6 +141,23 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		logger.debug("updateTaskStatus ended.");
 	}
+	
+	@Override
+	public void taskWorkSave(String taskID, String taskStatus, String completeRate, String content, String attachList, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception {
+		logger.debug("taskWorkSave started.");
+		logger.debug("taskID = " + taskID + " || completeRate = " + completeRate + " || content = " + content + " || attachList = " + attachList + " || contentPath = " + contentPath + " || realPath = " + realPath + " || uploadTaskPath = " + uploadTaskPath);
+		
+		if (contentPath.equals("")) {
+			/* 초기 */
+			
+			
+		} else {
+			/* 수정 */
+			
+		}
+		
+		logger.debug("taskWorkSave ended.");
+	}
 
 	/* 정수현*/
 	@Override

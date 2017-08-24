@@ -113,7 +113,7 @@
 				
 				initProgressBar(taskstatus, completerate);
 		    });
-   
+		    
 			function scrollTop() {
 				try {
 					window.scroll(0, 1);
@@ -567,7 +567,7 @@
 							taskCommentList += "<span style='color: #2828A5;'> (" + vo.commentDate.substring(0, 16) + ") : </span>";
 							taskCommentList += "<span>";
 							taskCommentList += vo.comment;
-							taskCommentList += "<img src='/images/comment_delete.gif' title='asdf' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
+							taskCommentList += "<img src='/images/comment_delete.gif' onclick='delete_comment(" + deleteCommentParam + ")' style='cursor: pointer' width='11' height='11' />";
 							taskCommentList += "</span>";
 							taskCommentList += "<br/>";
 						});

@@ -65,14 +65,14 @@ function manage_share(type) {
             m_type = 1;
             task_select_entity_cross_dialogArguments[0] = g_person;
             task_select_entity_cross_dialogArguments[1] = manage_share_Complete;
-            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "&title=" + encodeURI(strLang15) + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
+            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
             try { OpenWin.focus(); } catch (e) { }
             break;
         case 2:
             m_type = 2;
             task_select_entity_cross_dialogArguments[0] = g_share;
             task_select_entity_cross_dialogArguments[1] = manage_share_Complete;
-            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "&title=" + encodeURI(strLang15) + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
+            var OpenWin = window.open("/ezTask/taskSelectEntity.do?type="+ type + "", "taskSelectEntity", GetOpenWindowfeature(970, 655));
             try { OpenWin.focus(); } catch (e) { }
             break;
     }
@@ -746,4 +746,8 @@ function setAttachFileInfo(strXML) {
             alert(strLang58);
     }
     catch (e) { alert("returnvalue :: " + e.description); }
+}
+
+function save_taskWork() {
+	
 }
