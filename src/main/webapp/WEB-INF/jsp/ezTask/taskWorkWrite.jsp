@@ -83,8 +83,6 @@
 	</head>
 	<body class="popup">
 		<div id="main_body">
-			
-                  
 			<table id="normalScreen" class="layout">
 				<tr>
 					<td height="20" id="menuTable">

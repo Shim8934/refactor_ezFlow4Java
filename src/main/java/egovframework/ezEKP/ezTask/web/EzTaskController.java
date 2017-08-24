@@ -206,13 +206,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		String realPath = commonUtil.getRealPath(request);
 		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID);
 		String taskID = request.getParameter("taskID");
-		String taskStatus = request.getParameter("taskStatus");
-		String completeRate = request.getParameter("completeRate");
 		String content = request.getParameter("content");
 		String attachList = request.getParameter("attachList");
 		String contentPath = request.getParameter("contentPath");
 		
-		ezTaskService.taskWorkSave(taskID, taskStatus, completeRate, content, attachList, contentPath, realPath, uploadTaskPath, tenantID);
+		ezTaskService.taskWorkSave(taskID, content, attachList, contentPath, realPath, uploadTaskPath, tenantID);
 		
 		logger.debug("taskWorkSave ended.");
 		

@@ -570,11 +570,6 @@ function save_task() {
         createNodeAndAppandNodeText(xmlDom, personlist, shobjnode, "PERSONDEPTNAME2", deptname2);
     } else {
         if (taskpersonID != null) {
-        	/*alert(personid);
-        	alert(personname);
-        	alert(personname2);
-        	alert(persondeptname);
-        	alert(persondeptname2);*/
             for (var i = 0; i < g_person["id"].length; i++) {
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONID", g_person["id"][i]);
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME1", g_person["name"][i]);
@@ -749,5 +744,40 @@ function setAttachFileInfo(strXML) {
 }
 
 function save_taskWork() {
-	
+    var content = message.GetEditorContent();
+    content = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(content) + "</BODY>" + "</HTML>");
+
+    if (taskid == "") {
+    	personContentpath = "";
+    }
+    
+    var listtable = dadiframe.document.getElementById("filelist");
+	var filelist = GetChildNodes(listtable);
+	var fileList = "";
+
+	for (var i = 0; i < filelist.length - 1; i++) {	    
+		if (i == 0) {
+			fileList = GetAttribute(filelist[i + 1], "data2");
+		} else {
+			fileList += "," + GetAttribute(filelist[i + 1], "data2");
+		}
+	}
+    
+    $.ajax({
+    	type : "POST",
+		url : "/ezTask/taskWorkSave.do",
+		dataType : "json",
+		data : {
+			taskID : taskid,
+			content : content,
+			attachList : fileList,
+			contentPath : personContentpath
+		},
+		success : function(result) {
+			/*지시사항페이지 refresh*/
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			
+		}
+    });
 }
