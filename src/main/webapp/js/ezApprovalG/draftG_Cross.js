@@ -234,7 +234,9 @@ function SetHref()
 	var dataNodes = GetChildNodes(xmlhttp.responseXML); 	
 	pFormHref = getNodeText(dataNodes[0]);
 }
-
+/**
+ * .aspx로 전달 중 확인 필요
+ * */
 function SendAckForExch(pType, pMode)
 {
   try {

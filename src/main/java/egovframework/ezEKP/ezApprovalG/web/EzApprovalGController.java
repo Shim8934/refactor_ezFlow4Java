@@ -3110,7 +3110,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String chkFlag = request.getParameter("chkFlag");
 		
 		String result = ezApprovalGService.updateHistoryForLine(docID ,userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, chkFlag, userInfo.getCompanyID(), userInfo.getTenantId());
-		logger.debug("docID = " + docID + "userID = " + userID + "userName = " + userName + "userName2 = " + userName2 + "userJobTitle = " + userJobTitle + "userJobTitle2 = " + userJobTitle2 + "userDeptID = " + userDeptID + "userDeptName = " + userDeptName + "userDeptName2 =" + userDeptName + "chkFlag = " + chkFlag);
+		logger.debug("docID = " + docID + ", userID = " + userID + ", userName = " + userName + ", userName2 = " + userName2 + ", userJobTitle = " + userJobTitle + ", userJobTitle2 = " + userJobTitle2 + ", userDeptID = " + userDeptID + ", userDeptName = " + userDeptName + ", userDeptName2 =" + userDeptName + ", chkFlag = " + chkFlag);
 		logger.debug("updateLineHistory result = " + result);
 
 		logger.debug("updateLineHistory ended");
