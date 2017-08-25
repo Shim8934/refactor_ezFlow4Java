@@ -190,7 +190,7 @@
 	            document.body.style.UserSelect = 'none';
 	        }
 	        
-	        if (host == 'jgw.cloud.kaoni.com') {
+	        if (host == 'jgw.cloud.kaoni.com1') {
 	        	//getApprGraph();
 		        change_article("mail");
 		        getMailGraph();	
