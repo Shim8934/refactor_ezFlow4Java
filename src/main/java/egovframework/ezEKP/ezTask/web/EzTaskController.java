@@ -74,8 +74,14 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskMain started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+
+		//delayColor
+		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
+
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("delayColor", delayColor);
 		
 		logger.debug("taskMain ended.");
 		

@@ -23,7 +23,7 @@
 		}
 		</STYLE>
 		<script type="text/javascript">
-			var delaycolor = "_delaycolor";
+			var delayColor = "${delayColor}";
 			var completecolor = "_completecolor";
 			var userid = "${userInfo.id}";
 			var listdom = "";
@@ -382,16 +382,6 @@
 			        tr.cells[7].appendChild(span);
 			        setNodeText(tr.cells[8], startdate);
 			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
-
-			        if (SelectSingleNodeValue(node, "TASKSTATUS") == "4") {
-			            for (var j = 2; j < 9; j++)
-			                tr.cells[j].style.color = delaycolor;
-			        }
-
-			        if (SelectSingleNodeValue(node, "TASKSTATUS") == "3") {
-			            for (var j = 2; j < 9; j++)
-			                tr.cells[j].style.color = completecolor;
-			        }
 
 			        list_body.children[1].appendChild(tr);
 
