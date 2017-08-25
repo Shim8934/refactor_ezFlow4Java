@@ -46,7 +46,6 @@ public class EzTaskServiceImpl implements EzTaskService{
 		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 		
 		logger.debug("getTaskInfo ended.");
-		logger.debug(vo.toString());
 		
 		return vo;
 	}

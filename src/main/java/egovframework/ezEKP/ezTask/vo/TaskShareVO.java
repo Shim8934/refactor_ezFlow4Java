@@ -8,8 +8,16 @@ public class TaskShareVO {
 	private String sharerID;
 	/** 공유대상자이름 */
 	private String sharerName;
+	/** 공유대상자이름 */
+	private String sharerName1;
+	/** 공유대상자이름 */
+	private String sharerName2;
 	/** 공유대상자부서이름 */
 	private String sharerDeptName;
+	/** 공유대상자부서이름 */
+	private String sharerDeptName1;
+	/** 공유대상자부서이름 */
+	private String sharerDeptName2;
 	/** 완료율 */
 	private String completeRate;
 	/** 완료일 */
@@ -24,6 +32,7 @@ public class TaskShareVO {
 	private String newOrder;
 	/** 테넌트ID */
 	private int tenantID;
+	
 	public String getTaskID() {
 		return taskID;
 	}
@@ -36,17 +45,41 @@ public class TaskShareVO {
 	public void setSharerID(String sharerID) {
 		this.sharerID = sharerID;
 	}
-	public String getsharerName() {
+	public String getSharerName() {
 		return sharerName;
 	}
-	public void setsharerName(String sharerName) {
+	public void setSharerName(String sharerName) {
 		this.sharerName = sharerName;
+	}
+	public String getSharerName1() {
+		return sharerName1;
+	}
+	public void setSharerName1(String sharerName1) {
+		this.sharerName1 = sharerName1;
+	}
+	public String getSharerName2() {
+		return sharerName2;
+	}
+	public void setSharerName2(String sharerName2) {
+		this.sharerName2 = sharerName2;
 	}
 	public String getSharerDeptName() {
 		return sharerDeptName;
 	}
 	public void setSharerDeptName(String sharerDeptName) {
 		this.sharerDeptName = sharerDeptName;
+	}
+	public String getSharerDeptName1() {
+		return sharerDeptName1;
+	}
+	public void setSharerDeptName1(String sharerDeptName1) {
+		this.sharerDeptName1 = sharerDeptName1;
+	}
+	public String getSharerDeptName2() {
+		return sharerDeptName2;
+	}
+	public void setSharerDeptName2(String sharerDeptName2) {
+		this.sharerDeptName2 = sharerDeptName2;
 	}
 	public String getCompleteRate() {
 		return completeRate;
@@ -89,14 +122,5 @@ public class TaskShareVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
-	}
-	@Override
-	public String toString() {
-		return "TaskShareVO [taskID=" + taskID + ", sharerID=" + sharerID
-				+ ", sharerName=" + sharerName + ", sharerDeptName="
-				+ sharerDeptName + ", completeRate=" + completeRate
-				+ ", completeDate=" + completeDate + ", hasMemo=" + hasMemo
-				+ ", hasAttach=" + hasAttach + ", updateTime=" + updateTime
-				+ ", newOrder=" + newOrder + ", tenantID=" + tenantID + "]";
 	}
 }

@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezTask.web;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -165,7 +167,40 @@ public class EzTaskController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 지시사항 수정화면 조회
+	 * 지시사항 수정 Method
+	 */
+	@RequestMapping(value = "/ezTask/taskSave1.do")
+	public String taskSave(@CookieValue("loginCookie") String loginCookie, @RequestParam TaskInfoVO taskInfoVO, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskSave started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String realPath = commonUtil.getRealPath(request);
+		
+		String taskID = request.getParameter("taskID");
+		String ownerID = request.getParameter("ownerID");
+		String creatorID = request.getParameter("creatorID");
+		String creatorName1 = request.getParameter("creatorName1");
+		String hasShare = request.getParameter("hasShare");
+		String taskType = request.getParameter("taskType");
+		String taskStatus = request.getParameter("taskStatus");
+		String completeRate = request.getParameter("completeRate");
+		String importance = request.getParameter("importance");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String title = request.getParameter("textTitle");
+		String content = request.getParameter("content");
+		String contentPath = request.getParameter("contentPath");
+
+//		String ret = ezTaskService.taskSave(doc, realPath, userInfo, newGuid);
+
+		logger.debug("taskSave ended");
+		
+		return "json";
+	}
+	
+	
+	/**
+	 * 진행사항 수정화면 조회
 	 */
 	@RequestMapping(value = "/ezTask/taskWorkWrite.do")
 	public String taskWorkWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -194,7 +229,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 지시사항 수정 Method
+	 * 진행사항 수정 Method
 	 */
 	@RequestMapping(value = "/ezTask/taskWorkSave.do")
 	public String taskWorkSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {

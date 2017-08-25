@@ -85,23 +85,6 @@
 		            tempbody = message2.GetEditorContent();
 		        } */
 
-				/* 진행상태 disable */
-		       /*  var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
-		        for (var i = 0; i < taskcheckbox.length; i++) {
-		            if (taskcheckbox[i].value == taskstatus) {
-		                taskcheckbox[i].checked = true;
-		                break;
-		            }
-		        }
-
-		        taskcheckbox = document.getElementsByName("completeracheckbox");
-		        for (var i = 0; i < taskcheckbox.length; i++) {
-		            if (taskcheckbox[i].value == completerate) {
-		                taskcheckbox[i].checked = true;
-		                break;
-		            }
-		        } */
-		        
 				/* 의견카운트 */
 		        if (taskCommentListSize == 0) {
 		        	document.getElementById("1tab3").innerHTML = "<spring:message code='ezTask.t2013' />";
@@ -383,25 +366,25 @@
 					return;
 				} */
 	
-// 				var xmlDom = createXmlDom();
-// 				var xmlHTTP = createXMLHttpRequest();
-// 				var objRoot;
+				/* var xmlDom = createXmlDom();
+				var xmlHTTP = createXMLHttpRequest();
+				var objRoot;
 	
-// 				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-// 				createNodeAndInsertText(xmlDom, objRoot, "DATA", deltaskid);
+				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+				createNodeAndInsertText(xmlDom, objRoot, "DATA", deltaskid);
 				
-// 				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
-// 				xmlHTTP.send(xmlDom);
+				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
+				xmlHTTP.send(xmlDom);
 	
-// 				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-// 					alert("<spring:message code='ezTask.t108' />");
-// 				} else {
-// 					try {
-// 						window.opener.RefreshView()
-// 					} catch (e) { }
+				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+					alert("<spring:message code='ezTask.t108' />");
+				} else {
+					try {
+						window.opener.RefreshView()
+					} catch (e) { }
 					
-// 					window.close();
-// 				}
+					window.close();
+				} */
 
 				$.ajax({
 					type : "POST",
@@ -474,7 +457,9 @@
 			/* 업무수정 */
 			function edit_task() {
 			    var id = taskid;
-			    if (parentid != "0")
+			    if (parentid != "0") {
+			    	
+			    }
 			        id = parentid;
 			    var win;
 			    
@@ -483,25 +468,6 @@
 				var feature = GetOpenPosition(760, 750);
 				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
 		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-				
-			    /* if (CrossYN()) {
-			        var feature = GetOpenPosition(760, 750);
-			        win = window.open("/ezTask/taskWrite.do?taskID=" + id, "",
-			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			    } else {
-			        if (pUse_Editor == "" || pUse_Editor == "CK") {
-			            var feature = GetOpenPosition(760, 660);
-			            win = window.open("/myoffice/ezTask/task_write.aspx?id=" + id, "",
-			                "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        } else {
-			            var feature = GetOpenPosition(760, 660);
-			            win = window.open("/myoffice/ezTask/task_write_IE.aspx?id=" + id, "",
-			               "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        }
-			    }
-				
-			    win.opener = window.opener;
-			    window.close(); */
 			}
 			
 			/* 의견삭제 */
@@ -511,32 +477,15 @@
 				    return;
 				}
 			
-				if (!confirm("<spring:message code='ezTask.t147' />"))
+				if (!confirm("<spring:message code='ezTask.t147' />")) {
 				    return;
+				}
 				
 				var id = taskid;
-				if (parentid != "0")
+				if (parentid != "0") {
 				    id = parentid;
+				}
 				
-				/* var xmlDom = createXmlDom();
-				var xmlHTTP = createXMLHttpRequest();
-				var objRoot;
-				var objNode;
-				
-				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", id);
-				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMMENTID", commentid);
-				
-				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_del_memo.aspx", false);
-				xmlHTTP.send(xmlDom);
-				
-				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-				    alert("<spring:message code='ezTask.t148' />");
-				} else {
-					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=2";
-			        try { window.opener.location.reload(); } catch (e) { }
-			    } */
-			    
 			    $.ajax({
 					type : "POST",
 					url : "/ezTask/taskDeleteComment.do",
