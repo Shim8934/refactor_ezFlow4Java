@@ -160,6 +160,10 @@
 		            InsertRowToLV(rtn[1]);
 		        }
 		    }
+		    /**
+		    * [분리첨부] -> [추가]
+		    * 추가된 '분리첨부' 내용을 리스트에 출력
+		    */
 		    function InsertRowToLV(szInfoXml) {
 		        var pSN;
 		        var pLvList = new ListView();
@@ -449,7 +453,10 @@
 		        DelListRow("pLvList");
 		        OrderList();
 		    }
-		    function OrderList() {
+		    /**
+		    * [분리첨부] 리스트에서 순번 재정렬
+		    */
+		    function OrderList() { 
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
 		

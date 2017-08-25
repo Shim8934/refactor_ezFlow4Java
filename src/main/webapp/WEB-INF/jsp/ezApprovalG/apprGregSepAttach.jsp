@@ -52,18 +52,25 @@
 		            g_OrgCabinetID = RetValue[4];
 		        }
 		        InitCode();
-		        if (g_SepAttachXml != "") {
-		            InitSepAttInfo();
+		        if (g_SepAttachXml != "") { // 즉, [변경] 버튼을 선택한 경우
+		            InitSepAttInfo(); 
 		        }
 		        if (typeof (g_CabinetID) != "undefined") {
-		            if (g_CabinetID.length > 0) InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
+		            if (g_CabinetID.length > 0) {
+		            	InitCabinetInfo(GetCabinetClassInfo(g_CabinetID)); // '기록물철 정보' 부분 설정
+		            }
 		        }
 		        if (typeof (g_OrgCabinetID) != "undefined") {
-		            if (g_OrgCabinetID.length > 0) InitOrgCabinetInfo(GetCabinetClassInfo(g_OrgCabinetID));
+		            if (g_OrgCabinetID.length > 0) {
+		            	InitOrgCabinetInfo(GetCabinetClassInfo(g_OrgCabinetID));
+		            }
 		        }
-		        InitRegisterType();
+		        InitRegisterType(); // '분리첨부 정보입력' 부분 설정
 		        rtnVal[0] = "FALSE";
 		    };
+		    /**
+		    * 앞서 선택한 기록물철 화면에 맵핑.		    
+		    */
 		    function InitCabinetInfo(objCabInfoXml) {
 		        g_TaskCode = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TASKCODE");
 		
@@ -241,15 +248,15 @@
 		            }
 		        }
 
-		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType);
-		        SelectOption(selRegisterType, g_RegType);
+		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType); // 분리첨부 정보입력->등록구분 입력
+		        SelectOption(selRegisterType, g_RegType); 
 		
 		        selRegisterType_onchange();
 		    }
 		    function btnReset_onclick() {
 		        txtTitle.value = "";
 		        txtNumOfPage.value = "";
-		        txtSummary.value = "";
+		        txtSummary.value = "";		       
 		    }
 		    function btnOK_onclick() {
 		        if (txtTitle.value == "") {
@@ -359,6 +366,10 @@
 		        else if (g_RegType == "7" || g_RegType == "8")
 		            g_RecTypeCode = "5";
 		    }
+		    /**
+		    * [분리첨부] -> [추가] -> [확인]
+		    * 입력한 데이터를 XML로 변환
+		    */
 		    function GetSepAttInfoXml() {
 		        var pRegType = selRegisterType.value;
 		
