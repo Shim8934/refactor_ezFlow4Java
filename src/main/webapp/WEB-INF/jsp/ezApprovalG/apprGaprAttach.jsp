@@ -73,7 +73,9 @@
 				document.getElementById("BtnBodyAttach").style.display  = "none";
 			  }
 			}
-			
+			/**
+			* 첨부파일의 History 관리
+			*/
 			function CheckHistory(pFlag)
 			{
 				var i, j;
@@ -137,7 +139,10 @@
 				}
 			}
 			
-			// 파일첨부UI 초기화
+			/** 
+			* 파일첨부UI 초기화
+			* InitAttach()에서 기존 첨부파일리스트 추출 후 ListView()로 화면에 출력
+			*/
 			window.onload = function()
 			{
 				var doc;

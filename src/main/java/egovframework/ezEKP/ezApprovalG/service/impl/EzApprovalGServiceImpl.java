@@ -6892,6 +6892,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		int strSN = ezApprovalGDAO.updateHistoryForAttach_M(map) + 1;
+		// 첨부파일 리스트 추출
 		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.updateHistoryForAttach_I(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -6903,15 +6904,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		
+		// 첨부파일이 존재하는 경우
 		if (docXML.getElementsByTagName("ATTACHFILENAME").getLength() > 0) {
 			String oldYear = getDocHrefYear(docID, companyID, tenantID);
 			String source = convWebToPath(docXML.getElementsByTagName("ATTACHFILEHREF").item(0).getTextContent(), dirPath, tenantID);
 			String target = dirPath + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 							getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
-			
+			// history 디렉토리로 copy
 			FileUtils.copyFile(new File(source), new File(target));
-			
+			// DB에 저장될 target 경로 재설정
 			target = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 					 getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
 		
@@ -7016,7 +7017,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String getRecordList(Document doc, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getRecordList started.");
-
+		
+		// List 조회를 위한 parameter값을 recordListVO에 설정
 		ApprGRecordListVO recordListVO = new ApprGRecordListVO();
 		StringBuilder resultXML = new StringBuilder();
 		
@@ -7219,7 +7221,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         if (doc.getElementsByTagName("ISDOCPRINT").item(0) != null && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().length() > 0 && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().trim().equals("TRUE") && start < 0) {
         	recordListVO.setIsDocPrint(doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent());
         } 
-
+        
+        // resultXML 안에 XML 데이터 생성
         List<ApprGRecordVO> apprGRecordVOList = ezApprovalGDAO.getRecordList(recordListVO);
         
         StringBuffer sb = new StringBuffer();

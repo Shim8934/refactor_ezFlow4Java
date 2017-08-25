@@ -2441,6 +2441,9 @@ function openFileAttachUI() {
 }
 
 var aprcabinetattach_cross_dialogArguments = new Array();
+/**
+ * [문서첨부]
+ * */
 function openAaprDocAttachUI() {
     try {
         var parameter = pDocID;

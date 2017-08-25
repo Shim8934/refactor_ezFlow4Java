@@ -718,7 +718,10 @@ function GetRecordListXml() {
     createNodeAndInsertText(xmlpara, objNode, "PAGESIZE", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "PAGENO", curpage);
     createNodeAndInsertText(xmlpara, objNode, "ORDERBY", g_OrderBy);
-
+    /**
+     *  g_RecSearchParamXml 사용자가 입력한 검색조건
+     *  입력한 검색 조건을 XML에 추가
+     */
     if (g_RecSearchParamXml != "")
     {
         var oSParam = loadXMLString(g_RecSearchParamXml);
@@ -1387,7 +1390,11 @@ function btnSearchRec_onclick(opnOption,opentype) {
         }
     }
 }
-
+/**
+ * [문서첨부]->[검색]
+ * rtnVal[0] : TRUE OR FALSE
+ * rtnVal[1] : 검색 조건(XML)
+ * */
 function btnSearchRec_onclick_Complete(rtnVal) {
     DivPopUpHidden();
     if (rtnVal[0] == "TRUE") {

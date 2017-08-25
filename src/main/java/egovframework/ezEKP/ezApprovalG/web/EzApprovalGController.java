@@ -1794,15 +1794,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String serverName = userInfo.getServerName();
 		String susinAdmin = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		
+		// a=1은 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
 			susinAdmin = "NO";
 		}
-		
+		// A36 : 변환문서, A39 : 첨부문서
 		String formList = ezApprovalGService.getOptionInfo("A36", "007", userInfo, "CODE");
 		String poptExt = ezApprovalGService.getOptionInfo("A39", "001", userInfo, "CODE");
+		// 첨부파일의 maxSize 설정(단위 MB)
 		String maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
 		String isBody = "";
 
@@ -1851,7 +1852,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (request.getParameter("maxsize") != null) {
 			maxSize = Integer.parseInt(request.getParameter("maxsize"));
 		}
-		
+		// uploadFile, tempUploadFile 디렉토리 경로
 		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
 		File uFile = new File(upd);
@@ -1871,7 +1872,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (fileName.indexOf("\\") > -1) {
 			fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
 		}
-		
+		// 첨부파일 순번 설정 4자리
 		String fileAttachFormatSN = "00000" + fileAttachSN;
 		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4, fileAttachFormatSN.length());
 		
@@ -1880,9 +1881,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (fileSize > maxSize) {
 			resultUpload = "overflow";
 		} else {
+			// 첨부파일의 확장자가 useExtension에 포함되지 않은경우
 			if (useExtension.indexOf(fileName.substring(fileName.lastIndexOf(".") + 1)) == -1 && !useExtension.equals("*")) {
 				resultUpload = "denied";
 			} else {
+				// tempUploadFile에 파일 생성
 				writeUploadedFile(multilFile, saveFileName, tempUpd);
 				fileLocation = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator + saveFileName;
 				resultUpload = "true";
