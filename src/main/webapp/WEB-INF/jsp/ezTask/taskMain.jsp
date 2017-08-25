@@ -32,6 +32,7 @@
 			var currentpage = 0;
 			var pagesize = 10;
 			var isrefresh = false;
+			var isrefresh2 = false;
 			var selectelem = null;
 			var initdate = "_initdate";
 			var ownerid = "";
@@ -229,18 +230,29 @@
 			    }
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
-			    	if (totalcount == 0 || i == totalcount) {
+					if (totalcount == 0 || i == totalcount) {
 			            break;
 			        }
-
-			        document.getElementById("tr_ing").style.display = "none";
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
+// 			    	$("#taskID_'" + SelectSingleNodeValue(node, "TASKID")  + "'").empty();
 
-			        var tr = row_body.cloneNode(true);
+					if (isrefresh2) {
+						$("#taskID_" + SelectSingleNodeValue(node, "TASKID") + "").remove();
+					}
+
+			        var tr = "";
+
+			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+				        tr = row_body.cloneNode(true);
+				        document.getElementById("tr_ing").style.display = "none";
+			        } else {
+			        	tr = row_body2.cloneNode(true);
+				        document.getElementById("tr_ing2").style.display = "none";
+			        }
 
 			        tr.style.display = "";
-			        tr.id = "";
-		
+			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
+
 			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
 			        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
 			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
@@ -383,17 +395,23 @@
 			        setNodeText(tr.cells[8], startdate);
 			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
 
-			        list_body.children[1].appendChild(tr);
+			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+				        list_body.children[1].appendChild(tr);
+			        } else {
+			        	list_body2.children[1].appendChild(tr);
+			        }
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 				}
 
 			    if (totalcount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
+			        document.getElementById("tr_ing2").style.display = "";
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
 			    $(".percentCount").remove();
+			    isrefresh2 = false;
 			}
 
 			/* progressBar 조회 */
@@ -515,6 +533,8 @@
 		    }
 		    function RefreshView() {
 		        isrefresh = true;
+		        isrefresh2 = true;
+
 		        DateChange(startdate, enddate);
 		    }
 		    function MoveTask() {
@@ -812,16 +832,19 @@
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
+		                isrefresh2 = true;
 		                DateChange(startdate, enddate);
 		                break;
 		            case "taskdictate":
 		                type = "2";
+		                isrefresh2 = true;
+		                selectTab(2);
 		                DateChange(startdate, enddate);
 		                break;
-		            case "taskcomplete":
-		                type = "3";
-		                DateChange(startdate, enddate);
-		                break;
+// 		            case "taskcomplete":
+// 		                type = "3";
+// 		                DateChange(startdate, enddate);
+// 		                break;
 		        }
 		    }
 		
@@ -994,17 +1017,17 @@
 							<th ><spring:message code='ezTask.t121' /></th>
 							<th ><spring:message code='ezTask.t122' /></th>
 						</tr>
-						<tr id="row_body" style="display:none;" taskid="" parentid="" repeatcount="0" startdate="" onclick="select_row(this)">
-							<td style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-		                    <td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+						<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
+							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 						<tr id="tr_ing" style="text-align:center">
 							<td colspan="10" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
@@ -1034,17 +1057,20 @@
 							<th ><spring:message code='ezTask.t121' /></th>
 							<th ><spring:message code='ezTask.t122' /></th>
 						</tr>
-						<tr id="row_body2" style="display:none;" taskid="" parentid="" repeatcount="0" startdate="" onclick="select_row(this)">
-							<td style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-		                    <td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+						<tr class="row_body2" id="row_body2" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
+							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+						</tr>
+						<tr id="tr_ing2" style="text-align:center">
+							<td colspan="10" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
 				    </table>
 				</td>

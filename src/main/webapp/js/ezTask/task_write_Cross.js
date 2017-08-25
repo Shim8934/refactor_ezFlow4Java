@@ -538,7 +538,8 @@ function save_task() {
 //    var memo = document.getElementById("TextMemo").value; // 메모 value 값
     Doc_ContentHtml.innerHTML = strBody;
 
-    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+//    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    strBody = ConvertHTMLtoMHT(EmbedContentIntoXML(strBody));
 
     createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
 //    createNodeAndInsertText(xmlDom, objNode, "MEMO", memo); // 메모 값 세팅
