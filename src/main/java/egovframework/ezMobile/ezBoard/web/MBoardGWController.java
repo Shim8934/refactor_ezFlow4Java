@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezBoard.web;
 
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -312,7 +313,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/contents", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public JSONObject insertBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+	public JSONObject insertBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request, Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -320,9 +321,22 @@ public class MBoardGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
+			String realPath = commonUtil.getRealPath(request);
+			String content = "<p>"+jsonParam.get("mainContent").toString()+"</p>";
+			content = URLDecoder.decode(content, "utf-8");
 			
-			mBoardService.insertBrdItem(jsonParam, info);
+			String scheme = "http://";
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
 			
+			content = content.replace("replace_" + scheme, scheme);
+			
+			//html -> mht변환
+			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
+			
+			mBoardService.insertBrdItem(jsonParam, info, realPath,mhtData);
+
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
