@@ -46,7 +46,7 @@
 					</a>
 					
 					<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
 							<a id="AprSign" onClick="javascript:alert('<spring:message code='ezPortal.jjs10' />')" href="#">
 						</c:when>
 						<c:otherwise>
@@ -139,7 +139,7 @@
     			<article class="writebanner">
         			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
         			<c:choose>
-						<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
 							<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />')"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
 						</c:when>
 						<c:otherwise>
