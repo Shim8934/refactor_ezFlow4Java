@@ -156,10 +156,11 @@
 		    function btnOK_onclick() {
 		        var URL;
 		        var listview = new ListView();
-		        if (pSelectTab == "favoritelist")
+		        if (pSelectTab == "favoritelist") {
 		            listview.LoadFromID("lvtFavForm");
-		        else
+		        } else {
 		            listview.LoadFromID("lvtForm");
+		        }
 		        var oArrRows = listview.GetSelectedRows();
 		        var selRow = oArrRows[0];
 		        if (selRow) {
@@ -169,7 +170,7 @@
 		                Rtnval[1] = selRow.getAttribute("DATA3");
 		                Rtnval[2] = selRow.getAttribute("DATA1");
 		                Rtnval[3] = selRow.childNodes[0].innerText;
-		
+		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
 		                }

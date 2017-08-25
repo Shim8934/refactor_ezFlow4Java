@@ -1,4 +1,8 @@
-﻿function checkDocinfo() {
+﻿/**
+ * 결재정보->문서정보 값 확인 
+ */
+function checkDocinfo() {
+	// '쪽수' 확인
     var p_AprDeptTempletName = document.getElementById("txtPageNum").value;
     if (p_AprDeptTempletName.length > 0) {
         var strMatch = p_AprDeptTempletName.match(/^[0-9]+$/);
@@ -27,7 +31,7 @@
     var curDate = new Date(year, month, day);
     var sel = document.getElementById("idDatepicker").value.substring(0, 10);
     var selDate = new Date(sel.substring(0, 4), sel.substring(5,7), sel.substring(8,10));
-    
+    // 보안결재 선택 날짜 확인
     if (document.getElementById("AprSecurity").checked) {
         if (selDate < curDate) {
             var pAlertContent = Docalt4;
@@ -147,6 +151,9 @@ function setdocdisplay(vdocdisplay) {
     else
         document.getElementById("special5").checked = false;
 }
+/**
+ *  특수기록물 체크 확인
+ * */
 function getdocdisplay() {
     var strrtn = "";
     if (document.getElementById("special1").checked)

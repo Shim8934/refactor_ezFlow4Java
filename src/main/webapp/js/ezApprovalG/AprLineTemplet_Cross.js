@@ -242,7 +242,9 @@ function AddToAprLineFromAprLineTemplet( p_CheckAprLineTempletSN)
     pAPRLINE.DataSource(Resultxml); 
 	pAPRLINE.DataBind("APRLINE");
 }
-
+/**
+ * 결재선 즐겨찾기 저장 
+ */
 function CreateNewAprLineTemplet(p_AprLineTempletName)
 {
 	var AprLineTemplet = createXmlDom();

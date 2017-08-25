@@ -492,6 +492,7 @@ var strLang701 = "Third special list"
 // ezCabinet\View
 var strLang702 = "Successfully loading additional information then click the first tip"
 var strLang703 = "Failed loading documentary information!"
+var strLang704 = "해당없음"
 var strLang705 = "Take over&nbsp;&nbsp;&nbsp;"
 var strLang706 = "View Information"
 var strLang707 = "Transitionr"

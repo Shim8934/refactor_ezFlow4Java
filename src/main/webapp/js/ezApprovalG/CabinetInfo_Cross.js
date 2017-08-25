@@ -60,7 +60,10 @@ function GetSelIdxForCabinet(Rows, len, pCabID) {
     }
     return 0;
 }
-
+/**
+ * [분리첨부] -> [추가] 
+ * 선택된 기록물철에 대한 정보 추출
+ * */
 function GetCabinetClassInfo(pCabID) {
     var result = "";
     

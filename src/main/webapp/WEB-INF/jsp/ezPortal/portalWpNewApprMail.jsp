@@ -13,7 +13,7 @@
     				<ul>
     					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li> --%>
     					<c:choose>
-    						<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+    						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>
      							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>
     						</c:when>
@@ -91,7 +91,7 @@
             			</dl>
             			<!-- /tab -->
             			<c:choose>
-            				<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+            				<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
             					<%-- <span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span> --%>
             				</c:when>
             				<c:otherwise>
@@ -116,7 +116,7 @@
      					<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li> --%>    
      					
      					<c:choose>
-    						<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+    						<c:when test="${host == 'jgw.cloud.kaoni.com1'}">
     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appr.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>
      							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mailo.gif" onclick="change_article('mail')" width="50" height="115"></li>
     						</c:when>
@@ -190,7 +190,7 @@
 	            document.body.style.UserSelect = 'none';
 	        }
 	        
-	        if (host == 'jgw.cloud.kaoni.com') {
+	        if (host == 'jgw.cloud.kaoni.com1') {
 	        	//getApprGraph();
 		        change_article("mail");
 		        getMailGraph();	
