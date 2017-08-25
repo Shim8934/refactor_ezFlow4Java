@@ -257,6 +257,7 @@
 		        txtTitle.value = "";
 		        txtNumOfPage.value = "";
 		        txtSummary.value = "";		       
+		        $("input[name=chkAVType]:checkbox").removeProp("checked"); // '기록물형태' 체크박스 리셋
 		    }
 		    function btnOK_onclick() {
 		        if (txtTitle.value == "") {
