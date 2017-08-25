@@ -577,7 +577,7 @@
 <%--                            </c:when> --%>
 <%--                            <c:otherwise> --%>
                               <tr id="personinputtr" style="display:none">
-                                 <th ><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
+                                 <th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
                                  <td colspan ="3">
                                  	<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
                                  	<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
@@ -590,7 +590,7 @@
 <%--                         </c:choose> --%>
 
                      <tr id="shareinputtr">
-                        <th ><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
+                        <th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
                            <td colspan ="3">
                            		<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
                            		<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>

@@ -524,8 +524,10 @@ function save_task() {
     createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
     createNodeAndInsertText(xmlDom, objNode, "HASSHARE", hasshare);
     createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
+    /* 수정했을떄 완료율, 진행상태 가져가야하나*/
     createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", document.getElementById("taskstatusSelect").value);
     createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", document.getElementById("completerateSelect").value);
+    
     createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", importance);
     createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00");
     createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59");
@@ -542,9 +544,9 @@ function save_task() {
 //    createNodeAndInsertText(xmlDom, objNode, "MEMO", memo); // 메모 값 세팅
     
     if (taskid == "") {
-    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");    	
+    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
     } else {
-    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", contentPath);    	
+    	createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", contentPath);
     }
 
     var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
