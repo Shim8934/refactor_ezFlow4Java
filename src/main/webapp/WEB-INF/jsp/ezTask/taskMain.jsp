@@ -9,9 +9,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezTask.e1' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 		<STYLE type="text/css"> 
 		.pagetd{padding-top:6px; }
 		.pcol{padding-top:6px; }
@@ -216,8 +218,6 @@
 			function show_page() {
 			    selectelem = null;
 			    makePageSelPage();
-// alert("@@" + $("input:checked[name=check]").attr("value"));
-				var tabselect = "";
 
 			    var length = list_body.children[1].rows.length;
 			    
@@ -229,354 +229,221 @@
 			    	if (totalcount == 0 || i == totalcount) {
 			            break;
 			        }
+
 			        document.getElementById("tr_ing").style.display = "none";
-			        var node;
+			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
 
-			        node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
+			        var tr = row_body.cloneNode(true);
 
-			        if ($("input:checked[name=check]").attr("value") == "ongoing" && SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-						tabselect = 1;
-					} else {
-						tabselect = 2;
-					}
+			        tr.style.display = "";
+			        tr.id = "";
+		
+			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
+			        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
+			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
 
-// alert("S" + SelectSingleNodeValue(node, "COMPLETERATE"));				
-// alert("T" + tabselect);
+			        if (SelectSingleNode(node, "REPEATCOUNT") != null)
+			            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
+		
+			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
+			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
 
-					if ($("input:checked[name=check]").attr("value") == "ongoing" && SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-				        var tr = row_body.cloneNode(true);
-	
-				        tr.style.display = "";
-				        tr.id = "";
-			
-				        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
-				        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
-				        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
+			        tr.setAttribute("startdate", startdate);
 
-				        if (SelectSingleNode(node, "REPEATCOUNT") != null)
-				            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
-			
-				        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
-				        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
-	
-				        tr.setAttribute("startdate", startdate);
-	
-				        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
-	
-				        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
-				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
-				        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
-				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
-	
-				        tr.cells[1].style.textAlign = "center";
-	
-				        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
-				            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
-				        else
-				            tr.cells[2].innerHTML += "&nbsp;";
-			
-				        if (primary == "1") {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
-				        }
-				        else {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
-				        }
-			
-				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N") {
-				            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
-				        }
-				        else
-				            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
-				        tr.cells[4].style.overflow = "hidden"
-				        tr.cells[4].style.textOverflow = "ellipsis"
-			
-				        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
-				            case "1":
-				                var div = document.createElement("DIV");
-				                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
-				                div.style.width = "72px";
-				                div.style.lineHeight = "18px";
-				                div.style.height = "17px";
-				                div.style.textAlign = "center";
-				                div.style.color = "white";
-				                setNodeText(div, "<spring:message code='ezTask.t2000' />");
-				                tr.cells[6].appendChild(div);
-				                break;
-				            case "2":
-				                var div = document.createElement("DIV");
-				                div.style.background = "url(/images/icon/section_orderbg.gif)";
-				                div.style.width = "72px";
-				                div.style.lineHeight = "18px";
-				                div.style.height = "17px";
-				                div.style.textAlign = "center";
-				                div.style.color = "white";
-				                setNodeText(div, "<spring:message code='ezTask.t2001' />");
-				                tr.cells[6].appendChild(div);
-				                break;
-				            case "3":
-				                var div = document.createElement("DIV");
-				                div.style.background = "url(/images/icon/section_Individualbg.gif)";
-				                div.style.width = "72px";
-				                div.style.lineHeight = "18px";
-				                div.style.height = "17px";
-				                div.style.textAlign = "center";
-				                div.style.color = "white";
-				                setNodeText(div, "<spring:message code='ezTask.t2002' />");
-				                tr.cells[6].appendChild(div);
-				                break;
-				        }
-	
-				        // 진행단계
-	// 			        switch (SelectSingleNodeValue(node, "TASKSTATUS")) {
-	// 			            case "1":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_nothing.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t97' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			            case "2":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_working.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t98' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			            case "3":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_finish.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t99' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			            case "4":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_delay.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t100' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			        }
-				        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
-				        var span = document.createElement("SPAN");
-				        span.className = "workprogress";
-	
-				        var span2 = document.createElement("SPAN");
-				        span2.className = "bar";
-				        span2.style.width = completerate + "%";
-	
-				        var span3 = document.createElement("SPAN");
-				        span3.style.width = "30px";
-				        span3.style.display = "inline-block";
-				        setNodeText(span3, completerate + "%");
-	
-				        span.appendChild(span2);
-	
-				        tr.cells[7].appendChild(span);
-				        tr.cells[7].appendChild(span3);
-				        setNodeText(tr.cells[8], startdate);
-				        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
-			
-				        if (SelectSingleNodeValue(node, "TASKSTATUS") == "4") {
-				            for (var j = 2; j < 9; j++)
-				                tr.cells[j].style.color = delaycolor;
-				        }
-			
-				        if (SelectSingleNodeValue(node, "TASKSTATUS") == "3") {
-				            for (var j = 2; j < 9; j++)
-				                tr.cells[j].style.color = completecolor;
-				        }
-	
-				        list_body.children[1].appendChild(tr);
-						
-				        
-				        
-					} else {
-						
-						
-						
-				        var tr = row_body.cloneNode(true);
-				    	
-				        tr.style.display = "";
-				        tr.id = "";
-			
-				        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
-				        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
-				        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
+			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
-				        if (SelectSingleNode(node, "REPEATCOUNT") != null)
-				            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
-			
-				        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
-				        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
-	
-				        tr.setAttribute("startdate", startdate);
-	
-				        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
-	
-				        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
-				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
-				        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
-				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
-	
-				        tr.cells[1].style.textAlign = "center";
-	
-				        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
-				            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
-				        else
-				            tr.cells[2].innerHTML += "&nbsp;";
-			
-				        if (primary == "1") {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
-				        }
-				        else {
-				            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
-				        }
-			
-				        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N") {
-				            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
-				        }
-				        else
-				            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
-				        tr.cells[4].style.overflow = "hidden"
-				        tr.cells[4].style.textOverflow = "ellipsis"
-			
-				        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
-				            case "1":
-				                var div = document.createElement("DIV");
-				                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
-				                div.style.width = "72px";
-				                div.style.lineHeight = "18px";
-				                div.style.height = "17px";
-				                div.style.textAlign = "center";
-				                div.style.color = "white";
-				                setNodeText(div, "<spring:message code='ezTask.t2000' />");
-				                tr.cells[6].appendChild(div);
-				                break;
-				            case "2":
-				                var div = document.createElement("DIV");
-				                div.style.background = "url(/images/icon/section_orderbg.gif)";
-				                div.style.width = "72px";
-				                div.style.lineHeight = "18px";
-				                div.style.height = "17px";
-				                div.style.textAlign = "center";
-				                div.style.color = "white";
-				                setNodeText(div, "<spring:message code='ezTask.t2001' />");
-				                tr.cells[6].appendChild(div);
-				                break;
-				            case "3":
-				                var div = document.createElement("DIV");
-				                div.style.background = "url(/images/icon/section_Individualbg.gif)";
-				                div.style.width = "72px";
-				                div.style.lineHeight = "18px";
-				                div.style.height = "17px";
-				                div.style.textAlign = "center";
-				                div.style.color = "white";
-				                setNodeText(div, "<spring:message code='ezTask.t2002' />");
-				                tr.cells[6].appendChild(div);
-				                break;
-				        }
-	
-				        // 진행단계
-	// 			        switch (SelectSingleNodeValue(node, "TASKSTATUS")) {
-	// 			            case "1":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_nothing.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t97' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			            case "2":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_working.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t98' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			            case "3":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_finish.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t99' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			            case "4":
-	// 			                var div = document.createElement("DIV");
-	// 			                div.style.background = "url(/images/icon/status_delay.gif)";
-	// 			                div.style.width = "61px";
-	// 			                div.style.lineHeight = "18px";
-	// 			                div.style.height = "17px";
-	// 			                div.style.textAlign = "center";
-	// 			                div.style.color = "white";
-	// 			                setNodeText(div, "<spring:message code='ezTask.t100' />"); 
-	// 			                tr.cells[4].appendChild(div);
-	// 			                break;
-	// 			        }
-				        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
-				        var span = document.createElement("SPAN");
-				        span.className = "workprogress";
-	
-				        var span2 = document.createElement("SPAN");
-				        span2.className = "bar";
-				        span2.style.width = completerate + "%";
-	
-				        var span3 = document.createElement("SPAN");
-				        span3.style.width = "30px";
-				        span3.style.display = "inline-block";
-				        setNodeText(span3, completerate + "%");
-	
-				        span.appendChild(span2);
-	
-				        tr.cells[7].appendChild(span);
-				        tr.cells[7].appendChild(span3);
-				        setNodeText(tr.cells[8], startdate);
-				        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
-			
-				        if (SelectSingleNodeValue(node, "TASKSTATUS") == "4") {
-				            for (var j = 2; j < 9; j++)
-				                tr.cells[j].style.color = delaycolor;
-				        }
-			
-				        if (SelectSingleNodeValue(node, "TASKSTATUS") == "3") {
-				            for (var j = 2; j < 9; j++)
-				                tr.cells[j].style.color = completecolor;
-				        }
-	
-				        list_body.children[1].appendChild(tr);
-					}
-			    }
-			    if (totalcount == 0) {
-			        document.getElementById("tr_ing").style.display = "";
-			    }
+			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
+			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
+			        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
+			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
+
+			        tr.cells[1].style.textAlign = "center";
+
+			        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
+			            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
+			        else
+			            tr.cells[2].innerHTML += "&nbsp;";
+		
+			        if (primary == "1") {
+			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
+			        }
+			        else {
+			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
+			        }
+		
+			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N") {
+			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
+			        }
+			        else
+			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
+			        tr.cells[4].style.overflow = "hidden"
+			        tr.cells[4].style.textOverflow = "ellipsis"
+		
+			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
+			            case "1":
+			                var div = document.createElement("DIV");
+			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.width = "72px";
+			                div.style.lineHeight = "18px";
+			                div.style.height = "17px";
+			                div.style.textAlign = "center";
+			                div.style.color = "white";
+			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
+			                tr.cells[6].appendChild(div);
+			                break;
+			            case "2":
+			                var div = document.createElement("DIV");
+			                div.style.background = "url(/images/icon/section_orderbg.gif)";
+			                div.style.width = "72px";
+			                div.style.lineHeight = "18px";
+			                div.style.height = "17px";
+			                div.style.textAlign = "center";
+			                div.style.color = "white";
+			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
+			                tr.cells[6].appendChild(div);
+			                break;
+			            case "3":
+			                var div = document.createElement("DIV");
+			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.width = "72px";
+			                div.style.lineHeight = "18px";
+			                div.style.height = "17px";
+			                div.style.textAlign = "center";
+			                div.style.color = "white";
+			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
+			                tr.cells[6].appendChild(div);
+			                break;
+			        }
+
+			        // ì§íë¨ê³
+// 			        switch (SelectSingleNodeValue(node, "TASKSTATUS")) {
+// 			            case "1":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_nothing.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t97' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "2":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_working.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t98' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "3":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_finish.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t99' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "4":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_delay.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t100' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			        }
+			        
+			        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
+			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
+			        var span = document.createElement("SPAN");
+			        span.className = "workProgressBar";
+			        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
+
+					var span2 = document.createElement("SPAN");
+			        span2.style.width = "30px";
+			        span2.style.display = "inline-block";
+			        setNodeText(span2, completerate + "%");
+
+			        span.appendChild(span2);
+
+			        tr.cells[7].appendChild(span);
+			        setNodeText(tr.cells[8], startdate);
+			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
+		
+			        if (SelectSingleNodeValue(node, "TASKSTATUS") == "4") {
+			            for (var j = 2; j < 9; j++)
+			                tr.cells[j].style.color = delaycolor;
+			        }
+		
+			        if (SelectSingleNodeValue(node, "TASKSTATUS") == "3") {
+			            for (var j = 2; j < 9; j++)
+			                tr.cells[j].style.color = completecolor;
+			        }
+
+			        list_body.children[1].appendChild(tr);
+			        
+			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+
+				    if (totalcount == 0) {
+				        document.getElementById("tr_ing").style.display = "";
+				    }
+				}
+			    
+			    $(".progressbar").css("display", "inline-table");
+			    $(".percentCount").remove();
 			}
+
+			/* progressBar 조회 */
+			function initProgressBar(barID, taskstatus, completerate) {
+				if (completerate == '0') {
+					duration = 0;
+				} else {
+					duration = 500;
+				}
+
+				if (taskstatus == '4') {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: delayColor,
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
+				} else {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: '#3498db',
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
+				}
+			}
+
+			function selectTab(num) {
+				if (num == 2) {
+					list_body.style.display = "";
+					list_body2.style.display = "none";
+				} else {
+					list_body.style.display = "none";
+					list_body2.style.display = "";
+				}
+			}
+
 		    function update_status(elem) {
 		        var taskid = GetAttribute(elem.parentElement.parentElement, "taskid")
 		        var parentid = GetAttribute(elem.parentElement.parentElement, "parentid");
@@ -1088,11 +955,11 @@
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
 				<li id="right" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
-					<input name="check" id="radio4" type="radio" value="finish" style="width:13px;height:13px;vertical-align:middle ">
+					<input name="check" id="radio4" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio4" style="vertical-align:middle"><spring:message code='ezTask.t99' /></label>
 				</li>
 				<li id="right" style="float:right;font-weight:normal;color:black;">
-					<input name="check" id="radio3" type="radio" value="ongoing" checked style="width:13px;height:13px;vertical-align:middle ">
+					<input name="check" id="radio3" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="radio3" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
 			</ul>
@@ -1140,7 +1007,44 @@
 							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 						<tr id="tr_ing" style="text-align:center">
-							<td colspan="9" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+							<td colspan="10" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
+						</tr>
+				    </table>
+				    <table class="mainlist" id="list_body2" style="WIDTH: 100%;table-layout:fixed; display:none">
+						<col style ="width:30px;">
+						<col style ="width:50px;">
+						<col style ="width:20px;">
+						<col style ="width:60px;">
+						<col >
+						<col style ="width:90px;">
+		                <col style ="width:90px;">
+						<col style ="width:110px;">
+						<col style ="width:80px;">
+						<col style ="width:97px;">
+						<tr>
+							<th ><input id="checkboxAll2" type="checkbox" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+							<th ><spring:message code='ezTask.t156' /></th>
+							<th ><img src="/images/newAttach.gif"></th>
+							<th ><spring:message code='ezTask.t2005' /></th>
+							<th ><spring:message code='ezTask.t118' /></th>
+<%-- 							<th ><spring:message code='ezTask.t170' /></th> --%>
+							<th ></th>
+		                    <th ><spring:message code='ezTask.t2003' /></th>
+							<th ><spring:message code='ezTask.t120' /></th>
+							<th ><spring:message code='ezTask.t121' /></th>
+							<th ><spring:message code='ezTask.t122' /></th>
+						</tr>
+						<tr id="row_body2" style="display:none;" taskid="" parentid="" repeatcount="0" startdate="" onclick="select_row(this)">
+							<td style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+		                    <td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+							<td style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 						</tr>
 				    </table>
 				</td>
