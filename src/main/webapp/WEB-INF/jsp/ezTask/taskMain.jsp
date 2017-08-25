@@ -202,11 +202,14 @@
 			}
 
 			var strListInfo = "";
+			var strListIdInfo = "";
 			function chk_onselect(obj) {
 		        if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
+		            strListIdInfo += $(obj).attr("creatorID") + ";";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
+		            strListIdInfo = ReplaceText(strListIdInfo, $(obj).attr("creatorID") + ";", "");
 		        }
 		    }
 
@@ -250,7 +253,7 @@
 
 			        tr.setAttribute("startdate", startdate);
 
-			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -362,7 +365,7 @@
 // 			                tr.cells[4].appendChild(div);
 // 			                break;
 // 			        }
-			        
+
 			        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
 			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
 			        var span = document.createElement("SPAN");
@@ -379,26 +382,26 @@
 			        tr.cells[7].appendChild(span);
 			        setNodeText(tr.cells[8], startdate);
 			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
-		
+
 			        if (SelectSingleNodeValue(node, "TASKSTATUS") == "4") {
 			            for (var j = 2; j < 9; j++)
 			                tr.cells[j].style.color = delaycolor;
 			        }
-		
+
 			        if (SelectSingleNodeValue(node, "TASKSTATUS") == "3") {
 			            for (var j = 2; j < 9; j++)
 			                tr.cells[j].style.color = completecolor;
 			        }
 
 			        list_body.children[1].appendChild(tr);
-			        
-			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 
-				    if (totalcount == 0) {
-				        document.getElementById("tr_ing").style.display = "";
-				    }
+			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 				}
-			    
+
+			    if (totalcount == 0) {
+			        document.getElementById("tr_ing").style.display = "";
+			    }
+
 			    $(".progressbar").css("display", "inline-table");
 			    $(".percentCount").remove();
 			}
@@ -559,10 +562,16 @@
 // 		        delrepeatcount = GetAttribute(selectelem, "repeatcount");
 		        var creatorId = GetAttribute(selectelem, "creatorid");
 
-		        if (creatorId != userid) {
-		            alert("<spring:message code='ezTask.t146' />");
-		            return;
-		        }
+				var idArr = new Array();
+				idArr = strListIdInfo.split(";");
+
+				for (var i = 0; i < idArr.length - 1; i++) {
+			        if (idArr[i] != userid) {
+			            alert("<spring:message code='ezTask.t146' />");
+
+			            return;
+			        }
+				}
 
 		        if (delparentid != "0") {
 		            alert("<spring:message code='ezTask.t105' />");
@@ -719,6 +728,7 @@
 				});
 
 				strListInfo = "";
+				strListIdInfo = "";
 		    }
 		
 		    function after_DateChange(xml) {
