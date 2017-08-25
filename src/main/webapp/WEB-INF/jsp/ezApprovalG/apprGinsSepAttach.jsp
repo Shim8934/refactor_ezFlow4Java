@@ -139,7 +139,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
-		            DivPopUpShow(565, 390, url);
+		            DivPopUpShow(500, 615, url);
 		        }
 		        else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
@@ -160,6 +160,10 @@
 		            InsertRowToLV(rtn[1]);
 		        }
 		    }
+		    /**
+		    * [분리첨부] -> [추가]
+		    * 추가된 '분리첨부' 내용을 리스트에 출력
+		    */
 		    function InsertRowToLV(szInfoXml) {
 		        var pSN;
 		        var pLvList = new ListView();
@@ -304,7 +308,7 @@
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
-		                DivPopUpShow(500, 610, url);
+		                DivPopUpShow(500, 615, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
@@ -449,8 +453,10 @@
 		        DelListRow("pLvList");
 		        OrderList();
 		    }
-		    
-		    function OrderList() {
+		    /**
+		    * [분리첨부] 리스트에서 순번 재정렬
+		    */
+		    function OrderList() { 
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
 		

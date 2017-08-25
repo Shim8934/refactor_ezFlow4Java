@@ -53,7 +53,7 @@ public interface MBoardService {
 	
 	Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
 	
-	void insertBrdItem(JSONObject boardListVO, MCommonVO info) throws Exception;
+	void insertBrdItem(JSONObject boardListVO, MCommonVO info, String realPath, String mhtData) throws Exception;
 	
 	void insertBrdItem2(JSONObject boardListVO) throws Exception;
 	

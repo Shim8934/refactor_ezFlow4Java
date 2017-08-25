@@ -191,6 +191,9 @@
 		        }
 		        txtCharger.value = SelUserName;
 		    }
+		    /**
+		    * 검색조건을 XML로 만들기
+		    */
 		    function GetCabSearchParamXml() {
 		        var oXml = createXmlDom();
 		        var oRoot = "";

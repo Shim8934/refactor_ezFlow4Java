@@ -1,4 +1,7 @@
-﻿function InitCodeSelectBox(nodeXml, objSel) {
+﻿/**
+ * XML데이터를 Array에 저장
+ * */
+function InitCodeSelectBox(nodeXml, objSel) {
     objSel.innerHTML = "";
     var strText, strValue, i;
     var selOption = new Array();

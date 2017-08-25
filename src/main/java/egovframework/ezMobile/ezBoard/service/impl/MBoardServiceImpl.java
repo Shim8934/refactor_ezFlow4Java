@@ -1,6 +1,11 @@
 package egovframework.ezMobile.ezBoard.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -674,9 +679,11 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public void insertBrdItem(JSONObject boardListVO, MCommonVO info) throws Exception {
+	public void insertBrdItem(JSONObject boardListVO, MCommonVO info, String realPath, String mhtData) throws Exception {
 		int tenantID = info.getTenantId();
 		String offset = info.getOffSet();
+		boolean saveMHTResult = false;
+		String filePath = commonUtil.getUploadPath("upload_board.ROOT", info.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", boardListVO.get("itemID"));
@@ -713,7 +720,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("itemLevel", "1");
 		//리플이나 수정일때는 값받아와야함.
 		map.put("parentWriteDate", "docNO");
-		map.put("extensionAttribute1", boardListVO.get("extensionAttribute1"));
+		map.put("extensionAttribute1", "0");
 		//공지사항 여부
 		map.put("extensionAttribute2", boardListVO.get("notice"));
 		map.put("extensionAttribute3", boardListVO.get("extensionAttribute3"));
@@ -728,7 +735,71 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
 		
+		//mht파일저장
+		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);
+
 		mBoardDAO.insertBrdItem(map);
+	}
+	
+	/**
+	 * 게시판 mht저장 실행 Method
+	 */
+	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
+System.out.println("saveMHT start");
+System.out.println("strHTML:"+strHTML);
+System.out.println("strFilePath:"+strFilePath);
+		String docPath = "";
+		String mhtFilePath = "";
+		boolean ret = true;
+		
+        if (strType.equals("BOARD")) {
+            strHTML = strHTML.replace("'", "''");
+        }
+        
+		docPath = strFilePath + commonUtil.separator + strBoardID;
+		mhtFilePath = strMHTFilename + ".mht";
+		
+		String stordFilePathReal = docPath + commonUtil.separator + "doc";
+		
+		File file = new File(realPath + stordFilePathReal);
+		
+		if (!file.exists()) {
+			boolean _flag = file.mkdirs();
+			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
+			file.mkdirs();
+			
+			if (!_flag) {
+			    throw new IOException("Directory creation Failed ");
+			}
+		}
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
+			bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+			ret = true;
+		} catch (Exception e) {
+			ret = false;
+		} finally {
+			if(bos != null){
+				bos.close();
+			}
+			if(stream != null){
+				stream.close();
+			}
+		}
+		
+		return ret;
 	}
 	
 	@Override
