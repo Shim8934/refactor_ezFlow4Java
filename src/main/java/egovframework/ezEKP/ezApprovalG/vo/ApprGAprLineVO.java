@@ -82,6 +82,8 @@ public class ApprGAprLineVO {
 	/** */
 	private String companyID;
 	
+	private String opinionGB;
+	
 	public String getUserID() {
 		return userID;
 	}
@@ -321,6 +323,12 @@ public class ApprGAprLineVO {
 	}
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
+	}
+	public String getOpinionGB() {
+		return opinionGB;
+	}
+	public void setOpinionGB(String opinionGB) {
+		this.opinionGB = opinionGB;
 	}
 	
 }

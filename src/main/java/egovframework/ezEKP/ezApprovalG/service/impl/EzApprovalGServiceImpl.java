@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,10 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -25,7 +30,6 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21596,7 +21600,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception {
 		String strErrorMsg = "";
 		try {
-			content = beforeXmlConverter("<CONTENT>" + content + "</CONTENT>");
+ 			content = beforeXmlConverter("<CONTENT>" + content + "</CONTENT>");
 			
 			Document xmlDom = commonUtil.convertStringToDocument(content);
 			Node node = xmlDom.getDocumentElement();
@@ -21726,13 +21730,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					hasBRTag = false;
 				}
 			} while(hasBRTag);
+			String strRtnHtml = xmlDom.getElementsByTagName("CONTENT").item(0).getTextContent();
+			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
+			strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
 			
+			String strRtnContent = "<DATA>" +
+		                "<RESULT>OK</RESULT>" +
+		                "<CONTENT><![CDATA[" + strRtnHtml + "]]></CONTENT>" +
+		                "</DATA>";
 			//strong 태그를 b태그로 변경
+			return strRtnContent;
 		} catch (Exception e) {
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
-		return null;
 	}
 
 	private String ReturnErrorContent(String strErrorMsg) {
@@ -21788,14 +21799,118 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strRtnHTML = null;
 		
 		if (xmlDom.getElementsByTagName("*").getLength() == 0) {
-            strRtnHTML = "<CONTENT><![CDATA[[<p style=\"margin-top:0px;margin-bottom:0px\">" + xmlDom.getDocumentElement().getTextContent() + "</p>]]></CONTENT>";
+            strRtnHTML = "<CONTENT><![CDATA[<p style=\"margin-top:0px;margin-bottom:0px\">" + xmlDom.getDocumentElement().getTextContent() + "</p>]]></CONTENT>";
 		} else {
-			strRtnHTML = "<CONTENT><![CDATA[[" + xmlDom.getDocumentElement().getTextContent() +"]]></CONTENT>";
+			strRtnHTML = "<CONTENT><![CDATA[" + xmlDom.getDocumentElement().getTextContent() +"]]></CONTENT>";
 		}
 		
 		 // 리턴시 div태그를 p태그로 변경하여 리턴한다.
         strRtnHTML = strRtnHTML.replace("<div", "<p").replace("<DIV", "<p").replace("</div", "</p").replace("</DIV", "</p");
         
 		return strRtnHTML;
+	}
+
+	@Override
+	public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception {
+		int iAprSN;
+		int iAssistSN;
+		String strChkPosition;
+		String strAprType;
+		String strIsProposerYN;
+		String strIsBriefUserYN;
+		String strProcessDate;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringBuilder result = new StringBuilder();
+		
+		map.put("docID", docID);
+		List<ApprGAprLineVO> strLineXML = new ArrayList<ApprGAprLineVO>(); 
+		strLineXML = ezApprovalGDAO.relayAprLineXmlForExt(map);
+		
+	    StringBuffer sb = new StringBuffer();
+	        sb.append("<DATA>");
+	        
+	        for (int i = 0; i < strLineXML.size(); i++) {
+				sb.append(commonUtil.getQueryResult(strLineXML.get(i)));
+			}
+			sb.append("</DATA>");
+		
+		Document xmlDoc = commonUtil.convertStringToDocument(sb.toString());
+
+		int iFinalSn = xmlDoc.getElementsByTagName("ROW").getLength();
+		
+		result.append("<APPROVALINFO>");
+		
+		iAprSN = 1;
+		iAssistSN = 1;
+		
+		for (int i = 0; i < iFinalSn; i++) {
+			result.append("<APPROVAL>");
+			result.append("<ORDER>");
+			
+			strAprType = xmlDoc.getElementsByTagName("APRTYPE").item(i).getTextContent();
+			
+			if (strAprType.equals(staATSoonChaHyubJo)) {
+				result.append(iAssistSN);
+				result.append("</ORDER>");
+				iAssistSN += iAssistSN +1;
+			} else {
+				if (xmlDoc.getElementsByTagName("APRMEMBERSN").item(i).getTextContent().equals(Integer.toString(iFinalSn))) {
+					result.append("final");
+					result.append("</ORDER>");
+					iAprSN += iAprSN +1;
+				} else {
+					result.append(iAprSN);
+					result.append("</ORDER>");
+					iAprSN += iAprSN +1;
+				}
+			}
+			
+			result.append("<OPINION>");
+			
+			if (xmlDoc.getElementsByTagName("OPINIONGB").item(i).getTextContent().isEmpty()) {
+				result.append("NO");
+			} else {
+				result.append("YES");
+			}
+			
+			result.append("</OPINION>");
+			
+			strChkPosition = "";
+			strIsProposerYN = xmlDoc.getElementsByTagName("ISPROPOSERYN").item(i).getTextContent();
+			strIsBriefUserYN = xmlDoc.getElementsByTagName("ISBRIEFUSERYN").item(i).getTextContent();
+
+			if (!strIsProposerYN.isEmpty()) {
+				if (strIsProposerYN.equals("Y")) {
+					strChkPosition = strChkPosition + "★";
+				}
+			}
+			
+			if (!strIsBriefUserYN.isEmpty()) {
+				if (strIsBriefUserYN.equals("Y")) {
+					strChkPosition = strChkPosition + "⊙";
+				}
+			}
+			
+			result.append("<SIGNPOSITION>" + strChkPosition + xmlDoc.getElementsByTagName("APRMEMBERJOBTITLE").item(i).getTextContent() + "</SIGNPOSITION>");
+			
+			result.append("<TYPE>");
+			
+			if (strAprType.equals("018")) {
+				result.append("상신");
+			} else {
+				result.append(getCode2Name("A03", strAprType, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId()));
+			}
+			
+			result.append("</TYPE>");
+			
+			result.append("<NAME>" + xmlDoc.getElementsByTagName("APRMEMBERNAME").item(i).getTextContent() + "</NAME>");
+			
+			strProcessDate = xmlDoc.getElementsByTagName("PROCESSDATE").item(i).getTextContent();
+			
+			
+			
+		}
+		return null;
 	}
 }

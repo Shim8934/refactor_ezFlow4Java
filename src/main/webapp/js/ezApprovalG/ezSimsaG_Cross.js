@@ -54,8 +54,7 @@ function GetEndDocInfo() {
 	pDocInfoXML = loadXMLString(result);
 }
 
-function getLineInfo()
-{
+function getLineInfo() {
     var xmlpara = createXmlDom();
 	var xmlhttp = createXMLHttpRequest();
 
@@ -63,7 +62,7 @@ function getLineInfo()
 	createNodeInsert(xmlpara, objNode, "PARAMETERS"); 
 	createNodeAndInsertText(xmlpara, objNode, "DocID", pOrgDocID);
 
-	xmlhttp.open("Post","aspx/getLineInfo.aspx",false);
+	xmlhttp.open("Post","/ezApprovalG/getLineInfo.do",false);
 	xmlhttp.send(xmlpara);
 	
 	return xmlhttp.responseXML;

@@ -2238,5 +2238,18 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/getLineInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getLineInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getLineInfo started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+        String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+
+		String result = ezApprovalGService.getAprLineXmlForExt(docID, userInfo);
+		logger.debug("getLineInfo ended");
+		return result;
+	}
 	
 }

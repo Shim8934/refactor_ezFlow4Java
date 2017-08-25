@@ -833,11 +833,9 @@
 	            var Content = document.createElement("DIV");
 	            var pTemp = result;
 
-	            if (getNodeText(pTemp.getElementsByTagName("RESULT")[0]) === "OK")
-	            {
+	            if (getNodeText(pTemp.getElementsByTagName("RESULT")[0]) === "OK") {
 	                Content.innerHTML = getNodeText(pTemp.getElementsByTagName("CONTENT")[0]);
-	            }
-	            else {
+	            } else {
 	                alert(getNodeText(pTemp.getElementsByTagName("CONTENT")[0]));
 	                return "";
 	            }

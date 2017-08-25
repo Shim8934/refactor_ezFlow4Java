@@ -461,4 +461,5 @@ public interface EzApprovalGService {
 
 	public String startXmlConvert(String content, String fontFamily, String fontSize, LoginVO userInfo) throws Exception;
 
+	public String getAprLineXmlForExt(String docID, LoginVO userInfo) throws Exception;
 }

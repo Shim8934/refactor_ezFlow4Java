@@ -2683,4 +2683,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void updateProAprDocInfo(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateProAprDocInfo", map);
 	}
+
+	public List<ApprGAprLineVO> relayAprLineXmlForExt(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
