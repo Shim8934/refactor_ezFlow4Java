@@ -16946,11 +16946,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (nodeLength > 0) {
 			for (int k = 0; k < nodeLength; k++) {
-				String bujaeInfo = doc.getElementsByTagName("DATA4").item(k).getTextContent();
+				String bujaeInfo = doc.getElementsByTagName("DATA4").item(k).getTextContent(); 
 				String[] bujae = bujaeInfo.split(":");
 				
 				if (bujae.length >= 5) {
-					if (nowDate.compareTo(bujae[3].replace("/", ":").substring(0, 16)) >= 0 && nowDate.compareTo(bujae[4].replace("/", ":").substring(0, 16)) <= 0) {
+ 					if (nowDate.compareTo(bujae[5] + ":" + bujae[6] + ":" + "00") <= 0) {
 						if (!chkFirst) {
 							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
 							chkFirst = true;
