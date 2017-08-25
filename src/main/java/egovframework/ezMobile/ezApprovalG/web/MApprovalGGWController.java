@@ -128,17 +128,28 @@ public class MApprovalGGWController {
 				listSize = "20";
 			}
 			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
 			if (lastDate == null || lastDate.equals("")) {
 				lastDate = commonUtil.getTodayUTCTime("");
+			} else {
+				lastDate = commonUtil.getDateStringInUTC(lastDate, userInfo.getOffSet(), true);
 			}
-			
-			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			
 			List<MApprovalGDocInfoVO> approvalGDocInfoVOs = mApprovalGService.getDoApproveList(userInfo, type, searchText, listSize, lastDate);
 			
+			if (approvalGDocInfoVOs != null && approvalGDocInfoVOs.size() > 0) {
+				lastDate = approvalGDocInfoVOs.get(approvalGDocInfoVOs.size() - 1).getStartDate();
+			}
+			
+			JSONObject totalData = new JSONObject();
+			
+			totalData.put("docInfos", approvalGDocInfoVOs);
+			totalData.put("lastDate", lastDate);
+			
 			result.put("status", "ok");
 			result.put("code", "0");
-			result.put("data", approvalGDocInfoVOs);
+			result.put("data", totalData);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", "1");
