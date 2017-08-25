@@ -24,28 +24,39 @@
 		            window.focus();
 		        };
 		    }
+		    
+		    var flag = true;
 		    function btn_OpinionOK_onclick() {
-		        var rtnVal = "cancel";
-		
-		        if (trim(document.getElementById("inpPassword").value).length == 0) {
-		            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
-		            alert(pAlertContent);
-		            document.getElementById("inpPassword").focus();
-		            return;
-		        }
-		        else {
-		            rtnVal = chkPasswd();
-		        }
-		        if (ReturnFunction != null)
-		            ReturnFunction(rtnVal);
-		        else
-		            window.returnValue = rtnVal;
+		    	if (flag) {
+		    		flag = false;
+			        var rtnVal = "cancel";
+					
+			        if (trim(document.getElementById("inpPassword").value).length == 0) {
+			            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
+			            alert(pAlertContent);
+			            document.getElementById("inpPassword").focus();
+			            flag = true;
+			            return;
+			        }
+			        else {
+			            rtnVal = chkPasswd();
+			        }
+			        
+			        if (rtnVal != "") {
+				        if (ReturnFunction != null)
+				            ReturnFunction(rtnVal);
+				        else
+				            window.returnValue = rtnVal;
+			        } 
+		    	} 
 		    }
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null)
 		            ReturnFunction("cancel");
 		        else
 		            window.returnValue = "cancel";
+		        
+		        window.close();
 		    }
 		    var RetValue;
 		    var ReturnFunction;
@@ -107,7 +118,9 @@
 		
 		            return result;
 		        } catch (e) {
+		        	 flag = true;
 		            alert(e.description);
+		            return "";
 		        }
 		    }
 		    var ezapralert_cross_dialogArguments = new Array();

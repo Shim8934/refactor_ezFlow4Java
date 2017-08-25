@@ -1,4 +1,7 @@
-﻿function InitAttach(pDocID) {
+﻿/**
+ * 첨부파일 리스트 추출
+ * */
+function InitAttach(pDocID) {
 	var result = "";
 	
 	$.ajax({
@@ -86,6 +89,10 @@ function APRAttachXMLParsing(ATTACH, pDocID) {
     GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
     return GetXml;
 }
+/**
+ * [첨부] -> [삭제]
+ * 데이터베이스의 접근하지 않고 XML ROW만 삭제
+ * */
 function DelAttachFileAtList(pAttachCurSel) {
     var pAttachList = new ListView();
     pAttachList.LoadFromID("attachList");
@@ -334,6 +341,9 @@ function EditAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation, pList
         alert(ErrMsg.description);
     }
 }
+/**
+ * 첨부파일 관련된 XML데이터를 화면에 출력
+ * */
 function InsertAttachFileInfo(ATTACH, Resultxml) {
     var listview = new ListView();
     listview.LoadFromID("attachList");
@@ -503,6 +513,10 @@ function chkFileFilter(cur_ExtName) {
 
     return chkflag;
 }
+/**
+ * 첨부파일의 이력관리
+ * [번경내역] -> [첨부파일이력]에서 확인 가능
+ * */
 function UpdateAttachHistory(tempAttachSN, pModifyFlag) {
 	$.ajax({
 		type : "POST",
