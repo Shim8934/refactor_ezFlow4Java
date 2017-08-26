@@ -458,9 +458,9 @@
 			function edit_task() {
 			    var id = taskid;
 			    if (parentid != "0") {
-			    	
+			    	id = parentid;
 			    }
-			        id = parentid;
+			    
 			    var win;
 			    
 				/* 레이어팝업으로 taskWriteCross 호출 */

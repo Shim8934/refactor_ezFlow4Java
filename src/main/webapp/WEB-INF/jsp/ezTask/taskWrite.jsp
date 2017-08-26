@@ -3,85 +3,100 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
-   <HEAD>
-      <title><spring:message code='ezTask.t206' /></title>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-      <link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
-      <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-      <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-      <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-      <script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
-      <script type="text/javascript" src="/js/mouseeffect.js"></script>
-      <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-      <script type="text/javascript" src="/js/ezTask/task_write_Cross.js"></script>
-      <script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
-      <script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
-      <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-      <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-      <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-      <script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-      <script>
-          var userid = "${userInfo.id }";
-          var username = "${userInfo.displayName }";
-          var username2 = "${userInfo.displayName1 }";
-          var deptname = "${userInfo.deptName }";
-          var deptname2 = "${userInfo.deptName1 }";
-          var taskid = "${taskInfoVO.taskID }";
-          var taskstatus = "${taskInfoVO.taskStatus }";
-          var completerate = "${taskInfoVO.completeRate }";
-          var startdate = "${taskInfoVO.startDate }";
-          var enddate = "${taskInfoVO.endDate }";
-          var importance = "${taskInfoVO.importance }";
-          var tasktype = "${taskInfoVO.taskType }";
+	<HEAD>
+		<title><spring:message code='ezTask.t206' /></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezTask/task_write_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<script>
+			var userid = "${userInfo.id }";
+			var username = "${userInfo.displayName }";
+			var username2 = "${userInfo.displayName2 }";
+			var deptname = "${userInfo.deptName }";
+			var deptname2 = "${userInfo.deptName2 }";
+			var taskid = "${taskInfoVO.taskID }";
+			var taskstatus = "${taskInfoVO.taskStatus }";
+			var completerate = "${taskInfoVO.completeRate }";
+			var startdate = "${taskInfoVO.startDate }";
+			var enddate = "${taskInfoVO.endDate }";
+			var importance = "${taskInfoVO.importance }";
+			var tasktype = "${taskInfoVO.taskType }";
 //           var TextCompleteDate1 = "_TextCompleteDate";
-          var creatorid = "${taskInfoVO.creatorID }";
-          var hasattach = "${taskInfoVO.hasAttach }";
-          var hasshare = "${taskInfoVO.hasShare}";
-          var contentPath = "${taskInfoVO.contentPath }";
-          var sharelist = "";
-          var g_person = null;
-          var g_share = null;
-          var shareid = "_shareid";
-          var sharename = "_sharename";
-          var sharename2 = "_sharename2";
-          var sharedept = "_sharedept";
-          var sharedept2 = "_sharedept2";
-          var sharemail = "_sharemail";
-          var isreadpage = false;
-          var FormProcSpelling = "FormProcSpelling";
-          var personid = "${taskInfoVO.personID }";
-//           var content = "${newGuid}";
+			var creatorid = "${taskInfoVO.creatorID }";
+			var hasattach = "${taskInfoVO.hasAttach }";
+			var hasshare = "${taskInfoVO.hasShare}";
+			var contentPath = "${taskInfoVO.contentPath }";
+			var sharelist = "";
+			var g_person = null;
+			var g_share = null;
+			var shareid = "_shareid";
+			var sharename = "_sharename";
+			var sharename2 = "_sharename2";
+			var sharedept = "_sharedept";
+			var sharedept2 = "_sharedept2";
+			var sharemail = "_sharemail";
+			var isreadpage = false;
+			var FormProcSpelling = "FormProcSpelling";
+			var personid = "${taskInfoVO.personID }";
+			var personname = "${taskInfoVO.personName }";
+			var personname2 = "${taskInfoVO.personName2 }";
+			var persondept = "${taskInfoVO.personDeptName }";
+			var persondept2 = "${taskInfoVO.personDeptName2 }";
+			var personemail = "${taskInfoVO.personEmail }";
+// 			var content = "${newGuid}";
           
-          window.onload = function () {
+			window.onload = function () {
 //              document.getElementById("TextCompleteDate").value = "";
 
-             if (taskid != "") {
-                 document.getElementById("importantSelect").value = importance;
-                 document.getElementById("taskstatusSelect").value = taskstatus;
-                 document.getElementById("completerateSelect").value = completerate;
-                 $("#TextTitle").val("${taskInfoVO.title }");
-//                  document.getElementById("TextCompleteDate").value = TextCompleteDate1;
+			if (taskid != "") {
+				document.getElementById("importantSelect").value = importance;
+				document.getElementById("taskstatusSelect").value = taskstatus;
+				document.getElementById("completerateSelect").value = completerate;
+				$("#TextTitle").val("${taskInfoVO.title }");
+// 				document.getElementById("TextCompleteDate").value = TextCompleteDate1;
 
-//                  pAttachListXml = MakeAttachList();
-//                  AppendFileAttachInfo(pAttachListXml);
-                 /* if (repetition != "") {
-                     show_repetition_info();
-                 } */
+// 				pAttachListXml = MakeAttachList();
+// 				AppendFileAttachInfo(pAttachListXml);
+				/* if (repetition != "") {
+					show_repetition_info();
+				} */
 
-                 Editor_Complete();
-             }
+				Editor_Complete();
+			}
 
-             if (tasktype == "1") {
-                 document.getElementById("P").click();
-             } else if (tasktype == "2") {
-                 document.getElementById("I").click();
-             } else if (tasktype == "3") {
-                 document.getElementById("C").click();
-             }
+			if (tasktype == "1") {
+				document.getElementById("P").click();
+			} else if (tasktype == "2") {
+				document.getElementById("I").click();
+			} else if (tasktype == "3") {
+				document.getElementById("C").click();
+			}
 
-             if (personid != "") {
-                 document.getElementById("personlist").innerHTML = personid;
-              }
+			if (personid != "") {
+				document.getElementById("personlist").innerHTML = personid;
+                 
+				g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
+
+				g_person["name"][0] = personname;
+				g_person["name1"][0] = personname;
+				g_person["name2"][0] = personname2;
+				g_person["id"][0] = personid;
+				g_person["deptname"][0] = persondept;
+				g_person["deptname2"][0] = persondept2;
+				g_person["email"][0] = personemail;
+			}
              
              if (sharelist != "") {
                  document.getElementById("sharelist").innerHTML = sharelist;
@@ -96,10 +111,10 @@
 
                  for (var i = 0; i < shareid.length; i++) {
                      g_share["name"][i] = sharename[i];
+                     g_share["name1"][i] = sharename1[i];
+                     g_share["name2"][i] = sharename2[i];
                      g_share["id"][i] = shareid[i];
                      g_share["deptname"][i] = sharedept[i];
-                     g_share["name1"][i] = sharename[i];
-                     g_share["name2"][i] = sharename2[i];
                      g_share["deptname2"][i] = sharedept2[i];
                      g_share["email"][i] = sharemail[i];
                  }

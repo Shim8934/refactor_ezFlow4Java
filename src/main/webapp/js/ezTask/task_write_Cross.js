@@ -114,9 +114,9 @@ function manage_share_Complete(retVal) {
 
                 g_person["name"][0] = retVal["name"][0];
                 g_person["id"][0] = retVal["id"][0];
-                g_person["deptname"][0] = retVal["deptname"][0];
                 g_person["name1"][0] = retVal["name1"][0];
                 g_person["name2"][0] = retVal["name2"][0];
+                g_person["deptname"][0] = retVal["deptname"][0];
                 g_person["deptname2"][0] = retVal["deptname2"][0];
                 g_person["email"][0] = retVal["email"][0];
             }
@@ -140,9 +140,9 @@ function manage_share_Complete(retVal) {
 
                         g_share["name"][j] = retVal["name"][i];
                         g_share["id"][j] = retVal["id"][i];
-                        g_share["deptname"][j] = retVal["deptname"][i];
                         g_share["name1"][j] = retVal["name1"][i];
                         g_share["name2"][j] = retVal["name2"][i];
+                        g_share["deptname"][j] = retVal["deptname"][i];
                         g_share["deptname2"][j] = retVal["deptname2"][i];
                         g_share["email"][j] = retVal["email"][i];
                         j++;
@@ -239,10 +239,10 @@ function check_name() {
             }
             var nodes = SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW/CELL");
             g_share["name"][length] = getNodeText(GetChildNodes(nodes[3])[0]);
-            g_share["id"][length] = getNodeText(GetChildNodes(nodes[0])[2]);
-            g_share["deptname"][length] = getNodeText(GetChildNodes(nodes[0])[7]);
             g_share["name1"][length] = getNodeText(GetChildNodes(nodes[0])[5]);
             g_share["name2"][length] = getNodeText(GetChildNodes(nodes[0])[6]);
+            g_share["id"][length] = getNodeText(GetChildNodes(nodes[0])[2]);
+            g_share["deptname"][length] = getNodeText(GetChildNodes(nodes[0])[7]);
             g_share["deptname2"][length] = getNodeText(GetChildNodes(nodes[0])[8]);
             g_share["email"][length] = getNodeText(GetChildNodes(nodes[4])[0]);
             if (length == 0) {
@@ -299,10 +299,10 @@ function retevent() {
         }
         var length = g_share["name"].length;
         g_share["name"][length] = document.nameValue.name.value;
+        g_share["name1"][length] = document.nameValue.name.value;
+        g_share["name2"][length] = document.nameValue.name2.value;
         g_share["id"][length] = document.nameValue.id.value;
         g_share["deptname"][length] = document.nameValue.deptname.value;
-        g_share["name1"][length] = document.nameValue.name1.value;
-        g_share["name2"][length] = document.nameValue.name2.value;
         g_share["deptname2"][length] = document.nameValue.deptname2.value;
         g_share["email"][length] = document.nameValue.email.value;
         if (length == 0) {
@@ -556,7 +556,7 @@ function save_task() {
     	for (var i = 0; i < g_share["id"].length; i++) {
             createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREID", g_share["id"][i]);
             createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME1", g_share["name"][i]);
-            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME2", g_share["name1"][i]);
+            createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHARENAME2", g_share["name2"][i]);
             createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME1", g_share["deptname"][i]);
             createNodeAndAppandNodeText(xmlDom, sharelist, shobjnode, "SHAREDEPTNAME2", g_share["deptname2"][i]);
     	}
@@ -576,7 +576,7 @@ function save_task() {
             for (var i = 0; i < g_person["id"].length; i++) {
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONID", g_person["id"][i]);
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME1", g_person["name"][i]);
-                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME2", g_person["name1"][i]);
+                createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONNAME2", g_person["name2"][i]);
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONDEPTNAME1", g_person["deptname"][i]);
                 createNodeAndAppandNodeText(xmlDom, taskpersonlist, shobjnode, "TASKPERSONDEPTNAME2", g_person["deptname2"][i]);							
 			}
@@ -627,6 +627,179 @@ function save_task() {
         parent.DivPopUpHidden();
         window.close();
     }
+}
+
+function save_task1() {
+	if (document.getElementById("TextTitle").value == "") {
+    	alert(strLang9);
+        document.getElementById("TextTitle").focus();
+        return;
+    }
+
+    var startdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    var enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+    if (startdate > enddate) {
+    	alert(strLang45);
+        return;
+    }
+
+    tasktype = $(":input:radio[name=tasktypesel]:checked").val();
+    importance = $(":input:radio[name=important]:checked").val();
+
+    var sharelist = document.getElementById("sharelist").innerHTML;
+	var shareList2 = document.getElementById("shareList2").innerHTML;
+	var shareID = document.getElementById("shareID").innerHTML;
+	var shareDept = document.getElementById("shareDept").innerHTML;
+	var shareDept2 = document.getElementById("shareDept2").innerHTML;
+	
+	var taskPersonList = document.getElementById("personlist").innerHTML;
+	var taskpersonList2 = document.getElementById("personList2").innerHTML;
+	var taskpersonID = document.getElementById("personID").innerHTML;
+	var taskpersonDept = document.getElementById("personDept").innerHTML;
+	var taskpersonDept2 = document.getElementById("personDept2").innerHTML;
+	
+	var memo = $("#TextMemo").val();
+//  var memo = document.getElementById("TextMemo").value; // 메모 value 값
+
+	if (sharelist != "") {
+		hasshare = "Y";
+	} else {
+		hasshare = "N";
+	}
+
+    if (!check_length($("#TextTitle").val(), 100, "<spring:message code='ezTask.t996' />")) {
+    	return;
+    }
+
+    var xmlDom = createXmlDom();
+    var xmlHTTP = createXMLHttpRequest();
+    var objRoot, objNode, attachnode, shobjnode;
+    objNode = createNodeInsert(xmlDom, objNode, "DATA");
+
+    var Doc_ContentHtml = document.createElement("DIV");
+    var strBody = message.GetEditorContent();
+
+    Doc_ContentHtml.innerHTML = strBody;
+
+    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    
+    if (taskid == "") {
+    	contentPath = "";
+    }
+    
+    var shareList = new Array();
+    
+    var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
+
+    if (hasshare == "Y") {
+    	shareUser = {};
+    	for (var i = 0; i < g_share["id"].length; i++) {
+    		shareUser[i].sharerID = g_share["id"][i];
+    		shareUser[i].sharerName = g_share["name"][i];
+    		shareUser[i].sharerName2 = g_share["name2"][i];
+    		shareUser[i].sharerDeptName1 = g_share["deptname"][i];
+    		shareUser[i].sharerDeptName2 = g_share["deptname2"][i];
+    	}
+    }
+
+    if (tasktype == 1) {
+        personID =  userid;
+        personName = username;
+        personName2 = username2;
+        personDeptName = deptname;
+        personDeptName2 = deptname2;
+    } else {
+        if (g_person != null) {
+        	personID =  g_person["id"][0];
+            personName = g_person["name"][0];
+            personName2 = g_person["name2"][0];
+            personDeptName = g_person["deptname"][0];
+            personDeptName2 = g_person["deptname2"][0];
+        } else {
+        	alert(strLang57);
+        	return;
+        }
+    }
+
+  //파일 첨부된 목록 가져오기
+
+    /*xmlHTTP.open("POST", "/ezTask/taskSave.do", false);
+    xmlHTTP.send(xmlDom);
+
+    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+    	alert("" + strLang13 + "");
+    } else {
+    	alert("" + strLang14 + "");
+
+        try { window.opener.RefreshView(); } catch (e) { }
+        parent.DivPopUpHidden();
+        window.close();
+    }*/
+    
+    var strBody = message.GetEditorContent();
+    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    
+	var listtable = dadiframe.document.getElementById("filelist");
+	var filelist = GetChildNodes(listtable);
+	var fileList = "";
+	
+	for (var i = 0; i < filelist.length - 1; i++) {	    
+		if (i == 0) {
+			fileList = GetAttribute(filelist[i + 1], "data2");
+		} else {
+			fileList += "," + GetAttribute(filelist[i + 1], "data2");
+		}
+	}
+	
+	if (fileList.length > 0) {
+		hasattach = "Y";
+	} else {
+		hasattach = "N";
+	}
+	
+    $.ajax({
+    	type : "POST",
+		url : "/ezTask/taskSave1.do",
+		dataType : "json",
+		data : {
+			taskID : taskid,
+			ownerID : userid,
+			creatorID : userid,
+			creatorName1 : username,
+			creatorName2 : username2,
+			personID : personID,
+	        personName : personName,
+	        personName2 : personName2,
+	        personDeptName : personDeptName,
+	        personDeptName2 : personDeptName2,
+			hasShare : hasshare,
+			taskType : tasktype,
+			taskStatus : $("#taskstatusSelect").val(),
+			completeRate : $("#completerateSelect").val(),
+			importance : importance,
+			startDate : startdate + " 00:00:00",
+			endDate : enddate + " 23:59:59",
+			title : document.getElementById("TextTitle").value,
+			content : strBody,
+			contentPath : contentPath,
+			hasAttach : hasattach,
+			fileList : fileList,
+			shareList : shareList
+		},
+		success : function(result) {
+			try {
+				window.opener.RefreshView();
+			} catch (e) { }
+			
+	        parent.DivPopUpHidden();
+	        /*지시사항페이지 refresh*/
+	        window.close();
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert(strLang13);
+		}
+    });
 }
 
 function EmbedContentIntoXML(bodyhtml) {

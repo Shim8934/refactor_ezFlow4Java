@@ -427,10 +427,10 @@
 
 	        for (var i = 0; i < listview.GetRowCount(); i++) {
 	            rtn["name"][i] = GetAttribute(listview.GetDataRows()[i],"DATA1");
-	            rtn["id"][i] = GetAttribute(listview.GetDataRows()[i],"DATA5");
-	            rtn["deptname"][i] = GetAttribute(listview.GetDataRows()[i],"DATA3");
 	            rtn["name1"][i] = GetAttribute(listview.GetDataRows()[i],"DATA1");
 	            rtn["name2"][i] = GetAttribute(listview.GetDataRows()[i],"DATA2");
+	            rtn["id"][i] = GetAttribute(listview.GetDataRows()[i],"DATA5");
+	            rtn["deptname"][i] = GetAttribute(listview.GetDataRows()[i],"DATA3");
 	            rtn["deptname2"][i] = GetAttribute(listview.GetDataRows()[i],"DATA4");
 	            rtn["email"][i] = GetAttribute(listview.GetDataRows()[i],"DATA6");
 	        }

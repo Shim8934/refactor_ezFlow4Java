@@ -24,21 +24,28 @@
 				hascomment,
 				DATE_ADD(DATE_FORMAT(startdate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as startdate,
 				DATE_ADD(DATE_FORMAT(enddate,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as enddate,
-				title,
+				A.title as title,
 				contentpath,
 				tasktype,
 				updatetime,
 				newanswer,
 				newrefer,
 				personid,
-				case when #primary# = 1 then personname else personname2 end as personname,
-				case when #primary# = 1 then persondeptname else personDeptName2 end as persondeptname,
+				personname,
+				personname2,
+				persondeptname,
+				persondeptname2,
+				B.mail as personemail,
 				personattach,
 				personcontentpath,
 				taskpersonid,
 				case when #primary# = 1 then taskpersonname else taskPersonName2 end as taskpersonname
 			FROM
-				TBL_TASK
+				TBL_TASK A
+			JOIN
+				TBL_USERMASTER B
+			ON
+				A.personid = B.cn
 			WHERE
 				tenantid = #tenantID#
 			AND

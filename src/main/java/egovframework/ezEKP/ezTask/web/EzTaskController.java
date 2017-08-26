@@ -156,10 +156,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
+		model.addAttribute("taskShareList", taskShareList);
+		/*model.addAttribute("taskAttachList", taskAttachList);*/
 		model.addAttribute("taskCommentList", taskCommentList);
 		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
 		
-		model.addAttribute("taskShareList", taskShareList);
 		
 		model.addAttribute("type", type);
 		model.addAttribute("delayColor", delayColor);
@@ -176,30 +177,15 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 지시사항 수정 Method
 	 */
 	@RequestMapping(value = "/ezTask/taskSave1.do")
-	public String taskSave(@CookieValue("loginCookie") String loginCookie, @RequestParam TaskInfoVO taskInfoVO, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("taskSave started");
+	public String taskSave1(@CookieValue("loginCookie") String loginCookie, TaskInfoVO taskInfoVO, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskSave1 started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
 		
-		String taskID = request.getParameter("taskID");
-		String ownerID = request.getParameter("ownerID");
-		String creatorID = request.getParameter("creatorID");
-		String creatorName1 = request.getParameter("creatorName1");
-		String hasShare = request.getParameter("hasShare");
-		String taskType = request.getParameter("taskType");
-		String taskStatus = request.getParameter("taskStatus");
-		String completeRate = request.getParameter("completeRate");
-		String importance = request.getParameter("importance");
-		String startDate = request.getParameter("startDate");
-		String endDate = request.getParameter("endDate");
-		String title = request.getParameter("textTitle");
-		String content = request.getParameter("content");
-		String contentPath = request.getParameter("contentPath");
+		ezTaskService.taskSave1(taskInfoVO, realPath, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
 
-//		String ret = ezTaskService.taskSave(doc, realPath, userInfo, newGuid);
-
-		logger.debug("taskSave ended");
+		logger.debug("taskSave1 ended");
 		
 		return "json";
 	}
@@ -618,6 +604,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		if (taskID == null) {
 			/*업무작성*/
+			taskID = "";
 		} else {
 			/*업무수정*/
 			

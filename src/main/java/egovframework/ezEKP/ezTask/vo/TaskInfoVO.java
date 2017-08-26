@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezTask.vo;
 
+import java.util.List;
+
 public class TaskInfoVO {
 	/** 업무ID */
 	private String taskID;
@@ -11,6 +13,8 @@ public class TaskInfoVO {
 	private String creatorID;
 	/** 작성자이름 */
 	private String creatorName;
+	/** 작성자이름 */
+	private String creatorName1;
 	/** 작성자이름2 */
 	private String creatorName2;
 	/** 작성일 */
@@ -42,9 +46,9 @@ public class TaskInfoVO {
 	private String taskType;
 	/** */
 	private String updateTime;
-	/** */
+	/** N으로 그냥 고정(사용하는부분 모르겠음)*/
 	private String newAnswer;
-	/** */
+	/** N으로 그냥 고정(사용하는부분 모르겠음)*/
 	private String newRefer;
 	/** 담당자ID */
 	private String personID;
@@ -56,10 +60,15 @@ public class TaskInfoVO {
 	private String personDeptName;
 	/** 담당자 부서명2*/
 	private String personDeptName2;
+	/** 담당자 email */
+	private String personEmail;
 	/** 진행사항 파일첨부*/
 	private String personAttach;
 	/** 진행사항 본문경로 */
 	private String personContentPath;
+	/** 공유자관련 VO */
+	private List<TaskShareVO> shareList;
+	
 	/** */
 	private String taskPersonID;
 	/** */
@@ -68,7 +77,6 @@ public class TaskInfoVO {
 	private String taskPersonName2;
 	/** 테넌트ID*/
 	private int tenantID;
-	
 	public String getTaskID() {
 		return taskID;
 	}
@@ -98,6 +106,12 @@ public class TaskInfoVO {
 	}
 	public void setCreatorName(String creatorName) {
 		this.creatorName = creatorName;
+	}
+	public String getCreatorName1() {
+		return creatorName1;
+	}
+	public void setCreatorName1(String creatorName1) {
+		this.creatorName1 = creatorName1;
 	}
 	public String getCreatorName2() {
 		return creatorName2;
@@ -231,6 +245,12 @@ public class TaskInfoVO {
 	public void setPersonDeptName2(String personDeptName2) {
 		this.personDeptName2 = personDeptName2;
 	}
+	public String getPersonEmail() {
+		return personEmail;
+	}
+	public void setPersonEmail(String personEmail) {
+		this.personEmail = personEmail;
+	}
 	public String getPersonAttach() {
 		return personAttach;
 	}
@@ -242,6 +262,12 @@ public class TaskInfoVO {
 	}
 	public void setPersonContentPath(String personContentPath) {
 		this.personContentPath = personContentPath;
+	}
+	public List<TaskShareVO> getShareList() {
+		return shareList;
+	}
+	public void setShareList(List<TaskShareVO> shareList) {
+		this.shareList = shareList;
 	}
 	public String getTaskPersonID() {
 		return taskPersonID;
@@ -266,27 +292,5 @@ public class TaskInfoVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
-	}
-	@Override
-	public String toString() {
-		return "TaskInfoVO [taskID=" + taskID + ", parentID=" + parentID
-				+ ", ownerID=" + ownerID + ", creatorID=" + creatorID
-				+ ", creatorName=" + creatorName + ", creatorName2="
-				+ creatorName2 + ", createDate=" + createDate + ", taskStatus="
-				+ taskStatus + ", completeRate=" + completeRate
-				+ ", completeDate=" + completeDate + ", importance="
-				+ importance + ", hasShare=" + hasShare + ", hasAttach="
-				+ hasAttach + ", hasComment=" + hasComment + ", startDate="
-				+ startDate + ", endDate=" + endDate + ", title=" + title
-				+ ", contentPath=" + contentPath + ", taskType=" + taskType
-				+ ", updateTime=" + updateTime + ", newAnswer=" + newAnswer
-				+ ", newRefer=" + newRefer + ", personID=" + personID
-				+ ", personName=" + personName + ", personName2=" + personName2
-				+ ", personDeptName=" + personDeptName + ", personDeptName2="
-				+ personDeptName2 + ", personAttach=" + personAttach
-				+ ", personContentPath=" + personContentPath
-				+ ", taskPersonID=" + taskPersonID + ", taskPersonName="
-				+ taskPersonName + ", taskPersonName2=" + taskPersonName2
-				+ ", tenantID=" + tenantID + "]";
 	}
 }
