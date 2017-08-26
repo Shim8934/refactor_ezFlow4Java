@@ -322,7 +322,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
 			String realPath = commonUtil.getRealPath(request);
-			String content = "<p>"+jsonParam.get("mainContent").toString()+"</p>";
+			String content = jsonParam.get("mainContent").toString();
 			content = URLDecoder.decode(content, "utf-8");
 			
 			String scheme = "http://";
