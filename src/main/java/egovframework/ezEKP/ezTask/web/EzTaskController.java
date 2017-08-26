@@ -181,9 +181,14 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskSave1 started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String realPath = commonUtil.getRealPath(request);
+		int tenantID = userInfo.getTenantId();
 		
-		ezTaskService.taskSave1(taskInfoVO, realPath, userInfo.getId(), userInfo.getOffset(), userInfo.getTenantId());
+		String realPath = commonUtil.getRealPath(request);
+		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID); 
+		String content = request.getParameter("content");
+		String fileList = request.getParameter("fileList");
+		
+		ezTaskService.taskSave1(taskInfoVO, realPath, uploadTaskPath, content, fileList, userInfo.getOffset(), tenantID);
 
 		logger.debug("taskSave1 ended");
 		

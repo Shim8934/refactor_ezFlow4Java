@@ -143,72 +143,85 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	@Override
-	public void taskSave1(TaskInfoVO taskInfoVO, String realPath, String userID, String offset, int tenantID) throws Exception {
+	public void taskSave1(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, int tenantID) throws Exception {
 		logger.debug("taskSave started.");
 		logger.debug("contentPath = " + taskInfoVO.getContentPath());
 		
 		String taskID = taskInfoVO.getTaskID();
-		String nowDate = commonUtil.getTodayUTCTime("");
 		
-		if (taskID.equals("")) {
-			/* write */
-			logger.debug("write");
-			String contentPath = "Doc" + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+		/* mht Save*/
+		String mhtFilePath = "";
+		if (taskInfoVO.getContentPath().equals("")) {
+			/* task Write */
+			String contentPath = "Doc" + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}.mht";
+			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
 			taskInfoVO.setContentPath(contentPath);
-			
-			insertTask();
 		} else {
-			/* edit */
-			logger.debug("edit");
-			
-			//db 파일 제거
-			//첨부파일 생성
-			//첨부파일 db 추가
-			
-			
+			/* task Edit */
+			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + taskInfoVO.getContentPath();
 		}
 		
-//		taskInfoVO.setOwnerID(doc.getElementsByTagName("OWNERID").item(0).getTextContent());
-//		taskInfoVO.setCreatorID(doc.getElementsByTagName("CREATORID").item(0).getTextContent());
-//		taskInfoVO.setCreatorName(doc.getElementsByTagName("CREATORNAME1").item(0).getTextContent());
-//		taskInfoVO.setCreatorName2(doc.getElementsByTagName("CREATORNAME2").item(0).getTextContent());
-//		taskInfoVO.setHasShare(doc.getElementsByTagName("HASSHARE").item(0).getTextContent());
-//		taskInfoVO.setHasAttach(doc.getElementsByTagName("HASATTACH").item(0).getTextContent());
-//		taskInfoVO.setTaskStatus(Integer.parseInt(doc.getElementsByTagName("TASKSTATUS").item(0).getTextContent()));
-//		taskInfoVO.setImportance(Integer.parseInt(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
-//		taskInfoVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-//		taskInfoVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-//		taskInfoVO.setTitle(commonUtil.cleanValue(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
-//		taskInfoVO.setContentPath("Doc" + commonUtil.separator + "{" + newGuid + "}" + ".mht");
-//		taskInfoVO.setTaskType(doc.getElementsByTagName("TASKTYPE").item(0).getTextContent());
-//		taskInfoVO.setUpdateTime(commonUtil.getTodayUTCTime(""));
-//		taskInfoVO.setNewAnswer("N");
-//		taskInfoVO.setNewRefer("N");
-//		taskInfoVO.setTenantID(userInfo.getTenantId());
-//
-		//이쪽 필요업음
-//		if (taskInfoVO.getTaskType().equals("1")) { // 업무구분 : 개인
-//			taskInfoVO.setPersonID(doc.getElementsByTagName("PERSONID").item(0).getTextContent());
-//			taskInfoVO.setPersonName(doc.getElementsByTagName("PERSONNAME1").item(0).getTextContent());
-//			taskInfoVO.setPersonName2(doc.getElementsByTagName("PERSONNAME2").item(0).getTextContent());
-//			taskInfoVO.setPersonDeptName(doc.getElementsByTagName("PERSONDEPTNAME1").item(0).getTextContent());
-//			taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("PERSONDEPTNAME2").item(0).getTextContent());
-//
-//			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("PERSONID").item(0).getTextContent());
-//			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("PERSONNAME1").item(0).getTextContent());
-//			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("PERSONNAME2").item(0).getTextContent());
-//		} else { // 업무구분 : 지시, 협조
-//			taskInfoVO.setPersonID(doc.getElementsByTagName("TASKPERSONID").item(0).getTextContent());
-//			taskInfoVO.setPersonName(doc.getElementsByTagName("TASKPERSONNAME1").item(0).getTextContent());
-//			taskInfoVO.setPersonName2(doc.getElementsByTagName("TASKPERSONNAME2").item(0).getTextContent());
-//			taskInfoVO.setPersonDeptName(doc.getElementsByTagName("TASKPERSONDEPTNAME1").item(0).getTextContent());
-//			taskInfoVO.setPersonDeptName2(doc.getElementsByTagName("TASKPERSONDEPTNAME2").item(0).getTextContent());
-//			
-//			taskInfoVO.setTaskPersonID(doc.getElementsByTagName("TASKPERSONID").item(0).getTextContent());
-//			taskInfoVO.setTaskPersonName(doc.getElementsByTagName("TASKPERSONNAME1").item(0).getTextContent());
-//			taskInfoVO.setTaskPersonName2(doc.getElementsByTagName("TASKPERSONNAME2").item(0).getTextContent());			
-//		}
-//
+		File docFolder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
+		if (!docFolder.exists()) {
+			docFolder.mkdirs();
+		}
+		
+		PrintWriter pw = null;
+		
+		try {
+			pw = new PrintWriter(new File(mhtFilePath));
+			pw.println(content);
+			pw.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pw.close();
+		}
+		
+		if (taskID.equals("")) {
+			/* task write */
+			taskID = insertTask(taskInfoVO, offset, tenantID);
+			
+		} else {
+			/* task edit */
+			updateTask(taskInfoVO, offset, tenantID);
+			
+			//db 파일 제거
+		}
+		
+		if (taskInfoVO.getHasAttach().equals("Y")) {
+			Map<String, Object> attachMap = new HashMap<String, Object>();
+			String pDirPath = realPath + uploadTaskPath + commonUtil.separator;
+			File uploadFileFolder = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID);
+			
+			if (!uploadFileFolder.exists()) {
+				uploadFileFolder.mkdirs();
+			}
+			
+			attachMap.put("taskID", taskID);
+			attachMap.put("taskType", taskInfoVO.getTaskType());
+			attachMap.put("tenantID", tenantID);
+			
+			for(String fileStr : fileList.split(",")) {
+				String[] file = fileStr.split(";");
+				String filePath = file[0];
+				String fileName = file[1];
+				String fileSize = file[2];
+				
+				//temp쪽 있는거 uploadFile/taskID/   move
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", uploadFileFolder + commonUtil.separator + fileName);
+				
+				//insertTaskAttach 참고
+				
+				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + filePath + ";" + fileName;
+				
+				fileMove(beforePath, afterPath);
+			}
+		}
+		
 //		int shareLength = Integer.parseInt(doc.getElementsByTagName("SHARELENGTH").item(0).getTextContent());
 //		String fileList = "";
 //		
@@ -246,81 +259,144 @@ public class EzTaskServiceImpl implements EzTaskService{
 //				ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert				
 //			}
 //		}
-//		
-//		PrintWriter pw = null;
-//
-//		String mhtPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + "Doc" + commonUtil.separator + "{" + newGuid + "}" + ".mht";
-//		File folderDir = new File(realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator + "Doc");
-//
-//		logger.debug("mhtPath : " + mhtPath + " | folderDirIsExist : " + folderDir.exists());
-//		
-//        if (!folderDir.exists()) {
-//        	folderDir.mkdir();
-//        }
-//
-//		try {
-//			pw = new PrintWriter(new File(mhtPath));
-//			pw.print(commonUtil.cleanValue(doc.getElementsByTagName("CONTENT").item(0).getTextContent()));
-//			pw.flush();
-//			pw.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		// 첨부파일 저장
-//		Map<String, Object> attachMap = new HashMap<String, Object>();
-//
-//		if (fileList != null && !fileList.equals("")) {
-//			String pDirPath = realPath + commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-//
-//			File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID + "_uploadFile");
-//
-//			if (!file.exists()) {
-//	        	file.mkdir();
-//	        }
-//
-//			int fileLength = fileList.split(",").length;
-//			String[] fileLists = fileList.split(",");
-//
-//			attachMap.put("taskID", taskID);
-//			attachMap.put("taskType", taskInfoVO.getTaskType());
-//			attachMap.put("tenantID", userInfo.getTenantId());
-//
-//			for (int j=0; j<fileLength; j++) {
-//				String[] files = fileLists[j].split(";");
-//				String filePath = files[0];
-//				String fileName = files[1];
-//				String fileSize = files[2];
-//
-//				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
-//
-//				String uploadFilePath = commonUtil.separator + taskID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-//				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-//				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-//
-//				attachMap.put("fileName", fileName);
-//				attachMap.put("fileSize", fileSize);
-//				attachMap.put("filePath", uploadFilePath);
-//				
-//				logger.debug("uploadFilePath : " + uploadFilePath);
-//				
-//				ezTaskDAO.insertTaskAttach(attachMap);
-//
-//				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
-//			}
-//		}
 		
 		logger.debug("taskSave ended.");
 	}
 	
 	/** 업무작성 */
-	private void insertTask() throws Exception {
+	private String insertTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
+		logger.debug("insertTask started.");
 		
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parentID", 0);
+		map.put("ownerID", vo.getOwnerID());
+		map.put("creatorID", vo.getCreatorID());
+		map.put("creatorName", vo.getCreatorName());
+		map.put("creatorName2", vo.getCreatorName2());
+		map.put("nowDate", nowDate);
+		map.put("taskStatus", vo.getTaskStatus());
+		map.put("completeRate", 0);
+		map.put("completeDate", "");
+		map.put("importance", vo.getImportance());
+		map.put("hasShare", vo.getHasShare());
+		map.put("hasAttach", vo.getHasAttach());
+		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
+		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
+		map.put("title", vo.getTitle());
+		map.put("contentPath", vo.getContentPath());
+		map.put("taskType", vo.getTaskType());
+		map.put("personID", vo.getPersonID());
+		map.put("personName", vo.getPersonName());
+		map.put("personName2", vo.getPersonName2());
+		map.put("personDeptName", vo.getPersonDeptName());
+		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("tenantID", tenantID);
+		
+		String taskID = ezTaskDAO.insertTask(map);
+		vo.setTaskID(taskID);
+		
+		if (vo.getHasShare().equals("Y")) {
+			//쉐어리스트 왜 널이냐
+			for (TaskShareVO shareVO : vo.getShareList()) {
+				insertTaskShare(vo, shareVO, nowDate, offset, tenantID);
+			}
+		}
+		
+		logger.debug("insertTask ended.");
+		
+		return "";
 	}
 	
 	/** 업무수정 */
-	private void updateTask() throws Exception {
+	private void updateTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
+		logger.debug("updateTask started.");
 		
+		String nowDate = commonUtil.getTodayUTCTime("");
+		
+		String taskID = vo.getTaskID();
+		/*vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
+		vo.setEndDate(commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));*/
+		
+//		String taskID = ezTaskDAO.taskSave1(vo);
+//		ezTaskDAO.updateTask();
+		
+		deleteTaskShare(taskID, tenantID);
+		
+		if (vo.getHasShare().equals("Y")) {
+			for (TaskShareVO shareVO : vo.getShareList()) {
+				insertTaskShare(vo, shareVO, nowDate, offset, tenantID);
+			}
+		}
+
+		
+		//tbl_taskShare 공유자 
+		//tbl_task 공유자
+		
+		//첨부파일삭제
+		
+		
+		
+		logger.debug("updateTask ended.");
+	}
+	
+	/* 공유자 추가 */
+	private void insertTaskShare(TaskInfoVO vo, TaskShareVO shareVO, String nowDate, String offset, int tenantID) throws Exception {
+		logger.debug("insertTaskShare started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", vo.getTaskID());
+		map.put("sharerID", shareVO.getSharerID());
+		map.put("sharerName", shareVO.getSharerName());
+		map.put("sharerName2", shareVO.getSharerName2());
+		map.put("sharerDaptName", shareVO.getSharerDeptName());
+		map.put("sharerDeptName2", shareVO.getSharerDeptName2());
+		
+		map.put("parentID", vo.getTaskID());
+		map.put("ownerID", vo.getOwnerID());
+		map.put("creatorID", vo.getCreatorID());
+		map.put("creatorName", vo.getCreatorName());
+		map.put("creatorName2", vo.getCreatorName2());
+		map.put("nowDate", nowDate);
+		map.put("taskStatus", vo.getTaskStatus());
+		map.put("completeRate", 0);
+		map.put("completeDate", "");
+		map.put("importance", vo.getImportance());
+		map.put("hasShare", vo.getHasShare());
+		map.put("hasAttach", vo.getHasAttach());
+		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
+		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
+		map.put("title", vo.getTitle());
+		map.put("contentPath", vo.getContentPath());
+		map.put("taskType", vo.getTaskType());
+		map.put("personID", vo.getPersonID());
+		map.put("personName", vo.getPersonName());
+		map.put("personName2", vo.getPersonName2());
+		map.put("personDeptName", vo.getPersonDeptName());
+		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("insertType", "share");
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.insertTaskShare(map);
+		ezTaskDAO.insertTask(map);
+		
+		logger.debug("insertTaskShare ended.");
+	}
+	
+	/* 공유자 삭제 */
+	private void deleteTaskShare(String taskID, int tenantID) throws Exception {
+		logger.debug("deleteTaskShare started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("deleteType", "parent");
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.taskDelete(map);
+		ezTaskDAO.taskDeleteShare(map);
+		
+		logger.debug("deleteTaskShare ended.");
 	}
 	
 	@Override
@@ -330,11 +406,11 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		String filePath = "";
 		if (contentPath.equals("")) {
-			/* 초기 */
-			filePath = realPath + uploadTaskPath + commonUtil.separator + "Doc" + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}.mht";
-			contentPath = "Doc" + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}.mht";
+			/* taskWork Write */
+			filePath = realPath + uploadTaskPath + commonUtil.separator + "Doc" + commonUtil.separator + UUID.randomUUID().toString() + ".mht";
+			contentPath = "Doc" + commonUtil.separator + UUID.randomUUID().toString() + ".mht";
 		} else {
-			/* 수정 */
+			/* taskWork Edit */
 			filePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
 		}
 		
@@ -497,6 +573,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 			taskInfoVO.setPersonDeptName2(shareDeptName2);
 
 			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 공유자 Insert
+			/* 이런처리는 조직도스크립트에서 다 되있는것 같은데 빼먹고 안가져와서 여기서 처리하는거 같음*/
 			if (!shareID.equals(userInfo.getId())) {
 				ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert				
 			}
@@ -666,6 +743,8 @@ public class EzTaskServiceImpl implements EzTaskService{
 				logger.debug("mhtFile Delete Success");
 			}
 
+			map.put("deleteType", "all");
+			
 			ezTaskDAO.taskDelete(map);
 			ezTaskDAO.taskDeleteShare(map);
 			ezTaskDAO.taskDeleteAttach(map);

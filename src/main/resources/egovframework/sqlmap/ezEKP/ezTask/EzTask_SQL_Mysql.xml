@@ -86,6 +86,127 @@
 		]]>
 	</select>
 	
+	<insert id="EzTaskDAO.insertTask" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASK
+				(parentid,
+				ownerid,
+				creatorid,
+				creatorname,
+				creatorname2,
+				createdate,
+				taskstatus,
+				completerate,
+				completedate,
+				importance,
+				hasshare,
+				hasattach,
+				startdate,
+				enddate,
+				title,
+				contentpath,
+				tasktype,
+				updatetime,
+				personid,
+				personname,
+				personname2,
+				persondeptname,
+				persondeptname2,
+				taskpersonid,
+				taskpersonname,
+				taskpersonname2,
+				tenantid)
+			VALUES
+		]]>
+		
+		<isNull property="insertType">
+			<![CDATA[
+				(0,
+				#ownerID#,
+				#creatorID#,
+				#creatorName#,
+				#creatorName2#,
+				#nowDate#,
+				#taskStatus#,
+				0,
+				'',
+				#importance#,
+				#hasShare#,
+				#hasAttach#,
+				#startDate#,
+				#endDate#,
+				#title#,
+				#contentPath#,
+				#taskType#,
+				#nowDate#,
+				#personID#,
+				#personName#,
+				#personName2#,
+				#personDeptName#,
+				#personDeptName2#,
+				#personID#,
+				#personName#,
+				#personName2#,
+				#tenantID#)
+			]]>
+		</isNull>
+		
+		<isNotNull property="insertType">
+			<![CDATA[
+				(#parentID#,
+				#sharerID#,
+				#creatorID#,
+				#creatorName#,
+				#creatorName2#,
+				#nowDate#,
+				#taskStatus#,
+				0,
+				'',
+				#importance#,
+				#hasShare#,
+				#hasAttach#,
+				#startDate#,
+				#endDate#,
+				#title#,
+				#contentPath#,
+				#taskType#,
+				#nowDate#,
+				#sharerID#,
+				#sharerName#,
+				#sharerName2#,
+				#sharerDeptName#,
+				#sharerDeptName2#,
+				#personID#,
+				#personName#,
+				#personName2#,
+				#tenantID#)
+			]]>
+		</isNotNull>
+        
+		<selectKey keyProperty="taskID" resultClass="String">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+    </insert>
+    
+    <insert id="EzTaskDAO.insertTaskShare" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_TASKSHARE
+				(taskid,
+				sharerid,
+				sharername,
+				sharername2,
+				sharerdeptname,
+				sharerdeptname2,
+				hasmemo,
+				hasattach,
+				updatetime,
+				neworder,
+				tenantid)
+			VALUES
+				(#taskID#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, '', #hasAttach#, #nowDate#, 'Y', #tenantID#)
+        ]]>
+    </insert>
+	
 	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
 		<isEqual property="hasComment" compareValue="Y">
 			<![CDATA[
@@ -361,15 +482,33 @@
         ]]>
     </update>
     
-    <delete id="EzTaskDAO.taskDelete" parameterClass="map">
-	  	<![CDATA[
+	<delete id="EzTaskDAO.taskDelete" parameterClass="map">
+		<![CDATA[
 			DELETE FROM
 				TBL_TASK
 			WHERE
+		]]>
+		
+		<isEqual property="deleteType" compareValue="all">
+			<![CDATA[
 				taskid = #taskID# or parentid = #taskID#
+			]]>
+		</isEqual>
+		<isEqual property="deleteType" compareValue="task">
+			<![CDATA[
+				taskid = #taskID#
+			]]>
+		</isEqual>
+		<isEqual property="deleteType" compareValue="parent">
+			<![CDATA[
+				parentid = #taskID#
+			]]>
+		</isEqual>
+		
+		<![CDATA[
 			AND
 				tenantid = #tenantID#
-	    ]]>
+		]]>
 	</delete>
 
 	<delete id="EzTaskDAO.taskDeleteShare" parameterClass="map">

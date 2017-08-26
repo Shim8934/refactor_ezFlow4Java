@@ -672,34 +672,28 @@ function save_task1() {
     	return;
     }
 
-    var xmlDom = createXmlDom();
-    var xmlHTTP = createXMLHttpRequest();
-    var objRoot, objNode, attachnode, shobjnode;
-    objNode = createNodeInsert(xmlDom, objNode, "DATA");
-
-    var Doc_ContentHtml = document.createElement("DIV");
-    var strBody = message.GetEditorContent();
-
-    Doc_ContentHtml.innerHTML = strBody;
-
-    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-    
     if (taskid == "") {
     	contentPath = "";
     }
     
     var shareList = new Array();
     
-    var sharelist = createNodeAndAppandNode(xmlDom, objNode, sharelist, "SHARELIST");
-
     if (hasshare == "Y") {
-    	shareUser = {};
+    	shareUser = new Array();
     	for (var i = 0; i < g_share["id"].length; i++) {
-    		shareUser[i].sharerID = g_share["id"][i];
+    		var share = {sharerID : g_share["id"][i],
+    				sharerName : g_share["name"][i],
+    	    		sharerName2 : g_share["name2"][i],
+    	    		sharerDeptName1 : g_share["deptname"][i],
+    	    		sharerDeptName2 : g_share["deptname2"][i]};
+    		
+    		shareUser.push(share);
+    		
+    		/*shareUser[i].sharerID = 
     		shareUser[i].sharerName = g_share["name"][i];
     		shareUser[i].sharerName2 = g_share["name2"][i];
     		shareUser[i].sharerDeptName1 = g_share["deptname"][i];
-    		shareUser[i].sharerDeptName2 = g_share["deptname2"][i];
+    		shareUser[i].sharerDeptName2 = g_share["deptname2"][i];*/
     	}
     }
 
@@ -721,21 +715,6 @@ function save_task1() {
         	return;
         }
     }
-
-  //파일 첨부된 목록 가져오기
-
-    /*xmlHTTP.open("POST", "/ezTask/taskSave.do", false);
-    xmlHTTP.send(xmlDom);
-
-    if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-    	alert("" + strLang13 + "");
-    } else {
-    	alert("" + strLang14 + "");
-
-        try { window.opener.RefreshView(); } catch (e) { }
-        parent.DivPopUpHidden();
-        window.close();
-    }*/
     
     var strBody = message.GetEditorContent();
     strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
@@ -766,7 +745,7 @@ function save_task1() {
 			taskID : taskid,
 			ownerID : userid,
 			creatorID : userid,
-			creatorName1 : username,
+			creatorName : username,
 			creatorName2 : username2,
 			personID : personID,
 	        personName : personName,
