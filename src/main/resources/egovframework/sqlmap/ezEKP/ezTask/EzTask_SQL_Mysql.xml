@@ -197,15 +197,52 @@
 				sharername2,
 				sharerdeptname,
 				sharerdeptname2,
-				hasmemo,
-				hasattach,
 				updatetime,
 				neworder,
 				tenantid)
 			VALUES
-				(#taskID#, #personID#, #personName#, #personName2#, #personDeptName#, #personDeptName2#, '', #hasAttach#, #nowDate#, 'Y', #tenantID#)
+				(#taskID#,
+				#sharerID#,
+				#sharerName#,
+				#sharerName2#,
+				#sharerDeptName#,
+				#sharerDeptName2#,
+				#nowDate#,
+				'Y',
+				#tenantID#)
         ]]>
     </insert>
+    
+    <update id="EzTaskDAO.updateTask" parameterClass="Map">
+    	<![CDATA[
+    		UPDATE
+    			TBL_TASK
+    		SET
+				taskstatus = #taskStatus#,
+				completerate = #completeRate#,
+				completedate = #completeDate#,
+				importance = #importance#,
+				hasshare = #hasShare#,
+				hasattach = #hasAttach#,
+				startdate = #startDate#,
+				enddate = #endDate#,
+				title = #title#,
+				tasktype = #taskType#,
+				updatetime = #nowDate#,
+				personid = #personID#,
+				personname = #personName#,
+				personname2 = #personName2#,
+				persondeptname = #personDeptName#,
+				persondeptname2 = #personDeptName2#,
+				taskpersonid = #personID#,
+				taskpersonname = #personName#,
+				taskpersonname2 = #personName2#
+    		WHERE
+    			tenantID = #tenantID#
+    		AND
+    			taskID = #taskID#
+    	]]>
+    </update>
 	
 	<update id="EzTaskDAO.updateHasComment" parameterClass="Map">
 		<isEqual property="hasComment" compareValue="Y">

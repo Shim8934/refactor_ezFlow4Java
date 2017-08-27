@@ -186,7 +186,8 @@ public class EzTaskServiceImpl implements EzTaskService{
 			/* task edit */
 			updateTask(taskInfoVO, offset, tenantID);
 			
-			//db 파일 제거
+//			task에 추가된 파일 전부 삭제
+//			deleteAttach(taskID, realPath, uploadTaskPath);
 		}
 		
 		if (taskInfoVO.getHasAttach().equals("Y")) {
@@ -208,12 +209,11 @@ public class EzTaskServiceImpl implements EzTaskService{
 				String fileName = file[1];
 				String fileSize = file[2];
 				
-				//temp쪽 있는거 uploadFile/taskID/   move
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
 				attachMap.put("filePath", uploadFileFolder + commonUtil.separator + fileName);
 				
-				//insertTaskAttach 참고
+				ezTaskDAO.insertTaskAttach(attachMap);
 				
 				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
 				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + filePath + ";" + fileName;
@@ -221,44 +221,6 @@ public class EzTaskServiceImpl implements EzTaskService{
 				fileMove(beforePath, afterPath);
 			}
 		}
-		
-//		int shareLength = Integer.parseInt(doc.getElementsByTagName("SHARELENGTH").item(0).getTextContent());
-//		String fileList = "";
-//		
-//		if (taskInfoVO.getHasAttach().equals("Y")) {
-//			fileList = doc.getElementsByTagName("FILELIST").item(0).getTextContent();			
-//		}
-//
-//		logger.debug("OwnerID : " + taskInfoVO.getOwnerID() + " | CreatorID : " + taskInfoVO.getCreatorID() + " | CreatorName : " + taskInfoVO.getCreatorName() + " | HasShare : " + taskInfoVO.getHasShare() + " | HasAttach : " + taskInfoVO.getHasAttach());
-//		logger.debug("TaskStatus : " + taskInfoVO.getTaskStatus() + " | Importance : " + taskInfoVO.getImportance() + "StartDate : " + taskInfoVO.getStartDate() + " | EndDate : " + taskInfoVO.getEndDate() + " | Title : " + taskInfoVO.getTitle());
-//		logger.debug("ContentPath : " + taskInfoVO.getContentPath() + " | TaskType : " + taskInfoVO.getTaskType() + " | FileList : " + fileList);
-//		logger.debug("PersonID : " + taskInfoVO.getPersonID() + " | PersonName : " + taskInfoVO.getPersonName() + " | TaskPersonID : " + taskInfoVO.getTaskPersonID() + " | TaskPersonName : " + taskInfoVO.getTaskPersonName());
-//
-//		String taskID = ezTaskDAO.taskSave(taskInfoVO); // taskID 받아옴
-//		
-//		logger.debug("taskID : " + taskID);
-//
-//		taskInfoVO.setTaskID(taskID);
-//		
-//		for (int i=0; i<shareLength; i++) {
-//			String shareID = doc.getElementsByTagName("SHAREID").item(i).getTextContent();
-//			String shareName1 = doc.getElementsByTagName("SHARENAME1").item(i).getTextContent();
-//			String shareName2 = doc.getElementsByTagName("SHARENAME2").item(i).getTextContent();
-//			String shareDeptName1 = doc.getElementsByTagName("SHAREDEPTNAME1").item(i).getTextContent();
-//			String shareDeptName2 = doc.getElementsByTagName("SHAREDEPTNAME2").item(i).getTextContent();
-//
-//			taskInfoVO.setOwnerID(shareID);
-//			taskInfoVO.setPersonID(shareID);
-//			taskInfoVO.setPersonName(shareName1);
-//			taskInfoVO.setPersonName2(shareName2);
-//			taskInfoVO.setPersonDeptName(shareDeptName1);
-//			taskInfoVO.setPersonDeptName2(shareDeptName2);
-//
-//			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 공유자 Insert
-//			if (!shareID.equals(userInfo.getId())) {
-//				ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert				
-//			}
-//		}
 		
 		logger.debug("taskSave ended.");
 	}
@@ -298,29 +260,44 @@ public class EzTaskServiceImpl implements EzTaskService{
 		vo.setTaskID(taskID);
 		
 		if (vo.getHasShare().equals("Y")) {
-			//쉐어리스트 왜 널이냐
 			for (TaskShareVO shareVO : vo.getShareList()) {
 				insertTaskShare(vo, shareVO, nowDate, offset, tenantID);
 			}
 		}
 		
-		logger.debug("insertTask ended.");
+		logger.debug("insertTask ended. taskID = " + taskID);
 		
-		return "";
+		return taskID;
 	}
 	
 	/** 업무수정 */
-	private void updateTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
+	private String updateTask(TaskInfoVO vo, String offset, int tenantID) throws Exception {
 		logger.debug("updateTask started.");
 		
+		String taskID = vo.getTaskID();
 		String nowDate = commonUtil.getTodayUTCTime("");
 		
-		String taskID = vo.getTaskID();
-		/*vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
-		vo.setEndDate(commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));*/
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("nowDate", nowDate);
+		map.put("taskStatus", vo.getTaskStatus());
+		map.put("completeRate", 0);
+		map.put("completeDate", "");
+		map.put("importance", vo.getImportance());
+		map.put("hasShare", vo.getHasShare());
+		map.put("hasAttach", vo.getHasAttach());
+		map.put("startDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
+		map.put("endDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
+		map.put("title", vo.getTitle());
+		map.put("taskType", vo.getTaskType());
+		map.put("personID", vo.getPersonID());
+		map.put("personName", vo.getPersonName());
+		map.put("personName2", vo.getPersonName2());
+		map.put("personDeptName", vo.getPersonDeptName());
+		map.put("personDeptName2", vo.getPersonDeptName2());
+		map.put("tenantID", tenantID);
 		
-//		String taskID = ezTaskDAO.taskSave1(vo);
-//		ezTaskDAO.updateTask();
+		ezTaskDAO.updateTask(map);
 		
 		deleteTaskShare(taskID, tenantID);
 		
@@ -329,28 +306,23 @@ public class EzTaskServiceImpl implements EzTaskService{
 				insertTaskShare(vo, shareVO, nowDate, offset, tenantID);
 			}
 		}
-
 		
-		//tbl_taskShare 공유자 
-		//tbl_task 공유자
+		logger.debug("updateTask ended. taskID = " + taskID);
 		
-		//첨부파일삭제
-		
-		
-		
-		logger.debug("updateTask ended.");
+		return taskID;
 	}
 	
 	/* 공유자 추가 */
 	private void insertTaskShare(TaskInfoVO vo, TaskShareVO shareVO, String nowDate, String offset, int tenantID) throws Exception {
 		logger.debug("insertTaskShare started.");
+		logger.debug("taskID = " + vo.getTaskID() + " || sharerID = " + shareVO.getSharerID() + " || sharerDeptName = " + shareVO.getSharerDeptName());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", vo.getTaskID());
 		map.put("sharerID", shareVO.getSharerID());
 		map.put("sharerName", shareVO.getSharerName());
 		map.put("sharerName2", shareVO.getSharerName2());
-		map.put("sharerDaptName", shareVO.getSharerDeptName());
+		map.put("sharerDeptName", shareVO.getSharerDeptName());
 		map.put("sharerDeptName2", shareVO.getSharerDeptName2());
 		
 		map.put("parentID", vo.getTaskID());
@@ -397,6 +369,10 @@ public class EzTaskServiceImpl implements EzTaskService{
 		ezTaskDAO.taskDeleteShare(map);
 		
 		logger.debug("deleteTaskShare ended.");
+	}
+	
+	private void deleteTaskAttach(String taskID, String realPath, String uploadTaskPath) throws Exception {
+		
 	}
 	
 	@Override

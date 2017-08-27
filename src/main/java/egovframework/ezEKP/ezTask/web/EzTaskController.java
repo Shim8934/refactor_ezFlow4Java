@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezTask.web;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -176,17 +177,60 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 지시사항 수정 Method
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezTask/taskSave1.do")
-	public String taskSave1(@CookieValue("loginCookie") String loginCookie, TaskInfoVO taskInfoVO, HttpServletRequest request, Model model) throws Exception {
+	public String taskSave1(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSave1 started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int tenantID = userInfo.getTenantId();
 		
 		String realPath = commonUtil.getRealPath(request);
-		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID); 
-		String content = request.getParameter("content");
-		String fileList = request.getParameter("fileList");
+		String uploadTaskPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID);
+		String content = param.get("content").toString();
+		String fileList = param.get("fileList").toString();
+		
+		TaskInfoVO taskInfoVO = new TaskInfoVO();
+		taskInfoVO.setTaskID(param.get("taskID").toString());
+		taskInfoVO.setOwnerID(param.get("ownerID").toString());
+		taskInfoVO.setCreatorID(param.get("creatorID").toString());
+		taskInfoVO.setCreatorName(param.get("creatorName").toString());
+		taskInfoVO.setCreatorName2(param.get("creatorName2").toString());
+		taskInfoVO.setPersonID(param.get("personID").toString());
+		taskInfoVO.setPersonName(param.get("personName").toString());
+		taskInfoVO.setPersonName2(param.get("personName2").toString());
+		taskInfoVO.setPersonDeptName(param.get("personDeptName").toString());
+		taskInfoVO.setPersonDeptName2(param.get("personDeptName2").toString());
+		taskInfoVO.setHasShare(param.get("hasShare").toString());
+		taskInfoVO.setTaskType(param.get("taskType").toString());
+		taskInfoVO.setTaskStatus(Integer.parseInt(param.get("taskStatus").toString()));
+		taskInfoVO.setCompleteRate(Integer.parseInt(param.get("completeRate").toString()));
+		taskInfoVO.setImportance(Integer.parseInt(param.get("importance").toString()));
+		taskInfoVO.setStartDate(param.get("startDate").toString());
+		taskInfoVO.setEndDate(param.get("endDate").toString());
+		taskInfoVO.setTitle(param.get("title").toString());
+		taskInfoVO.setHasAttach(param.get("hasAttach").toString());
+		taskInfoVO.setContentPath(param.get("contentPath").toString());
+		
+		List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("shareList");
+		List<TaskShareVO> shareList = new ArrayList<TaskShareVO>();
+		
+		for (Map<String, Object> map : list) {
+			TaskShareVO shareVO = new TaskShareVO();
+			logger.debug("sharerID = " + map.get("sharerID").toString());
+			logger.debug("sharerName = " + map.get("sharerName").toString());
+			logger.debug("sharerName2 = " + map.get("sharerName2").toString());
+			logger.debug("sharerDeptName = " + map.get("sharerDeptName").toString());
+			logger.debug("sharerDeptName2 = " + map.get("sharerDeptName2").toString());
+			shareVO.setSharerID(map.get("sharerID").toString());
+			shareVO.setSharerName(map.get("sharerName").toString());
+			shareVO.setSharerName2(map.get("sharerName2").toString() != null ? map.get("sharerName2").toString() : "");
+			shareVO.setSharerDeptName(map.get("sharerDeptName").toString());
+			shareVO.setSharerDeptName2(map.get("sharerDeptName2").toString() != null ? map.get("sharerDeptName2").toString() : "");
+			shareList.add(shareVO);
+		}
+		
+		taskInfoVO.setShareList(shareList);
 		
 		ezTaskService.taskSave1(taskInfoVO, realPath, uploadTaskPath, content, fileList, userInfo.getOffset(), tenantID);
 

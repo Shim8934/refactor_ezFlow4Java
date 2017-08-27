@@ -679,21 +679,13 @@ function save_task1() {
     var shareList = new Array();
     
     if (hasshare == "Y") {
-    	shareUser = new Array();
     	for (var i = 0; i < g_share["id"].length; i++) {
-    		var share = {sharerID : g_share["id"][i],
-    				sharerName : g_share["name"][i],
-    	    		sharerName2 : g_share["name2"][i],
-    	    		sharerDeptName1 : g_share["deptname"][i],
-    	    		sharerDeptName2 : g_share["deptname2"][i]};
-    		
-    		shareUser.push(share);
-    		
-    		/*shareUser[i].sharerID = 
-    		shareUser[i].sharerName = g_share["name"][i];
-    		shareUser[i].sharerName2 = g_share["name2"][i];
-    		shareUser[i].sharerDeptName1 = g_share["deptname"][i];
-    		shareUser[i].sharerDeptName2 = g_share["deptname2"][i];*/
+    		var share = {"sharerID" : g_share["id"][i],
+    				"sharerName" : g_share["name"][i],
+    	    		"sharerName2" : g_share["name2"][i],
+    	    		"sharerDeptName" : g_share["deptname"][i],
+    	    		"sharerDeptName2" : g_share["deptname2"][i]};
+    		shareList.push(share);
     	}
     }
 
@@ -737,11 +729,7 @@ function save_task1() {
 		hasattach = "N";
 	}
 	
-    $.ajax({
-    	type : "POST",
-		url : "/ezTask/taskSave1.do",
-		dataType : "json",
-		data : {
+	data = {
 			taskID : taskid,
 			ownerID : userid,
 			creatorID : userid,
@@ -765,7 +753,14 @@ function save_task1() {
 			hasAttach : hasattach,
 			fileList : fileList,
 			shareList : shareList
-		},
+		};
+	
+    $.ajax({
+    	type : "POST",
+		url : "/ezTask/taskSave1.do",
+		dataType : "json",
+		contentType: "application/json; charset=UTF-8",
+		data : JSON.stringify(data),
 		success : function(result) {
 			try {
 				window.opener.RefreshView();
