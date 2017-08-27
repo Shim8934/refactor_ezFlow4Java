@@ -244,7 +244,11 @@
 	                                Document_Ptag[i].style.marginBottom = "0px";
 	                            if (Document_Ptag[i].style.marginTop == "")
 	                                Document_Ptag[i].style.marginTop = "0px";
-	                            Document_Ptag[i].style.fontFamily = "Gulim";
+	                            if ("${userInfo.lang}" == "3") {
+	                            	Document_Ptag[i].style.fontFamily = "メイリオ";
+	                            } else {
+	                            	Document_Ptag[i].style.fontFamily = "Gulim";
+	                            }
 	                        }
 	                    }
 	                    
@@ -306,7 +310,7 @@
 	                        if (document.getElementById("body") != null) {
 	                            if (BODYTag.getAttribute("editor") == null) {
 	                                isEditor = true;
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "' frameborder='0'></ifrmae>";
+	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "&isused=${isused}' frameborder='0'></ifrmae>";
 	                            }
 	                            else {
 	                                try {

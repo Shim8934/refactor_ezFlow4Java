@@ -1380,11 +1380,11 @@
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
 		                
-		                tempSecurity = ret[7];
-		                tempUrgent = ret[8];
-		                pSummery = ret[9];
-		                tempSecurityDate = ret[14];
-		                pPublicityCode = ret[11];
+		                tempSecurity = ret[7];                // 보안등급 관련
+		                tempUrgent = ret[8];                  // 긴급 결재 여부
+		                pSummery = ret[9];                    // 요약 내용 관련
+		                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+		                pPublicityCode = ret[11];             // 공개여부 및 공개등급 관련 
 		                
 		                //tempPublic 추가
 		                if (ret[11].substring(0,1) == '1') {
@@ -1397,7 +1397,7 @@
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
-			                
+			                //문서 공개 범위 설정
 			                setPublicFlag();
 		                } else {
 		                	//회람
@@ -1564,7 +1564,7 @@
 		<iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

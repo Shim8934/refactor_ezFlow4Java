@@ -1331,6 +1331,10 @@ public class EzApprovalGarchiveController {
 		String fields =  xmlDom.getElementsByTagName("fields").item(0).getTextContent();
 		String result = ezApprovalGService.getDocInfo(docID, mode, fields, userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		logger.debug("<<<docID : " + docID);
+		logger.debug("<<<mode : " + mode);
+		logger.debug("<<<fields : " + fields);
+		
 		logger.debug("GetDocInfoMode ended");
 		
 		return result;

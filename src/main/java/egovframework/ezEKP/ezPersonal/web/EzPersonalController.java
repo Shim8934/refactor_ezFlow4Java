@@ -770,12 +770,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		SSL = req.getRequestURL().toString();
-		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		
-		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);

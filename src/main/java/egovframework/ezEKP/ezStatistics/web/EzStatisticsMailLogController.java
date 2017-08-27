@@ -17,6 +17,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,10 +172,10 @@ public class EzStatisticsMailLogController {
 			searchEndTime = searchEndTime.replaceAll("[^0-9]", "");
 		}
 
-		if (userInfo.getLang().equals(sysLang)) {
-			isPrimaryLang = userInfo.getLang();
-		} else { 
+		if (sysLang.equals(userInfo.getLang())) {
 			isPrimaryLang = sysLang;
+		} else { 
+			isPrimaryLang = userInfo.getLang();
 		}
 
 		Map<String, Object> resultMap = ezStatisticsAdminService.getMailLogList(tenantId, pageNo, String.valueOf(pageSize), 
@@ -282,41 +284,80 @@ public class EzStatisticsMailLogController {
 		
 		row = sheet.createRow(0);
 		
+		sheet.addMergedRegion(CellRangeAddress.valueOf("B1:D1"));
+		sheet.addMergedRegion(CellRangeAddress.valueOf("E1:F1"));
+		sheet.addMergedRegion(CellRangeAddress.valueOf("G1:G2"));
+		sheet.addMergedRegion(CellRangeAddress.valueOf("H1:H2"));
+		sheet.addMergedRegion(CellRangeAddress.valueOf("I1:I2"));
+		
+		// 상단
 		if (mailLogType.equals("sendAll")) {
-			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1051", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1052", locale)); 
+			
+			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1051", locale));
 			cell.setCellStyle(headerStyle);
-			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
+			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale));
 			cell.setCellStyle(headerStyle);
-			cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
+			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale));
 			cell.setCellStyle(headerStyle);
-			cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t83", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
-			cell.setCellStyle(headerStyle);
-		} else {
-			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1050", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1052", locale)); 
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(2);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(3);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale) + " " + egovMessageSource.getMessage("ezStatistics.t83", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1068", locale));
-			cell.setCellStyle(headerStyle);
-			cell = row.createCell(5);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale) + " " + egovMessageSource.getMessage("ezStatistics.t1055", locale));
-			cell.setCellStyle(headerStyle);
-		}
 			cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1056", locale));
 			cell.setCellStyle(headerStyle);
 			cell = row.createCell(7);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1057", locale));
 			cell.setCellStyle(headerStyle);
 			cell = row.createCell(8);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1058", locale));
 			cell.setCellStyle(headerStyle);
+
+			row = sheet.createRow(1);
+			
+			cell = row.createCell(0); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t214", locale)); // 시간
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(1); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); // 이름
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(2); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale)); // 이메일주소
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(3); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t83", locale)); // 부서명
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(4); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); // 이름
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(5); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale)); // 이메일주소
+			cell.setCellStyle(headerStyle);
+			
+		} else {
+			
+			cell = row.createCell(0);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1050", locale)); 
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(1);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1054", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(4);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1053", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(6);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1056", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(7);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1057", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(8);	cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1058", locale));
+			cell.setCellStyle(headerStyle);
+			
+			row = sheet.createRow(1);
+			
+			cell = row.createCell(0); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t214", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(1); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale)); 
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(2); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(3); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t83", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(4); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1068", locale));
+			cell.setCellStyle(headerStyle);
+			cell = row.createCell(5); cell.setCellValue(egovMessageSource.getMessage("ezStatistics.t1055", locale));
+			cell.setCellStyle(headerStyle);
+			
+		}
 		
-		for (int i = 1; i < totalCount + 1; i++) {
+		cell = row.createCell(6); cell.setCellStyle(headerStyle);
+		cell = row.createCell(7); cell.setCellStyle(headerStyle);
+		cell = row.createCell(8); cell.setCellStyle(headerStyle);
+		
+		for (int i = 2; i < totalCount + 1; i++) {
 			row = sheet.createRow(i);
 			row.setHeight((short)300);
 			
@@ -355,6 +396,11 @@ public class EzStatisticsMailLogController {
 			cell.setCellStyle(bodyStyle);
 			
 			sheet.autoSizeColumn(i-1);
+		}
+		
+		for (int i=0; i< 9; i++) {
+			sheet.autoSizeColumn(i);
+			sheet.setColumnWidth(i, sheet.getColumnWidth(i) + 1000);
 		}
 		
 		response.setCharacterEncoding("UTF-8");

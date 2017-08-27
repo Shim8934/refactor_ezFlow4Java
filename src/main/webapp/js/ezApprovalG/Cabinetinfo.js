@@ -385,6 +385,9 @@ function DelListRow(objListView) {
 
 var addvolume_cross_dialogArguments = new Array();
 var temppCabClassNo = "";
+/**
+ *  기록물철 권호수추가 함수
+ * */
 function NewVolume(pCabID, pCabClassNo) {
     var para = new Array();
     para[0] = pCabID;
@@ -582,7 +585,7 @@ function MyTaskSCateList_onclick()
     }
 }
 
-// 즐겨찾기 추가 
+// 기록물철 즐겨찾기 추가 
 function Set_MyTask(type) {
     var objList = new ListView();
     if (type == "INS") {

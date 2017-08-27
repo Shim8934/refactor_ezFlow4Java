@@ -518,11 +518,11 @@
 	</head>
 	<body class="popup">
 		<xml id="listviewheader" style ="display:none"></xml>
-	    <h1>Quick Link <spring:message code = 'ezPersonal.t105' /></h1>
+	    <h1>Quick Link <spring:message code = 'ezPersonal.t105' /><spring:message code = 'ezPersonal.t169' /></h1>
 	    <span style="color:red"><spring:message code = 'ezPersonal.t00008' /></span>
 	    <table class="content" style="height:300px;width:100%;">
 	        <tr>
-	            <th style="text-align:center"><spring:message code = 'ezPersonal.t304' /><span style="color:red">*</span></th>
+	            <th style="text-align:center"><spring:message code = 'ezPersonal.jjs03' /><span style="color:red">*</span></th>
 	            <td colspan="2">
 	                <table width="100%">
 	                	<c:choose>

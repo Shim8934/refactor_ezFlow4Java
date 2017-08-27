@@ -635,6 +635,11 @@ function CheckAprlineCC() {
         return 2;
 }
 
+/*
+ * 전자결재S인 경우 '전결'이 중간 단계에 들어갈 수 있기 때문에 
+ * 이 함수를 통해 나머지 뒤의 결재를 초기화 시킨다. 
+ * 전자결재G는 '전결'이 항상 마지막에 위치.
+ */
 function initJunGyul() {
     var pAPRLINE = new ListView();
     pAPRLINE.LoadFromID("lvAPRLINE");
@@ -649,7 +654,7 @@ function initJunGyul() {
         if (GetAttribute(pTotalRows[i], "DATA5") == "N") {
             for (var z = 0; z < pTotalRows[i].cells[4].childNodes[0].length; z++) {
                 var temprowvalue = getNodeText(pTotalRows[i].cells[4].childNodes[0].options[z]);
-
+                
                 if (pTotalRows[i].cells[4].childNodes[0].options[z].selected && temprowvalue == strLangAprType4) {
                     SetAttribute(pTotalRows[i], "DATA11", strAprType4);
                     for (var y = 0; y < i; y++) {
@@ -1107,6 +1112,10 @@ function AddDraftUserFirst() {
     return pparsingXML;
 }
 var aprlinecount = 0;
+/**
+ * 결재선 리스트 유저의 결재유형을 찾아주는 함수
+ * ex) 첫 번째 유저는 '기안'만 가능
+ */
 function ChangeAprlineType(CheckGPerson, CurrentAprType) {
     var ReturnValue = "";
     try {

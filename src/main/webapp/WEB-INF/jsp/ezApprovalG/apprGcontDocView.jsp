@@ -532,8 +532,10 @@
 		    
 		    //재사용 추가
 		    var getformcont_cross_dialogArguments = new Array();
-		    function btnReuse_onclick() {
-		        
+		    var editable = "";
+		    function btnReuse_onclick(type) {
+		    	editable = type;
+		    	
 		        if (true) {
 		            formURL = formUrl;
 		            formDocType = formDocType;
@@ -626,7 +628,7 @@
 
 		            openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 		            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=" + escape(pListTypeValue) + "&aprState=" + escape(pArgument[6]);
-		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
+		            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]) + "&isuesd=" +  editable;
 		        }
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;
@@ -648,7 +650,7 @@
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 
    				  <c:if test="${approvalFlag != 'G'}">
-		          <li id="btnReuse"><span onClick="return btnReuse_onclick()"><spring:message code='ezApprovalG.t990048'/></span></li>
+		          <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 		        </ul>
 		      </div>
@@ -679,7 +681,7 @@
 		</script>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

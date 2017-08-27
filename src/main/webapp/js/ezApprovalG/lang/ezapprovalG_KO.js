@@ -492,6 +492,7 @@ var strLang701 = "제3 특수목록"
 // ezCabinet\ViewCabInfo.js
 var strLang702 = "부가정보를 성공적으로 가져왔을 경우 첫째팁을클릭"
 var strLang703 = "기록물정보를 가져오는데 실패하였습니다!"
+var strLang704 = "해당없음"
 var strLang705 = "인수&nbsp;&nbsp;&nbsp;"
 var strLang706 = "정보보기"
 var strLang707 = "인계"
@@ -723,7 +724,7 @@ var strLangDocState24 = "배부";
 var strLangDocState31 = "반송";
 var strLangDocState32 = "회송";
 
-// AprType, FunctionType : 결재 형태A03
+// AprType, FunctionType : 결재 형태 A03
 var strAprType1 = "001";
 var strAprType2 = "002";
 var strAprType3 = "003";
