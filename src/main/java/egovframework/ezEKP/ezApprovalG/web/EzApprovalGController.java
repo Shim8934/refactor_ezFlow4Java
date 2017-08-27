@@ -514,8 +514,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         int tenantID = userInfo.getTenantId();        
-        logger.debug("docID = " + docID + " mode =" + mode + " tenantID=" + tenantID);       
-		
+        logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
+		// c=1 : 전체관리자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("c=1") == -1) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
 				if (docID != null && !docID.equals("")) {
@@ -528,6 +528,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						Document docXML = commonUtil.convertStringToDocument(docList);
 						
 						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+							// APRSTATE 002(진행) OR 005(보류)
 							if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005")) {
 								String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 								

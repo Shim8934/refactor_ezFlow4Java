@@ -17078,7 +17078,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_FORMID", formID);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
-		
+		// 진행중인 결재 리스트 추출
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
