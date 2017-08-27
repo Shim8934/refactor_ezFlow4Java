@@ -156,26 +156,37 @@ public class LoginController {
 		loginVO.setDn("NOPASSWORD");
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
+		// 사용자 ID & 사원번호 자체가 발견되지 않는 경우
 		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
+        // 사용자 ID 혹은 사원번호가 발견된 경우
 		} else {
+			// 사용자 ID를 사용해 로그인하는 경우
 			if (_uid.equals(resultVO.getId())) {
 				//User uses his/her username to login
 	        	loginVO.setId(_uid);
 	        	loginVO.setPassword(_pwd);
 	            loginVO.setDn("PASSWORD");
+	            
+	            // 암호가 맞는 지 확인한다.
 	            resultVO = loginService.selectUser(loginVO);
+	        // 사원번호를 사용해 로그인하는 경우
 			} else {
 				//Check if his/her tenant allows using employeeID to login				
 				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+				
+				// 사원번호를 사용한 로그인을 허용하는 경우
 				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
+					// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
 					_uid = resultVO.getId();
 					_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
 		        	loginVO.setId(_uid);
 		        	loginVO.setPassword(_pwd);
 		            loginVO.setDn("PASSWORD");
+		             
 		            resultVO = loginService.selectUser(loginVO);
+		         // 사원번호를 사용한 로그인을 허용하지 않는 경우
 				} else {
 					//This kind of login is not allowed in his/her tenant
 			        model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
@@ -184,12 +195,25 @@ public class LoginController {
 			}
 		}
 		
-		int numberOfLoginFailPermit = Integer.parseInt(ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId)); 
+		int numberOfLoginFailPermit = 0;
 		
+		// 로그인 실패 최대 허용 횟수를 구한다.
+		String maxAllowedCountOfLoginFail = ezCommonService.getTenantConfig("MaxAllowedCountOfLoginFail", tenantId);
+				
+		if (!maxAllowedCountOfLoginFail.equals("")) {
+			try {
+				numberOfLoginFailPermit = Integer.parseInt(maxAllowedCountOfLoginFail);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		// 사용자가 입력한 암호가 맞는 경우
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {  
         	//Check login state of the user
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
         	
+        	// 해당 사용자의 로그인이 블록되지 않은 경우
         	if (check != -3) {
 	        	//비밀번호 변경 팝업 상태 값 초기화
 	        	int diff = 1;
@@ -219,8 +243,12 @@ public class LoginController {
 		        	}	        	
 	        	}        	        	
 	        		        	
-	        	//Reset number of login fail attempts
-	        	commonUtil.resetLoginFailAttempts(_uid, tenantId);
+	        	// 로그인 실패 횟수를 제한하는 경우 
+	        	if (check != -1) {
+		        	// 성공적으로 로그인한 경우 지금까지의 로그인 실패 카운터를 초기화한다.
+		        	//Reset number of login fail attempts
+		        	commonUtil.resetLoginFailAttempts(_uid, tenantId);
+	        	}
 	        	
 				//0보다 작아지면 패스워드 변경기한 Expired
 				if (diff <= 0) {				
@@ -263,12 +291,14 @@ public class LoginController {
 		        	    return "redirect:/ezPortal/portalMain.do";
 		        	}
 				}
+			// 해당 사용자의 로그인이 블록된 경우
             } else {
         		//User has been blocked
     			//Show block message
             	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] {numberOfLoginFailPermit}, locale));
             	return "forward:/user/login/login.do";
         	}
+        // 사용자가 입력한 암호가 맞지 않는 경우
         } else {     	
         	//Check login state of the user 
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);        
@@ -485,13 +515,20 @@ public class LoginController {
         	return -1; 
         }
         
-    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");            
+    	String userLoginFailedAttempt = ezCommonService.getUserConfigInfo(tenantID, userId, "LoginFailCount");
         
         if (userLoginFailedAttempt.equals("")) {
         	//This is the first time this user failed to login        	
         	return -2; 
         } else {
-        	int currentNumber = Integer.parseInt(userLoginFailedAttempt);
+        	int currentNumber = 0;
+        	
+        	try {
+        		currentNumber = Integer.parseInt(userLoginFailedAttempt);
+        	// Exception이 발생하는 경우엔 LoginFailCount가 0인 경우로 처리한다.
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        	}
         	
         	if (currentNumber >= numberOfLoginFailPermit) {
         		//User has been blocked        		
