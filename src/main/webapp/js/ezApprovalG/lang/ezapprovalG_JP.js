@@ -492,6 +492,7 @@ var strLang701 = "제3 특수목록"
 // ezCabinet\ViewCabInfo.js
 var strLang702 = "부가정보를 성공적으로 가져왔을 경우 첫째팁을클릭"
 var strLang703 = "기록물정보를 가져오는데 실패하였습니다!"
+var strLang704 = "해당없음"
 var strLang705 = "인수&nbsp;&nbsp;&nbsp;"
 var strLang706 = "정보보기"
 var strLang707 = "인계"
@@ -648,7 +649,7 @@ var strLang940 = "前へ"
 var strLang941 = "次へ"
 var strLang942 = "総 "
 var strLang943 = "件"
-var strLang944 = "データが存在しません。";
+var strLang944 = "検索結果がありません。";
 var strLang945 = "起案者は削除することができません。"
 // TreeViewCtrl.js
 var strLang1001 ="選択した項目がないです。文書だけ印刷しますか?";

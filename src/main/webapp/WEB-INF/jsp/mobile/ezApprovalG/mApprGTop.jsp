@@ -11,7 +11,21 @@
 	</head>
 	<body>
 		<header data-role="header" data-position="fixed">
-			<h1>결재할문서</h1>
+			<c:if test="${type == 'DO'}">
+				<h1>결재할문서</h1>
+			</c:if>
+			<c:if test="${type == 'END'}">
+				<h1>결재한문서</h1>
+			</c:if>
+			<c:if test="${type == 'ING'}">
+				<h1>결재진행문서</h1>
+			</c:if>
+			<c:if test="${type == 'DRAFT'}">
+				<h1>기안한문서</h1>
+			</c:if>
+			<c:if test="${type == ''}">
+				<h1>결재할문서</h1>
+			</c:if>
 			<a class="ui-btn ui-icon-bars ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#menu-panel">menu</a>
 			<a class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-notext ui-btn-b ui-btn-inline" href="#option-panel">option</a>
 			<ul style="background-color: white;color:black">
@@ -39,11 +53,10 @@
 	    	<div style="font-size:16px"><b>메뉴선택</b></div>		    	
 	        <ul data-role="listview" style="margin-top:10px">
 	        	<li data-icon="carat-r"><a href="javascript:goHome();"><i class="fa fa-home" style="font-size:18px"></i>&nbsp;&nbsp;홈</a></li>
-                <li data-icon="carat-r"><a href="javascript:goMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;받은편지함</a></li>
-                <li data-icon="carat-r"><a href="javascript:goSendMail();"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;보낸편지함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;임시보관함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;지운편지함</a></li>
-                <li data-icon="carat-r"><a href="#panel-fixed-page2"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;개인편지함</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('DO');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;결재할문서</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('ING');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;결재진행문서</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('DRAFT');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;기안한문서</a></li>
+                <li data-icon="carat-r"><a href="javascript:goApproveList('END');"><i class="fa fa-envelope-o" style="font-size:15px"></i>&nbsp;&nbsp;결재한문서</a></li>
 	        </ul>
 	        <div style="margin-top:45px">
 	        	<a type="button" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-delete ui-btn-b" data-rel="close">CLOSE MENU</a>

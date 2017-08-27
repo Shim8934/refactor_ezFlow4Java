@@ -1,6 +1,8 @@
 package egovframework.ezMobile.ezSchedule.service;
 
 import java.util.List;
+import java.util.Locale;
+
 import org.json.simple.JSONObject;
 
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -9,7 +11,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 
 public interface MScheduleService {
 
-	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception;
+	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception;
 
 	public void deleteSchedule(String scheduleId, int tenantId) throws Exception;
 

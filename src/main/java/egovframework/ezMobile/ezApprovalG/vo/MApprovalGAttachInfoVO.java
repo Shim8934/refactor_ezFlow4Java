@@ -6,7 +6,7 @@ public class MApprovalGAttachInfoVO {
 	/** 첨부파일 이름*/
 	private String attachName;
 	/** 첨부파일 사이즈*/
-	private String attachFileSize;
+	private int attachFileSize;
 	
 	public String getAttachHref() {
 		return attachHref;
@@ -20,10 +20,10 @@ public class MApprovalGAttachInfoVO {
 	public void setAttachName(String attachName) {
 		this.attachName = attachName;
 	}
-	public String getAttachFileSize() {
+	public int getAttachFileSize() {
 		return attachFileSize;
 	}
-	public void setAttachFileSize(String attachFileSize) {
+	public void setAttachFileSize(int attachFileSize) {
 		this.attachFileSize = attachFileSize;
 	}
 }

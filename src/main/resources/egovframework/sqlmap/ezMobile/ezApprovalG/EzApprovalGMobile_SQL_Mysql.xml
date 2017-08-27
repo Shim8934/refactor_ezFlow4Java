@@ -17,8 +17,9 @@
 					DOCID,
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-					WRITERNAME$lang$,
-					WRITERDEPTNAME$lang$
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -31,6 +32,8 @@
 	   				APRMEMBERID IN ($id$) 
 	   			AND 
 	   				APRTYPE <> '015' 
+	   			AND
+	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
@@ -48,10 +51,11 @@
 					DOCID,
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-					WRITERNAME$lang$,
-					WRITERDEPTNAME$lang$
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
@@ -83,18 +87,17 @@
 					DOCID,
 					DOCTITLE,
 					DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-					WRITERNAME$lang$,
-					WRITERDEPTNAME$lang$
+					WRITERNAME$lang$ WRITERNAME,
+					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+					HASATTACHYN
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
 	   				COMPANYID = #companyID#
 	   			AND
 	   				STARTDATE < #lastDate#
-	   			AND 
-		         	APRMEMBERSN = 1 
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
@@ -119,8 +122,9 @@
 				DISTINCT A.DOCID,
 				A.DOCTITLE,
 				DATE_ADD(DATE_FORMAT(A.ENDDATE,'%Y-%m-%d %H:%i'), INTERVAL #offset# MINUTE) STARTDATE,
-				A.WRITERNAME$lang$,
-				A.WRITERDEPTNAME$lang$
+				A.WRITERNAME$lang$ WRITERNAME,
+				A.WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+				A.HASATTACHYN
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -195,7 +199,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer">
+	<select id="MApprovalG.getDoApproveListCount" parameterClass="Map" resultClass="Integer" remapResults="true">
 		<isEqual property="type" compareValue="DO">
 			<![CDATA[
 				SELECT 
@@ -209,7 +213,11 @@
 	   			AND 
 	   				APRMEMBERID IN ($id$) 
 	   			AND 
+	   				STARTDATE < #nowDate#
+	   			AND
 	   				APRTYPE <> '015' 
+	   			AND
+	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
@@ -222,7 +230,7 @@
 				SELECT 
 					COUNT(*)
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
@@ -232,6 +240,8 @@
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
+	   				STARTDATE < #nowDate#
+	   			AND
 	   				APRTYPE <> '015'
 	   			AND 
 		         	DocState <> '017'
@@ -247,20 +257,22 @@
 				SELECT 
 					COUNT(*)
 				FROM 
-					VAPRDOINGDOCLIST 
+					VAPRWILLDOCLIST 
 	   			WHERE
 	   				TENANT_ID = #tenantID#
 	   			AND
 	   				COMPANYID = #companyID#
-	   			AND 
-		         	APRMEMBERSN = 1 
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
+	   				STARTDATE < #nowDate#
+	   			AND
 	   				APRTYPE <> '015'
-	   			AND 
-		         	DocState <> '017'
 			]]>
+			<isEqual property="mainViewYN" compareValue="YES">
+				AND	    
+					AprState != '001'
+		    </isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
 					OR 
@@ -283,7 +295,7 @@
 			INNER JOIN
 				TBL_EXPENDAPRDOCINFO C
 			ON
-		   		A.DOCID = B.DOCID
+		   		A.DOCID = C.DOCID
 		   	AND
 		   		A.TENANT_ID = C.TENANT_ID
 		   	AND
@@ -321,6 +333,8 @@
 	   				A.COMPANYID = #companyID#
 	   			AND
 	   				C.DELFLAG IS NULL
+	   			AND
+	   				A.ENDDATE < #nowDate#
 	   			AND
 	   				B.APRMEMBERID = #userId# 
 			]]>
@@ -408,6 +422,8 @@
    				COMPANYID = #companyID#
    			AND
    				DOCID = #docID#
+   			LIMIT
+   				1
 		]]>
 	</select>
 	
@@ -553,12 +569,129 @@
 			FROM
 				TBL_USERMASTER
 			WHERE
-				TENANT_ID = #tenantId#
+				TENANT_ID = #tenantID#
 			AND
-				cn = #userId#
+				cn = #userID#
 			AND
 				password = #password#
 		]]>
+	</select>
+	
+	<select id="MApprovalG.getAprDocInfo" parameterClass="Map" resultClass="MApprGDocInfoVO">
+		<isEqual property="type" compareValue="DO">
+			<![CDATA[
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+					CASE 
+	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+	   					ELSE WRITERNAME$lang$
+	   				END WRITERNAME,
+	   				CASE 
+	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+	   					ELSE WRITERDEPTNAME$lang$
+	   				END WRITERDEPTNAME,
+	   				CASE 
+	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+	   					ELSE WRITERJOBTITLE$lang$
+	   				END WRITERJOBTITLE
+				FROM
+					VAPRDOINGDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				LIMIT
+					1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="ING">
+			<![CDATA[
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+					CASE 
+	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+	   					ELSE WRITERNAME$lang$
+	   				END WRITERNAME,
+	   				CASE 
+	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+	   					ELSE WRITERDEPTNAME$lang$
+	   				END WRITERDEPTNAME,
+	   				CASE 
+	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+	   					ELSE WRITERJOBTITLE$lang$
+	   				END WRITERJOBTITLE
+				FROM
+					VAPRWILLDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				LIMIT
+					1
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="DRAFT">
+			<![CDATA[
+				SELECT
+					DOCID,
+					ORGDOCID,
+					FORMID,
+					HREF,
+					HASATTACHYN,
+					APRMEMBERID,
+					APRMEMBERNAME,
+					APRMEMBERNAME2,
+					APRMEMBERDEPTID,
+					DOCSTATE,
+					DOCTITLE,
+					CASE 
+	   					WHEN (WRITERNAME$lang$ = '' OR WRITERNAME$lang$ IS NULL) THEN WRITERNAME
+	   					ELSE WRITERNAME$lang$
+	   				END WRITERNAME,
+	   				CASE 
+	   					WHEN (WRITERDEPTNAME$lang$ = '' OR WRITERDEPTNAME$lang$ IS NULL) THEN WRITERDEPTNAME
+	   					ELSE WRITERDEPTNAME$lang$
+	   				END WRITERDEPTNAME,
+	   				CASE 
+	   					WHEN (WRITERJOBTITLE$lang$ = '' OR WRITERJOBTITLE$lang$ IS NULL) THEN WRITERJOBTITLE
+	   					ELSE WRITERJOBTITLE$lang$
+	   				END WRITERJOBTITLE
+				FROM
+					VAPRWILLDOCLIST
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+				LIMIT
+					1
+			]]>
+		</isEqual>
 	</select>
 	
 	<insert id="MApprovalG.insertOpinionInfo" parameterClass="Map">

@@ -20,8 +20,8 @@
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>	
 		<script type="text/javascript">
 			$(document).ready(function() {
-				getApproveList("DO");
-				getApproveListCount("DO");
+				getApproveList("${type}");
+				getApproveListCount("${type}");
 	
 				$.searchApprove = function() {
 					alert("Search!");

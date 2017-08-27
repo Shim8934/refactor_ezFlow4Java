@@ -1,4 +1,9 @@
-﻿function DocMove() {
+﻿/**
+ * [문서첨부]->문서 선택 후 더블클릭or화살표
+ * 선택한 '결재완료문서'의 이동
+ * 리스트->선택리스트
+ * */
+function DocMove() {
     var selRow;
     var count1, pCount;
     var length, SDocID, strAttachList;
@@ -15,7 +20,7 @@
     if (DocList.GetDataRows()[0].textContent != strLang944) {
 	    if (SelDocList.GetDataRows().length == 1){
 	        if (SelDocList.GetDataRows()[0].id == "lvTDocLV_TR_noItems") {
-	            SelDocList.DeleteRow("lvTDocLV_TR_noItems");
+	            SelDocList.DeleteRow("lvTDocLV_TR_noItems"); // [데이터가 없습니다.] ROW 삭제
 	        }
 	    }
     }
@@ -42,6 +47,7 @@
                     OpenAlertUI(strLang258);
                 }
                 else {
+                	// 선택된 문서들의 리스트로 넘기기 위한 XML 생성
                     var GetXml = "<LISTVIEWDATA>";
                     GetXml += "<HEADERS><HEADER><NAME>" + strLang940 + "</NAME><WIDTH>50</WIDTH></HEADER></HEADERS>"
                     GetXml += "<ROWS><ROW><CELL>"
@@ -75,7 +81,7 @@
                             MaxID = curnum;
                     }
                     var objTr = SelDocList.NewAddRow(RowCount, "lvTDocLV" + "_TR_" + eval(MaxID + 1));//InitTr.length			  
-                    SelDocList.AddDataRow(objTr, Resultxml);
+                    SelDocList.AddDataRow(objTr, Resultxml); // 우측 리스트에 추가
 
                 }
             }
@@ -332,6 +338,10 @@ function onreadystatechange_RecList_lv() {
         }
     }
 }
+/**
+ * [문서첨부]->리스트 출력
+ * Resultxml -> '결재완료된 문서' 정보
+ * */
 function InsertToRecListView_lv(Resultxml) {
     try {
         ListViewData = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");

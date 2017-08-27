@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.ibm.icu.util.Calendar;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
@@ -41,7 +43,10 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	private MScheduleDAO mScheduleDAO;
 	
 	@Resource(name="EzScheduleService")
-	private EzScheduleService ezScheduleService;
+	private EzScheduleService ezScheduleService;	
+
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@Resource(name="EzScheduleDAO")
 	private EzScheduleDAO ezScheduleDAO;
@@ -50,11 +55,14 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 	private CommonUtil commonUtil;
 
 	@Override
-	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, String defaultPath, int tenantId) throws Exception {
+	public int insertSchedule(JSONObject jsonParam, String utcStartDate, String utcEndDate, int tenantId, String realPath, Locale locale) throws Exception {
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
 		/*String uploadFilePath = commonUtil.separator + "uploadFile";*/
+		
+		String defaultPath = realPath + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId);		
 		String contentPath = defaultPath + mhtPath;
+		
 		File file = new File(contentPath);
 
 		if (!file.exists()) {			
@@ -65,12 +73,14 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		OutputStream bos = null;		
 		int sID = 0;
 		
-		try {
+		try {					
 			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
 			contentPath += schedulePath;
 
 			byte[] ct = Base64.decode(jsonParam.get("content").toString());
-			stream = new ByteArrayInputStream(ct);
+			String mhtData = ezCommonService.startHtml2Mht(new String(ct), realPath, locale);
+			
+			stream = new ByteArrayInputStream(mhtData.getBytes());
 			bos = new FileOutputStream(contentPath);
 	
 			int bytesRead = 0;
@@ -79,7 +89,7 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
-
+			
 			//첨부파일 카운트
 			String hasattach = "N";
 	

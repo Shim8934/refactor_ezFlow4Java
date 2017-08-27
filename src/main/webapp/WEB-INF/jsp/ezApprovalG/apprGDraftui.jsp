@@ -186,6 +186,7 @@
 		    }
 		    var noFieldsAvailable = false;
 		    function FieldsAvailable() {
+	    	
 		        if (noFieldsAvailable) {
 		            noFieldsAvailable = false;
 		        }
@@ -303,6 +304,7 @@
 		        }
 		    }
 		    function process_AfterOpen() {
+	    	
 		        try {
 		            if (pFormHref == "") {
 		                SetBtnStateFalse();

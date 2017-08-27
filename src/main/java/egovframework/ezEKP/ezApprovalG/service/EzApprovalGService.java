@@ -202,7 +202,7 @@ public interface EzApprovalGService {
 	
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getSignInfo(String docID, String offset, Locale locale, String companyID, int tenantID) throws Exception;
+	public String getSignInfo(String docID, String offset, Locale locale, String primary, String companyID, int tenantID) throws Exception;
 	
 	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID, String offSet) throws Exception;
 	
@@ -462,5 +462,9 @@ public interface EzApprovalGService {
 	public String setCabinetHesong(String docID, String deptID,	String deptName, String deptName2, String userName,	String userName2, String dirpath, String docSN, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
 	public String doBansong(String docID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo) throws Exception;
+
+	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception;
+
+	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception;
 
 }
