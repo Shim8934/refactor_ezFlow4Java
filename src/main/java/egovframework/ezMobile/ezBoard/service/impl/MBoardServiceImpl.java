@@ -343,7 +343,7 @@ public class MBoardServiceImpl implements MBoardService {
 //    }
 	
 	@Override
-	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID) throws Exception {
+	public List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add) throws Exception {
 		logger.debug("getBoardItemList started.");
 		
 		String boardID = mBoardInfoVO.getBoardID();
@@ -372,8 +372,11 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 		}
 		
-		for (MBoardItemVO vo : mBoardNoticeItemList) {
-			mBoardItemList.add(0, vo);
+		//스크롤 페이징할 때 공지사항 추가 안되게 add를 받아옴
+		if (add == null || add.equals("")) {
+			for (MBoardItemVO vo : mBoardNoticeItemList) {
+				mBoardItemList.add(0, vo);
+			}
 		}
 		
 		logger.debug("getBoardItemList ended.");
