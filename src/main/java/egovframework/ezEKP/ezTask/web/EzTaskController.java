@@ -19,11 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -178,7 +176,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 지시사항 수정 Method
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezTask/taskSave1.do")
+	@RequestMapping(value = "/ezTask/taskSave.do")
 	public String taskSave1(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> param, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("taskSave1 started");
 
@@ -232,9 +230,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		taskInfoVO.setShareList(shareList);
 		
-		ezTaskService.taskSave1(taskInfoVO, realPath, uploadTaskPath, content, fileList, userInfo.getOffset(), tenantID);
+		ezTaskService.taskSave(taskInfoVO, realPath, uploadTaskPath, content, fileList, userInfo.getOffset(), tenantID);
 
-		logger.debug("taskSave1 ended");
+		logger.debug("taskSave ended");
 		
 		return "json";
 	}
@@ -614,7 +612,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 * 업무등록 실행
 	 */
-	@RequestMapping(value = "/ezTask/taskSave.do", produces = "text/xml; charset=utf-8")
+	/*@RequestMapping(value = "/ezTask/taskSave.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String taskSave(HttpServletRequest request, @RequestBody String xmlData, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("taskSave started");
@@ -631,7 +629,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		logger.debug("taskSave ended");
 		
 		return ret;
-	}
+	}*/
 
 	/**
 	 * 업무작성, 수정화면조회 조회

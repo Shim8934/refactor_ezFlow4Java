@@ -2,12 +2,9 @@ package egovframework.ezEKP.ezTask.service;
 
 import java.util.List;
 
-import org.w3c.dom.Document;
-
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
-import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzTaskService {
 
@@ -26,7 +23,7 @@ public interface EzTaskService {
 	
 	void taskWorkSave(String taskID, String content, String attachList, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception;
 	
-	void taskSave1(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, int tenantID) throws Exception;
+	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, int tenantID) throws Exception;
 	
 	/* 정수현*/
 	public void taskSaveConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
@@ -35,7 +32,7 @@ public interface EzTaskService {
 
 	public void taskUpdateConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;
 
-	public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception;
+	/*public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception;*/
 
 	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, int tenantID) throws Exception;
 

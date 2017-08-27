@@ -326,19 +326,6 @@
 				});
 			}
 			
-			/* 사용하지 않는 것같은 공유자지정
-			function manage_share() {
-				var id = taskid;
-				
-				if (parentid != "0") {
-					id = parentid;
-				}
-	
-				var feature = GetOpenPosition(432, 363);
-				window.open("/myoffice/ezTask/task_manage_share_Cross.aspx?id=" + id + "&personid=" + personid, "", "height = 363px, width = 432px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
-			} */
-			
-			/* var task_repetition_del_cross_dialogArguments = new Array(); */
 			var deltaskid = "";
 			function delete_task() {
 				if (!confirm("<spring:message code='ezTask.t106' />")) {
@@ -352,40 +339,6 @@
 	
 				deltaskid = id;
 				
-				/* 반복설정 이효진 */
-				/* if (repeatcount != "0") {
-					var rgParams = new Array();
-					rgParams["CancelOpen"] = false;
-					rgParams["InstanceType"] = "";
-					
-					task_repetition_del_cross_dialogArguments[0] = rgParams;
-					task_repetition_del_cross_dialogArguments[1] = DeleteTask_Complete;
-					
-					DivPopUpShow(390, 235, "/myoffice/ezTask/htm/task_repetition_del_Cross.aspx");
-					
-					return;
-				} */
-	
-				/* var xmlDom = createXmlDom();
-				var xmlHTTP = createXMLHttpRequest();
-				var objRoot;
-	
-				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-				createNodeAndInsertText(xmlDom, objRoot, "DATA", deltaskid);
-				
-				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
-				xmlHTTP.send(xmlDom);
-	
-				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-					alert("<spring:message code='ezTask.t108' />");
-				} else {
-					try {
-						window.opener.RefreshView()
-					} catch (e) { }
-					
-					window.close();
-				} */
-
 				$.ajax({
 					type : "POST",
 					url : "/ezTask/taskDelete.do",
@@ -405,55 +358,6 @@
 				});
 			}
 			
-			/* 반복설정 이효진 */
-			/* function DeleteTask_Complete(rgParams) {
-				if (rgParams["InstanceType"] == "Instance") {
-					var xmlDom = createXmlDom();
-					var xmlHTTP = createXMLHttpRequest();
-					var objRoot;
-					var objNode;
-					
-					objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-					objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", deltaskid)
-					objNode = createNodeAndInsertText(xmlDom, objNode, "REPEATCOUNT", repeatcount);
-					
-					xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_del_repeat_instance.aspx", false);
-					xmlHTTP.send(xmlDom);
-					
-					if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-						alert("<spring:message code='ezTask.t107' />");
-					} else {
-						try {
-							window.opener.RefreshView()
-						} catch (e) { }
-						
-						window.close();
-					}
-	
-					return;
-				}
-	
-				var xmlDom = createXmlDom();
-				var xmlHTTP = createXMLHttpRequest();
-				var objRoot;
-	
-				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-				createNodeAndInsertText(xmlDom, objRoot, "DATA", deltaskid);
-				
-				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_delete.aspx", false);
-				xmlHTTP.send(xmlDom);
-	
-				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-					alert("<spring:message code='ezTask.t108' />");
-				} else {
-					try {
-						window.opener.RefreshView()
-					} catch (e) { }
-					
-					window.close();
-				}
-			} */
-			
 			/* 업무수정 */
 			function edit_task() {
 			    var id = taskid;
@@ -464,7 +368,6 @@
 			    var win;
 			    
 				/* 레이어팝업으로 taskWriteCross 호출 */
-				/* 수현이 소스랑 겹쳐서 걍 새로짬 */
 				var feature = GetOpenPosition(760, 750);
 				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
 		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
@@ -536,46 +439,6 @@
 					alert("<spring:message code='ezTask.t149' />");
 					return;
 				}
-				
-				/* var xmlDom = createXmlDom();
-				var xmlHTTP = createXMLHttpRequest();
-				var objRoot;
-				var objNode;
-				
-				objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKID", id);
-				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "REPEATCOUNT", repeatcount);
-				
-				var tempcheckvalue = "";
-				var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
-				for (var i = 0; i < taskcheckbox.length; i++) {
-				    if (taskcheckbox[i].checked) {
-				        tempcheckvalue = taskcheckbox[i].value;
-				        break;
-				    }
-				}
-			
-				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TASKSTATUS", tempcheckvalue);
-				
-				taskcheckbox = document.getElementsByName("completeracheckbox");
-				for (var i = 0; i < taskcheckbox.length; i++) {
-				    if (taskcheckbox[i].checked) {
-				        tempcheckvalue = taskcheckbox[i].value;
-				        break;
-				    }
-				}
-				
-				objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "COMPLETERATE", tempcheckvalue);
-				
-				xmlHTTP.open("POST", "/myoffice/ezTask/remote/task_update_instance.aspx", false);
-				xmlHTTP.send(xmlDom);
-				
-				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-				    alert("<spring:message code='ezTask.t102' />");
-				else {
-				    alert("<spring:message code='ezTask.t150' />");
-					try { window.opener.RefreshView() } catch (e) { }
-				} */
 				
 				DivPopUpShow(200, 150, "/ezTask/taskStatus.do?taskID=" + taskid);
 			}
@@ -719,99 +582,15 @@
 			
 			/* 진행사항 수정 스크립트 */
 			function edit_taskwrok() {
-				/* 기존 */
-			    /* var xmlDom = createXmlDom();
-			    var xmlHTTP = createXMLHttpRequest();
-			
-			    var objRoot, objNode, attachnode, shobjnode;
-			    objNode = createNodeInsert(xmlDom, objNode, "DATA");
-			    createNodeAndInsertText(xmlDom, objNode, "TASKID", taskid);
-			
-			    var taskcheckbox = document.getElementsByName("taskstatuscheckbox");
-			    var taskvalue = "";
-			    for (var i = 0; i < taskcheckbox.length; i++) {
-			        if (taskcheckbox[i].checked == true) {
-			            taskvalue = taskcheckbox[i].value;
-			            break;
-			        }
-			    }
-			
-			    if (taskvalue == "3") {
-			        if (message2.GetEditorContent() == tempbody) {
-			            alert("<spring:message code='ezTask.t2014' />");
-				        return;
-				    }
-				}
-			
-				createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", taskvalue);
-				var taskcheckbox = document.getElementsByName("completeracheckbox");
-				taskvalue = "";
-				for (var i = 0; i < taskcheckbox.length; i++) {
-				    if (taskcheckbox[i].checked == true) {
-				        taskvalue = taskcheckbox[i].value;
-				        break;
-				    }
-				}
-				createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", taskvalue);
-				
-				var strBody = message2.GetEditorContent();
-				
-				var tempDiv = document.createElement("DIV");
-				tempDiv.innerHTML = strBody;
-				
-				strBody = ConvertHTMLtoMHT(HTMLtoMHT_MakeTag(tempDiv));
-				createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
-				
-				var list = createNodeAndAppandNode(xmlDom, objNode, list, "ATTACHLIST");
-				if (pAttachListXml != "") {
-				    var nodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-				    for (var i = 0; i < nodes.length; i++) {
-				        createNodeAndAppandNodeText(xmlDom, list, attachnode, "ATTACH", SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA2") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "VALUE") + "/" + SelectSingleNodeValue(GetChildNodes(nodes[i])[0], "DATA6"));
-				    }
-				}
-				
-				if(content != "")
-				    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", content);
-				else
-				    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
-				
-				xmlHTTP.open("POST", "/myoffice/ezTask/remote/taskwrok_save.aspx", false);
-				xmlHTTP.send(xmlDom);
-				
-				if (xmlHTTP.status == 200 || xmlHTTP.responseText == "OK") {
-					alert("<spring:message code='ezTask.t2009' />");
-					window.location.href = "/ezTask/taskRead.do?taskID=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date + "&type=1";
-				} */
-				
 				var id = taskid;
 			    if (parentid != "0")
 			        id = parentid;
 			    var win;
 			    
 				/* 레이어팝업으로 taskWriteCross 호출 */
-				/* 수현이 소스랑 겹쳐서 걍 새로짬 */
 				var feature = GetOpenPosition(760, 750);
 				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWorkWrite.do?taskID=" + id, "",
 		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-				
-			    /* if (CrossYN()) {
-			        var feature = GetOpenPosition(760, 750);
-			        win = window.open("/ezTask/taskWrite.do?taskID=" + id, "",
-			                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			    } else {
-			        if (pUse_Editor == "" || pUse_Editor == "CK") {
-			            var feature = GetOpenPosition(760, 660);
-			            win = window.open("/myoffice/ezTask/task_write.aspx?id=" + id, "",
-			                "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        } else {
-			            var feature = GetOpenPosition(760, 660);
-			            win = window.open("/myoffice/ezTask/task_write_IE.aspx?id=" + id, "",
-			               "height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-			        }
-			    }
-				
-			    win.opener = window.opener;
-			    window.close(); */
 			}
 			
 			/* 진행상태변경시 스크립트 */

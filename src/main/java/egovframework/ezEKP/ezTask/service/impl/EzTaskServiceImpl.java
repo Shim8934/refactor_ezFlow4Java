@@ -11,14 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzTaskService")
@@ -143,7 +141,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	@Override
-	public void taskSave1(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, int tenantID) throws Exception {
+	public void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, int tenantID) throws Exception {
 		logger.debug("taskSave started.");
 		logger.debug("contentPath = " + taskInfoVO.getContentPath());
 		
@@ -186,6 +184,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 			/* task edit */
 			updateTask(taskInfoVO, offset, tenantID);
 			
+//			2017-08-28 
 //			task에 추가된 파일 전부 삭제
 //			deleteAttach(taskID, realPath, uploadTaskPath);
 		}
@@ -371,8 +370,9 @@ public class EzTaskServiceImpl implements EzTaskService{
 		logger.debug("deleteTaskShare ended.");
 	}
 	
+	/* 첨부파일 삭제 */
 	private void deleteTaskAttach(String taskID, String realPath, String uploadTaskPath) throws Exception {
-		
+//		2017-08-28
 	}
 	
 	@Override
@@ -470,7 +470,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		logger.debug("taskUpdateConfig ended.");
 	}
 
-	@Override
+	/*@Override
 	public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception {
 		logger.debug("taskSave started.");
 
@@ -549,7 +549,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 			taskInfoVO.setPersonDeptName2(shareDeptName2);
 
 			ezTaskDAO.shareTaskSave(taskInfoVO); // Task 테이블에 공유자 Insert
-			/* 이런처리는 조직도스크립트에서 다 되있는것 같은데 빼먹고 안가져와서 여기서 처리하는거 같음*/
+			 이런처리는 조직도스크립트에서 다 되있는것 같은데 빼먹고 안가져와서 여기서 처리하는거 같음
 			if (!shareID.equals(userInfo.getId())) {
 				ezTaskDAO.shareTaskSave2(taskInfoVO); // TaskShare 테이블에 Insert				
 			}
@@ -621,7 +621,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		logger.debug("taskSave ended.");
 
 		return "OK";
-	}
+	}*/
 	
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		logger.debug("fileMove started.");
