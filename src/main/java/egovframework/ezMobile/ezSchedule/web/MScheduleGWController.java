@@ -303,21 +303,43 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String primary = commonUtil.getPrimaryData(lang, info.getTenantId());
 			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 			StringBuilder sb = new StringBuilder();
+			
+			String pCompanyAdmin = "";
+			String pDeptAdmin = "";
+			
+			if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
+	        	pCompanyAdmin = "Y";
+	        	pDeptAdmin = "Y";
+	        } else if (info.getRollInfo().contains("g=1")) {
+	        	pDeptAdmin = "Y";
+	        } 
 
 			if (primary.equals("1")) {
 				//개인일정
-				sb.append("<option value='1;;" + userId + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + info.getUserName() + "</option>");				
-				//부서일정
-				sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName() + "</option>");			
-				//회사일정
-				sb.append("<option value='3;;" + info.getCompanyId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t374", locale) + " " + info.getCompanyName() + "</option>");			
+				sb.append("<option value='1;;" + userId + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + info.getUserName() + "</option>");
+				
+				if (pCompanyAdmin.equals("Y") || pDeptAdmin.equals("Y")) {
+					//부서일정				
+					sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName() + "</option>");
+				}
+				
+				if (pCompanyAdmin.equals("Y")) {
+					//회사일정
+					sb.append("<option value='3;;" + info.getCompanyId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t374", locale) + " " + info.getCompanyName() + "</option>");
+				}
 			} else {
 				//개인일정
-				sb.append("<option value='1;;" + userId + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + info.getUserName2() + "</option>");				
-				//부서일정
-				sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName2() + "</option>");				
-				//회사일정
-				sb.append("<option value='3;;" + info.getCompanyId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t374", locale) + " " + info.getCompanyName2() + "</option>");			
+				sb.append("<option value='1;;" + userId + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t372", locale) + " " + info.getUserName2() + "</option>");
+				
+				if (pCompanyAdmin.equals("Y") || pDeptAdmin.equals("Y")) {
+					//부서일정
+					sb.append("<option value='2;;" + info.getDeptId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t373", locale) + " " + info.getDeptName2() + "</option>");
+				}
+				
+				if (pCompanyAdmin.equals("Y")) {
+					//회사일정
+					sb.append("<option value='3;;" + info.getCompanyId() + "'" + ">" + egovMessageSource.getMessage("ezSchedule.t374", locale) + " " + info.getCompanyName2() + "</option>");
+				}
 			}
 			
 			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, info.getTenantId());

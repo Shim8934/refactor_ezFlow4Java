@@ -322,7 +322,7 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
 			String realPath = commonUtil.getRealPath(request);
-			String content = "<p>"+jsonParam.get("mainContent").toString()+"</p>";
+			String content = jsonParam.get("mainContent").toString();
 			content = URLDecoder.decode(content, "utf-8");
 			
 			String scheme = "http://";
@@ -357,7 +357,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+	public JSONObject updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request, Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -365,8 +365,21 @@ public class MBoardGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
+			String realPath = commonUtil.getRealPath(request);
+			String content = jsonParam.get("mainContent").toString();
+			content = URLDecoder.decode(content, "utf-8");
 			
-			mBoardService.updateItem(jsonParam);
+			String scheme = "http://";
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
+	    	
+	    	content = content.replace("replace_" + scheme, scheme);
+			
+			//html -> mht변환
+			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
+			
+			mBoardService.updateItem(jsonParam, info, realPath,mhtData);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			

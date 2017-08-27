@@ -57,7 +57,7 @@ public interface MBoardService {
 	
 	void insertBrdItem2(JSONObject boardListVO) throws Exception;
 	
-	void updateItem(JSONObject boardListVO) throws Exception;
+	void updateItem(JSONObject boardListVO, MCommonVO info, String realPath, String mhtData) throws Exception;
 	
 	void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
 	

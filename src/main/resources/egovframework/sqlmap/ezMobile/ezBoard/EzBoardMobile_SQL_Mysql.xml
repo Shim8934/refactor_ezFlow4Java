@@ -666,9 +666,9 @@
             UpdateDate = #writeDate#,
             Importance = #importance#,
             Title = #title#,
-            StartDate = #startDate#,
-            EndDate = #endDate#,
-            Abstract = #abstract#,
+            <!-- StartDate = #startDate#, -->
+            <!-- EndDate = #endDate#, -->
+            <!-- Abstract = #abstract#, -->
             Attachments = #hasAttach#,
             <isEqual property="guBun" compareValue="2">
                 WriterName = #writerName#,

@@ -741,6 +741,38 @@ public class MBoardServiceImpl implements MBoardService {
 		mBoardDAO.insertBrdItem(map);
 	}
 	
+	@Override
+	public void updateItem(JSONObject boardListVO, MCommonVO info, String realPath, String mhtData) throws Exception {
+		boolean saveMHTResult = false;
+		String filePath = commonUtil.getUploadPath("upload_board.ROOT", info.getTenantId());
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
+		map.put("importance", boardListVO.get("importance"));
+		map.put("title", boardListVO.get("title"));
+		//map.put("startDate", boardListVO.get("startDate"));
+		//map.put("endDate", boardListVO.get("endDate"));
+		map.put("abstract", boardListVO.get("abstract"));
+		map.put("hasAttach", boardListVO.get("hasAttach"));
+		map.put("writerName", boardListVO.get("writerName"));
+		map.put("writerName2", boardListVO.get("writerName2"));
+		map.put("extensionAttribute2", boardListVO.get("notice"));
+		map.put("extensionAttribute5", boardListVO.get("extensionAttribute5"));
+		map.put("docPassword", boardListVO.get("docPassword"));
+		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
+		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
+		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
+		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
+		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
+		map.put("tenantID", info.getTenantId());
+		map.put("itemID", boardListVO.get("itemID"));
+		
+		//mht파일저장
+		saveMHTResult = saveMHT(mhtData, boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath);
+		
+		mBoardDAO.updateItem(map);
+	}
+	
 	/**
 	 * 게시판 mht저장 실행 Method
 	 */
@@ -816,7 +848,7 @@ System.out.println("strFilePath:"+strFilePath);
 		map.put("writerCompanyID", boardListVO.get("writerCompanyID"));
 		map.put("writerCompanyName", boardListVO.get("writerCompanyName"));
 		map.put("writerCompanyName2", boardListVO.get("writerCompanyName2"));
-		map.put("writeDate", boardListVO.get("writeDate"));
+		map.put("writeDate", commonUtil.getTodayUTCTime(""));
 		map.put("parentWriteDate", boardListVO.get("parentWriteDate"));
 		map.put("tenantID", boardListVO.get("tenantID"));
 		map.put("importance", boardListVO.get("importance"));
@@ -842,31 +874,6 @@ System.out.println("strFilePath:"+strFilePath);
 		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
 		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
 		mBoardDAO.insertBrdItem2(map);
-	}
-
-	@Override
-	public void updateItem(JSONObject boardListVO) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("writeDate", boardListVO.get("writeDate"));
-		map.put("importance", boardListVO.get("importance"));
-		map.put("title", boardListVO.get("title"));
-		map.put("startDate", boardListVO.get("startDate"));
-		map.put("endDate", boardListVO.get("endDate"));
-		map.put("abstract", boardListVO.get("abstract"));
-		map.put("hasAttach", boardListVO.get("hasAttach"));
-		map.put("writerName", boardListVO.get("writerName"));
-		map.put("writerName2", boardListVO.get("writerName2"));
-		map.put("extensionAttribute2", boardListVO.get("extensionAttribute2"));
-		map.put("extensionAttribute5", boardListVO.get("extensionAttribute5"));
-		map.put("docPassword", boardListVO.get("docPassword"));
-		map.put("extensionAttribute6", boardListVO.get("extensionAttribute6"));
-		map.put("extensionAttribute7", boardListVO.get("extensionAttribute7"));
-		map.put("extensionAttribute8", boardListVO.get("extensionAttribute8"));
-		map.put("extensionAttribute9", boardListVO.get("extensionAttribute9"));
-		map.put("extensionAttribute10", boardListVO.get("extensionAttribute10"));
-		map.put("tenantID", boardListVO.get("tenantID"));
-		map.put("itemID", boardListVO.get("itemID"));
-		mBoardDAO.updateItem(map);
 	}
 
 	@Override
