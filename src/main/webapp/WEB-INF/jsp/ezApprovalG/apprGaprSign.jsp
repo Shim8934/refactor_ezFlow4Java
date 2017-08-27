@@ -66,45 +66,47 @@
 		    /**
 		    * 글림으로된 서명을 선택해서 진행할 경우
 		    */
+		    var flag = true;
 		    function btn_ImageSave_onclick() {
-		        var listview = new ListView();
-		        listview.LoadFromID("listSIGNLIST");
-		        var AprSign = listview.GetSelectedRows();
-		        if (AprSign.length != 0) {
-		            if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
-		                if (ReturnFunction != null) {
-		                    ReturnFunction(AprSign[0].getAttribute("DATA1"));
-		                }
-		                else {
-		                    parent.window.returnValue = AprSign[0].getAttribute("DATA1");
-		                }
-		            }
-		            else {
-		                var AprSignName = AprSign[0].cells[0].innerText;
-		                var AprSignURL = AprSign[0].getAttribute("DATA1");
-		                var AprSignInfo = BaseURL + AprSignURL;
-		                
-		                if (ReturnFunction != null) {
-		                    ReturnFunction(AprSignInfo);
-		                }
-		                else {
-		                    window.returnValue = AprSignInfo;
-		                    parent.window.close();
-		                }
-		            }
-		        }
-		        else if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
-		            if (ReturnFunction != null) {
-		                ReturnFunction(AprSign[0].getAttribute("DATA1"));
-		            }
-		            else {
-		                window.returnValue = AprSign[0].getAttribute("DATA1");
-		                parent.window.close();
-		            }
-		        }
-		        else {
-		            alert("<spring:message code='ezApprovalG.t437'/>");
-		        }
+		    	if (flag) {
+					flag = false;
+			    	var listview = new ListView();
+			        listview.LoadFromID("listSIGNLIST");
+			        var AprSign = listview.GetSelectedRows();
+			        if (AprSign.length != 0) {
+			            if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
+			                if (ReturnFunction != null) {
+			                    ReturnFunction(AprSign[0].getAttribute("DATA1"));
+			                }
+			                else {
+			                    parent.window.returnValue = AprSign[0].getAttribute("DATA1");
+			                }
+			            } else {
+			                var AprSignName = AprSign[0].cells[0].innerText;
+			                var AprSignURL = AprSign[0].getAttribute("DATA1");
+			                var AprSignInfo = BaseURL + AprSignURL;
+			                
+			                if (ReturnFunction != null) {
+			                    ReturnFunction(AprSignInfo);
+			                } else {
+			                    window.returnValue = AprSignInfo;
+			                    parent.window.close();
+			                }
+			            }
+			        } else if (trim_Cross(AprSign[0].getAttribute("DATA1")) == "NAME") {
+			            if (ReturnFunction != null) {
+			                ReturnFunction(AprSign[0].getAttribute("DATA1"));
+			            } else {
+			                window.returnValue = AprSign[0].getAttribute("DATA1");
+			                parent.window.close();
+			            }
+			        }
+			        else {
+			            alert("<spring:message code='ezApprovalG.t437'/>");
+			        }
+		    	} else {
+		    		return;
+		    	}
 		    }
 		    function btn_ImageCancel_onclick() {
 		        if (ReturnFunction != null) {
@@ -115,14 +117,20 @@
 		            window.close();
 		        }
 		    }
+		    
 		    function btn_Save_onclick() {
-		        if (ReturnFunction != null) {
-		            ReturnFunction("NAME");
-		        }
-		        else {
-		            window.returnValue = "NAME";
-		            window.close();
-		        }
+		    	if (flag) {
+		    		flag = false;
+			        if (ReturnFunction != null) {
+			            ReturnFunction("NAME");
+			        }
+			        else {
+			            window.returnValue = "NAME";
+			            window.close();
+			        }
+		    	} else {
+		    		return;
+		    	}
 		    }
 		    function SIGNLIST_onfocus() {
 		        document.getElementById("SIGNVIEW").innerHTML = "";
