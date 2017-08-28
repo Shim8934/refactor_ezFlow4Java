@@ -32,7 +32,6 @@
 			var currentpage = 0;
 			var pagesize = 10;
 			var isrefresh = false;
-			var isrefresh2 = false;
 			var selectelem = null;
 			var initdate = "";
 			var ownerid = "";
@@ -220,36 +219,30 @@
 		    }
 
 			function show_page() {
-// 			    selectelem = null;
 			    makePageSelPage();
 
 			    var length = list_body.children[1].rows.length;
-// 			    var length2 = list_body.children[1].rows.length;
-// alert("@@" + $("#list_body").children().eq(1).children().html);
-// alert($("#list_body").children().eq(1).children().length);
-// alert("##" + length2);
-// alert(length);
+			    var length2 = list_body2.children[1].rows.length;
+
 			    for (var i = 3; i < length; i++) {
-// alert("@" + list_body.children[1].rows[3]);
 			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
 			    }
 
+			    for (var i = 3; i < length2; i++) {
+			        list_body2.children[1].removeChild(list_body2.children[1].rows[3]);			    	
+			    }
+
 			    var tr = "";
+			    var onTaskCount = 0; // 진행중업무 Count
+			    var finishTaskCount = 0; // 완료업무 Count
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 					if (totalcount == 0 || i == totalcount) {
 			            break;
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
-// 			    	$("#taskID_'" + SelectSingleNodeValue(node, "TASKID")  + "'").empty();
-// alert(isrefresh2);
-					
-					if (isrefresh2) {
-// alert("@");
-						$("#taskID_" + SelectSingleNodeValue(node, "TASKID") + "").remove();
-					}
 
-					if (type == 1) {					
+					if (type == 1) {		
 				        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
 					        tr = row_body.cloneNode(true);
 					        document.getElementById("tr_ing").style.display = "none";
@@ -314,13 +307,14 @@
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
 			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
 			                div.style.width = "72px";
 			                div.style.lineHeight = "18px";
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
+			                div.style.verticalAlign = "top";
+// 			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			            case "2":
@@ -331,18 +325,20 @@
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
+			                div.style.verticalAlign = "top";
+// 			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			            case "3":
 			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
 			                div.style.width = "72px";
 			                div.style.lineHeight = "18px";
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
+			                div.style.verticalAlign = "top";
+// 			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			        }
@@ -414,21 +410,25 @@
 
 			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
 				        list_body.children[1].appendChild(tr);
+				        onTaskCount++;
 			        } else {
 			        	list_body2.children[1].appendChild(tr);
+			        	finishTaskCount++;
 			        }
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
 				}
 
-			    if (totalcount == 0) {
+			    if (onTaskCount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
-			        document.getElementById("tr_ing2").style.display = "";
+			    }
+
+			    if (finishTaskCount == 0) {
+			        document.getElementById("tr_ing2").style.display = "";			    	
 			    }
 
 			    $(".progressbar").css("display", "inline-table");
 			    $(".percentCount").remove();
-			    isrefresh2 = false;
 			}
 
 			/* progressBar 조회 */
@@ -550,7 +550,6 @@
 		    }
 		    function RefreshView() {
 		        isrefresh = true;
-		        isrefresh2 = true;
 
 		        DateChange(startdate, enddate);
 		    }
@@ -737,7 +736,7 @@
 // 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
 // 		        xmlHTTP2.onreadystatechange = after_DateChange;
 // 		        xmlHTTP2.send(xmlDom);
-// alert(startdate + " / " + enddate);
+
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -855,12 +854,10 @@
 		        switch (pSelectTab) {
 		            case "taskprog":
 		                type = "1";
-		                isrefresh2 = true;
 		                DateChange(startdate, enddate);
 		                break;
 		            case "taskdictate":
 		                type = "2";
-		                isrefresh2 = true;
 		                DateChange(startdate, enddate);
 		                break;
 // 		            case "taskcomplete":
@@ -880,8 +877,8 @@
 		        document.getElementById('txt_keyword').value = "";
 		    }
 		    function search() {
-		        if (document.getElementById("txt_keyword").value.trim() == "") {
-		            alert("<spring:message code='ezTask.t194' />");
+		        if ($.trim($("#txt_keyword").val()) == "") {
+		        	alert("<spring:message code='ezTask.jsh01' />");
 		            return;
 		        }
 
@@ -918,7 +915,7 @@
 		        if (userlang != "1" && chkValue == "TaskPersonName") {
 		            filter = document.getElementById("txt_keyword").value;
 		        }
-alert(chkValue + " / " + filter);
+
 // 		        xmlHTTP2 = createXMLHttpRequest();
 // 		        var xmlDom = createXmlDom();
 		

@@ -769,6 +769,14 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("taskGetList started.");
 		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass);
 
+		if (!startDate.equals("")) {
+			startDate += " 00:00:00";
+			endDate += " 23:59:59";
+
+			startDate = commonUtil.getDateStringInUTC(startDate, offset, true).substring(0, 19);
+			endDate = commonUtil.getDateStringInUTC(endDate, offset, true).substring(0, 19);
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("memberID", memberID);
@@ -789,15 +797,13 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public String getTaskCount(String memberID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception {
+	public String getTaskCount(String memberID, String offset, String type, String filter, String chkValue, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
-		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue);
+		logger.debug("type : " + type + " | filter : " + filter + " | chkValue : " + chkValue);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("memberID", memberID);
-		map.put("startDate", startDate);
-		map.put("endDate", endDate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("type", type);
 		map.put("filter", filter);

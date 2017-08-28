@@ -132,20 +132,30 @@
 				var edate = "";
 
 				var filter = "";
+				var useDate = document.getElementById("usedate").checked;
 				if (document.getElementById("usedate").checked)
 				{
 				    sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 				    edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 				}
-				if (document.getElementById("keyword").value != "")
-					filter = document.getElementById("keyword").value;
-				
+
+				if ($.trim($("#keyword").val()) == "") {
+		        	alert("<spring:message code='ezTask.jsh01' />");
+		            return;
+		        }
+
+				if (sdate > edate) {
+					alert("<spring:message code='ezTask.t993' />");
+		            return;
+				}
+
+				if (document.getElementById("keyword").value != "") {
+					filter = document.getElementById("keyword").value;					
+				}
+
 				var searchClass = $("#search_class").val();
 				var chkValue = $("#search_field").val();
-alert(searchClass + " / " + chkValue + " / " + filter);
-// 				window.location.href = "/ezTask/taskGetList.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + escape(filter) + "&searchtype=" + document.getElementById("search_field").value + "&tclass=" + document.getElementById("search_class").value + "&event=search";
-// 				window.location.href = "/ezTask/taskGetList.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + escape(filter) + "&chkValue=" + chkValue + "&search_class=" + search_class;
-alert(sdate + " / " + edate);				
+
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -157,7 +167,8 @@ alert(sdate + " / " + edate);
 						app : 1,
 						filter : filter,
 						chkValue : chkValue,
-						searchClass : searchClass
+						searchClass : searchClass,
+						useDate : useDate
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -168,7 +179,7 @@ alert(sdate + " / " + edate);
 				});
 			}
 
-			var pagesize = 10;
+			var pagesize = 30;
 			function after_DateChange(xml) {
 	            listdom = loadXMLString(xml);
 
@@ -188,11 +199,10 @@ alert(sdate + " / " + edate);
 	
 // 	            makePageSelPage();
 	            show_page();
-// 	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-// 	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
-	
+
 // 	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
 // 	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
+				cntAdd = "";
 
 	            return;
 		    }
@@ -207,6 +217,7 @@ alert(sdate + " / " + edate);
 			    }
 
 			    var tr = "";
+			    var searchCount = "";
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 					if (totalcount == 0 || i == totalcount) {
@@ -218,15 +229,10 @@ alert(sdate + " / " + edate);
 // 						$("#taskID_" + SelectSingleNodeValue(node, "TASKID") + "").remove();
 // 					}
 
-			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-				        tr = row_body.cloneNode(true);
-				        document.getElementById("tr_ing").style.display = "none";
-			        } else {
-			        	tr = row_body2.cloneNode(true);
-				        document.getElementById("tr_ing2").style.display = "none";
-			        }
+				    tr = row_body.cloneNode(true);
+				    document.getElementById("tr_ing").style.display = "none";
 
-			        tr.style.display = "";
+				    tr.style.display = "";
 			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
 
 			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
@@ -371,23 +377,22 @@ alert(sdate + " / " + edate);
 			        setNodeText(tr.cells[8], startdate);
 			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
 
-			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-				        list_body.children[1].appendChild(tr);
-			        } else {
-			        	list_body2.children[1].appendChild(tr);
-			        }
+			        list_body.children[1].appendChild(tr);
 
 			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+			        
+			        searchCount++;
 				}
 
 			    if (totalcount == 0) {
 			        document.getElementById("tr_ing").style.display = "";
-			        document.getElementById("tr_ing2").style.display = "";
 			    }
+
+				$("#resultCount").empty();
+				$("#resultCount").append(searchCount + "&nbsp;");
 
 			    $(".progressbar").css("display", "inline-table");
 			    $(".percentCount").remove();
-// 			    isrefresh2 = false;
 			}
 
 			/* progressBar 조회 */
@@ -429,7 +434,6 @@ alert(sdate + " / " + edate);
 
 			function ReadTask(obj)
 			{
-alert($(obj).closest("tr").attr("taskid"));
 				var taskid = $(obj).closest("tr").attr("taskid");
 				var feature = GetOpenPosition(760, 656);
 				if (CrossYN() || pNoneActiveX == "YES") {
@@ -502,7 +506,7 @@ alert($(obj).closest("tr").attr("taskid"));
 				<td>
 					<select id="search_field" name="search_field" style="WIDTH: 70px;vertical-align:middle">
 						<option  value="title" selected><spring:message code='ezTask.t182' /></option>
-						<option  value="person" ><spring:message code='ezTask.t2005' /></option>
+						<option  value="TaskPersonName" ><spring:message code='ezTask.t2005' /></option>
 					</select>
 					<select name="search_class" id="search_class" style="WIDTH: 80px;vertical-align:middle">
 						<option  value="" selected ><spring:message code='ezTask.t240' /></option>
@@ -530,7 +534,7 @@ alert($(obj).closest("tr").attr("taskid"));
 		<div class="txt">
 			<h2 class="h2_dot"><spring:message code='ezTask.t190' /><span class="point">
 <!-- 			<asp:Label ID="LabelCount" class="point" Runat="server"></asp:Label> -->
-			</span><span id="resultCount"></span><spring:message code='ezTask.t191' /></h2>
+			</span><span id="resultCount" style="color:#CC3300"></span><spring:message code='ezTask.t191' /></h2>
 		</div>
 		
 		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
