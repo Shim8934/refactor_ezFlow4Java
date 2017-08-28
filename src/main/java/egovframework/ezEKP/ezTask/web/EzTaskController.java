@@ -759,7 +759,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	if (startDate != null || !startDate.equals("")) {
     		useDate = request.getParameter("useDate");
     	}
-System.out.println(startDate + " / " + useDate);
+
     	// 검색 시 날짜사용 안하면 최근 3개월이내 검색
     	if (useDate != null) {
     		if (!useDate.equals("true")) {

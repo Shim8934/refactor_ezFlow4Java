@@ -144,6 +144,11 @@
 		            return;
 		        }
 
+				if (sdate > edate) {
+					alert("<spring:message code='ezTask.t993' />");
+		            return;
+				}
+
 				if (document.getElementById("keyword").value != "") {
 					filter = document.getElementById("keyword").value;					
 				}

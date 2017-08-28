@@ -307,13 +307,14 @@
 			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
 			            case "1":
 			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
 			                div.style.width = "72px";
 			                div.style.lineHeight = "18px";
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
+			                div.style.verticalAlign = "top";
+// 			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			            case "2":
@@ -324,18 +325,20 @@
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
+			                div.style.verticalAlign = "top";
+// 			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			            case "3":
 			                var div = document.createElement("DIV");
-			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
 			                div.style.width = "72px";
 			                div.style.lineHeight = "18px";
 			                div.style.height = "17px";
 			                div.style.textAlign = "center";
 			                div.style.color = "white";
-			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
+			                div.style.verticalAlign = "top";
+// 			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
 			                tr.cells[6].appendChild(div);
 			                break;
 			        }

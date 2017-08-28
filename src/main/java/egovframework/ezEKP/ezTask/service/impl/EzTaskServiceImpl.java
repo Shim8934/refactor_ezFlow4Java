@@ -702,6 +702,9 @@ public class EzTaskServiceImpl implements EzTaskService{
 		if (!startDate.equals("")) {
 			startDate += " 00:00:00";
 			endDate += " 23:59:59";
+
+			startDate = commonUtil.getDateStringInUTC(startDate, offset, true).substring(0, 19);
+			endDate = commonUtil.getDateStringInUTC(endDate, offset, true).substring(0, 19);
 		}
 
 		Map<String, Object> map = new HashMap<String, Object>();
