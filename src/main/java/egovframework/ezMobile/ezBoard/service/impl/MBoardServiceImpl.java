@@ -920,11 +920,12 @@ System.out.println("strFilePath:"+strFilePath);
 	}
 
 	@Override
-	public List<MBoardNewListVO> getNewBoardList(String userID, int tenantID) throws Exception {
+	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		//mainList 임시 10까지
 		map.put("listSize", 10);
+		map.put("lastDate", lastDate);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return mBoardDAO.getNewItemList(map);

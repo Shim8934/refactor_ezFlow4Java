@@ -79,6 +79,7 @@ public class MBoardGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String boardId = request.getParameter("boardID");
+			String lastDate = request.getParameter("lastDate");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
@@ -91,7 +92,7 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, info.getTenantId());
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId());
 			
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
 			LOGGER.debug("listCount ="+listCount);
