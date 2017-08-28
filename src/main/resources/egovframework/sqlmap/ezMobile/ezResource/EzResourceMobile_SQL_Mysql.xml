@@ -146,10 +146,17 @@
       <result property="approveFlag"      column="APPROVEFLAG"      columnIndex="16"/>
     </resultMap>
     
-        <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceBrdVO">
+    <resultMap class="MResourceGetAdmSubClsTreeVO" id="mResourceBrdVO">
       <result property="brdID"          column="BRD_ID"         columnIndex="1"/>
       <result property="brdNm"          column="BRD_NM"         columnIndex="2"/>
-      <result property="approveFlag"      column="APPROVEFLAG"      columnIndex="3"/>
+      <result property="brdNm2"       column="BRD_NM2"        columnIndex="3"/>
+      <result property="brdLevel"       column="BRD_LEVEL"        columnIndex="4"     nullValue="0"/>
+      <result property="brdStep"        column="BRD_STEP"       columnIndex="5"/>
+      <result property="brdPostterm"      column="BRD_POSTTERM"   columnIndex="6"/>
+      <result property="brdUpper"       column="BRD_UPPER"        columnIndex="7"/>
+      <result property="brdGb"          column="BRD_GB"         columnIndex="8"/>
+      <result property="brdUrl"         column="BRD_URL"          columnIndex="9"/>
+      <result property="brdExplain"     column="BRD_EXPLAIN"      columnIndex="10"/>
     </resultMap>
     
     	<resultMap class="MResourceScheduleVO" 		id="mResourceScheduleVO">
@@ -562,19 +569,24 @@
 	<select id="MResourceDAO.getResBrdList" parameterClass="Map" resultMap="mResourceBrdVO">
 		<![CDATA[
 			SELECT 
-				BRD_ID,
-				BRD_NM,
-				APPROVEFLAG 
+					   A.BRD_ID,
+                       A.BRD_NM,
+                       A.BRD_NM2,
+                       A.BRD_LEVEL,
+                       A.BRD_STEP,
+                       A.BRD_POSTTERM,
+                       A.BRD_UPPER,
+                       A.BRD_GB,
+                       A.BRD_URL,
+                       A.BRD_EXPLAIN
 			FROM
-				TBL_RS_BRD 
+				TBL_RS_BRD A
 			WHERE
-				BRD_UPPER = #v_PBRDID#
+				A.BRD_UPPER = #v_PBRDID#
 			AND
-				BRD_COMPANY = #v_PBRDCOMPANY#
+				A.BRD_COMPANY = #v_PBRDCOMPANY#
 			AND
-				TENANT_ID = #tenantID#
-			AND
-       			BRD_GB = '1'		
+				A.TENANT_ID = #tenantID#		
            	ORDER BY
 				BRD_GB, BRD_STEP 
 		]]>

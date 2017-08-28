@@ -244,7 +244,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
-			String companyId = request.getParameter("companyId");
+			String companyId = info.getCompanyId();
 			
 			LOGGER.debug("resourceId: " + resourceId);
 			LOGGER.debug("scheduleId: " + scheduleId);
