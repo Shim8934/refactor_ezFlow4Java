@@ -752,14 +752,12 @@ public class EzTaskController extends EgovFileMngUtil {
     	String filter = request.getParameter("filter");
     	String chkValue = request.getParameter("chkValue");
     	String searchClass = request.getParameter("searchClass");
-    	String startDate = "";
-    	String endDate = "";
+    	String startDate = request.getParameter("startDate");
+    	String endDate = request.getParameter("endDate");
     	String useDate = "";
 
-    	if (!startDate.equals("") || startDate != null) {
-    		startDate = request.getParameter("startDate");
-        	endDate = request.getParameter("endDate");
-        	useDate = request.getParameter("useDate");
+    	if (startDate != null || !startDate.equals("")) {
+    		useDate = request.getParameter("useDate");
     	}
 System.out.println(startDate + " / " + useDate);
     	// 검색 시 날짜사용 안하면 최근 3개월이내 검색
@@ -782,7 +780,7 @@ System.out.println(startDate + " / " + useDate);
     	}
 
     	List<TaskInfoVO> list = ezTaskService.taskGetList(userInfo.getId(), startDate, endDate, offset, app, type, filter, chkValue, searchClass, userInfo.getTenantId());
-    	String cnt = ezTaskService.getTaskCount(userInfo.getId(), startDate, endDate, offset, type, filter, chkValue, searchClass, userInfo.getTenantId());
+    	String cnt = ezTaskService.getTaskCount(userInfo.getId(), offset, type, filter, chkValue, userInfo.getTenantId());
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 
