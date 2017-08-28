@@ -40,19 +40,28 @@
 		    var date = "${date }";
 		    var type = "${type }";
 		    var personid = "${taskInfoVO.personID }";
-		    var attachFileInfo = "${attachFileInfo }";
+// 		    var attachFileInfo = "${attachFileInfo }";
 		    var taskCommentListSize = "${taskCommentListSize }";
 		    var tempbody = "";
 		    var pUse_Editor = "${useEditor}";
 		    var AttachLimit = 5;
 		    
-		    var folderPath = "${folderPath }";
-		    
+// 		    var folderPath = "${folderPath }";
+		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
+		    var taskAttachList = "${taskAttachList }";
+		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
+		    var taskWorkAttachList = "${taskWorkAttachList }";
 		    
 		    $(document).ready(function() {
-		    	
-		    	load_bodyhtml();
-		    	load_bodyhtml2();
+				load_bodyhtml();
+				if (hasTaskAttach == 'Y') {
+					document.getElementById('attachedfileDIV').innerHTML = taskAttachList;
+		    	}
+				
+				load_bodyhtml2();
+				if (hasTaskWorkAttach == 'Y') {
+					document.getElementById('attachedfileDIV2').innerHTML = taskWorkAttachList
+		    	}
 		    	
 		        setTimeout(scrollTop, 1000);
 		        
@@ -204,6 +213,106 @@
 					} catch (e) { }
 				}
 			}
+			
+			/* function setTaskAttachList() {
+		        var pos = 0;
+		        var filename = "";
+		        var filepath = "";
+		        var strAttach = "";
+		        var fileImage = "";
+		        
+		        taskAttachList.forEach(function(vo, index) {
+		            filepath = vo.filePath;
+		            filename = vo.fileName;
+		            filesize = vo.fileSize;
+		            var strTarget = "target=''";
+		            var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
+		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+		               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+		               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+		               strFileExt == ".xlsx" || strFileExt == ".rtf") {
+		                strTarget = "target=''";
+		            }
+		            
+		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
+		                fileImage = "/images/image.png";
+		            else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
+		                fileImage = "/images/doc.png";
+		            else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
+		                fileImage = "/images/xls.png";
+		            else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
+		                fileImage = "/images/ppt.png";
+		            else if (strFileExt.indexOf(".txt") != -1)
+		                fileImage = "/images/txt.png";
+		            else if (strFileExt.indexOf(".zip") != -1)
+		                fileImage = "/images/zip.png";
+		            else if (strFileExt.indexOf(".pdf") != -1)
+		                fileImage = "/images/pdf.png";
+		            else if (strFileExt.indexOf(".ecm") != -1)
+		                fileImage = "/images/ecm.png";
+		            else
+		                fileImage = "/images/email/mail_006.gif";
+		
+		            var protocol = window.location.protocol;
+		            var serverName = window.location.hostname;
+		            
+		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
+		            strAttach += "<img src='" + fileImage + "'> <a href='/ezCommon/downloadAttach.do?filePath=" + javaURLEncode(folderPath + filepath) + "&fileName=" + javaURLEncode(filename) + "'\">";
+		            strAttach += filename + "&nbsp;(" + filesize + ")</a><br>";
+		        });
+		        
+		        document.getElementById('attachedfileDIV').innerHTML = strAttach;
+			}
+			
+			function setTaskWorkAttachList() {
+		        var pos = 0;
+		        var filename = "";
+		        var filepath = "";
+		        var strAttach = "";
+		        var fileImage = "";
+		        
+		        taskWorkAttachList.forEach(function(vo, index) {
+		            filepath = vo.filePath;
+		            filename = vo.fileName;
+		            filesize = vo.fileSize;
+		            var strTarget = "target=''";
+		            var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
+		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+		               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+		               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+		               strFileExt == ".xlsx" || strFileExt == ".rtf") {
+		                strTarget = "target=''";
+		            }
+		            
+		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
+		                fileImage = "/images/image.png";
+		            else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
+		                fileImage = "/images/doc.png";
+		            else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
+		                fileImage = "/images/xls.png";
+		            else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
+		                fileImage = "/images/ppt.png";
+		            else if (strFileExt.indexOf(".txt") != -1)
+		                fileImage = "/images/txt.png";
+		            else if (strFileExt.indexOf(".zip") != -1)
+		                fileImage = "/images/zip.png";
+		            else if (strFileExt.indexOf(".pdf") != -1)
+		                fileImage = "/images/pdf.png";
+		            else if (strFileExt.indexOf(".ecm") != -1)
+		                fileImage = "/images/ecm.png";
+		            else
+		                fileImage = "/images/email/mail_006.gif";
+		
+		            var protocol = window.location.protocol;
+		            var serverName = window.location.hostname;
+		            
+		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
+		            strAttach += "<img src='" + fileImage + "'> <a href='/ezCommon/downloadAttach.do?filePath=" + javaURLEncode(folderPath + filepath) + "&fileName=" + javaURLEncode(filename) + "'\">";
+		            strAttach += filename + "&nbsp;(" + filesize + ")</a><br>";
+		        });
+		        
+		        document.getElementById('attachedfileDIV2').innerHTML = strAttach;
+			} */
 			
 			function ImageUrl(pUrl, cnt) {
 				var link = "/myoffice/Common/ImgFileRead.asp?PUrl=" + pUrl + "&Cnt=" + cnt;
@@ -1033,11 +1142,13 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="padding-top:4px;height:20px"  class="pad1">
+				<td style="padding-top:4px;height:20px" class="pad1">
 					<table class="file">
 						<tr>
 							<th><spring:message code='ezTask.t160' /></th>
-							<td class="pos1"><div id="attachedfileDIV" style="overflow:auto;height:50px;background-color:white;text-align:left"><asp:Literal ID="LiteralAttach" Runat="server"></asp:Literal></div></td>
+							<td class="pos1">
+								<div id="attachedfileDIV" style="overflow:auto;height:50px;background-color:white;text-align:left"></div>
+							</td>
 							<td class="pos2">
 								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>
 								<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
@@ -1125,9 +1236,7 @@
 							<tr>
 								<th><spring:message code='ezTask.t160' /></th>
 								<td class="pos1">
-									<div id="attachedfileDIV2" style="overflow: auto;height: 50px;background-color:white;text-align:left">
-										<asp:Literal ID="Literal1" Runat="server"></asp:Literal>
-									</div>
+									<div id="attachedfileDIV2" style="overflow: auto;height: 50px;background-color:white;text-align:left"></div>
 								</td>
 								<td class="pos2"><a class="imgbtn">
 									<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br>

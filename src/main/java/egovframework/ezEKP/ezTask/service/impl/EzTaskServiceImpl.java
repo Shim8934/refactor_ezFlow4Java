@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
-import egovframework.ezEKP.ezTask.vo.TaskFileVO;
+import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -211,7 +211,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", uploadFileFolder + commonUtil.separator + fileName);
+				attachMap.put("filePath", taskID + commonUtil.separator + filePath + ";" + fileName);
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
@@ -420,8 +420,58 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	@Override
-	public List<TaskFileVO> getAttachList(String taskID) throws Exception {
-		return null;
+	public String getAttachList(String taskID, String folderPath, int type, int tenantID) throws Exception {
+		logger.debug("getAttachList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("type", type);
+		map.put("tenantID", tenantID);
+		
+		List<TaskAttachVO> list = ezTaskDAO.getAttachList(map);
+		
+		StringBuilder sb = new StringBuilder();
+		for (TaskAttachVO vo : list) {
+			String attachID = vo.getAttachID();
+			String fileName = vo.getFileName();
+			String filePath = vo.getFilePath();
+			String fileSize = vo.getFileSize();
+			String fileImage = null;
+			
+			String strFileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+			
+			String strTarget = "target=''";
+			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
+				fileImage = "/images/image.png";
+			} else if (fileName.contains(".doc")) {
+				fileImage = "/images/doc.png";
+			} else if (fileName.contains(".xls") || fileName.contains(".xlsx")) {
+				fileImage = "/images/xls.png";
+			} else if (fileName.contains(".ppt") || fileName.contains(".pptx") || fileName.contains(".pps") || fileName.contains(".ppsx")) {
+				fileImage = "/images/ppt.png";
+			} else if (fileName.contains(".txt")) {
+				fileImage = "/images/txt.png";
+			} else if (fileName.contains(".zip")) {
+				fileImage = "/images/zip.png";
+			} else if (fileName.contains(".pdf")) {
+				fileImage = "/images/pdf.png";
+			} else if (fileName.contains(".ecm")) {
+				fileImage = "/images/ecm.png";
+			} else if (fileName.contains(".hwp")) {
+				fileImage = "/images/hwp.png";
+			} else {
+				fileImage = "/images/email/mail_006.gif";
+			}
+			
+			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' >");
+			sb.append("<img src='" + fileImage + "' >");
+			sb.append("<a href='/ezCommon/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
+			sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
+		}
+		
+		logger.debug("getAttachList ended. listSize = " + list.size());
+		
+		return sb.toString();
 	}
 
 	/* 정수현*/

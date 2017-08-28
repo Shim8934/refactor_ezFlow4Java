@@ -3,7 +3,7 @@ package egovframework.ezEKP.ezTask.service;
 import java.util.List;
 
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
-import egovframework.ezEKP.ezTask.vo.TaskFileVO;
+import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 
@@ -16,6 +16,8 @@ public interface EzTaskService {
 	
 	List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception;
 	
+	String getAttachList(String taskID, String folderPath, int type, int tenantID) throws Exception;
+	
 	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception;
 	
 	void deleteComment(String taskID, String commentID, int tenantID) throws Exception;
@@ -25,8 +27,6 @@ public interface EzTaskService {
 	void taskWorkSave(String taskID, String content, String attachList, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception;
 	
 	void taskSave(TaskInfoVO taskInfoVO, String realPath, String uploadTaskPath, String content, String fileList, String offset, int tenantID) throws Exception;
-	
-	List<TaskFileVO> getAttachList(String taskID) throws Exception;
 	
 	/* 정수현*/
 	public void taskSaveConfig(String memberID, String delayColor, int autoDelete, int tenantID) throws Exception;

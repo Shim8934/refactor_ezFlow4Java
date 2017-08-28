@@ -35,7 +35,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
-import egovframework.ezEKP.ezTask.vo.TaskFileVO;
+import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -115,7 +115,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String folderPath = commonUtil.getRealPath(request) + commonUtil.separator + commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator;
+		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
@@ -145,33 +145,35 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 		}
 		
-		//첨부파일목록조회
-		List<TaskFileVO> taskFileList = null;
+		//task첨부파일목록조회
+		String taskAttachList = null;
 		if (taskInfoVO.getHasAttach().equals("Y")) {
 			if (parentID.equals("0")) {
-				taskFileList = ezTaskService.getAttachList(taskID);
+				taskAttachList = ezTaskService.getAttachList(taskID, folderPath, 1, tenantID);
 			} else {
-				taskFileList = ezTaskService.getAttachList(parentID);
+				taskAttachList = ezTaskService.getAttachList(parentID, folderPath, 1, tenantID);
+			}
+		}
+		
+		//taskWork첨부파일목록조회
+		String taskWorkAttachList = null;
+		if (taskInfoVO.getPersonAttach().equals("Y")) {
+			if (parentID.equals("0")) {
+				taskWorkAttachList  = ezTaskService.getAttachList(taskID, folderPath, 2, tenantID);
+			} else {
+				taskWorkAttachList  = ezTaskService.getAttachList(parentID, folderPath, 2, tenantID);
 			}
 		}
 		
 		//delayColor
 		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
 		
-		/*
-	    var personlist = "${personList }";
-	    var content = "${contentPerson }";
-	    var date = "${date }";
-	    var attachFileInfo = "${attachFileInfo }";
-	    var optioncnt = "${optionCnt }";
-	    var tempbody = "";
-	    */
-		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("taskShareList", taskShareList);
-		/*model.addAttribute("taskAttachList", taskAttachList);*/
+		model.addAttribute("taskAttachList", taskAttachList);
+		model.addAttribute("taskWorkAttachList", taskWorkAttachList);
 		model.addAttribute("taskCommentList", taskCommentList);
 		model.addAttribute("taskCommentListSize", taskCommentList == null ? "0" : taskCommentList.size());
 		
@@ -180,7 +182,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("delayColor", delayColor);
 		
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("folderPath", folderPath);
 		
 		logger.debug("taskRead ended.");
 		
