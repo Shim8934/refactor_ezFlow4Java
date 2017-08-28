@@ -519,11 +519,28 @@
                 (A.APPRFLAG = 'Y' 
                  OR A.APPRFLAG IS NULL)
               AND 
-                A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
-              AND 
-                A.STARTDATE <= #nowDate#
-              AND 
-                A.ENDDATE > #nowDate#         
+                A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+            ]]>
+            
+            <isNotEmpty property="lastDate">
+                <![CDATA[
+                    AND 
+                        A.STARTDATE < #lastDate#
+                    AND 
+                        A.ENDDATE > #nowDate#
+                ]]>
+            </isNotEmpty>
+            <isEmpty property="lastDate">
+                <![CDATA[
+                    AND 
+                        A.STARTDATE <= #nowDate#
+                    AND 
+                        A.ENDDATE > #nowDate#
+                ]]>
+            </isEmpty>
+            
+            <![CDATA[
+                       
               AND 
                 (NOT EXISTS
                     (SELECT 
@@ -545,7 +562,7 @@
               ORDER BY
                   A.writedate DESC
               LIMIT #listSize#
-      ]]>
+            ]]>
   </select>
   
   <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
