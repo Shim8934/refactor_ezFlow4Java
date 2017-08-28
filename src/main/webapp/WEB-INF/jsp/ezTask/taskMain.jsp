@@ -737,7 +737,7 @@
 // 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
 // 		        xmlHTTP2.onreadystatechange = after_DateChange;
 // 		        xmlHTTP2.send(xmlDom);
-alert(startdate + " / " + enddate);
+// alert(startdate + " / " + enddate);
 				$.ajax({
 					type : "POST",
 					dataType : "text",

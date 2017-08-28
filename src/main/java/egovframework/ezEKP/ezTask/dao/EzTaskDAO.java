@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -21,6 +22,11 @@ public class EzTaskDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<TaskShareVO> getShareList(Map<String, Object> map) {
 		return (List<TaskShareVO>) list("EzTaskDAO.getShareList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TaskAttachVO> getAttachList(Map<String, Object> map) throws Exception {
+		return (List<TaskAttachVO>) list("EzTaskDAO.getAttachList", map);
 	}
 	
 	public TaskInfoVO getTaskInfo(Map<String, Object> map) {

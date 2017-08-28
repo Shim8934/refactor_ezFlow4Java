@@ -5,6 +5,7 @@
 	<typeAlias alias="TaskInfoVO"					type="egovframework.ezEKP.ezTask.vo.TaskInfoVO"/>
 	<typeAlias alias="TaskShareVO"					type="egovframework.ezEKP.ezTask.vo.TaskShareVO"/>
 	<typeAlias alias="TaskCommentVO"				type="egovframework.ezEKP.ezTask.vo.TaskCommentVO"/>
+	<typeAlias alias="TaskAttachVO"					type="egovframework.ezEKP.ezTask.vo.TaskAttachVO"/>
 	
 	<select id="EzTaskDAO.getTaskInfo" resultClass="TaskInfoVO">
 	   <![CDATA[
@@ -83,6 +84,23 @@
 				tenantid = #tenantID#
 			AND
 				taskid = #taskID#
+		]]>
+	</select>
+	
+	<select id="EzTaskDAO.getAttachList" resultClass="TaskAttachVO">
+		<![CDATA[
+			SELECT
+				filename,
+				filepath,
+				filesize
+			FROM
+				TBL_TASKATTACH
+			WHERE
+				tenantid = #tenantID#
+			AND
+				taskid = #taskID#
+			AND
+				type = #type#
 		]]>
 	</select>
 	

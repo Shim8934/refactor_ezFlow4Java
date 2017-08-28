@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezTask.vo;
 
-public class TaskFileVO {
+public class TaskAttachVO {
 	/** 파일명 */
 	private String fileName;
 	/** 파일경로 */

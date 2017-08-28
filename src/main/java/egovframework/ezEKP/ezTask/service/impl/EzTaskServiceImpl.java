@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
-import egovframework.ezEKP.ezTask.vo.TaskFileVO;
+import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -211,7 +211,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", uploadFileFolder + commonUtil.separator + fileName);
+				attachMap.put("filePath", taskID + commonUtil.separator + filePath + ";" + fileName);
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
@@ -420,8 +420,19 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	@Override
-	public List<TaskFileVO> getAttachList(String taskID) throws Exception {
-		return null;
+	public List<TaskAttachVO> getAttachList(String taskID, int type, int tenantID) throws Exception {
+		logger.debug("getAttachList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("type", type);
+		map.put("tenantID", tenantID);
+		
+		List<TaskAttachVO> list = ezTaskDAO.getAttachList(map);
+		
+		logger.debug("getAttachList ended. listSize = " + list.size());
+		
+		return list;
 	}
 
 	/* 정수현*/
