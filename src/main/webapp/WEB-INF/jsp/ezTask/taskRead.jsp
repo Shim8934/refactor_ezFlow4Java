@@ -46,21 +46,21 @@
 		    var pUse_Editor = "${useEditor}";
 		    var AttachLimit = 5;
 		    
-		    var folderPath = "${folderPath }";
-		    var hasTaskAttach = "${vo.hasAttach}";
+// 		    var folderPath = "${folderPath }";
+		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
 		    var taskAttachList = "${taskAttachList }";
-		    var hasTaskWorkAttach = "${vo.personAttach}";
+		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
 		    var taskWorkAttachList = "${taskWorkAttachList }";
 		    
 		    $(document).ready(function() {
 				load_bodyhtml();
 				if (hasTaskAttach == 'Y') {
-					setTaskAttachList();
+					document.getElementById('attachedfileDIV').innerHTML = taskAttachList;
 		    	}
 				
 				load_bodyhtml2();
 				if (hasTaskWorkAttach == 'Y') {
-					setTaskWorkAttachList();
+					document.getElementById('attachedfileDIV2').innerHTML = taskWorkAttachList
 		    	}
 		    	
 		        setTimeout(scrollTop, 1000);
@@ -214,7 +214,7 @@
 				}
 			}
 			
-			function setTaskAttachList() {
+			/* function setTaskAttachList() {
 		        var pos = 0;
 		        var filename = "";
 		        var filepath = "";
@@ -312,7 +312,7 @@
 		        });
 		        
 		        document.getElementById('attachedfileDIV2').innerHTML = strAttach;
-			}
+			} */
 			
 			function ImageUrl(pUrl, cnt) {
 				var link = "/myoffice/Common/ImgFileRead.asp?PUrl=" + pUrl + "&Cnt=" + cnt;

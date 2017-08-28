@@ -90,6 +90,7 @@
 	<select id="EzTaskDAO.getAttachList" resultClass="TaskAttachVO">
 		<![CDATA[
 			SELECT
+				attachid,
 				filename,
 				filepath,
 				filesize

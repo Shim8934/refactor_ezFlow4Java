@@ -115,7 +115,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String folderPath = commonUtil.getRealPath(request) + commonUtil.separator + commonUtil.getUploadPath("upload_task.ROOT", tenantID);
+		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
 		String taskID = request.getParameter("taskID");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
@@ -146,36 +146,27 @@ public class EzTaskController extends EgovFileMngUtil {
 		}
 		
 		//task첨부파일목록조회
-		List<TaskAttachVO> taskAttachList = null;
+		String taskAttachList = null;
 		if (taskInfoVO.getHasAttach().equals("Y")) {
 			if (parentID.equals("0")) {
-				taskAttachList = ezTaskService.getAttachList(taskID, 1, tenantID);
+				taskAttachList = ezTaskService.getAttachList(taskID, folderPath, 1, tenantID);
 			} else {
-				taskAttachList = ezTaskService.getAttachList(parentID, 1, tenantID);
+				taskAttachList = ezTaskService.getAttachList(parentID, folderPath, 1, tenantID);
 			}
 		}
 		
 		//taskWork첨부파일목록조회
-		List<TaskAttachVO> taskWorkAttachList = null;
+		String taskWorkAttachList = null;
 		if (taskInfoVO.getPersonAttach().equals("Y")) {
 			if (parentID.equals("0")) {
-				taskWorkAttachList  = ezTaskService.getAttachList(taskID, 2, tenantID);
+				taskWorkAttachList  = ezTaskService.getAttachList(taskID, folderPath, 2, tenantID);
 			} else {
-				taskWorkAttachList  = ezTaskService.getAttachList(parentID, 2, tenantID);
+				taskWorkAttachList  = ezTaskService.getAttachList(parentID, folderPath, 2, tenantID);
 			}
 		}
 		
 		//delayColor
 		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
-		
-		/*
-	    var personlist = "${personList }";
-	    var content = "${contentPerson }";
-	    var date = "${date }";
-	    var attachFileInfo = "${attachFileInfo }";
-	    var optioncnt = "${optionCnt }";
-	    var tempbody = "";
-	    */
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("taskID", taskID);
@@ -191,7 +182,6 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("delayColor", delayColor);
 		
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("folderPath", folderPath);
 		
 		logger.debug("taskRead ended.");
 		

@@ -420,7 +420,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	@Override
-	public List<TaskAttachVO> getAttachList(String taskID, int type, int tenantID) throws Exception {
+	public String getAttachList(String taskID, String folderPath, int type, int tenantID) throws Exception {
 		logger.debug("getAttachList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -430,9 +430,48 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		List<TaskAttachVO> list = ezTaskDAO.getAttachList(map);
 		
+		StringBuilder sb = new StringBuilder();
+		for (TaskAttachVO vo : list) {
+			String attachID = vo.getAttachID();
+			String fileName = vo.getFileName();
+			String filePath = vo.getFilePath();
+			String fileSize = vo.getFileSize();
+			String fileImage = null;
+			
+			String strFileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+			
+			String strTarget = "target=''";
+			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
+				fileImage = "/images/image.png";
+			} else if (fileName.contains(".doc")) {
+				fileImage = "/images/doc.png";
+			} else if (fileName.contains(".xls") || fileName.contains(".xlsx")) {
+				fileImage = "/images/xls.png";
+			} else if (fileName.contains(".ppt") || fileName.contains(".pptx") || fileName.contains(".pps") || fileName.contains(".ppsx")) {
+				fileImage = "/images/ppt.png";
+			} else if (fileName.contains(".txt")) {
+				fileImage = "/images/txt.png";
+			} else if (fileName.contains(".zip")) {
+				fileImage = "/images/zip.png";
+			} else if (fileName.contains(".pdf")) {
+				fileImage = "/images/pdf.png";
+			} else if (fileName.contains(".ecm")) {
+				fileImage = "/images/ecm.png";
+			} else if (fileName.contains(".hwp")) {
+				fileImage = "/images/hwp.png";
+			} else {
+				fileImage = "/images/email/mail_006.gif";
+			}
+			
+			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' >");
+			sb.append("<img src='" + fileImage + "' >");
+			sb.append("<a href='/ezCommon/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
+			sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
+		}
+		
 		logger.debug("getAttachList ended. listSize = " + list.size());
 		
-		return list;
+		return sb.toString();
 	}
 
 	/* 정수현*/
