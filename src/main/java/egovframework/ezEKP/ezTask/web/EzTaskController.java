@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezTask.web;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -23,6 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -77,15 +83,21 @@ public class EzTaskController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userID = userInfo.getId();
 		int tenantID = userInfo.getTenantId();
+		
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		Date curretnTime = new Date();
+//
+//		String initDate = sdf.format(curretnTime);
 
 		//delayColor
 		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("delayColor", delayColor);
-		
+//		model.addAttribute("initDate", initDate);
+
 		logger.debug("taskMain ended.");
-		
+
 		return "/ezTask/taskMain";
 	}
 
@@ -488,7 +500,22 @@ public class EzTaskController extends EgovFileMngUtil {
 	 * 업무관리 검색
 	 */
 	@RequestMapping(value = "/ezTask/taskSearch.do")
-	public String taskSearch() throws Exception {
+	public String taskSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		logger.debug("taskSearch started.");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+
+		//delayColor
+		String delayColor = ezTaskService.getDelayColor(userID, tenantID);
+
+		model.addAttribute("userInfo",userInfo);
+		model.addAttribute("delayColor", delayColor);
+
+		logger.debug("taskSearch ended.");
+
 		return "/ezTask/taskSearch";
 	}
 
@@ -719,13 +746,21 @@ public class EzTaskController extends EgovFileMngUtil {
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
     	String offset = userInfo.getOffset();
-    	String startDate = request.getParameter("startDate");
-    	String endDate = request.getParameter("endDate");
     	String app = request.getParameter("app");
     	String type = request.getParameter("type");
-    	
-    	List<TaskInfoVO> list = ezTaskService.taskGetList(userInfo.getId(), startDate, endDate, offset, app, type, userInfo.getTenantId());
-    	String cnt = ezTaskService.getTaskCount(userInfo.getId(), startDate, endDate, offset, type, userInfo.getTenantId());
+    	String filter = request.getParameter("filter");
+    	String chkValue = request.getParameter("chkValue");
+    	String searchClass = request.getParameter("searchClass");
+    	String startDate = "";
+    	String endDate = "";
+
+    	if (!startDate.equals("") || startDate != null) {
+    		startDate = request.getParameter("startDate");
+        	endDate = request.getParameter("endDate");
+    	}
+
+    	List<TaskInfoVO> list = ezTaskService.taskGetList(userInfo.getId(), startDate, endDate, offset, app, type, filter, chkValue, searchClass, userInfo.getTenantId());
+    	String cnt = ezTaskService.getTaskCount(userInfo.getId(), startDate, endDate, offset, type, filter, chkValue, searchClass, userInfo.getTenantId());
 
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 

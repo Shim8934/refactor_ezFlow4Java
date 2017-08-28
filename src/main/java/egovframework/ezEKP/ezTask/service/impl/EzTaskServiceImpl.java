@@ -645,30 +645,33 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 
 	@Override
-	public List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, int tenantID) throws Exception {
+	public List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception {
 		logger.debug("taskGetList started.");
-		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type);
-		
+		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass);
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("memberID", memberID);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("type", type);
+		map.put("filter", filter);
+		map.put("chkValue", chkValue);
+		map.put("searchClass", searchClass);
 		map.put("tenantID", tenantID);
-		
+
 		List<TaskInfoVO> list = ezTaskDAO.taskGetList(map); 
-		
+
 		logger.debug("taskGetList ended.");
 
 		return list;
 	}
 
 	@Override
-	public String getTaskCount(String memberID, String startDate, String endDate, String offset, String type, int tenantID) throws Exception {
+	public String getTaskCount(String memberID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception {
 		logger.debug("getTaskCount started.");
-		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type);
+		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -677,6 +680,8 @@ public class EzTaskServiceImpl implements EzTaskService{
 		map.put("endDate", endDate);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("type", type);
+		map.put("filter", filter);
+		map.put("chkValue", chkValue);
 		map.put("tenantID", tenantID);
 
 		String rtnCnt = "";
