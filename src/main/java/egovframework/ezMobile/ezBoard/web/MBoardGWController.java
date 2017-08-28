@@ -231,6 +231,9 @@ public class MBoardGWController {
 			String domain = request.getServerName() + ":" + request.getServerPort();
 			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale);
 			
+			//새게시물 눌렀을때, read테이블에 들어가게함.
+			mBoardService.setAsRead(info, boardId, contentId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", boardItem);
@@ -291,6 +294,8 @@ public class MBoardGWController {
 			}
 				
 			LOGGER.debug("photoList:"+photoList);
+			
+			mBoardService.setAsRead(info, boardId, contentId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
