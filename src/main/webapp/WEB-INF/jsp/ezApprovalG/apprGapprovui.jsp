@@ -1380,11 +1380,11 @@
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
 		                
-		                tempSecurity = ret[7];
-		                tempUrgent = ret[8];
-		                pSummery = ret[9];
-		                tempSecurityDate = ret[14];
-		                pPublicityCode = ret[11];
+		                tempSecurity = ret[7];                // 보안등급 관련
+		                tempUrgent = ret[8];                  // 긴급 결재 여부
+		                pSummery = ret[9];                    // 요약 내용 관련
+		                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+		                pPublicityCode = ret[11];             // 공개여부 및 공개등급 관련 
 		                
 		                //tempPublic 추가
 		                if (ret[11].substring(0,1) == '1') {
@@ -1397,7 +1397,7 @@
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
-			                
+			                //문서 공개 범위 설정
 			                setPublicFlag();
 		                } else {
 		                	//회람

@@ -202,7 +202,7 @@ public interface EzApprovalGService {
 	
 	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getSignInfo(String docID, String offset, Locale locale, String companyID, int tenantID) throws Exception;
+	public String getSignInfo(String docID, String offset, Locale locale, String primary, String companyID, int tenantID) throws Exception;
 	
 	public String getCabinetNum(String deptID, String subID, String companyID, String docID, String lang, int tenantID, String offSet) throws Exception;
 	

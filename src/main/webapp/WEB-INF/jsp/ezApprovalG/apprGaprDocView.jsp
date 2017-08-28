@@ -63,7 +63,8 @@
 		    var pHasOpinion = "${hasOpinionYN}";
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
-		
+		    var signImageType = "${signImageType}";
+		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
@@ -143,6 +144,7 @@
 		                    var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
 		                    var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
 		                    var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
+		                    var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
 		                    
 		                    var field = message.GetListItem(fields, SignName);
 
@@ -179,7 +181,11 @@
 		                            if (img.length >= 1) {
 		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
-		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2];
+		                                if (signImageType == "NAME") {
+		                                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
+		                                } else {
+		                                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+		                                }
 		                            }
 		                            
 		                            if (seumyung) {

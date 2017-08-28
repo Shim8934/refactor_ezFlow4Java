@@ -159,18 +159,11 @@
 		<div id="left">
 			<div class="left_env"></div>
 			<c:if test="${IsJMochaStandAlone != 'YES' && packageType != 'basic'}">
-			<%
-				String usePortal = (String)request.getAttribute("usePortal");
-			%>
-			<% if (usePortal.equals("YES")) { %>
 				<h2><span  id="Portal" name="Portal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900001' /></span></h2>
 				<ul>
 					<li><span id="Portal_sub1"  name="Portal_sub1"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900002' /></span></li>
 					<li><span id="Portal_sub4"  name="Portal_sub4"  onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span></li>
 				</ul>
-			<% } else if (request.getHeader("User-Agent").indexOf("MSIE") > -1 || request.getHeader("User-Agent").indexOf("Trident") > -1) { %>
-				<h2><span  id="Personal" name="Personal" onclick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t999900005' /></span><ul></ul></h2>
-			<% } %>
             </c:if>
 			
 			<h2><span id="UserInfo" name="UserInfo" onClick="Open_Func(this)" style="width:100%;display:inline-block"><spring:message code='ezPersonal.t172' /></span><ul></ul></h2>
