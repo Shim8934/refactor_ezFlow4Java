@@ -243,7 +243,7 @@
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
 // 			    	$("#taskID_'" + SelectSingleNodeValue(node, "TASKID")  + "'").empty();
 // alert(isrefresh2);
-					
+
 					if (isrefresh2) {
 // alert("@");
 						$("#taskID_" + SelectSingleNodeValue(node, "TASKID") + "").remove();

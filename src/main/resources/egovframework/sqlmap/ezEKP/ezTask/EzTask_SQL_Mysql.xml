@@ -490,7 +490,8 @@
 		<![CDATA[
 				tenantid = #tenantID#
 			ORDER BY
-				startDate DESC
+				startDate DESC,
+				taskid DESC
 		]]>
 	</select>
 
