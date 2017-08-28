@@ -2954,7 +2954,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String userID = request.getParameter("userID");
+		
 		String result = ezOrganService.getPropertyValue(userID, "extensionAttribute3", userInfo.getTenantId());
+		// 서명이 있는 경우 XML에 append 해서 return
 		if (result != null) {
 			String[] signText = result.split(";");
 			int tempLength = signText.length;
@@ -3240,7 +3242,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String hideCabinet = config.getProperty("config.hideCabinet");
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
-		
+		// a=1 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -3267,7 +3269,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		dirPath = dirPath + docDir + "/" + docID + ".mht";
-		
+		// allFlag : 0(결재), 1(모두결재), 2(일괄결재)
 		if (!allFlag.equals("1") && !allFlag.equals("2")) {
 			allFlag = "0";
 		}
@@ -3275,13 +3277,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optIsSplit = "";
 		
+		// 결재칸 split 유무
 		if (approvalFlag.equals("S")) {
-			optIsSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+			optIsSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");  // Y
 		} else {
-			optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+			optIsSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE"); // N
 		}
-		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
-		String optJunKyulInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
+		String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE"); // FIX
+		String optJunKyulInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE"); //전결 처리 방법
 		
 		if (docID != null && !docID.equals("")) {
 			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", tenantID, userInfo.getOffset());

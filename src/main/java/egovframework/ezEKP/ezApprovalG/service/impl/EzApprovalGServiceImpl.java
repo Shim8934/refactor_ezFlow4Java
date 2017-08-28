@@ -8887,6 +8887,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return rtnVal;
 	}
 
+	/**
+	 * 각 문서별 서명 정보 업데이트
+	 * DOCID 기준으로 저장
+	 * */
 	@Override
 	public String updateSignInfo(Document xmlDom, String companyID, String mode, int tenantID) throws Exception {
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
@@ -8896,7 +8900,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID);
 		map.put("v_TENANTID", tenantID);
 		
-		int aprSN = ezApprovalGDAO.updateSignInfoAprSN(map);
+		int aprSN = ezApprovalGDAO.updateSignInfoAprSN(map); // 서명 순번 추출
 		int signLength = xmlDom.getElementsByTagName("SIGNINFO").getLength();
 		int maxAprSN = 0;
 		
@@ -13089,13 +13093,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String receiptMemberJobTitle2 = "";
 		String receiptCompanyID = "";
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
-		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
+		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim(); //G 정부버전, S 대학버전
 		String orgDocID = docID;
 		String tempOrgDocID = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 
 		if (approvalFlag.equals("G")) {
-			// 진행 중인 문서의 OrgDocID, 문서 상태(DOCSTATE) 리스트를 가져온다.
+			// '진행 중인 문서'의 OrgDocID, 문서 상태(DOCSTATE) 리스트를 가져온다.
 			// TBL_APRDOCINFO
 			List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.doSendDocAprDocInfo(map);
 			
@@ -13129,7 +13133,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 			}
 			// dlength != 0 -> 수신처가 존재하는 경우
-			// TBL_RECEIPTPOINTINFO 테이블에서 데이터 가져오기
+			// TBL_RECEIPTPOINTINFO 테이블의 데이터 사용
 			for (int j = 0; j < dlength; j++) {
 				receiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
 				receiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
@@ -13253,7 +13257,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                            // '진행 문서 수신처리 정보' 테이블에 저장
 	                            ezApprovalGDAO.insertDocSendAprReceiptProcessInfo(map);
 							
-								if (!flag.equals("G")) {
+								if (!flag.equals("G")) { // S : 대학버전인 경우
 									 map.put("v_DOCID", docID);
 									 map.put("v_TENANTID", tenantID);
 									 map.put("companyID", companyID);
