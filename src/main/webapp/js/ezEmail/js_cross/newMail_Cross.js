@@ -738,7 +738,7 @@ function Send_onClick_Complete(ReturnValue) {
             	secureMail_dialogArguments[1] = secureMail_Complete;
             	secureMail_dialogArguments[2] = DivPopUpHidden;
             	
-            	DivPopUpShow(550, 300, "/ezEmail/mailSecureOption.do");
+            	DivPopUpShow(550, 330, "/ezEmail/mailSecureOption.do");
             } else {
             	Save_onClick("sendsave");
             }

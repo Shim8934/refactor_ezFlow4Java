@@ -113,6 +113,7 @@
 		        }
 		        
 		        document.getElementById("securePassword").value = RetValue["securePassword"];
+		        document.getElementById("securePasswordCheck").value = RetValue["securePassword"];
 		        
 		        if (RetValue["secureReadCount"] != "0") {
 		        	document.getElementById("maxReadCount").value = RetValue["secureReadCount"];
@@ -139,6 +140,12 @@
 	            	return;
 	            }
 	            
+	            if (document.getElementById("securePassword").value != document.getElementById("securePasswordCheck").value) {
+	            	alert("<spring:message code='ezEmail.lhm62' />");
+	            	document.getElementById("securePasswordCheck").focus();
+	            	return;
+	            }
+	            
 	            var secureReadDate = null;
 	            if (document.getElementById("dateUnlimit").checked == false) {
 	            	secureReadDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
@@ -153,12 +160,22 @@
 		            }
 	            }
 	            
+	            var secureReadCount = null;
+	            if (document.getElementById("countUnlimit").checked == false) {
+	            	secureReadCount = Number(document.getElementById("maxReadCount").value);
+	            	
+	            	if (isNaN(secureReadCount) || secureReadCount > 1000 || secureReadCount < 1) {
+	            		alert("<spring:message code='ezEmail.lhm60' />");
+	            		return;
+	            	}
+	            }
+	            
 	            RetValue["securePassword"] = rsa.encrypt(document.getElementById("securePassword").value);
 	            
 	            if (document.getElementById("countUnlimit").checked == true) {
 	            	RetValue["secureReadCount"] = 0;
 	            } else {
-	            	RetValue["secureReadCount"] = document.getElementById("maxReadCount").value;
+	            	RetValue["secureReadCount"] = secureReadCount;
 	            }
 	            
 	            if (document.getElementById("dateUnlimit").checked == true) {
@@ -191,11 +208,18 @@
 	            }
 		    }
 			
+			function digitCheck(event) {
+				if ((event.keyCode < 48)||(event.keyCode > 57)) {
+					return false;
+				}
+			}
+			
 			function cancel() {
-		    	if (!isDivPopUp)
+		    	if (!isDivPopUp) {
 	                window.close();
-	            else
+		    	} else {
 	                CancelFunction();
+		    	}
 		    }
 		</script>
 	</head>
@@ -210,22 +234,19 @@
 		<table style="width:100%;" class="content">
 		  <tr>
 		    <th><spring:message code='ezEmail.lhm32' /></th>
-		    <td><input type="text" id="securePassword" maxlength="50" /></td>
+		    <td><input type="password" id="securePassword" maxlength="20" /></td>
+		  </tr>
+		  <tr>
+		    <th><spring:message code='ezEmail.lhm61' /></th>
+		    <td><input type="password" id="securePasswordCheck" maxlength="20" /></td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code='ezEmail.lhm33' /></th>
 		    <td>
-		    	<select id="maxReadCount" style="width:50px" disabled>
-		    		<option value=1>1</option>
-		    		<option value=2>2</option>
-		    		<option value=3>3</option>
-		    		<option value=4>4</option>
-		    		<option value=5>5</option>
-		    	</select>
+		    	<input type="text" id="maxReadCount" maxlength="3" style="width:50px;-webkit-ime-mode:mode:disabled;-moz-ime-mode:mode:disabled;-ms-ime-mode:mode:disabled;ime-mode:disabled;" 
+		    		onkeypress="return digitCheck(event)" disabled />
 		    	<spring:message code='ezEmail.lhm36' />
-		    	<span class="right">
-		    		<input type="checkbox" id="countUnlimit" onclick="chkMaxReadCount()" checked /><label for="countUnlimit"><spring:message code='ezEmail.lhm35' /></label>
-		    	</span>
+		    	<input type="checkbox" id="countUnlimit" onclick="chkMaxReadCount()" checked /><label for="countUnlimit"><spring:message code='ezEmail.lhm35' /></label>
 		    </td>
 		  </tr>
 		  <tr>

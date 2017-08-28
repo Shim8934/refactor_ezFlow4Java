@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -239,7 +240,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					String[] secureMailHeaders = message.getHeader("X-JMocha-Secure-Mail");
 					String secureMailHeader = secureMailHeaders != null ? secureMailHeaders[0] : null;		
 					
-					// TODO: 보안메일 처리
+					// 보안메일 처리
 					if (secureMailHeader.equals("true")) {
 						
 						// get Info from secureMail header
@@ -248,6 +249,13 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 						String secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
 						String secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
 						String serverName = message.getHeader("X-JMocha-Secure-Mail-ServerName")[0];
+						
+						// 암호화되어있는 securePassword 복호화
+		    			String prm = egovFileScrty.getPrm();
+		            	String pre = egovFileScrty.getPre();
+		            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+		            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
+						
 						logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount
 								+ ",secureReadDate=" + secureReadDate + ",serverName=" + serverName);
 						
@@ -258,12 +266,15 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 						message.removeHeader("X-JMocha-Secure-Mail-ServerName");
 						message.removeHeader("X-JMocha-Secure-Mail");
 						
-						//TODO: timezone 처리 확인
+						// timezone 처리 확인
 						if (!secureReadDate.equals("")) {
 							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 							secureReadDate = sdf.format(new Date(Long.parseLong(secureReadDate)));
 							secureReadDate = commonUtil.getDateStringInUTC(secureReadDate, offset, true);
 						}
+						
+						// securePassword 암호화
+	            		securePassword = egovFileScrty.encryptAES(securePassword);
 						
 						// save secure mail info and get secureId
 	            		int secureId = ezEmailService.setMailSecure(tenantId, userId, securePassword, Integer.parseInt(secureReadCount), secureReadDate);
@@ -297,6 +308,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	sb.append("<style>\n");
     		        	sb.append(".security_message{background:#d0e1ff;}\n");
     		        	sb.append(".security_message .security_img{max-width:780px; margin:0 auto; padding-left: 40px;}\n");
+    		        	//TODO: 리소스
     		        	sb.append(".security_message .security_txt{margin:0px 0px 0px 300px; padding:54px 0px; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;position:relative;left:-50px;margin-top:-250px;}\n");
     		        	sb.append(".security_message .security_txt h4{margin:0px; padding:3px 0px 0px 0px; font-size:22px; letter-spacing:-1px; color:#333; border-bottom:2px solid #727985; line-height:44px;}\n");
     		        	sb.append(".security_message .security_txt h4 span{color:#304d7f;}\n");
@@ -306,8 +318,8 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	sb.append("    <div class=\"security_img\">\n");
     		        	sb.append("        <img src=\"cid:" + tempFileName + ".gif@12345678.87654321\">\n");
     		        	sb.append("        <section class=\"security_txt\">\n");
-    		        	sb.append("            <h4>해당 메일은 <span>암호화</span>되어있는 <span>보안메일</span>입니다.</h4>\n");
-    		        	sb.append("            <p>메일을 열람하려면 첨부파일을 다운로드한 후<br>보낸 사람이 지정한 암호를 입력해야 합니다.<br>열람 허용 횟수와 열람 허용 기간이 지정되어있으니<br>주의하시기 바랍니다.</p>\n");
+    		        	sb.append("            " + egovMessageSource.getMessage("ezEmail.lhm57", locale) + "\n");
+    		        	sb.append("            " + egovMessageSource.getMessage("ezEmail.lhm58", locale) + "\n");
     		        	sb.append("        </section>\n");
     		        	sb.append("    </div>\n");
     		        	sb.append("</div>\n");
@@ -340,6 +352,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	sb.append("        <style>\n");
     		        	sb.append("            .security_layerpopup{width:100%; height:100%; background:#f1f1f1;}\n");
     		        	sb.append("            .security_layerpopup .popup_img{margin:0px; padding:84px 0px 0px 0px; text-align:center;}\n");
+    		        	//TODO: 리소스
     		        	sb.append("            .security_layerpopup .popup_txt{margin:0px; padding:0px; text-align:center; font-size:24px; color:#333; font-weight:600; font-family:\"맑은고딕\", Malgun Gothic, \"돋움\", Dotum, \"굴림\", Gulim, Arial, Helvetica, sans-serif;}\n");
     		        	sb.append("            .security_layerpopup .popup_txt span{font-size:18px; font-weight:300; letter-spacing:-1px;}\n");
     		        	sb.append("            .security_layerpopup form{width:465px; margin: 35px auto;}\n");
@@ -361,10 +374,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	sb.append("    <body style=\"margin:0;height:100%;\">\n");
     		        	sb.append("        <div class=\"security_layerpopup\">\n");
     		        	sb.append("            <p class=\"popup_img\"><img src=\"http://" + serverName + "/images/email/secureMail/layer_img.gif\"></p>\n");
-    		        	sb.append("            <p class=\"popup_txt\">해당 메일은 암호화되어있는 보안메일입니다.<br><span>메일을 열람하려면 보낸 사람이 지정한 암호를 입력해야 합니다.</span></p>\n");
+    		        	sb.append("            <p class=\"popup_txt\">" + egovMessageSource.getMessage("ezEmail.lhm59", locale) + "</p>\n");
     		        	sb.append("            <form name=\"secureForm\" method=\"post\" action=\"http://" + serverName + "/ezEmail/readSecureMail.do\">\n");
     		        	sb.append("                <fieldset>\n");
-    		        	sb.append("                    <legend>암호입력 폼</legend>\n");
     		        	sb.append("                    <p class=\"password\"><input name=\"securePassword\" type=\"password\" id=\"TextPassword\" class=\"input_text\" onchange=\"if(this.value.length!=0){this.className=&#39;input_text focus&#39;}\"\n");
     		        	sb.append("                                           onblur=\"if (this.value.length==0) {this.className=&#39;input_text&#39;}else {this.className=&#39;input_text focusnot&#39;};\" onfocus=\"this.className=&#39;input_text focus&#39;\" /></p>\n");
     		        	sb.append("                    <p class=\"btn\"><input src=\"http://" + serverName + "/images/email/secureMail/btn.gif\" name=\"Button\" type=\"image\" id=\"Button\" tabindex=\"3\" border=\"0\" class=\"btn_check\" /></p>\n");
@@ -375,8 +387,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	sb.append("    </body>\n");
     		        	sb.append("</html>\n");
     		        	
-    		        	// TODO: secureMailKey 암호화
-    		        	String secureMailKey = userAccount + "/" + secureId;
+    		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
+    		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
+    		        	
     		        	secureAttachPart.setContent(sb.toString().replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
     		        	secureAttachPart.setHeader("Content-Disposition", "attachment;\r\n\tfilename=\"secureMail.html\"");
     		        	secureMixedPart.addBodyPart(secureAttachPart);
@@ -385,7 +398,6 @@ public class EzEmailScheduler extends EgovFileMngUtil {
     		        	// make encryptedOriginalPart and add to secureMixedPart
     		        	MimeBodyPart encryptedOriginalPart = new MimeBodyPart();
     		        	
-    		        	// TODO: originalFile, encryptedFile 삭제
     		        	String tempPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId) + commonUtil.separator + "tempFileUpload";
     		        	
     		        	File file = new File(tempPath);

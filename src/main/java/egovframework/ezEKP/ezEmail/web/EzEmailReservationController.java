@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,6 +59,7 @@ import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
  * @Description [Controller] 메일 예약발송관리
@@ -96,7 +98,10 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
-
+	
+	@Resource(name="crypto") 
+    private EgovFileScrty egovFileScrty;
+	
 	/**
 	 * 메일 예약발송 화면 호출 함수
 	 */
@@ -439,6 +444,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
               Header h = (Header) headers.nextElement();
               logger.debug("@@"+h.getName() + ": " + h.getValue());
             }
+            
             //set isEachMail
         	if (message.getHeader("X-JMocha-Each-Mail") != null) {
         		isEach = message.getHeader("X-JMocha-Each-Mail")[0];
@@ -451,9 +457,15 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     			secureReadCount = message.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
     			secureReadDate = message.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
 				
+    			// 암호화되어있는 securePassword 복호화
+    			String prm = egovFileScrty.getPrm();
+            	String pre = egovFileScrty.getPre();
+            	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
+            	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
+    			
 				logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount + ",secureReadDate=" + secureReadDate);
     		}
-        	
+    		
         	//set bodyType
         	if (message.getHeader("Content-Type") != null) {
         		String tempBodyType = ezEmailUtil.getTextPart(message).get(1);

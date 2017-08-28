@@ -1749,9 +1749,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			securePassword = request.getParameter("securePassword");
 			logger.debug("secureKey=" + secureKey + ",password=" + securePassword);
 			
-			String reader = secureKey.split("/")[0];
-			String secureId = secureKey.split("/")[1];
-			logger.debug("reader=" + reader + ",secureId=" + secureId);
+			String[] secureArr = secureKey.split("/");
+			String reader = secureArr[0];
+			String secureId = secureArr[1];
+			String sender = secureArr[2];
+			logger.debug("reader=" + reader + ",secureId=" + secureId + ",sender=" + sender);
 			
 			// secureKey는 메일 본문내용 호출에 쓰이기 때문에 secureKey를 다시 암호화한다.
 			secureKey = egovFileScrty.encryptAES(secureKey);
@@ -1765,24 +1767,28 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			if (result != 0) {
 				String message = null;
 				
-				//TODO: locale 어떡하지
-				Locale locale = Locale.getDefault();
+				String userId = sender.split("@")[0];
+				String domainName = sender.split("@")[1];
+				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
+				Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+				logger.debug("tenantId=" + tenantId + ",lang=" + lang);
 				
 				switch (result) {
 					case -1 : 
 						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
 						break;
 					case -2 : 
-						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
+						message = egovMessageSource.getMessage("ezEmail.lhm51", locale);
 						break;
 					case -3 : 
-						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
+						message = egovMessageSource.getMessage("ezEmail.lhm52", locale);
 						break;
 					case -4 : 
-						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
+						message = egovMessageSource.getMessage("ezEmail.lhm53", locale);
 						break;
 					default : 
-						message = egovMessageSource.getMessage("ezEmail.lhm50", locale);
+						message = egovMessageSource.getMessage("ezEmail.lhm54", locale);
 						break;
 				}
 				

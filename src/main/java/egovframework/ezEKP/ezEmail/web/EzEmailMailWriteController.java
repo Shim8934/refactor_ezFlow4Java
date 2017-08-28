@@ -2876,12 +2876,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            
 			        	// 보안메일 처리
 		            	if (isSecureMail) {
-		            		// client단에서 암호화되어 넘겨진 securePassword 복호화
-		            		String prm = egovFileScrty.getPrm();
-		                	String pre = egovFileScrty.getPre();
-		                	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
-		                	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
-		                	
 	    		        	message.setHeader("X-JMocha-Secure-Mail", "true");
 	    		        	message.setHeader("X-JMocha-Secure-Mail-Password", securePassword);
 	    		        	message.setHeader("X-JMocha-Secure-Mail-ReadCount", secureReadCount);
@@ -3047,7 +3041,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		    		        	sb.append("    </body>\n");
 		    		        	sb.append("</html>\n");
 		    		        	
-		    		        	String secureMailKey = userAccount + "/" + secureId;
+		    		        	String secureMailKey = userAccount + "/" + secureId + "/" + userAccount;
 		    		        	secureMailKey = egovFileScrty.encryptAES(secureMailKey);
 		    		        	
 		    		        	secureAttachPart.setContent(sb.toString().replace("${X-JMocha-Secure-Mail-Key}", secureMailKey), "text/html; charset=utf-8");
