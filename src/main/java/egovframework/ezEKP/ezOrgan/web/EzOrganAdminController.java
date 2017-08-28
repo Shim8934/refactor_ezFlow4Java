@@ -136,12 +136,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+		String useBizmekaTalk = ezCommonService.getTenantConfig("UseBizmekaTalk", user.getTenantId());
 		
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+		model.addAttribute("useBizmekaTalk", useBizmekaTalk);
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -393,7 +395,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), tenantID);
         String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), tenantID);
         String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
-            
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);    
+       
+        model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
         model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
@@ -593,9 +597,35 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
         logger.debug("parentCn=" + parentCn + ",cn=" + cn);
         
-        String result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
-
-        logger.debug("moveEntry result=" + result);
+        String result = "OK";
+		String bizmekaResult = "ERROR";
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);		
+        
+		if (useBizmekaSpambox.equals("YES")) {
+			String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+			String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+			String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+			String parentDeptId = parentCn;
+			
+			// 비즈메카에서는 조직도 최상위 회사의 ID가 Top이 아닌 companyId를 사용하므로 상위부서가 Top인 경우 변경한다.
+			if (parentDeptId.equals("Top")) {
+				parentDeptId = bizmekaCompanyId;
+			}
+			
+			bizmekaResult = ezEmailUtil.bizmekaMoveDept(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn, parentDeptId);		
+			
+			logger.debug("bizmekaResult=" + bizmekaResult);
+			
+			if (!bizmekaResult.equals("OK")) {
+				result = "EMAIL_ERROR";
+			}
+		}
+		
+		if (result.equals("OK")) {
+	        result = ezOrganAdminService.moveEntry(parentCn, cn, "group", tenantID);
+	
+	        logger.debug("moveEntry result=" + result);
+		}
         
 		logger.debug("movDept ended.");
 		
@@ -869,8 +899,32 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("parentCn=" + parentCn);
 		
+		String bizmekaResult = "ERROR";
+		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);		
+		
 		for (int i=0; i < cn.length; i++) {
-		    logger.debug("cn[" + i + "]=" + cn[i]);
+		    logger.debug("cn[" + i + "]=" + cn[i]);		    
+			
+			if (useBizmekaSpambox.equals("YES")) {
+				String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+				String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+				String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+				String parentDeptId = parentCn;
+				
+				// 비즈메카에서는 조직도 최상위 회사의 ID가 Top이 아닌 companyId를 사용하므로 상위부서가 Top인 경우 변경한다.
+				if (parentDeptId.equals("Top")) {
+					parentDeptId = bizmekaCompanyId;
+				}
+				
+				bizmekaResult = ezEmailUtil.bizmekaMoveUser(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn[i], parentDeptId);		
+				
+				logger.debug("bizmekaResult=" + bizmekaResult);
+				
+				if (!bizmekaResult.equals("OK")) {
+					result = "EMAIL_ERROR";
+					break;
+				}
+			}
 		    
 			result = ezOrganAdminService.moveEntry(parentCn, cn[i], "user", tenantID);
 		
@@ -1978,6 +2032,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
 		
+   		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
+   		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
+   		
    		logger.debug("retireUserManage ended");
    		
 		return "admin/ezOrgan/retireUserManage";
@@ -2161,6 +2218,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("saveEmail started.");
 		
 		String returnValue = "ERROR";
+		String bizmekaResult = "ERROR";
 		
 		try {
 			//관리자 권한 체크
@@ -2182,6 +2240,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			for (int i=0; i<mailNodeList.getLength(); i++) {
 				String mail = mailNodeList.item(i).getTextContent();
 				mailList.add(mail.substring(5));
+			}
+			
+			String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+			
+			if (useBizmekaSpambox.equals("YES")) {
+				String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+				String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+				String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
+				
+				bizmekaResult = ezEmailUtil.bizmekaEditEmailList(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, 
+												userId, primaryMail, mailList);		
+
+				logger.debug("bizmekaResult=" + bizmekaResult);
+				
+				if (!bizmekaResult.equals("OK")) {
+					throw new Exception("bizmekaEditEmailList failed");
+				}				
 			}
 			
 			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
@@ -2316,4 +2391,35 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         return returnValue;
     }
+    
+	/**
+	 * 그룹웨어 계정으로 비즈메카톡 계정을 동기화한다.
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/syncWithBizmekaTalkAccounts.do")
+	@ResponseBody
+	public String syncWithBizmekaTalkAccounts(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("syncWithBizmekaTalkAccounts started.");
+		
+		String returnValue = "ERROR";
+		
+		try {
+			// 관리자 권한 체크
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+				return returnValue;
+			}
+			
+			ezOrganAdminService.syncWithBizmekaTalkAccounts(userInfo.getTenantId());
+			
+			returnValue = "OK";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("syncWithBizmekaTalkAccounts ended.");
+		
+		return returnValue;
+	}
+	
 }

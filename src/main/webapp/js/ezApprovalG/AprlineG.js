@@ -2460,7 +2460,10 @@ function CheckSignCellValue()
 {
 	return true;
 }
-
+/** 
+ *  결재정보를 최종으로 확인.
+ *  모든 경우에 따른 Validation 확인.
+ */ 
 function CheckSignCellValueLast() {
     var pAPRLINE = new ListView();      //// ListView 선언
     pAPRLINE.LoadFromID("lvAPRLINE");

@@ -719,7 +719,6 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
   
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
-
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
@@ -867,14 +866,12 @@ function openForm() {
     var parameter = new Array();
     parameter[0] = arr_userinfo[4];
     parameter[1] = "000";
-
     var url = "/ezApprovalG/getFormCont.do";
     var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(713, 570);
 
     getformcont_cross_dialogArguments[0] = parameter;
     getformcont_cross_dialogArguments[1] = openForm_Complete;
-
     getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
     
     try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
@@ -885,7 +882,6 @@ function openForm_Complete(ret) {
     formURL = ret[0];
     formDocType = ret[1];
     formExt = ret[2];
-
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -1398,8 +1394,7 @@ function OpenInformationUI(pInformationContent, CompleteFunction, type) {
             var OpenWin = window.open(url, "ezAPROPINION_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
-    }
-    else {
+    } else {
         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
         feature = feature + GetShowModalPosition(330, 205);
         var RtnVal = window.showModalDialog(url, parameter, feature);
@@ -1469,8 +1464,12 @@ function openergetDocInfo() {
         else
             getDocList();
 
-
-        parent.frames["left"].getAprCount();
+        try {
+        	parent.frames["left"].getAprCount();
+		} catch (e) {
+			// LEFT메뉴 없는 연동일시 넘어가기
+			// TODO: handle exception
+		}
     } catch (e) {
         alert("openergetDocInfo :: " + e.description);
     }
@@ -1501,34 +1500,39 @@ function makePageSelPage() {
 
     document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 
-    if (ViewLeftCount == "YES") {
-        switch (pListTypeValue) {
-            case "1":
-                parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "2":
-                parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "3":
-                parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "4":
-                parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "6":
-                parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "7":
-                parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "21":
-                parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-            case "99":
-                parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
-                break;
-        }
-    }
+    try {
+    	if (ViewLeftCount == "YES") {
+    		switch (pListTypeValue) {
+    		case "1":
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "2":
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "3":
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "4":
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "6":
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "7":
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "21":
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		case "99":
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			break;
+    		}
+    	}
+	} catch (e) {
+		// LEFT메뉴 없는 연동일시 넘어가기
+		// TODO: handle exception
+	}
 
     strtext = "<div class='pagenavi'>";
     PagingHTML += strtext;
@@ -1536,8 +1540,7 @@ function makePageSelPage() {
         strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
-    }
-    else {
+    } else {
         strtext = "<span class='btnimg'><a >";
         strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
         PagingHTML += strtext;
@@ -1567,6 +1570,10 @@ function makePageSelPage() {
     }
     else {
         MaxNum = totalPage;
+    }
+    
+    if(totalPage == "0") {
+    	MaxNum = 1;
     }
     for (i = startNum; i <= MaxNum; i++) {
         if (i == pageNum) {
@@ -2569,7 +2576,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
     openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-
+alert("openServerDraftUI");
     openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
 

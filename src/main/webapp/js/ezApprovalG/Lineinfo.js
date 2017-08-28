@@ -42,6 +42,18 @@ function list3_onSel_DBclick() {
         alert("list3_onSel_DBclick :: " + e.description);
     }
 }
+function list4_onSel_DBclick() {
+	try {
+		var listview = new ListView();
+		listview.LoadFromID("DivUserList");
+		
+		var selnode = listview.GetSelectedRows();
+		APRLINEATTENDADDFunctionCC(selnode[0], "SEARCH");
+	}
+	catch (e) {
+		alert("list3_onSel_DBclick :: " + e.description);
+	}
+}
 function list3_onSel_Click() {
 }
 
@@ -345,9 +357,10 @@ function APRLINEATTENDADDFunctionCC(pCurSelectedRow, Mode) {
         if (pCurSelectedRow == null) {
             if (Mode == "PERSON") {
                 var pCurSelectedRow = pCurSelRow[0];
-            }
-            else if (Mode == "DEPT") {
+            } else if (Mode == "DEPT") {
                 var pCurSelectedRow = selnode;
+            } else if (Mode == "SEARCH") {
+            	var pCurSelectedRow = pCurSelRow[0];
             }
         }
 
@@ -387,15 +400,15 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
             var selnode = treeView.GetSelectNode();
 
             if (Mode == "PERSON") {
-                var preDeptID = GetAttribute(pSelectedRow, "DATA3");
-                var preDeptName = pSelectedRow.cells[1].innerText;
-                var preDeptJobTitle = pSelectedRow.cells[2].innerText;
-                var preDeptName1 = GetAttribute(pSelectedRow, "DATA10");
-                var preDeptName2 = GetAttribute(pSelectedRow, "DATA11");
-                var preWriterName1 = GetAttribute(pSelectedRow, "DATA8");
-                var preWriterName2 = GetAttribute(pSelectedRow, "DATA9");
-                var preDeptJobTitle1 = GetAttribute(pSelectedRow, "DATA12");
-                var preDeptJobTitle2 = GetAttribute(pSelectedRow, "DATA13");
+        		var preDeptID = GetAttribute(pSelectedRow, "DATA3");
+        		var preDeptName = pSelectedRow.cells[1].innerText;
+        		var preDeptJobTitle = pSelectedRow.cells[2].innerText;
+        		var preDeptName1 = GetAttribute(pSelectedRow, "DATA10");
+        		var preDeptName2 = GetAttribute(pSelectedRow, "DATA11");
+        		var preWriterName1 = GetAttribute(pSelectedRow, "DATA8");
+        		var preWriterName2 = GetAttribute(pSelectedRow, "DATA9");
+        		var preDeptJobTitle1 = GetAttribute(pSelectedRow, "DATA12");
+        		var preDeptJobTitle2 = GetAttribute(pSelectedRow, "DATA13");
 
                 if (trim(GetAttribute(pSelectedRow[0], "DATA4")) != "") {
                     var RtnVal = selectSubTitles(GetAttribute(pSelectedRow, "DATA2"));
@@ -436,8 +449,8 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
                 //회람 docstate
                 pparsingXML = pparsingXML + "<DATA11>015</DATA11>";
                 pparsingXML = pparsingXML + "<DATA12>001</DATA12>";
-                pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA8")) + "</DATA13>";		
-                pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(GetAttribute(pSelectedRow, "DATA9")) + "</DATA14>";		
+                pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";		
+                pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";		
                 pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";		
                 pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";	
                 pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";	
@@ -455,6 +468,74 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
                 pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
             } else if (Mode == "DEPT") {
+            } else if (Mode == "SEARCH") {
+            	var preDeptID = GetAttribute(pSelectedRow, "DATA3");
+        		var preDeptName = pSelectedRow.cells[1].innerText;
+        		var preDeptJobTitle = pSelectedRow.cells[2].innerText;
+        		var preDeptName1 = GetAttribute(pSelectedRow, "DATA9");
+        		var preDeptName2 = GetAttribute(pSelectedRow, "DATA10");
+        		var preWriterName1 = GetAttribute(pSelectedRow, "DATA7");
+        		var preWriterName2 = GetAttribute(pSelectedRow, "DATA8");
+        		var preDeptJobTitle1 = GetAttribute(pSelectedRow, "DATA11");
+        		var preDeptJobTitle2 = GetAttribute(pSelectedRow, "DATA12");
+            	
+            	if (trim(GetAttribute(pSelectedRow[0], "DATA4")) != "") {
+            		var RtnVal = selectSubTitles(GetAttribute(pSelectedRow, "DATA2"));
+            		if (RtnVal[0] == "OK") {
+            			preDeptID = RtnVal[1];
+            			preDeptName = RtnVal[2];
+            			preDeptJobTitle = RtnVal[3];
+            			preDeptName1 = RtnVal[4];
+            			preDeptName2 = RtnVal[5];
+            			preDeptJobTitle1 = RtnVal[6];
+            			preDeptJobTitle2 = RtnVal[7];
+            		}
+            		else {
+            			return;
+            		}
+            	}
+            	
+            	pparsingXML = "<LISTVIEWDATA><HEADERS>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
+            	pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
+            	pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
+            	pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
+            	pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
+            	pparsingXML = pparsingXML + "<DATA4>" + GetAttribute(pSelectedRow, "DATA2") + "</DATA4>";
+            	pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
+            	pparsingXML = pparsingXML + "<DATA6>" + preDeptID + "</DATA6>";
+            	pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
+            	pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
+            	pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
+            	pparsingXML = pparsingXML + "<DATA10>" + selnode.GetNodeData("EXTENSIONATTRIBUTE2") + "</DATA10>";
+            	//회람 docstate
+            	pparsingXML = pparsingXML + "<DATA11>015</DATA11>";
+            	pparsingXML = pparsingXML + "<DATA12>001</DATA12>";
+            	pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";		
+            	pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";		
+            	pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";		
+            	pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";	
+            	pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";	
+            	pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
+            	
+            	pparsingXML = pparsingXML + "</CELL><CELL>";
+            	pparsingXML = pparsingXML + "<VALUE>" + pSelectedRow.cells[0].innerText + "</VALUE>";
+            	pparsingXML = pparsingXML + "</CELL><CELL>";
+            	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
+            	pparsingXML = pparsingXML + "</CELL><CELL>";
+            	pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
+            	pparsingXML = pparsingXML + "</CELL><CELL>";
+            	pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
+            	pparsingXML = pparsingXML + "</CELL><CELL>";
+            	pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
+            	pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
             }
             objXML = loadXMLString(pparsingXML);
 
@@ -3325,7 +3406,9 @@ function CheckDraftDeptID( AprLineRow )
 	
 	return true;
 }
-
+/**
+ *  최종결재가 이후로 참조 추가 체크.(프리텔레콤)
+ * */
 function CheckChamjo(AprLineRow) {
 	var i, rtnVal;
 	var aprtype;

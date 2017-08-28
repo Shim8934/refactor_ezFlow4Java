@@ -69,6 +69,7 @@ public class EzEditorController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String height = request.getParameter("height");
 		String id = request.getParameter("id");
+		String isused = request.getParameter("isused");
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String returnPath = "";
@@ -93,7 +94,8 @@ public class EzEditorController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("type", type);
 		model.addAttribute("height", height);
-		
+		model.addAttribute("isused", isused);
+
 		return returnPath;
 	}
 	

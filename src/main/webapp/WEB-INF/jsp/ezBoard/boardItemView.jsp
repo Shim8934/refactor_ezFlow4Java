@@ -1153,7 +1153,7 @@
 			        <tr>
 			          <th><spring:message code='ezBoard.t323' /></th>
 			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all;" colspan=5>
-			             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle">${boardItem.title}</div>
+			             	<div style="overflow-y:auto;WIDTH: 100%; height:16px; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
 			             </td>
 			        </tr>
 			      </table>
@@ -1172,7 +1172,7 @@
 				        </tr>
 				        <tr>
 				          <th><spring:message code='ezBoard.t291' /></th>
-				          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;">${boardItem.title}</div></td>
+				          <td style="width:100%;" id="cTitle" colSpan="5"><div id="title" style="OVERFLOW-Y: auto; PADDING-LEFT: 5px; WIDTH: 100%; HEIGHT: 16px; vertical-align:middle;"><c:out value="${boardItem.title}"/></div></td>
 				        </tr>
 				      </table>
 				    </td>
@@ -1227,7 +1227,10 @@
 				              <th><spring:message code='ezBoard.t324' /></th>
 				              <td class="pos1"><input id="onelinereply" style="WIDTH: 99%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown()"></td>
 				              <th><spring:message code='ezBoard.t438' /></th>
-				              <td><INPUT type="password" id="txtPassWord" style="WIDTH:80px" maxlength="15"></td>
+				              <td>
+				              	<INPUT type="password" id="txtPassWord_fake" name="pwd" style="WIDTH:80px; display: none;" autocomplete="new-password">
+				              	<INPUT type="password" id="txtPassWord" name="pwd" style="WIDTH:80px" maxlength="15" autocomplete="new-password">
+				              </td>
 				              <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply()"><spring:message code='ezBoard.t321' /></span></a></td>
 				            </tr>
 				          </table>
@@ -1353,7 +1356,7 @@
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	        <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>
 </html>

@@ -52,18 +52,25 @@
 		            g_OrgCabinetID = RetValue[4];
 		        }
 		        InitCode();
-		        if (g_SepAttachXml != "") {
-		            InitSepAttInfo();
+		        if (g_SepAttachXml != "") { // 즉, [변경] 버튼을 선택한 경우
+		            InitSepAttInfo(); 
 		        }
 		        if (typeof (g_CabinetID) != "undefined") {
-		            if (g_CabinetID.length > 0) InitCabinetInfo(GetCabinetClassInfo(g_CabinetID));
+		            if (g_CabinetID.length > 0) {
+		            	InitCabinetInfo(GetCabinetClassInfo(g_CabinetID)); // '기록물철 정보' 부분 설정
+		            }
 		        }
 		        if (typeof (g_OrgCabinetID) != "undefined") {
-		            if (g_OrgCabinetID.length > 0) InitOrgCabinetInfo(GetCabinetClassInfo(g_OrgCabinetID));
+		            if (g_OrgCabinetID.length > 0) {
+		            	InitOrgCabinetInfo(GetCabinetClassInfo(g_OrgCabinetID));
+		            }
 		        }
-		        InitRegisterType();
+		        InitRegisterType(); // '분리첨부 정보입력' 부분 설정
 		        rtnVal[0] = "FALSE";
 		    };
+		    /**
+		    * 앞서 선택한 기록물철 화면에 맵핑.		    
+		    */
 		    function InitCabinetInfo(objCabInfoXml) {
 		        g_TaskCode = SelectSingleNodeValueNew(objCabInfoXml, "RESULT/TASKCODE");
 		
@@ -241,15 +248,16 @@
 		            }
 		        }
 
-		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType);
-		        SelectOption(selRegisterType, g_RegType);
+		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType); // 분리첨부 정보입력->등록구분 입력
+		        SelectOption(selRegisterType, g_RegType); 
 		
 		        selRegisterType_onchange();
 		    }
 		    function btnReset_onclick() {
 		        txtTitle.value = "";
 		        txtNumOfPage.value = "";
-		        txtSummary.value = "";
+		        txtSummary.value = "";		       
+		        $("input[name=chkAVType]:checkbox").removeProp("checked"); // '기록물형태' 체크박스 리셋
 		    }
 		    function btnOK_onclick() {
 		        if (txtTitle.value == "") {
@@ -359,6 +367,10 @@
 		        else if (g_RegType == "7" || g_RegType == "8")
 		            g_RecTypeCode = "5";
 		    }
+		    /**
+		    * [분리첨부] -> [추가] -> [확인]
+		    * 입력한 데이터를 XML로 변환
+		    */
 		    function GetSepAttInfoXml() {
 		        var pRegType = selRegisterType.value;
 		
@@ -618,7 +630,7 @@
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

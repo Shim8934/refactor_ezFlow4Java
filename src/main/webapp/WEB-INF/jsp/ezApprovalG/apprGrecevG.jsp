@@ -408,12 +408,12 @@
 		    function btnCabinet_onclick() {
 		        var para = new Array();
 		        para[0] = cabinetID;
-		        var url = "../ezCabinet/SelectCabinet_Cross.aspx?initFlag=1";
+		        var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
 		
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = btnCabinet_onclick_Complete;
 		
-		        DivPopUpShow(850, 455, "/myoffice/ezApprovalG/ezCabinet/SelectCabinet_Cross.aspx?initFlag=1");
+		        DivPopUpShow(880, 465, "/ezApprovalG/selectCabinet.do?initFlag=1");
 		    }
 		
 		    function btnCabinet_onclick_Complete(rtn) {
@@ -1181,7 +1181,7 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(600, 450, "/myoffice/ezApprovalG/TotalSaveFileInfo.aspx?docid=" + pDocID + "&type=APR");
+		        DivPopUpShow(600, 450, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
@@ -1259,7 +1259,7 @@
 		<div id="AprMemberSN" style="display:none"></div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

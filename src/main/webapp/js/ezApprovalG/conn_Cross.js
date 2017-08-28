@@ -81,7 +81,7 @@ function ExcuteInfo(pprocessIdx, currTD) {
     var rtnVal = true;
 
     var xmlData = createXmlDom();
-
+    
     try {
         if (!message.GetTagList("CONNINFO")[0]) return rtnVal;
     } catch (e) {

@@ -203,7 +203,7 @@
 	        	initdatepicker();
 	        });
 	        
-	        window.onload = function () {
+	        window.onload = function () {        	
 	        	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
@@ -517,6 +517,7 @@
 	        var bool3 = false;
 	        var bool4 = false;
 	        var bool5 = false;
+	        // 결재정보 창에서 보이는 탭 이동 관련 함수.
 	        function ChangeTab(obj) {
 	            //DisabledTab();
 	            var pSelectTab = obj.getAttribute("divname");
@@ -532,8 +533,9 @@
 		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
-	                    if (!bool)
+	                    if (!bool) {
 	                        Lineinfo_ini();
+	                    }
 	                    bool = true;
 	                    break;
 	                case "Receptinfo":
@@ -545,8 +547,9 @@
 		                    document.getElementById("Circulation").style.display = "none";
 	                    }
 	                    
-	                    if (!bool2)
+	                    if (!bool2) {
 	                        Receptinfo_ini();
+	                    }
 	                    bool2 = true;
 	                    break;
 	                case "Cabinetinfo":
@@ -1005,7 +1008,7 @@
 		        return getXmlString(rtnXml);
 		    }
 		
-		    function CheckAprPerson() {  	
+		    function CheckAprPerson() {  	    	
 		        var pAPRLINE = new ListView();
 		        pAPRLINE.LoadFromID("lvAPRLINE");
 		
@@ -1485,7 +1488,13 @@
 		            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApproval.t335'/></span></p>
 		           	</c:if>
 	            </c:if>
-	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4"><c:if test="${approvalFlag eq 'G' }"><spring:message code='ezApprovalG.t1204'/></c:if><c:if test="${approvalFlag eq 'S' }"><spring:message code='ezApproval.t62'/></c:if></span></p>
+	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4">
+	            <c:if test="${approvalFlag eq 'G' }">
+	            	<spring:message code='ezApprovalG.t1204'/>
+	            </c:if>
+	            <c:if test="${approvalFlag eq 'S' }">
+	            	<spring:message code='ezApproval.t62'/>
+	            </c:if></span></p>
 	            <c:if test="${approvalFlag eq 'S' }">
 		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
 	            </c:if>
@@ -2208,8 +2217,8 @@
                                 	</tr>
 			                    	<tr>
 	                                    <td style="background-color: transparent; height: 28px;">
-	                                        <input id="textUserCC" style="width: 150px" name="textUserCC" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
-	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                        <input id="textUserCC" style="width: 150px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
 <!-- 	                                        부서추가 -->
 <%-- 	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a> --%>
 	                                    </td>
@@ -2347,7 +2356,7 @@
 		</xml>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	    <!-- 사용자 정보 해더 xml -->
 	</body>

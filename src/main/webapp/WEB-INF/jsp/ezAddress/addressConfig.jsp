@@ -54,7 +54,7 @@
 			  <tr>
 			    <th><spring:message code='ezAddress.t2004' /></th>
 			    <td>
-			        <select id="listtype" style="WIDTH:100px">
+			        <select id="listtype" style="WIDTH:110px">
 			            <option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
 			            <option value="list" <c:if test="${pListType == 'list'}"> selected</c:if>><spring:message code='ezAddress.t2001' /></option>
 			        </select>
@@ -63,7 +63,7 @@
 			  <tr>
 			    <th><spring:message code='ezAddress.t999900001' /></th>
 			    <td>
-			        <select id="listcount" style="WIDTH:100px">
+			        <select id="listcount" style="WIDTH:110px">
 			            <option value=10 <c:if test="${listCount == '10'}"> selected</c:if>>10</option>
 			            <option value=15 <c:if test="${listCount == '15'}"> selected</c:if>>15</option>
 			            <option value=20 <c:if test="${listCount == '20'}"> selected</c:if>>20</option>

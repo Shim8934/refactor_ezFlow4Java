@@ -617,7 +617,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	public ApprGLineTempletVO gongRamActivateLineInfo(Map<String, Object> map) throws Exception{
-		return (ApprGLineTempletVO) list("EzApprovalG.gongRamActivateLineInfo", map);
+		return (ApprGLineTempletVO) select("EzApprovalG.gongRamActivateLineInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1228,6 +1228,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int getSearchDocListCountS(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getSearchDocListCountS", map);
+	}
+	
+	public int gongRamActivateCount2(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.gongRamActivateCount2", map);
 	}
 	
 	public String getUserContMaxID(Map<String, Object> map) throws Exception{
@@ -2670,5 +2674,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public void updateResetDoc(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.updateResetDoc", map);
+	}
+
+	public void updateGongRamDocSate(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateGongRamDocSate", map);
 	}
 }

@@ -76,7 +76,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGAdminServiceImpl.class);
 
 	@Override
-	public String getContainerInfoManage(String deptID, String type, String companyID, String primary, int tenantID) throws Exception {
+	public String getContainerInfoManage(String deptID, String type, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("getContainerInfoManage started.");
 		StringBuilder sb = new StringBuilder();
 
@@ -89,12 +89,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		List<ApprGContInfoVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
 		
-		String strMultiData = commonUtil.getMultiData(primary, tenantID);
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
 		if (type.equals("LIST")){
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_LISTTYPE", "106");
-			map.put("v_LANGTYPE", primary);
+			map.put("v_LANGTYPE", lang);
 			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			
@@ -413,6 +413,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("deptID", pOwnDeptID);
 		
 		String duplicated = ezApprovalGAdminDAO.checkContainer(map);
+		
+		if (duplicated == null) {
+			duplicated = "";
+		}
 		
 		if (duplicated == null) {
 			logger.debug("insertContainer duplicated.");
@@ -1601,6 +1605,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 	@Override
 	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID, String approvalFlag) throws Exception {
+		logger.debug("getDeptTranSendDocCount started.");
+		logger.debug("sYear = " + sYear + " || sMonth = " + sMonth + " || eYear = " + eYear + " || eMonth = " + eMonth + " || pMode = " + pMode + " || companyID = " + companyID + " || lang = " + lang + " || offset = " + offset + " || tenantID = " + tenantID + " || approvalFlag = " + approvalFlag);
+		
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1645,7 +1652,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String eDate = Integer.toString(cal.getActualMaximum(Calendar.DATE));
 		
 		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "-01 00:00:00", offset, true);
-		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-" + eDate + " 00:00:00", offset, true);
+		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-" + eDate + " 23:59:59", offset, true);
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_MODE", pMode);
@@ -1660,9 +1667,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("szTo=" + szTo);
 		logger.debug("lang=" + lang);
 		
-		logger.debug("getDeptTranSendDocCount started.");
 		List<ApprGReceiveDocVO> list = ezApprovalGAdminDAO.getDeptTranSendDocCount(map1);
-		logger.debug("getDeptTranSendDocCount ended.");
 		
 		for(ApprGReceiveDocVO vo : list) {
 			if (vo != null) {
@@ -1681,11 +1686,20 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		sb.append("</ROWS></LISTVIEWDATA>");
 		
+		logger.debug("getDeptTranSendDocCount ended.");
+		
 		return sb.toString();
 	}
 
 	@Override
 	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo, String approvalFlag) throws Exception {
+		logger.debug("getUserDocCount started.");
+		logger.debug("sYear = " + sYear + " || sMonth = " + sMonth + " || eYear = " + eYear + " || eMonth = " + eMonth + " || userFlag = " + userFlag + " || companyID = " + companyID + " || approvalFlag = " + approvalFlag);
+		
+		String lang = userInfo.getLang();
+		String offset = userInfo.getOffset();
+		int tenantID = userInfo.getTenantId();
+		Locale locale = userInfo.getLocale();
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1695,9 +1709,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_LISTTYPE", "107");
 		}
 		
-		map.put("v_LANGTYPE", userInfo.getLang());
+		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
-		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("v_TENANTID", tenantID);
 		
 		logger.debug("getListHeader started.");
 		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
@@ -1710,22 +1724,22 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			sb.append("<HEADER>");
 			
-			if (approvalFlag.equals("G") && vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()))) {
+			if (approvalFlag.equals("G") && vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", locale))) {
 				switch (userFlag) {
 				case "1":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", locale));
 					break;
 				case "2":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1304", userInfo.getLocale()));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1304", locale));
 					break;
 				case "3":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1305", userInfo.getLocale()));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1305", locale));
 					break;
 				case "4":
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1306", userInfo.getLocale()));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t1306", locale));
 					break;
 				default:
-					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()));
+					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", locale));
 					break;
 				}
 			}
@@ -1754,23 +1768,31 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			break;
 		}
 		
-		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "-01 00:00:00", userInfo.getOffset(), true);
-		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-01 00:00:00", userInfo.getOffset(), true);
+		Calendar cal = Calendar.getInstance();
+		
+		cal.set(Calendar.YEAR, Integer.parseInt(eYear));
+		cal.set(Calendar.MONTH, Integer.parseInt(eMonth)-1);
+		
+		String eDate = Integer.toString(cal.getActualMaximum(Calendar.DATE));
+		
+		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "-01 00:00:00", offset, true);
+		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-" + eDate + " 23:59:59", offset, true);
+		
+		logger.debug("szFrom=" + szFrom);
+		logger.debug("szTo=" + szTo);
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_APRTYPE", aprType);
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
-		map1.put("v_STRLANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map1.put("v_STRLANG", commonUtil.getMultiData(lang, tenantID));
 		map1.put("userFlag", userFlag);
 		map1.put("companyID", companyID);
-		map1.put("tenantID", userInfo.getTenantId());
+		map1.put("tenantID", tenantID);
 		map1.put("approvalFlag", approvalFlag);
 		
 		logger.debug("aprType=" + aprType);
-		logger.debug("getUserDocCount started.");
 		List<ApprGAprLineVO> list = ezApprovalGAdminDAO.getUserDocCount(map1);
-		logger.debug("getUserDocCount ended. listsize = " + list.size());
 		
 		for (ApprGAprLineVO vo : list) {
 			sb.append("<ROW>");
@@ -1791,6 +1813,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		sb.append("</ROWS></LISTVIEWDATA>");
+		
+		logger.debug("getUserDocCount ended. listsize = " + list.size());
 		
 		return sb.toString();
 	}
