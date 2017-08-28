@@ -475,7 +475,7 @@ function check_length(chkstr, maxlength, fieldname) {
 
     return true;
 }
-function save_task() {
+/*function save_task() {
 	if (document.getElementById("TextTitle").value == "") {
     	alert("" + strLang9 + "");
         document.getElementById("TextTitle").focus();
@@ -524,7 +524,7 @@ function save_task() {
     createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
     createNodeAndInsertText(xmlDom, objNode, "HASSHARE", hasshare);
     createNodeAndInsertText(xmlDom, objNode, "TASKTYPE", tasktype);
-    /* 수정했을떄 완료율, 진행상태 가져가야하나*/
+     수정했을떄 완료율, 진행상태 가져가야하나
     createNodeAndInsertText(xmlDom, objNode, "TASKSTATUS", document.getElementById("taskstatusSelect").value);
     createNodeAndInsertText(xmlDom, objNode, "COMPLETERATE", document.getElementById("completerateSelect").value);
     
@@ -627,9 +627,9 @@ function save_task() {
         parent.DivPopUpHidden();
         window.close();
     }
-}
+}*/
 
-function save_task1() {
+function save_task() {
 	if (document.getElementById("TextTitle").value == "") {
     	alert(strLang9);
         document.getElementById("TextTitle").focus();
@@ -757,7 +757,7 @@ function save_task1() {
 	
     $.ajax({
     	type : "POST",
-		url : "/ezTask/taskSave1.do",
+		url : "/ezTask/taskSave.do",
 		dataType : "json",
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
