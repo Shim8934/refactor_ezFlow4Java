@@ -112,6 +112,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 		map.put("type", type);
 		map.put("approvalFlag", approvalFlag);
 		map.put("mainViewYN", mainViewYN);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
 		int listCount = mApprovalGDAO.getDoApproveListCount(map);
 		
