@@ -1270,6 +1270,29 @@ public class EzEmailUtil {
                     }
                 };                  			    
 			}
+			
+			if (searchField.equalsIgnoreCase("SUBJECT&FROM")) {
+				logger.debug("if SUBJECT&FROM start");
+				sTerm = new SearchTerm() {
+				    public boolean match(Message message) {
+				        try {
+				        	String subject = getSubject(message);				        	
+				        	String from = getFullFromAddressOfMessage(message);
+				        	
+				        	boolean subjectFlag = subject != null && subject.toLowerCase().contains(searchValue.toLowerCase()); 
+				        	boolean fromFlag = from != null & from.toLowerCase().contains(searchValue.toLowerCase());
+				        	
+				            if (subjectFlag || fromFlag) {
+				                return true;
+				            }
+				        } 
+				        catch (Exception e) {
+				        }
+				        
+				        return false;
+				    }
+				};					
+			}
 		}
 		
 		if (sTerm != null) {
@@ -1323,12 +1346,14 @@ public class EzEmailUtil {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
 			
 			messages = folder.search(sTerm);
+			logger.debug("UnRead Message Count : " + messages.length);
 		}
 		
 		else if (isImportantOnly) {
 			sTerm = new FlagTerm(new Flags(Flags.Flag.FLAGGED), true);
 			
 			messages = folder.search(sTerm);
+			logger.debug("Important Message Count : " + messages.length);
 		} 
 		
 		else {
@@ -1336,7 +1361,7 @@ public class EzEmailUtil {
 		}
 		
 		if (endDate != null) {
-			if(sTerm == null) {// filter 없을 때
+			if(sTerm == null) {// filter search 없을 때
 //				logger.debug("END DATE :" + endDate);
 //				sTerm = new ReceivedDateTerm(ComparisonTerm.LE, endDate);
 //
@@ -1392,14 +1417,14 @@ public class EzEmailUtil {
 				Date from = endDate;       
 				Folder f = folder;
 				
-				int end = f.getMessageCount();       
+				int end = f.search(sTerm).length;       
 				long lFrom = from.getTime(); //endDate
 				
 				Date rDate;//message Date       
 				long lrDate;//message Date long for  comparing endDate       
 				int j = 0;
 				
-				Message orgMsg[] = f.getMessages(); 
+				Message orgMsg[] = f.search(sTerm); 
 				this.sortMessages(folder, orgMsg, "receivedDate", true);
 				
 				do {                

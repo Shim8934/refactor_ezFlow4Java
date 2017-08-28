@@ -282,13 +282,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        }
 	        
 			if (!search.equals("")) {
-				int index = search.indexOf("=");
-				if (index >= 0) {
-					String searchField = search.substring(0, index);
-					final String searchValue = search.substring(index + 1);
-					
-					LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue);
-					
+				LOGGER.debug("search field not null");
+
+				String searchField = "SUBJECT&FROM";
+				final String searchValue = search;
+				
+				LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue + ",endDate=" + endDate);
+				
+				
+				if (!endDate.equals("")) {
+					LOGGER.debug("search field paging");
+					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, ed, false, null, isUnreadOnly, isImportantOnly);
+				} else {
+					LOGGER.debug("search field not paging");
 					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
 				}
 			}
@@ -300,7 +306,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, false, isImportantOnly);
 			}
 			
-			if (!endDate.equals("")) {
+			if (messages == null && !endDate.equals("")) {
+				LOGGER.debug("search field paging");
 				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, isImportantOnly);
 			}
 			
@@ -3136,10 +3143,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
 			mail.put("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
-			mail.put("pAttachListHtmlSub", pAttachListHtmlSub);
 			
 			if (bodyInfoList != null) { 
 				mail.put("htmlBody", bodyInfoList.get(0));
+				mail.put("pAttachListHtmlSub", pAttachListHtmlSub);
 				mail.put("pAttachListHtml", bodyInfoList.get(1));
 				mail.put("isAttach", bodyInfoList.get(4));
 			}
