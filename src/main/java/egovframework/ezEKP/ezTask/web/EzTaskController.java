@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskFileVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -132,11 +134,12 @@ public class EzTaskController extends EgovFileMngUtil {
 		}
 		
 		//첨부파일목록조회
+		List<TaskFileVO> taskFileList = null;
 		if (taskInfoVO.getHasAttach().equals("Y")) {
 			if (parentID.equals("0")) {
-//				getAttachList(taskID);
+				taskFileList = ezTaskService.getAttachList(taskID);
 			} else {
-//				getAttachList(parentID);
+				taskFileList = ezTaskService.getAttachList(parentID);
 			}
 		}
 		
@@ -401,6 +404,30 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskStatus";
 	}
 	
+	/**
+	 * 첨부파일 다운로드
+	 */
+	@RequestMapping(value = "/ezTask/downloadAttach.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("downloadAttach started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
+		String uploadFilePath = commonUtil.getUploadPath("upload_task.ROOT", userInfo.getTenantId());
+		
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath; 
+		}
+		
+		String fullFilePath = realPath + uploadFilePath + filePath;
+
+		downFile(request, response, fullFilePath, fileName);
+		
+		logger.debug("downloadAttach ended.");
+	}
 	
 	/* 정수현*/
 	

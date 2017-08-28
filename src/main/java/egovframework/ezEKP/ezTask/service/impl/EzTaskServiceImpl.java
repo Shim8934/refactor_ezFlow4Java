@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
+import egovframework.ezEKP.ezTask.vo.TaskFileVO;
 import egovframework.ezEKP.ezTask.vo.TaskInfoVO;
 import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -416,6 +417,11 @@ public class EzTaskServiceImpl implements EzTaskService{
 		ezTaskDAO.updateTaskWork(map);
 		
 		logger.debug("taskWorkSave ended.");
+	}
+	
+	@Override
+	public List<TaskFileVO> getAttachList(String taskID) throws Exception {
+		return null;
 	}
 
 	/* 정수현*/
