@@ -24,7 +24,7 @@
 		</STYLE>
 		<script type="text/javascript">
 			var delayColor = "${delayColor}";
-			var completecolor = "_completecolor";
+// 			var completecolor = "_completecolor";
 			var userid = "${userInfo.id}";
 			var listdom = "";
 			var pagecount = 0;
@@ -34,11 +34,11 @@
 			var isrefresh = false;
 			var isrefresh2 = false;
 			var selectelem = null;
-			var initdate = "_initdate";
+			var initdate = "";
 			var ownerid = "";
 		    var offSetNum = "timeZoneStr";
-		    var startdate = "_initdate";
-		    var enddate = "_initdate";
+		    var startdate = "";
+		    var enddate = "";
 		    var type = "";
 		    var userlang = "${userInfo.lang}";
 		    var pUse_Editor = "Use_Editor";
@@ -220,14 +220,21 @@
 		    }
 
 			function show_page() {
-			    selectelem = null;
+// 			    selectelem = null;
 			    makePageSelPage();
 
 			    var length = list_body.children[1].rows.length;
-			    
+// 			    var length2 = list_body.children[1].rows.length;
+// alert("@@" + $("#list_body").children().eq(1).children().html);
+// alert($("#list_body").children().eq(1).children().length);
+// alert("##" + length2);
+// alert(length);
 			    for (var i = 3; i < length; i++) {
+// alert("@" + list_body.children[1].rows[3]);
 			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
 			    }
+
+			    var tr = "";
 
 			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
 					if (totalcount == 0 || i == totalcount) {
@@ -235,20 +242,30 @@
 			        }
 			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
 // 			    	$("#taskID_'" + SelectSingleNodeValue(node, "TASKID")  + "'").empty();
-
+// alert(isrefresh2);
+					
 					if (isrefresh2) {
+// alert("@");
 						$("#taskID_" + SelectSingleNodeValue(node, "TASKID") + "").remove();
 					}
 
-			        var tr = "";
-
-			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
-				        tr = row_body.cloneNode(true);
-				        document.getElementById("tr_ing").style.display = "none";
-			        } else {
-			        	tr = row_body2.cloneNode(true);
-				        document.getElementById("tr_ing2").style.display = "none";
-			        }
+					if (type == 1) {					
+				        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+					        tr = row_body.cloneNode(true);
+					        document.getElementById("tr_ing").style.display = "none";
+				        } else {
+				        	tr = row_body2.cloneNode(true);
+					        document.getElementById("tr_ing2").style.display = "none";
+				        }
+					} else {
+						if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+					        tr = row_body.cloneNode(true);
+					        document.getElementById("tr_ing").style.display = "none";
+				        } else {
+				        	tr = row_body2.cloneNode(true);
+					        document.getElementById("tr_ing2").style.display = "none";
+				        }
+					}
 
 			        tr.style.display = "";
 			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
@@ -683,6 +700,9 @@
 		        var endMonth = endYearMontgday[1];
 		        var startDay = startYearMontgday[2];
 		        var endDay = endYearMontgday[2];
+		        var filter = "";
+		        var chkValue = "";
+		        var searchClass = "";
 
 // 		        if (startMonth.length == 1) {
 // 		            startMonth = "0" + startMonth;
@@ -717,7 +737,7 @@
 // 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
 // 		        xmlHTTP2.onreadystatechange = after_DateChange;
 // 		        xmlHTTP2.send(xmlDom);
-
+alert(startdate + " / " + enddate);
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -727,7 +747,10 @@
 						startDate : startdate,
 						endDate : enddate,
 						app : 1,
-						type : type
+						type : type,
+						filter : filter,
+						chkValue : chkValue,
+						searchClass : searchClass
 					},
 					success : function(xml) {
 						after_DateChange(xml);
@@ -838,7 +861,6 @@
 		            case "taskdictate":
 		                type = "2";
 		                isrefresh2 = true;
-		                selectTab(2);
 		                DateChange(startdate, enddate);
 		                break;
 // 		            case "taskcomplete":
@@ -862,29 +884,29 @@
 		            alert("<spring:message code='ezTask.t194' />");
 		            return;
 		        }
+
+// 		        var startYearMontgday = startdate.split("-");
+// 		        var endYearMontgday = enddate.split("-");
+// 		        var startMonth = startYearMontgday[1];
+// 		        var endMonth = endYearMontgday[1];
+// 		        var startDay = startYearMontgday[2];
+// 		        var endDay = endYearMontgday[2];
 		
-		        var startYearMontgday = startdate.split("-");
-		        var endYearMontgday = enddate.split("-");
-		        var startMonth = startYearMontgday[1];
-		        var endMonth = endYearMontgday[1];
-		        var startDay = startYearMontgday[2];
-		        var endDay = endYearMontgday[2];
+// 		        if (startMonth.length == 1) {
+// 		            startMonth = "0" + startMonth;
+// 		        }
+// 		        if (endMonth.length == 1) {
+// 		            endMonth = "0" + endMonth;
+// 		        }
+// 		        if (startDay.length == 1) {
+// 		            startDay = "0" + startDay;
+// 		        }
+// 		        if (endDay.length == 1) {
+// 		            endDay = "0" + endDay;
+// 		        }
 		
-		        if (startMonth.length == 1) {
-		            startMonth = "0" + startMonth;
-		        }
-		        if (endMonth.length == 1) {
-		            endMonth = "0" + endMonth;
-		        }
-		        if (startDay.length == 1) {
-		            startDay = "0" + startDay;
-		        }
-		        if (endDay.length == 1) {
-		            endDay = "0" + endDay;
-		        }
-		
-		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
-		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
+// 		        startdate = startYearMontgday[0] + "-" + startMonth + "-" + startDay;
+// 		        enddate = endYearMontgday[0] + "-" + endMonth + "-" + endDay;
 		
 		        var chkValue;
 		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
@@ -892,25 +914,47 @@
 		                chkValue = document.getElementsByName("searchCheck")[i].value;
 		
 		        }
-		        var filter = chkValue + " LIKE N'%" + document.getElementById("txt_keyword").value + "%'";
-		        if (userlang != "1" && chkValue == "TaskPersonName")
-		            filter = chkValue + "2 LIKE N'%" + document.getElementById("txt_keyword").value + "%'";
+		        var filter = document.getElementById("txt_keyword").value;
+		        if (userlang != "1" && chkValue == "TaskPersonName") {
+		            filter = document.getElementById("txt_keyword").value;
+		        }
+alert(chkValue + " / " + filter);
+// 		        xmlHTTP2 = createXMLHttpRequest();
+// 		        var xmlDom = createXmlDom();
 		
-		        xmlHTTP2 = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
+// 		        var objRoot, objNode;
+// 		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
+// 		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "FILTER", filter);
 		
-		        var objRoot, objNode;
-		        objRoot = createNodeInsert(xmlDom, objRoot, "DATA");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "STARTDATE", startdate);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "ENDDATE", enddate);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "APP", "1");
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "IDLIST", ownerid);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "TYPE", type);
-		        objNode = createNodeAndAppandNodeText(xmlDom, objRoot, objNode, "FILTER", filter);
-		
-		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_searchlist.aspx", true);
-		        xmlHTTP2.onreadystatechange = after_search;
-		        xmlHTTP2.send(xmlDom);
+// 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_searchlist.aspx", true);
+// 		        xmlHTTP2.onreadystatechange = after_search;
+// 		        xmlHTTP2.send(xmlDom);
+		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskGetList.do",
+					data : {
+						startDate : startdate,
+						endDate : enddate,
+						app : 1,
+						type : type,
+						filter : filter,
+						chkValue : chkValue
+					},
+					success : function(xml) {
+						after_DateChange(xml);
+					},
+					error : function() {
+						alert("<spring:message code='ezTask.t992' />");
+					}
+				});
 		    }
 		    function after_search() {
 		        if (xmlHTTP2.readyState == 4 && xmlHTTP2 != null) {

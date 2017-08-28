@@ -3,17 +3,19 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>업무검색</title>
+		<title><spring:message code='ezTask.t180' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 		<script type="text/javascript">
 			var startdate = "_startdate";
 			var enddate = "_enddate";
@@ -21,6 +23,10 @@
 		    var orgfilter = "_OrgFilter";
 		    var pUse_Editor = "Use_Editor";
 		    var pSearchType = "pSearchType";
+		    var primary = "${userInfo.primary}";
+		    var delayColor = "${delayColor}";
+		    var selectelem = null;
+
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -40,6 +46,15 @@
 // 		            if (pSearchType == "person")
 // 		                document.getElementById("search_field").selectedIndex = 1;
 // 		        }
+		    }
+
+		    function select_row(elem) {
+		        if (selectelem != null) {
+		            selectelem.style.backgroundColor = "#ffffff";
+		        }
+
+		        selectelem = elem;
+		        selectelem.style.backgroundColor = "#DBE1E7";
 		    }
 
 		    $(function () {
@@ -111,23 +126,11 @@
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 
-// 		    $(function () {
-// 		        $.datepicker.regional['en'] = {
-// 		            dateFormat: 'yy-mm-dd',
-// 		            firstDay: 0,
-// 		            isRTL: false,
-// 		            duration: 200,
-// 		            showAnim: 'show',
-// 		            showMonthAfterYear: true
-// 		        };
-// 		        $.datepicker.setDefaults($.datepicker.regional['en']);
-// 		    });
-
 			function search()
 			{
 				var sdate = "";
 				var edate = "";
-				
+
 				var filter = "";
 				if (document.getElementById("usedate").checked)
 				{
@@ -137,7 +140,285 @@
 				if (document.getElementById("keyword").value != "")
 					filter = document.getElementById("keyword").value;
 				
-				window.location.href = "/myoffice/ezTask/task_search_Cross.aspx?sdate=" + sdate + "&edate=" + edate + "&filter=" + escape(filter) + "&searchtype=" + document.getElementById("search_field").value + "&tclass=" + document.getElementById("search_class").value + "&event=search";
+				var searchClass = $("#search_class").val();
+				var chkValue = $("#search_field").val();
+alert(searchClass + " / " + chkValue + " / " + filter);
+// 				window.location.href = "/ezTask/taskGetList.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + escape(filter) + "&searchtype=" + document.getElementById("search_field").value + "&tclass=" + document.getElementById("search_class").value + "&event=search";
+// 				window.location.href = "/ezTask/taskGetList.do?sdate=" + sdate + "&edate=" + edate + "&filter=" + escape(filter) + "&chkValue=" + chkValue + "&search_class=" + search_class;
+alert(sdate + " / " + edate);				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskGetList.do",
+					data : {
+						startDate : sdate,
+						endDate : edate,
+						app : 1,
+						filter : filter,
+						chkValue : chkValue,
+						searchClass : searchClass
+					},
+					success : function(xml) {
+						after_DateChange(xml);
+					},
+					error : function() {
+						alert("<spring:message code='ezTask.t992' />");
+					}
+				});
+			}
+
+			var pagesize = 10;
+			function after_DateChange(xml) {
+	            listdom = loadXMLString(xml);
+
+	            totalcount = GetChildNodes(listdom.documentElement).length - 2;
+	            totalpage = Math.ceil(new Number(totalcount / pagesize));
+
+// 	            if (isrefresh)
+// 	                isrefresh = false;
+// 	            else
+	                currentpage = 1;
+	
+// 	            if (currentpage > totalpage)
+// 	                currentpage = totalpage;
+	
+	            if (currentpage == 0)
+	                currentpage = 1;
+	
+// 	            makePageSelPage();
+	            show_page();
+// 	            var cnt = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
+// 	            var cnt2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+	
+// 	            document.getElementById("1tab1").innerHTML = "<spring:message code='ezTask.t2007' />" + " (" + cnt + ")";
+// 	            document.getElementById("1tab2").innerHTML = "<spring:message code='ezTask.t2008' />" + " (" + cnt2 + ")";
+
+	            return;
+		    }
+			
+			function show_page() {
+// 			    makePageSelPage();
+
+			    var length = list_body.children[1].rows.length;
+
+			    for (var i = 3; i < length; i++) {
+			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
+			    }
+
+			    var tr = "";
+
+			    for (var i = (currentpage - 1) * pagesize; i < currentpage * pagesize; i++) {
+					if (totalcount == 0 || i == totalcount) {
+			            break;
+			        }
+			        var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[i];
+
+// 			        if (isrefresh2) {
+// 						$("#taskID_" + SelectSingleNodeValue(node, "TASKID") + "").remove();
+// 					}
+
+			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+				        tr = row_body.cloneNode(true);
+				        document.getElementById("tr_ing").style.display = "none";
+			        } else {
+			        	tr = row_body2.cloneNode(true);
+				        document.getElementById("tr_ing2").style.display = "none";
+			        }
+
+			        tr.style.display = "";
+			        tr.id = "taskID_" + SelectSingleNodeValue(node, "TASKID");
+
+			        tr.setAttribute("taskid", SelectSingleNodeValue(node, "TASKID"));
+			        tr.setAttribute("parentid", SelectSingleNodeValue(node, "PARENTID"));
+			        tr.setAttribute("creatorid", SelectSingleNodeValue(node, "CREATORID"));
+
+			        if (SelectSingleNode(node, "REPEATCOUNT") != null)
+			            tr.setAttribute("repeatcount", SelectSingleNodeValue(node, "REPEATCOUNT"));
+		
+			        var startdate = SelectSingleNodeValue(node, "STARTDATE").substr(0, 10);
+			        var enddate = SelectSingleNodeValue(node, "ENDDATE").substr(0, 10);
+
+			        tr.setAttribute("startdate", startdate);
+
+			        tr.cells[0].innerHTML += "<input type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+
+			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
+			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
+			        else if (SelectSingleNodeValue(node, "IMPORTANCE") == "1")
+			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-lowimportance.gif'>";
+
+			        tr.cells[1].style.textAlign = "center";
+
+			        if (SelectSingleNodeValue(node, "HASATTACH") == "Y")
+			            tr.cells[2].innerHTML += "<img src='/images/newAttach.gif' >";
+			        else
+			            tr.cells[2].innerHTML += "&nbsp;";
+		
+			        if (primary == "1") {
+			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME"));
+			        }
+			        else {
+			            setNodeText(tr.cells[3], SelectSingleNodeValue(node, "PERSONNAME2"));
+			        }
+		
+			        if (SelectSingleNodeValue(node, "HASCOMMENT") != "N") {
+			            tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE") + "<font color = '#c64200'>&nbsp;&nbsp[" + SelectSingleNodeValue(node, "HASCOMMENT") + "]</font>";;
+			        }
+			        else
+			            setNodeText(tr.cells[4], SelectSingleNodeValue(node, "TITLE"));
+			        tr.cells[4].style.overflow = "hidden"
+			        tr.cells[4].style.textOverflow = "ellipsis"
+		
+			        switch (SelectSingleNodeValue(node, "TASKTYPE")) {
+			            case "1":
+			                var div = document.createElement("DIV");
+			                div.style.background = "url(/images/icon/section_Cooperativebg.gif)";
+			                div.style.width = "72px";
+			                div.style.lineHeight = "18px";
+			                div.style.height = "17px";
+			                div.style.textAlign = "center";
+			                div.style.color = "white";
+			                setNodeText(div, "<spring:message code='ezTask.t2000' />");
+			                tr.cells[6].appendChild(div);
+			                break;
+			            case "2":
+			                var div = document.createElement("DIV");
+			                div.style.background = "url(/images/icon/section_orderbg.gif)";
+			                div.style.width = "72px";
+			                div.style.lineHeight = "18px";
+			                div.style.height = "17px";
+			                div.style.textAlign = "center";
+			                div.style.color = "white";
+			                setNodeText(div, "<spring:message code='ezTask.t2001' />");
+			                tr.cells[6].appendChild(div);
+			                break;
+			            case "3":
+			                var div = document.createElement("DIV");
+			                div.style.background = "url(/images/icon/section_Individualbg.gif)";
+			                div.style.width = "72px";
+			                div.style.lineHeight = "18px";
+			                div.style.height = "17px";
+			                div.style.textAlign = "center";
+			                div.style.color = "white";
+			                setNodeText(div, "<spring:message code='ezTask.t2002' />");
+			                tr.cells[6].appendChild(div);
+			                break;
+			        }
+
+			        // ì§íë¨ê³
+// 			        switch (SelectSingleNodeValue(node, "TASKSTATUS")) {
+// 			            case "1":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_nothing.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t97' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "2":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_working.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t98' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "3":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_finish.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t99' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			            case "4":
+// 			                var div = document.createElement("DIV");
+// 			                div.style.background = "url(/images/icon/status_delay.gif)";
+// 			                div.style.width = "61px";
+// 			                div.style.lineHeight = "18px";
+// 			                div.style.height = "17px";
+// 			                div.style.textAlign = "center";
+// 			                div.style.color = "white";
+// 			                setNodeText(div, "<spring:message code='ezTask.t100' />"); 
+// 			                tr.cells[4].appendChild(div);
+// 			                break;
+// 			        }
+
+			        var taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");
+			        var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
+			        var span = document.createElement("SPAN");
+			        span.className = "workProgressBar";
+			        span.innerHTML += "<span class='bar' taskID='taskProgressBar" + i + "'></span>&nbsp;"
+
+					var span2 = document.createElement("SPAN");
+			        span2.style.width = "30px";
+			        span2.style.display = "inline-block";
+			        setNodeText(span2, completerate + "%");
+
+			        span.appendChild(span2);
+
+			        tr.cells[7].appendChild(span);
+			        setNodeText(tr.cells[8], startdate);
+			        tr.cells[9].innerHTML = "<B>" + enddate + "</B>";
+
+			        if (SelectSingleNodeValue(node, "COMPLETERATE") != 100) {
+				        list_body.children[1].appendChild(tr);
+			        } else {
+			        	list_body2.children[1].appendChild(tr);
+			        }
+
+			        initProgressBar("taskProgressBar" + i, taskstatus, completerate);
+				}
+
+			    if (totalcount == 0) {
+			        document.getElementById("tr_ing").style.display = "";
+			        document.getElementById("tr_ing2").style.display = "";
+			    }
+
+			    $(".progressbar").css("display", "inline-table");
+			    $(".percentCount").remove();
+// 			    isrefresh2 = false;
+			}
+
+			/* progressBar 조회 */
+			function initProgressBar(barID, taskstatus, completerate) {
+				if (completerate == '0') {
+					duration = 0;
+				} else {
+					duration = 500;
+				}
+
+				if (taskstatus == '4') {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: delayColor,
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
+				} else {
+					$(".bar[taskid='" + barID + "']").LineProgressbar({
+						percentage: completerate,
+						fillBackgroundColor: '#3498db',
+						backgroundColor: '#EEEEEE',
+						radius: '10px',
+						height: '10px',
+						width: '70%',
+						duration : duration
+					});
+				}
 			}
 
 			function ReplaceText( orgStr, findStr, replaceStr )
@@ -146,31 +427,30 @@
 				return ( orgStr.replace( re, replaceStr ) );
 			}
 
-			function open_task(taskid, repeatcount, date)
+			function ReadTask(obj)
 			{
-				date = date.substr(0,10);
-				
+alert($(obj).closest("tr").attr("taskid"));
+				var taskid = $(obj).closest("tr").attr("taskid");
 				var feature = GetOpenPosition(760, 656);
 				if (CrossYN() || pNoneActiveX == "YES") {
-				    window.open("/myoffice/ezTask/task_read_Cross.aspx" + "?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date, "",
-					"height = 656px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				    window.open("/ezTask/taskRead.do?taskID=" + taskid, "",
+					"height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				}
 				else {
 				    if (pUse_Editor == "" || pUse_Editor == "CK") {
-				        window.open("/myoffice/ezTask/task_read.aspx" + "?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date, "",
-					"height = 656px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-				    }
-				    else {
-				        window.open("/myoffice/ezTask/task_read_IE.aspx" + "?id=" + taskid + "&repeatcount=" + repeatcount + "&date=" + date, "",
-					"height = 656px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				        window.open("/ezTask/taskRead.do?taskID=" + taskid, "",
+					"height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				    } else {
+				        window.open("/ezTask/taskRead.do?taskID=" + taskid, "",
+					"height = 935px, width = 780px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				    }
 				}
 			}
 
 			function RefreshView()
 			{
-			    window.location.reload(true);
-			}		
+// 			    window.location.reload(true);
+			}
 
 			function onmouseOver(elem)
 			{
@@ -253,49 +533,45 @@
 			</span><span id="resultCount"></span><spring:message code='ezTask.t191' /></h2>
 		</div>
 		
-		<table class="mainlist" style="width:100%" >
+		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
+			<col style ="width:30px;">
+			<col style ="width:50px;">
+			<col style ="width:20px;">
+			<col style ="width:60px;">
+			<col >
+			<col style ="width:90px;">
+               <col style ="width:90px;">
+			<col style ="width:110px;">
+			<col style ="width:80px;">
+			<col style ="width:97px;">
 			<tr>
-				<th style="width:50px"><spring:message code='ezTask.t156' /></th>
-				<th style ="width:30px"><img src="/images/newAttach.gif"></th>
-				<th style ="width:80px" ><spring:message code='ezTask.t2005' /></th>
-				<th><spring:message code='ezTask.t118' /></th>
-				<th style ="width:90px"><spring:message code='ezTask.t2003' /></th>
-				<th style ="width:90px"><spring:message code='ezTask.t119' /></th>
-				<th style ="width:110px" ><spring:message code='ezTask.t120' /></th>
-				<th style ="width:80px" ><spring:message code='ezTask.t121' /></th>
-				<th style ="width:97px"><spring:message code='ezTask.t122' /></th>
+				<th ><input id="checkboxAll" type="checkbox" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+				<th ><spring:message code='ezTask.t156' /></th>
+				<th ><img src="/images/newAttach.gif"></th>
+				<th ><spring:message code='ezTask.t2005' /></th>
+				<th ><spring:message code='ezTask.t118' /></th>
+<%-- 							<th ><spring:message code='ezTask.t170' /></th> --%>
+				<th ></th>
+                <th ><spring:message code='ezTask.t2003' /></th>
+				<th ><spring:message code='ezTask.t120' /></th>
+				<th ><spring:message code='ezTask.t121' /></th>
+				<th ><spring:message code='ezTask.t122' /></th>
 			</tr>
-<!-- 			<asp:Repeater ID="ListTask" Runat="server"> -->
-<!-- 				<ItemTemplate> -->
-<%-- 					<tr style="cursor:pointer;" onClick="open_task('<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TASKID").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("REPEATCOUNT").InnerText %>','<%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("STARTDATE").InnerText %>')"> --%>
-<%-- 						<td style="white-space:nowrap;text-align:center"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("IMPORTANCE").InnerText %> </td> --%>
-<%-- 						<td style="white-space:nowrap"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("HASATTACH").InnerText %> </td> --%>
-<%-- 						<% if(userinfo.primary == "1")%> --%>
-<%-- 						<% {%> --%>
-<%-- 						<td style="white-space:nowrap"><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TASKPERSONNAME").InnerText) %> </td> --%>
-<%-- 						<%} --%>
-<!-- // 						else -->
-<%-- 						{ %> --%>
-<%-- 						<td style="white-space:nowrap"><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TASKPERSONNAME2").InnerText) %> </td> --%>
-<%-- 						<%}%> --%>
-						
-<%-- 						<td > <%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TITLE").InnerText) %> <font color = "#c64200"><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("HASCOMMENT").InnerText) %></font></td> --%>
-<%-- 						<td style="white-space:nowrap;"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TASKTYPE").InnerText %></td> --%>
-<%-- 						<td style="white-space:nowrap;"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("TASKSTATUS").InnerText %> </td> --%>
-<!-- 						<td style="white-space:nowrap;"> -->
-<%-- 						<span class="workprogress" style="margin-right:0px"><span class="bar" style="width:  <%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMPLETERATE").InnerText %>%"></span></span> --%>
-<%-- 						<span style="width:30px;display:inline-block"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("COMPLETERATE").InnerText %>%</span> --%>
-<!-- 						</td> -->
-<%-- 						<td style="white-space:nowrap;"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("STARTDATE").InnerText %> </td> --%>
-<%-- 						<td style="white-space:nowrap;"><div class="point"><%# ((System.Xml.XmlElement)Container.DataItem).SelectSingleNode("ENDDATE").InnerText %></div></td> --%>
-<!-- 					</tr> -->
-<!-- 				</ItemTemplate> -->
-<!-- 			</asp:Repeater> -->
-<!-- 			<asp:PlaceHolder ID="HolderNone" Runat="server"> -->
-			<tr>
-			<td colspan="9" style="height:25px;background-color:white;text-align:center"><spring:message code='ezTask.t192' /></td>
+			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+                <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 			</tr>
-<!-- 			</asp:PlaceHolder> -->
+			<tr id="tr_ing" style="text-align:center">
+				<td colspan="10" style="height:25px;background-color:white;text-align:center"><spring:message code='ezTask.t192' /></td>
+			</tr>
 		</table>
 		<br>
 		<br>

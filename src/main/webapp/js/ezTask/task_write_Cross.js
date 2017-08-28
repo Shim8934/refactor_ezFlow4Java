@@ -539,7 +539,7 @@ function check_length(chkstr, maxlength, fieldname) {
     Doc_ContentHtml.innerHTML = strBody;
 
 //    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-    strBody = ConvertHTMLtoMHT(EmbedContentIntoXML(strBody));
+    strBody = ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
 
     createNodeAndInsertText(xmlDom, objNode, "CONTENT", strBody);
 //    createNodeAndInsertText(xmlDom, objNode, "MEMO", memo); // 메모 값 세팅

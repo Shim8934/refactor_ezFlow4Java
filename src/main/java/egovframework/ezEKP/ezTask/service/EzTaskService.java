@@ -34,9 +34,9 @@ public interface EzTaskService {
 
 	/*public String taskSave(Document doc, String realPath, LoginVO userInfo, String newGuid) throws Exception;*/
 
-	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, int tenantID) throws Exception;
+	List<TaskInfoVO> taskGetList(String memberID, String startDate, String endDate, String offset, String app, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception;
 
-	String getTaskCount(String memberID, String startDate, String endDate, String offset, String type, int tenantID) throws Exception;
+	String getTaskCount(String memberID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, int tenantID) throws Exception;
 
 	public void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception;
 }
