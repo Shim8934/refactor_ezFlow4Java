@@ -1112,6 +1112,36 @@ System.out.println("strFilePath:"+strFilePath);
 		map.put("tenantID", tenantID);
 		return mBoardDAO.photoViewDBCount(map);
 	}
+
+	@Override
+	public void setAsRead(MCommonVO userInfo, String boardID, String itemID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pBoardID", boardID);
+		map.put("v_pItemID", itemID);
+		map.put("v_pUserID", userInfo.getUserId());
+		map.put("v_pUserName", userInfo.getUserName());
+		map.put("v_pUserDeptName", userInfo.getDeptName());
+		map.put("v_pUserCompanyName", userInfo.getCompanyName());
+		map.put("v_pUserTitle", userInfo.getTitle());
+		map.put("v_pUserName2", userInfo.getUserName2());
+		map.put("v_pUserDeptName2", userInfo.getDeptName2());
+		map.put("v_pUserCompanyName2", userInfo.getCompanyName2());
+		map.put("v_pUserTitle2", userInfo.getTitle2());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		String tempString = mBoardDAO.getBoardItemRead(map);
+		
+		if (tempString != null && !tempString.equals("")) {
+			mBoardDAO.setAsRead(map);
+			
+			String tempWriterID = mBoardDAO.getWriterID(map);
+			
+			if (tempWriterID == null || !tempWriterID.equals(userInfo.getUserId())) {
+				mBoardDAO.setAsRead2(map);
+			}
+		}
+	}
 	
 	
 	

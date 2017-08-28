@@ -231,6 +231,8 @@ public class MBoardGWController {
 			String domain = request.getServerName() + ":" + request.getServerPort();
 			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale);
 			
+			mBoardService.setAsRead(info, boardId, contentId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", boardItem);
