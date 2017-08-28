@@ -519,11 +519,28 @@
                 (A.APPRFLAG = 'Y' 
                  OR A.APPRFLAG IS NULL)
               AND 
-                A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
-              AND 
-                A.STARTDATE <= #nowDate#
-              AND 
-                A.ENDDATE > #nowDate#         
+                A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
+            ]]>
+            
+            <isNotEmpty property="lastDate">
+                <![CDATA[
+                    AND 
+                        A.STARTDATE < #lastDate#
+                    AND 
+                        A.ENDDATE > #nowDate#
+                ]]>
+            </isNotEmpty>
+            <isEmpty property="lastDate">
+                <![CDATA[
+                    AND 
+                        A.STARTDATE <= #nowDate#
+                    AND 
+                        A.ENDDATE > #nowDate#
+                ]]>
+            </isEmpty>
+            
+            <![CDATA[
+                       
               AND 
                 (NOT EXISTS
                     (SELECT 
@@ -545,7 +562,7 @@
               ORDER BY
                   A.writedate DESC
               LIMIT #listSize#
-      ]]>
+            ]]>
   </select>
   
   <select id="MBoardDAO.getFavoriteList" parameterClass="Map" resultClass="MBoardFavoriteVO" remapResults="true">
@@ -625,6 +642,71 @@
     ]]>
   </select>
   
+  <select id="MBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
+        <isEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
+            <![CDATA[
+                SELECT 
+                    1
+                FROM 
+                    DUAL
+                WHERE 
+                    NOT EXISTS ( SELECT 
+                                    ITEMID 
+                                 FROM 
+                                    TBL_Board_Item_Read 
+                                 WHERE  
+                                    TENANT_ID = #v_TENANTID#
+                                 AND
+                                    ItemID = #v_pItemID#
+                                 AND 
+                                    UserID = #v_pUserID#
+                                 AND 
+                                    BoardID = ( SELECT 
+                                                    BOARDID 
+                                                FROM 
+                                                    TBL_Board_Item
+                                                WHERE
+                                                    TENANT_ID = #v_TENANTID#
+                                                AND  
+                                                    ItemID = #v_pItemID# ) )
+            ]]>
+        </isEqual>
+        <isNotEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
+            <![CDATA[
+                SELECT 
+                    1
+                FROM 
+                    DUAL
+                WHERE 
+                    NOT EXISTS ( SELECT 
+                                    ITEMID
+                                 FROM 
+                                    TBL_Board_Item_Read 
+                                 WHERE  
+                                    TENANT_ID = #v_TENANTID#
+                                 AND
+                                    ItemID = #v_pItemID#
+                                 AND 
+                                    UserID = #v_pUserID#
+                                 AND 
+                                    BoardID = #v_pBoardID# )
+            ]]>
+        </isNotEqual>
+    </select>
+    
+    <select id="MBoardDAO.getWriterID" parameterClass="Map" resultClass="String">
+        <![CDATA[
+            SELECT 
+                WRITERID
+            FROM 
+                TBL_Board_Item 
+            WHERE  
+                TENANT_ID = #v_TENANTID#
+            AND
+                ItemID = #v_pItemID#
+        ]]>
+    </select>
+  
     <insert id="MBoardDAO.insertBrdItem" parameterClass="Map">
         <isEqual property="parentWriteDate" compareValue="docNO">
             INSERT INTO TBL_Board_Item ( 
@@ -658,6 +740,29 @@
           )
     </isNotEqual>
   </insert>
+  
+  <insert id="MBoardDAO.setAsRead" parameterClass="Map">
+        <![CDATA[
+            INSERT INTO TBL_Board_Item_Read ( 
+                BoardID,      ItemID,      UserID,      UserName,      UserDeptName,      UserCompanyName,      UserTitle,      UserName2,      UserDeptName2,      UserCompanyName2,      UserTitle2,      ReadDate,                                    TENANT_ID 
+            )
+            VALUES ( 
+                #v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID# 
+            )
+        ]]>
+    </insert>
+    
+    <update id="MBoardDAO.setAsRead2" parameterClass="Map">
+        <![CDATA[
+            UPDATE TBL_Board_Item
+            SET 
+                ReadCount = ReadCount + 1
+            WHERE
+                TENANT_ID = #v_TENANTID#
+            AND  
+                ItemID = #v_pItemID#
+        ]]>
+    </update>
   
   <update id="MBoardDAO.updateItem" parameterClass="Map">
         UPDATE

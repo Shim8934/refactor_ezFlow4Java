@@ -79,6 +79,7 @@ public class MBoardGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String boardId = request.getParameter("boardID");
+			String lastDate = request.getParameter("lastDate");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
@@ -91,7 +92,7 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, info.getTenantId());
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId());
 			
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
 			LOGGER.debug("listCount ="+listCount);
@@ -130,6 +131,10 @@ public class MBoardGWController {
 			String add = request.getParameter("add");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			
+			if (lastDate == null || lastDate.equals("")) {
+				lastDate = commonUtil.getTodayUTCTime("");
+			}
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			
@@ -230,6 +235,9 @@ public class MBoardGWController {
 			String domain = request.getServerName() + ":" + request.getServerPort();
 			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale);
 			
+			//새게시물 눌렀을때, read테이블에 들어가게함.
+			mBoardService.setAsRead(info, boardId, contentId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", boardItem);
@@ -290,6 +298,8 @@ public class MBoardGWController {
 			}
 				
 			LOGGER.debug("photoList:"+photoList);
+			
+			mBoardService.setAsRead(info, boardId, contentId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
