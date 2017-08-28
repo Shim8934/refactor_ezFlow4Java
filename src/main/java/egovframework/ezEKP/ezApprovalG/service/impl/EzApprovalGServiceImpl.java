@@ -13063,7 +13063,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_DOCID", docID);
 		map.put("v_TENANTID", tenantID);
-		// 완료문서 수신처 정보 가져오기
+		// '진행 문서 수신처 정보' 가져오기, TBL_RECEIPTPOINTINFO
 		List<ApprGReceiptVO> apprGReceiptVOList = ezApprovalGDAO.doSendDocReceiptInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -13096,6 +13096,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		if (approvalFlag.equals("G")) {
 			// 진행 중인 문서의 OrgDocID, 문서 상태(DOCSTATE) 리스트를 가져온다.
+			// TBL_APRDOCINFO
 			List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.doSendDocAprDocInfo(map);
 			
 			StringBuffer sb1 = new StringBuffer();
@@ -13114,8 +13115,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				// docState 004 : 심사
 				if (!tempOrgDocID.trim().equals("") && (flag.equals("G") || tempDocState.equals("004"))) {
 					orgDocID = tempOrgDocID;
-					
-					if (dlength == 0) {
+					// '진행 문서 수신처 정보' List에서 데이터를 찾을 수 없는 경우
+					// 즉, 수신처가 없는 경우
+					if (dlength == 0) { 
 						subSQL = updateProcessYN(tempOrgDocID, "", "S", "QUERY", companyID, lang, tenantID);
 						
 						if (subSQL.toUpperCase().equals("FALSE")) {
@@ -13126,7 +13128,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 			}
-			
+			// dlength != 0 -> 수신처가 존재하는 경우
+			// TBL_RECEIPTPOINTINFO 테이블에서 데이터 가져오기
 			for (int j = 0; j < dlength; j++) {
 				receiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
 				receiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
@@ -13139,13 +13142,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				receiptCompanyID = makeListField(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(j).getTextContent());
 				isGroup = false;
 				groupCount = 1;
-				// 수신처ID의 앞부분이 수신그룹의 이름과 같은 경우
+				/**
+				 *  수신처ID의 앞부분이 수신그룹의 이름과 같은 경우 -> 수신처가 그룹인 경우
+				 *  코드리스트에 있는 수신처 관련 '이름'이 receiptPointID에 포함된 경우.
+				 */
 				if (receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon)) {
 					Map<String, Object> map2 = new HashMap<String, Object>();
 					map2.put("companyID", companyID);
 					map2.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length()));
 					map2.put("v_TENANTID" , tenantID);
-					// 수신처그룹 상세리스트 정보
+					// '수신처그룹' 상세리스트 정보
 					List<ApprGReceiptVO> apprGReceiptVOList2 = ezApprovalGDAO.doSendDocReceiptGroupSub(map2);
 					
 					StringBuffer sb2 = new StringBuffer();
@@ -13158,6 +13164,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					receiptXML = commonUtil.convertStringToDocument(sb2.toString());
 					logger.debug("<<<receiptXML : " + receiptXML.toString());
+					// '수신처그룹'이 존재하는 경우
 					if (receiptXML.getElementsByTagName("ROW").getLength() > 0) {
 						isGroup = true;
 						groupCount = receiptXML.getElementsByTagName("ROW").getLength();
@@ -13166,7 +13173,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				for (int k = 0; k < groupCount; k++) {
 					if (rtnVal) {
-						if (isGroup) { // 수신처그룹 상세리스트 정보가 존재하는 경우
+						/**
+						 * TBL_ADMINRECEIPTGROUP_SUB != null -> isGroup == True
+						 * 수신처그룹 상세리스트 정보가 존재하는 경우, 그룹으로 보내기 위해 해당 데이터를 사용
+						 * */
+						if (isGroup) {
 							receiptPointID = makeListField(receiptXML.getElementsByTagName("DEPTID").item(k).getTextContent());
 							receiptPointName = makeListField(receiptXML.getElementsByTagName("DEPTNAME").item(k).getTextContent());
 							receiptPointName2 = makeListField(receiptXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent());
@@ -13233,18 +13244,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                            map.put("v_ReceivedDeptName", receiptPointName);
 	                            map.put("v_ReceivedDeptName2", receiptPointName2);
 	                            map.put("v_DocState", docState);
-	                            //S 버젼 수신처 변경
-	                            if (ezCommonService.getTenantConfig("ApprovalFlag", tenantID).equals("S")) {
-	                            	map.put("v_ReceiveSN", 1);
-	                            	
-	                            	if (receiptMemberID != null && !receiptMemberID.equals("")) {
-	                            		map.put("v_AprState", staASJiJung);
-	                            	} else {
-	                            		map.put("v_AprState", staASDoJak);
-	                            	}
-	                            } else {
-	                            	map.put("v_AprState", staASDoJak);
-	                            }
+	                            map.put("v_AprState", staASDoJak); // G 버젼 수신처 
 	                            map.put("v_ProcessorID", receiptMemberID);
 	                            map.put("v_ProcessorName", receiptMemberName);
 	                            map.put("v_ProcessorName2", receiptMemberName2);
@@ -13382,16 +13382,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             map.put("v_ReceivedDeptName", receiptPointName);
                             map.put("v_ReceivedDeptName2", receiptPointName2);
                             map.put("v_DocState", docState);
-                            //S 버젼 수신처 변경
-                            if (ezCommonService.getTenantConfig("ApprovalFlag", tenantID).equals("S")) {
-                            	if (receiptMemberID != null && !receiptMemberID.equals("")) {
-                            		map.put("v_AprState", staASJiJung);
-                            	} else {
-                            		map.put("v_AprState", staASDoJak);
-                            	}
-                            } else {
-                            	map.put("v_AprState", staASDoJak);
-                            }
+                            // 일반버젼 수신처
+                        	if (receiptMemberID != null && !receiptMemberID.equals("")) {
+                        		map.put("v_AprState", staASJiJung);
+                        	} else {
+                        		map.put("v_AprState", staASDoJak);
+                        	}                            
                             map.put("v_ProcessorID", receiptMemberID);
                             map.put("v_ProcessorName", receiptMemberName);
                             map.put("v_ProcessorName2", receiptMemberName2);
