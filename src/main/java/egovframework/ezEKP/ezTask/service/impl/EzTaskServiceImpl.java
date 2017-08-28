@@ -11,7 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskCommentVO;
@@ -21,7 +23,7 @@ import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzTaskService")
-public class EzTaskServiceImpl implements EzTaskService{
+public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	private static final Logger logger = LoggerFactory.getLogger(EzTaskServiceImpl.class);
 	
 	@Autowired
@@ -184,10 +186,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		} else {
 			/* task edit */
 			updateTask(taskInfoVO, offset, tenantID);
-			
-//			2017-08-28 
-//			task에 추가된 파일 전부 삭제
-//			deleteAttach(taskID, realPath, uploadTaskPath);
+			deleteTaskAttach(taskID, 1, realPath, uploadTaskPath, tenantID);
 		}
 		
 		if (taskInfoVO.getHasAttach().equals("Y")) {
@@ -200,7 +199,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 			}
 			
 			attachMap.put("taskID", taskID);
-			attachMap.put("taskType", taskInfoVO.getTaskType());
+			attachMap.put("taskType", 1);
 			attachMap.put("tenantID", tenantID);
 			
 			for(String fileStr : fileList.split(",")) {
@@ -211,12 +210,12 @@ public class EzTaskServiceImpl implements EzTaskService{
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
-				attachMap.put("filePath", taskID + commonUtil.separator + filePath + ";" + fileName);
+				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + ";" + fileName);
 				
 				ezTaskDAO.insertTaskAttach(attachMap);
 				
 				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + filePath + ";" + fileName;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + ";" + fileName;
 				
 				fileMove(beforePath, afterPath);
 			}
@@ -372,8 +371,18 @@ public class EzTaskServiceImpl implements EzTaskService{
 	}
 	
 	/* 첨부파일 삭제 */
-	private void deleteTaskAttach(String taskID, String realPath, String uploadTaskPath) throws Exception {
-//		2017-08-28
+	private void deleteTaskAttach(String taskID, int type, String realPath, String uploadTaskPath, int tenantID) throws Exception {
+		logger.debug("deleteTaskAttach started.");
+		//닷넷 파일은 그대로 두고 DB만 날림
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("attachType", type);
+		map.put("tenantID", tenantID);
+		
+		ezTaskDAO.deleteTaskAttach(map);
+		
+		logger.debug("deleteTaskAttach ended.");
 	}
 	
 	@Override
@@ -381,14 +390,15 @@ public class EzTaskServiceImpl implements EzTaskService{
 		logger.debug("taskWorkSave started.");
 		logger.debug("taskID = " + taskID + " || content = " + content + " || attachList = " + attachList + " || contentPath = " + contentPath + " || realPath = " + realPath + " || uploadTaskPath = " + uploadTaskPath);
 		
-		String filePath = "";
+		String mhtFilePath = "";
 		if (contentPath.equals("")) {
 			/* taskWork Write */
-			filePath = realPath + uploadTaskPath + commonUtil.separator + "Doc" + commonUtil.separator + UUID.randomUUID().toString() + ".mht";
-			contentPath = "Doc" + commonUtil.separator + UUID.randomUUID().toString() + ".mht";
+			contentPath = "Doc" + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}.mht";
+			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
 		} else {
 			/* taskWork Edit */
-			filePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
+			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
+			//파일삭제
 		}
 		
 		File folder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
@@ -399,7 +409,7 @@ public class EzTaskServiceImpl implements EzTaskService{
 		PrintWriter pw = null;
 		
 		try {
-			pw = new PrintWriter(new File(filePath));
+			pw = new PrintWriter(new File(mhtFilePath));
 			pw.println(content);
 			pw.flush();
 		} catch (Exception e) {
@@ -416,12 +426,44 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		ezTaskDAO.updateTaskWork(map);
 		
+		if (attachList.length() > 0) {
+			Map<String, Object> attachMap = new HashMap<String, Object>();
+			String pDirPath = realPath + uploadTaskPath + commonUtil.separator;
+			File uploadFileFolder = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID);
+			
+			if (!uploadFileFolder.exists()) {
+				uploadFileFolder.mkdirs();
+			}
+			
+			attachMap.put("taskID", taskID);
+			attachMap.put("taskType", 2);
+			attachMap.put("tenantID", tenantID);
+			
+			for(String fileStr : attachList.split(",")) {
+				String[] file = fileStr.split(";");
+				String filePath = file[0];
+				String fileName = file[1];
+				String fileSize = file[2];
+				
+				attachMap.put("fileName", fileName);
+				attachMap.put("fileSize", fileSize);
+				attachMap.put("filePath", commonUtil.separator + taskID + commonUtil.separator + filePath + ";" + fileName);
+				
+				ezTaskDAO.insertTaskAttach(attachMap);
+				
+				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath + ";" + fileName;
+				
+				fileMove(beforePath, afterPath);
+			}
+		}
+		
 		logger.debug("taskWorkSave ended.");
 	}
 	
 	@Override
-	public String getAttachList(String taskID, String folderPath, int type, int tenantID) throws Exception {
-		logger.debug("getAttachList started.");
+	public String getAttachListStr(String taskID, String folderPath, String type, int tenantID) throws Exception {
+		logger.debug("getAttachListStr started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("taskID", taskID);
@@ -432,15 +474,11 @@ public class EzTaskServiceImpl implements EzTaskService{
 		
 		StringBuilder sb = new StringBuilder();
 		for (TaskAttachVO vo : list) {
-			String attachID = vo.getAttachID();
 			String fileName = vo.getFileName();
 			String filePath = vo.getFilePath();
 			String fileSize = vo.getFileSize();
 			String fileImage = null;
 			
-			String strFileExt = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
-			
-			String strTarget = "target=''";
 			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
 				fileImage = "/images/image.png";
 			} else if (fileName.contains(".doc")) {
@@ -469,9 +507,41 @@ public class EzTaskServiceImpl implements EzTaskService{
 			sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
 		}
 		
-		logger.debug("getAttachList ended. listSize = " + list.size());
+		logger.debug("getAttachListStr ended. listSize = " + list.size());
 		
 		return sb.toString();
+	}
+	
+	@Override
+	public List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception {
+		logger.debug("getAttachList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("taskID", taskID);
+		map.put("type", type);
+		map.put("tenantID", tenantID);
+		
+		List<TaskAttachVO> list = ezTaskDAO.getAttachList(map);
+		
+		String uploadFolder = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
+		String tempFolder = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "tempUploadFile";
+		
+		for (TaskAttachVO vo : list) {
+			String filePath = vo.getFilePath();
+			String tempFilePath = filePath.substring(vo.getTaskID().length() + 2);
+			
+			logger.debug("filePath = " + filePath);
+			logger.debug("tempFilePath = " + tempFilePath);
+			
+			File beforeFile = new File(realPath + uploadFolder + filePath);
+			File afterFile = new File(realPath + tempFolder + commonUtil.separator + tempFilePath);
+			
+			copy(beforeFile, afterFile);
+		}
+		
+		logger.debug("getAttachList ended");
+		
+		return list;
 	}
 
 	/* 정수현*/

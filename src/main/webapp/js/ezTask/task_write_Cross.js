@@ -767,7 +767,7 @@ function save_task() {
 			} catch (e) { }
 			
 	        parent.DivPopUpHidden();
-	        /*지시사항페이지 refresh*/
+	        parent.location.reload();
 	        window.close();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezTask.vo;
 
 public class TaskAttachVO {
+	/** 업무ID */
+	private String taskID;
 	/** 파일ID */
 	private String attachID;
 	/** 파일명 */
@@ -9,6 +11,12 @@ public class TaskAttachVO {
 	private String filePath;
 	/** 파일사이즈 */
 	private String fileSize;
+	public String getTaskID() {
+		return taskID;
+	}
+	public void setTaskID(String taskID) {
+		this.taskID = taskID;
+	}
 	public String getAttachID() {
 		return attachID;
 	}

@@ -46,6 +46,8 @@
 			JOIN
 				TBL_USERMASTER B
 			ON
+				A.tenantid = B.tenant_id
+			AND
 				A.personid = B.cn
 			WHERE
 				tenantid = #tenantID#
@@ -90,6 +92,7 @@
 	<select id="EzTaskDAO.getAttachList" resultClass="TaskAttachVO">
 		<![CDATA[
 			SELECT
+				taskid,
 				attachid,
 				filename,
 				filepath,
@@ -349,6 +352,19 @@
 			AND
 				commentid = #commentID#
         ]]>
+    </delete>
+    
+    <delete id="EzTaskDAO.deleteTaskAttach" parameterClass="Map">
+    	<![CDATA[
+    		DELETE FROM
+    			TBL_TASKATTACH
+    		WHERE
+    			tenantid = #tenantID#
+    		AND
+    			taskid = #taskID#
+    		AND
+    			type = #attachType#
+    	]]>
     </delete>
 
 	<select id="EzTaskDAO.getDelayColor" parameterClass="Map" resultClass="String">

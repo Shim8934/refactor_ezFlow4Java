@@ -31,22 +31,16 @@
 			var completerate = "${taskInfoVO.completeRate }";
 			var duration = 500;
 			var delayColor = "${delayColor }";
-			/* 담당자 인듯 이효진 */		    
-// 		    var personlist = "${personList }";
-
 		    var shareid = "${shareID }";
 		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
 		    var date = "${date }";
 		    var type = "${type }";
 		    var personid = "${taskInfoVO.personID }";
-// 		    var attachFileInfo = "${attachFileInfo }";
 		    var taskCommentListSize = "${taskCommentListSize }";
 		    var tempbody = "";
 		    var pUse_Editor = "${useEditor}";
 		    var AttachLimit = 5;
-		    
-// 		    var folderPath = "${folderPath }";
 		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
 		    var taskAttachList = "${taskAttachList }";
 		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
