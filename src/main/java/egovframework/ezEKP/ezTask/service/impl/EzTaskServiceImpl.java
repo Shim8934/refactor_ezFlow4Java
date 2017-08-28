@@ -649,6 +649,11 @@ public class EzTaskServiceImpl implements EzTaskService{
 		logger.debug("taskGetList started.");
 		logger.debug("startDate : " + startDate + " | endDate : " + endDate + " | type : " + type + " | filter : " + filter + " | chkValue : " + chkValue + " | searchClass : " + searchClass);
 
+		if (!startDate.equals("")) {
+			startDate += " 00:00:00";
+			endDate += " 23:59:59";
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("memberID", memberID);

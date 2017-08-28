@@ -737,7 +737,7 @@
 // 		        xmlHTTP2.open("POST", "/myoffice/ezTask/remote/task_get_list.aspx", true);
 // 		        xmlHTTP2.onreadystatechange = after_DateChange;
 // 		        xmlHTTP2.send(xmlDom);
-alert(startdate + " / " + enddate);
+
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -880,8 +880,8 @@ alert(startdate + " / " + enddate);
 		        document.getElementById('txt_keyword').value = "";
 		    }
 		    function search() {
-		        if (document.getElementById("txt_keyword").value.trim() == "") {
-		            alert("<spring:message code='ezTask.t194' />");
+		        if ($.trim($("#txt_keyword").val()) == "") {
+		        	alert("<spring:message code='ezTask.jsh01' />");
 		            return;
 		        }
 
@@ -918,7 +918,7 @@ alert(startdate + " / " + enddate);
 		        if (userlang != "1" && chkValue == "TaskPersonName") {
 		            filter = document.getElementById("txt_keyword").value;
 		        }
-alert(chkValue + " / " + filter);
+
 // 		        xmlHTTP2 = createXMLHttpRequest();
 // 		        var xmlDom = createXmlDom();
 		
