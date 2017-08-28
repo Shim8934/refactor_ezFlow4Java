@@ -2021,7 +2021,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					// readCountStr
 					if (maxReadCount == 0) {
-						readCountStr = egovMessageSource.getMessage("ezEmail.lhm35", locale);
+						readCountStr = egovMessageSource.getMessage("ezEmail.lhm67", locale);
 					} else {
 						readCountStr = maxReadCount + egovMessageSource.getMessage("ezEmail.lhm55", locale) 
 							+ " <span style=\"color:red\">" + (maxReadCount - readCount - 1) + egovMessageSource.getMessage("ezEmail.lhm56", locale) + "</span>";
@@ -2029,7 +2029,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					
 					// readDateStr
 					if (maxReadDate == null) {
-						readDateStr = egovMessageSource.getMessage("ezEmail.lhm35", locale);
+						readDateStr = egovMessageSource.getMessage("ezEmail.lhm67", locale);
 					} else {
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						sdf.setTimeZone(TimeZone.getTimeZone("GMT"));

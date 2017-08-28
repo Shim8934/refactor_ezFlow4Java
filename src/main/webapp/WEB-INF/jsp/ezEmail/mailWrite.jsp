@@ -943,7 +943,7 @@
 	                        </li>
 	                        <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
 	                        	<input type="checkbox" id="chkSecureMail" />
-	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm31' /></label>
+	                        	<label for="chkSecureMail" style="color:white"><spring:message code='ezEmail.lhm63' /></label>
 	                        </li>
 	                    </ul>
 	                </div>

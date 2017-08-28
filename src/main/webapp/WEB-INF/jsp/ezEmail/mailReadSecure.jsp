@@ -122,7 +122,7 @@
 			                    	<span id="LabelToHidden">${toHiddenStr}</span> 
 			                    </div>
 		                    </td>
-		                    <th><spring:message code="ezEmail.lhm33" /></th>
+		                    <th><spring:message code="ezEmail.lhm65" /></th>
 		                    <td>
 		                    	<div style="padding-left:5px;">${readCountStr}</div>
 		                    </td>
@@ -139,7 +139,7 @@
 					                	<span id="LabelCCHidden">${ccHiddenStr}</span> 
 					                </div>
 				                </td>
-				                <th><spring:message code="ezEmail.lhm34" /></th>
+				                <th><spring:message code="ezEmail.lhm66" /></th>
 			                    <td>
 		                    		<div style="padding-left:5px;">${readDateStr}</div>
 		                    	</td>
@@ -163,7 +163,7 @@
 		                			<span id="LabelSubject">${subject}</span>
 		                		</div>
 		                	</td>
-	                		<th><spring:message code="ezEmail.lhm34" /></th>
+	                		<th><spring:message code="ezEmail.lhm66" /></th>
 	                    	<td>
 	                    		<div style="padding-left:5px;">${readDateStr}</div>
 	                    	</td>

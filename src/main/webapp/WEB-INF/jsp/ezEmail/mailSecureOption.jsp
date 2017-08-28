@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<title><spring:message code='ezEmail.lhm31' /></title>
+		<title><spring:message code='ezEmail.lhm63' /></title>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
@@ -224,7 +224,7 @@
 		</script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1><spring:message code='ezEmail.lhm31' /></h1>
+		<h1><spring:message code='ezEmail.lhm63' /></h1>
 		<span><spring:message code='ezEmail.lhm38' /></span><br>
 		<span><spring:message code='ezEmail.lhm39' /></span><br>
 		<span><spring:message code='ezEmail.lhm40' /></span><br>
@@ -233,7 +233,7 @@
 		
 		<table style="width:100%;" class="content">
 		  <tr>
-		    <th><spring:message code='ezEmail.lhm32' /></th>
+		    <th><spring:message code='ezEmail.lhm64' /></th>
 		    <td><input type="password" id="securePassword" maxlength="20" /></td>
 		  </tr>
 		  <tr>
@@ -241,20 +241,20 @@
 		    <td><input type="password" id="securePasswordCheck" maxlength="20" /></td>
 		  </tr>
 		  <tr>
-		    <th><spring:message code='ezEmail.lhm33' /></th>
+		    <th><spring:message code='ezEmail.lhm65' /></th>
 		    <td>
 		    	<input type="text" id="maxReadCount" maxlength="3" style="width:50px;-webkit-ime-mode:mode:disabled;-moz-ime-mode:mode:disabled;-ms-ime-mode:mode:disabled;ime-mode:disabled;" 
 		    		onkeypress="return digitCheck(event)" disabled />
-		    	<spring:message code='ezEmail.lhm36' />
-		    	<input type="checkbox" id="countUnlimit" onclick="chkMaxReadCount()" checked /><label for="countUnlimit"><spring:message code='ezEmail.lhm35' /></label>
+		    	<spring:message code='ezEmail.lhm68' />
+		    	<input type="checkbox" id="countUnlimit" onclick="chkMaxReadCount()" checked /><label for="countUnlimit"><spring:message code='ezEmail.lhm67' /></label>
 		    </td>
 		  </tr>
 		  <tr>
-		  	<th><spring:message code='ezEmail.lhm34' /></th>
+		  	<th><spring:message code='ezEmail.lhm66' /></th>
 		  	<td>
 		  		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" disabled />
 		  		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" disabled /> <spring:message code='ezEmail.lhm37' />
-		  		<input type="checkbox" id="dateUnlimit" onclick="chkMaxReadDate()" checked /><label for="dateUnlimit"><spring:message code='ezEmail.lhm35' /></label>
+		  		<input type="checkbox" id="dateUnlimit" onclick="chkMaxReadDate()" checked /><label for="dateUnlimit"><spring:message code='ezEmail.lhm67' /></label>
 		  	</td>
 		  </tr>
 		</table>

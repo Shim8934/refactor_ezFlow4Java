@@ -39,22 +39,22 @@
 		<h2><spring:message code='ezEmail.lhm44' /></h2>
 		<table style="width:100%;" class="content">
 		  <tr>
-		    <th><spring:message code='ezEmail.lhm32' /></th>
+		    <th><spring:message code='ezEmail.lhm64' /></th>
 		    <td>${secureInfo.password}</td>
 		  </tr>
 		  <tr>
-		    <th><spring:message code='ezEmail.lhm33' /></th>
+		    <th><spring:message code='ezEmail.lhm65' /></th>
 	    	<c:if test="${secureInfo.maxReadCount == '0'}">
-	    		<td><spring:message code='ezEmail.lhm35' /></td>
+	    		<td><spring:message code='ezEmail.lhm67' /></td>
 	    	</c:if>
 		    <c:if test="${secureInfo.maxReadCount != '0'}">
-	    		<td>${secureInfo.maxReadCount} <spring:message code='ezEmail.lhm36' /></td>
+	    		<td>${secureInfo.maxReadCount} <spring:message code='ezEmail.lhm68' /></td>
 	    	</c:if>
 		  </tr>
 		  <tr>
-		  	<th><spring:message code='ezEmail.lhm34' /></th>
+		  	<th><spring:message code='ezEmail.lhm66' /></th>
 		  	<c:if test="${secureInfo.maxReadDate == null}">
-	    		<td><spring:message code='ezEmail.lhm35' /></td>
+	    		<td><spring:message code='ezEmail.lhm67' /></td>
 	    	</c:if>
 		    <c:if test="${secureInfo.maxReadDate != null}">
 	    		<td>${secureInfo.maxReadDate} <spring:message code='ezEmail.lhm37' /></td>
