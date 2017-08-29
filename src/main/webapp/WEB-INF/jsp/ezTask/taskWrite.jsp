@@ -644,10 +644,6 @@
                <th><spring:message code='ezTask.t120' /></th>
                <td><div id="printCompleteRate"></div></td>
             </tr>
-<!--                <tr> -->
-<%--                   <th><spring:message code='ezTask.t213' /></th> --%>
-<!--                   <td><div id="printRepetition"></div></td> -->
-<!--                </tr> -->
             <tr>
                <th><spring:message code='ezTask.t218' /></th>
                <td><div id="printDate"></div></td>
