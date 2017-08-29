@@ -1509,7 +1509,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title"><spring:message code='ezCircular.t40' /></h1>
+		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
 		<table style="width:100%">
 			<tr>
 				<td>
