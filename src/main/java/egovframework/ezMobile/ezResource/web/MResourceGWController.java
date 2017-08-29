@@ -242,6 +242,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
@@ -253,6 +255,9 @@ public class MResourceGWController extends EgovFileMngUtil {
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId);
 
+			resVO.setStartDate(startDate);
+			resVO.setEndDate(endDate);
+			
 			String obj = "";
 			
 			Gson gson = new Gson();

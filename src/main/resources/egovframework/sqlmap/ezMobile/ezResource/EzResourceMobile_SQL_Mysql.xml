@@ -1173,5 +1173,27 @@
 		</isNotEqual>			
 	</select>
   
+  	<select id="MResourceDAO.getResSchRepet" parameterClass="Map" resultMap="resGetScheduleListMainVO">
+		<![CDATA[
+			SELECT
+				OWNERID,
+				NUM ,
+				COMPANYID,
+				STARTDATETIME,
+				ENDDATETIME,
+				TENANT_ID
+        	FROM
+        		TBL_RS_SCHEDULEREPETITION	
+        	WHERE
+				COMPANYID = #v_PCOMPANYID#
+			AND
+				TENANT_ID = #tenantID#	
+			AND 
+				NUM = #v_PNUM#
+			AND 
+				OWNERID = #v_OWNERID#
+		]]>
+	</select>
+  
 </sqlMap>
 

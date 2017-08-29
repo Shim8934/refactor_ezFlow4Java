@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
@@ -190,6 +191,17 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 	@Override
 	public void delResSch(String companyId, String ownerId, String num, String startDate, String endDate, String offset, String reFlag, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		
+		LOGGER.debug("companyId", companyId);
+		LOGGER.debug("ownerId", ownerId);
+		LOGGER.debug("num", num);
+		LOGGER.debug("startDate", startDate);
+		LOGGER.debug("endDate", endDate);
+		LOGGER.debug("offset", offset);
+		LOGGER.debug("reFlag", reFlag);
+		LOGGER.debug("tenantId", tenantId);
+		
+		
 		map.put("v_PCOMPANYID", companyId);
 		map.put("v_POWNERID", ownerId);
 		map.put("v_PNUM", num);
@@ -201,8 +213,13 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		if(reFlag.equals("1")){
 			int maxNum = mResourceDAO.getResSchMaxNum(map);
 			map.put("v_PMAXNUM", maxNum);
+			//MResourceGetScheduleVO resSchRepet = mResourceDAO.getResSchRepet(map);
+			//startDate = startDate.substring(0, 11) + " " + commonUtil.getDateStringInUTC(resSchRepet.getStartDate(), offset, false).substring(11);
+			//endDate = endDate.substring(0, 11) + " " + commonUtil.getDateStringInUTC(resSchRepet.getEndDate(), offset, false).substring(11);			
 			startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
-			startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+			endDate = commonUtil.getDateStringInUTC(endDate, offset, true);			
+			LOGGER.debug("startDate in repeat :", startDate);
+			LOGGER.debug("endDate in repeat :", endDate);
 			map.put("v_PSTARTDATE", startDate);
 			map.put("v_PENDDATE", endDate);
 			mResourceDAO.delResSch_I(map);
