@@ -66,9 +66,6 @@
 			            setAttachFileInfo("${taskAttachList}");
 			        }
 					
-// 					MakeAttachList();
-// 					AppendFileAttachInfo(pAttachListXml);
-	
 					Editor_Complete();
 				}
 	
@@ -616,7 +613,7 @@
             <tr>
                 <td>
                      <br/> 
-                     <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>   
+                     <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>
                 </td>
             </tr>
          </table>

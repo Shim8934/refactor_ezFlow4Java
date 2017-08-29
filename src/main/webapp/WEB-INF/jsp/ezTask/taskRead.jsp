@@ -361,7 +361,7 @@
 			function downloadAll(checks) {
 				if (checks.item(suffix)) {
 					if (checks.item(suffix).checked) {
-						location.href = GetAttribute(checks.item(suffix++), "filehref");
+						location.href = "/ezCommon/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
 						setTimeout(function () { downloadAll(checks) }, 1000);
 					} else {
 						suffix++;
@@ -932,6 +932,28 @@
 
 			function messageload() {
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
+			}
+			
+			function getTaskWorkAttachList() {
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/getTaskWorkAttachList.do",
+					dataType : "json",
+					data : {
+							taskID : taskid,
+					},
+					success : function(result) {
+						hasTaskWorkAttach = result.hasTaskWorkAttach;
+						taskWorkAttachList = result.taskWorkAttachList;
+						
+						if (hasTaskWorkAttach == 'Y') {
+							document.getElementById('attachedfileDIV2').innerHTML = taskWorkAttachList
+				    	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				})
 			}
 		</script>
 	</head>

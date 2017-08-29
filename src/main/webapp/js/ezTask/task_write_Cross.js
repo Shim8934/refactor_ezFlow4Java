@@ -918,8 +918,8 @@ function save_taskWork() {
 	} else {
 		personAttach = "N";
 	}
-    
-    $.ajax({
+	
+	$.ajax({
     	type : "POST",
 		url : "/ezTask/taskWorkSave.do",
 		dataType : "json",
@@ -931,7 +931,10 @@ function save_taskWork() {
 			contentPath : personContentpath
 		},
 		success : function(result) {
-			/*지시사항페이지 refresh*/
+			parent.DivPopUpHidden();
+			parent.load_bodyhtml2();
+			parent.getTaskWorkAttachList();
+	        window.close();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			

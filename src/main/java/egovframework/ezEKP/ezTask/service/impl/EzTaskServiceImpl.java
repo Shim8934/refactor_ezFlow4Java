@@ -375,6 +375,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	/* 첨부파일 삭제 */
 	private void deleteTaskAttach(String taskID, int type, String realPath, String uploadTaskPath, int tenantID) throws Exception {
 		logger.debug("deleteTaskAttach started.");
+		logger.debug("taskID = " + taskID + " || attachType = " + type + " || tenantID = " + tenantID);
 		//닷넷 파일은 그대로 두고 DB만 날림
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -390,7 +391,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	@Override
 	public void taskWorkSave(String taskID, String content, String attachList, String personAttach, String contentPath, String realPath, String uploadTaskPath, int tenantID) throws Exception {
 		logger.debug("taskWorkSave started.");
-		logger.debug("taskID = " + taskID + " || content = " + content + " || attachList = " + attachList + " || contentPath = " + contentPath + " || realPath = " + realPath + " || uploadTaskPath = " + uploadTaskPath);
+		logger.debug("taskID = " + taskID + " || content = " + content + " || attachList = " + attachList + " || personAttach = " + personAttach + " || contentPath = " + contentPath + " || realPath = " + realPath + " || uploadTaskPath = " + uploadTaskPath);
 		
 		String mhtFilePath = "";
 		if (contentPath.equals("")) {
@@ -400,7 +401,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		} else {
 			/* taskWork Edit */
 			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
-			//파일삭제
 		}
 		
 		File folder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
@@ -427,6 +427,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("tenantID", tenantID);
 		
 		ezTaskDAO.updateTaskWork(map);
+		deleteTaskAttach(taskID, 2, realPath, uploadTaskPath, tenantID);
 		
 		if (attachList.length() > 0) {
 			Map<String, Object> attachMap = new HashMap<String, Object>();
@@ -503,14 +504,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				fileImage = "/images/email/mail_006.gif";
 			}
 			
-			if (type.equals("1")) {
-				sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' >");
-				sb.append("<img src='" + fileImage + "' >");
-				sb.append("<a href='/ezCommon/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
-				sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
-			} else if (type.equals("2")) {
-				
-			}
+			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
+			sb.append("<img src='" + fileImage + "' >");
+			sb.append("<a href='/ezCommon/downloadAttach.do?filePath=" + folderPath + filePath + "&fileName=" + commonUtil.cleanValue(fileName) + "' />");
+			sb.append(fileName + "&nbsp;(" + fileSize + ")</a><br>");
 		}
 		
 		logger.debug("getAttachListStr ended. listSize = " + list.size());

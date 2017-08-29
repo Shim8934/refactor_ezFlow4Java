@@ -49,11 +49,11 @@
 	        var FormProcSpelling = "FormProcSpelling";
 	        var personid = "${taskInfoVO.personID }"; */
 	        
-	        $(function () {
+	        window.onload = function () {
 	        	if (hasattach == "Y") {
 		            setAttachFileInfo("${taskWorkAttachList}");
 		        }
-	        });
+	        }
 	        
 	        window.onresize = function () {
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
@@ -115,7 +115,7 @@
 				<tr>
 					<td>
 						<br/>
-						<iframe id="dadiframe" name="dadiframe" style="width: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>
+						<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>
 					</td>
 	            </tr>
 			</table>
