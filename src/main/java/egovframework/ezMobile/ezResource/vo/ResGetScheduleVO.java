@@ -1,16 +1,16 @@
 package egovframework.ezMobile.ezResource.vo;
 
 public class ResGetScheduleVO {
-	/** 자원예약게시판ID*/
-	private String ownerID;
+	/** 자원예약게시판Id*/
+	private String ownerId;
 	/** 순번*/
 	private int num;
 	/** parent일정번호*/
 	private int pNum;
-	/** 회사ID*/
-	private String companyID;
+	/** 회사Id*/
+	private String companyId;
 	/** 등록자사번*/
-	private String writerID;
+	private String writerId;
 	/** 제목*/
 	private String title;
 	/** 위치*/
@@ -38,15 +38,15 @@ public class ResGetScheduleVO {
 	/** 참가자리스트*/
 	private String entryList;
 	/** 특정순번*/
-	private int characterID;
+	private int characterId;
 	/** 첨부파일여부*/
 	private String attachFlag;
 	/** 일정공개여부*/
 	private String publicFlag;
 	/** 승인여부*/
 	private String approveFlag;
-	/** 스케줄ID*/
-	private String scheduleID;
+	/** 스케줄Id*/
+	private String scheduleId;
 	/** 등록자부서명*/
 	private String deptNm;
 	/** 영문부서명*/
@@ -98,23 +98,23 @@ public class ResGetScheduleVO {
 	public void setpNum(int pNum) {
 		this.pNum = pNum;
 	}
-	public String getOwnerID() {
-		return ownerID;
+	public String getOwnerId() {
+		return ownerId;
 	}
-	public void setOwnerID(String ownerID) {
-		this.ownerID = ownerID;
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
 	}
-	public String getCompanyID() {
-		return companyID;
+	public String getCompanyId() {
+		return companyId;
 	}
-	public void setCompanyID(String companyID) {
-		this.companyID = companyID;
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
-	public String getWriterID() {
-		return writerID;
+	public String getWriterId() {
+		return writerId;
 	}
-	public void setWriterID(String writerID) {
-		this.writerID = writerID;
+	public void setWriterId(String writerId) {
+		this.writerId = writerId;
 	}
 	public String getTitle() {
 		return title;
@@ -194,11 +194,11 @@ public class ResGetScheduleVO {
 	public void setEntryList(String entryList) {
 		this.entryList = entryList;
 	}
-	public int getCharacterID() {
-		return characterID;
+	public int getCharacterId() {
+		return characterId;
 	}
-	public void setCharacterID(int characterID) {
-		this.characterID = characterID;
+	public void setCharacterId(int characterId) {
+		this.characterId = characterId;
 	}
 	public String getAttachFlag() {
 		return attachFlag;
@@ -218,11 +218,11 @@ public class ResGetScheduleVO {
 	public void setApproveFlag(String approveFlag) {
 		this.approveFlag = approveFlag;
 	}
-	public String getScheduleID() {
-		return scheduleID;
+	public String getScheduleId() {
+		return scheduleId;
 	}
-	public void setScheduleID(String scheduleID) {
-		this.scheduleID = scheduleID;
+	public void setScheduleId(String scheduleId) {
+		this.scheduleId = scheduleId;
 	}
 	public String getDeptNm() {
 		return deptNm;
