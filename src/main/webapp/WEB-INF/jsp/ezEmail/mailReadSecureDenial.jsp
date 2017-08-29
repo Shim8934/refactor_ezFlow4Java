@@ -6,7 +6,7 @@
 	<body>
 		<script>
 			alert("${message}");
-			window.close();
+			window.history.back();
 		</script>
 	</body>
 </html>
