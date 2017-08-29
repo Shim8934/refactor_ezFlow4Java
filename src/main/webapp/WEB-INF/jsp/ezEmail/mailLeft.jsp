@@ -446,6 +446,16 @@
 	        function Email_Menu_Click() {
 	            PostTreeView.select(1);
 	        }
+	        
+	        function showProgress() {
+			    document.getElementById("progressPanel").style.display = "block";
+			    document.getElementById("progressPanel").style.opacity = 0.5;
+			    document.getElementById("progressPanel").style.backgroundColor = "#808080";
+			}
+	        
+	        function hideProgress() {
+	        	document.getElementById("progressPanel").style.display = "none";
+	        }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: hidden;">
@@ -483,5 +493,6 @@
 	    <xml id="AddressFolderXML" style="display: none;">
 	    ${rootAddressXML}
 	    </xml>
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	</body>
 </html>
