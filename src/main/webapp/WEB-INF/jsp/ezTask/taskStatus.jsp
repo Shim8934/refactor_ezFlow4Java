@@ -57,7 +57,7 @@
 				});
 	        	
 	        	/* 완료율 변경시 잘안되서 일단 주석*/
-	        	/* $("#completeRate").change(function() {
+	        	$("#completeRate").change(function() {
 	        		if ($("#completeRate").val() == "0") {
 						$("#taskStatus").val("1");
 					} else if ($("#completeRate").val() == "100" && taskstatus != "4") {
@@ -70,7 +70,7 @@
 				
 					initProgressBar($("#taskStatus").val(), $("#completeRate").val());
 			    	completerate = $("#completeRate").val();
-				}); */
+				});
 	        });
 	        
 	        /* progressBar 조회 */

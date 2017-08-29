@@ -16,7 +16,9 @@ public interface EzTaskService {
 	
 	List<TaskShareVO> getShareList(String taskID, String offset, String primary, int tenantID) throws Exception;
 	
-	String getAttachList(String taskID, String folderPath, int type, int tenantID) throws Exception;
+	public List<TaskAttachVO> getAttachList(String taskID, String realPath, String type, int tenantID) throws Exception;
+	
+	String getAttachListStr(String taskID, String folderPath, String type, int tenantID) throws Exception;
 	
 	int insertComment(String taskID, String commentorID, String commentorName, String commentorName2, String comment, int tenantID) throws Exception;
 	
