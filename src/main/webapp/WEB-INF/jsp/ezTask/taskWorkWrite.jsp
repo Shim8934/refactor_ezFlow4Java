@@ -22,6 +22,7 @@
 	        var deptname = "${userInfo.deptName }";
 	        var deptname2 = "${userInfo.deptName1 }";
 	        var taskid = "${taskInfoVO.taskID }";
+	        var hasattach = "${taskInfoVO.personAttach }";
 			/* 필요하면 주석제거하고 하나씩 빼쓰자
 	        var taskstatus = "${taskInfoVO.taskStatus }";
 	        var completerate = "${taskInfoVO.completeRate }";
@@ -48,8 +49,14 @@
 	        var FormProcSpelling = "FormProcSpelling";
 	        var personid = "${taskInfoVO.personID }"; */
 	        
+	        window.onload = function () {
+	        	if (hasattach == "Y") {
+		            setAttachFileInfo("${taskWorkAttachList}");
+		        }
+	        }
+	        
 	        window.onresize = function () {
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 240 + "PX";
+	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 250 + "PX";
 	         }
 	        
 			function Editor_Complete() {
@@ -68,7 +75,7 @@
 		                }
 	                });
 	                
-	               try {
+					try {
 	                    var objTags = document.getElementById('message').getElementsByTagName("a");
 	
 	                    for (var i = 0 ; i < objTags.length ; i++) {
@@ -77,8 +84,36 @@
 	                    }
 	                }
 	                catch (e) { }
-	            }
-	        }
+				}
+			}
+			
+			function close_onclick() {
+			    if (!confirm("" + strLang8 + "")) {
+					parent.DivPopUpHidden();
+					window.close();
+			    } else {
+			    	save_taskWork();
+			    }
+			}
+			
+			function beforeprint() {
+				document.getElementById("main_body").style.display = "none";
+				document.getElementById("printScreen").style.display = "";
+				
+				var filehtml = "";
+				var nodes;
+				nodes = dadiframe.filelist.childNodes;
+				for (i = 1; i < nodes.length; i++) {
+				    filehtml = filehtml + "<span><input type='checkbox'><img src='/images/email/mail_006.gif'> " + getNodeText(nodes[i].childNodes[1]) + "&nbsp;&nbsp;<br></span>";
+				}
+				document.getElementById("printAttach").innerHTML = filehtml;
+				document.getElementById("printDocument").innerHTML = message.GetEditorContent();
+				
+				window.print();
+				
+				document.getElementById("main_body").style.display = "";
+				document.getElementById("printScreen").style.display = "none";
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -89,7 +124,7 @@
 						<div id="menu">
 							<ul>
 								<li><span onClick="save_taskWork()"><spring:message code='ezTask.t96' /></span></li>
-								<li><span onClick="window.print()"><spring:message code='ezTask.t153' /></span></li>
+								<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 							</ul>
 						</div>
 						
@@ -108,9 +143,20 @@
 				<tr>
 					<td>
 						<br/>
-						<iframe id="dadiframe" name="dadiframe" style="width: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>   
+						<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>
 					</td>
 	            </tr>
+			</table>
+		</div>
+		<div id="printScreen" style="display: none">
+			<table class="content">
+				<tr>
+					<th><spring:message code='ezTask.t219' /></th>
+					<td><div id="printAttach"></div></td>
+				</tr>
+				<tr style="width:100%;">
+					<td colspan="2"><div id="printDocument" style="padding-right: 5px; padding-left: 5px; padding-bottom: 5px; width: 100%; padding-top: 5px"></div></td>
+				</tr>
 			</table>
 		</div>
 		<script>

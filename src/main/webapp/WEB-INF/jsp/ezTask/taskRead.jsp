@@ -361,7 +361,7 @@
 			function downloadAll(checks) {
 				if (checks.item(suffix)) {
 					if (checks.item(suffix).checked) {
-						location.href = GetAttribute(checks.item(suffix++), "filehref");
+						location.href = "/ezCommon/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
 						setTimeout(function () { downloadAll(checks) }, 1000);
 					} else {
 						suffix++;
@@ -473,7 +473,7 @@
 				/* 레이어팝업으로 taskWriteCross 호출 */
 				var feature = GetOpenPosition(760, 750);
 				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWrite.do?taskID=" + id, "",
-		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 			}
 			
 			/* 의견삭제 */
@@ -690,10 +690,10 @@
 			        id = parentid;
 			    var win;
 			    
-				/* 레이어팝업으로 taskWriteCross 호출 */
+				/* 레이어팝업으로 taskWorkWriteCross 호출 */
 				var feature = GetOpenPosition(760, 750);
 				DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.92, "/ezTask/taskWorkWrite.do?taskID=" + id, "",
-		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		                "height = 750px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 			}
 			
 			/* 진행상태변경시 스크립트 */
@@ -722,7 +722,7 @@
 			            document.getElementById("taskstatus2").checked = true;
 			}
 			
-			function Editor_Complete() {
+			/* function Editor_Complete() {
 			    loadiframe();
 			}
 			
@@ -787,7 +787,7 @@
 			    }
 			
 			    AttachFileInfo(strXML);
-			}
+			} */
 		
 			function beforeprint() {
 			    document.getElementById("printScreen").style.display = "block";
@@ -932,6 +932,28 @@
 
 			function messageload() {
 			    document.getElementById("printDocument").innerHTML = message.document.body.innerHTML;
+			}
+			
+			function getTaskWorkAttachList() {
+				$.ajax({
+					type : "POST",
+					url : "/ezTask/getTaskWorkAttachList.do",
+					dataType : "json",
+					data : {
+							taskID : taskid,
+					},
+					success : function(result) {
+						hasTaskWorkAttach = result.hasTaskWorkAttach;
+						taskWorkAttachList = result.taskWorkAttachList;
+						
+						if (hasTaskWorkAttach == 'Y') {
+							document.getElementById('attachedfileDIV2').innerHTML = taskWorkAttachList
+				    	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						
+					}
+				})
 			}
 		</script>
 	</head>

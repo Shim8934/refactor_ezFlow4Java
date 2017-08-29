@@ -912,8 +912,14 @@ function save_taskWork() {
 			fileList += "," + GetAttribute(filelist[i + 1], "data2");
 		}
 	}
-    
-    $.ajax({
+	
+	if (fileList.length > 0) {
+		personAttach = "Y";
+	} else {
+		personAttach = "N";
+	}
+	
+	$.ajax({
     	type : "POST",
 		url : "/ezTask/taskWorkSave.do",
 		dataType : "json",
@@ -921,10 +927,14 @@ function save_taskWork() {
 			taskID : taskid,
 			content : content,
 			attachList : fileList,
+			personAttach : personAttach,
 			contentPath : personContentpath
 		},
 		success : function(result) {
-			/*지시사항페이지 refresh*/
+			parent.DivPopUpHidden();
+			parent.load_bodyhtml2();
+			parent.getTaskWorkAttachList();
+	        window.close();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			

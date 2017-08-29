@@ -61,10 +61,11 @@
 					document.getElementById("taskstatusSelect").value = taskstatus;
 					document.getElementById("completerateSelect").value = completerate;
 					$("#TextTitle").val("${taskInfoVO.title }");
-	
-					MakeAttachList();
-	// 				AppendFileAttachInfo(pAttachListXml);
-	
+					
+					if (hasattach == "Y") {
+			            setAttachFileInfo("${taskAttachList}");
+			        }
+					
 					Editor_Complete();
 				}
 	
@@ -122,112 +123,37 @@
 	//             document.getElementById("EdtorSize").style.height = document.body.clientHeight - 150 + "PX";
 			}
 			
-			function MakeAttachList() {
-				$.ajax({
-					type : "POST",
-	                dataType : "json",
-	                url : "/ezTask/getAttachList.do",
-	                data : {
-	                	attachType : 1,
-						taskID : taskid
-	                },
-	                success: function(result){
-	                	var attachListXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME></NAME><WIDTH>50</WIDTH></HEADER></HEADERS><ROWS>";
-	                	result.list.forEach(function(vo, index) {
-	                		filepath = escape(vo.filePath);
-							filename = escape(vo.fileName);
-							filepath = "/Upload_Task/Doc/" + filepath;
-							attachListXml += "<ROW><CELL>";
-							attachListXml += "<VALUE>" + filename + "</VALUE>";
-							attachListXml += "<DATA1>" + filepath + "</DATA1>";
-							attachListXml += "<DATA2>" + vo.filePath + "</DATA2>";
-							attachListXml += "<DATA3></DATA3>";
-							attachListXml += "<DATA4></DATA4>";
-							attachListXml += "<DATA5>Y</DATA5>";
-							attachListXml += "<DATA6>" + vo.fileSize + "</DATA6>";
-							attachListXml += "</CELL>";
-							attachListXml += "<CELL><VALUE></VALUE>";
-							attachListXml += "</CELL></ROW>";
-	                	});
-	                	
-	                	attachListXml += "</ROWS></LISTVIEWDATA>";
-	                	
-						AppendFileAttachInfo(attachListXml)
-	                }
-					
-				})
-			}
-         
-//          function MakeAttachList() {
-//              var xmlhttp = createXMLHttpRequest();
-//              var xmldom = createXmlDom();
-//              var str = "";
-//              var i = 0;
-//              var pos = 0;
-//              var filename = "";
-//              var filepath = "";
-
-//              xmlhttp.open("POST", "/myoffice/ezTask/interASP/getitemattach.aspx?taskid=" + taskid, false);
-//              xmlhttp.send();
-
-//              xmldom.async = false;
-//              xmldom.preserveWhiteSpace = true;
-//              xmldom = loadXMLString(xmlhttp.responseText);
-//              xmlhttp = null;
-
-//              var xmldomNodes = SelectNodes(xmldom, "DATA/ROW");
-
-//              str += "<LISTVIEWDATA><HEADERS><HEADER><NAME></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME></NAME><WIDTH>50</WIDTH></HEADER></HEADERS><ROWS>";
-
-//              for (i = 0; i < xmldomNodes.length; i++) {
-//                  filepath = escape(SelectSingleNodeValue(xmldomNodes[i], "FILEPATH"));
-//                  filename = escape(SelectSingleNodeValue(xmldomNodes[i], "FILENAME"));
-//                  filepath = "/Upload_Task/Doc/" + filepath;
-//                  str += "<ROW><CELL>";
-//                  str += "<VALUE>" + filename + "</VALUE>";
-//                  str += "<DATA1>" + filepath + "</DATA1>";
-//                  str += "<DATA2>" + SelectSingleNodeValue(xmldomNodes[i], "FILEPATH") + "</DATA2>";
-//                  str += "<DATA3></DATA3>";
-//                  str += "<DATA4></DATA4>";
-//                  str += "<DATA5>Y</DATA5>";
-//                  str += "<DATA6>" + SelectSingleNodeValue(xmldomNodes[i], "FILESIZE") + "</DATA6>";
-//                  str += "</CELL>";
-//                  str += "<CELL><VALUE></VALUE>";
-//                  str += "</CELL></ROW>";
-//              }
-//              str += "</ROWS></LISTVIEWDATA>";
-//              return str;
-//          }
-          
-          $(function () {
-              $("#Sdatepicker").datepicker({
-                  changeMonth: true,
-                  changeYear: true,
-                  autoSize: true,
-                  showOn: "both",
-                  buttonImage: "/images/ImgIcon/calendar-month.gif",
-                  buttonImageOnly: true,
-                  beforeShow: function (input) {
-                      var i_offset = $(input).offset();
-                      setTimeout(function () {
-                          $('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-                      })
-                  }
-              });
-              $("#Edatepicker").datepicker({
-                  changeMonth: true,
-                  changeYear: true,
-                  autoSize: true,
-                  showOn: "both",
-                  buttonImage: "/images/ImgIcon/calendar-month.gif",
-                  buttonImageOnly: true,
-                  beforeShow: function (input) {
-                      var i_offset = $(input).offset();
-                      setTimeout(function () {
-                          $('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
-                      })
-                  }
-              });
+			$(function () {
+				$("#Sdatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.gif",
+					buttonImageOnly: true,
+					beforeShow: function (input) {
+						var i_offset = $(input).offset();
+						setTimeout(function () {
+							$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+						})
+					}
+			});
+				
+			$("#Edatepicker").datepicker({
+				changeMonth: true,
+				changeYear: true,
+				autoSize: true,
+				showOn: "both",
+				buttonImage: "/images/ImgIcon/calendar-month.gif",
+				buttonImageOnly: true,
+				beforeShow: function (input) {
+					var i_offset = $(input).offset();
+					setTimeout(function () {
+						$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+        			})
+    			}
+			});
+			
               var SDate = new Date(startdate);
               var EDate = new Date(enddate);
               $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -687,7 +613,7 @@
             <tr>
                 <td>
                      <br/> 
-                     <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>   
+                     <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezTask/dragAndDrop.do"></iframe>
                 </td>
             </tr>
          </table>
@@ -718,10 +644,6 @@
                <th><spring:message code='ezTask.t120' /></th>
                <td><div id="printCompleteRate"></div></td>
             </tr>
-<!--                <tr> -->
-<%--                   <th><spring:message code='ezTask.t213' /></th> --%>
-<!--                   <td><div id="printRepetition"></div></td> -->
-<!--                </tr> -->
             <tr>
                <th><spring:message code='ezTask.t218' /></th>
                <td><div id="printDate"></div></td>
