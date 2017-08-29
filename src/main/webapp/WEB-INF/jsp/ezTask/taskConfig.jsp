@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>환경설정</title>
+		<title><spring:message code='ezTask.jsh02' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -58,7 +58,7 @@
 						alert("<spring:message code='ezTask.t89' />");
 					},
 					error : function() {
-						alert("환경설정 저장 중 에러발생");	
+						alert("<spring:message code='ezTask.t992' />");
 					}
 				});
 // 				if (getNodeText(document.getElementById("CompleteColor")) == "") {

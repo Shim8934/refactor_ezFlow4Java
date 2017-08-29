@@ -344,12 +344,12 @@ function TreeView() {
 
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert("트리뷰의 ID가 지정되지 않았습니다.");
+            alert(strLang59);
             return;
         }
 
         if (_dataSource == null) {
-            alert("데이터가 지정되지 않았습니다.");
+            alert(strLang60);
             return;
         }
 

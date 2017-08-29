@@ -40,7 +40,7 @@
 		            evt.preventDefault();
 		        }
 		        if (isfileup) {
-		            alert("첨부파일을 추가하는 중입니다.");
+		            alert("<spring:message code='ezTask.jsh03' />");
 		            return;
 		        }
 		        var filelist;
@@ -147,11 +147,11 @@
 		    }
 		
 		    function uploadFailed(evt) {
-		        alert("<파일 업로드 중 오류가 발생했습니다.");
+		        alert("<spring:message code='ezTask.jsh04' />");
 		    }
 		
 		    function uploadCanceled(evt) {
-		        alert("<업로드가 취소되었습니다./>");
+		        alert("<spring:message code='ezTask.jsh05' />");
 		    }
 		
 		    function btnfileup() {
@@ -209,7 +209,7 @@
 	                success: function() {
 	                },
 	                error: function() {
-	                	alert("오류가 발생하였습니다.");	
+	                	alert("<spring:message code='ezTask.t992' />");	
 	                }
 				});
 		    }

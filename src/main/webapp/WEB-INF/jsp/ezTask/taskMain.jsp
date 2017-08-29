@@ -49,7 +49,8 @@
 		        }
 	
 		        selectelem = elem;
-		        selectelem.style.backgroundColor = "#DBE1E7";
+// 		        selectelem.style.backgroundColor = "#DBE1E7";#EDEDED
+		        selectelem.style.backgroundColor = "rgb(233, 241, 244)";
 		    }
 	
 		    function ReadTask(elem) {

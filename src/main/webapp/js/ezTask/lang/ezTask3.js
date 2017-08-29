@@ -53,3 +53,9 @@ var strLang55 = "は既に業務共有者に登録されています。";
 var strLang56 = "は既に業務担当者に登録されています。";
 var strLang57 = "担当者を指定してください";
 var strLang58 = "このファイル形式はアップロードが制限されているです。";
+
+var strLang59 = "트리뷰의 ID가 지정되지 않았습니다.";
+var strLang60 = "데이터가 지정되지 않았습니다."
+var strLang61 = "리스트의 ID가 지정되지 않았습니다."
+var strLang62 = "데이터가 지정되지 않았습니다."
+var strLang63 = "노드가 존재하지 않습니다."
