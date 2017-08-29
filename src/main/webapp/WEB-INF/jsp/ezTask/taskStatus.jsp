@@ -174,10 +174,10 @@
 							<option value = "100">100%</option>
 						</select>
 						<select id = "taskStatus">
-							<option value = "1"><spring:message code="ezTask.ezTask.t97" /></option>
-							<option value = "2"><spring:message code="ezTask.ezTask.t98" /></option>
-							<option value = "3"><spring:message code="ezTask.ezTask.t99" /></option>
-							<option value = "4"><spring:message code="ezTask.ezTask.t100" /></option>
+							<option value = "1"><spring:message code="ezTask.t97" /></option>
+							<option value = "2"><spring:message code="ezTask.t98" /></option>
+							<option value = "3"><spring:message code="ezTask.t99" /></option>
+							<option value = "4"><spring:message code="ezTask.t100" /></option>
 						</select>						
 					</td>
 				</tr>
