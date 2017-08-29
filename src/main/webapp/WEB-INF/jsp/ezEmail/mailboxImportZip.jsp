@@ -9,7 +9,9 @@
 		<script type="text/javascript">
 			window.onload = function() {
 				var result = "${result}";
-				parent.mailboxImportComplete(result);
+				var userkey = "${userkey}";
+				parent.mailboxImportComplete(result, userkey);
+				return;
 			};
 		</script>
 	</head>

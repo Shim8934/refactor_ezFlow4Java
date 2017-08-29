@@ -913,14 +913,12 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				Message message = null;
 				int count = 0;
 
-				SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
-				String lastTime = dateFormat.format(System.currentTimeMillis());
-				lastTime = lastTime.replaceAll(":", "");
+				long lastTime = System.currentTimeMillis();
 				
-				while(ze != null){
+				while (ze != null) {
 					count++;
 
-					if (count % 50 == 0) {
+					if (count % 20 == 0) {
 						folder.appendMessages(messageList.toArray(new Message[0]));
 						messageList = new ArrayList<Message>();
 						
@@ -936,16 +934,14 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					if (userkey != null) {
 						
 						int percent = (int)((double) currCount / (double) (messageCount -1) * 100.0 );
-						String currTime = dateFormat.format(System.currentTimeMillis());
-						currTime = currTime.replaceAll(":", "");
-						
-						int interval = Integer.parseInt(currTime) - Integer.parseInt(lastTime);
+						long currTime = System.currentTimeMillis();
+						int interval = (int) (currTime - lastTime);
 						
 						JSONObject jsonObj = new JSONObject();
 						jsonObj.put("status" , "progress"); 
 						jsonObj.put("userkey", userkey);
 
-						if (interval >= 2) {
+						if (interval >= 2000) {
 							jsonObj.put(sessionKeyName, percent); 
 							String json2 = jsonObj.toJSONString();
 							handleMessage(json2, session);
@@ -953,7 +949,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						}
 						currCount = currCount + 1;
 					}
-					
 				}
 				
 				logger.debug("count=" + count);
@@ -963,7 +958,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			zis.closeEntry();
-			
+ 			
 		} catch (Exception e) {
 			returnValue = "ERROR";
 			e.printStackTrace();
@@ -977,6 +972,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		}
 
 		model.addAttribute("result", returnValue);
+		model.addAttribute("userkey", userkey);
 
 		logger.debug("mailboxImportZip ended.");
 		return "ezEmail/mailboxImportZip";
@@ -1011,9 +1007,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		logger.debug("downloadMailZip ended.");
 	}
-	
-	
-	
 	
 	/**
 	 * 특정 메일함의 모든 메일을 zip파일로 서버에 저장하기 실행 함수
@@ -1080,16 +1073,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				
 				int messageCount = messages.length; // 총 메일 갯수
 				int currCount = 1;
-
-				SimpleDateFormat dateformat = new SimpleDateFormat("hh:mm:ss");
-				String lastTime = dateformat.format(System.currentTimeMillis());
-				lastTime = lastTime.replaceAll(":", "");
+				long lastTime = System.currentTimeMillis();
 				
 				for (Message message : messages) {
-
-					JSONObject jsonObj = new JSONObject();
-					String startTime = dateformat.format(System.currentTimeMillis());
-					startTime = startTime.replaceAll(":", "");
 
 					String subject = ezEmailUtil.getSubject(message);
 					
@@ -1137,17 +1123,16 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 					// 진행율 클라이언트에게 전송
 					if (userkey != null) {
+						JSONObject jsonObj = new JSONObject();
 						
-						String currTime = dateformat.format(System.currentTimeMillis());
-						currTime = currTime.replaceAll(":", "");
-						
-						int interval = Integer.parseInt(currTime) - Integer.parseInt(lastTime);
+						long currTime = System.currentTimeMillis();
+						int interval = (int) (currTime - lastTime);
 						int percent = (int)((double) currCount / (double) (messageCount -1) * 100.0 );
 						
 						jsonObj.put("status", "progress"); // 현재 퍼센트
 						jsonObj.put("userkey", userkey);
 						
-						if (interval >= 2) {
+						if (interval >= 2000) {
 							jsonObj.put(sessionKeyName, percent); // 현재 퍼센트
 							String json1 = jsonObj.toJSONString();
 							handleMessage(json1, session);
@@ -1155,7 +1140,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						}
 						currCount = currCount + 1; // 현재 메일 카운트
 					}
-					
 				}
 				
 				folder.close(true);
@@ -1269,7 +1253,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
         jsonObj.put("status", "start");
         jsonObj.put("userkey", userkey);
         String jsonStr = jsonObj.toJSONString();
-
+        
         try {
         	// 클라이언트 연결을 확인하고 시작을 알린다.(유저의 고유문자를 전송)
         	this.handleMessage(jsonStr, session);
@@ -1300,7 +1284,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		JSONObject recObj = new JSONObject();
 		JSONParser jsonParser = new JSONParser();
 		recObj = (JSONObject) jsonParser.parse(jsonStr);
-		
 		String userkey = (String) recObj.get("userkey");
 		
 		if ( recObj.get("status").equals("start")) {
@@ -1314,28 +1297,30 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		} else if (recObj.get("status").equals("progress")) {
 			session.getBasicRemote().sendText(jsonStr);
 			logger.info("[WebSocket] SessionId=" + session.getId() + " Send message=" + jsonStr +" Connection progressed.");
-			
-		} else if (recObj.get("status").equals("close")) {
-			handleClose(sessionMap.get(userkey));
-			sessionMap.remove(userkey);
-			logger.info("[WebSocket] SessionId=" + session.getId() +" UserKey=" + userkey + " SessionMap Size=" + sessionMap.size() +" Connection closed.");
-			
-		} else {
-			if (recObj.get("percent").equals(100)) {
-				sendObj.put("status", "close");
-				jsonStr = sendObj.toJSONString();
-				session.getBasicRemote().sendText(jsonStr);
-			}
-		}
+		} 
+		
     }
 
     /**
      * 웹소켓 커넥션 종료시 호출 함수
      * @param session
+     * @throws IOException 
      */
     @OnClose
-    public void handleClose(Session session){
-    	logger.info("[WebSocket] OnClose called. WebSocket Disconnected.");
+    public void handleClose(Session session) throws IOException{
+    	
+    	logger.info("[WebSocket] OnClose called. WebSocket Disconnected." + session.getId());
+    	
+    	for (String userkey : sessionMap.keySet()) {
+    		Session tempSession = sessionMap.get(userkey);
+    		if (session == tempSession) {
+    			logger.debug("userkey=" + userkey + " session is found" );
+    			sessionMap.remove(userkey);
+    			break;
+    		}
+    	}
+    	
+    	logger.info("[WebSocket] SessionMap Size=" + sessionMap.size());
     }
 
     /**

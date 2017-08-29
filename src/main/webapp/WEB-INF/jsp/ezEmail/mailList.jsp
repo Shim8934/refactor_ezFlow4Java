@@ -79,6 +79,7 @@
 		    var webSocket =  null;
 		    var userkey = "";
 		    var host = 'ws://' + window.location.host + '/websocket/${userId}';
+		    var pclose = "close";
 		    
 		    // commented out to allow users to be able to select text in the preview : dhlee
 			// document.onselectstart = function () { return false; };
@@ -370,196 +371,140 @@
 	            }
 		        MailListRefresh();
 		    }
-// <<<<<<< Updated upstream
-// =======
-		    
-// 		    function mailbox_export() {
-// 		    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
-// 		    		ShowMailProgress();
-			        
-// 		            $.ajax({
-// 		    			type : "POST",
-// 		    			dataType : "text",
-// 		    			async : true,
-// 		    			url : "/ezEmail/mailboxExportZip.do",
-// 		    			data : {folderPath: '${url}'},
-// 		    			complete: function(){
-// 		    				HiddenMailProgress();
-// 		    			},
-// 		    			success: function(result){
-// 		    				if (result != "") {
-// 		    			    	var fullpath = "/ezEmail/downloadMailboxZip.do?folderName=" + encodeURIComponent('${folderName}') + "&temp=" + result;
-// 		    			    	AttachDownFrame.location.href = fullpath;
-// 		    			        AttachDownFrame.target = "_blank";
-// 		    				} else {
-// 		    					alert("<spring:message code='ezEmail.lhm33' />");
-// 		    				}
-// 		    			}
-// 		    			,onprograss : function (e, total, loaded, per, computable) {
-// 		    				alert(e);
-// 		    				alert(total);
-// 		    				alert(loaded);
-// 		    				alert(per);
-// 		    				alert(computable);
-// 		    			}
-// 		    		});
-// 		    	}
-// 		    }
-		    
-// 		    function mailbox_import() {
-// 		    	document.getElementById("file1").click();
-// 		    }
-		    
-// 		    function mailbox_attach_import() {
-// 	            var tempname = document.importMailboxform.file1.value;
-// 	        	if (tempname == "") {
-// 		            return;
-// 	            }
-	        	
-// 	            var last = tempname.split(".").length;
-// 	            var extension = tempname.split(".")[last - 1];
-// >>>>>>> Stashed changes
 
 		    // 메일박스 내보내기
 			function mailbox_export() {
 
-			    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
-						// 웹소켓 연결
-						if ('WebSocket' in window) {
-			            	webSocket= new WebSocket(host);
-			           	} else if ('MozWebSocket' in window) {
-			            	webSocket = new MozWebSocket(host);
-			           	}
-						
-				        // 서버로부터 메세지가 왔을 때 실행되는 함수 
-		 				webSocket.onmessage = function(message){
-				        	var obj = JSON.parse(message.data);
-				        	if (obj.status == "transferStart") {
-				            	userkey = obj.userkey;
-					            ShowMailProgressNew();
-					            ShowPercent(0);
-					            
-								$.ajax({
-									type : "POST",
-									dataType : "text",
-									async : true,
-									url : "/ezEmail/mailboxExportZip.do",
-									data : { folderPath : '${url}', userkey : userkey },
-									success : function(result) {
-										if (result != "") {
-											var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
-													+ encodeURIComponent('${folderName}')
-													+ "&temp=" + result;
-											AttachDownFrame.location.href = fullpath;
-											AttachDownFrame.target = "_blank";
-										} else {
-											alert("<spring:message code='ezEmail.lhm33' />");
-										}
-										sendMessage();
-						        		HiddenMailProgressNew();
+		    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+					// 웹소켓 연결
+		            webSocket= new WebSocket(host);
+					
+			        // 서버로부터 메세지가 왔을 때 실행되는 함수 
+	 				webSocket.onmessage = function(message){
+			        	var obj = JSON.parse(message.data);
+			        	
+			        	if (obj.status == "transferStart") {
+			            	userkey = obj.userkey;
+				            ShowMailProgressNew();
+				            ShowPercent(0);
+				            
+							$.ajax({
+								type : "POST",
+								dataType : "text",
+								async : true,
+								url : "/ezEmail/mailboxExportZip.do",
+								data : { folderPath : '${url}', userkey : userkey },
+								success : function(result) {
+									if (result != "") {
+										var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
+												+ encodeURIComponent('${folderName}')
+												+ "&temp=" + result;
+										AttachDownFrame.location.href = fullpath;
+										AttachDownFrame.target = "_blank";
+									} else {
+										alert("<spring:message code='ezEmail.lhm33' />");
 									}
-								});
-								
-				            } else if (obj.status == 'progress') {
-				            	ShowPercent(obj.percent);
-								
-				            } else {
-				            	ShowPercent(obj.percent);
-				        		webSocket.close();
-				        		HiddenMailProgressNew();
-				        	}
-				        }
-				        
-				        // 웹소켓 연결 해제시 실행 되는 함수
-				        webSocket.onclose = function(event){};
-				        
-				        // 연결되어있는 도중 다른 페이지로 전환시 소켓 연결 종료
-						window.onbeforeunload = function() {
-							sendMessage();
-						}
+									webSocket.close();
+					        		HiddenMailProgressNew();
+								}
+							});
+							
+			            } else if (obj.status == 'progress') {
+			            	ShowPercent(obj.percent);
+			            } 
+			        }
+			        
+			        // 웹소켓 연결 해제시 실행 되는 함수
+			        webSocket.onclose = function(event){
+			        	webSocket = null;
+			        };
+			        
+			        // 연결되어있는 도중 다른 페이지로 전환시 소켓 연결 종료
+					window.onbeforeunload = function() {
+						webSocket.close();
+					}
 		    	}
 			}
 			
 			// 메일박스 가져오기
 			function mailbox_attach_import() {
-
-		        	if ('WebSocket' in window) {
-		            	webSocket= new WebSocket(host);
-		           	} else if ('MozWebSocket' in window) {
-		            	webSocket = new MozWebSocket(host);
-		           	}
-		        	
-					var tempname = document.importMailboxform.file1.value;
-					if (tempname == "") {
-						return;
-					}
-	
-					var last = tempname.split(".").length;
-					var extension = tempname.split(".")[last - 1];
-	
-					if (extension.toUpperCase() != "ZIP") {
-						alert("<spring:message code='ezEmail.lhm34' />");
-						return;
-					}
+	        
+				console.log('mailbox_attach_import started.');
 				
-			        webSocket.onmessage = function(message){
-			        	
-			        	var obj = JSON.parse(message.data);
-			            ShowMailProgressNew();
-			            ShowPercent(0);
+				// mailbox_attach_import() function이 2번 호출됨으로 인해 websocket 객체 존재유무를 판단하여 진입을 막는다.
+				if (webSocket != null) {
+					console.log('websocket is not null');
+					return;					
+				}
+				
+		        webSocket = new WebSocket(host);
+				
+				var tempname = document.importMailboxform.file1.value;
+				if (tempname == "") {
+					return;
+				}
+
+				var last = tempname.split(".").length;
+				var extension = tempname.split(".")[last - 1];
+
+				if (extension.toUpperCase() != "ZIP") {
+					alert("<spring:message code='ezEmail.lhm34' />");
+					return;
+				}
+			
+		        webSocket.onmessage = function(message){
+		        	
+		        	var obj = JSON.parse(message.data);
+		            ShowMailProgressNew();
+		            ShowPercent(0);
+		            
+		        	if (obj.status == "transferStart") {
+		            	userkey = obj.userkey;
 			            
-			        	if (obj.status == "transferStart") {
-			            	userkey = obj.userkey;
-				            
-				            var frm = document.getElementById("importMailboxform");
-							frm.action = "/ezEmail/mailboxImportZip.do?folderPath="
-									+ encodeURIComponent('${url}') + "&userkey=" + encodeURIComponent(userkey);
-							frm.submit();
-				            
-			            } else if (obj.status == 'progress') {
-			            	ShowPercent(obj.percent);
-			            	
-			            } else {
-			            	ShowPercent(obj.percent);
-			        		webSocket.close();
-			        		HiddenMailProgressNew();
-			        	}
+			            var frm = document.getElementById("importMailboxform");
+						frm.action = "/ezEmail/mailboxImportZip.do?folderPath="
+								+ encodeURIComponent('${url}') + "&userkey=" + encodeURIComponent(userkey);
+						frm.submit();
 			            
-			        };
-			        
-			        webSocket.onclose = function(event){};
-			        				
-					window.onbeforeunload = function() {
-						sendMessage();
-					}
+		            } else if (obj.status == 'progress') {
+		            	ShowPercent(obj.percent);
+		            }            
+		        };
+		        
+		        webSocket.onclose = function(event){
+		        	webSocket = null;
+		        };
+		        				
+				window.onbeforeunload = function() {
+					webSocket.close();
+				}
 			}
 			
-	        function sendMessage() {
+	        function sendMessage(data) {
 	        	var sendObj = {};
-	            sendObj.status = "close";
-	            sendObj.userkey = userkey;
+	            sendObj.status = encodeURIComponent(data);
+	            sendObj.userkey = encodeURIComponent(userkey);
 	            var json = JSON.stringify(sendObj);
 	            console.log(json);
 	            webSocket.send(json);
-	            webSocket.close();
 	        }
-		
-			function mailbox_import() {
-				document.getElementById("file1").click();
-			}
 			
-	        function mailboxImportComplete(result) {
+	        function mailboxImportComplete(result, userkeyValue) {
 				document.importMailboxform.file1.value = "";
 				if (result == "OK") {
-					if (webSocket != null) {
-						sendMessage();
-						webSocket.close();
-					}
+					webSocket.close();
 					MailListRefresh();
 					HiddenMailProgressNew();
 				} else {
 					alert("<spring:message code='ezEmail.lhm35' />");
+					webSocket.close();
+					MailListRefresh();
+					HiddenMailProgressNew();
 				}
+			}
+			
+			function mailbox_import() {
+				document.getElementById("file1").click();
 			}
 			
 			function ScriptEngineMinorVersion(){                                        
