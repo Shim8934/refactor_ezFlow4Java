@@ -440,14 +440,14 @@
 					id = parentid;
 				}
 	
-				deltaskid = id;
+				deltaskid = id + ";";
 				
 				$.ajax({
 					type : "POST",
 					url : "/ezTask/taskDelete.do",
 					dataType : "json",
 					data : {
-						taskID : deltaskid
+						taskIDList : deltaskid
 					},
 					success : function(result) {
 						window.opener.RefreshView()

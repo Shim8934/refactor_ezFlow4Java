@@ -212,7 +212,7 @@
                   var frm = document.getElementById('form');
                   frm.submit();
               } else {
-                  alert("업로드 할 파일을 선택하시오");
+                  alert("<spring:message code='ezTask.t145' />");
               }
           }
               
