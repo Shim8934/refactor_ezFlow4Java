@@ -395,7 +395,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), tenantID);
         String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), tenantID);
         String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
-            
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);    
+       
+        model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
         model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);

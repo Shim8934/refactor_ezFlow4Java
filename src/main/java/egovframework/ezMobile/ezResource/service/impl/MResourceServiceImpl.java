@@ -1,6 +1,5 @@
 package egovframework.ezMobile.ezResource.service.impl;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,14 +11,15 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezMobile.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.ezMobile.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.dao.MResourceDAO;
@@ -167,8 +167,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			String characterId, String companyId, String num, String ownerId,
 			int tenantId) {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_OWNERID", ownerId);
-		map.put("v_COMPANYID", companyId);
+		map.put("v_POWNERID", ownerId);
+		map.put("v_PCOMPANYID", companyId);
 		map.put("tenantID", tenantId);
 		map.put("v_PTITLE", title);
 		map.put("v_PLOCATION", location);
@@ -185,18 +185,52 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		map.put("v_PREFLAG", reFlag);
 		map.put("v_PGRESFLAG", gresFlag);
 		map.put("v_PNUM", num);
+		
+		LOGGER.debug("map in modifyResSch: " + map);
+		
 		mResourceDAO.modifyResSch(map);
 	}
 
 	@Override
-	public void delResSch(String companyId, String ownerId, String num,
-			int tenantId) {
+	public void delResSch(String companyId, String ownerId, String num, String startDate, String endDate, String offset, String reFlag, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		
+		LOGGER.debug("companyId", companyId);
+		LOGGER.debug("ownerId", ownerId);
+		LOGGER.debug("num", num);
+		LOGGER.debug("startDate", startDate);
+		LOGGER.debug("endDate", endDate);
+		LOGGER.debug("offset", offset);
+		LOGGER.debug("reFlag", reFlag);
+		LOGGER.debug("tenantId", tenantId);
+		
+		
 		map.put("v_PCOMPANYID", companyId);
 		map.put("v_POWNERID", ownerId);
 		map.put("v_PNUM", num);
 		map.put("tenantID", tenantId);
-		mResourceDAO.delResSch(map);
+		
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		map.put("v_PNOWDATE", nowDate);
+		
+		if(reFlag.equals("1")){
+			int maxNum = mResourceDAO.getResSchMaxNum(map);
+			map.put("v_PMAXNUM", maxNum);
+			//MResourceGetScheduleVO resSchRepet = mResourceDAO.getResSchRepet(map);
+			//startDate = startDate.substring(0, 11) + " " + commonUtil.getDateStringInUTC(resSchRepet.getStartDate(), offset, false).substring(11);
+			//endDate = endDate.substring(0, 11) + " " + commonUtil.getDateStringInUTC(resSchRepet.getEndDate(), offset, false).substring(11);			
+			startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+			endDate = commonUtil.getDateStringInUTC(endDate, offset, true);			
+			LOGGER.debug("startDate in repeat :", startDate);
+			LOGGER.debug("endDate in repeat :", endDate);
+			map.put("v_PSTARTDATE", startDate);
+			map.put("v_PENDDATE", endDate);
+			mResourceDAO.delResSch_I(map);
+		} else {
+			mResourceDAO.delResSch(map);
+		}
+		
+		
 	}
 
 	@Override
@@ -231,6 +265,8 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		String startDateLimit = eDate + " 23:59:59";
 		String endDateLimit = sDate + " 00:00:01";
 
+		LOGGER.debug("");
+		
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		List<ResGetScheduleVO> getScheduleList = getScheduleNormalList(ownerID, companyID, startDateLimit, endDateLimit, pWriterDept, offset, tenantID);
 		
@@ -250,9 +286,9 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (int i=0; i<getRepeatResult.size(); i++) {
-				String reCompanyID = getRepeatResult.get(i).getCompanyID();
+				String reCompanyID = getRepeatResult.get(i).getCompanyId();
 				String reNum = Integer.toString(getRepeatResult.get(i).getNum());
-				String reOwnerID = getRepeatResult.get(i).getOwnerID();
+				String reOwnerID = getRepeatResult.get(i).getOwnerId();
 				
 				// tbl_schedulerepetition에서 정보 가져옴
 				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, Integer.parseInt(reNum), tenantID);
@@ -286,7 +322,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						
 						temp.setNum(getRepeatResult.get(i).getNum());
 						temp.setpNum(getRepeatResult.get(i).getNum());
-						temp.setOwnerID(getRepeatResult.get(i).getOwnerID());
+						temp.setOwnerId(getRepeatResult.get(i).getOwnerId());
 						temp.setTitle(getRepeatResult.get(i).getTitle());
 						temp.setLocation(getRepeatResult.get(i).getLocation());
 						temp.setTimeDisplay(getRepeatResult.get(i).getTimeDisplay());
@@ -295,19 +331,19 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 						temp.setAlertTime(getRepeatResult.get(i).getAlertTime());
 						temp.setReFlag(getRepeatResult.get(i).getReFlag());
 						temp.setGresFlag(getRepeatResult.get(i).getGresFlag());
-						temp.setWriterID(getRepeatResult.get(i).getWriterID());
+						temp.setWriterId(getRepeatResult.get(i).getWriterId());
 						temp.setImportance(getRepeatResult.get(i).getImportance());
 						temp.setEntryList(getRepeatResult.get(i).getEntryList());
 						temp.setAllDay(getRepeatResult.get(i).getAllDay());
 						temp.setWriteDay(getRepeatResult.get(i).getWriteDay());
 						temp.setAttachFlag(getRepeatResult.get(i).getAttachFlag());
-						temp.setCharacterID(getRepeatResult.get(i).getCharacterID());
+						temp.setCharacterId(getRepeatResult.get(i).getCharacterId());
 						temp.setApproveFlag(getRepeatResult.get(i).getApproveFlag());
 						temp.setOwnerNm(getRepeatResult.get(i).getOwnerNm());
 						temp.setDeptNm(getRepeatResult.get(i).getDeptNm());
 						temp.setBrdNm(getRepeatResult.get(i).getBrdNm());
 						temp.setDate(format.format(dateArr[0]).substring(0,10));
-						temp.setValue(getRepeatResult.get(i).getTitle());
+						temp.setValue(getRepeatResult.get(i).getOwnerId());
 						
 						getScheduleList.add(temp);
 					}
@@ -1116,8 +1152,7 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
     	LOGGER.debug("writerDt: " + writerDt);
     	LOGGER.debug("tenantId: " + tenantId);
     	LOGGER.debug("offset: " + offset);
-
-    	
+  	
 		Map<String, Object> result = getScheduleList(ownerId, companyId, utcStartDate, utcEndDate, writerDt, tenantId, offset, listCnt);
 
 		LOGGER.debug("result: " + result);
@@ -1126,8 +1161,18 @@ public class MResourceServiceImpl extends EgovAbstractServiceImpl implements MRe
 		
 		return result;
 	}
-	
-	
+
+	//휴일가져오기
+	@Override
+	public List<ResScheGetHolidayVO> getTholiday(String companyId,
+			String userCompany, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyId);
+		map.put("v_USERCOMPANY", userCompany);
+		map.put("v_TENANTID", tenantId);
+		
+		return mResourceDAO.getTholiday(map);
+	}
 	
 }
 

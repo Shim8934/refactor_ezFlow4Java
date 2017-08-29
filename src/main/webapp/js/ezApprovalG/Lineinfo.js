@@ -3406,7 +3406,9 @@ function CheckDraftDeptID( AprLineRow )
 	
 	return true;
 }
-
+/**
+ *  최종결재가 이후로 참조 추가 체크.(프리텔레콤)
+ * */
 function CheckChamjo(AprLineRow) {
 	var i, rtnVal;
 	var aprtype;

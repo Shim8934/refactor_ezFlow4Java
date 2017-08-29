@@ -159,16 +159,14 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 		String timeZone = optionVO.getTimeZone();
 		String lang = optionVO.getLang();
 		String mainType = optionVO.getMainType();
-		String listCnt = optionVO.getListCnt();
-		String useSearch = optionVO.getUseSearch();
+		String listCnt = optionVO.getListCnt();		
 		String useSecurity = optionVO.getUseSecurity();
 		String userId = "";
 		
 		timeZone = "235|+09:00";
 		lang = "1";
 		mainType = "P";
-		listCnt = "10";
-		useSearch = "Y";
+		listCnt = "10";		
 		useSecurity = "N";
 		userId = "naman79";
 		
@@ -185,8 +183,7 @@ private static final Logger logger = LoggerFactory.getLogger(MOptionController.c
 		optionVO.setTimeZone(timeZone);
 		optionVO.setLang(lang);
 		optionVO.setListCnt(listCnt);
-		optionVO.setMainType(mainType);
-		optionVO.setUseSearch(useSearch);
+		optionVO.setMainType(mainType);		
 		optionVO.setUseSecurity(useSecurity);
 		
 		RestTemplate rest = new RestTemplate();

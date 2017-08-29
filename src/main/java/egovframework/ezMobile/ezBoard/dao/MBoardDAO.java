@@ -56,6 +56,11 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (List<MBoardAttachVO>) list("MBoardDAO.getAttachList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<MBoardAttachVO> photoViewDB(Map<String, Object> map) throws Exception{		
+		return (List<MBoardAttachVO>) list("MBoardDAO.photoViewDB", map);
+	}
+	
 	public MBoardItemVO getBrdItemInfo(Map<String, Object> map) throws Exception {
 		return (MBoardItemVO) select("MBoardDAO.getBrdItemInfo", map);
 	}
@@ -85,6 +90,14 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public String getDeptPathCode(Map<String, Object> map) throws Exception{
 		return (String) select("MBoardDAO.getDeptPathCode", map);
 	}
+	
+	public String getBoardItemRead(Map<String, Object> map) throws Exception{
+		return (String) select("MBoardDAO.getBoardItemRead", map);
+	}
+
+	public String getWriterID(Map<String, Object> map) throws Exception{
+		return (String) select("MBoardDAO.getWriterID", map);
+	}
 
 	public Integer getBoardItemListCount(Map<String, Object> map) throws Exception {
 		return (Integer) select("MBoardDAO.getBoardItemListCount", map);
@@ -98,6 +111,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (Integer) select("MBoardDAO.getNewBoardListCount", map);
 	}
 	
+	public Integer photoViewDBCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("MBoardDAO.photoViewDBCount", map);
+	}
+	
 	public void insertBrdItem(Map<String, Object> map) throws Exception{
 		insert("MBoardDAO.insertBrdItem", map);
 	}
@@ -108,6 +125,14 @@ public class MBoardDAO extends EgovAbstractDAO {
 	
 	public void insertFavorite(Map<String, Object> map) throws Exception{
 		insert("MBoardDAO.insertFavorite", map);
+	}
+	
+	public void setAsRead(Map<String, Object> map) throws Exception{
+		insert("MBoardDAO.setAsRead", map);
+	}
+	
+	public void setAsRead2(Map<String, Object> map) throws Exception{
+		update("MBoardDAO.setAsRead2", map);
 	}
 	
 	public void updateItem(Map<String, Object> map) throws Exception{

@@ -1160,8 +1160,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 	@Override
 	public void moveCircular(String folderId, String circularIdList, String memberId, String updateStatus, String originLoc, int tenantId) throws Exception {
+		logger.debug("circularDeleteTemp started.");
+		logger.debug("folderId : " + folderId + " | memberId : " + memberId + " | updateStatus : " + updateStatus + " | originLoc : " + originLoc);
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		String[] circularIdArr = circularIdList.split(";");
 
 		map.put("folderId", folderId);
@@ -1169,13 +1172,15 @@ public class EzCircularServiceImpl implements EzCircularService {
 		map.put("updateStatus", updateStatus);
 		map.put("originLoc", originLoc);
 		map.put("tenantId", tenantId);
-		
+
 		for (int i=0; i<circularIdArr.length; i++) {
 			map.put("circularId", circularIdArr[i]);
 
 			ezCircularDAO.moveCircular(map); // updateStatus 값 변경
 			ezCircularDAO.moveCircular2(map); // Link 테이블에 Insert
 		}
+		
+		logger.debug("moveCircular ended.");
 	}
 
 	@Override
@@ -1239,7 +1244,8 @@ public class EzCircularServiceImpl implements EzCircularService {
 	@Override
 	public void updateFolderId(String folderId, String circularIdList, String memberId, int tenantId) throws Exception {
 		logger.debug("updateFolderId started.");
-		
+		logger.debug("folderId : " + folderId);
+
 		String[] circularIdArr = circularIdList.split(";");
 		
 		Map<String, Object> map = new HashMap<String, Object>();

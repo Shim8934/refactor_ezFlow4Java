@@ -6,10 +6,12 @@ import java.util.List;
 
 import java.util.Map;
 
+
+
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezResource.vo.MResourceGetAdmSubClsTreeVO;
-import egovframework.ezMobile.ezResource.vo.MResourceGetScheduleVO;
 import egovframework.ezMobile.ezResource.vo.MResourceScheduleVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 
 public interface MResourceService {
 	
@@ -37,10 +39,12 @@ public interface MResourceService {
 			String reFlag, String gresFlag, String allDay, String writeDay, String entryList, String attachFlag, String characterId,
 			String companyId, String num, String ownerId, int tenantId);
 	
-	public void delResSch(String companyId, String ownerId, String num, int tenantId);
+	public void delResSch(String companyId, String ownerId, String num, String startDate, String endDate, String offset,String reFlag, int tenantId) throws Exception;
 	
 	public void addResFavor(String resId, String companyId, String userId, int tenantId);
 	
 	public void delResFavor(String resId, String userId, int tenantId);
+	
+	public List<ResScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId) throws Exception ;
 	
 }

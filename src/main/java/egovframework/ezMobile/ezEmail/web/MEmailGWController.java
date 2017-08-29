@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ import egovframework.ezMobile.ezEmail.vo.MEmailFolderVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -165,8 +167,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 //				folder.setName(f.getName());
 //				folder.setFullName(f.getFullName());
 //				folder.setUnReadCount(f.getUnreadMessageCount());
-				
-				folder.put("name", f.getName());
+				if ( f.getName().equals("INBOX") ) {
+					folder.put("name", "받은 편지함");
+				} else {
+					folder.put("name", f.getName());
+				}
 				folder.put("fullName", f.getFullName());
 				folder.put("unReadCount", f.getUnreadMessageCount());
 				
@@ -209,7 +214,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			@RequestParam(value="start", required=true) String start,
 			@RequestParam(value="end", required=true) String end,
 			@RequestParam(value="search", required=false) String search,
-			@RequestParam(value="filter", required=false) String filter, Locale locale) {
+			@RequestParam(value="filter", required=false) String filter,
+			@RequestParam(value="endDate", required=false) String endDate,
+			Locale locale) {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/folders/{folderId}/mails/users/{userId}] started.");
 
 		JSONObject result = new JSONObject();
@@ -219,6 +226,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 			JSONArray messageJsonArray = new JSONArray();
 			
+			Date ed = null;
+			
 			boolean senderReceiverFlag = false;
        
 			String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
@@ -226,11 +235,25 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String tempName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		
 	        folderId = folderId.equals(inboxName) ? "INBOX" : folderId;
-	        
+	        	        
 	        senderReceiverFlag = folderId.equals(sendName) ? true : false;
 	        senderReceiverFlag = folderId.equals(tempName) ? true : false;
 	        
-	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",start : " + start + ",end : " + end + "search : " + search); 
+	        if (endDate == null) {
+	        	endDate = "";
+	        }
+	        
+			else if (!endDate.equals("")) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//				String receivedDateStr = sdf.format(receivedDate);
+				ed = sdf.parse(endDate);
+			}
+	        
+	        folderId = URLDecoder.decode(folderId, "UTF-8");
+	        
+	        LOGGER.debug("userID : " + userId+ ",folderId : " + folderId + ",start : " + start 
+	        		+ ",end : " + end + "search : " + search + "endDate : " + ed); 
 	        
 	        Message[] messages = null;
 			
@@ -259,22 +282,33 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        }
 	        
 			if (!search.equals("")) {
-				int index = search.indexOf("=");
-				if (index >= 0) {
-					String searchField = search.substring(0, index);
-					final String searchValue = search.substring(index + 1);
-					
-					LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue);
-					
+				LOGGER.debug("search field not null");
+
+				String searchField = "SUBJECT&FROM";
+				final String searchValue = search;
+				
+				LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue + ",endDate=" + endDate);
+				
+				
+				if (!endDate.equals("")) {
+					LOGGER.debug("search field paging");
+					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, ed, false, null, isUnreadOnly, isImportantOnly);
+				} else {
+					LOGGER.debug("search field not paging");
 					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
 				}
 			}
 			else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false);
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, false);
 			}
 			
 			else if (isImportantOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, false, isImportantOnly);
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, false, isImportantOnly);
+			}
+			
+			if (messages == null && !endDate.equals("")) {
+				LOGGER.debug("search field paging");
+				messages = ezEmailUtil.searchFolder(folder, "", "", null, ed, false, null, isUnreadOnly, isImportantOnly);
 			}
 			
 			if (messages == null) {
@@ -342,6 +376,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				}
 				messageJson.put("flag",flagged);
 				
+				if( filter.equals("isImportantOnly") && flagged != 1 ) {
+					continue;
+				}
+				
 				// attachment
 				boolean isAttached = IMAPAccess.hasAttachment(message);
 				int attached = isAttached ? 1 : 0;
@@ -393,7 +431,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				// received date
 				Date receivedDate = message.getReceivedDate();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String receivedDateStr = sdf.format(receivedDate);
 				
@@ -407,7 +445,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				// read/unread
 				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 				messageJson.put("read",readFlag);
-							
+				
+				if( filter.equals("isUnreadOnly") && readFlag == 1 ) {
+					continue;
+				}
+				
 				if (message.isSet(Flags.Flag.ANSWERED)) {
 					messageJson.put("contentclass","REPLY");
 				} else {
@@ -420,15 +462,23 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						messageJson.put("contentclass","IPM.Note");
 					}
 				}
-				messageJsonArray.add(messageJson);
+				if (!endDate.equals(receivedDateStr)) {
+					messageJsonArray.add(messageJson);
+				}
 			}
-			
+			String folderName = folder.getName();
+			if ( folderName.equals("INBOX") ) {
+				folderName = "받은 편지함";
+			}
 			folder.close(false);
 			
 			JSONObject data = new JSONObject();
 			
 			data.put("messageJsonArray", messageJsonArray);
 			data.put("unreadCount", folder.getUnreadMessageCount());
+			data.put("fullCount", folder.getMessageCount());
+			data.put("optionCount", messages.length);
+			data.put("folderName", folderName);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -462,7 +512,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	@RequestMapping(value="/mobile/ezemail/mail-write/option", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public void mMailWriteOption(HttpServletRequest request) throws Exception {
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] started.");
+//		String serverName = request.getHeader("x-user-host");
+//		MCommonVO info = mOptionService.commonInfo(serverName, userId);
 		
+//		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+//		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(info.getUserId(), info.getLang(), info.getTenantId());
 		LOGGER.debug("MOBILE G/W MAIL [GET /ezemail/mail-write/option] ended.");		
 	}
 	
@@ -778,17 +832,60 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		String importance = "3";
 		
-		String subject = (String) jsonObject.get("subject");
-		String to = (String) jsonObject.get("to");
-		String cc = (String) jsonObject.get("cc");
-		String bcc = (String) jsonObject.get("bcc");
-		String textBody = (String) jsonObject.get("textbody");
-		String from = (String) jsonObject.get("from");
-		String charset = (String) jsonObject.get("charset");
-		String htmlbody = (String) jsonObject.get("htmlbody");
-		String displayName = (String) jsonObject.get("displayName");
-		String stateName = (String) jsonObject.get("stateName");
-//		String importance = (String) jsonObject.get("importance");
+		String subject = "";
+		String to = "";
+		String cc = "";
+		String bcc = "";
+		String textBody = "";
+		String from = "";
+		String charset = "";
+		String htmlbody = "";
+		String displayName = "";
+		String stateName = "";
+		
+		if (jsonObject.get("subject") != null) {
+			subject = (String) jsonObject.get("subject");
+		}
+		
+		if (jsonObject.get("to") != null) {
+			to = (String) jsonObject.get("to");
+		}
+		
+		if (jsonObject.get("cc") != null) {
+			cc = (String) jsonObject.get("cc");
+		}
+		
+		if (jsonObject.get("bcc") != null) {
+			bcc = (String) jsonObject.get("bcc");
+		}
+		
+		if (jsonObject.get("textBody") != null) {
+			textBody = (String) jsonObject.get("textBody");
+		}
+		
+		if (jsonObject.get("from") != null) {
+			from = (String) jsonObject.get("from");
+		}
+		
+		if (jsonObject.get("charset") != null) {
+			charset = (String) jsonObject.get("charset");
+		}
+		
+		if (jsonObject.get("htmlbody") != null) {
+			htmlbody = (String) jsonObject.get("htmlbody");
+		}
+		
+		if (jsonObject.get("displayName") != null) {
+			displayName = (String) jsonObject.get("displayName");
+		}
+		
+		if (jsonObject.get("stateName") != null) {
+			stateName = (String) jsonObject.get("stateName");
+		}
+		
+		if (jsonObject.get("importance") != null) {
+			importance = (String) jsonObject.get("importance");
+		}
 		
 		String realPath = commonUtil.getRealPath(request);
 
@@ -1723,17 +1820,60 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		String importance = "3";
 		
-		String subject = (String) jsonObject.get("subject");
-		String to = (String) jsonObject.get("to");
-		String cc = (String) jsonObject.get("cc");
-		String bcc = (String) jsonObject.get("bcc");
-		String textBody = (String) jsonObject.get("textbody");
-		String from = (String) jsonObject.get("from");
-		String charset = (String) jsonObject.get("charset");
-		String htmlbody = (String) jsonObject.get("htmlbody");
-		String displayName = (String) jsonObject.get("displayName");
-		String stateName = (String) jsonObject.get("stateName");
-//		String importance = (String) jsonObject.get("importance");
+		String subject = "";
+		String to = "";
+		String cc = "";
+		String bcc = "";
+		String textBody = "";
+		String from = "";
+		String charset = "";
+		String htmlbody = "";
+		String displayName = "";
+		String stateName = "";
+		
+		if (jsonObject.get("subject") != null) {
+			subject = (String) jsonObject.get("subject");
+		}
+		
+		if (jsonObject.get("to") != null) {
+			to = (String) jsonObject.get("to");
+		}
+		
+		if (jsonObject.get("cc") != null) {
+			cc = (String) jsonObject.get("cc");
+		}
+		
+		if (jsonObject.get("bcc") != null) {
+			bcc = (String) jsonObject.get("bcc");
+		}
+		
+		if (jsonObject.get("textBody") != null) {
+			textBody = (String) jsonObject.get("textBody");
+		}
+		
+		if (jsonObject.get("from") != null) {
+			from = (String) jsonObject.get("from");
+		}
+		
+		if (jsonObject.get("charset") != null) {
+			charset = (String) jsonObject.get("charset");
+		}
+		
+		if (jsonObject.get("htmlbody") != null) {
+			htmlbody = (String) jsonObject.get("htmlbody");
+		}
+		
+		if (jsonObject.get("displayName") != null) {
+			displayName = (String) jsonObject.get("displayName");
+		}
+		
+		if (jsonObject.get("stateName") != null) {
+			stateName = (String) jsonObject.get("stateName");
+		}
+		
+		if (jsonObject.get("importance") != null) {
+			importance = (String) jsonObject.get("importance");
+		}
 		
 		String realPath = commonUtil.getRealPath(request);
 
@@ -2950,7 +3090,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						LOGGER.debug("Message's seen flag changed to true.");
 					}
 					
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, locale);
+					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, null, false, true, locale);
 					double size = Double.parseDouble(bodyInfoList.get(2));
 					String strSize = ezEmailUtil.getSizeWithUnit(size);
 					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
@@ -3003,10 +3143,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			mail.put("pnFlag", pnFlag);
 			mail.put("pIsCCFg", pIsCCFg);
 			mail.put("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
-			mail.put("pAttachListHtmlSub", pAttachListHtmlSub);
 			
 			if (bodyInfoList != null) { 
 				mail.put("htmlBody", bodyInfoList.get(0));
+				mail.put("pAttachListHtmlSub", pAttachListHtmlSub);
 				mail.put("pAttachListHtml", bodyInfoList.get(1));
 				mail.put("isAttach", bodyInfoList.get(4));
 			}
@@ -3124,54 +3264,39 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 						try {
 							input = part.getInputStream();
-//							output = response.getOutputStream();
+							
 							String[] encoding_type = part.getHeader("Content-Transfer-Encoding");
+							
 							for(int i = 0; i < encoding_type.length ; i++) {
 								LOGGER.debug("@@@@@@@@@@@@@@@@@@@@@@@@" + encoding_type[i]);
 							}
-//							byte[] buffer = new byte[4096];
+							
 							int byteRead;
 							
-//							while ((byteRead = input.read(buffer)) != -1) {
-//								output.write(buffer, 0, byteRead);
-//							}
-							Encoder encoder = Base64.getEncoder();
-//							Decoder decoder = Base64.getDecoder();
-
-							BufferedReader streamReader = new BufferedReader(new InputStreamReader(input)); 
-							StringBuilder responseStrBuilder = new StringBuilder();
+							String encodeType = encoding_type[0];
+							
+//							input = MimeUtility.decode(input, encodeType);
+							
+//							BufferedReader streamReader = new BufferedReader(new InputStreamReader(input)); 
+//							StringBuilder responseStrBuilder = new StringBuilder();
 
 							int i;
 							StringBuffer buffer = new StringBuffer();
 							
-//							byte[] b = new byte[4096]; 
-//							while ( (i = input.read(b)) != -1) {
-//								buffer.append(new String(b, 0, i)); 
-//							} 
-							
 							InputStream is;
+							
 							byte[] bytes = IOUtils.toByteArray(input);
 							
-//							String inputStr;
-//							while ((inputStr = streamReader.readLine()) != null) {
-//							    responseStrBuilder.append(inputStr);
-//							}
-//							new JSONObject(responseStrBuilder.toString());
-														
 							JSONObject data = new JSONObject();
 							
 							JSONParser jp = new JSONParser();
-							
-//							JSONObject partJSON = jp.parse(input , "UTF-8");
-							LOGGER.debug("buffer : " + buffer.toString());
-							LOGGER.debug("responseStrBuilder : " + responseStrBuilder.toString());
+						
 							LOGGER.debug("bytes : " + ByteBuffer.wrap(bytes));
 							
-							data.put("buffer", buffer.toString());
 							data.put("bytes", bytes);
-							data.put("responseStrBuilder", responseStrBuilder.toString());
 							data.put("filename",filename);
 							data.put("filetype",part.getContentType());
+							data.put("encodeType", encodeType);
 							
 							result.put("status", "success");
 							result.put("code", 0);			
@@ -3191,7 +3316,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 							}
 							if (output != null) {
 //								try { output.flush(); } catch (IOException e1) {}
-//								try { output.close(); } catch (IOException e1) {}
+								try { output.close(); } catch (IOException e1) {}
 							}
 						}
 						

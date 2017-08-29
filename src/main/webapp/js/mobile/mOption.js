@@ -9,8 +9,7 @@
     			id  : "1",
     			timeZone: "",
     			lang: "",
-    			listCnt: "",
-    			useSearch: "",
+    			listCnt: "",    			
     			useSecurity: ""
     		},
     		success: function(e) {		    			
@@ -30,8 +29,7 @@
     			id  : "1",
     			timeZone: "",
     			lang: "",
-    			listCnt: "",
-    			useSearch: "",
+    			listCnt: "",    			
     			useSecurity: ""
     		},
     		success: function(e) {		    			
@@ -53,17 +51,13 @@
         
         var lang = $('input[name = radio-view]:checked').val();
         var timeZone = $('#select-custom-1 option:selected').val();
-        var listCnt = $('input[name = slider-2]').val();
-        var useSearch = $('input[name = radio-view3]:checked').val();
+        var listCnt = $('input[name = slider-2]').val();        
         var useSecurity = $('input[name = radio-view4]:checked').val(); 
         
         console.log(lang);
         console.log(timeZone);
-        console.log(listCnt);
-        console.log(useSearch);
+        console.log(listCnt);        
         console.log(useSecurity);
-        
-
 	}
 	
   function addPlus(flag) {
@@ -78,8 +72,7 @@
 
 	  var lang = '1';
 	  var timeZone = '235|+09:00';
-	  var listCnt = '5';
-	  var useSearch = 'Y';
+	  var listCnt = '5';	  
 	  var useSecurity = 'N';
 	  
 	  if(t.hasOwnProperty('lang')){
@@ -93,11 +86,7 @@
 	  if(t.hasOwnProperty('listCnt')){
 		  listCnt = t.listCnt
 	  }
-	  
-	  if(t.hasOwnProperty('useSearch')){
-		  useSearch = t.useSearch
-	  }
-	  
+	  	  
 	  if(t.hasOwnProperty('useSecurity')){
 		  useSecurity = t.useSecurity
 	  }	  
@@ -111,8 +100,7 @@
 	  }
 	  
       $('#select-custom-1').val(timeZone);
-      $('#slider-2').val(listCnt);
-      $('#radio-view3').val(useSearch);
+      $('#slider-2').val(listCnt);      
       $('#radio-view4').val(useSecurity); 
 		  
   }

@@ -105,7 +105,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			
 			int tenantId = info.getTenantId();
 			
-			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSearch").toString(), jsonObject.get("useSecurity").toString(), tenantId);
+			mOptionService.updateOption(userId, jsonObject.get("timeZone").toString(), jsonObject.get("lang").toString(), jsonObject.get("mainType").toString(), jsonObject.get("listCnt").toString(), jsonObject.get("useSecurity").toString(), tenantId);
 			
 			MOptionVO opt = mOptionService.optionInfo(userId, tenantId);
 

@@ -191,6 +191,9 @@
 		
 		        DivPopUpShow(326, 205, "/ezApprovalG/ezAprAllAlert.do");
 		    }
+		    /**
+		    * RtnVal -> 0 : 결재, 1 : 다음문서, 2 : 문서보기, 3 : 취소
+		    */
 		    function OpenAllApproveFlag_Complete(RtnVal) {
 		        DivPopUpHidden();
 		        AllApprove.style.display = "";
@@ -397,7 +400,10 @@
 		            OpenAllApproveFlag();
 		        }
 		    }
-		
+			/**
+			* 각 결재타입마다 나타나는 경고창 출력 함수
+			* 결재, 반송, 보류, 참조 등
+			*/
 		    function process_AfterApprove(mode)
 		    {
 		        if (FirstHtml != "")
@@ -568,14 +574,13 @@
 		        }
 		        setMenuDisable("btnApprove", true);
 		        var signInfo;
-		        if((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16)
-		        {
-		            if(pDraftFlag == "HABYUI" || pDraftFlag == "B_GAMSA" || pDraftFlag == "A_GAMSA")
+		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+		            if (pDraftFlag == "HABYUI" || pDraftFlag == "B_GAMSA" || pDraftFlag == "A_GAMSA") {
 		                getLastOpinon();
+		            }
 		            var fields = message.GetFieldsList(); 	
 		            var field = message.GetListItem(fields, "lastdraftdate");
-		            if(field)
-		            {
+		            if (field) {
 		                var CurrentDate = getGyulJeDate();
 		                setNodeText(field, CurrentDate);
 		            }
@@ -603,7 +608,12 @@
 		            Approv_Complete(ret);
 		        }
 		    }
-		
+		    /**
+		    * ExcuteInfo()를 통한 연동관리
+		    * getDocNumber()를 통한 문서번호 채번
+		    * AprrovMappingSign()를 통한 결재정보 내용 출력
+		    * SaveApproveInfo()를 통한 xml 생성 및 Contoller 호출
+		    */
 		    function Approv_Complete(signtype) {
 		        DivPopUpHidden();
 		        UpdateLineHistory();
@@ -618,6 +628,7 @@
 		                }
 		            }
 		        }
+		        // getDocNumber를 이용한 문서번호 채번
 		        if (pDraftFlag != "SUSIN") {
 		        	if (approvalFlag == "S") {
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4) {
@@ -633,7 +644,9 @@
 			                }
 			            }
 		        	} else {
+		        		// 1 : 결재, 4 : 전결, 16 : 대결
 			            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
+			            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
 			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                    var rtnval;
 			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
@@ -679,7 +692,7 @@
 		            }
 		        }
 		        
-		        signInfo = AprrovMappingSign(signtype);
+		        signInfo = AprrovMappingSign(signtype); // 현재 양식에 결재 관련 정보 출력( ex. 서명 서명 날짜 등등)
 
 		        var rtnVal = true;
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
@@ -1376,11 +1389,11 @@
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
 		                
-		                tempSecurity = ret[7];
-		                tempUrgent = ret[8];
-		                pSummery = ret[9];
-		                tempSecurityDate = ret[14];
-		                pPublicityCode = ret[11];
+		                tempSecurity = ret[7];                // 보안등급 관련
+		                tempUrgent = ret[8];                  // 긴급 결재 여부
+		                pSummery = ret[9];                    // 요약 내용 관련
+		                tempSecurityDate = ret[14];           // 보안 결재 체크 관련
+		                pPublicityCode = ret[11];             // 공개여부 및 공개등급 관련 
 		                
 		                //tempPublic 추가
 		                if (ret[11].substring(0,1) == '1') {
@@ -1393,7 +1406,7 @@
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
-			                
+			                //문서 공개 범위 설정
 			                setPublicFlag();
 		                } else {
 		                	//회람
@@ -1560,7 +1573,7 @@
 		<iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

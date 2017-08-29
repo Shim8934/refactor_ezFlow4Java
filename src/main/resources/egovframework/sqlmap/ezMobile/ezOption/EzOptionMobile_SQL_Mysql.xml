@@ -30,10 +30,9 @@
       <result property="timeZone"          	column="timeZone"         					columnIndex="2"/>
       <result property="lang"       		column="lang"        						columnIndex="3"/>
       <result property="mainType"	      	column="mainType"        					columnIndex="4"/>
-      <result property="listCnt"	     	column="listCnt"        					columnIndex="5"/>
-      <result property="useSearch"	       	column="useSearch"      					columnIndex="6"/>
-      <result property="useSecurity"       	column="useSecurity"        				columnIndex="7"/>
-      <result property="tenantId"       	column="tenant_id"        					columnIndex="8"/>     
+      <result property="listCnt"	     	column="listCnt"        					columnIndex="5"/>      
+      <result property="useSecurity"       	column="useSecurity"        				columnIndex="6"/>
+      <result property="tenantId"       	column="tenant_id"        					columnIndex="7"/>     
     </resultMap>
     
     <select id="EzOptionDAO.commonInfo" parameterClass="Map" resultMap="MCommonVO">
@@ -71,8 +70,7 @@
 	    		timeZone, 	
 				lang,
 			  	mainType,
-			    listCnt,
-			    useSearch,
+			    listCnt,			    
 			    useSecurity,
 			    tenant_id
 			FROM
@@ -87,9 +85,9 @@
   	<insert id="EzOptionDAO.insertOption" parameterClass="Map">
   		<![CDATA[
 			INSERT INTO TBL_USERMOBILEINFO(
-				userId,			timeZone, 			lang, 			mainType,			listCnt,		useSearch,		useSecurity,		tenant_id
+				userId,			timeZone, 			lang, 			mainType,			listCnt,		useSecurity,		tenant_id
 			) values (
-				#userId#,		#timeZone#,			#lang#,			#mainType#,			#listCnt#,		#useSearch#,	#useSecurity#,		#tenantId#
+				#userId#,		#timeZone#,			#lang#,			#mainType#,			#listCnt#,		#useSecurity#,		#tenantId#
 			)
    		]]>
   	</insert>
@@ -101,14 +99,13 @@
 					LANG = #lang#	
 					,TIMEZONE = #timeZone#
 					,MAINTYPE = #mainType#
-					,LISTCNT = #listCnt#
-					,USESEARCH = #useSearch#
+					,LISTCNT = #listCnt#					
 					,USESECURITY = #useSecurity#	
 				WHERE 
 					USERID = #userId#
 				AND 
 					TENANT_ID = #tenantId#
-   				]]>
+   			]]>
   	</update>
   	
 </sqlMap>

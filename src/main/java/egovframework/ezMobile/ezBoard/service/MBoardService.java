@@ -2,6 +2,7 @@ package egovframework.ezMobile.ezBoard.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 
@@ -13,11 +14,12 @@ import egovframework.ezMobile.ezBoard.vo.MBoardListHeaderVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardNewListVO;
 import egovframework.ezMobile.ezBoard.vo.MBoardTreeVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface MBoardService {
 	List<MBoardListHeaderVO> getListHeader(MBoardInfoVO mBoardInfoVO, String lang, int tenantID) throws Exception;
 	
-	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
+	List<MBoardItemVO> getBoardItemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String lastDate,String userID,String add) throws Exception;
 
 	List<MBoardNewListVO> getNewBoarditemList(MBoardInfoVO mBoardInfoVO, MCommonVO info, String userID) throws Exception;
 	
@@ -27,11 +29,13 @@ public interface MBoardService {
 	
 	List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, int tenantID) throws Exception;
 	
-	List<MBoardNewListVO> getNewBoardList(String userID, int tenantID) throws Exception;
+	List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, int tenantID) throws Exception;
 	
 	List<MBoardTreeVO> getBoardTree(String rootBoardID, int mode, int subFlag, int selectBy, String excludeBoardID, MCommonVO info) throws Exception;
 	
 	List<MBoardAttachVO> getAttachList(String itemID, int tenantID) throws Exception;
+	
+	List<MBoardAttachVO> photoViewDB(String itemID, String boardID,int tenantID) throws Exception;
 	
 	MBoardInfoVO getBoardInfo(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info) throws Exception;
 	
@@ -47,11 +51,17 @@ public interface MBoardService {
 	
 	Integer getNewBoardListCount(String userID, String startDate, int tenantID) throws Exception;
 	
-	void insertBrdItem(JSONObject boardListVO, String offset, int tenantID) throws Exception;
+	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID) throws Exception;
+	
+	Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
+	
+	void insertBrdItem(JSONObject boardListVO, MCommonVO info, String realPath, String mhtData) throws Exception;
 	
 	void insertBrdItem2(JSONObject boardListVO) throws Exception;
 	
-	void updateItem(JSONObject boardListVO) throws Exception;
+	void setAsRead(MCommonVO userInfo, String boardID, String itemID) throws Exception;
+	
+	void updateItem(JSONObject boardListVO, MCommonVO info, String realPath, String mhtData) throws Exception;
 	
 	void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
 	

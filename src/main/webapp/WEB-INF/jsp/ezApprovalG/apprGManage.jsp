@@ -113,8 +113,10 @@
 		            	checkBujaeInfo_Complete_After();
 		                return true;
 		            }
-		            
-		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate.substring(0,16) + " ~ " + tmpEndDate.substring(0,16) + " <spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            else if (tmpStartDate > "${nowDate}") {
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
 		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
 		            if (Rtnval) {
 		                checkBujaeInfo_Complete(true);
@@ -123,29 +125,29 @@
 		                checkBujaeInfo_Complete(false);
 		            }
 		        } else if (proxyInfo != null && proxyInfo != "") {
-			        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
-			            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
-			
-			            tmpStartDate = tmpStartDate.replace("/", ":");
-			            tmpEndDate = tmpEndDate.replace("/", ":");
-			            if (tmpEndDate < "${nowDate}") {
-			                setBujaeOff();
-			                return true;
-			            }
-			            else if (tmpStartDate > "${nowDate}") {
-			                return true;
-			            }
-			            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate.substring(0,10) + " <spring:message code='ezApprovalG.t1722'/>" + tmpEndDate.substring(0,10) + " <spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
-			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
-			            if (Rtnval) {
-			                checkBujaeInfo_Complete(true);
-			            }
-			            else {
-			                checkBujaeInfo_Complete(false);
-			            }
-			        } else {
-			            checkBujaeInfo_Complete(true);
-			        }
+		        	var tmpStartDate = "${proxyInfo.startDate}".substring(0, 16);
+		            var tmpEndDate = "${proxyInfo.endDate}".substring(0, 16);
+		
+		            tmpStartDate=tmpStartDate.replace("/", ":");
+		            tmpEndDate=tmpEndDate.replace("/", ":");
+		            if (tmpEndDate < "${nowDate}") {
+		                setBujaeOff();
+		                return true;
+		            }
+		            else if (tmpStartDate > "${nowDate}") {
+		                return true;
+		            }
+		            var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+		            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+		            if (Rtnval) {
+		                checkBujaeInfo_Complete(true);
+		            }
+		            else {
+		                checkBujaeInfo_Complete(false);
+		            }
+		        } else {
+		            checkBujaeInfo_Complete(true);
+		        }
 		    }
 		
 		    function checkBujaeInfo_Complete(Rtnval) {
@@ -541,7 +543,7 @@
 		        openForm();
 		    }
 		    var selectedDocIDS = "";
-		    function btnApprove_onclick(tempFlag) {
+		    function btnApprove_onclick(tempFlag) { // tempFlag -> 0:결재, 1:모두결재, 2:일괄결재
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var oArrRows = DocList.GetSelectedRows();
@@ -1720,7 +1722,7 @@
 		</script>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<form id="formAPP">
 	        <input type="hidden"  id="APPXML" name="APPXML" />

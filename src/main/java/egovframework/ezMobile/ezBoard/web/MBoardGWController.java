@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezBoard.web;
 
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -78,6 +79,7 @@ public class MBoardGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String boardId = request.getParameter("boardID");
+			String lastDate = request.getParameter("lastDate");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
@@ -90,13 +92,16 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
-			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, info.getTenantId()); 
+			List<MBoardNewListVO> list = mBoardService.getNewBoardList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getTenantId());
+			
+			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getTenantId());
+			LOGGER.debug("listCount ="+listCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
 			result.put("data2", boardInfo);
-			result.put("listSize", list.size());
+			result.put("listCount", listCount);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -122,8 +127,14 @@ public class MBoardGWController {
 		
 		try {
 			String userID = request.getParameter("userID");
+			String lastDate = request.getParameter("lastDate");
+			String add = request.getParameter("add");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			
+			if (lastDate == null || lastDate.equals("")) {
+				lastDate = commonUtil.getTodayUTCTime("");
+			}
 			
 			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
 			
@@ -135,12 +146,16 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 			
-			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, info.getUserId());
+			List<MBoardItemVO> list = mBoardService.getBoardItemList(boardInfo, info, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true),info.getUserId(),add);
+			int listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(),info.getTenantId());
+			
+			LOGGER.debug("listCount : "+listCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", list);
 			result.put("data2", boardInfo);
+			result.put("listCount", listCount);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -188,7 +203,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/{type}/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public Object boardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
+	public Object boardDetail(@PathVariable String type,@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] started.");
 		
 		JSONObject result = new JSONObject();
@@ -220,6 +235,9 @@ public class MBoardGWController {
 			String domain = request.getServerName() + ":" + request.getServerPort();
 			String mhtContent = mBoardService.getMhtContent(realPath, domain, info, boardItem.getContentLocation(), locale);
 			
+			//새게시물 눌렀을때, read테이블에 들어가게함.
+			mBoardService.setAsRead(info, boardId, contentId);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", boardItem);
@@ -230,9 +248,74 @@ public class MBoardGWController {
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
+			result.put("content", "");
+			result.put("boardInfo", "");
 		}		
 		
 		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/{type}/boards/{boardId}/contents/{contentId}] ended.");
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 게시판 [GET] 포토게시물 상세정보
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezboard/photo/boards/{boardId}/contents/{contentId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object photoBoardDetail(@PathVariable String boardId, @PathVariable String contentId,HttpServletRequest request,Locale locale) throws Exception {		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String userID = request.getParameter("userID");
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfo(serverName, userID);
+			
+			MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentId, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
+			boardItem.setWriteDate(commonUtil.getDateStringInUTC(boardItem.getWriteDate(), info.getOffSet(), false));
+			
+			//boardInfo
+			String primary = commonUtil.getPrimaryData(info.getLang(), info.getTenantId());
+			
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			String deptPathCode = mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			LOGGER.debug("deptPathCode = "+deptPathCode);
+			
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+			
+			//썸네일게시판일때 게시물
+			boardInfo.setType("photoBoardItem");
+			List<MBoardAttachVO>	photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
+			
+			//String gwServerUrl = config.getProperty("config.mobileGwServerURL");
+			
+			for (MBoardAttachVO photo : photoList) {
+				//임시로 localhost:8080
+				photo.setFilePath("http://localhost:8080"+photo.getFilePath());
+			}
+				
+			LOGGER.debug("photoList:"+photoList);
+			
+			mBoardService.setAsRead(info, boardId, contentId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", boardItem);
+			result.put("boardInfo", boardInfo);
+			result.put("photoList", photoList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+			result.put("boardInfo", "");
+			result.put("photoList", "");
+		}		
+		
+		LOGGER.debug("MOBILE G/W BOARD [GET /ezboard/photo/boards/{boardId}/contents/{contentId}] ended.");
 		return result;
 	}
 	
@@ -241,7 +324,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/contents", method= RequestMethod.POST, produces="application/json;charset=utf-8")
-	public void insertBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+	public JSONObject insertBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request, Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -249,9 +332,22 @@ public class MBoardGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
+			String realPath = commonUtil.getRealPath(request);
+			String content = jsonParam.get("mainContent").toString();
+			content = URLDecoder.decode(content, "utf-8");
 			
-			mBoardService.insertBrdItem(jsonParam, info.getOffSet(),info.getTenantId());
+			String scheme = "http://";
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
 			
+			content = content.replace("replace_" + scheme, scheme);
+			
+			//html -> mht변환
+			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
+			
+			mBoardService.insertBrdItem(jsonParam, info, realPath,mhtData);
+
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", "");
@@ -263,6 +359,8 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [POST /ezboard/boards/{boardId}/contents] ended.");
+		
+		return result;
 	}
 	
 	/**
@@ -270,7 +368,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public void updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+	public JSONObject updateBoard(@RequestBody JSONObject jsonParam, HttpServletRequest request, Locale locale) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -278,8 +376,21 @@ public class MBoardGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  jsonParam.get("userID").toString());
+			String realPath = commonUtil.getRealPath(request);
+			String content = jsonParam.get("mainContent").toString();
+			content = URLDecoder.decode(content, "utf-8");
 			
-			mBoardService.updateItem(jsonParam);
+			String scheme = "http://";
+	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+	    		scheme = "https://";
+	    	}
+	    	
+	    	content = content.replace("replace_" + scheme, scheme);
+			
+			//html -> mht변환
+			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
+			
+			mBoardService.updateItem(jsonParam, info, realPath,mhtData);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -292,6 +403,7 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [PUT /ezboard/boards/{boardId}/contents] ended.");
+		return result;
 	}
 	
 	/**
@@ -299,7 +411,7 @@ public class MBoardGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezboard/boards/{boardId}/contents/{contentId}", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
-	public void deleteBoard(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
+	public JSONObject deleteBoard(@PathVariable String boardId, @PathVariable String contentId, HttpServletRequest request) throws Exception {		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] started.");
 		
 		JSONObject result = new JSONObject();
@@ -322,6 +434,7 @@ public class MBoardGWController {
 		}	
 		
 		LOGGER.debug("MOBILE G/W BOARD [DELETE /ezboard/boards/{boardId}/contents] ended.");
+		return result;
 	}
 	
 	/**

@@ -39,19 +39,19 @@
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_01" target="right">メイン画面</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_02" target="right">掲示文登録</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_02" target="right">掲示物の登録</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_03" target="right">掲示文閲覧</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_03" target="right">掲示物の閲覧</a></span></h2>
 				<ul>
 				</ul>
 				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_04" target="right">マイ掲示板</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_05" target="right">掲示文管理</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_05" target="right">掲示物の管理</a></span></h2>
 				<ul>
 				</ul>
-				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_06" target="right">掲示文の検索</a></span></h2>
+				<h2><span><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/board_jp_06" target="right">掲示物の検索</a></span></h2>
 				<ul>
 				</ul>
 			</c:otherwise>

@@ -21,6 +21,10 @@
     }
 }
 
+/**
+ * 현재 진행 중인 결재 정보를 가져온 뒤 
+ * 의견 정보를 저장하는 XML파일 생성하는 함수
+ * */
 function getAprOpinionXML(pOpContent) {
     var KyljeaOrder = "";
     var KyljeaName = "";
@@ -41,7 +45,7 @@ function getAprOpinionXML(pOpContent) {
 
     try {
     	var result = "";
-        
+        // 결재라인 정보 가져오기
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -133,7 +137,7 @@ function getAprOpinionXML(pOpContent) {
         createNodeAndAppandNodeText(objXML, CELL, CELLVALUE, "VALUE", GetOpinionTypeName(pOpinionType));
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA1", pDocID);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA2", pUserID);
-        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA3", pOpContent);
+        createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA3", pOpContent); //의견 내용 추가
 
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA4", KyljeaDeptID);
         createNodeAndAppandNodeText(objXML, CELL, CELLDATA, "DATA5", pAddIndex);
@@ -218,7 +222,9 @@ function getOpinionListInfo() {
         alert("getOpinionListInfo :: " + e.description);
     }
 }
-
+/**
+ * 의견의 유무에 따라 btn_OpinionAdd의 text 변경
+ * */
 function CheckOpinionExist() {
     try {
         var OpinionList = new ListView();
@@ -267,17 +273,22 @@ function AddOpinionContent(Opstate, OpContent) {
             var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
 
-            
+            /**
+             * 리스트의 ROW 값이 1인 경우
+             * 해당 ROW가 '데이터가 없습니다.(indexOf(noItems))'를 출력하는 것인지 확인
+             * noItems를 출력하는 ROW라면 실존하는 데이터가 없는 것이기 때문에
+             * pTotalRows를 0으로 초기화
+             * */
             var pTotalRows = OpinionList.GetDataRows().length;
             if (pTotalRows == 1) {
                 var tr = OpinionList.GetDataRows();
                 if (tr[0].id.indexOf("noItems") > 0)
                     pTotalRows = 0;
             }
-
+            // 추가를 원하는 의견이 담긴 XML 생성
             var pstrXML = getAprOpinionXML(OpContent);
             objXML = loadXMLString(pstrXML);
-
+            // ListView에 objXML 추가
             if (pTotalRows < 1) {
                 if (document.getElementById("OPINION").innerHTML != "")
                     document.getElementById("OPINION").innerHTML = "";
@@ -314,7 +325,6 @@ function AddOpinionContent(Opstate, OpContent) {
             var pSelectedRow = OpinionList.GetSelectedRows();
             var pTotalRows = OpinionList.GetDataRows();
             var tr = pSelectedRow[0];
-
 
             if (pSelectedRow.length != 0) {
                 if (trim_Cross(GetAttribute(tr, "DATA2")) == pUserID) {

@@ -201,12 +201,13 @@ public class EzSystemAdminController {
 		}
 		
 		int maxItemPerPage = 20; 
+		int currentPage = Integer.parseInt(currPage);
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		
 		if (currPage.equals("-1")) {
 			startRow = -1;
 		}
-		int currentPage = Integer.parseInt(currPage);
-		
+
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
 		if ( userInfo.getLang().equals(sysLang))  {
@@ -256,6 +257,7 @@ public class EzSystemAdminController {
 		
 		int maxItemPerPage = 20; 
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
+		String isPrimaryLang = "2";
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -263,12 +265,14 @@ public class EzSystemAdminController {
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 
-		if ( userInfo.getLang().equals(sysLang))  {
-			sysLang = userInfo.getLang();
+		if (sysLang.equals(userInfo.getLang())) {
+			isPrimaryLang = sysLang;
+		} else { 
+			isPrimaryLang = userInfo.getLang();
 		}
 		
 		List<ConnectionInfoVO> loginHistList = ezSystemAdminService.getLoginHist(Integer.valueOf(userInfo.getTenantId()), 
-				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, sysLang, startDate, endDate);
+				commonUtil.getMinuteUTC(offset), startRow, maxItemPerPage, searchKeycode, searchKeyword, isPrimaryLang, startDate, endDate);
 		
 		int totalCount = ezSystemAdminService.getLoginHistCount(userInfo.getTenantId(), commonUtil.getMinuteUTC(offset), searchKeycode, searchKeyword, sysLang, startDate, endDate);
 		

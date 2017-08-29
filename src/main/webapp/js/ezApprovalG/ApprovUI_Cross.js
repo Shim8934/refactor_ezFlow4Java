@@ -74,7 +74,10 @@ function putBansongSign() {
     }
     return signInfo;
 }
-
+/**
+ * 현재 결재중인 양식에 결재관련 서명 및 기타 내용 출력.
+ * field.innerHTML = String Data
+ * */
 function AprrovMappingSign(ret) {
     var fields = message.GetFieldsList();
     var field;
@@ -92,11 +95,11 @@ function AprrovMappingSign(ret) {
 
     var OpinionText = "";
     var PositionText = "";
-    
+    // 4 : 전결, 16 : 대결
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
         OpinionText = getSignDate() + "<br/>";
     }
-    
+    // 8 : 개인순차협조, 9 : 개인병렬협조, 11 : 부서순차협조, 12 : 부서병렬협조
     if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
@@ -119,7 +122,7 @@ function AprrovMappingSign(ret) {
         var field = message.GetListItem(fields, habyui);
         var isHabyuiDate = message.GetListItem(fields, phabyuidate + pAprMemberSN);
         if (field) {
-            if (ret != "NAME" && ret != "") {
+            if (ret != "NAME" && ret != "") { // 서명이 이미지인 경우 
                 var signWidth = parseInt(field.offsetWidth) - 4 - 15;
                 var signHeight = parseInt(field.offsetHeight) - 4;
                 signWidth = 50;
@@ -146,7 +149,7 @@ function AprrovMappingSign(ret) {
                 if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
                     strimg = strLang8 + strimg;
 
-                field.innerHTML = strimg;
+                field.innerHTML = strimg; // field에 이미지 정보 출력
                 var content = ret;
                 if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
                     content = ret + "::" + strLang8;
@@ -159,6 +162,10 @@ function AprrovMappingSign(ret) {
                 signCnt = signCnt + 1;
                 SingFlag = true;
             } else {
+            	/**
+            	 * '환경설정->결재환경설정->부재자설정'을 통한 대리결재 설정
+            	 * 두 유저 ID가 다른 경우 -> 대결, 대결 표시 출력
+            	 * */
                 if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
                     field.innerHTML = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
                     SignContent[signCnt] = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
@@ -183,7 +190,7 @@ function AprrovMappingSign(ret) {
             signInfo[signCnt] = habyuidateID;
             SignType[signCnt] = "TEXT";
             SignName[signCnt] = habyuidateID;
-            SignContent[signCnt] = s;
+            SignContent[signCnt] = s; // var s = CurrentDate[1] + "." + CurrentDate[2];
             signCnt = signCnt + 1;
         }
 
@@ -193,10 +200,10 @@ function AprrovMappingSign(ret) {
             setNodeText(field , getNodeText(field) + PositionText);
         }
     }
-    else if (pAprLineType == strAprType2 || pAprLineType == strAprType7) {
+    else if (pAprLineType == strAprType2 || pAprLineType == strAprType7) { // 2 : 확인, 7 : 참조
 
     }
-    else if (pAprLineType == strAprType15) {
+    else if (pAprLineType == strAprType15) { // 15 : 후열
         signID = "gamsasign1";
 
         var field = message.GetListItem(fields, signID);
@@ -262,7 +269,7 @@ function AprrovMappingSign(ret) {
         }
 
     }
-    else if (approvalFlag == "S" && pAprLineType == strAprType4) {
+    else if (approvalFlag == "S" && pAprLineType == strAprType4) { // 4 : 전결
     	var pAprMemberSignSN = pAprMemberSN;
         var signID;
         var seumyungID;
@@ -517,16 +524,19 @@ function AprrovMappingSign(ret) {
             seumyungdateID = "seumyungdate" + pAprMemberSignSN;
         }
 
-        var field = message.GetListItem(fields, seumyungdateID);
+        var field = message.GetListItem(fields, seumyungdateID); 
         if (field) {
-            setNodeText(field , s);
+            setNodeText(field , s); // '서명날짜'에 출력
         }
 
         field = message.GetListItem(fields, seumyungID);
         if (field) {
-            setNodeText(field , getNodeText(field) + PositionText);
+            setNodeText(field , getNodeText(field) + PositionText); // '직위' 출력
         }
-
+        /**
+         * 기안 작성시 결재자의 결재유형을 '대결'로 설정한 경우
+         *  16 : 대결
+         * */
         if (pAprLineType == strAprType16) {
             var field = message.GetListItem(fields, signID);
             if (field) {
@@ -537,14 +547,15 @@ function AprrovMappingSign(ret) {
                     var strimg;
 
                     var FilePath = encodeURI(ret);
-                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
-                    else
+                    } else {
                         strimg = strLang8 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                    }
 
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (signImageType = "NAME") {
+                    if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -556,6 +567,7 @@ function AprrovMappingSign(ret) {
 					} else {
 						strimg = "<br>" + strimg;
 					}
+					// 서명 정보에 strLang7 = '대결' 출력
                     strimg = strLang7 + strimg;
 
                     field.innerHTML = strimg;
@@ -608,7 +620,7 @@ function AprrovMappingSign(ret) {
 
         var field = message.GetListItem(fields, signID);
         if (field) {
-            if (DekyulFlag && pAprLineB4type == strAprType4) {
+            if (DekyulFlag && pAprLineB4type == strAprType4) { // 4: 전결
                 field.innerHTML = strLang6;
                 signInfo[signCnt] = signID;
                 SignName[signCnt] = signID;
@@ -620,7 +632,7 @@ function AprrovMappingSign(ret) {
             else if (DekyulFlag) {
             }
             else {
-                if (ret != "NAME") {
+                if (ret != "NAME") { // 서명이 이름이 아닌 경우 (즉, 이미지)
                     var signWidth = field.offsetWidth;
                     var signHeight = field.offsetHeight;
                     if (signWidth > signHeight) {
@@ -649,7 +661,7 @@ function AprrovMappingSign(ret) {
 
                     strimg = strimg + " width=" + signWidth;
                     
-                    if (signImageType = "NAME") {
+                    if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
@@ -671,7 +683,7 @@ function AprrovMappingSign(ret) {
                         contents = strLang7 + contents;
                     }
 
-                    field.innerHTML = strimg;
+                    field.innerHTML = strimg;           // 서명 field에 값 넣기
                     signInfo[signCnt] = signID;
                     SignName[signCnt] = signID;
                     SignType[signCnt] = "IMAGE";
@@ -681,23 +693,24 @@ function AprrovMappingSign(ret) {
                     signCnt = signCnt + 1;
                     SingFlag = true;
                 }
-                else {
+                else { // 서명이 이름인 경우 (즉, 문자)
                 	var strimg;
                 	
-                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
+                    if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase()) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
-                    else
+                    } else {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + strLang8 + arr_userinfo[2] + "</P>";
+                    }
 
                     if (!message.GetListItem(fields, seumyungdateID)) {
                         strimg = OpinionText + strimg;
                     }
 
-                    if (pAprLineType == strAprType4) {
+                    if (pAprLineType == strAprType4) { // 전결 + strimg
                         strimg = strLang6 + strimg;
                     }
 
-                    if (pAprLineType == strAprType16) {
+                    if (pAprLineType == strAprType16) { // 대결 + strimg
                         strimg = strLang7 + strimg;
                     }
 
@@ -1361,7 +1374,10 @@ function getCurApproverAprLine() {
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType2)
         setMenuBar("btnJunKyul", false);
 }
-
+/**
+ * xmlpara에 결재관련 정보 저장
+ * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류
+ * */
 function SaveApproveInfo(pApproveFlag) {
     SaveFile();
     SignSave();
@@ -1424,30 +1440,33 @@ function SaveApproveInfo(pApproveFlag) {
     	}
     	else {
     		var field = message.GetListItem(fields, "docnumber");
-    		if (field)
+    		if (field) {
     			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-    		else {
+    		} else {
     			var field = message.GetListItem(fields, "bedocnumber");
-    			if (field)
+    			if (field) {
     				createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-    			else
+    			} else {
     				createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+    			}
     		}
     	}
     	
     }
 
-    if (pHasAttachYN == "")
+    if (pHasAttachYN == "") {
         createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(objNodes[9]));
-    else
+    } else {
         createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
+    }
 
     var objNode;
 
-    if (pHasOpinionYN == "")
+    if (pHasOpinionYN == "") {
         createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(objNodes[10]));
-    else
+    } else {
         createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
+    }
 
 
     createNodeAndInsertText(xmlpara, objNode, "STARTDATE", "");
@@ -1485,10 +1504,11 @@ function SaveApproveInfo(pApproveFlag) {
 
     var g_SepAttachLVXml = "";
     g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
-    if (!g_SepAttachLVXml)
+    if (!g_SepAttachLVXml) {
         createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
-    else
+    } else {
         createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
+    }
 
     createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
 
@@ -2416,7 +2436,7 @@ function ChangeHapYuiInfo() {
 var aprsign1_cross_dialogArguments = new Array();
 function openSingUI(parameter) { 
 	var result = "";
-	
+	// 결재 서명 존재유무 확인
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -2434,11 +2454,12 @@ function openSingUI(parameter) {
 
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     var SignNodeList = objNodes.length;
-
+    // 결재 서명 정보가 존재하는 경우
     if (SignNodeList != 0) {
         var parameter = pingUserID;
         aprsign1_cross_dialogArguments[0] = parameter;
         aprsign1_cross_dialogArguments[1] = openSingUI_Complete;
+        // 서명하는 팝업 호출
         DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
     }
     else {
@@ -2446,6 +2467,9 @@ function openSingUI(parameter) {
         Approv_Complete(ret);
     }
 }
+/**
+ * sentdate field가 존재하는 경우
+ * */
 function SetAutoPropFinal() {
     try {
         var fields = message.GetFieldsList();
@@ -2792,6 +2816,9 @@ function openAaprDocAttachUI_Complete(ret) {
         setAttachInfo(pDocID, "APR", lstAttachLink);
     }
 }
+/**
+ * 결재 진행시 발생하는 서명 정보 업데이트
+ * */
 function SignSave() {
     if (SignContent.length > 0) {
         var xmlhttp = createXMLHttpRequest();
@@ -3074,6 +3101,9 @@ function UpdateDocHistory(pHtml) {
         OpenAlertUI(pAlertContent);
     }
 }
+/**
+ * 결재선의 이력관리
+ * */
 function UpdateLineHistory() {
 	var result = "";
     

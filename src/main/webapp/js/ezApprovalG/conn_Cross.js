@@ -1,4 +1,8 @@
-﻿var color1, color2
+﻿/**
+ * 연동 관련 소스
+ * 전자결재 연동 관련 개발 시 참고
+ * */
+var color1, color2
 var bgFlag = true;
 var colSignCnt = 10;
 
@@ -81,9 +85,11 @@ function ExcuteInfo(pprocessIdx, currTD) {
     var rtnVal = true;
 
     var xmlData = createXmlDom();
-
+    
     try {
-        if (!message.GetTagList("CONNINFO")[0]) return rtnVal;
+        if (!message.GetTagList("CONNINFO")[0]) {
+        	return rtnVal;
+        }
     } catch (e) {
         return true;
     }

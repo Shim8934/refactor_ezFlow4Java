@@ -504,7 +504,11 @@ function SendMailToReceiveDept(pdrafttitle, pdraftname, pdrafdate, docid) {
     }
 }
 
-function GetDocInfoData(mode, filed) {
+/**
+ *  원하는 문서의 정보를 XML로 변형하는 함수
+ *  field에 얻고 싶은 XML field명 입력
+ * */
+function GetDocInfoData(mode, field) {
     try {
         var value = "";
         var xmlpara = createXmlDom();
@@ -512,7 +516,7 @@ function GetDocInfoData(mode, filed) {
         createNodeInsert(xmlpara, objNode, "PARAMETER"); 
         createNodeAndInsertText(xmlpara, objNode, "DocID", pDocID);
         createNodeAndInsertText(xmlpara, objNode, "mode", mode);
-        createNodeAndInsertText(xmlpara, objNode, "fields", filed);
+        createNodeAndInsertText(xmlpara, objNode, "fields", field);
 
         var xmlhttp = createXMLHttpRequest();
         xmlhttp.open("Post", "/ezApprovalG/GetDocInfoMode.do", false);
@@ -852,7 +856,9 @@ function getHapyuitype(pSelectedRow, orgid) {
 
 }
 
-
+/**
+ * 해당 문서의 '의견' 정보 추출
+ * */
 function getOpinionInfo(docid, Flag) {
     $.ajax({
 		type : "POST",
@@ -896,6 +902,10 @@ function getOpinionInfo(docid, Flag) {
             txtRtn = txtRtn + "</tr>";
         }
     }
+    /**
+     *  NodeList.length > 0 의견이 존재하는 경우
+     *  NodeList.length <= 0 의견이 존재하지 않는 경우
+     */
     if (TitleList.length > 0 && NodeList.length > 0) {
         txtRtn = txtRtn + "</table>";
     } else if (TitleList.length > 0 && NodeList.length <= 0) {
