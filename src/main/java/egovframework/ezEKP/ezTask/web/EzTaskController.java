@@ -859,6 +859,8 @@ public class EzTaskController extends EgovFileMngUtil {
     	logger.debug("cnt : " + cnt + " | listSize : " + list.size());
 
     	StringBuffer resultXML = new StringBuffer();
+    	String primary = userInfo.getPrimary();
+    	int tenantID = userInfo.getTenantId();
     	
     	resultXML.append("<DATA>");
     	
@@ -879,7 +881,21 @@ public class EzTaskController extends EgovFileMngUtil {
     		resultXML.append("<ENDDATE>" + list.get(i).getEndDate() + "</ENDDATE>");
     		resultXML.append("<TITLE>" + list.get(i).getTitle() + "</TITLE>");
     		resultXML.append("<HASATTACH>" + list.get(i).getHasAttach() + "</HASATTACH>");
-    		resultXML.append("<HASCOMMENT>" + list.get(i).getHasComment() + "</HASCOMMENT>");
+
+    		List<TaskCommentVO> taskCommentList = null;
+    		int commentLength = 0;
+
+    		if (list.get(i).getHasComment().equals("Y")) {
+    			if (list.get(i).getParentID().equals("0")) {
+    				taskCommentList = ezTaskService.getCommentList(list.get(i).getTaskID(), offset, primary, tenantID);
+    				commentLength = taskCommentList.size();
+    			} else {
+    				taskCommentList = ezTaskService.getCommentList(list.get(i).getParentID(), offset, primary, tenantID);
+    				commentLength = taskCommentList.size();
+    			}
+    		}
+
+    		resultXML.append("<HASCOMMENT>" + commentLength + "</HASCOMMENT>");
     		resultXML.append("<PERSONID>" + list.get(i).getPersonID() + "</PERSONID>");
     		resultXML.append("<PERSONNAME>" + list.get(i).getPersonName() + "</PERSONNAME>");
     		resultXML.append("<PERSONNAME2>" + list.get(i).getPersonName2() + "</PERSONNAME2>");
